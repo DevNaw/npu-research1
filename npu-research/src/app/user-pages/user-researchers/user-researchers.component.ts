@@ -1,0 +1,417 @@
+import { Component } from '@angular/core';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+import {
+  ApexNonAxisChartSeries,
+  ApexChart,
+  ApexLegend,
+  ApexPlotOptions,
+  ApexDataLabels,
+  ApexResponsive,
+} from 'ng-apexcharts';
+import Swal from 'sweetalert2';
+
+export interface PieChartConfig {
+  title: string;
+  subtitle: string;
+  series: ApexNonAxisChartSeries;
+  labels: string[];
+  chart: ApexChart;
+  legend: ApexLegend;
+  plotOptions: ApexPlotOptions;
+  dataLabels: ApexDataLabels;
+  responsive: ApexResponsive[];
+  colors: string[];
+}
+
+interface News {
+  title: string;
+  summary: string;
+  imageUrl: string;
+  link: string;
+}
+
+export interface Publication {
+  photo: string;
+  name: string;
+  career_path: string;
+  position: string;
+  faculty: string;
+}
+
+@Component({
+  selector: 'app-user-researchers',
+  standalone: false,
+  templateUrl: './user-researchers.component.html',
+  styleUrl: './user-researchers.component.css',
+})
+export class UserResearchersComponent {
+  groupedPublications: { [faculty: string]: Publication[] } = {};
+  series: ApexNonAxisChartSeries = [
+    18.2, 12.5, 10.8, 8.6, 7.4, 6.2, 5.5, 4.8, 4.1, 3.7, 3.2, 2.8, 2.4, 2.1,
+    1.9, 1.6, 1.3, 1.1, 0.9, 0.8, 0.7,
+  ];
+  colors: string[] = [
+    '#4C78A8', // น้ำเงิน
+    '#72B7B2', // เขียวอมฟ้า
+    '#F58518', // ส้ม
+    '#E45756', // แดงหม่น
+    '#54A24B', // เขียว
+    '#B279A2', // ม่วงหม่น
+    '#9C755F', // น้ำตาล
+    '#BAB0AC', // เทา
+    '#A0CBE8', // ฟ้าอ่อน
+    '#FF9DA6', // ชมพูอ่อน
+
+    '#1F77B4', // น้ำเงินเข้ม
+    '#AEC7E8', // ฟ้าเทา
+    '#2CA02C', // เขียวเข้ม
+    '#98DF8A', // เขียวอ่อน
+    '#FFBB78', // ส้มอ่อน
+    '#C49C94', // น้ำตาลอ่อน
+    '#9467BD', // ม่วง
+    '#C5B0D5', // ม่วงอ่อน
+    '#7F7F7F', // เทาเข้ม
+    '#BCBD22', // เขียวเหลือง
+    '#17BECF', // ฟ้าอมเขียว
+    '#FF7F0E', // ส้มเข้ม
+    '#FFBBE6', // ชมพูอ่อนมาก
+  ];
+
+  ngOnInit() {
+    this.groupedPublications = this.publications.reduce((group, item) => {
+      if (!group[item.faculty]) {
+        group[item.faculty] = [];
+      }
+      group[item.faculty].push(item);
+      return group;
+    }, {} as { [key: string]: Publication[] });
+  }
+
+  sweet() {
+    Swal.fire({
+      icon: 'success',
+      title: 'Your work has been saved',
+      showConfirmButton: false,
+      timer: 1500,
+    });
+  }
+
+  downloadPDF() {
+    const element = document.getElementById('chart-pdf');
+    if (!element) return;
+
+    html2canvas(element, {
+      scale: 2, // ⬅ เพิ่มความคม
+      useCORS: true,
+      backgroundColor: '#ffffff',
+    }).then((canvas) => {
+      const imgData = canvas.toDataURL('image/png');
+
+      const pdf = new jsPDF({
+        orientation: 'landscape',
+        unit: 'mm',
+        format: 'a4',
+      });
+
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+      pdf.addImage(imgData, 'PNG', 10, 10, pdfWidth - 20, pdfHeight);
+
+      pdf.save('research-chart.pdf');
+    });
+  }
+
+  charts: PieChartConfig[] = [
+    {
+      title: 'กราฟสรุปจำนวนโครงการวิจัย จำแนกตามหน่วยงาน',
+      subtitle: this.getLastUpdatedText(),
+      series: this.series,
+      labels: [
+        'คณะเกษตรและเทคโนโลยี',
+        'คณะครุศาสตร์',
+        'คณะเทคโนโลยีอุตสาหกรรม',
+        'คณะวิทยาการจัดการและเทคโนโลยีสารสนเทศ',
+        'คณะวิทยาศาสตร์',
+        'คณะวิศวกรรมศาสตร์',
+        'คณะศิลปกรรมศาสตร์และวิทยาศาสตร์',
+        'โรงเรียนสาธิตแห่งมหาวิทยาลัยนครพนม พนมพิทยพัฒน์',
+        'วิทยาลัยการท่องเที่ยวและอุตสาหกรรมบริการ',
+        'วิทยาลัยการบิน การศึกษา และวิจัยนานาชาติ',
+        'วิทยาลัยเทคโนโลยีอุตสาหกรรมศรีสงคราม',
+        'วิทยาลัยธาตุพนม',
+        'วิทยาลัยนาหว้า',
+        'วิทยาลัยพยาบาลบรมราชชนนีนครพนม',
+        'ศูนย์การศึกษามหาวิทยาลัยนครพนม ณ กรุงเทพมหานคร',
+        'สถาบันวิจัยและพัฒนา',
+        'สำนักงานอธิการบดี',
+        'สำนักงานอธิการบดี-กองกลาง',
+        'สำนักงานอธิการบดี-กองบริหารวิชาการ',
+        'สำนักงานอธิการบดี-กองพัฒนานักศึกษา',
+        'สำนักวิทยบริการ',
+      ],
+      chart: {
+        type: 'donut',
+        height: 540,
+        width: '100%',
+        animations: {
+          enabled: true,
+        },
+      },
+      legend: {
+        position: 'right',
+      },
+      plotOptions: {
+        pie: {
+          donut: {
+            size: '40%',
+          },
+          dataLabels: {
+            offset: 12, // ⬅ ดัน label ออกนอกวง
+            minAngleToShowLabel: 10,
+          },
+        },
+      },
+      dataLabels: {
+        enabled: true,
+      },
+      responsive: [
+        {
+          breakpoint: 768,
+          options: {
+            legend: {
+              position: 'bottom',
+            },
+          },
+        },
+      ],
+      colors: this.colors,
+    },
+    {
+      title: 'กราฟสรุปจำนวนบทความ จำแนกตามหน่วยงาน',
+      subtitle: this.getLastUpdatedText(),
+      series: [
+        124, 611, 505, 225, 382, 206, 560, 5, 17, 80, 43, 184, 309, 28, 322, 18,
+        4, 59, 5, 12, 8, 1, 16, 2,
+      ],
+      labels: [
+        'คณะเกษตรและเทคโนโลยี',
+        'คณะครุศาสตร์',
+        'คณะเทคโนโลยีอุตสาหกรรม',
+        'คณะวิทยาการจัดการและเทคโนโลยีสารสนเทศ',
+        'คณะวิทยาศาสตร์',
+        'คณะวิศวกรรมศาสตร์',
+        'คณะศิลปกรรมศาสตร์และวิทยาศาสตร์',
+        'งานวิชาศึกษาทั่วไป',
+        'โรงเรียนสาธิตแห่งมหาวิทยาลัยนครพนม พนมพิทยพัฒน์',
+        'วิทยาลัยการท่องเที่ยวและอุตสาหกรรมบริการ',
+        'วิทยาลัยการบิน การศึกษา และวิจัยนานาชาติ',
+        'วิทยาลัยเทคโนโลยีอุตสาหกรรมศรีสงคราม',
+        'วิทยาลัยธาตุพนม',
+        'วิทยาลัยนาหว้า',
+        'วิทยาลัยพยาบาลบรมราชชนนีนครพนม',
+        'ศูนย์การศึกษามหาวิทยาลัยนครพนม ณ กรุงเทพมหานคร',
+        'สถาบันภาษา',
+        'สถาบันวิจัยและพัฒนา',
+        'สำนักงานอธิการบดี',
+        'สำนักงานอธิการบดี-กองกลาง',
+        'สำนักงานอธิการบดี-กองบริหารทรัพยากรบุคคล',
+        'สำนักงานอธิการบดี-กองบริหารวิชาการ',
+        'สำนักงานอธิการบดี-กองพัฒนานักศึกษา',
+        'สำนักวิทยบริการ',
+      ],
+      chart: {
+        type: 'donut',
+        height: 540,
+        width: '100%',
+        animations: {
+          enabled: true,
+        },
+      },
+      legend: {
+        position: 'right',
+      },
+      plotOptions: {
+        pie: {
+          donut: {
+            size: '40%',
+          },
+          dataLabels: {
+            offset: 12, // ⬅ ดัน label ออกนอกวง
+            minAngleToShowLabel: 10,
+          },
+        },
+      },
+      dataLabels: {
+        enabled: true,
+      },
+      responsive: [
+        {
+          breakpoint: 768,
+          options: {
+            legend: {
+              position: 'bottom',
+            },
+          },
+        },
+      ],
+      colors: this.colors,
+    },
+    {
+      title: 'กราฟสรุปจำนวนนวัตกรรมสิ่งประดิษฐ์ จำแนกตามหน่วยงาน',
+      subtitle: this.getLastUpdatedText(),
+      series: [3, 5, 9, 2, 3, 5, 2, 6, 5, 61, 31, 1, 42],
+      labels: [
+        'คณะเกษตรและเทคโนโลยี',
+        'คณะครุศาสตร์',
+        'คณะเทคโนโลยีอุตสาหกรรม',
+        'คณะวิทยาการจัดการและเทคโนโลยีสารสนเทศ',
+        'คณะวิทยาศาสตร์',
+        'คณะวิศวกรรมศาสตร์',
+        'คณะศิลปกรรมศาสตร์และวิทยาศาสตร์',
+        'โรงเรียนสาธิตแห่งมหาวิทยาลัยนครพนม พนมพิทยพัฒน์',
+        'วิทยาลัยเทคโนโลยีอุตสาหกรรมศรีสงคราม',
+        'วิทยาลัยธาตุพนม',
+        'วิทยาลัยนาหว้า',
+        'วิทยาลัยพยาบาลบรมราชชนนีนครพนม',
+        'สำนักงานอธิการบดี-กองกลาง',
+      ],
+      chart: {
+        type: 'donut',
+        height: 540,
+        width: '100%',
+        animations: {
+          enabled: true,
+        },
+      },
+      legend: {
+        position: 'right',
+      },
+      plotOptions: {
+        pie: {
+          donut: {
+            size: '40%',
+          },
+          dataLabels: {
+            offset: 12, // ⬅ ดัน label ออกนอกวง
+            minAngleToShowLabel: 10,
+          },
+        },
+      },
+      dataLabels: {
+        enabled: true,
+      },
+      responsive: [
+        {
+          breakpoint: 768,
+          options: {
+            legend: {
+              position: 'bottom',
+            },
+          },
+        },
+      ],
+      colors: this.colors,
+    },
+  ];
+
+  getLastUpdatedText(): string {
+    const now = new Date();
+
+    const date = now.toLocaleDateString('th-TH', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    });
+
+    const time = now.toLocaleTimeString('th-TH', {
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+
+    return `ข้อมูล ณ วันที่ ${date} เวลา ${time} น.`;
+  }
+
+  newsList: News[] = [
+    {
+      title: 'มหาวิทยาลัยนครพนม เปิดรับข้อเสนอโครงการวิจัย ปี 2568',
+      summary:
+        'เปิดรับข้อเสนอโครงการวิจัยเพื่อขอรับทุนสนับสนุน ประจำปีงบประมาณ 2568',
+      imageUrl: 'assets/news1.jpg',
+      link: '#',
+    },
+    {
+      title: 'ประกาศผลการพิจารณาทุนวิจัย รอบที่ 2',
+      summary: 'ประกาศรายชื่อผู้ได้รับทุนวิจัย รอบที่ 2 ประจำปีงบประมาณ 2567',
+      imageUrl: 'assets/news2.jpg',
+      link: '#',
+    },
+    {
+      title: 'ขอเชิญเข้าร่วมอบรมการเขียนบทความวิจัย',
+      summary: 'อบรมการเขียนบทความวิจัยเพื่อตีพิมพ์ในวารสารระดับนานาชาติ',
+      imageUrl: 'assets/news.jpeg',
+      link: '#',
+    },
+  ];
+
+  publications: Publication[] = [
+    {
+      photo: '/assets/logoNPU.png',
+      name: 'ดร.เศริยา มั่งมี',
+      career_path: 'วิชาการ',
+      position: 'อาจารย์',
+      faculty: 'คณะเกษตรและเทคโนโลยี'
+    },
+    {
+      photo: '/assets/logoNPU.png',
+      name: 'ดร.เศริยา มั่งมี',
+      career_path: 'วิชาการ',
+      position: 'อาจารย์',
+      faculty: 'คณะเกษตรและเทคโนโลยี'
+    },
+    {
+      photo: '/assets/logoNPU.png',
+      name: 'ดร.เศริยา มั่งมี',
+      career_path: 'วิชาการ',
+      position: 'อาจารย์',
+      faculty: 'คณะเกษตรและเทคโนโลยี'
+    },
+    {
+      photo: '/assets/logoNPU.png',
+      name: 'ผศ.สมชาย ใจดีผศ.สมชาย ใจดีผศ.สมชาย ใจดีผศ.สมชาย ใจดี',
+      career_path: 'วิชาการ',
+      position: 'ผู้ช่วยศาสตราจารย์',
+      faculty: 'คณะวิทยาศาสตร์'
+    },
+    {
+      photo: '/assets/logoNPU.png',
+      name: 'ดร.สมหญิง แก้วใส',
+      career_path: 'วิชาการ',
+      position: 'ผู้ช่วยศาสตราจารย์',
+      faculty: 'คณะวิศวกรรมศาสตร์'
+    },
+  ];
+
+  pageSize = 10;
+  currentPage = 1;
+  // เก็บหน้าปัจจุบันแยกตามคณะ
+facultyPage: { [faculty: string]: number } = {};
+
+getTotalPages(faculty: string, list: any[]): number {
+  if (!list || list.length === 0) {
+    return 1;
+  }
+  return Math.ceil(list.length / this.pageSize);
+}
+
+  getPaginatedData(faculty: string, list: any[]) {
+    const page = this.facultyPage[faculty] || 1;
+    const start = (page - 1) * this.pageSize;
+    return list.slice(start, start + this.pageSize);
+  }
+  
+  changePage(faculty: string, page: number) {
+    this.facultyPage[faculty] = page;
+  }
+}

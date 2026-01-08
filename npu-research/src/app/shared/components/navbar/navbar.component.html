@@ -1,0 +1,432 @@
+<nav class="text-black bg-gray-200 font-serif">
+  <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 cursor-pointer p-2">
+    <div class="flex items-center justify-between h-16">
+      <div class="flex items-center">
+        <img
+          src="assets/logoNPU.png"
+          alt="NPU Logo"
+          class="h-15 w-15 object-contain shrink-0 mr-2"
+        />
+        <div>
+          <h1 class="text-2xl">ระบบฐานข้อมูลวิจัย มหาวิทยาลัยนครพนม</h1>
+          <p class="text-sm underline">Research Database System</p>
+        </div>
+      </div>
+      <div>
+        <a
+          routerLink="/login"
+          class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium ml-10 hover:text-blue-400"
+          ><i class="bi bi-box-arrow-in-right mr-1"></i>เข้าสู่ระบบ</a
+        >
+      </div>
+    </div>
+  </div>
+
+  <!-- Menu Bar -->
+  <div
+    class="flex justify-center items-center flex-wrap text-black bg-linear-to-r from-amber-600 to-yellow-400"
+  >
+    <div class="hidden md:block m-2">
+      <div class="flex flex-wrap items-baseline space-x-2">
+        <a
+          routerLink=""
+          class="hover:bg-gray-50 px-1 py-2 rounded-md text-sm font-medium"
+          ><i class="bi bi-house mr-1"></i>หน้าหลัก</a
+        >
+        <a
+          routerLink=""
+          class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium"
+          ><i class="bi bi-layers-half mr-1"></i>งานวิจัย</a
+        >
+        <a
+          routerLink=""
+          class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium"
+          ><i class="bi bi-book mr-1"></i>บทความ/วารสาร</a
+        >
+        <a
+          routerLink=""
+          class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium"
+          ><i class="bi bi-award mr-1"></i>นวัตกรรมสิ่งประดิษฐ์</a
+        >
+        <a
+          routerLink=""
+          class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium"
+          ><i class="bi bi-rss mr-1"></i>ข่าวประชาสัมพันธ์</a
+        >
+        <a
+          routerLink=""
+          class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium"
+          ><i class="bi bi-cloud-arrow-down mr-1"></i>เอกสารดาว์โหลด</a
+        >
+
+        <div class="relative group">
+          <a
+            routerLink=""
+            class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium"
+            ><i class="bi bi-graph-up mr-1"></i>สถิติ/รายงาน</a
+          >
+          <div
+            class="absolute left-0 mt-2
+            opacity-0 invisible
+            group-hover:opacity-100 group-hover:visible
+            transition-all duration-200 delay-150
+            bg-gray-700 text-white rounded-md shadow-lg
+            w-max min-w-45 z-50"
+          >
+            <a routerLink="" class="block px-4 py-2 hover:bg-gray-600"
+              >รายงานข้อมูลประวัตินักวิจัย</a
+            >
+            <a routerLink="" class="block px-4 py-2 hover:bg-gray-600"
+              >รายงานข้อมูลผลงานวิจัย</a
+            >
+            <a routerLink="" class="block px-4 py-2 hover:bg-gray-600"
+              >รายงานข้อมูลจำนวนนักวิจัยแยกตามสาขาเชี่ยวชาญ</a
+            >
+            <a routerLink="" class="block px-4 py-2 hover:bg-gray-600"
+              >รายงานข้อมูลจำนวนนักวิจัยแยกตามหน่วยงานที่สังกัด</a
+            >
+            <a routerLink="" class="block px-4 py-2 hover:bg-gray-600"
+              >รายงานข้อมูลจำนวนนักวิจัยแยกตามประเภทนักวิจัย</a
+            >
+          </div>
+        </div>
+        <div class="relative group">
+          <a
+            routerLink=""
+            class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium cursor-pointer"
+            ><i class="bi bi-file-earmark-text mr-1"></i>คู่มือการใช้งาน</a
+          >
+          <div
+            class="absolute left-0 mt-2
+            opacity-0 invisible
+            group-hover:opacity-100 group-hover:visible
+            transition-all duration-200 delay-150
+            bg-gray-700 text-white rounded-md shadow-lg
+            w-max min-w-45 z-50"
+          >
+            <a routerLink="" class="block px-4 py-2 hover:bg-gray-600"
+              >สำหรับนักวิจัย</a
+            >
+            <a routerLink="" class="block px-4 py-2 hover:bg-gray-600"
+              >สำหรับแอดมิน</a
+            >
+            <a routerLink="" class="block px-4 py-2 hover:bg-gray-600"
+              >สำหรับผู้บริหาร</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="md:hidden">
+    <button
+      class="block text-gray-400 hover:text-white focus:outline-none focus:text-white"
+    >
+      <svg
+        class="h-6 w-6"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M4 6h16M4 12h16m-7 6h7"
+        />
+      </svg>
+    </button>
+  </div>
+</nav>
+
+<br />
+
+<!-- Navbar User -->
+<nav class="text-black bg-gray-200 font-serif">
+  <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 cursor-pointer p-2">
+    <div class="flex items-center justify-between h-16">
+      <div class="flex items-center">
+        <img
+          src="assets/logoNPU.png"
+          alt="NPU Logo"
+          class="h-15 w-15 object-contain shrink-0 mr-2"
+        />
+        <div>
+          <h1 class="text-2xl">ระบบฐานข้อมูลวิจัย มหาวิทยาลัยนครพนม</h1>
+          <p class="text-sm underline">Research Database System</p>
+        </div>
+      </div>
+      <div>
+        <a
+          routerLink="/login"
+          class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium ml-10"
+          ><i class="bi bi-person mr-1"></i>นายทดสอบ เริ่มเลย</a
+        >
+        <a
+          routerLink="/login"
+          class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium ml-10 hover:text-red-400"
+          ><i class="bi bi-box-arrow-left mr-1"></i>ออกจากระบบ</a
+        >
+      </div>
+    </div>
+  </div>
+
+  <!-- Menu Bar -->
+  <div
+    class="flex justify-between items-center flex-wrap bg-linear-to-r from-amber-600 to-yellow-400"
+  >
+    <div class="hidden md:block m-2 ml-10">
+      <div class="ml-5 flex flex-wrap items-baseline space-x-1">
+        <a
+          routerLink="/dashboard"
+          class="hover:bg-gray-50 px-1 py-2 rounded-md text-sm font-medium"
+          ><i class="bi bi-house mr-1"></i>หน้าหลัก</a
+        >
+        <a
+          routerLink=""
+          class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium"
+          ><i class="bi bi-person mr-1"></i>โปรไฟล์</a
+        >
+        <div class="relative group">
+          <a
+            routerLink=""
+            class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium"
+          >
+            <i class="bi bi-floppy mr-1"></i>บันทึกผลงาน
+          </a>
+        
+          <div
+            class="
+              absolute left-0 mt-2
+              opacity-0 invisible
+              group-hover:opacity-100 group-hover:visible
+              transition-all duration-200 delay-150
+              bg-gray-700 text-white rounded-md shadow-lg
+              w-max min-w-45 z-50
+            "
+          >
+            <a routerLink="/user-add-research" class="block px-4 py-2 hover:bg-gray-600">
+              โครงการงานวิจัย
+            </a>
+            <a routerLink="/user-add-aticle" class="block px-4 py-2 hover:bg-gray-600">
+              บทความ/วารสาร
+            </a>
+            <a routerLink="/user-add-innovation" class="block px-4 py-2 hover:bg-gray-600">
+              นวัตกรรมสิ่งประดิษฐ์
+            </a>
+          </div>
+        </div>
+        
+        <a
+          routerLink="user-research"
+          class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium"
+          ><i class="bi bi-search mr-1"></i>ค้นหางานวิจัย</a
+        >
+        <a
+          routerLink="/user-researchers"
+          class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium"
+          ><i class="bi bi-search mr-1"></i>ค้นหาข้อมูลนักวิจัย</a
+        >
+      </div>
+    </div>
+  </div>
+
+  <div class="md:hidden">
+    <button
+      class="block text-gray-400 hover:text-white focus:outline-none focus:text-white"
+    >
+      <svg
+        class="h-6 w-6"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M4 6h16M4 12h16m-7 6h7"
+        />
+      </svg>
+    </button>
+  </div>
+</nav>
+
+<br />
+
+<!-- Navbar Admin -->
+<nav class="text-black bg-gray-200 font-serif">
+  <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 cursor-pointer p-2">
+    <div class="flex items-center justify-between h-16">
+      <div class="flex items-center">
+        <img
+          src="assets/logoNPU.png"
+          alt="NPU Logo"
+          class="h-15 w-15 object-contain shrink-0 mr-2"
+        />
+        <div>
+          <h1 class="text-2xl">
+            <span
+              class="bg-linear-to-r from-amber-600 to-yellow-400 bg-clip-text text-transparent"
+              >ระบบฐานข้อมูลวิจัย มหาวิทยาลัยนครพนม</span
+            >
+          </h1>
+          <p
+            class="text-sm bg-linear-to-r from-amber-600 to-yellow-400 bg-clip-text text-transparent underline decoration-amber-500 decoration-2"
+          >
+            Research Database System
+          </p>
+        </div>
+      </div>
+      <div>
+        <a
+          routerLink="/login"
+          class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium ml-10"
+          ><i class="bi bi-person mr-1"></i>นายทดสอบ เริ่มเลย</a
+        >
+        <a
+          routerLink="/login"
+          class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium ml-10 hover:text-red-400"
+          ><i class="bi bi-box-arrow-left mr-1"></i>ออกจากระบบ</a
+        >
+      </div>
+    </div>
+  </div>
+
+  <!-- Menu Bar -->
+  <div
+    class="flex justify-between items-center flex-wrap bg-linear-to-r from-amber-600 to-yellow-400"
+  >
+    <div class="hidden md:block m-2 ml-10">
+      <div class="ml-5 flex flex-wrap items-baseline space-x-1">
+        <a
+          routerLink=""
+          class="hover:bg-gray-50 px-1 py-2 rounded-md text-sm font-medium"
+          ><i class="bi bi-house mr-1"></i>หน้าหลัก</a
+        >
+        <!-- <a
+            routerLink=""
+            class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium"
+            ><i class="bi bi-person mr-1"></i>โปรไฟล์</a
+          > -->
+
+        <!-- ข้อมูลพื้นฐาน -->
+        <div class="relative group">
+          <a
+            routerLink=""
+            class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium"
+            ><i class="bi bi-gear mr-1"></i>ข้อมูลพื้นฐาน</a
+          >
+          <div
+            class="absolute left-0 mt-2
+            opacity-0 invisible
+            group-hover:opacity-100 group-hover:visible
+            transition-all duration-200 delay-150
+            bg-gray-700 text-white rounded-md shadow-lg
+            w-max min-w-45 z-50"
+          >
+            <a routerLink="" class="block px-4 py-2 hover:bg-gray-600"
+              >แหล่งทุนภายนอก</a
+            >
+            <a routerLink="" class="block px-4 py-2 hover:bg-gray-600"
+              >สาขาวิชาที่เชี่ยวชาญ</a
+            >
+          </div>
+        </div>
+
+        <!-- จัดการข่าว -->
+        <div class="relative group">
+          <a
+            routerLink=""
+            class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium"
+            ><i class="bi bi-newspaper mr-1"></i>จัดการข่าว/ประกาศ</a
+          >
+          <div
+            class="absolute left-0 mt-2
+            opacity-0 invisible
+            group-hover:opacity-100 group-hover:visible
+            transition-all duration-200 delay-150
+            bg-gray-700 text-white rounded-md shadow-lg
+            w-max min-w-45 z-50"
+          >
+            <a routerLink="" class="block px-4 py-2 hover:bg-gray-600"
+              >ข่าวประชาสัมพันธ์</a
+            >
+            <a routerLink="" class="block px-4 py-2 hover:bg-gray-600"
+              >ข่าวประชาสัมพันธ์ POP UP</a
+            >
+            <a routerLink="" class="block px-4 py-2 hover:bg-gray-600"
+              >เอกสารดาว์โหลด</a
+            >
+          </div>
+        </div>
+
+        <!-- บันทึกข้อมูลผลงาน -->
+        <div class="relative group">
+          <a
+            routerLink=""
+            class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium"
+            ><i class="bi bi-floppy mr-1"></i>บันทึกผลงาน</a
+          >
+          <div
+            class="absolute left-0 mt-2
+            opacity-0 invisible
+            group-hover:opacity-100 group-hover:visible
+            transition-all duration-200 delay-150
+            bg-gray-700 text-white rounded-md shadow-lg
+            w-max min-w-45 z-50"
+          >
+            <a routerLink="/user-add-research" class="block px-4 py-2 hover:bg-gray-600"
+              >โครงการงานวิจัย</a
+            >
+            <a routerLink="/user-add-aticle" class="block px-4 py-2 hover:bg-gray-600"
+              >บทความ/วารสาร</a
+            >
+            <a routerLink="/user-add-innovation" class="block px-4 py-2 hover:bg-gray-600"
+              >นวัตกรรมสิ่งประดิษฐ์</a
+            >
+          </div>
+        </div>
+
+        <a
+          routerLink="/user-research"
+          class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium"
+          ><i class="bi bi-search mr-1"></i>ค้นหางานวิจัย</a
+        >
+        <a
+          routerLink="/user-researchers"
+          class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium"
+          ><i class="bi bi-search mr-1"></i>ค้นหาข้อมูลนักวิจัย</a
+        >
+        <a
+          routerLink=""
+          class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium"
+          ><i class="bi bi-file-earmark-text mr-1"></i>รายงาน</a
+        >
+      </div>
+    </div>
+  </div>
+
+  <div class="md:hidden">
+    <button
+      class="block text-gray-400 hover:text-white focus:outline-none focus:text-white"
+    >
+      <svg
+        class="h-6 w-6"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M4 6h16M4 12h16m-7 6h7"
+        />
+      </svg>
+    </button>
+  </div>
+</nav>
