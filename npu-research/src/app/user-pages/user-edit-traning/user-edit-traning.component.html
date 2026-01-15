@@ -1,0 +1,243 @@
+<div class="bg-gray-100 min-h-screen p-6">
+  <div class="max-w-7xl mx-auto bg-white rounded-2xl shadow p-8 space-y-10">
+    <!-- Header -->
+    <div>
+      <h1 class="text-3xl text-gray-800">แก้ไขข้อมูลนักวิจัย</h1>
+      <div class="flex items-center gap-2 mt-3 text-indigo-600">
+        <i class="bi bi-pencil-square"></i>
+        <span>ข้อมูลการฝึกอบรม</span>
+      </div>
+      <hr class="mt-4" />
+    </div>
+
+    <!-- === Content=== -->
+    <!-- ปุ่ม -->
+    <div class="flex justify-end">
+      <button
+        (click)="openModalAdd()"
+        type="button"
+        class="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition cursor-pointer"
+      >
+        <i class="bi bi-plus"></i><span>เพิ่มข้อมูลการฝึกอบรม</span>
+      </button>
+    </div>
+
+    <!-- ตาราง -->
+    <div class="w-full overflow-x-auto">
+      <table
+        class="min-w-255 w-full border border-gray-300 rounded-lg overflow-hidden"
+      >
+        <thead>
+          <tr class="bg-[#FACC15] text-[#1E293B] border-b">
+            <th class="p-3 whitespace-nowrap text-left">ชื่อหัวข้อการอบรม</th>
+            <th class="p-3 whitespace-nowrap text-left">
+              จัดโดย (หน่วยงานที่จัด)
+            </th>
+            <th class="p-3 whitespace-nowrap text-left">สถานที่จัดอบรม</th>
+            <th class="p-3 whitespace-nowrap text-left">ปีที่จัดอบรม</th>
+            <th class="p-3 whitespace-nowrap text-left"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border-b hover:bg-gray-50 transition">
+            <td class="p-3 max-w-87.5 wrap-break-word">TopGunNer</td>
+            <td class="p-3 max-w-87.5 wrap-break-word">Islander</td>
+            <td class="p-3 max-w-87.5 wrap-break-word">Nakhon</td>
+            <td class="p-3 max-w-87.5 wrap-break-word">2025</td>
+            <td class="p-3 max-w-87.5 wrap-break-word">
+              <i
+                (click)="openModalEdit()"
+                class="bi bi-pencil mr-3 text-sky-500 hover:text-sky-700 cursor-pointer"
+              ></i
+              ><i
+              (click)="deleteTraining()"
+                class="bi bi-trash3 text-red-500 hover:text-red-700 cursor-pointer"
+              ></i>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ปุ่ม -->
+    <div class="flex justify-center mt-6">
+      <button
+        type="submit"
+        (click)="save()"
+        class="px-6 py-2 bg-[#FDE68A] text-[#1E293B] hover:bg-[#FACC15] rounded-md transition cursor-pointer"
+      >
+        บันทึกข้อมูล
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Modal Add Traning ===== -->
+<div
+  *ngIf="isModalAdd"
+  class="fixed inset-0 flex items-center justify-center bg-black/40 z-40"
+>
+  <!-- Modal Box -->
+  <div class="bg-white w-full max-w-lg rounded-2xl shadow-lg p-6 z-50 relative">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-lg">เพิ่มข้อมูลการฝึกอบรม</h2>
+      <button
+        (click)="closeModalAdd()"
+        class="text-gray-400 hover:text-gray-600"
+      >
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <div class="space-y-4">
+      <input
+        type="text"
+        placeholder="ชื่อหัวข้อการอบรม"
+        class="w-full border rounded-lg px-3 py-2"
+      />
+      <div class="relative">
+        <button
+          (click)="toggle('location')"
+          type="button"
+          class="w-full border rounded-lg px-3 py-2 flex justify-between items-center"
+        >
+          {{ selectedLocation || "เลือกสถานที่" }}
+          <i class="bi bi-chevron-down"></i>
+        </button>
+
+        <div
+          *ngIf="isOpen('location')"
+          class="absolute left-0 mt-1 z-50 w-full bg-white border rounded-lg shadow"
+        >
+          <input
+            [(ngModel)]="searchLocation"
+            placeholder="ค้นหา..."
+            class="w-full px-3 py-2 border-b"
+          />
+          <ul class="max-h-48 overflow-y-auto">
+            <li
+              *ngFor="let l of filteredLocation()"
+              (click)="selectLocation(l)"
+              class="px-4 py-2 hover:bg-indigo-50 cursor-pointer"
+            >
+              {{ l }}
+            </li>
+            <li
+              *ngIf="filteredLocation().length === 0"
+              class="px-4 py-2 text-gray-400"
+            >
+              ไม่พบข้อมูล
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <input
+        type="text"
+        placeholder="สถานที่จัดอบรม"
+        class="w-full border rounded-lg px-3 py-2"
+      />
+      <input
+        type="text"
+        placeholder="ปีที่จัดอบรม"
+        class="w-full border rounded-lg px-3 py-2"
+      />
+    </div>
+    <!-- ปุ่ม -->
+    <div class="flex justify-center mt-6">
+      <button
+        type="submit"
+        (click)="saveAdd()"
+        class="px-6 py-2 bg-[#FDE68A] text-[#1E293B] hover:bg-[#FACC15] rounded-md transition cursor-pointer"
+      >
+        เพิ่มข้อมูล
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Modal Edit Traning ===== -->
+<div
+  *ngIf="isModalEdit"
+  class="fixed inset-0 flex items-center justify-center bg-black/40 z-40"
+>
+  <!-- Modal Box -->
+  <div class="bg-white w-full max-w-lg rounded-2xl shadow-lg p-6 z-50 relative">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-lg">แก้ไขข้อมูลการฝึกอบรม</h2>
+      <button
+        (click)="closeModalEdit()"
+        class="text-gray-400 hover:text-gray-600"
+      >
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <div class="space-y-4">
+      <input
+        type="text"
+        placeholder="ชื่อหัวข้อการอบรม"
+        class="w-full border rounded-lg px-3 py-2"
+      />
+      <div class="relative">
+        <button
+          (click)="toggle('location')"
+          type="button"
+          class="w-full border rounded-lg px-3 py-2 flex justify-between items-center"
+        >
+          {{ selectedLocation || "เลือกสถานที่" }}
+          <i class="bi bi-chevron-down"></i>
+        </button>
+
+        <div
+          *ngIf="isOpen('location')"
+          class="absolute left-0 mt-1 z-50 w-full bg-white border rounded-lg shadow"
+        >
+          <input
+            [(ngModel)]="searchLocation"
+            placeholder="ค้นหา..."
+            class="w-full px-3 py-2 border-b"
+          />
+          <ul class="max-h-48 overflow-y-auto">
+            <li
+              *ngFor="let l of filteredLocation()"
+              (click)="selectLocation(l)"
+              class="px-4 py-2 hover:bg-indigo-50 cursor-pointer"
+            >
+              {{ l }}
+            </li>
+            <li
+              *ngIf="filteredLocation().length === 0"
+              class="px-4 py-2 text-gray-400"
+            >
+              ไม่พบข้อมูล
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <input
+        type="text"
+        placeholder="สถานที่จัดอบรม"
+        class="w-full border rounded-lg px-3 py-2"
+      />
+      <input
+        type="text"
+        placeholder="ปีที่จัดอบรม"
+        class="w-full border rounded-lg px-3 py-2"
+      />
+    </div>
+    <!-- ปุ่ม -->
+    <div class="flex justify-center mt-6">
+      <button
+        type="submit"
+        (click)="saveEdit()"
+        class="px-6 py-2 bg-[#FDE68A] text-[#1E293B] hover:bg-[#FACC15] rounded-md transition cursor-pointer"
+      >
+        บันทึกข้อมูล
+      </button>
+    </div>
+  </div>
+</div>

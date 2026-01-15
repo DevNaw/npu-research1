@@ -12,6 +12,7 @@ import {
 import Swal from 'sweetalert2';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { Router } from '@angular/router';
 
 export interface PieChartConfig {
   title: string;
@@ -52,6 +53,7 @@ export class UserDashboardComponent {
     18.2, 12.5, 10.8, 8.6, 7.4, 6.2, 5.5, 4.8, 4.1, 3.7, 3.2, 2.8, 2.4, 2.1,
     1.9, 1.6, 1.3, 1.1, 0.9, 0.8, 0.7,
   ];
+
   colors: string[] = [
     '#4C78A8', // น้ำเงิน
     '#72B7B2', // เขียวอมฟ้า
@@ -183,7 +185,8 @@ export class UserDashboardComponent {
       title: 'กราฟสรุปจำนวนบทความ จำแนกตามหน่วยงาน',
       subtitle: this.getLastUpdatedText(),
       series: [
-        124, 611, 505, 225, 382, 206, 560, 5, 17, 80, 43, 184, 309, 28, 322, 18, 4, 59, 5, 12, 8, 1, 16, 2
+        124, 611, 505, 225, 382, 206, 560, 5, 17, 80, 43, 184, 309, 28, 322, 18,
+        4, 59, 5, 12, 8, 1, 16, 2,
       ],
       labels: [
         'คณะเกษตรและเทคโนโลยี',
@@ -251,9 +254,7 @@ export class UserDashboardComponent {
     {
       title: 'กราฟสรุปจำนวนนวัตกรรมสิ่งประดิษฐ์ จำแนกตามหน่วยงาน',
       subtitle: this.getLastUpdatedText(),
-      series: [
-        3, 5, 9, 2, 3, 5, 2, 6, 5, 61, 31, 1, 42
-      ],
+      series: [3, 5, 9, 2, 3, 5, 2, 6, 5, 61, 31, 1, 42],
       labels: [
         'คณะเกษตรและเทคโนโลยี',
         'คณะครุศาสตร์',
@@ -310,40 +311,41 @@ export class UserDashboardComponent {
 
   getLastUpdatedText(): string {
     const now = new Date();
-  
+
     const date = now.toLocaleDateString('th-TH', {
       day: 'numeric',
       month: 'long',
-      year: 'numeric'
+      year: 'numeric',
     });
-  
+
     const time = now.toLocaleTimeString('th-TH', {
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
     });
-  
+
     return `ข้อมูล ณ วันที่ ${date} เวลา ${time} น.`;
   }
 
   newsList: News[] = [
     {
       title: 'มหาวิทยาลัยนครพนม เปิดรับข้อเสนอโครงการวิจัย ปี 2568',
-      summary: 'เปิดรับข้อเสนอโครงการวิจัยเพื่อขอรับทุนสนับสนุน ประจำปีงบประมาณ 2568',
+      summary:
+        'เปิดรับข้อเสนอโครงการวิจัยเพื่อขอรับทุนสนับสนุน ประจำปีงบประมาณ 2568',
       imageUrl: 'assets/news1.jpg',
-      link: '#'
+      link: 'news/:id',
     },
     {
       title: 'ประกาศผลการพิจารณาทุนวิจัย รอบที่ 2',
       summary: 'ประกาศรายชื่อผู้ได้รับทุนวิจัย รอบที่ 2 ประจำปีงบประมาณ 2567',
       imageUrl: 'assets/news2.jpg',
-      link: '#'
+      link: 'news/:id',
     },
     {
       title: 'ขอเชิญเข้าร่วมอบรมการเขียนบทความวิจัย',
       summary: 'อบรมการเขียนบทความวิจัยเพื่อตีพิมพ์ในวารสารระดับนานาชาติ',
       imageUrl: 'assets/news.jpeg',
-      link: '#'
-    }
+      link: 'news/:id',
+    },
   ];
 
   publications: Publication[] = [
@@ -352,111 +354,127 @@ export class UserDashboardComponent {
       researchers: 'ดร.เศริยา มั่งมี',
       journal: 'วารสารวิจัยมหาวิทยาลัยนครพนม',
       publishDate: '30 มิ.ย. 2567',
-      year: 2567
+      year: 2567,
     },
     {
       title: 'ผลกระทบของการเปลี่ยนแปลงสภาพภูมิอากาศต่อการเกษตร',
       researchers: 'ผศ.สมชาย ใจดีผศ.สมชาย ใจดีผศ.สมชาย ใจดีผศ.สมชาย ใจดี',
       journal: 'วารสารวิทยาศาสตร์และเทคโนโลยี',
       publishDate: '15 มี.ค. 2567',
-      year: 2567
+      year: 2567,
     },
     {
       title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
       researchers: 'ดร.สมหญิง แก้วใส',
       journal: 'วารสารพลังงานทดแทน',
       publishDate: '10 ก.พ. 2567',
-      year: 2567
+      year: 2567,
     },
     {
       title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
       researchers: 'ดร.สมหญิง แก้วใส',
       journal: 'วารสารพลังงานทดแทน',
       publishDate: '10 ก.พ. 2567',
-      year: 2567
+      year: 2567,
     },
     {
       title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
       researchers: 'ดร.สมหญิง แก้วใส',
       journal: 'วารสารพลังงานทดแทน',
       publishDate: '10 ก.พ. 2567',
-      year: 2567
+      year: 2567,
     },
     {
-      title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
+      title:
+        'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
       researchers: 'ดร.สมหญิง แก้วใส',
       journal: 'วารสารพลังงานทดแทน',
       publishDate: '10 ก.พ. 2567',
-      year: 2567
-    },
-    {
-      title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
-      researchers: 'ดร.สมหญิง แก้วใส',
-      journal: 'วารสารพลังงานทดแทน',
-      publishDate: '10 ก.พ. 2567',
-      year: 2567
+      year: 2567,
     },
     {
       title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
       researchers: 'ดร.สมหญิง แก้วใส',
       journal: 'วารสารพลังงานทดแทน',
       publishDate: '10 ก.พ. 2567',
-      year: 2567
+      year: 2567,
     },
     {
       title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
       researchers: 'ดร.สมหญิง แก้วใส',
       journal: 'วารสารพลังงานทดแทน',
       publishDate: '10 ก.พ. 2567',
-      year: 2567
+      year: 2567,
     },
     {
       title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
       researchers: 'ดร.สมหญิง แก้วใส',
       journal: 'วารสารพลังงานทดแทน',
       publishDate: '10 ก.พ. 2567',
-      year: 2567
+      year: 2567,
     },
     {
       title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
       researchers: 'ดร.สมหญิง แก้วใส',
       journal: 'วารสารพลังงานทดแทน',
       publishDate: '10 ก.พ. 2567',
-      year: 2567
+      year: 2567,
     },
     {
       title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
       researchers: 'ดร.สมหญิง แก้วใส',
       journal: 'วารสารพลังงานทดแทน',
       publishDate: '10 ก.พ. 2567',
-      year: 2567
+      year: 2567,
     },
     {
-      title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
+      title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
       researchers: 'ดร.สมหญิง แก้วใส',
       journal: 'วารสารพลังงานทดแทน',
       publishDate: '10 ก.พ. 2567',
-      year: 2567
+      year: 2567,
+    },
+    {
+      title:
+        'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
+      researchers: 'ดร.สมหญิง แก้วใส',
+      journal: 'วารสารพลังงานทดแทน',
+      publishDate: '10 ก.พ. 2567',
+      year: 2567,
     },
   ];
-  
+
+  constructor(private router: Router){}
+
   pageSize = 10;
-currentPage = 1;
+  currentPage = 1;
 
-get totalPages(): number {
-  return Math.ceil(this.publications.length / this.pageSize);
-}
+  get totalPages(): number {
+    return Math.ceil(this.publications.length / this.pageSize);
+  }
 
-get paginatedPublications() {
-  const startIndex = (this.currentPage - 1) * this.pageSize;
-  return this.publications.slice(startIndex, startIndex + this.pageSize);
-}
+  get paginatedPublications() {
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    return this.publications.slice(startIndex, startIndex + this.pageSize);
+  }
 
-changePage(page: number) {
-  if (page < 1 || page > this.totalPages) return;
-  this.currentPage = page;
-  // window.scrollTo({ top: 0, behavior: 'smooth' });
-}
+  changePage(page: number) {
+    if (page < 1 || page > this.totalPages) return;
+    this.currentPage = page;
+    // window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 
-  
+  // Nevigate to
+  goToResearch() {
+    this.router.navigateByUrl('/research');
+  }
+  goToAticle() {
+    this.router.navigateByUrl('/aticle');
+  }
+  goToInnovation() {
+    this.router.navigateByUrl('/innovation');
+  }
+  goToManual() {
+    this.router.navigateByUrl('/manual');
+  }
 }

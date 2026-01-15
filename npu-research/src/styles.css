@@ -1,2 +1,79 @@
 /* You can add global styles to this file, and also import other style files */
 @import "tailwindcss";
+
+body {
+    font-family: 'Sarabun', 'TH Sarabun New', 'TH Sarabun PSK', 'TH Niramit AS', 'TH KoHo', sans-serif;
+  }
+  
+  h1, h2, h3 {
+    font-family: 'TH Niramit AS', 'TH Chakra Petch', 'TH KoHo', 'Sarabun', sans-serif;
+  }
+
+  /* ซ่อน header ตอนปกติ */
+.hidden-print {
+  display: none;
+}
+
+@media print {
+  body * {
+    visibility: hidden !important;
+  }
+
+  #print-section,
+  #print-section * {
+    visibility: visible !important;
+  }
+
+  #print-section {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+
+  /* แสดงหัวรายงานเฉพาะตอนพิมพ์ */
+  .print-header {
+    display: block !important;
+    margin-bottom: 16px;
+  }
+
+  .print-header h2 {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 4px 0;
+  }
+
+  .print-header h3 {
+    font-size: 16px;
+    margin: 2px 0;
+  }
+
+  .print-header p {
+    font-size: 12px;
+    margin-top: 6px;
+  }
+
+  .print-logo {
+    height: 60px;
+    margin-bottom: 8px;
+  }
+
+  table {
+    border-collapse: collapse !important;
+    width: 100%;
+  }
+
+  th,
+  td {
+    border: 1px solid #000 !important;
+    padding: 6px !important;
+    color: #000 !important;
+  }
+
+  button,
+  input,
+  nav,
+  footer {
+    display: none !important;
+  }
+}

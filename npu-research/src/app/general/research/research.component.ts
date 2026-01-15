@@ -1,0 +1,103 @@
+import { Component } from '@angular/core';
+
+interface Research {
+  title: string;
+  researchers: string;
+}
+
+@Component({
+  selector: 'app-research',
+  standalone: false,
+  templateUrl: './research.component.html',
+  styleUrl: './research.component.css',
+})
+export class ResearchComponent {
+  pageSize = 10;
+  currentPage = 1;
+
+  searchText: string = '';
+
+  reseacrchs: Research[] = [
+    {
+      title: 'การพัฒนาระบบฐานข้อมูลวิจัย',
+      researchers: 'ดร.เศริยา มั่งมี',
+    },
+    {
+      title: 'ผลกระทบของการเปลี่ยนแปลงสภาพภูมิอากาศต่อการเกษตร',
+      researchers: 'ผศ.สมชาย ใจดีผศ.สมชาย ใจดีผศ.สมชาย ใจดีผศ.สมชาย ใจดี',
+    },
+    {
+      title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
+      researchers: 'ดร.สมหญิง แก้วใส',
+    },
+    {
+      title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
+      researchers: 'ดร.สมหญิง แก้วใส',
+    },
+    {
+      title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
+      researchers: 'ดร.สมหญิง แก้วใส',
+    },
+    {
+      title:
+        'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
+      researchers: 'ดร.สมหญิง แก้วใส',
+    },
+    {
+      title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
+      researchers: 'ดร.สมหญิง แก้วใส',
+    },
+    {
+      title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
+      researchers: 'ดร.สมหญิง แก้วใส',
+    },
+    {
+      title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
+      researchers: 'ดร.สมหญิง แก้วใส',
+    },
+    {
+      title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
+      researchers: 'ดร.สมหญิง แก้วใส',
+    },
+    {
+      title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
+      researchers: 'ดร.สมหญิง แก้วใส',
+    },
+    {
+      title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
+      researchers: 'ดร.สมหญิง แก้วใส',
+    },
+    {
+      title:
+        'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
+      researchers: 'ดร.สมหญิง แก้วใส',
+    },
+  ];
+
+  get totalPages(): number {
+    return Math.ceil(this.reseacrchs.length / this.pageSize);
+  }
+
+  get paginatedReseacrchs() {
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    return this.reseacrchs.slice(startIndex, startIndex + this.pageSize);
+  }
+
+  changePage(page: number) {
+    if (page < 1 || page > this.totalPages) return;
+    this.currentPage = page;
+    // window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  filteredReseacrchs = [...this.reseacrchs];
+
+  onSearch() {
+    const keyword = this.searchText.toLowerCase().trim();
+
+    this.filteredReseacrchs = this.reseacrchs.filter(
+      (p) =>
+        p.title.toLowerCase().includes(keyword) ||
+        p.researchers.toLowerCase().includes(keyword)
+    );
+  }
+}

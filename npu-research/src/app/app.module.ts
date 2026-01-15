@@ -15,9 +15,32 @@ import { UserDashboardComponent } from './user-pages/dashboard/dashboard.compone
 import { UserAddResearchComponent } from './user-pages/user-add-research/user-add-research.component';
 import { UserAddAticleComponent } from './user-pages/user-add-aticle/user-add-aticle.component';
 import { UserAddInnovationComponent } from './user-pages/user-add-innovation/user-add-innovation.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UserResearchComponent } from './user-pages/user-research/user-research.component';
 import { UserResearchersComponent } from './user-pages/user-researchers/user-researchers.component';
+import { UserProfileComponent } from './user-pages/user-profile/user-profile.component';
+import { UserEditProfileComponent } from './user-pages/user-edit-profile/user-edit-profile.component';
+import { UserEditStudyComponent } from './user-pages/user-edit-study/user-edit-study.component';
+import { UserEditTraningComponent } from './user-pages/user-edit-traning/user-edit-traning.component';
+import { UserEditAddressComponent } from './user-pages/user-edit-address/user-edit-address.component';
+import { ResearchComponent } from './general/research/research.component';
+import { AticleComponent } from './general/aticle/aticle.component';
+import { InnovationComponent } from './general/innovation/innovation.component';
+import { NewsComponent } from './general/news/news.component';
+import { DownloadComponent } from './general/download/download.component';
+import { NewsDetailComponent } from './general/news-detail/news-detail.component';
+import { ReportResearcherTypeComponent } from './general/report-researcher-type/report-researcher-type.component';
+import { ReportResearcherInstitutionComponent } from './general/report-researcher-institution/report-researcher-institution.component';
+import { ReportResearcherExpertiseComponent } from './general/report-researcher-expertise/report-researcher-expertise.component';
+import { ReportResearcherProfileComponent } from './general/report-researcher-profile/report-researcher-profile.component';
+import { ReportResearcherResearchComponent } from './general/report-researcher-research/report-researcher-research.component';
+import { ManualComponent } from './general/manual/manual.component';
+import { ExternalFundingComponent } from './admin-pages/external-funding/external-funding.component';
+import { SpecializationComponent } from './admin-pages/specialization/specialization.component';
+import { AdminNewsComponent } from './admin-pages/admin-news/admin-news.component';
+import { AdminDownloadComponent } from './admin-pages/admin-download/admin-download.component';
+import { AdminSearchResearcherComponent } from './admin-pages/admin-search-researcher/admin-search-researcher.component';
+import { AdminSearchPaperComponent } from './admin-pages/admin-search-paper/admin-search-paper.component';
 
 @NgModule({
   declarations: [
@@ -35,12 +58,36 @@ import { UserResearchersComponent } from './user-pages/user-researchers/user-res
     UserAddInnovationComponent,
     UserResearchComponent,
     UserResearchersComponent,
+    UserProfileComponent,
+    UserEditProfileComponent,
+    UserEditStudyComponent,
+    UserEditTraningComponent,
+    UserEditAddressComponent,
+    ResearchComponent,
+    AticleComponent,
+    InnovationComponent,
+    NewsComponent,
+    DownloadComponent,
+    NewsDetailComponent,
+    ReportResearcherTypeComponent,
+    ReportResearcherInstitutionComponent,
+    ReportResearcherExpertiseComponent,
+    ReportResearcherProfileComponent,
+    ReportResearcherResearchComponent,
+    ManualComponent,
+    ExternalFundingComponent,
+    SpecializationComponent,
+    AdminNewsComponent,
+    AdminDownloadComponent,
+    AdminSearchResearcherComponent,
+    AdminSearchPaperComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     NgApexchartsModule,
     FormsModule,
+    ReactiveFormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,11 +1,12 @@
 <div class="contain-content bg-gray-100 p-3">
     <div class="max-w-7xl mt-5 mx-auto px-20 py-10 bg-white rounded-xl shadow-md">
       <div class="max-w-7xl mx-auto px-6 py-10 rounded-xl">
-        <h2 class="text-2xl font-semibold mb-6">เพิ่มข้อมูลนวัตกรรมสิ่งประดิษฐ์</h2>
+        <h2 class="text-2xl font-semibold ">เพิ่มข้อมูลนวัตกรรมสิ่งประดิษฐ์</h2>
       </div>
+      <hr>
 
       <!-- ชื่อนวัตกรรม สิ่งประดิษฐ์ -->
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6 mt-10">
         <label class="md:col-span-1 font-medium text-end text-gray-700">
           ชื่อนวัตกรรม สิ่งประดิษฐ์ : <span class="text-red-500">*</span>
         </label>
@@ -115,7 +116,7 @@
             <div class="flex justify-center-safe mt-6 ">
               <button
                 type="button"
-                class="mt-4 px-4 py-2 bg-[#FDE68A] text-[#1E293B] hover:bg-[#FACC15] rounded-md"
+                class="mt-4 px-4 py-2 bg-[#FDE68A] text-[#1E293B] hover:bg-[#FACC15] rounded-md cursor-pointer"
                 (click)="addRow2()"
               >
                 เพิ่มรายการ
@@ -189,7 +190,7 @@
             <div class="flex justify-center-safe mt-6 ">
               <button
                 type="button"
-                class="mt-4 px-4 py-2 bg-[#FDE68A] text-[#1E293B] hover:bg-[#FACC15] rounded-md"
+                class="mt-4 px-4 py-2 bg-[#FDE68A] text-[#1E293B] hover:bg-[#FACC15] rounded-md cursor-pointer"
                 (click)="addRow()"
               >
                 เพิ่มรายการ
@@ -306,7 +307,7 @@
           </span>
           <button
             type="button"
-            class="px-4 py-2 bg-[#FDE68A] text-[#1E293B] hover:bg-[#FACC15] rounded-md"
+            class="px-4 py-2 bg-[#FDE68A] text-[#1E293B] hover:bg-[#FACC15] rounded-md cursor-pointer"
             (click)="reportFileInput.click()"
           >
             เลือกไฟล์
@@ -336,7 +337,7 @@
           </span>
           <button
             type="button"
-            class="px-4 py-2 bg-[#FDE68A] text-[#1E293B] hover:bg-[#FACC15]rounded-md"
+            class="px-4 py-2 bg-[#FDE68A] text-[#1E293B] hover:bg-[#FACC15] rounded-md cursor-pointer"
             (click)="fileInput.click()"
           >
             เลือกไฟล์
@@ -348,7 +349,7 @@
       <div class="flex justify-center mt-6">
         <button
           type="submit"
-          class="px-6 py-2 bg-[#FDE68A] text-[#1E293B] hover:bg-[#FACC15] rounded-md transition"
+          class="px-6 py-2 bg-[#FDE68A] text-[#1E293B] hover:bg-[#FACC15] rounded-md transition cursor-pointer"
         >
           บันทึกข้อมูล
         </button>

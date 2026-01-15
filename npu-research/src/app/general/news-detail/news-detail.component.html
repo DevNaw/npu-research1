@@ -1,0 +1,38 @@
+<div class="contain-content bg-gray-100 p-3">
+    <div class="max-w-7xl mx-auto px-2 py-10 bg-white rounded-xl">
+    
+    <div class="max-w-4xl mx-auto px-6 py-10">
+        <!-- Back Button -->
+        <button
+          routerLink="/news"
+          class="mb-6 text-sm text-gray-600 hover:text-orange-500 flex items-center gap-1 cursor-pointer"
+        >
+          ← กลับไปหน้าข่าวทั้งหมด
+        </button>
+      
+        <!-- Image -->
+        <img
+          [src]="news?.image"
+          alt=""
+          class="w-full h-96 object-cover rounded-xl shadow mb-6"
+        />
+      
+        <!-- Title -->
+        <h1 class="text-3xl font-bold text-gray-800 mb-2">
+          {{ news?.title }}
+        </h1>
+      
+        <!-- Date -->
+        <p class="text-gray-500 mb-6">
+          เผยแพร่เมื่อ {{ news?.date }}
+        </p>
+      
+        <!-- Content -->
+        <div class="prose max-w-none text-gray-700">
+          <p *ngFor="let paragraph of news?.content">
+            {{ paragraph }}
+          </p>
+        </div>
+      </div>
+    </div>
+</div>

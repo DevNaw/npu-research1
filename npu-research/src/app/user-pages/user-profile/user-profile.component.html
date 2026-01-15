@@ -1,0 +1,450 @@
+<div class="contain-content bg-gray-100 p-3 min-h-screen">
+  <!-- Heaer -->
+  <div class="flex items-center max-w-7xl mx-auto px-10">
+    <img src="/assets/logoNPU.png" class="w-30 h-40 mr-6" />
+    <div>
+      <h1 class="text-3xl">นาวิน พรมรัตน์</h1>
+      <h2 class="text-lg italic font-script">Nawin Phromrat</h2>
+    </div>
+  </div>
+
+  <!-- Main Layout -->
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 max-w-7xl mx-auto">
+    <!-- Left -->
+    <div class="lg:col-span-4 space-y-5">
+      <!-- ประวัติส่วนตัว -->
+      <div class="bg-white rounded-xl shadow-md p-6 max-w-md px-10 py-10">
+        <!-- Header -->
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="text-black text-2xl">
+              <i class="bi bi-person"></i>
+            </div>
+            <h2 class="text-xl font-semibold text-black">
+              ข้อมูลประวัติทั่วไป
+            </h2>
+          </div>
+          <!-- Edit Button -->
+          <button
+            class="bg-[#FDE68A] hover:bg-[#FACC15] hover:text-white text-black rounded-xl w-10 h-10 flex items-center justify-center shadow cursor-pointer"
+            (click)="goToEditProfile(item)"
+          >
+            <i class="bi bi-pencil-square"></i>
+          </button>
+        </div>
+
+        <hr class="my-4" />
+        <!-- Content -->
+        <ul class="space-y-3 text-gray-600 text-base">
+          <li class="flex gap-2">
+            <span class="text-gray-400 font-bold flex-wrap wrap-break-word"
+              >• เลขบัตรประชาชน :</span
+            >
+            12345678909877
+          </li>
+          <li class="flex gap-2 flex-wrap wrap-break-word">
+            <span class="text-gray-400 font-bold">• วันเดือนปีเกิด :</span>
+            1 มกราคม 1234
+          </li>
+          <li class="flex gap-2 flex-wrap wrap-break-word">
+            <span class="text-gray-400 font-bold">• อายุ :</span>
+            12
+          </li>
+          <li class="flex gap-2 flex-wrap wrap-break-word">
+            <span class="text-gray-400 font-bold">• เชื้อชาติ :</span>
+            ไทย
+          </li>
+          <li class="flex gap-2 flex-wrap wrap-break-word">
+            <span class="text-gray-400 font-bold">• สัญชาติ :</span>
+            ไทย
+          </li>
+          <li class="flex gap-2 flex-wrap wrap-break-word">
+            <span class="text-gray-400 font-bold">• ศาสนา :</span>
+            ศาสนาพุทธ
+          </li>
+          <li class="flex gap-2 flex-wrap wrap-break-word">
+            <span class="text-gray-400 font-bold">• หมู่เลือด :</span>
+            ไม่ระบุ
+          </li>
+        </ul>
+      </div>
+
+      <!-- ข้อมูลการทำงาน -->
+      <div class="max-w-md mt-5 px-10 py-10 bg-white rounded-xl shadow-md">
+        <!-- Header -->
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="text-black text-2xl">
+              <i class="bi bi-person"></i>
+            </div>
+            <h2 class="text-xl font-semibold text-black">ข้อมูลการทำงาน</h2>
+          </div>
+          <!-- Edit Button -->
+          <!-- <button
+            class="bg-[#FDE68A] hover:bg-[#FACC15] hover:text-white text-black rounded-xl w-10 h-10 flex items-center justify-center shadow cursor-pointer"
+          >
+            <i class="bi bi-pencil-square"></i>
+          </button> -->
+        </div>
+
+        <hr class="my-4" />
+        <!-- Content -->
+        <ul class="space-y-3 text-gray-600 text-base">
+          <li class="flex gap-2 flex-wrap wrap-break-word">
+            <span class="text-gray-400 font-bold">• ตำแหน่ง :</span>
+            อาจารย์
+          </li>
+          <li class="flex gap-2 flex-wrap wrap-break-word">
+            <span class="text-gray-400 font-bold">• สังกัด :</span>
+            คณะวิศวกรรมศาสตร์
+          </li>
+          <li class="flex gap-2 flex-wrap wrap-break-word">
+            <span class="text-gray-400 font-bold">• ประเภท :</span>
+            พนักงาน
+          </li>
+          <li class="flex gap-2 flex-wrap wrap-break-word">
+            <span class="text-gray-400 font-bold">• สายงาน :</span>
+            วิชาการ
+          </li>
+          <li class="flex gap-2 flex-wrap wrap-break-word">
+            <span class="text-gray-400 font-bold">• ตำแหน่งทางวิชาการ :</span>
+            อาจารย์
+          </li>
+          <li class="flex gap-2 flex-wrap wrap-break-word">
+            <span class="text-gray-400 font-bold">• ความความสนใจ :</span>
+            เครือข่ายเซ็นเซอร์ไร้สาย เครือข่ายเฉพาะกิจ
+            การประเมินประสิธิภาพโพรโทคอล การควบคุมความคับคั่งในเครือข่าย
+          </li>
+          <li class="flex gap-2 flex-wrap wrap-break-word">
+            <span class="text-gray-400 font-bold"
+              >• สาขาวิชาที่เชี่ยวชาญ :</span
+            >
+            สาขาวิทยาศาสตร์กายภาพและคณิตศาสตร์
+          </li>
+          <li class="flex gap-2 flex-wrap wrap-break-word">
+            <span class="text-gray-400 font-bold">• วันที่เริ่มงาน :</span>
+            2013-12-02
+          </li>
+          <li class="flex gap-2 flex-wrap wrap-break-word">
+            <span class="text-gray-400 font-bold">• อายุงาน :</span>
+            20 ปี
+          </li>
+        </ul>
+      </div>
+
+      <!-- ข้อมูลการศึกษา -->
+      <div class="max-w-md mt-5 px-10 py-10 bg-white rounded-xl shadow-md">
+        <!-- Header -->
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="text-black text-2xl">
+              <i class="bi bi-person"></i>
+            </div>
+            <h2 class="text-xl font-semibold text-black">ข้อมูลการศึกษา</h2>
+          </div>
+          <!-- Edit Button -->
+          <button
+            class="bg-[#FDE68A] hover:bg-[#FACC15] hover:text-white text-black rounded-xl w-10 h-10 flex items-center justify-center shadow cursor-pointer"
+            (click)="goToEditStudy(item)"
+          >
+            <i class="bi bi-pencil-square"></i>
+          </button>
+        </div>
+
+        <hr class="my-4" />
+        <!-- Content -->
+        <ul class="space-y-3 text-gray-600 text-base">
+          <li class="flex gap-2 flex-wrap wrap-break-word">
+            <span class="text-gray-400 font-bold">• การศึกษาสูงสุด :</span>
+            ปริญญาเอก
+          </li>
+          <li class="flex gap-2 flex-wrap wrap-break-word">
+            <span class="text-gray-400 font-bold">• สาขาวิชา :</span>
+            วิศวกรรมคอมพิวเตอร์
+          </li>
+          <li class="flex gap-2 flex-wrap wrap-break-word">
+            <span class="text-gray-400 font-bold">• คุณวุฒิ :</span>
+            กกกกกก
+          </li>
+          <li class="flex gap-2 flex-wrap wrap-break-word">
+            <span class="text-gray-400 font-bold">• GPA :</span>
+            4.00
+          </li>
+          <li class="flex gap-2 flex-wrap wrap-break-word">
+            <span class="text-gray-400 font-bold">• สถานศึกษา :</span>
+            มหาวิทยาลัยขอนแก่น
+          </li>
+          <li class="flex gap-2 flex-wrap wrap-break-word">
+            <span class="text-gray-400 font-bold"
+              >• ปี/วันที่ ที่เข้าศึกษา :</span
+            >
+            1/1/1111
+          </li>
+          <li class="flex gap-2 flex-wrap wrap-break-word">
+            <span class="text-gray-400 font-bold"
+              >• ปี/วันที่ ที่สำเร็จการศึกษา :</span
+            >
+            09/07/2563
+          </li>
+        </ul>
+      </div>
+
+      <!-- ข้อมูลการฝึกอบรม -->
+      <div class="max-w-md mt-5 px-10 py-10 bg-white rounded-xl shadow-md">
+        <!-- Header -->
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="text-black text-2xl">
+              <i class="bi bi-person"></i>
+            </div>
+            <h2 class="text-xl font-semibold text-black">ข้อมูลการฝึกอบรม</h2>
+          </div>
+          <!-- Edit Button -->
+          <button
+            class="bg-[#FDE68A] hover:bg-[#FACC15] hover:text-white text-black rounded-xl w-10 h-10 flex items-center justify-center shadow cursor-pointer"
+            (click)="goToEditTraning()"
+          >
+            <i class="bi bi-pencil-square"></i>
+          </button>
+        </div>
+
+        <hr class="my-4" />
+        <!-- Content -->
+        <ul
+          *ngIf="trainings.length > 0; else noTraining"
+          class="space-y-3 text-gray-600 text-base"
+        >
+          <li
+            *ngFor="let item of trainings"
+            class="flex gap-2 flex-wrap wrap-break-word"
+          >
+            <span class="text-gray-400 font-bold"> • {{ item.title }} : </span>
+            {{ item.value }}
+          </li>
+        </ul>
+
+        <!-- ไม่มีข้อมูล -->
+        <ng-template #noTraining>
+          <div class="text-red-500 text-center font-semibold py-4">
+            ไม่พบข้อมูล
+          </div>
+        </ng-template>
+      </div>
+
+      <!-- ข้อมูลที่อยู่ (ตามทะเบียนบ้าน) -->
+      <div class="max-w-md mt-5 px-10 py-10 bg-white rounded-xl shadow-md">
+        <!-- Header -->
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="text-black text-2xl">
+              <i class="bi bi-person"></i>
+            </div>
+            <h2 class="text-xl font-semibold text-black">
+              ข้อมูลที่อยู่ (ตามทะเบียนบ้าน)
+            </h2>
+          </div>
+          <!-- Edit Button -->
+          <button
+            class="bg-[#FDE68A] hover:bg-[#FACC15] hover:text-white text-black rounded-xl w-10 h-10 flex items-center justify-center shadow cursor-pointer"
+            (click)="goToEditAddress()"
+          >
+            <i class="bi bi-pencil-square"></i>
+          </button>
+        </div>
+
+        <hr class="my-4" />
+        <!-- Content -->
+        <ul class="space-y-3 text-gray-600 text-base">
+          <li class="flex gap-2 flex-wrap">
+            <span class="text-gray-400 font-bold">• บ้านเลขที่ :</span>
+            {{ address.houseNo || "-" }}
+          </li>
+
+          <li class="flex gap-2 flex-wrap">
+            <span class="text-gray-400 font-bold">• ซอย :</span>
+            {{ address.alley || "-" }}
+          </li>
+
+          <li class="flex gap-2 flex-wrap">
+            <span class="text-gray-400 font-bold">• ถนน :</span>
+            {{ address.road || "-" }}
+          </li>
+
+          <li class="flex gap-2 flex-wrap">
+            <span class="text-gray-400 font-bold">• ตำบล :</span>
+            {{ address.subDistrict || "-" }}
+          </li>
+
+          <li class="flex gap-2 flex-wrap">
+            <span class="text-gray-400 font-bold">• อำเภอ :</span>
+            {{ address.district || "-" }}
+          </li>
+
+          <li class="flex gap-2 flex-wrap">
+            <span class="text-gray-400 font-bold">• จังหวัด :</span>
+            {{ address.province || "-" }}
+          </li>
+
+          <li class="flex gap-2 flex-wrap">
+            <span class="text-gray-400 font-bold">• เบอร์โทร :</span>
+            {{ address.phone || "-" }}
+          </li>
+        </ul>
+        <div
+          *ngIf="
+            !address.houseNo &&
+            !address.alley &&
+            !address.road &&
+            !address.subDistrict &&
+            !address.district &&
+            !address.province &&
+            !address.phone
+          "
+          class="text-red-500 font-semibold text-center py-4"
+        >
+          ไม่พบข้อมูล
+        </div>
+      </div>
+    </div>
+
+    <!-- ข้อมูลผลงาน -->
+    <div class="px-6 lg:col-span-8">
+      <div class="bg-white rounded-2xl shadow-lg p-8">
+        <!-- Header -->
+        <div class="flex items-center gap-3 mb-6">
+          <i class="bi bi-file-earmark-text text-black text-3xl"></i>
+          <h2 class="text-2xl font-semibold text-black">ข้อมูลผลงาน</h2>
+        </div>
+
+        <button
+          (click)="changeTab('research')"
+          [ngClass]="
+            selectedTab === 'research'
+              ? 'bg-[#FDE68A] text-black'
+              : 'text-black hover:bg-[#FDE68A]'
+          "
+          class="px-4 py-2 rounded-lg cursor-pointer"
+        >
+          <i class="bi bi-journal-text"></i>
+          งานวิจัย
+        </button>
+
+        <button
+          (click)="changeTab('article')"
+          [ngClass]="
+            selectedTab === 'article'
+              ? 'bg-[#FDE68A] text-black'
+              : 'text-black hover:bg-[#FDE68A]'
+          "
+          class="px-4 py-2 rounded-lg cursor-pointer"
+        >
+          <i class="bi bi-file-earmark"></i>
+          บทความวิชาการ
+        </button>
+
+        <button
+          (click)="changeTab('innovation')"
+          [ngClass]="
+            selectedTab === 'innovation'
+              ? 'bg-[#FDE68A] text-black'
+              : 'text-black hover:bg-[#FDE68A]'
+          "
+          class="px-4 py-2 rounded-lg cursor-pointer"
+        >
+          <i class="bi bi-award"></i>
+          นวัตกรรมสิ่งประดิษฐ์
+        </button>
+        <!-- Table controls -->
+        <div
+          class="flex items-center justify-between mb-4 text-sm text-gray-600 mt-5"
+        >
+          <div>
+            Show
+            <select class="border rounded px-2 py-1 mx-1">
+              <option>10</option>
+              <option>25</option>
+              <option>50</option>
+            </select>
+            entries
+          </div>
+
+          <div>
+            Search:
+            <input
+              type="text"
+              class="border rounded px-2 py-1 ml-2"
+              placeholder="ค้นหา..."
+            />
+          </div>
+        </div>
+
+        <!-- Table -->
+        <table class="w-full p-4 rounded-lg">
+          <thead class="bg-[#FACC15] text-[#1E293B] rounded-md">
+            <tr>
+              <th class="px-4 py-2 w-20">ที่</th>
+              <th class="px-4 py-2">ชื่อผลงาน</th>
+              <th class="px-4 py-2 w-24">จัดการ</th>
+            </tr>
+          </thead>
+
+          <tbody *ngIf="data[selectedTab].length > 0; else noData">
+            <tr
+              *ngFor="let item of data[selectedTab]; let i = index"
+              class="border-b"
+            >
+              <td class="text-center py-3">{{ i + 1 }}</td>
+              <td class="py-3 text-indigo-500">
+                {{ item.title }}
+                <div class="text-sm text-gray-500">
+                  วันที่สร้าง {{ item.date }}
+                </div>
+              </td>
+              <td class="text-center py-3">
+                <i
+                  class="bi bi-pencil-square text-blue-500 cursor-pointer hover:text-blue-300 mr-3"
+                  (click)="editItem(item.id)"
+                  title="แก้ไขข้อมูล"
+                ></i
+                ><i
+                  class="bi bi-trash3 text-red-500 hover:text-red-300 cursor-pointer"
+                  (click)="deleteItem(item.id)"
+                  title="ลบข้อมูล"
+                ></i>
+              </td>
+            </tr>
+          </tbody>
+
+          <!-- No Data -->
+          <ng-template #noData>
+            <tr>
+              <td
+                colspan="3"
+                class="text-center py-6 text-red-500 font-semibold"
+              >
+                ไม่พบข้อมูล
+              </td>
+            </tr>
+          </ng-template>
+        </table>
+
+        <!-- Pagination -->
+        <div
+          class="flex items-center justify-between mt-4 text-sm text-gray-600"
+        >
+          <div>Showing 1 to 1 of 1 entries</div>
+
+          <div class="flex items-center gap-2">
+            <button class="border px-3 py-1 rounded cursor-pointer">
+              Previous
+            </button>
+            <button class="bg-[#FDE68A] text-black px-3 py-1 rounded">1</button>
+            <button class="border px-3 py-1 rounded cursor-pointer">
+              Next
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

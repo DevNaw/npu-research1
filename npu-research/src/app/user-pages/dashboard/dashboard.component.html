@@ -85,7 +85,7 @@
   >
     <div class="flex justify-between text-center mt-5">
       <h1 class="text-2xl font-semibold">ข่าวประชาสัมพันธ์</h1>
-      <a routerLink="" class="text-lg cursor-pointer hover:text-blue-500"
+      <a routerLink="/news" class="text-lg cursor-pointer hover:text-blue-500"
         >ดูทั้งหมด</a
       >
     </div>
@@ -135,12 +135,12 @@
         >
           <thead>
             <tr class="bg-[#FACC15] text-[#1E293B] border-b">
-              <th class="p-3 text-left whitespace-nowrap">ลำดับ</th>
-              <th class="p-3 text-left">ชื่อผลงาน</th>
-              <th class="p-3 text-left">ผู้วิจัย</th>
-              <th class="p-3 text-left">วารสาร</th>
-              <th class="p-3 text-left whitespace-nowrap">วันที่เผยแพร่</th>
-              <th class="p-3 text-left whitespace-nowrap">ปีที่ตีพิมพ์</th>
+              <th class="p-3 text-center whitespace-nowrap border-r">ลำดับ</th>
+              <th class="p-3 text-center border-r">ชื่อผลงาน</th>
+              <th class="p-3 text-center border-r">ผู้วิจัย</th>
+              <th class="p-3 text-center border-r">วารสาร</th>
+              <th class="p-3 text-center whitespace-nowrap border-r">วันที่เผยแพร่</th>
+              <th class="p-3 text-center whitespace-nowrap">ปีที่ตีพิมพ์</th>
             </tr>
           </thead>
       
@@ -149,36 +149,36 @@
               *ngFor="let publication of paginatedPublications; let i = index"
               class="border-b hover:bg-gray-50 transition"
             >
-              <td class="p-3 text-center whitespace-nowrap">
+              <td class="p-3 text-center whitespace-nowrap border-r">
                 {{ (currentPage - 1) * pageSize + i + 1 }}
               </td>
       
               <td
-                class="p-3 font-medium max-w-87.5 wrap-break-word"
+                class="p-3 font-medium max-w-87.5 wrap-break-word border-r"
                 title="{{ publication.title }}"
               >
                 {{ publication.title }}
               </td>
       
-              <td class="p-3 max-w-60 wrap-break-word">
+              <td class="p-3 max-w-60 wrap-break-word border-r">
                 {{ publication.researchers }}
               </td>
       
-              <td class="p-3 max-w-55 wrap-break-word">
+              <td class="p-3 max-w-55 wrap-break-word border-r">
                 {{ publication.journal }}
               </td>
       
-              <td class="p-3 whitespace-nowrap">
+              <td class="p-3 whitespace-nowrap border-r text-center">
                 {{ publication.publishDate }}
               </td>
       
-              <td class="p-3 whitespace-nowrap">
+              <td class="p-3 whitespace-nowrap text-center">
                 {{ publication.year }}
               </td>
             </tr>
           </tbody>
         </table>
-      </div>
+    </div>
       
 
     <div
@@ -230,32 +230,38 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl mx-auto">
       <!-- Card 1 -->
       <div
+      (click)="goToResearch()"
         class="bg-white rounded-2xl shadow-sm h-44 flex flex-col items-center justify-center hover:shadow-md transition cursor-pointer duration-300 hover:scale-105"
       >
         <i class="bi bi-book text-4xl text-amber-500 mb-4"></i>
         <h2 class="text-xl font-medium text-gray-800">
-          โครงการวิจัย/บทความ/วารสาร
+          โครงการวิจัย
         </h2>
       </div>
 
       <!-- Card 2 -->
       <div
+      (click)="goToAticle()"
+        class="bg-white rounded-2xl shadow-sm h-44 flex flex-col items-center justify-center hover:shadow-md transition cursor-pointer duration-300 hover:scale-105"
+      >
+        <i class="bi bi-graph-up text-4xl text-blue-600 mb-4"></i>
+        <h2 class="text-xl font-medium text-gray-800">บทความ/วารสาร</h2>
+      </div>
+
+      <!-- Card 3 -->
+      <div
+      (click)="goToInnovation()"
         class="bg-white rounded-2xl shadow-sm h-44 flex flex-col items-center justify-center hover:shadow-md transition cursor-pointer duration-300 hover:scale-105"
       >
         <i class="bi bi-stars text-4xl text-blue-500 mb-4"></i>
         <h2 class="text-xl font-medium text-gray-800">นวัตกรรมสิ่งประดิษฐ์</h2>
       </div>
 
-      <!-- Card 3 -->
-      <div
-        class="bg-white rounded-2xl shadow-sm h-44 flex flex-col items-center justify-center hover:shadow-md transition cursor-pointer duration-300 hover:scale-105"
-      >
-        <i class="bi bi-graph-up text-4xl text-blue-600 mb-4"></i>
-        <h2 class="text-xl font-medium text-gray-800">สถิติ/รายงาน</h2>
-      </div>
+      
 
       <!-- Card 4 -->
       <div
+      (click)="goToManual()"
         class="bg-white rounded-2xl shadow-sm h-44 flex flex-col items-center justify-center hover:shadow-md transition cursor-pointer duration-300 hover:scale-105"
       >
         <i class="bi bi-person-lines-fill text-4xl text-amber-500 mb-4"></i>

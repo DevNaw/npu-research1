@@ -1,0 +1,56 @@
+<div class="contain-content bg-gray-100 p-3">
+    <div class="max-w-7xl mx-auto px-2 py-10 bg-white rounded-xl">
+        <h1 class="text-3xl ml-5">ข่าวประชาสัมพันธ์</h1>
+        <div class="max-w-7xl mx-auto px-6 py-10">
+            <!-- NEWS GRID -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div
+                *ngFor="let news of paginatedNews"
+                class="bg-white rounded-xl shadow hover:shadow-lg transition"
+              >
+                <!-- Image -->
+                <img
+                  [src]="news.image"
+                  alt=""
+                  class="h-48 w-full object-cover rounded-t-xl"
+                />
+          
+                <!-- Content -->
+                <div class="p-4 space-y-2">
+                  <h3 class="font-semibold text-gray-800 line-clamp-2">
+                    {{ news.title }}
+                  </h3>
+          
+                  <p class="text-sm text-gray-500">
+                    {{ news.date }}
+                  </p>
+          
+                  <a
+                    [routerLink]="['/news', news.id]"
+                    class="text-orange-500 font-medium inline-flex items-center gap-1 hover:underline"
+                  >
+                    ดูเพิ่มเติม
+                    <span>»</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          
+            <!-- PAGINATION -->
+            <div class="flex justify-center mt-10 space-x-2">
+              <button
+                *ngFor="let page of totalPages"
+                (click)="changePage(page)"
+                class="px-3 py-1 rounded-md border"
+                [ngClass]="{
+                  'bg-teal-500 text-white border-teal-500': currentPage === page,
+                  'hover:bg-gray-100': currentPage !== page
+                }"
+              >
+                {{ page }}
+              </button>
+            </div>
+          </div>
+          
+    </div>
+</div>
