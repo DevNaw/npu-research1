@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
 interface ExternalPerson {
   name: string;
@@ -17,12 +18,46 @@ interface InternalPerson {
   styleUrl: './user-add-aticle.component.css'
 })
 export class UserAddAticleComponent {
+  isEdit = false;
+  researchId?: number;
+  reportFilename = '';
+  selectedFileName = '';
+
   rows: ExternalPerson[] = [];
   rows2: InternalPerson[] = [];
 
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router
+  ) {}
+
   ngOnInit() {
-    this.addRow(); 
-    this.addRow2(); 
+    this.route.paramMap.subscribe(params => {
+      const id = params.get('id');
+
+      if (id) {
+        this.isEdit = true;
+        this.researchId = +id;
+        this.loadAticleData(this.researchId);
+      } else {
+        this.isEdit = false;
+      }
+    });
+
+    this.addRow();
+    this.addRow2();
+  }
+
+  loadAticleData(id: number) {
+    this.rows = [
+      { name: 'นาย A', role: 'ผู้เชี่ยวชาญ', organization: 'บริษัท ABC' }
+    ];
+
+    this.rows2 = [
+      { name: 'ดร. B', organization: 'มหาวิทยาลัย X' }
+    ];
+  
+    this.reportFileName = 'report.pdf';
   }
 
   addRow() {
@@ -63,7 +98,6 @@ export class UserAddAticleComponent {
   }
 
   selectedFile: File | null = null;
-  selectedFileName = '';
 
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;

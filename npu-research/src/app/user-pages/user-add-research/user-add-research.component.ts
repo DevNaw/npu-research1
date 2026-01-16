@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
 interface ExternalPerson {
   name: string;
@@ -17,13 +18,50 @@ interface InternalPerson {
   styleUrl: './user-add-research.component.css',
 })
 export class UserAddResearchComponent {
+  isEdit = false;
+  researchId?: number;
+  reportFileName = '';
+  selectedFileName = '';
+
   rows: ExternalPerson[] = [];
   rows2: InternalPerson[] = [];
+  
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router
+  ) {}
 
   ngOnInit() {
-    this.addRow(); 
-    this.addRow2(); 
+    this.route.paramMap.subscribe(params => {
+      const id = params.get('id');
+  
+      if (id) {
+        this.isEdit = true;
+        this.researchId = +id;
+        this.loadResearchData(this.researchId);
+      } else {
+        this.isEdit = false;
+      }
+    });
+  
+    this.addRow();
+    this.addRow2();
   }
+  loadResearchData(id: number) {
+    console.log('แก้ไขงานวิจัย ID:', id);
+  
+    // mock data (แทน API)
+    this.rows = [
+      { name: 'นาย A', role: 'ผู้เชี่ยวชาญ', organization: 'บริษัท ABC' }
+    ];
+  
+    this.rows2 = [
+      { name: 'ดร. B', organization: 'มหาวิทยาลัย X' }
+    ];
+  
+    this.reportFileName = 'report.pdf';
+  }
+  
 
   addRow() {
     this.rows = [
@@ -63,7 +101,6 @@ export class UserAddResearchComponent {
   }
 
   selectedFile: File | null = null;
-  selectedFileName = '';
 
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
@@ -74,7 +111,6 @@ export class UserAddResearchComponent {
     }
   }
   reportFile: File | null = null;
-  reportFileName = '';
 
   onReportFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;

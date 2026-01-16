@@ -1,0 +1,104 @@
+<div class="bg-gray-100 min-h-screen p-6">
+    <div class="max-w-6xl mx-auto bg-white rounded-2xl shadow p-8 space-y-8">
+  
+      <!-- Header -->
+      <div class="flex justify-between items-center">
+        <h1 class="text-3xl font-semibold text-gray-800">
+          {{ data.title }}
+        </h1>
+  
+        <div class="flex gap-2">
+          <button
+            (click)="goBack()"
+            class="px-4 py-2 rounded-md border text-gray-600 hover:bg-gray-100">
+            ← กลับ
+          </button>
+  
+          <button
+            (click)="goEdit()"
+            class="px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700">
+            ✏️ แก้ไข
+          </button>
+        </div>
+      </div>
+  
+      <hr />
+  
+      <!-- ================= RESEARCH ================= -->
+      <div *ngIf="type === 'research'" class="space-y-6">
+        <section>
+          <h2 class="section-title">ข้อมูลทั่วไป</h2>
+          <div class="grid grid-cols-2 gap-4">
+            <p><b>สาขา:</b> {{ data.field }}</p>
+            <p><b>ประเภทความรับผิดชอบ:</b> {{ data.responsibility }}</p>
+            <p><b>สถานะ:</b> {{ data.status }}</p>
+          </div>
+        </section>
+  
+        <section>
+          <h2 class="section-title">งบประมาณ</h2>
+          <div class="grid grid-cols-3 gap-4">
+            <p>แหล่งเงินทุน: {{ data.fundSource }}</p>
+            <p>งบประมาณ: {{ data.budget }} บาท</p>
+            <p>ปีที่ได้รับทุน: {{ data.year }}</p>
+          </div>
+        </section>
+  
+        <section>
+          <h2 class="section-title">ผู้ร่วมโครงการ</h2>
+          <ul class="list-disc ml-6">
+            <li *ngFor="let m of data.internalMembers">
+              {{ m.name }} ({{ m.role }})
+            </li>
+            <li *ngFor="let m of data.externalMembers">
+              {{ m.name }} ({{ m.role }}) - {{ m.org }}
+            </li>
+          </ul>
+        </section>
+  
+        <section>
+          <h2 class="section-title">เอกสาร</h2>
+          <a class="link" href="#">{{ data.files.report }}</a><br />
+          <a class="link" href="#">{{ data.files.contract }}</a>
+        </section>
+      </div>
+  
+      <!-- ================= ARTICLE ================= -->
+      <div *ngIf="type === 'article'" class="space-y-6">
+        <section>
+          <h2 class="section-title">ข้อมูลบทความ</h2>
+          <div class="grid grid-cols-2 gap-4">
+            <p>ประเภท: {{ data.articleType }}</p>
+            <p>วารสาร: {{ data.publisher }}</p>
+            <p>หน้า: {{ data.pages }}</p>
+            <p>ปี: {{ data.year }}</p>
+            <p>คุณภาพ: {{ data.weight }}</p>
+          </div>
+        </section>
+  
+        <section>
+          <h2 class="section-title">การเผยแพร่</h2>
+          <a class="link" [href]="data.doi" target="_blank">{{ data.doi }}</a>
+        </section>
+      </div>
+  
+      <!-- ================= INNOVATION ================= -->
+      <div *ngIf="type === 'innovation'" class="space-y-6">
+        <section>
+          <h2 class="section-title">รายละเอียดนวัตกรรม</h2>
+          <p>{{ data.principle }}</p>
+        </section>
+  
+        <section>
+          <h2 class="section-title">สิทธิบัตร</h2>
+          <p>เลขที่สิทธิบัตร: {{ data.patentNo }}</p>
+          <p>เลขที่คำขอ: {{ data.requestNo }}</p>
+          <a class="link" [href]="data.patentUrl" target="_blank">
+            ตรวจสอบสิทธิบัตร
+          </a>
+        </section>
+      </div>
+  
+    </div>
+  </div>
+  

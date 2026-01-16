@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 interface Innovation {
   title: string;
@@ -11,11 +11,10 @@ interface Innovation {
   templateUrl: './innovation.component.html',
   styleUrl: './innovation.component.css',
 })
-export class InnovationComponent {
+export class InnovationComponent implements OnInit {
   pageSize = 10;
   currentPage = 1;
-
-  searchText: string = '';
+  searchText = '';
 
   innovations: Innovation[] = [
     {
@@ -74,30 +73,44 @@ export class InnovationComponent {
     },
   ];
 
-  get totalPages(): number {
-    return Math.ceil(this.innovations.length / this.pageSize);
+  filteredInnovations: Innovation[] = [];
+  paginatedInnovations: Innovation[] = [];
+
+  ngOnInit(): void {
+    this.filteredInnovations = [...this.innovations];
+    this.updatePagination();
   }
 
-  get paginatedInnovations() {
-    const startIndex = (this.currentPage - 1) * this.pageSize;
-    return this.innovations.slice(startIndex, startIndex + this.pageSize);
-  }
-
-  changePage(page: number) {
-    if (page < 1 || page > this.totalPages) return;
-    this.currentPage = page;
-    // window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  filteredInnovations = [...this.innovations];
-
-  onSearch() {
+  onSearch(): void {
     const keyword = this.searchText.toLowerCase().trim();
 
     this.filteredInnovations = this.innovations.filter(
-      (i) =>
-        i.title.toLowerCase().includes(keyword) ||
-        i.researchers.toLowerCase().includes(keyword)
+    (i) =>
+      i.title.toLowerCase().includes(keyword) ||
+      i.researchers.toLowerCase().includes(keyword)
     );
+
+    this.currentPage = 1;
+    this.updatePagination();
+  }
+
+  updatePagination(): void {
+    const start = (this.currentPage - 1) * this.pageSize;
+    const end = start + this.pageSize;
+
+    this.paginatedInnovations = this.filteredInnovations.slice(start, end);
+  }
+
+  changePage(page: number): void {
+    if (page < 1 || page > this.totalPages) return;
+
+    this.currentPage = page;
+    this.updatePagination();
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.innovations.length / this.pageSize);
   }
 }

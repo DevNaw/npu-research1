@@ -1,271 +1,233 @@
-<div class="contain-content bg-gray-100 p-3">
-  <div class="flex justify-between flex-wrap w-full max-w-7xl mx-auto px-2 py-10 rounded-xl">
-    <div
-      class="flex w-[23%] min-w-75 p-6 mb-5 space-y-6 bg-linear-to-r from-amber-200 to-yellow-300 rounded-lg shadow-md"
-    >
-      <i class="bi bi-flask text-7xl mr-3"></i>
-      <div class="ml-10 mt-8 text-end">
-        <h2 class="text-lg font-medium">โครงการวิจัย</h2>
-        <h3 class="text-3xl mt-3">1200</h3>
-        <h3 class="text-base">ชาย 501 หญิง 600</h3>
-        <h3 class="text-sm italic">Th 100 Eng 100</h3>
+<!-- Background หลัก -->
+<div class="bg-gray-100 min-h-screen">
+  <div class="max-w-7xl mx-auto px-4 py-10 space-y-16">
+    <!-- ===== Summary Cards ===== -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div
+        class="flex items-center p-6 bg-linear-to-r from-amber-200 to-yellow-300 rounded-xl shadow"
+      >
+        <i class="bi bi-flask text-6xl"></i>
+        <div class="ml-auto text-right">
+          <p class="text-sm">โครงการวิจัย</p>
+          <h2 class="text-3xl font-bold">1200</h2>
+          <p class="text-sm">ชาย 501 | หญิง 600</p>
+          <p class="text-xs italic text-gray-600">TH 100 · EN 100</p>
+        </div>
       </div>
-    </div>
-    <div
-      class="flex w-[23%] min-w-75 p-6 mb-5 space-y-6 bg-linear-to-r from-yellow-300 to-sky-200 rounded-lg shadow-md"
-    >
-      <i class="bi bi-file-earmark-text text-7xl mr-3"></i>
-      <div class="ml-10 mt-8 text-end">
-        <h2 class="text-lg font-medium">บทความ/วารสาร</h2>
-        <h3 class="text-3xl mt-3">1200</h3>
-        <h3 class="text-base">ชาย 501 หญิง 600</h3>
-        <h3 class="text-sm italic">Th 100 Eng 100</h3>
-      </div>
-    </div>
-    <div
-      class="flex w-[23%] min-w-75 p-6 mb-5 space-y-6 bg-linear-to-r from-amber-200 to-yellow-300 rounded-lg shadow-md"
-    >
-      <i class="bi bi-award text-7xl mr-6"></i>
-      <div class="mt-8 text-end">
-        <h2 class="text-lg font-medium">นวัตกรรมสิ่งประดิษฐ์</h2>
-        <h3 class="text-3xl mt-3">1200</h3>
-        <h3 class="text-base">ชาย 501 หญิง 600</h3>
-        <h3 class="text-sm italic">Th 100 Eng 100</h3>
-      </div>
-    </div>
-    <div
-      class="flex w-[23%] min-w-75 p-6 mb-5 space-y-6 bg-linear-to-r from-sky-300 to-cyan-200 rounded-lg shadow-md"
-    >
-      <i class="bi bi-people text-7xl mr-3"></i>
-      <div class="ml-10 mt-8 text-end">
-        <h2 class="text-lg font-medium">จำนวนนักวิจัย</h2>
-        <h3 class="text-3xl mt-3">1200</h3>
-        <h3 class="text-base">ชาย 501 หญิง 600</h3>
-      </div>
-    </div>
-  </div>
 
-<!-- กราฟ -->
-<div class="max-w-7xl mx-auto px-2 py-10 bg-white rounded-xl">
-
-    <div *ngFor="let c of charts" class="mb-12">
-  
-      <!-- Title -->
-      <div class="text-center mt-10">
-        <h1 class="text-2xl font-semibold">{{ c.title }}</h1>
-        <p class="text-sm mt-2 text-gray-500">{{ c.subtitle }}</p>
+      <div
+        class="flex items-center p-6 bg-linear-to-r from-blue-200 to-blue-300 rounded-xl shadow"
+      >
+        <i class="bi bi-file-earmark-text text-6xl"></i>
+        <div class="ml-auto text-right">
+          <p class="text-sm">บทความ</p>
+          <h2 class="text-3xl font-bold">860</h2>
+          <p class="text-sm">ชาย 501 | หญิง 600</p>
+          <p class="text-xs italic text-gray-600">TH 100 · EN 100</p>
+        </div>
       </div>
-  
-      <!-- Chart -->
-      <div class="flex justify-center mt-10">
-        <div class="w-full max-w-6xl rounded-xl p-5">
-          <div id="chart-pdf">
-            <apx-chart
-              class="w-full"
-              [series]="c.series"
-              [chart]="c.chart"
-              [labels]="c.labels"
-              [legend]="c.legend"
-              [plotOptions]="c.plotOptions"
-              [dataLabels]="c.dataLabels"
-              [responsive]="c.responsive"
-              [colors]="c.colors">
-            </apx-chart>
+
+      <div
+        class="flex items-center p-6 bg-linear-to-r from-green-200 to-green-300 rounded-xl shadow"
+      >
+        <i class="bi bi-award text-6xl"></i>
+        <div class="ml-auto text-right">
+          <p class="text-sm">นวัตกรรม</p>
+          <h2 class="text-3xl font-bold">210</h2>
+          <p class="text-sm">ชาย 501 | หญิง 600</p>
+          <p class="text-xs italic text-gray-600">TH 100 · EN 100</p>
+        </div>
+      </div>
+
+      <div
+        class="flex items-center p-6 bg-linear-to-r from-purple-200 to-purple-300 rounded-xl shadow"
+      >
+        <i class="bi bi-people text-6xl"></i>
+        <div class="ml-auto text-right">
+          <p class="text-sm">นักวิจัย</p>
+          <h2 class="text-3xl font-bold">340</h2>
+          <p class="text-sm">ชาย 501 | หญิง 600</p>
+          <p class="text-xs italic text-gray-600">TH 100 · EN 100</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Charts ===== -->
+    <div *ngFor="let c of charts" class="bg-white rounded-xl p-8 shadow">
+      <h1 class="text-2xl font-semibold text-center">{{ c.title }}</h1>
+      <p class="text-center text-gray-500 mb-6">{{ c.subtitle }}</p>
+
+      <apx-chart
+        [series]="c.series"
+        [chart]="c.chart"
+        [labels]="c.labels"
+        [legend]="c.legend"
+        [plotOptions]="c.plotOptions"
+        [dataLabels]="c.dataLabels"
+        [responsive]="c.responsive"
+        [colors]="c.colors"
+      >
+      </apx-chart>
+    </div>
+
+    <!-- ===== News Section ===== -->
+    <div class="bg-white rounded-xl p-6 shadow">
+      <!-- Header -->
+      <div class="flex items-center justify-between mb-6">
+        <h1 class="text-2xl font-semibold">ข่าวประชาสัมพันธ์</h1>
+        <a routerLink="/news" class="text-sm text-blue-600 hover:underline">
+          ดูข่าวทั้งหมด →
+        </a>
+      </div>
+
+      <!-- News Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div
+          *ngFor="let news of newsList"
+          class="bg-white rounded-xl shadow hover:shadow-lg transition duration-300 hover:scale-105 flex flex-col"
+        >
+          <!-- Image -->
+          <img
+            [src]="news.imageUrl"
+            class="h-44 w-full object-cover rounded-t-xl"
+          />
+
+          <!-- Content -->
+          <div class="p-4 flex flex-col flex-1">
+            <h2 class="font-semibold line-clamp-2">
+              {{ news.title }}
+            </h2>
+
+            <p class="text-sm text-gray-600 line-clamp-3 mt-1 flex-1">
+              {{ news.summary }}
+            </p>
+
+            <!-- Read more -->
+            <div class="mt-3 text-right">
+              <a
+                [href]="news.link"
+                class="text-blue-600 text-sm font-medium hover:underline inline-flex items-center gap-1 cursor-pointer"
+              >
+                อ่านเพิ่มเติม
+                <span>→</span>
+              </a>
+            </div>
           </div>
         </div>
       </div>
-  
     </div>
-  </div>
-  
 
-  <!-- ข่าวประชาสัมพันธ์ -->
-  <div
-    class="max-w-7xl mt-5 mx-auto px-6 py-10 bg-white rounded-xl"
-  >
-    <div class="flex justify-between text-center mt-5">
-      <h1 class="text-2xl font-semibold">ข่าวประชาสัมพันธ์</h1>
-      <a routerLink="/news" class="text-lg cursor-pointer hover:text-blue-500"
-        >ดูทั้งหมด</a
-      >
-    </div>
-    <div class="justify-between flex-wrap mt-8 cursor-pointer w-full min-w-75 grid grid-cols-1 md:grid-cols-3 gap-6 p-5">
-      <div
-        *ngFor="let news of newsList"
-        class="bg-gray-100 rounded-lg shadow-md overflow-hidden mb-5 transition duration-300 hover:scale-105"
-      >
-        <img
-          class="w-full h-48 object-cover"
-          [src]="news.imageUrl"
-          alt="News Image"
-        />
-        <div class="p-4">
-          <h2 class="text-lg font-semibold mb-2">{{ news.title }}</h2>
-          <p class="text-sm mb-4">
-            {{ news.summary }}
-          </p>
-          <a [href]="news.link" class="text-blue-500 hover:underline text-sm"
-            >อ่านเพิ่มเติม</a
-          >
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ผลงานที่ตีพิมพ์ -->
-  <div
-    class="max-w-7xl mt-5 mx-auto px-6 py-10 bg-white rounded-xl"
-  >
-    <div class="mt-5">
-      <h1 class="text-2xl font-semibold">ผลงานที่ตีพิมพ์</h1>
-      <div class="flex justify-end items-center mt-1">
-        <label class="text-lg mr-2">Search:</label>
+    <!-- ===== Publications Table ===== -->
+    <div class="bg-white rounded-xl p-6 shadow">
+      <div class="flex items-center justify-between mb-4">
+        <h1 class="text-2xl font-semibold">ผลงานที่ตีพิมพ์</h1>
+    
+        <!-- Search -->
         <input
           type="text"
-          name="search"
-          id="search"
-          class="border border-gray-300 rounded-md p-2"
-          placeholder="ค้นหาผลงานที่ตีพิมพ์..."
+          [(ngModel)]="searchText"
+          (input)="onSearch()"
+          placeholder="ค้นหาชื่อผลงาน / ผู้วิจัย / วารสาร"
+          class="border px-4 py-2 rounded-lg w-80 focus:ring-2 focus:ring-yellow-400 outline-none"
         />
       </div>
-    </div>
-    <div class="w-full overflow-x-auto">
-        <table
-          class="min-w-225 w-full border border-gray-300 rounded-lg overflow-hidden mt-4"
-        >
-          <thead>
-            <tr class="bg-[#FACC15] text-[#1E293B] border-b">
-              <th class="p-3 text-center whitespace-nowrap border-r">ลำดับ</th>
-              <th class="p-3 text-center border-r">ชื่อผลงาน</th>
-              <th class="p-3 text-center border-r">ผู้วิจัย</th>
-              <th class="p-3 text-center border-r">วารสาร</th>
-              <th class="p-3 text-center whitespace-nowrap border-r">วันที่เผยแพร่</th>
-              <th class="p-3 text-center whitespace-nowrap">ปีที่ตีพิมพ์</th>
-            </tr>
-          </thead>
-      
-          <tbody>
-            <tr
-              *ngFor="let publication of paginatedPublications; let i = index"
-              class="border-b hover:bg-gray-50 transition"
-            >
-              <td class="p-3 text-center whitespace-nowrap border-r">
-                {{ (currentPage - 1) * pageSize + i + 1 }}
-              </td>
-      
-              <td
-                class="p-3 font-medium max-w-87.5 wrap-break-word border-r"
-                title="{{ publication.title }}"
-              >
-                {{ publication.title }}
-              </td>
-      
-              <td class="p-3 max-w-60 wrap-break-word border-r">
-                {{ publication.researchers }}
-              </td>
-      
-              <td class="p-3 max-w-55 wrap-break-word border-r">
-                {{ publication.journal }}
-              </td>
-      
-              <td class="p-3 whitespace-nowrap border-r text-center">
-                {{ publication.publishDate }}
-              </td>
-      
-              <td class="p-3 whitespace-nowrap text-center">
-                {{ publication.year }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-    </div>
-      
 
-    <div
-      class="flex flex-col md:flex-row md:justify-between md:items-center mt-4 gap-2"
-    >
-      <p class="text-sm text-gray-600">
-        หน้า {{ currentPage }} จาก {{ totalPages }}
-      </p>
+      <table class="w-full border">
+        <thead class="bg-yellow-400">
+          <tr>
+            <th class="p-2 border-r">ลำดับ</th>
+            <th class="p-2 text-left border-r">ชื่อผลงาน</th>
+            <th class="p-2 text-left border-r">ผู้วิจัย</th>
+            <th class="p-2 text-left border-r">วารสาร</th>
+            <th class="p-2">ปี</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let p of paginatedPublications; let i = index"
+            class="border-t hover:bg-gray-50"
+          >
+            <td class="p-2 text-center border-r">{{ i + 1 }}</td>
+            <td class="p-2 border-r">{{ p.title }}</td>
+            <td class="p-2 border-r">{{ p.researchers }}</td>
+            <td class="p-2 border-r">{{ p.journal }}</td>
+            <td class="p-2 text-center">{{ p.year }}</td>
+          </tr>
 
-      <p class="text-sm text-gray-500">
-        แสดง {{ paginatedPublications.length }} รายการ จาก
-        {{ publications.length }} รายการ
-      </p>
+          <!-- ไม่พบข้อมูล -->
+          <tr *ngIf="filteredResearch.length === 0">
+            <td colspan="5" class="text-center p-4 text-gray-500">
+              ไม่พบข้อมูล
+            </td>
+          </tr>
+        </tbody>
+      </table>
 
-      <div class="flex justify-end mt-3 space-x-1">
+      <!-- Pagination -->
+      <div class="flex justify-end mt-4 space-x-1">
         <button
-          (click)="changePage(currentPage - 1)"
-          [disabled]="currentPage === 1"
-          class="px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100"
-        >
-          ‹
-        </button>
-
-        <button
-          *ngFor="let page of [].constructor(totalPages); let i = index"
+          *ngFor="let p of [].constructor(totalPages); let i = index"
           (click)="changePage(i + 1)"
-          class="px-3 py-1 rounded border text-sm transition"
-          [ngClass]="{
-            'bg-[#FACC15] text-[#1E293B]': currentPage === i + 1,
-            'hover:bg-gray-100': currentPage !== i + 1
-          }"
+          class="px-3 py-1 border rounded"
+          [class.bg-yellow-400]="currentPage === i + 1"
         >
           {{ i + 1 }}
         </button>
-
-        <button
-          (click)="changePage(currentPage + 1)"
-          [disabled]="currentPage === totalPages"
-          class="px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100"
-        >
-          ›
-        </button>
       </div>
     </div>
   </div>
 
-  <!-- การ์ด -->
-  <div class="max-w-7xl mt-5 mx-auto px-2 py-10 rounded-xl">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl mx-auto">
+  <!-- ===== Quick Access Cards ===== -->
+  <div class="max-w-7xl mx-auto px-4 py-12">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-6xl mx-auto">
       <!-- Card 1 -->
       <div
-      (click)="goToResearch()"
-        class="bg-white rounded-2xl shadow-sm h-44 flex flex-col items-center justify-center hover:shadow-md transition cursor-pointer duration-300 hover:scale-105"
+        (click)="goToResearch()"
+        class="group bg-white rounded-2xl h-44 flex flex-col items-center justify-center shadow hover:shadow-xl transition-all duration-300 cursor-pointer hover:-translate-y-1"
       >
-        <i class="bi bi-book text-4xl text-amber-500 mb-4"></i>
-        <h2 class="text-xl font-medium text-gray-800">
-          โครงการวิจัย
-        </h2>
+        <i
+          class="bi bi-book text-4xl text-amber-500 mb-3 group-hover:scale-110 transition"
+        ></i>
+        <h2 class="text-lg font-semibold text-gray-800">โครงการวิจัย</h2>
+        <p class="text-sm text-gray-500 mt-1">Research Projects</p>
       </div>
 
       <!-- Card 2 -->
       <div
-      (click)="goToAticle()"
-        class="bg-white rounded-2xl shadow-sm h-44 flex flex-col items-center justify-center hover:shadow-md transition cursor-pointer duration-300 hover:scale-105"
+        (click)="goToAticle()"
+        class="group bg-white rounded-2xl h-44 flex flex-col items-center justify-center shadow hover:shadow-xl transition-all duration-300 cursor-pointer hover:-translate-y-1"
       >
-        <i class="bi bi-graph-up text-4xl text-blue-600 mb-4"></i>
-        <h2 class="text-xl font-medium text-gray-800">บทความ/วารสาร</h2>
+        <i
+          class="bi bi-graph-up text-4xl text-blue-600 mb-3 group-hover:scale-110 transition"
+        ></i>
+        <h2 class="text-lg font-semibold text-gray-800">บทความ / วารสาร</h2>
+        <p class="text-sm text-gray-500 mt-1">Articles & Journals</p>
       </div>
 
       <!-- Card 3 -->
       <div
-      (click)="goToInnovation()"
-        class="bg-white rounded-2xl shadow-sm h-44 flex flex-col items-center justify-center hover:shadow-md transition cursor-pointer duration-300 hover:scale-105"
+        (click)="goToInnovation()"
+        class="group bg-white rounded-2xl h-44 flex flex-col items-center justify-center shadow hover:shadow-xl transition-all duration-300 cursor-pointer hover:-translate-y-1"
       >
-        <i class="bi bi-stars text-4xl text-blue-500 mb-4"></i>
-        <h2 class="text-xl font-medium text-gray-800">นวัตกรรมสิ่งประดิษฐ์</h2>
+        <i
+          class="bi bi-stars text-4xl text-indigo-500 mb-3 group-hover:scale-110 transition"
+        ></i>
+        <h2 class="text-lg font-semibold text-gray-800">
+          นวัตกรรมสิ่งประดิษฐ์
+        </h2>
+        <p class="text-sm text-gray-500 mt-1">Innovations</p>
       </div>
-
-      
 
       <!-- Card 4 -->
       <div
-      (click)="goToManual()"
-        class="bg-white rounded-2xl shadow-sm h-44 flex flex-col items-center justify-center hover:shadow-md transition cursor-pointer duration-300 hover:scale-105"
+        (click)="goToManual()"
+        class="group bg-white rounded-2xl h-44 flex flex-col items-center justify-center shadow hover:shadow-xl transition-all duration-300 cursor-pointer hover:-translate-y-1"
       >
-        <i class="bi bi-person-lines-fill text-4xl text-amber-500 mb-4"></i>
-        <h2 class="text-xl font-medium text-gray-800">คู่มือการใช้งาน</h2>
+        <i
+          class="bi bi-person-lines-fill text-4xl text-amber-500 mb-3 group-hover:scale-110 transition"
+        ></i>
+        <h2 class="text-lg font-semibold text-gray-800">คู่มือการใช้งาน</h2>
+        <p class="text-sm text-gray-500 mt-1">User Manual</p>
       </div>
     </div>
   </div>

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 interface Aticle {
   title: string;
@@ -11,11 +11,10 @@ interface Aticle {
   templateUrl: './aticle.component.html',
   styleUrl: './aticle.component.css',
 })
-export class AticleComponent {
+export class AticleComponent implements OnInit {
   pageSize = 10;
   currentPage = 1;
-
-  searchText: string = '';
+  searchText = '';
 
   aticles: Aticle[] = [
     {
@@ -74,29 +73,44 @@ export class AticleComponent {
     },
   ];
 
-  get totalPages(): number {
-    return Math.ceil(this.aticles.length / this.pageSize);
+  filteredAticles: Aticle[] = [];
+  paginatedAticles: Aticle[] = [];
+
+  ngOnInit(): void {
+      this.filteredAticles = [...this.aticles];
+      this.updatePagination();
   }
 
-  get paginatedAticles() {
-    const startIndex = (this.currentPage - 1) * this.pageSize;
-    return this.aticles.slice(startIndex, startIndex + this.pageSize);
-  }
-
-  changePage(page: number) {
-    if (page < 1 || page > this.totalPages) return;
-    this.currentPage = page;
-    // window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  filteredAticles = [...this.aticles];
-
-  onSearch() {
+  onSearch(): void {
     const keyword = this.searchText.toLowerCase().trim();
 
     this.filteredAticles = this.aticles.filter(
-      (p) =>
-        p.title.toLowerCase().includes(keyword)
+      (a) =>
+        a.title.toLowerCase().includes(keyword) ||
+      a.researchers.toLowerCase().includes(keyword)
     );
+
+    this.currentPage = 1;
+    this.updatePagination();
+  }
+
+  updatePagination(): void {
+    const start = (this.currentPage - 1) * this.pageSize;
+    const end = start + this.pageSize;
+
+    this.paginatedAticles = this.filteredAticles.slice(start, end);
+  }
+
+  changePage(page: number): void {
+    if (page < 1 || page > this.totalPages) return;
+
+    this.currentPage = page;
+    this.updatePagination();
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.aticles.length / this.pageSize);
   }
 }

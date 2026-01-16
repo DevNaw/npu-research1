@@ -1,13 +1,7 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
-
-export interface News {
-  title: string;
-  category: string;
-  link: string;
-  date: Date;
-  dateend: Date;
-}
+import { News } from '../../models/news.model';
 
 @Component({
   selector: 'app-admin-news',
@@ -16,6 +10,23 @@ export interface News {
   styleUrl: './admin-news.component.css',
 })
 export class AdminNewsComponent {
+  news: News[] = [
+    {
+      id: 1,
+      title: 'ข่าวประชาสัมพันธ์ที่ 1',
+      date: '2026-01-01',
+      dateend: '2026-01-31',
+    },
+    {
+      id: 2,
+      title: 'ข่าวประชาสัมพันธ์ที่ 2',
+      date: '2026-02-01',
+      dateend: '2026-02-28',
+    },
+  ];
+
+  filteredNews = [...this.news];
+
   pageSize = 10;
   currentPage = 1;
   searchText: string = '';
@@ -23,126 +34,35 @@ export class AdminNewsComponent {
   modalMode: 'add' | 'edit' = 'add';
   editIndex: number | null = null;
 
-  news: News[] = [
-    {
-      title: 'เปิดรับข้อเสนอโครงการวิจัย ประจำปีงบประมาณ 2569',
-      category: 'งานวิจัย',
-      link: 'https://research.npu.ac.th/news/research-2569',
-      date: new Date('2025-10-01'),
-      dateend: new Date('2025-12-31'),
-    },
-    {
-      title: 'ประกาศทุนสนับสนุนงานวิจัยจาก สกสว. รอบที่ 2',
-      category: 'ทุนวิจัย',
-      link: 'https://research.npu.ac.th/news/tsri-round2',
-      date: new Date('2025-09-15'),
-      dateend: new Date('2025-11-30'),
-    },
-    {
-      title: 'ขอเชิญเข้าร่วมอบรมการเขียนบทความวิจัยเพื่อตีพิมพ์ระดับนานาชาติ',
-      category: 'อบรม/สัมมนา',
-      link: 'https://research.npu.ac.th/news/international-paper-workshop',
-      date: new Date('2025-08-20'),
-      dateend: new Date('2025-08-25'),
-    },
-  ];
+  constructor(private router: Router) {}
 
-  filteredNews = [...this.news];
+  editNews(news: News) {
+    this.router.navigate(['/admin-news/edit', news.id]);
+  }
 
   onSearch() {
-    const keyword = this.searchText.toLowerCase().trim();
-
-    this.filteredNews = this.news.filter((n) =>
-      n.title.toLowerCase().includes(keyword)
+    this.filteredNews = this.news.filter(n =>
+      n.title.toLowerCase().includes(this.searchText.toLowerCase())
     );
   }
 
-  get totalPages(): number {
-    return Math.ceil(this.news.length / this.pageSize);
+  get paginatedNews() {
+    const start = (this.currentPage - 1) * this.pageSize;
+    return this.filteredNews.slice(start, start + this.pageSize);
   }
 
-  get paginatedNews() {
-    const startIndex = (this.currentPage - 1) * this.pageSize;
-    return this.news.slice(startIndex, startIndex + this.pageSize);
+  get totalPages() {
+    return Math.ceil(this.filteredNews.length / this.pageSize);
   }
 
   changePage(page: number) {
-    if (page < 1 || page > this.totalPages) return;
-    this.currentPage = page;
-  }
-
-  newNews: News = {
-    title: '',
-    category: '',
-    link: '',
-    date: new Date(),
-    dateend: new Date(),
-  };
-
-  openAddModal() {
-    (this.modalMode = 'add'),
-      (this.newNews = {
-        title: '',
-        category: '',
-        link: '',
-        date: new Date(),
-        dateend: new Date(),
-      });
-    this.showModal = true;
-  }
-
-  openEditModal(item: any, index: number) {
-    (this.modalMode = 'edit'),
-      (this.editIndex = index),
-      (this.newNews = { ...item });
-    this.showModal = true;
-  }
-
-  updateNews() {
-    if (this.editIndex === null) return;
-
-    this.news[this.editIndex] = { ...this.newNews };
-    this.onSearch();
-    this.closeModal();
-  }
-
-  closeModal() {
-    this.showModal = false;
-    this.resetForm();
-  }
-
-  saveNews() {
-    if (!this.newNews.title || !this.newNews.category || !this.newNews.link) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'ข้อมูลไม่ครบ',
-        text: 'กรุณากรอกข้อมูลให้ครบถ้วน',
-        confirmButtonText: 'ตกลง',
-      });
-      return;
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
     }
-
-    this.news.push({ ...this.newNews });
-    this.onSearch();
-    this.closeModal();
-
-    Swal.fire({
-      icon: 'success',
-      title: 'บันทึกสำเร็จ',
-      text: 'เพิ่มข้อมูลข่าวเรียบร้อย',
-      timer: 1500,
-      showConfirmButton: false,
-    });
   }
 
-  resetForm() {
-    this.newNews = {
-      title: '',
-      category: '',
-      link: '',
-      date: new Date(),
-      dateend: new Date(),
-    };
+  createNews() {
+    this.router.navigate(['/admin-news/create']);
   }
 
   delectNews(index: number) {

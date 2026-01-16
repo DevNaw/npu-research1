@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   ApexChart,
   ApexDataLabels,
@@ -48,11 +48,16 @@ interface Publication {
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
 })
-export class UserDashboardComponent {
+export class UserDashboardComponent implements OnInit {
+  pageSize = 10;
+  currentPage = 1;
+  searchText = '';
+
   series: ApexNonAxisChartSeries = [
     18.2, 12.5, 10.8, 8.6, 7.4, 6.2, 5.5, 4.8, 4.1, 3.7, 3.2, 2.8, 2.4, 2.1,
     1.9, 1.6, 1.3, 1.1, 0.9, 0.8, 0.7,
   ];
+  
 
   colors: string[] = [
     '#4C78A8', // น้ำเงิน
@@ -446,22 +451,46 @@ export class UserDashboardComponent {
 
   constructor(private router: Router){}
 
-  pageSize = 10;
-  currentPage = 1;
+  
+  filteredResearch: Publication[] = [];
+  paginatedPublications: Publication[] = [];
 
-  get totalPages(): number {
-    return Math.ceil(this.publications.length / this.pageSize);
+  ngOnInit(): void {
+      this.filteredResearch = [...this.publications];
+      this.updatePagination();
+  }
+  onSearch() {
+    const keyword = this.searchText.toLowerCase().trim();
+
+    this.filteredResearch = this.publications.filter((p) =>
+      p.title.toLowerCase().includes(keyword) ||
+      p.researchers.toLowerCase().includes(keyword) ||
+      p.journal.toLowerCase().includes(keyword) ||
+      p.year.toString().includes(keyword)
+    );
+
+    this.currentPage = 1;
+    this.updatePagination();
   }
 
-  get paginatedPublications() {
-    const startIndex = (this.currentPage - 1) * this.pageSize;
-    return this.publications.slice(startIndex, startIndex + this.pageSize);
+  updatePagination(): void {
+    const start = (this.currentPage - 1) * this.pageSize;
+    const end = start + this.pageSize;
+
+    this.paginatedPublications = this.filteredResearch.slice(start, end);
   }
 
   changePage(page: number) {
     if (page < 1 || page > this.totalPages) return;
+
     this.currentPage = page;
+    this.updatePagination();
+
     // window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.publications.length / this.pageSize);
   }
 
   // Nevigate to

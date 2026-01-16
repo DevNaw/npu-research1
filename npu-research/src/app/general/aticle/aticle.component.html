@@ -15,7 +15,7 @@
     </div>
     <div class="w-full overflow-x-auto">
       <table
-        class="min-w-225 w-full border border-gray-300 rounded-lg overflow-hidden mt-4"
+        class="min-w-225 w-full border overflow-hidden mt-4"
       >
         <thead>
           <tr class="bg-[#FACC15] text-[#1E293B] border-b">
@@ -27,7 +27,7 @@
     
         <tbody>
           <tr
-            *ngFor="let publication of filteredAticles; let i = index"
+            *ngFor="let publication of paginatedAticles; let i = index"
             class="border-b hover:bg-gray-50 transition"
           >
             <!-- ลำดับ -->

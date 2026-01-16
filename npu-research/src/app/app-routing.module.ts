@@ -35,6 +35,8 @@ import { AdminNewsComponent } from './admin-pages/admin-news/admin-news.componen
 import { AdminDownloadComponent } from './admin-pages/admin-download/admin-download.component';
 import { AdminSearchResearcherComponent } from './admin-pages/admin-search-researcher/admin-search-researcher.component';
 import { AdminSearchPaperComponent } from './admin-pages/admin-search-paper/admin-search-paper.component';
+import { NewsEditComponent } from './admin-pages/news-edit/news-edit.component';
+import { PerformanceComponent } from './user-pages/performance/performance.component';
 
 const routes: Routes = [
   { path: '', component: NavbarComponent },
@@ -45,8 +47,11 @@ const routes: Routes = [
   { path: 'test', component: TestComponent },
   { path: 'dashboard', component: UserDashboardComponent },
   { path: 'user-add-aticle', component: UserAddAticleComponent },
+  { path: 'user-add-aticle/:id', component: UserAddAticleComponent },
   { path: 'user-add-innovation', component: UserAddInnovationComponent },
+  { path: 'user-add-innovation/:id', component: UserAddInnovationComponent },
   { path: 'user-add-research', component: UserAddResearchComponent },
+  { path: 'user-add-research/:id', component: UserAddResearchComponent },
   { path: 'user-research', component: UserResearchComponent },
   { path: 'user-researchers', component: UserResearchersComponent },
   { path: 'user-profile', component: UserProfileComponent },
@@ -54,6 +59,7 @@ const routes: Routes = [
   { path: 'user-edit-profile', component: UserEditProfileComponent },
   { path: 'user-edit-study', component: UserEditStudyComponent },
   { path: 'user-edit-traning', component: UserEditTraningComponent },
+  { path: 'performance/:type/:id', component: PerformanceComponent },
 
   // General
   { path: 'aticle', component: AticleComponent },
@@ -76,6 +82,8 @@ const routes: Routes = [
   { path: 'admin-search-paper', component: AdminSearchPaperComponent },
   { path: 'external-funding', component: ExternalFundingComponent },
   { path: 'specialization', component: SpecializationComponent },
+  { path: 'admin-news/create', component: NewsEditComponent },
+  { path: 'admin-news/edit/:id', component: NewsEditComponent },
 ];
 
 @NgModule({

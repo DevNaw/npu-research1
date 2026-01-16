@@ -41,6 +41,8 @@ import { AdminNewsComponent } from './admin-pages/admin-news/admin-news.componen
 import { AdminDownloadComponent } from './admin-pages/admin-download/admin-download.component';
 import { AdminSearchResearcherComponent } from './admin-pages/admin-search-researcher/admin-search-researcher.component';
 import { AdminSearchPaperComponent } from './admin-pages/admin-search-paper/admin-search-paper.component';
+import { NewsEditComponent } from './admin-pages/news-edit/news-edit.component';
+import { PerformanceComponent } from './user-pages/performance/performance.component';
 
 @NgModule({
   declarations: [
@@ -81,6 +83,8 @@ import { AdminSearchPaperComponent } from './admin-pages/admin-search-paper/admi
     AdminDownloadComponent,
     AdminSearchResearcherComponent,
     AdminSearchPaperComponent,
+    NewsEditComponent,
+    PerformanceComponent,
   ],
   imports: [
     BrowserModule,
