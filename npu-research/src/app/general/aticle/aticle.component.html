@@ -13,7 +13,8 @@
         />
       </div>
     </div>
-    <div class="w-full overflow-x-auto">
+    
+    <!-- <div class="w-full overflow-x-auto">
       <table
         class="min-w-225 w-full border overflow-hidden mt-4"
       >
@@ -30,12 +31,12 @@
             *ngFor="let publication of paginatedAticles; let i = index"
             class="border-b hover:bg-gray-50 transition"
           >
-            <!-- ลำดับ -->
+           
             <td class="p-3 text-center border-r whitespace-nowrap">
               {{ (currentPage - 1) * pageSize + i + 1 }}
             </td>
     
-            <!-- ผู้วิจัย -->
+            
             <td
               class="p-3 pl-6 border-r flex items-center gap-3 wrap-break-word whitespace-normal"
             >
@@ -49,19 +50,81 @@
               </span>
             </td>
     
-            <!-- ชื่อบทความ -->
             <td class="p-3 pl-6 wrap-break-word whitespace-normal">
               {{ publication.title }}
             </td>
           </tr>
     
-          <!-- ไม่พบข้อมูล -->
           <tr *ngIf="filteredAticles.length === 0">
             <td colspan="3" class="text-center p-4 text-gray-500">
               ไม่พบผลงานที่ค้นหา
             </td>
           </tr>
         </tbody>
+      </table>
+    </div> -->
+    
+    <div class="w-full overflow-x-auto mt-6 bg-white shadow-sm">
+      <table class="min-w-225 w-full text-sm text-gray-700 border">
+    
+        <!-- Header -->
+        <thead class="bg-linear-to-r border from-yellow-300 to-yellow-400 text-[#1E293B]">
+          <tr>
+            <th class="px-4 py-4 w-20 text-center border-r font-semibold">
+              ลำดับ
+            </th>
+            <th class="px-6 py-4 text-left border-r font-semibold">
+              ผู้วิจัย
+            </th>
+            <th class="px-6 py-4 text-left font-semibold">
+              ชื่อบทความ / วารสาร
+            </th>
+          </tr>
+        </thead>
+    
+        <!-- Body -->
+        <tbody>
+          <tr
+            *ngFor="let publication of paginatedAticles; let i = index"
+            class="border-b hover:bg-indigo-50 transition"
+          >
+            <!-- Index -->
+            <td class="text-center py-4 border-r font-medium">
+              {{ (currentPage - 1) * pageSize + i + 1 }}
+            </td>
+    
+            <!-- Researcher -->
+            <td class="px-6 py-4 border-r">
+              <div class="flex items-center gap-4">
+                <img
+                  src="assets/logoNPU.png"
+                  alt="researcher"
+                  class="h-14 w-14 rounded-full object-contain border shrink-0 bg-white"
+                />
+    
+                <div class="leading-relaxed wrap-break-word whitespace-normal">
+                  {{ publication.researchers }}
+                </div>
+              </div>
+            </td>
+    
+            <!-- Title -->
+            <td class="px-6 py-4">
+              <div class="leading-relaxed wrap-break-word whitespace-normal text-gray-800">
+                {{ publication.title }}
+              </div>
+            </td>
+          </tr>
+    
+          <!-- No search result -->
+          <tr *ngIf="filteredAticles.length === 0">
+            <td colspan="3" class="text-center py-10 text-red-500">
+              <i class="bi bi-folder-x text-3xl block mb-2"></i>
+              ไม่พบผลงานที่ค้นหา
+            </td>
+          </tr>
+        </tbody>
+    
       </table>
     </div>
     

@@ -136,9 +136,9 @@
         <thead class="bg-yellow-400">
           <tr>
             <th class="p-2 border-r">ลำดับ</th>
-            <th class="p-2 text-left border-r">ชื่อผลงาน</th>
-            <th class="p-2 text-left border-r">ผู้วิจัย</th>
-            <th class="p-2 text-left border-r">วารสาร</th>
+            <th class="p-2 border-r">ชื่อผลงาน</th>
+            <th class="p-2 border-r">ผู้วิจัย</th>
+            <th class="p-2 border-r">วารสาร</th>
             <th class="p-2">ปี</th>
           </tr>
         </thead>
@@ -168,7 +168,7 @@
         <button
           *ngFor="let p of [].constructor(totalPages); let i = index"
           (click)="changePage(i + 1)"
-          class="px-3 py-1 border rounded"
+          class="px-3 py-1 border rounded cursor-pointer"
           [class.bg-yellow-400]="currentPage === i + 1"
         >
           {{ i + 1 }}

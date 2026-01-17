@@ -1,5 +1,5 @@
 <div class="contain-content bg-gray-100 p-3">
-  <div class="max-w-7xl mx-auto px-2 py-10 bg-white rounded-xl">
+  <div class="max-w-7xl mt-5 mb-5 mx-auto px-2 py-10 bg-white rounded-xl">
     <div class="mt-5">
       <h1 class="text-3xl ml-5">โครงการงานวิจัย</h1>
       <div class="flex justify-end items-center mt-1">
@@ -15,7 +15,8 @@
         />
       </div>
     </div>
-    <div class="w-full overflow-x-auto">
+
+    <!-- <div class="w-full overflow-x-auto">
       <table
         class="min-w-225 w-full border overflow-hidden mt-4 "
       >
@@ -57,7 +58,72 @@
           </tr>
         </tbody>
       </table>
+    </div> -->
+
+    <div class="w-full overflow-x-auto bg-white shadow-sm mt-6">
+      <table class="min-w-225 w-full text-sm text-gray-700 border">
+        
+        <!-- Header -->
+        <thead class="bg-linear-to-r from-yellow-300 to-yellow-400 text-[#1E293B] border">
+          <tr>
+            <th class="px-4 py-4 w-20 text-center border-r font-semibold">
+              ลำดับ
+            </th>
+            <th class="px-6 py-4 text-left border-r font-semibold">
+              ผู้วิจัย
+            </th>
+            <th class="px-6 py-4 text-left font-semibold">
+              ชื่อผลงานวิจัย
+            </th>
+          </tr>
+        </thead>
+    
+        <!-- Body -->
+        <tbody>
+          <tr
+            *ngFor="let r of paginatedReseacrchs; let i = index"
+            class="border-b hover:bg-indigo-50 transition"
+          >
+            <!-- Index -->
+            <td class="text-center py-4 border-r font-medium">
+              {{ (currentPage - 1) * pageSize + i + 1 }}
+            </td>
+    
+            <!-- Researcher -->
+            <td class="px-6 py-4 border-r">
+              <div class="flex items-center gap-4">
+                <img
+                  src="assets/logoNPU.png"
+                  alt="researcher"
+                  class="h-14 w-14 rounded-full object-contain border shrink-0 bg-white"
+                />
+    
+                <div class="leading-relaxed wrap-break-word whitespace-normal">
+                  {{ r.researchers }}
+                </div>
+              </div>
+            </td>
+    
+            <!-- Title -->
+            <td class="px-6 py-4">
+              <div class="leading-relaxed wrap-break-word whitespace-normal text-gray-800">
+                {{ r.title }}
+              </div>
+            </td>
+          </tr>
+    
+          <!-- No result from search -->
+          <tr *ngIf="filteredReseacrchs.length === 0">
+            <td colspan="3" class="text-center py-10 text-red-500">
+              <i class="bi bi-folder-x text-3xl block mb-2"></i>
+              ไม่พบผลงานที่ค้นหา
+            </td>
+          </tr>
+        </tbody>
+    
+      </table>
     </div>
+    
 
     <div
       class="flex flex-col md:flex-row md:justify-between md:items-center mt-4 gap-2"

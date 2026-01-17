@@ -39,13 +39,19 @@ import { NewsEditComponent } from './admin-pages/news-edit/news-edit.component';
 import { PerformanceComponent } from './user-pages/performance/performance.component';
 
 const routes: Routes = [
-  { path: '', component: NavbarComponent },
+  { path: 'login', component: LoginComponent },
+
+  { path: 'user/dashboard', component: UserDashboardComponent },
+  { path: 'admin/dashboard', component: UserDashboardComponent },
+  { path: 'dashboard', component: UserDashboardComponent },
+
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+
   { path: 'footer', component: FooterComponent },
   { path: 'main', component: MainComponent },
-  { path: 'login', component: LoginComponent },
+  
   { path: 'register', component: RegisterComponent },
   { path: 'test', component: TestComponent },
-  { path: 'dashboard', component: UserDashboardComponent },
   { path: 'user-add-aticle', component: UserAddAticleComponent },
   { path: 'user-add-aticle/:id', component: UserAddAticleComponent },
   { path: 'user-add-innovation', component: UserAddInnovationComponent },

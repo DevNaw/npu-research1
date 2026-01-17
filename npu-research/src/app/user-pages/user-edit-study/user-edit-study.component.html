@@ -14,64 +14,96 @@
       <button (click)="openModal()" class="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition"><i class="bi bi-plus"></i>เพิ่มข้อมูลการศึกษา</button>
     </div>
 
-    <div class="w-full overflow-x-auto">
-      <table
-        class="min-w-225 w-full border border-gray-300 rounded-lg overflow-hidden mt-4"
-      >
+    <div class="w-full overflow-x-auto bg-white shadow-sm">
+      <table class="min-w-225 w-full border-collapse  border">
+    
+        <!-- Table Header -->
         <thead>
           <tr class="bg-[#FACC15] text-[#1E293B] border-b">
-            <th class="p-3 text-left whitespace-nowrap">ระดับ</th>
-            <th class="p-3 text-left">สาขา/คุณวุฒิ</th>
-            <th class="p-3 text-left">สถานศึกษา</th>
-            <th class="p-3 text-left">ประเทศ</th>
-            <th class="p-3 text-left whitespace-nowrap">เกรดเฉลี่ย(GPAX)</th>
-            <th class="p-3 text-left whitespace-nowrap">ปีที่เข้าศึกษา</th>
-            <th class="p-3 text-left whitespace-nowrap">ปีที่สำเร็จการศึกษา</th>
-            <th class="p-3 text-left whitespace-nowrap">แก้ไข</th>
+            <th class="px-4 py-3 text-center whitespace-nowrap border-r font-semibold">
+              ระดับ
+            </th>
+            <th class="px-4 py-3 text-center border-r font-semibold">
+              สาขา / คุณวุฒิ
+            </th>
+            <th class="px-4 py-3 text-center border-r font-semibold">
+              สถานศึกษา
+            </th>
+            <th class="px-4 py-3 text-center border-r font-semibold">
+              ประเทศ
+            </th>
+            <th class="px-4 py-3 text-center whitespace-nowrap border-r font-semibold">
+              GPAX
+            </th>
+            <th class="px-4 py-3 text-center whitespace-nowrap border-r font-semibold">
+              ปีที่เข้า
+            </th>
+            <th class="px-4 py-3 text-center whitespace-nowrap border-r font-semibold">
+              ปีที่สำเร็จ
+            </th>
+            <th class="px-4 py-3 text-center whitespace-nowrap font-semibold">
+              การจัดการ
+            </th>
           </tr>
         </thead>
     
+        <!-- Table Body -->
         <tbody>
-          <tr
-            
-            class="border-b hover:bg-gray-50 transition"
-          >
+          <tr class="hover:bg-gray-50 transition">
     
-            <td
-              class="p-3 max-w-87.5 wrap-break-word"
-            >
+            <td class="px-4 py-3 max-w-88 wrap-break-word border-r">
               ปริญญาเอก
             </td>
     
-            <td class="p-3 max-w-60 wrap-break-word">
+            <td class="px-4 py-3 max-w-60 wrap-break-word border-r">
               วิศวกรรมคอมพิวเตอร์
             </td>
     
-            <td class="p-3 max-w-55 wrap-break-word">
+            <td class="px-4 py-3 max-w-56 wrap-break-word border-r">
               มหาวิทยาลัยนครพนม
             </td>
     
-            <td class="p-3 whitespace-nowrap">
+            <td class="px-4 py-3 whitespace-nowrap border-r">
               ไทยแลนด์
             </td>
     
-            <td class="p-3 whitespace-nowrap">
+            <td class="px-4 py-3 whitespace-nowrap border-r">
               4.00
             </td>
-            <td class="p-3 whitespace-nowrap">
+    
+            <td class="px-4 py-3 whitespace-nowrap border-r">
               1/1/2020
             </td>
-            <td class="p-3 whitespace-nowrap">
+    
+            <td class="px-4 py-3 whitespace-nowrap border-r">
               1/1/2024
             </td>
-            <td class="p-3 whitespace-nowrap">
-              <i (click)="openModalEdit()" class="bi bi-pencil mr-3 text-sky-500 cursor-pointer hover:text-sky-700"></i>
-              <i class="bi bi-trash3 text-red-500 cursor-pointer hover:text-red-700"></i>
+    
+            <!-- Actions -->
+            <td class="px-4 py-3 text-center whitespace-nowrap">
+              <button
+                (click)="openModalEdit()"
+                class="inline-flex items-center justify-center w-9 h-9 rounded-full
+                       text-sky-600 hover:bg-sky-100 hover:text-sky-700 transition"
+                title="แก้ไข"
+              >
+                <i class="bi bi-pencil"></i>
+              </button>
+    
+              <button
+                class="inline-flex items-center justify-center w-9 h-9 rounded-full
+                       text-red-500 hover:bg-red-100 hover:text-red-700 transition"
+                title="ลบ"
+              >
+                <i class="bi bi-trash3"></i>
+              </button>
             </td>
           </tr>
         </tbody>
+    
       </table>
-  </div>
+    </div>
+    
   <!-- ปุ่ม -->
   <div class="flex justify-center mt-6">
     <button

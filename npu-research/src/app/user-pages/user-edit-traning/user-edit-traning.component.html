@@ -23,41 +23,76 @@
     </div>
 
     <!-- ตาราง -->
-    <div class="w-full overflow-x-auto">
-      <table
-        class="min-w-255 w-full border border-gray-300 rounded-lg overflow-hidden"
-      >
+    <div class="w-full overflow-x-auto bg-white shadow-sm">
+      <table class="min-w-255 w-full border-collapse border">
+    
+        <!-- Header -->
         <thead>
           <tr class="bg-[#FACC15] text-[#1E293B] border-b">
-            <th class="p-3 whitespace-nowrap text-left">ชื่อหัวข้อการอบรม</th>
-            <th class="p-3 whitespace-nowrap text-left">
-              จัดโดย (หน่วยงานที่จัด)
+            <th class="px-4 py-3 text-center whitespace-nowrap border-r font-semibold">
+              ชื่อหัวข้อการอบรม
             </th>
-            <th class="p-3 whitespace-nowrap text-left">สถานที่จัดอบรม</th>
-            <th class="p-3 whitespace-nowrap text-left">ปีที่จัดอบรม</th>
-            <th class="p-3 whitespace-nowrap text-left"></th>
+            <th class="px-4 py-3 text-center whitespace-nowrap border-r font-semibold">
+              หน่วยงานที่จัด
+            </th>
+            <th class="px-4 py-3 text-center whitespace-nowrap border-r font-semibold">
+              สถานที่จัดอบรม
+            </th>
+            <th class="px-4 py-3 text-center whitespace-nowrap border-r font-semibold">
+              ปีที่จัดอบรม
+            </th>
+            <th class="px-4 py-3 text-center whitespace-nowrap font-semibold">
+              การจัดการ
+            </th>
           </tr>
         </thead>
+    
+        <!-- Body -->
         <tbody>
           <tr class="border-b hover:bg-gray-50 transition">
-            <td class="p-3 max-w-87.5 wrap-break-word">TopGunNer</td>
-            <td class="p-3 max-w-87.5 wrap-break-word">Islander</td>
-            <td class="p-3 max-w-87.5 wrap-break-word">Nakhon</td>
-            <td class="p-3 max-w-87.5 wrap-break-word">2025</td>
-            <td class="p-3 max-w-87.5 wrap-break-word">
-              <i
+    
+            <td class="px-4 py-3 max-w-88 wrap-break-word text-center border-r">
+              TopGunNer
+            </td>
+    
+            <td class="px-4 py-3 max-w-88 wrap-break-word text-center border-r">
+              Islander
+            </td>
+    
+            <td class="px-4 py-3 max-w-88 wrap-break-word text-center border-r">
+              Nakhon
+            </td>
+    
+            <td class="px-4 py-3 whitespace-nowrap text-center border-r">
+              2025
+            </td>
+    
+            <!-- Actions -->
+            <td class="px-4 py-3 text-center whitespace-nowrap">
+              <button
                 (click)="openModalEdit()"
-                class="bi bi-pencil mr-3 text-sky-500 hover:text-sky-700 cursor-pointer"
-              ></i
-              ><i
-              (click)="deleteTraining()"
-                class="bi bi-trash3 text-red-500 hover:text-red-700 cursor-pointer"
-              ></i>
+                class="inline-flex items-center justify-center w-9 h-9 rounded-full
+                       text-sky-600 hover:bg-sky-100 hover:text-sky-700 transition"
+                title="แก้ไข"
+              >
+                <i class="bi bi-pencil"></i>
+              </button>
+    
+              <button
+                (click)="deleteTraining()"
+                class="inline-flex items-center justify-center w-9 h-9 rounded-full
+                       text-red-500 hover:bg-red-100 hover:text-red-700 transition"
+                title="ลบ"
+              >
+                <i class="bi bi-trash3"></i>
+              </button>
             </td>
           </tr>
         </tbody>
+    
       </table>
     </div>
+    
 
     <!-- ปุ่ม -->
     <div class="flex justify-center mt-6">

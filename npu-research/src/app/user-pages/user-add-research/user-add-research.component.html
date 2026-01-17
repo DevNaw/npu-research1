@@ -1,5 +1,5 @@
 <div class="contain-content bg-gray-100 p-3">
-  <div class="max-w-7xl mt-5 mx-auto px-20 py-10 bg-white rounded-xl shadow-md">
+  <div class="max-w-7xl mt-5 mb-5 mx-auto px-20 py-10 bg-white rounded-xl shadow-md">
     <div class="max-w-7xl mx-auto px-6 py-10 rounded-xl">
       <h2 class="text-2xl font-semibold">{{ isEdit ? 'แก้ไขผลงานโครงการวิจัย' : 'เพิ่มผลงานโครงการวิจัยใหม่' }}</h2>
     </div>
@@ -49,25 +49,25 @@
 
         <!-- Table -->
         <div class="md:col-span-3 overflow-x-auto mt-2">
-          <h1 class="mb-3 font-semibold">ระบุผู้ร่วมโครงการภายใน</h1>
+          <h1 class="mb-3 text-2xl">ระบุผู้ร่วมโครงการภายใน</h1>
 
           <table
-            class="w-full max-w-4xl border border-gray-300 rounded-xl overflow-hidden ml-auto"
+            class="w-full max-w-4xl border overflow-hidden ml-auto"
           >
             <thead>
-              <tr class="bg-[#FACC15] text-[#1E293B] text-center">
-                <th class="p-3 w-16">ที่</th>
-                <th class="p-3">ระบุชื่อ</th>
-                <th class="p-3">ประเภทความรับผิดชอบ</th>
+              <tr class="bg-[#FACC15] text-[#1E293B] border text-center">
+                <th class="p-3 w-16 border-r">ที่</th>
+                <th class="p-3 border-r">ระบุชื่อ</th>
+                <th class="p-3 border-r">ประเภทความรับผิดชอบ</th>
                 <th class="p-3">ลบ</th>
               </tr>
             </thead>
 
             <tbody>
               <tr *ngFor="let j of rows2; let i = index; trackBy: trackByIndex" class="border-b">
-                <td class="text-center p-3">{{ i + 1 }}</td>
+                <td class="text-center p-3 border-r">{{ i + 1 }}</td>
 
-                <td class="text-center p-3">
+                <td class="text-center p-3 border-r">
                     <input
                       type="text"
                       class="w-full border rounded-md px-3 py-2"
@@ -76,7 +76,7 @@
                     />
                   </td>
 
-                  <td class="p-3">
+                  <td class="p-3 border-r">
                     <select
                       class="w-full border rounded-md px-3 py-2"
                       [(ngModel)]="j.organization"
@@ -103,23 +103,23 @@
           <div class="flex justify-center-safe mt-6 ">
             <button
               type="button"
-              class="mt-4 px-4 py-2 bg-[#FDE68A] text-[#1E293B] hover:bg-[#FACC15] rounded-md"
+              class="mt-4 px-4 py-2 bg-[#FDE68A] text-[#1E293B] hover:bg-[#FACC15] rounded-md cursor-pointer"
               (click)="addRow2()"
             >
               เพิ่มรายการ
             </button></div>
 
-          <h1 class="mb-3 font-semibold">ระบุผู้ร่วมโครงการภายนอก</h1>
+          <h1 class="mb-3 text-2xl">ระบุผู้ร่วมโครงการภายนอก</h1>
 
           <table
-            class="w-full max-w-4xl border border-gray-300 rounded-xl overflow-hidden ml-auto"
+            class="w-full max-w-4xl border overflow-hidden ml-auto"
           >
             <thead>
-              <tr class="bg-[#FACC15] text-[#1E293B] text-center">
-                <th class="p-3">ที่</th>
-                <th class="p-3">ระบุชื่อ(บุคลากรภายนอก)</th>
-                <th class="p-3">ประเภทความรับผิดชอบ</th>
-                <th class="p-3">หน่วยงาน(บุคลากรภายนอก)</th>
+              <tr class="bg-[#FACC15] text-[#1E293B] border text-center">
+                <th class="p-3 border-r">ที่</th>
+                <th class="p-3 border-r">ระบุชื่อ(บุคลากรภายนอก)</th>
+                <th class="p-3 border-r">ประเภทความรับผิดชอบ</th>
+                <th class="p-3 border-r">หน่วยงาน(บุคลากรภายนอก)</th>
                 <th class="p-3">ลบ</th>
               </tr>
             </thead>
@@ -129,9 +129,9 @@
                 *ngFor="let item of rows; let i = index; trackBy: trackByIndex"
                 class="border-b"
               >
-                <td class="text-center p-3">{{ i + 1 }}</td>
+                <td class="text-center p-3 border-r">{{ i + 1 }}</td>
 
-                <td class="text-center p-3">
+                <td class="text-center p-3 border-r">
                   <input
                     type="text"
                     class="w-full border rounded-md px-3 py-2"
@@ -140,7 +140,7 @@
                   />
                 </td>
 
-                <td class="p-3">
+                <td class="p-3 border-r">
                   <select
                     class="w-full border rounded-md px-3 py-2"
                     [(ngModel)]="item.role"
@@ -153,7 +153,7 @@
                     <option value="กรรมการ">กรรมการ</option>
                   </select>
                 </td>
-                <td class="p-3">
+                <td class="p-3 border-r">
                   <input
                     type="text"
                     class="w-full border rounded-md px-3 py-2"
@@ -176,7 +176,7 @@
           <div class="flex justify-center-safe mt-6 ">
             <button
               type="button"
-              class="mt-4 px-4 py-2 bg-[#FDE68A] text-[#1E293B] hover:bg-[#FACC15] rounded-md"
+              class="mt-4 px-4 py-2 bg-[#FDE68A] text-[#1E293B] hover:bg-[#FACC15] rounded-md cursor-pointer"
               (click)="addRow()"
             >
               เพิ่มรายการ
@@ -295,7 +295,7 @@
         </span>
         <button
           type="button"
-          class="px-4 py-2 bg-[#FDE68A] text-[#1E293B] hover:bg-[#FACC15] rounded-md"
+          class="px-4 py-2 bg-[#FDE68A] text-[#1E293B] hover:bg-[#FACC15] rounded-md cursor-pointer"
           (click)="reportFileInput.click()"
         >
           เลือกไฟล์
@@ -325,7 +325,7 @@
         </span>
         <button
           type="button"
-          class="px-4 py-2 bg-[#FDE68A] text-[#1E293B] hover:bg-[#FACC15] rounded-md"
+          class="px-4 py-2 bg-[#FDE68A] text-[#1E293B] cursor-pointer hover:bg-[#FACC15] rounded-md"
           (click)="fileInput.click()"
         >
           เลือกไฟล์
@@ -337,7 +337,7 @@
     <div class="flex justify-center mt-6">
       <button
         type="submit"
-        class="px-6 py-2 bg-[#FDE68A] text-[#1E293B] hover:bg-[#FACC15] rounded-md transition"
+        class="px-6 py-2 bg-[#FDE68A] text-[#1E293B] hover:bg-[#FACC15] cursor-pointer rounded-md transition"
       >
         บันทึกข้อมูล
       </button>

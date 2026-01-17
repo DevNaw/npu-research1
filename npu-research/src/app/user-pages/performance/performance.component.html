@@ -1,104 +1,162 @@
 <div class="bg-gray-100 min-h-screen p-6">
-    <div class="max-w-6xl mx-auto bg-white rounded-2xl shadow p-8 space-y-8">
-  
-      <!-- Header -->
-      <div class="flex justify-between items-center">
-        <h1 class="text-3xl font-semibold text-gray-800">
+  <div class="max-w-6xl mx-auto bg-white rounded-2xl shadow-sm p-8 space-y-10">
+
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <h1 class="text-3xl font-bold text-gray-800">
+        ข้อมูลผลงาน
+      </h1>
+
+      <div class="flex gap-3">
+        <button
+          (click)="goBack()"
+          class="px-4 py-2 rounded-lg border text-gray-600 hover:bg-gray-100 transition"
+        >
+          ← กลับ
+        </button>
+
+        <button
+          (click)="goEdit()"
+          class="px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition flex items-center gap-2"
+        >
+          <i class="bi bi-pencil-square"></i>
+          แก้ไข
+        </button>
+      </div>
+    </div>
+
+    <!-- ================= RESEARCH ================= -->
+    <div *ngIf="type === 'research'" class="space-y-8">
+
+      <!-- ข้อมูลทั่วไป -->
+      <div class="rounded-xl border p-6 space-y-4">
+        <h2 class="text-lg font-semibold text-indigo-700 flex items-center gap-2">
+          <i class="bi bi-info-circle"></i> ข้อมูลทั่วไป
+        </h2>
+
+        <h3 class="text-xl font-bold text-gray-800">
           {{ data.title }}
-        </h1>
-  
-        <div class="flex gap-2">
-          <button
-            (click)="goBack()"
-            class="px-4 py-2 rounded-md border text-gray-600 hover:bg-gray-100">
-            ← กลับ
-          </button>
-  
-          <button
-            (click)="goEdit()"
-            class="px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700">
-            ✏️ แก้ไข
-          </button>
+        </h3>
+
+        <div class="grid md:grid-cols-2 gap-4 text-sm text-gray-700">
+          <p><span class="font-medium">สาขา:</span> {{ data.field }}</p>
+          <p><span class="font-medium">ความรับผิดชอบ:</span> {{ data.responsibility }}</p>
+          <p><span class="font-medium">สถานะ:</span>
+            <span class="px-2 py-1 rounded-full bg-green-100 text-green-700 text-xs">
+              {{ data.status }}
+            </span>
+          </p>
         </div>
       </div>
-  
-      <hr />
-  
-      <!-- ================= RESEARCH ================= -->
-      <div *ngIf="type === 'research'" class="space-y-6">
-        <section>
-          <h2 class="section-title">ข้อมูลทั่วไป</h2>
-          <div class="grid grid-cols-2 gap-4">
-            <p><b>สาขา:</b> {{ data.field }}</p>
-            <p><b>ประเภทความรับผิดชอบ:</b> {{ data.responsibility }}</p>
-            <p><b>สถานะ:</b> {{ data.status }}</p>
-          </div>
-        </section>
-  
-        <section>
-          <h2 class="section-title">งบประมาณ</h2>
-          <div class="grid grid-cols-3 gap-4">
-            <p>แหล่งเงินทุน: {{ data.fundSource }}</p>
-            <p>งบประมาณ: {{ data.budget }} บาท</p>
-            <p>ปีที่ได้รับทุน: {{ data.year }}</p>
-          </div>
-        </section>
-  
-        <section>
-          <h2 class="section-title">ผู้ร่วมโครงการ</h2>
-          <ul class="list-disc ml-6">
-            <li *ngFor="let m of data.internalMembers">
-              {{ m.name }} ({{ m.role }})
-            </li>
-            <li *ngFor="let m of data.externalMembers">
-              {{ m.name }} ({{ m.role }}) - {{ m.org }}
-            </li>
-          </ul>
-        </section>
-  
-        <section>
-          <h2 class="section-title">เอกสาร</h2>
-          <a class="link" href="#">{{ data.files.report }}</a><br />
-          <a class="link" href="#">{{ data.files.contract }}</a>
-        </section>
+
+      <!-- งบประมาณ -->
+      <div class="rounded-xl border p-6 space-y-4">
+        <h2 class="text-lg font-semibold text-indigo-700 flex items-center gap-2">
+          <i class="bi bi-cash-stack"></i> งบประมาณ
+        </h2>
+
+        <div class="grid md:grid-cols-3 gap-4 text-sm text-gray-700">
+          <p><b>แหล่งทุน:</b> {{ data.fundSource }}</p>
+          <p><b>งบประมาณ:</b> {{ data.budget | number }} บาท</p>
+          <p><b>ปี:</b> {{ data.year }}</p>
+        </div>
       </div>
-  
-      <!-- ================= ARTICLE ================= -->
-      <div *ngIf="type === 'article'" class="space-y-6">
-        <section>
-          <h2 class="section-title">ข้อมูลบทความ</h2>
-          <div class="grid grid-cols-2 gap-4">
-            <p>ประเภท: {{ data.articleType }}</p>
-            <p>วารสาร: {{ data.publisher }}</p>
-            <p>หน้า: {{ data.pages }}</p>
-            <p>ปี: {{ data.year }}</p>
-            <p>คุณภาพ: {{ data.weight }}</p>
-          </div>
-        </section>
-  
-        <section>
-          <h2 class="section-title">การเผยแพร่</h2>
-          <a class="link" [href]="data.doi" target="_blank">{{ data.doi }}</a>
-        </section>
+
+      <!-- ผู้ร่วมโครงการ -->
+      <div class="rounded-xl border p-6 space-y-4">
+        <h2 class="text-lg font-semibold text-indigo-700 flex items-center gap-2">
+          <i class="bi bi-people"></i> ผู้ร่วมโครงการ
+        </h2>
+
+        <ul class="list-disc ml-6 text-sm text-gray-700 space-y-1">
+          <li *ngFor="let m of data.internalMembers">
+            {{ m.name }} <span class="text-gray-500">({{ m.role }})</span>
+          </li>
+          <li *ngFor="let m of data.externalMembers">
+            {{ m.name }} ({{ m.role }}) - {{ m.org }}
+          </li>
+        </ul>
       </div>
-  
-      <!-- ================= INNOVATION ================= -->
-      <div *ngIf="type === 'innovation'" class="space-y-6">
-        <section>
-          <h2 class="section-title">รายละเอียดนวัตกรรม</h2>
-          <p>{{ data.principle }}</p>
-        </section>
-  
-        <section>
-          <h2 class="section-title">สิทธิบัตร</h2>
-          <p>เลขที่สิทธิบัตร: {{ data.patentNo }}</p>
-          <p>เลขที่คำขอ: {{ data.requestNo }}</p>
-          <a class="link" [href]="data.patentUrl" target="_blank">
-            ตรวจสอบสิทธิบัตร
+
+      <!-- เอกสาร -->
+      <div class="rounded-xl border p-6 space-y-4">
+        <h2 class="text-lg font-semibold text-indigo-700 flex items-center gap-2">
+          <i class="bi bi-file-earmark-text"></i> เอกสาร
+        </h2>
+
+        <div class="space-y-2 text-sm">
+          <a class="text-indigo-600 hover:underline flex items-center gap-2" href="#">
+            <i class="bi bi-download"></i> {{ data.files.report }}
           </a>
-        </section>
+          <a class="text-indigo-600 hover:underline flex items-center gap-2" href="#">
+            <i class="bi bi-download"></i> {{ data.files.contract }}
+          </a>
+        </div>
       </div>
-  
     </div>
+
+    <!-- ================= ARTICLE ================= -->
+    <div *ngIf="type === 'article'" class="space-y-8">
+
+      <div class="rounded-xl border p-6 space-y-4">
+        <h2 class="text-lg font-semibold text-indigo-700 flex items-center gap-2">
+          <i class="bi bi-journal-text"></i> ข้อมูลบทความ
+        </h2>
+
+        <div class="grid md:grid-cols-2 gap-4 text-sm text-gray-700">
+          <p><b>ประเภท:</b> {{ data.articleType }}</p>
+          <p><b>วารสาร:</b> {{ data.publisher }}</p>
+          <p><b>หน้า:</b> {{ data.pages }}</p>
+          <p><b>ปี:</b> {{ data.year }}</p>
+          <p><b>คุณภาพ:</b> {{ data.weight }}</p>
+        </div>
+      </div>
+
+      <div class="rounded-xl border p-6">
+        <h2 class="text-lg font-semibold text-indigo-700 flex items-center gap-2 mb-2">
+          <i class="bi bi-link-45deg"></i> การเผยแพร่
+        </h2>
+
+        <a
+          class="text-indigo-600 hover:underline break-all"
+          [href]="data.doi"
+          target="_blank"
+        >
+          {{ data.doi }}
+        </a>
+      </div>
+    </div>
+
+    <!-- ================= INNOVATION ================= -->
+    <div *ngIf="type === 'innovation'" class="space-y-8">
+
+      <div class="rounded-xl border p-6 space-y-4">
+        <h2 class="text-lg font-semibold text-indigo-700 flex items-center gap-2">
+          <i class="bi bi-lightbulb"></i> รายละเอียดนวัตกรรม
+        </h2>
+
+        <p class="text-sm text-gray-700 leading-relaxed">
+          {{ data.principle }}
+        </p>
+      </div>
+
+      <div class="rounded-xl border p-6 space-y-2">
+        <h2 class="text-lg font-semibold text-indigo-700 flex items-center gap-2">
+          <i class="bi bi-award"></i> สิทธิบัตร
+        </h2>
+
+        <p class="text-sm">เลขที่สิทธิบัตร: {{ data.patentNo }}</p>
+        <p class="text-sm">เลขคำขอ: {{ data.requestNo }}</p>
+
+        <a
+          class="text-indigo-600 hover:underline text-sm"
+          [href]="data.patentUrl"
+          target="_blank"
+        >
+          ตรวจสอบสิทธิบัตร
+        </a>
+      </div>
+    </div>
+
   </div>
-  
+</div>
