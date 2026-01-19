@@ -19,3 +19,9 @@ export interface DataPerformanceItem {
     province?: string;
     phone?: string;
   }
+
+  export interface Data {
+    id: number;
+    title: string;
+    researchers: string;
+  }

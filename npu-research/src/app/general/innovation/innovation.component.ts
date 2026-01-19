@@ -1,9 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-
-interface Innovation {
-  title: string;
-  researchers: string;
-}
+import { Data } from '../../models/data-performance.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-innovation',
@@ -16,65 +13,24 @@ export class InnovationComponent implements OnInit {
   currentPage = 1;
   searchText = '';
 
-  innovations: Innovation[] = [
+  innovations: Data[] = [
     {
+      id: 1,
       title: 'การพัฒนาระบบฐานข้อมูลวิจัย',
       researchers: 'ดร.เศริยา มั่งมี',
     },
     {
+      id: 2,
       title: 'ผลกระทบของการเปลี่ยนแปลงสภาพภูมิอากาศต่อการเกษตร',
       researchers: 'ผศ.สมชาย ใจดีผศ.สมชาย ใจดีผศ.สมชาย ใจดีผศ.สมชาย ใจดี',
     },
-    {
-      title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
-      researchers: 'ดร.สมหญิง แก้วใส',
-    },
-    {
-      title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
-      researchers: 'ดร.สมหญิง แก้วใส',
-    },
-    {
-      title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
-      researchers: 'ดร.สมหญิง แก้วใส',
-    },
-    {
-      title:
-        'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
-      researchers: 'ดร.สมหญิง แก้วใส',
-    },
-    {
-      title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
-      researchers: 'ดร.สมหญิง แก้วใส',
-    },
-    {
-      title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
-      researchers: 'ดร.สมหญิง แก้วใส',
-    },
-    {
-      title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
-      researchers: 'ดร.สมหญิง แก้วใส',
-    },
-    {
-      title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
-      researchers: 'ดร.สมหญิง แก้วใส',
-    },
-    {
-      title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
-      researchers: 'ดร.สมหญิง แก้วใส',
-    },
-    {
-      title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
-      researchers: 'ดร.สมหญิง แก้วใส',
-    },
-    {
-      title:
-        'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
-      researchers: 'ดร.สมหญิง แก้วใส',
-    },
+    
   ];
 
-  filteredInnovations: Innovation[] = [];
-  paginatedInnovations: Innovation[] = [];
+  constructor(private router: Router) {}
+
+  filteredInnovations: Data[] = [];
+  paginatedInnovations: Data[] = [];
 
   ngOnInit(): void {
     this.filteredInnovations = [...this.innovations];
@@ -112,5 +68,9 @@ export class InnovationComponent implements OnInit {
 
   get totalPages(): number {
     return Math.ceil(this.innovations.length / this.pageSize);
+  }
+
+  viewDetails(id: number): void {
+    this.router.navigate(['/performance/innovation', id]);
   }
 }

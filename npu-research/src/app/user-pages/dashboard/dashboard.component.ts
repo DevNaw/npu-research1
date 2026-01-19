@@ -6,13 +6,15 @@ import {
   ApexNonAxisChartSeries,
   ApexPlotOptions,
   ApexResponsive,
-  ApexStroke,
-  ApexTooltip,
 } from 'ng-apexcharts';
 import Swal from 'sweetalert2';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { Router } from '@angular/router';
+import {
+  DataPerformance,
+  DataPerformanceItem,
+} from '../../models/dashboard.model';
 
 export interface PieChartConfig {
   title: string;
@@ -35,6 +37,7 @@ interface News {
 }
 
 interface Publication {
+  id: number;
   title: string;
   researchers: string;
   journal: string;
@@ -52,12 +55,12 @@ export class UserDashboardComponent implements OnInit {
   pageSize = 10;
   currentPage = 1;
   searchText = '';
+  selectedTab: keyof DataPerformance = 'research';
 
   series: ApexNonAxisChartSeries = [
     18.2, 12.5, 10.8, 8.6, 7.4, 6.2, 5.5, 4.8, 4.1, 3.7, 3.2, 2.8, 2.4, 2.1,
     1.9, 1.6, 1.3, 1.1, 0.9, 0.8, 0.7,
   ];
-  
 
   colors: string[] = [
     '#4C78A8', // น้ำเงิน
@@ -353,120 +356,125 @@ export class UserDashboardComponent implements OnInit {
     },
   ];
 
-  publications: Publication[] = [
-    {
-      title: 'การพัฒนาระบบฐานข้อมูลวิจัย',
-      researchers: 'ดร.เศริยา มั่งมี',
-      journal: 'วารสารวิจัยมหาวิทยาลัยนครพนม',
-      publishDate: '30 มิ.ย. 2567',
-      year: 2567,
-    },
-    {
-      title: 'ผลกระทบของการเปลี่ยนแปลงสภาพภูมิอากาศต่อการเกษตร',
-      researchers: 'ผศ.สมชาย ใจดีผศ.สมชาย ใจดีผศ.สมชาย ใจดีผศ.สมชาย ใจดี',
-      journal: 'วารสารวิทยาศาสตร์และเทคโนโลยี',
-      publishDate: '15 มี.ค. 2567',
-      year: 2567,
-    },
-    {
-      title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
-      researchers: 'ดร.สมหญิง แก้วใส',
-      journal: 'วารสารพลังงานทดแทน',
-      publishDate: '10 ก.พ. 2567',
-      year: 2567,
-    },
-    {
-      title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
-      researchers: 'ดร.สมหญิง แก้วใส',
-      journal: 'วารสารพลังงานทดแทน',
-      publishDate: '10 ก.พ. 2567',
-      year: 2567,
-    },
-    {
-      title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
-      researchers: 'ดร.สมหญิง แก้วใส',
-      journal: 'วารสารพลังงานทดแทน',
-      publishDate: '10 ก.พ. 2567',
-      year: 2567,
-    },
-    {
-      title:
-        'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
-      researchers: 'ดร.สมหญิง แก้วใส',
-      journal: 'วารสารพลังงานทดแทน',
-      publishDate: '10 ก.พ. 2567',
-      year: 2567,
-    },
-    {
-      title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
-      researchers: 'ดร.สมหญิง แก้วใส',
-      journal: 'วารสารพลังงานทดแทน',
-      publishDate: '10 ก.พ. 2567',
-      year: 2567,
-    },
-    {
-      title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
-      researchers: 'ดร.สมหญิง แก้วใส',
-      journal: 'วารสารพลังงานทดแทน',
-      publishDate: '10 ก.พ. 2567',
-      year: 2567,
-    },
-    {
-      title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
-      researchers: 'ดร.สมหญิง แก้วใส',
-      journal: 'วารสารพลังงานทดแทน',
-      publishDate: '10 ก.พ. 2567',
-      year: 2567,
-    },
-    {
-      title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
-      researchers: 'ดร.สมหญิง แก้วใส',
-      journal: 'วารสารพลังงานทดแทน',
-      publishDate: '10 ก.พ. 2567',
-      year: 2567,
-    },
-    {
-      title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
-      researchers: 'ดร.สมหญิง แก้วใส',
-      journal: 'วารสารพลังงานทดแทน',
-      publishDate: '10 ก.พ. 2567',
-      year: 2567,
-    },
-    {
-      title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
-      researchers: 'ดร.สมหญิง แก้วใส',
-      journal: 'วารสารพลังงานทดแทน',
-      publishDate: '10 ก.พ. 2567',
-      year: 2567,
-    },
-    {
-      title:
-        'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
-      researchers: 'ดร.สมหญิง แก้วใส',
-      journal: 'วารสารพลังงานทดแทน',
-      publishDate: '10 ก.พ. 2567',
-      year: 2567,
-    },
-  ];
+  publications: DataPerformance = {
+    research: [
+      {
+        id: 1,
+        title: 'การพัฒนาระบบฐานข้อมูลวิจัย',
+        researchers: 'ดร.เศริยา มั่งมี',
+        date: '30 มิ.ย. 2567',
+        year: 2567,
+      },
+      {
+        id: 2,
+        title: 'ผลกระทบของการเปลี่ยนแปลงสภาพภูมิอากาศต่อการเกษตร',
+        researchers: 'ผศ.สมชาย ใจดีผศ.สมชาย ใจดีผศ.สมชาย ใจดีผศ.สมชาย ใจดี',
+        date: '15 มี.ค. 2567',
+        year: 2567,
+      },
+      {
+        id: 3,
+        title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
+        researchers: 'ดร.สมหญิง แก้วใส',
+        date: '10 ก.พ. 2567',
+        year: 2567,
+      },
+      {
+        id: 4,
+        title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
+        researchers: 'ดร.สมหญิง แก้วใส',
+        date: '10 ก.พ. 2567',
+        year: 2567,
+      },
+    ],
+    article: [
+      {
+        id: 5,
+        title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
+        researchers: 'ดร.สมหญิง แก้วใส',
+        date: '10 ก.พ. 2567',
+        year: 2567,
+      },
+      {
+        id: 6,
+        title:
+          'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
+        researchers: 'ดร.สมหญิง แก้วใส',
+        date: '10 ก.พ. 2567',
+        year: 2567,
+      },
+      {
+        id: 7,
+        title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
+        researchers: 'ดร.สมหญิง แก้วใส',
+        date: '10 ก.พ. 2567',
+        year: 2567,
+      },
+      {
+        id: 8,
+        title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
+        researchers: 'ดร.สมหญิง แก้วใส',
+        date: '10 ก.พ. 2567',
+        year: 2567,
+      },
+    ],
+    innovation: [
+      {
+        id: 9,
+        title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
+        researchers: 'ดร.สมหญิง แก้วใส',
+        date: '10 ก.พ. 2567',
+        year: 2567,
+      },
+      {
+        id: 10,
+        title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
+        researchers: 'ดร.สมหญิง แก้วใส',
+        date: '10 ก.พ. 2567',
+        year: 2567,
+      },
+      {
+        id: 11,
+        title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
+        researchers: 'ดร.สมหญิง แก้วใส',
+        date: '10 ก.พ. 2567',
+        year: 2567,
+      },
+      {
+        id: 12,
+        title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
+        researchers: 'ดร.สมหญิง แก้วใส',
+        date: '10 ก.พ. 2567',
+        year: 2567,
+      },
+      {
+        id: 13,
+        title:
+          'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
+        researchers: 'ดร.สมหญิง แก้วใส',
+        date: '10 ก.พ. 2567',
+        year: 2567,
+      },
+    ],
+  };
 
-  constructor(private router: Router){}
+  constructor(private router: Router) {}
 
-  
-  filteredResearch: Publication[] = [];
-  paginatedPublications: Publication[] = [];
+  filteredResearch: DataPerformanceItem[] = [];
+  paginatedPublications: DataPerformanceItem[] = [];
 
   ngOnInit(): void {
-      this.filteredResearch = [...this.publications];
-      this.updatePagination();
+    this.filteredResearch = [...this.publications[this.selectedTab]];
+    this.updatePagination();
   }
   onSearch() {
     const keyword = this.searchText.toLowerCase().trim();
 
-    this.filteredResearch = this.publications.filter((p) =>
-      p.title.toLowerCase().includes(keyword) ||
-      p.researchers.toLowerCase().includes(keyword) ||
-      p.journal.toLowerCase().includes(keyword) ||
-      p.year.toString().includes(keyword)
+    this.filteredResearch = this.publications[this.selectedTab].filter(
+      (p) =>
+        p.title.toLowerCase().includes(keyword) ||
+        p.researchers.toLowerCase().includes(keyword) ||
+        p.year.toString().includes(keyword)
     );
 
     this.currentPage = 1;
@@ -490,7 +498,7 @@ export class UserDashboardComponent implements OnInit {
   }
 
   get totalPages(): number {
-    return Math.ceil(this.publications.length / this.pageSize);
+    return Math.ceil(this.publications[this.selectedTab].length / this.pageSize);
   }
 
   // Nevigate to
@@ -505,5 +513,18 @@ export class UserDashboardComponent implements OnInit {
   }
   goToManual() {
     this.router.navigateByUrl('/manual');
+  }
+
+  viewItem(id: number) {
+    this.router.navigate(['/performance', this.selectedTab, id]);
+  }
+
+  changeTab(tab: keyof DataPerformance): void {
+    this.selectedTab = tab;
+    this.searchText = '';
+    this.currentPage = 1;
+
+    this.filteredResearch = [...this.publications[tab]];
+    this.updatePagination();
   }
 }

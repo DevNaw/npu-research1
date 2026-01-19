@@ -121,16 +121,46 @@
     <div class="bg-white rounded-xl p-6 shadow">
       <div class="flex items-center justify-between mb-4">
         <h1 class="text-2xl font-semibold">ผลงานที่ตีพิมพ์</h1>
-    
-        <!-- Search -->
-        <input
-          type="text"
-          [(ngModel)]="searchText"
-          (input)="onSearch()"
-          placeholder="ค้นหาชื่อผลงาน / ผู้วิจัย / วารสาร"
-          class="border px-4 py-2 rounded-lg w-80 focus:ring-2 focus:ring-yellow-400 outline-none"
-        />
       </div>
+
+      <div class="flex justify-between">
+        <div class="flex items-center space-x-4 mb-4">
+          <button
+            (click)="changeTab('research')"
+            [ngClass]="selectedTab === 'research' ? 'bg-[#FDE68A] text-black' : 'text-black hover:bg-[#FDE68A]'"
+            class="px-4 py-2 rounded-lg cursor-pointer"
+          >
+            โครงการวิจัย
+          </button>
+          <button
+            (click)="changeTab('article')"
+            [ngClass]="selectedTab === 'article' ? 'bg-[#FDE68A] text-black' : 'text-black hover:bg-[#FDE68A]'"
+            class="px-4 py-2 rounded-lg cursor-pointer"
+          >
+            บทความ
+          </button>
+          <button
+            (click)="changeTab('innovation')"
+            [ngClass]="selectedTab === 'innovation'
+            ? 'bg-[#FDE68A] text-black' : 'text-black hover:bg-[#FDE68A]'"
+            class="px-4 py-2 rounded-lg cursor-pointer"
+          >
+            นวัตกรรมสิ่งประดิษฐ์
+          </button>
+        </div>
+
+        <div>
+          Search:
+          <input
+            type="text"
+            [(ngModel)]="searchText"
+            (input)="onSearch()"
+            class="border rounded px-2 py-1 ml-2"
+            placeholder="ค้นหา..."
+          />
+        </div>
+      </div>
+      
 
       <table class="w-full border">
         <thead class="bg-yellow-400">
@@ -138,7 +168,6 @@
             <th class="p-2 border-r">ลำดับ</th>
             <th class="p-2 border-r">ชื่อผลงาน</th>
             <th class="p-2 border-r">ผู้วิจัย</th>
-            <th class="p-2 border-r">วารสาร</th>
             <th class="p-2">ปี</th>
           </tr>
         </thead>
@@ -148,9 +177,21 @@
             class="border-t hover:bg-gray-50"
           >
             <td class="p-2 text-center border-r">{{ i + 1 }}</td>
-            <td class="p-2 border-r">{{ p.title }}</td>
+            <td class="p-2 border-r">
+              <div
+                class="font-medium text-indigo-600 hover:underline cursor-pointer truncate max-w-125"
+                title="{{ p.title }}"
+                (click)="viewItem(p.id)"
+              >
+                {{ p.title }}
+              </div>
+
+              <div class="text-xs text-gray-500 mt-1 flex items-center gap-1">
+                <i class="bi bi-calendar-event"></i>
+                วันที่สร้าง: {{ p.date }}
+              </div>
+            </td>
             <td class="p-2 border-r">{{ p.researchers }}</td>
-            <td class="p-2 border-r">{{ p.journal }}</td>
             <td class="p-2 text-center">{{ p.year }}</td>
           </tr>
 

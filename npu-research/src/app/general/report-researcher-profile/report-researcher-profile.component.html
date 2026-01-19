@@ -148,27 +148,31 @@
     <div class="overflow-x-auto">
       <table class="w-full border border-gray-300">
         <thead class="bg-[#FACC15]">
-          <tr>
+          <tr class="border">
             <th class="p-3 border">ลำดับ</th>
-            <th class="p-3 border text-left">ชื่อ</th>
-            <th class="p-3 border text-left">หน่วยงาน</th>
-            <th class="p-3 border text-left">สายงาน</th>
-            <th class="p-3 border text-left">ตำแหน่ง</th>
+            <th class="p-3 border">ชื่อ</th>
+            <th class="p-3 border">หน่วยงาน</th>
+            <th class="p-3 border">สายงาน</th>
+            <th class="p-3 border">ตำแหน่ง</th>
+            <th class="p-3 border">โปรไฟล์</th>
           </tr>
         </thead>
 
         <tbody>
           <tr
             *ngFor="let r of filteredResearchers; let i = index"
-            class="hover:bg-gray-50"
+            class="hover:bg-gray-50 border"
           >
             <td class="p-3 border text-center">{{ i + 1 }}</td>
             <td class="p-3 border">{{ r.name }}</td>
-            <td class="p-3 border">{{ r.faculty }}</td>
-            <td class="p-3 border">
+            <td class="p-3 border text-center">{{ r.faculty }}</td>
+            <td class="p-3 border text-center">
               {{ r.career_path === "academic" ? "สายวิชาการ" : "สายสนับสนุน" }}
             </td>
-            <td class="p-3 border">{{ r.position }}</td>
+            <td class="p-3 border text-center">{{ r.position }}</td>
+            <td class="p-3 text-center">
+              <i (click)="viewProfile(r.id)" class="bi bi-person hover:text-blue-500 cursor-pointer"></i>
+            </td>
           </tr>
 
           <tr *ngIf="filteredResearchers.length === 0">

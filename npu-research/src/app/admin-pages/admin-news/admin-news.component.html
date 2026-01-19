@@ -1,27 +1,27 @@
 <div class="bg-gray-100 p-6">
   <div class="max-w-7xl mx-auto bg-white rounded-xl p-6">
-    <div class="flex justify-between items-center mb-4">
-      <h1 class="text-2xl font-semibold">ข่าวประชาสัมพันธ์</h1>
+    <h1 class="text-2xl font-semibold">ข่าวประชาสัมพันธ์</h1>
 
+    <div class="flex items-center mb-4 mt-5">
       <button
         routerLink="/admin-news/create"
-        class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+        class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 cursor-pointer"
       >
         <i class="bi bi-plus-circle mr-2"></i> เพิ่มข่าว
       </button>
-    </div>
 
-    <input
-      type="text"
-      [(ngModel)]="searchText"
-      (input)="onSearch()"
-      placeholder="ค้นหาข่าว..."
-      class="border rounded px-3 py-2 mb-4 w-64"
-    />
+      <input
+        type="text"
+        [(ngModel)]="searchText"
+        (input)="onSearch()"
+        placeholder="ค้นหาข่าว..."
+        class="border rounded px-3 py-2 w-64 ml-auto"
+      />
+    </div>
 
     <table class="w-full border">
       <thead class="bg-yellow-300">
-        <tr>
+        <tr class="border">
           <th class="p-2 border-r">ลำดับ</th>
           <th class="p-2 text-left border-r">หัวข้อข่าว</th>
           <th class="p-2 border-r">วันที่ประกาศ</th>
@@ -32,17 +32,17 @@
 
       <tbody>
         <tr *ngFor="let news of paginatedNews; let i = index">
-          <td class="text-center p-2 border-r">
+          <td class="text-center p-2 border">
             {{ (currentPage - 1) * pageSize + i + 1 }}
           </td>
-          <td class="p-2 border-r">{{ news.title }}</td>
-          <td class="text-center p-2 border-r">
+          <td class="p-2 border">{{ news.title }}</td>
+          <td class="text-center p-2 border">
             {{ news.date | date : "dd/MM/yyyy" }}
           </td>
-          <td class="text-center p-2 border-r">
+          <td class="text-center p-2 border">
             {{ news.dateend | date : "dd/MM/yyyy" }}
           </td>
-          <td class="text-center p-2">
+          <td class="text-center p-2 border">
             <i
               (click)="editNews(news)"
               class="bi bi-pencil text-blue-600 cursor-pointer mr-3"

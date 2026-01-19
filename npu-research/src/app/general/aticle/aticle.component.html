@@ -9,60 +9,10 @@
           [(ngModel)]="searchText"
           (input)="onSearch()"
           class="border border-gray-300 rounded-md p-2"
-          placeholder="ค้นหาบทความ..."
+          placeholder="ค้นหา..."
         />
       </div>
     </div>
-    
-    <!-- <div class="w-full overflow-x-auto">
-      <table
-        class="min-w-225 w-full border overflow-hidden mt-4"
-      >
-        <thead>
-          <tr class="bg-[#FACC15] text-[#1E293B] border-b">
-            <th class="p-3 whitespace-nowrap border-r text-center">ลำดับ</th>
-            <th class="p-3 pl-15 text-left border-r">ผู้วิจัย</th>
-            <th class="p-3 pl-15 text-left">ชื่อบทความ / วารสาร</th>
-          </tr>
-        </thead>
-    
-        <tbody>
-          <tr
-            *ngFor="let publication of paginatedAticles; let i = index"
-            class="border-b hover:bg-gray-50 transition"
-          >
-           
-            <td class="p-3 text-center border-r whitespace-nowrap">
-              {{ (currentPage - 1) * pageSize + i + 1 }}
-            </td>
-    
-            
-            <td
-              class="p-3 pl-6 border-r flex items-center gap-3 wrap-break-word whitespace-normal"
-            >
-              <img
-                src="assets/logoNPU.png"
-                alt="researcher"
-                class="h-16 w-16 object-contain shrink-0"
-              />
-              <span>
-                {{ publication.researchers }}
-              </span>
-            </td>
-    
-            <td class="p-3 pl-6 wrap-break-word whitespace-normal">
-              {{ publication.title }}
-            </td>
-          </tr>
-    
-          <tr *ngIf="filteredAticles.length === 0">
-            <td colspan="3" class="text-center p-4 text-gray-500">
-              ไม่พบผลงานที่ค้นหา
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div> -->
     
     <div class="w-full overflow-x-auto mt-6 bg-white shadow-sm">
       <table class="min-w-225 w-full text-sm text-gray-700 border">
@@ -110,7 +60,10 @@
     
             <!-- Title -->
             <td class="px-6 py-4">
-              <div class="leading-relaxed wrap-break-word whitespace-normal text-gray-800">
+              <div
+              title="{{ publication.title }}"
+              (click)="viewAticleDetails(publication.id)"
+              class="leading-relaxed wrap-break-word whitespace-normal text-indigo-600 hover:underline cursor-pointer">
                 {{ publication.title }}
               </div>
             </td>

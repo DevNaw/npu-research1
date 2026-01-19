@@ -49,7 +49,13 @@ export class UserProfileComponent implements OnInit {
       },
     ],
 
-    article: [],
+    article: [
+      {
+        id: 101,
+        title: 'บทวิเคราะห์ผลกระทบของเทคโนโลยี 5G ต่ออุตสาหกรรมโทรคมนาคม',
+        date: '15 ก.พ. 2563 เวลา 11:20:33 น.',
+      }
+    ],
 
     innovation: [
       {

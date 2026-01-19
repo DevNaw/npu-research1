@@ -37,21 +37,22 @@ import { AdminSearchResearcherComponent } from './admin-pages/admin-search-resea
 import { AdminSearchPaperComponent } from './admin-pages/admin-search-paper/admin-search-paper.component';
 import { NewsEditComponent } from './admin-pages/news-edit/news-edit.component';
 import { PerformanceComponent } from './user-pages/performance/performance.component';
+import { DashboardComponent } from './admin-pages/dashboard/dashboard.component';
 
 const routes: Routes = [
+  /* ================= AUTH ================= */
   { path: 'login', component: LoginComponent },
-
-  { path: 'user/dashboard', component: UserDashboardComponent },
-  { path: 'admin/dashboard', component: UserDashboardComponent },
+  { path: 'register', component: RegisterComponent },
   { path: 'dashboard', component: UserDashboardComponent },
 
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  /* ================= DASHBOARD ================= */
+  { path: 'user/dashboard', component: UserDashboardComponent },
+  { path: 'admin/dashboard', component: UserDashboardComponent },
 
-  { path: 'footer', component: FooterComponent },
-  { path: 'main', component: MainComponent },
-  
-  { path: 'register', component: RegisterComponent },
-  { path: 'test', component: TestComponent },
+  // dashboard กลาง → จะ redirect ตาม role (ผ่าน guard ภายหลัง)
+  // { path: 'dashboard', redirectTo: 'login', pathMatch: 'full' },
+
+  /* ================= USER ================= */
   { path: 'user-add-aticle', component: UserAddAticleComponent },
   { path: 'user-add-aticle/:id', component: UserAddAticleComponent },
   { path: 'user-add-innovation', component: UserAddInnovationComponent },
@@ -61,27 +62,28 @@ const routes: Routes = [
   { path: 'user-research', component: UserResearchComponent },
   { path: 'user-researchers', component: UserResearchersComponent },
   { path: 'user-profile', component: UserProfileComponent },
+  { path: 'user-profile/:id', component: UserProfileComponent },
   { path: 'user-edit-address', component: UserEditAddressComponent },
   { path: 'user-edit-profile', component: UserEditProfileComponent },
   { path: 'user-edit-study', component: UserEditStudyComponent },
   { path: 'user-edit-traning', component: UserEditTraningComponent },
   { path: 'performance/:type/:id', component: PerformanceComponent },
 
-  // General
+  /* ================= GENERAL ================= */
   { path: 'aticle', component: AticleComponent },
   { path: 'download', component: DownloadComponent },
   { path: 'innovation', component: InnovationComponent },
   { path: 'news', component: NewsComponent },
-  { path: 'research', component: ResearchComponent },
   { path: 'news/:id', component: NewsDetailComponent },
+  { path: 'research', component: ResearchComponent },
   { path: 'report-researcher', component: ReportResearcherTypeComponent },
   { path: 'report-institution', component: ReportResearcherInstitutionComponent },
-  { path: 'report-expertise', component: ReportResearcherExpertiseComponent},
+  { path: 'report-expertise', component: ReportResearcherExpertiseComponent },
   { path: 'report-researcher-profile', component: ReportResearcherProfileComponent },
   { path: 'report-research', component: ReportResearcherResearchComponent },
   { path: 'manual', component: ManualComponent },
 
-  // Admin Path
+  /* ================= ADMIN ================= */
   { path: 'admin-news', component: AdminNewsComponent },
   { path: 'admin-download', component: AdminDownloadComponent },
   { path: 'admin-search-research', component: AdminSearchResearcherComponent },
@@ -90,6 +92,10 @@ const routes: Routes = [
   { path: 'specialization', component: SpecializationComponent },
   { path: 'admin-news/create', component: NewsEditComponent },
   { path: 'admin-news/edit/:id', component: NewsEditComponent },
+
+  /* ================= DEFAULT ================= */
+  // { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+  // { path: '**', redirectTo: 'dashboard' }
 ];
 
 @NgModule({

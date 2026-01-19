@@ -12,14 +12,19 @@ export class LoginComponent {
   username = '';
   password = '';
 
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(
+    private router: Router,
+    private authService: AuthService
+  ) {}
 
   goToDashboard() {
     const success = this.authService.login(this.username, this.password);
+
     if (!success) {
-      alert('Login failed');
+      alert('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
       return;
     }
+
     if (this.authService.isAdmin()) {
       this.router.navigate(['/admin/dashboard']);
     } else {

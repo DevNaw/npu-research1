@@ -1,9 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-
-interface Aticle {
-  title: string;
-  researchers: string;
-}
+import { Router } from '@angular/router';
+import { Data } from '../../models/data-performance.model';
 
 @Component({
   selector: 'app-aticle',
@@ -16,65 +13,23 @@ export class AticleComponent implements OnInit {
   currentPage = 1;
   searchText = '';
 
-  aticles: Aticle[] = [
+  aticles: Data[] = [
     {
+      id: 1,
       title: 'การพัฒนาระบบฐานข้อมูลวิจัย',
       researchers: 'ดร.เศริยา มั่งมี',
     },
     {
+      id: 2,
       title: 'ผลกระทบของการเปลี่ยนแปลงสภาพภูมิอากาศต่อการเกษตร',
       researchers: 'ผศ.สมชาย ใจดีผศ.สมชาย ใจดีผศ.สมชาย ใจดีผศ.สมชาย ใจดี',
     },
-    {
-      title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
-      researchers: 'ดร.สมหญิง แก้วใส',
-    },
-    {
-      title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
-      researchers: 'ดร.สมหญิง แก้วใส',
-    },
-    {
-      title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
-      researchers: 'ดร.สมหญิง แก้วใส',
-    },
-    {
-      title:
-        'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
-      researchers: 'ดร.สมหญิง แก้วใส',
-    },
-    {
-      title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
-      researchers: 'ดร.สมหญิง แก้วใส',
-    },
-    {
-      title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
-      researchers: 'ดร.สมหญิง แก้วใส',
-    },
-    {
-      title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
-      researchers: 'ดร.สมหญิง แก้วใส',
-    },
-    {
-      title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
-      researchers: 'ดร.สมหญิง แก้วใส',
-    },
-    {
-      title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
-      researchers: 'ดร.สมหญิง แก้วใส',
-    },
-    {
-      title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
-      researchers: 'ดร.สมหญิง แก้วใส',
-    },
-    {
-      title:
-        'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
-      researchers: 'ดร.สมหญิง แก้วใส',
-    },
   ];
 
-  filteredAticles: Aticle[] = [];
-  paginatedAticles: Aticle[] = [];
+  constructor(private router: Router) {}
+
+  filteredAticles: Data[] = [];
+  paginatedAticles: Data[] = [];
 
   ngOnInit(): void {
       this.filteredAticles = [...this.aticles];
@@ -112,5 +67,9 @@ export class AticleComponent implements OnInit {
 
   get totalPages(): number {
     return Math.ceil(this.aticles.length / this.pageSize);
+  }
+
+  viewAticleDetails(id: number): void {
+    this.router.navigate(['/performance/article', id]);
   }
 }

@@ -1,12 +1,7 @@
 import { Component, HostListener } from '@angular/core';
 import { ApexChart, ApexLegend } from 'ng-apexcharts';
-
-interface Researcher {
-  faculty: string;
-  name: string;
-  career_path: 'academic' | 'support';
-  position: string;
-}
+import { DataProfile } from '../../models/profile.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-report-researcher-profile',
@@ -16,7 +11,6 @@ interface Researcher {
 })
 export class ReportResearcherProfileComponent {
   openDropdown: string | null = null;
-  /** ===== STATE ===== */
   isSearched = false;
   selectedFaculty = '';
   selectedCareer: string = '';
@@ -28,33 +22,38 @@ export class ReportResearcherProfileComponent {
   facultySearch: string = '';
 
   /** ===== DATA (ตัวอย่าง) ===== */
-  publications: Researcher[] = [
+  publications: DataProfile[] = [
     {
+      id: 1,
       faculty: 'คณะวิศวกรรมศาสตร์',
       name: 'นาย ก',
       career_path: 'academic',
       position: 'อาจารย์',
     },
     {
+      id: 2,
       faculty: 'คณะวิศวกรรมศาสตร์',
       name: 'นาย ข',
       career_path: 'support',
       position: 'เจ้าหน้าที่',
     },
     {
+      id: 3,
       faculty: 'คณะวิศวกรรมศาสตร์',
       name: 'นาย ค',
       career_path: 'academic',
       position: 'อาจารย์',
     },
     {
-      faculty: 'วิทยาศาสตร์',
+      id: 4,
+      faculty: 'คณะวิทยาศาสตร์',
       name: 'นาง ง',
       career_path: 'academic',
       position: 'อาจารย์',
     },
     {
-      faculty: 'วิทยาศาสตร์',
+      id: 5,
+      faculty: 'คณะวิทยาศาสตร์',
       name: 'นาย จ',
       career_path: 'support',
       position: 'เจ้าหน้าที่',
@@ -72,7 +71,7 @@ export class ReportResearcherProfileComponent {
     'คณะเทคโนโลยีสารสนเทศ',
   ];
 
-  /** ===== FILTERED (ตาราง + กราฟใช้ชุดนี้) ===== */
+  constructor(private router: Router) {}
 
   /** ===== DONUT CHART ===== */
   donutLabels: string[] = [];
@@ -88,7 +87,7 @@ export class ReportResearcherProfileComponent {
     position: 'bottom',
   };
 
-  filteredResearchers: Researcher[] = [];
+  filteredResearchers: DataProfile[] = [];
   /** ===== SEARCH ===== */
   search() {
     this.isSearched = true;
@@ -150,5 +149,9 @@ export class ReportResearcherProfileComponent {
     return this.faculties.filter((f) =>
       f.toLowerCase().includes(this.searchFaculitie.toLowerCase())
     );
+  }
+
+  viewProfile(id: number) {
+    this.router.navigate(['/user-profile', id]);
   }
 }

@@ -1,42 +1,44 @@
 import { Injectable } from '@angular/core';
-import { User } from '../models/user.model';
 import { MOCK_USERS } from '../models/mock-user';
-import { Router } from '@angular/router';
+import { User } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private currentUser?: User | null = null;
-
-  constructor(private router: Router) {}
+  private currentUser: User | null = null;
 
   login(username: string, password: string): boolean {
     const user = MOCK_USERS.find(
-      (u) => u.username === username && u.password === password
+      u => u.username === username && u.password === password
     );
 
-    if (user) {
-      this.currentUser = user;
-      localStorage.setItem('user', JSON.stringify(user));
+    if (!user) {
+      return false;
     }
 
-    return false;
-  }
-
-  getUser(): User | null {
-    return (
-      this.currentUser || JSON.parse(localStorage.getItem('user') || 'null')
-    );
-  }
-
-  logout(): void {
-    this.currentUser = undefined;
-    localStorage.removeItem('user');
-    this.router.navigate(['/login']);
+    this.currentUser = user;
+    return true;
   }
 
   isAdmin(): boolean {
-    return this.getUser()?.role === 'admin';
+    return this.currentUser?.role === 'admin';
   }
+
+  getUser(): User | null {
+    return this.currentUser;
+  }
+
+  logout() {
+    this.currentUser = null;
+  }
+  isLoggedIn(): boolean {
+    return !!this.currentUser;
+  }
+
+
+  getRole(): 'user' | 'admin' | null {
+    return this.currentUser?.role ?? null;
+  }
+
 }
