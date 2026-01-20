@@ -123,7 +123,7 @@
         <h1 class="text-2xl font-semibold">ผลงานที่ตีพิมพ์</h1>
       </div>
 
-      <div class="flex justify-between">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 md:flex md:justify-between">
         <div class="flex items-center space-x-4 mb-4">
           <button
             (click)="changeTab('research')"
@@ -155,7 +155,7 @@
             type="text"
             [(ngModel)]="searchText"
             (input)="onSearch()"
-            class="border rounded px-2 py-1 ml-2"
+            class="border border-gray-300 rounded px-2 py-1 ml-2"
             placeholder="ค้นหา..."
           />
         </div>
@@ -179,7 +179,7 @@
             <td class="p-2 text-center border-r">{{ i + 1 }}</td>
             <td class="p-2 border-r">
               <div
-                class="font-medium text-indigo-600 hover:underline cursor-pointer truncate max-w-125"
+                class="font-medium text-indigo-600 hover:underline cursor-pointer truncate max-w-125 text-wrap"
                 title="{{ p.title }}"
                 (click)="viewItem(p.id)"
               >
@@ -205,16 +205,39 @@
       </table>
 
       <!-- Pagination -->
-      <div class="flex justify-end mt-4 space-x-1">
+      <div class="flex justify-end mt-3 space-x-1">
+        <!-- Prev -->
         <button
-          *ngFor="let p of [].constructor(totalPages); let i = index"
-          (click)="changePage(i + 1)"
-          class="px-3 py-1 border rounded cursor-pointer"
-          [class.bg-yellow-400]="currentPage === i + 1"
+          (click)="changePage(currentPage - 1)"
+          [disabled]="currentPage === 1"
+          class="px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
         >
-          {{ i + 1 }}
+          ‹
+        </button>
+      
+        <!-- Pages -->
+        <button
+          *ngFor="let page of pages"
+          (click)="changePage(page)"
+          class="px-3 py-1 rounded border text-sm transition"
+          [ngClass]="{
+            'bg-[#FACC15] text-[#1E293B] border-[#FACC15]': currentPage === page,
+            'hover:bg-gray-100': currentPage !== page
+          }"
+        >
+          {{ page }}
+        </button>
+      
+        <!-- Next -->
+        <button
+          (click)="changePage(currentPage + 1)"
+          [disabled]="currentPage === totalPages"
+          class="px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
+        >
+          ›
         </button>
       </div>
+      
     </div>
   </div>
 

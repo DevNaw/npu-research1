@@ -62,14 +62,16 @@ export class ResearchComponent implements OnInit {
     this.paginatedReseacrchs = this.filteredReseacrchs.slice(start, end);
   }
 
-  changePage(page: number): void {
+  changePage(page: number) {
     if (page < 1 || page > this.totalPages) return;
-
+    if (page === this.currentPage) return;
+  
     this.currentPage = page;
     this.updatePagination();
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
+  
 
   get totalPages(): number {
     return Math.ceil(this.filteredReseacrchs.length / this.pageSize);
@@ -78,4 +80,9 @@ export class ResearchComponent implements OnInit {
   viewDetails(id: number): void {
     this.router.navigate(['/performance/research', id]);
   }
+
+  get pages(): number[] {
+    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  }
+  
 }

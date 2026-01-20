@@ -1,5 +1,5 @@
 <div class="contain-content bg-gray-100 p-3">
-  <div class="max-w-7xl mx-auto px-2 py-10 bg-white rounded-xl">
+  <div class="max-w-7xl mx-auto px-6 py-6 bg-white rounded-xl">
     <div class="mt-5">
       <h1 class="text-2xl font-semibold">แหล่งทุนภายนอก</h1>
 
@@ -37,7 +37,7 @@
             type="text"
             [(ngModel)]="searchText"
             (input)="onSearch()"
-            class="border border-gray-300 rounded-md p-2"
+            class="border border-gray-300 rounded px-2 py-1"
             placeholder="ค้นหาหน่วยงาน..."
           />
         </div>
@@ -58,60 +58,75 @@
       <table class="w-full border overflow-hidden">
         <thead>
           <tr class="bg-[#FACC15] text-[#1E293B] border-b">
-            <th class="p-3 border-r text-center">ลำดับ</th>
+            <th class="p-3 border-r text-center w-16">ลำดับ</th>
             <th class="p-3 pl-6 text-left border-r">ชื่อแหล่งทุน</th>
-            <th class="p-3 pl-6 text-center border-r">คำอธิบาย</th>
-            <th class="p-3 pl-6 text-center border-r">สถานะใช้งาน</th>
-            <th class="p-3 pl-6 text-center">แก้ไข</th>
+            <th class="p-3 pl-6 text-left border-r">คำอธิบาย</th>
+            <th class="p-3 text-center border-r w-28">สถานะใช้งาน</th>
+            <th class="p-3 text-center w-24">จัดการ</th>
           </tr>
         </thead>
-
+      
         <tbody>
           <tr
             *ngFor="let e of filteredExternalFunding; let i = index"
-            class="border-b hover:bg-gray-50"
+            class="border-b hover:bg-gray-50 transition"
           >
+            <!-- ลำดับ -->
             <td class="p-3 text-center border-r">
               {{ (currentPage - 1) * pageSize + i + 1 }}
             </td>
-
+      
+            <!-- ชื่อแหล่งทุน -->
             <td class="p-3 pl-6 border-r font-medium">
-              {{ e.title }}
+              {{ e.title || '-' }}
             </td>
-
-            <td class="p-3 text-left border-r">
-              {{ e.explanation }}
+      
+            <!-- คำอธิบาย -->
+            <td class="p-3 pl-6 border-r text-sm text-gray-700">
+              {{ e.explanation || '-' }}
             </td>
+      
+            <!-- สถานะ -->
             <td class="p-3 text-center border-r">
-              <ng-container *ngIf="e.status === 'พร้อมใช้งาน'; else notReady">
-                <i class="bi bi-check-lg text-green-600 text-lg"></i>
-              </ng-container>
-
+              <i
+                *ngIf="e.status === 'พร้อมใช้งาน'; else notReady"
+                class="bi bi-check-circle-fill text-green-600 text-lg"
+                title="พร้อมใช้งาน"
+              ></i>
+      
               <ng-template #notReady>
-                <i class="bi bi-x-lg text-red-600 text-lg"></i>
+                <i
+                  class="bi bi-x-circle-fill text-red-600 text-lg"
+                  title="ไม่พร้อมใช้งาน"
+                ></i>
               </ng-template>
             </td>
-
-            <td class="p-3 text-center border-r">
+      
+            <!-- แก้ไข / ลบ -->
+            <td class="p-3 text-center">
               <i
-              (click)="openEditModal(e, i)"
-                class="bi bi-pencil text-blue-500 hover:text-blue-700 mr-3 cursor-pointer"
+                (click)="openEditModal(e,i)"
+                class="bi bi-pencil-square text-blue-500 hover:text-blue-700 cursor-pointer mr-3"
+                title="แก้ไข"
               ></i>
+      
               <i
-              (click)="delectFunding(i)"
-                class="bi bi-trash3 text-red-500 cursor-pointer hover:text-red-700"
+                (click)="delectFunding(e)"
+                class="bi bi-trash3 text-red-500 hover:text-red-700 cursor-pointer"
+                title="ลบ"
               ></i>
             </td>
           </tr>
-
+      
           <!-- ไม่พบข้อมูล -->
           <tr *ngIf="filteredExternalFunding.length === 0">
-            <td colspan="5" class="text-center p-4 text-gray-500">
+            <td colspan="5" class="text-center p-6 text-gray-400 italic">
               ไม่พบข้อมูล
             </td>
           </tr>
         </tbody>
       </table>
+      
     </div>
 
     <div

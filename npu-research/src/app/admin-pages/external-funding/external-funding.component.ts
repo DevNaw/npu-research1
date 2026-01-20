@@ -3,6 +3,7 @@ import * as XLSX from 'xlsx';
 import Swal from 'sweetalert2';
 
 interface ExternalFunding {
+  id: number;
   title: string;
   explanation: string;
   status: 'พร้อมใช้งาน' | 'ไม่พร้อมใช้งาน';
@@ -26,30 +27,35 @@ export class ExternalFundingComponent {
 
   externals: ExternalFunding[] = [
     {
+      id: 1,
       title: 'สำนักงานการวิจัยแห่งชาติ (วช.)',
       explanation:
         'สนับสนุนทุนวิจัยพื้นฐานและเชิงประยุกต์ทุกสาขา เน้นงานวิจัยที่สร้างองค์ความรู้และประโยชน์ต่อประเทศ',
       status: 'พร้อมใช้งาน',
     },
     {
+      id: 2,
       title: 'สำนักงานพัฒนาการวิจัยการเกษตร (สวก.)',
       explanation:
         'ทุนวิจัยด้านการเกษตร อาหาร และเทคโนโลยีชีวภาพ เพื่อเพิ่มขีดความสามารถการแข่งขันของประเทศ',
       status: 'พร้อมใช้งาน',
     },
     {
+      id: 3,
       title: 'สำนักงานนวัตกรรมแห่งชาติ (NIA)',
       explanation:
         'สนับสนุนโครงการวิจัยและนวัตกรรมที่สามารถนำไปต่อยอดเชิงพาณิชย์และสร้าง Startup',
       status: 'พร้อมใช้งาน',
     },
     {
+      id: 4,
       title: 'สำนักงานคณะกรรมการวิจัยแห่งชาติ (สกสว.)',
       explanation:
         'สนับสนุนการบริหารจัดการงานวิจัยและพัฒนานโยบายวิทยาศาสตร์ วิจัย และนวัตกรรมของประเทศ',
       status: 'ไม่พร้อมใช้งาน',
     },
     {
+      id: 5,
       title: 'สำนักงานพัฒนาวิทยาศาสตร์และเทคโนโลยีแห่งชาติ (สวทช.)',
       explanation:
         'ทุนวิจัยด้านวิทยาศาสตร์ เทคโนโลยี และนวัตกรรมขั้นสูง เพื่อภาคอุตสาหกรรมและสังคม',
@@ -112,6 +118,7 @@ export class ExternalFundingComponent {
   
 
   newFunding: ExternalFunding = {
+    id: 0,
     title: '',
     explanation: '',
     status: 'พร้อมใช้งาน',
@@ -119,7 +126,7 @@ export class ExternalFundingComponent {
 
   openAddModal() {
     this.modalMode = 'add';
-    this.newFunding = { title: '', explanation: '', status: 'พร้อมใช้งาน' };
+    this.newFunding = { id:0 ,title: '', explanation: '', status: 'พร้อมใช้งาน' };
     this.showModal = true;
   }
 
@@ -168,13 +175,15 @@ export class ExternalFundingComponent {
 
   resetForm() {
     this.newFunding = {
+      id: 0,
       title: '',
       explanation: '',
       status: 'พร้อมใช้งาน',
     };
   }
 
-  delectFunding(index: number) {
+  /** ✅ ลบแบบปลอดภัย */
+  delectFunding(item: ExternalFunding) {
     Swal.fire({
       title: 'ยืนยันการลบ?',
       text: 'ข้อมูลนี้จะไม่สามารถกู้คืนได้',
@@ -184,11 +193,12 @@ export class ExternalFundingComponent {
       cancelButtonColor: '#6b7280',
       confirmButtonText: 'ลบ',
       cancelButtonText: 'ยกเลิก',
-    }).then((result) => {
+    }).then(result => {
       if (result.isConfirmed) {
-        this.externals.splice(index, 1);
+        this.externals = this.externals.filter(e => e.id !== item.id);
 
         this.onSearch();
+
         Swal.fire({
           icon: 'success',
           title: 'ลบเรียบร้อย',

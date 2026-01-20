@@ -216,5 +216,43 @@
         </tbody>
       </table>
     </div>
+    <div
+    class="flex flex-col md:flex-row md:justify-end md:items-center mt-4 gap-2"
+  >
+    <div class="flex items-center space-x-1">
+      <!-- Prev -->
+      <button
+        (click)="changePage(currentPage - 1)"
+        [disabled]="currentPage === 1"
+        class="px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
+      >
+        ‹
+      </button>
+
+      <!-- Pages -->
+      <button
+        *ngFor="let page of pages"
+        (click)="changePage(page)"
+        class="px-3 py-1 rounded border text-sm min-w-8 transition"
+        [ngClass]="{
+          'bg-[#FACC15] text-[#1E293B] font-semibold':
+            currentPage === page,
+          'hover:bg-gray-100': currentPage !== page
+        }"
+      >
+        {{ page }}
+      </button>
+
+      <!-- Next -->
+      <button
+        (click)="changePage(currentPage + 1)"
+        [disabled]="currentPage === totalPages"
+        class="px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
+      >
+        ›
+      </button>
+    </div>
+  </div>
+
   </div>
 </div>

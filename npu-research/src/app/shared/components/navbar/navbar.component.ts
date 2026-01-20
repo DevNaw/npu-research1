@@ -11,6 +11,22 @@ import { AuthService } from '../../../services/auth.service';
 export class NavbarComponent {
   isMobileMenuOpen = false;
 
+  doc = {
+    researcher: {
+      label: 'สำหรับนักวิจัย',
+      fileUrl: 'assets/manual/researcher.pdf'
+    },
+    admin: {
+      label: 'สำหรับแอดมิน',
+      fileUrl: 'assets/manual/admin.pdf'
+    },
+    executive: {
+      label: 'สำหรับผู้บริหาร',
+      fileUrl: 'assets/manual/executive.pdf'
+    }
+  };
+  
+
   constructor(
     public auth: AuthService,
     private router: Router

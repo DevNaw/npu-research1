@@ -55,10 +55,13 @@ const routes: Routes = [
   /* ================= USER ================= */
   { path: 'user-add-aticle', component: UserAddAticleComponent },
   { path: 'user-add-aticle/:id', component: UserAddAticleComponent },
+  { path: 'user-edit-aticle/:id', component: UserAddAticleComponent },
   { path: 'user-add-innovation', component: UserAddInnovationComponent },
   { path: 'user-add-innovation/:id', component: UserAddInnovationComponent },
+  { path: 'user-edit-innovation/:id', component: UserAddInnovationComponent },
   { path: 'user-add-research', component: UserAddResearchComponent },
   { path: 'user-add-research/:id', component: UserAddResearchComponent },
+  { path: 'user-edit-research/:id', component: UserAddResearchComponent },
   { path: 'user-research', component: UserResearchComponent },
   { path: 'user-researchers', component: UserResearchersComponent },
   { path: 'user-profile', component: UserProfileComponent },

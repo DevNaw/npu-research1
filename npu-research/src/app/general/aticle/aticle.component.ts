@@ -58,6 +58,7 @@ export class AticleComponent implements OnInit {
 
   changePage(page: number): void {
     if (page < 1 || page > this.totalPages) return;
+    if (page === this.currentPage) return;
 
     this.currentPage = page;
     this.updatePagination();
@@ -71,5 +72,9 @@ export class AticleComponent implements OnInit {
 
   viewAticleDetails(id: number): void {
     this.router.navigate(['/performance/article', id]);
+  }
+
+  get pages(): number[] {
+    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
   }
 }

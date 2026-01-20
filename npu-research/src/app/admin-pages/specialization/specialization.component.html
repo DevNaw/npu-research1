@@ -1,5 +1,5 @@
 <div class="contain-content bg-gray-100 p-3">
-  <div class="max-w-7xl mx-auto px-2 py-10 bg-white rounded-xl">
+  <div class="max-w-7xl mx-auto px-6 py-6 bg-white rounded-xl">
     <div class="mt-5">
       <h1 class="text-2xl font-semibold">สาขาวิชาที่เชี่ยวชาญ</h1>
 
@@ -37,7 +37,7 @@
             type="text"
             [(ngModel)]="searchText"
             (input)="onSearch()"
-            class="border border-gray-300 rounded-md p-2"
+            class="border border-gray-300 rounded px-2 py-1"
             placeholder="ค้นหาหน่วยงาน..."
           />
         </div>
@@ -85,24 +85,23 @@
               {{ field.description }}
             </td>
             <td class="p-3 text-center border-r">
-              <ng-container
+              <i
                 *ngIf="field.status === 'พร้อมใช้งาน'; else notReady"
-              >
-                <i class="bi bi-check-lg text-green-600 text-lg"></i>
-              </ng-container>
+                class="bi bi-check-circle-fill text-green-600 text-lg"
+              ></i>
 
               <ng-template #notReady>
-                <i class="bi bi-x-lg text-red-600 text-lg"></i>
+                <i class="bi bi-x-circle-fill text-red-600 text-lg"></i>
               </ng-template>
             </td>
 
             <td class="p-3 text-center border-r">
               <i
-              (click)="openEditModal(field, i)"
-                class="bi bi-pencil text-blue-500 hover:text-blue-700 mr-3 cursor-pointer"
+                (click)="openEditModal(field, i)"
+                class="bi bi-pencil-square text-blue-500 hover:text-blue-700 mr-3 cursor-pointer"
               ></i>
               <i
-              (click)="deleteFunding(i)"
+                (click)="deleteFunding(i)"
                 class="bi bi-trash3 text-red-500 cursor-pointer hover:text-red-700"
               ></i>
             </td>
@@ -174,7 +173,9 @@
   >
     <!-- Title -->
     <h2 class="text-xl font-semibold mb-4 text-center md:text-left">
-      {{ modalMode === 'add' ? 'เพิ่มสาขาที่เชี่ยวชาญ' : 'แก้ไขสาขาที่เชี่ยวชาญ' }}
+      {{
+        modalMode === "add" ? "เพิ่มสาขาที่เชี่ยวชาญ" : "แก้ไขสาขาที่เชี่ยวชาญ"
+      }}
     </h2>
 
     <!-- ชื่อสาขา -->
@@ -224,7 +225,7 @@
         (click)="modalMode === 'add' ? saveFunding() : updateFunding()"
         class="w-full sm:w-auto px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700"
       >
-        {{ modalMode === 'add' ? 'บันทึก' : 'อัปเดต' }}
+        {{ modalMode === "add" ? "บันทึก" : "อัปเดต" }}
       </button>
     </div>
   </div>

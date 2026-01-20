@@ -172,4 +172,31 @@ filteredFaculties(): string[] {
   );
 }
 
+changePage(page: number) {
+  if (page < 1 || page > this.totalPages) return;
+  if (page === this.currentPage) return;
+
+  this.currentPage = page;
+  this.updatePagination();
+}
+currentPage: number = 1;
+pageSize: number = 10;
+
+updatePagination(): void {
+  const start = (this.currentPage - 1) * this.pageSize;
+  const end = start + this.pageSize;
+
+  this.filteredResearchers = this.filteredResearchers.slice(start, end);
+}
+
+get totalPages(): number {
+  return Math.ceil(this.filteredResearchers.length / this.pageSize);
+}
+get totalItems(): number {
+  return this.filteredResearchers.length;
+}
+get pages(): number[] {
+  return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+}
+
 }

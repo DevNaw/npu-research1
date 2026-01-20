@@ -59,6 +59,7 @@ export class InnovationComponent implements OnInit {
 
   changePage(page: number): void {
     if (page < 1 || page > this.totalPages) return;
+    if (page === this.currentPage) return;
 
     this.currentPage = page;
     this.updatePagination();
@@ -72,5 +73,9 @@ export class InnovationComponent implements OnInit {
 
   viewDetails(id: number): void {
     this.router.navigate(['/performance/innovation', id]);
+  }
+
+  get pages(): number[] {
+    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
   }
 }

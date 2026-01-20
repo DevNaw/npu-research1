@@ -50,8 +50,9 @@ export class ReportResearcherInstitutionComponent {
 
   changePage(page: number) {
     if (page < 1 || page > this.totalPages) return;
+    if (page === this.currentPage) return;
+
     this.currentPage = page;
-    // window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   exportExcel() {
@@ -93,5 +94,9 @@ export class ReportResearcherInstitutionComponent {
       (sum: number, r: any) => sum + r.support,
       0
     );
+  }
+
+  get pages(): number[] {
+    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
   }
 }

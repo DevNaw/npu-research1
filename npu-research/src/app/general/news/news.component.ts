@@ -49,6 +49,9 @@ export class NewsComponent {
   }
   
   changePage(page: number) {
+    if (page < 1 || page > this.totalPages.length) return;
+    if (page === this.currentPage) return;
+
     this.currentPage = page;
   }
   

@@ -1,5 +1,5 @@
 <div class="contain-content bg-gray-100 p-3">
-  <div class="max-w-7xl mx-auto px-2 py-10 bg-white rounded-xl">
+  <div class="max-w-7xl mx-auto px-6 py-6 bg-white rounded-xl">
     <div class="mt-5">
       <h1 class="text-2xl font-semibold">
         รายงานข้อมูลจำนวนนักวิจัย แยกตามประเภทนักวิจัย
@@ -32,27 +32,26 @@
             type="text"
             [(ngModel)]="searchText"
             (input)="onSearch()"
-            class="border border-gray-300 rounded-md p-2"
-            placeholder="ค้นหาหน่วยงาน..."
+            class="border border-gray-300 rounded px-2 py-1"
+            placeholder="ค้นหา..."
           />
         </div>
       </div>
     </div>
 
     <div class="w-full overflow-x-auto mt-4" id="print-section">
-
-        <!-- PRINT HEADER -->
-  <div class="print-header hidden-print">
-    <div class="text-center">
-      <h2>รายงานข้อมูลจำนวนนักวิจัย</h2>
-      <h3>แยกตามประเภทนักวิจัย</h3>
-      <p>
-        ระบบฐานข้อมูลงานวิจัย มหาวิทยาลัยนครพนม<br />
-        วันที่พิมพ์: {{ today | date:'dd/MM/yyyy HH:mm' }}
-      </p>
-    </div>
-  </div>
-      <table class="w-full border border-gray-300 rounded-lg overflow-hidden">
+      <!-- PRINT HEADER -->
+      <div class="print-header hidden-print">
+        <div class="text-center">
+          <h2>รายงานข้อมูลจำนวนนักวิจัย</h2>
+          <h3>แยกตามประเภทนักวิจัย</h3>
+          <p>
+            ระบบฐานข้อมูลงานวิจัย มหาวิทยาลัยนครพนม<br />
+            วันที่พิมพ์: {{ today | date : "dd/MM/yyyy HH:mm" }}
+          </p>
+        </div>
+      </div>
+      <table class="w-full border overflow-hidden">
         <thead>
           <tr class="bg-[#FACC15] text-[#1E293B] border-b">
             <th class="p-3 border-r text-center">ลำดับ</th>
@@ -129,27 +128,27 @@
         <button
           (click)="changePage(currentPage - 1)"
           [disabled]="currentPage === 1"
-          class="px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100"
+          class="px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
         >
           ‹
         </button>
 
         <button
-          *ngFor="let page of [].constructor(totalPages); let i = index"
-          (click)="changePage(i + 1)"
+          *ngFor="let page of pages"
+          (click)="changePage(page)"
           class="px-3 py-1 rounded border text-sm transition"
           [ngClass]="{
-            'bg-[#FACC15] text-[#1E293B]': currentPage === i + 1,
-            'hover:bg-gray-100': currentPage !== i + 1
+            'bg-[#FACC15] text-[#1E293B]': currentPage === page,
+            'hover:bg-gray-100': currentPage !== page
           }"
         >
-          {{ i + 1 }}
+          {{ page }}
         </button>
 
         <button
           (click)="changePage(currentPage + 1)"
           [disabled]="currentPage === totalPages"
-          class="px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100"
+          class="px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
         >
           ›
         </button>
