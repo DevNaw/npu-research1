@@ -2,7 +2,7 @@
   <!-- ===== SEARCH ===== -->
   <div class="max-w-7xl mx-auto bg-white rounded-xl p-6 shadow">
     <!-- Title -->
-    <h1 class="text-2xl font-semibold mb-6 flex items-center gap-2">
+    <h1 class="text-3xl font-semibold mb-6 flex items-center gap-2">
       <i class="bi bi-funnel"></i>
       ระบุเงื่อนไขในการค้นหา
     </h1>
@@ -10,13 +10,13 @@
 
     <!-- ประเภทงานวิจัย -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-center mb-6">
-      <label class="md:text-right font-medium text-gray-700">
+      <label class="md:text-right font-medium text-gray-700 text-xl">
         ประเภทงานวิจัย:
       </label>
 
       <select
         [(ngModel)]="selectedType"
-        class="md:col-span-3 w-full border rounded-md px-4 py-2 focus:ring focus:ring-yellow-200"
+        class="md:col-span-3 w-full border rounded-md px-4 py-2  text-xl"
       >
         <option value="">ทั้งหมด</option>
         <option value="project">โครงการวิจัย</option>
@@ -28,7 +28,7 @@
     <!-- หน่วยงาน -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-start mb-6">
       <!-- Label -->
-      <label class="md:text-right font-medium text-gray-700 pt-2">
+      <label class="md:text-right font-medium text-gray-700 pt-2 text-xl">
         หน่วยงาน :
       </label>
 
@@ -38,7 +38,7 @@
         <button
           type="button"
           (click)="toggleDropdown('faculties', $event)"
-          class="w-full border rounded-md px-3 py-2 flex justify-between items-center bg-white"
+          class="w-full border rounded-md px-3 py-2 flex justify-between text-xl items-center bg-white"
         >
           <span class="truncate">
             {{ selectedFaculty || "เลือกหน่วยงาน" }}
@@ -56,7 +56,7 @@
           <input
             [(ngModel)]="searchFaculitie"
             placeholder="ค้นหา..."
-            class="w-full px-3 py-2 border-b outline-none"
+            class="w-full px-3 py-2 border-b outline-none text-xl"
           />
 
           <!-- List -->
@@ -64,7 +64,7 @@
             <li
               *ngFor="let f of filteredFaculties()"
               (click)="selectFaculities(f)"
-              class="px-4 py-2 hover:bg-yellow-50 cursor-pointer"
+              class="px-4 py-2 hover:bg-yellow-50 cursor-pointer text-xl"
             >
               {{ f }}
             </li>
@@ -82,13 +82,13 @@
 
     <!-- แหล่งเงินทุน -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-center mb-6">
-      <label class="md:text-right font-medium text-gray-700">
+      <label class="md:text-right font-medium text-gray-700 text-xl">
         แหล่งเงินทุน :
       </label>
 
       <select
         [(ngModel)]="selectedFunding"
-        class="md:col-span-3 w-70 border rounded-md px-4 py-2 focus:ring focus:ring-yellow-200"
+        class="md:col-span-3 w-70 border rounded-md px-4 py-2 text-xl"
       >
         <option value="">ทั้งหมด</option>
         <option value="external">ภายนอก</option>
@@ -98,13 +98,13 @@
 
     <!-- ปีที่วิจัย -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-center mb-6">
-      <label class="md:text-right font-medium text-gray-700">
+      <label class="md:text-right font-medium text-gray-700 text-xl">
         ปีที่วิจัย :
       </label>
 
       <select
         [(ngModel)]="selectedYear"
-        class="md:col-span-3 w-70 border rounded-md px-4 py-2 focus:ring focus:ring-yellow-200"
+        class="md:col-span-3 w-70 border rounded-md px-4 py-2 text-xl"
       >
         <option value="">ทั้งหมด</option>
         <option *ngFor="let y of years" [value]="y">{{ y }}</option>
@@ -113,14 +113,14 @@
 
     <!-- ชื่อนักวิจัย -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-center mb-6">
-      <label class="md:text-right font-medium text-gray-700">
+      <label class="md:text-right font-medium text-gray-700 text-xl">
         ชื่องานวิจัย :
       </label>
 
       <input
         [(ngModel)]="researchTitle"
         type="text"
-        class="md:col-span-3 w-full border rounded-md px-4 py-2 focus:ring focus:ring-yellow-200"
+        class="md:col-span-3 w-full border rounded-md px-4 py-2 focus:ring text-xl"
         placeholder="กรอกชื่อนักวิจัย"
       />
     </div>
@@ -143,7 +143,7 @@
     class="max-w-7xl mx-auto mt-8 grid grid-cols-1 md:grid-cols-2 gap-6"
   >
     <div class="bg-white rounded-xl shadow p-6">
-      <h2 class="font-semibold mb-4">สัดส่วนนักวิจัย จำแนกตามสายงาน</h2>
+      <h2 class="font-semibold mb-4 text-2xl">สัดส่วนนักวิจัย จำแนกตามสายงาน</h2>
 
       <apx-chart
         *ngIf="donutSeries.length > 0; else noData"
@@ -159,13 +159,13 @@
     </div>
 
     <div
-      class="bg-white rounded-xl shadow p-6 flex flex-col justify-center items-center"
+      class="bg-white rounded-xl shadow p-6 flex flex-col justify-center items-center text-2xl"
     >
       <p *ngFor="let l of donutLabels; let i = index">
         {{ l }} : {{ donutSeries[i] }} งาน
       </p>
 
-      <p class="mt-4 text-sm text-gray-500">
+      <p class="mt-4 text-gray-500 text-xl">
         รวมทั้งหมด {{ totalResearchers }} งาน
       </p>
     </div>
@@ -176,7 +176,7 @@
     *ngIf="isSearched"
     class="max-w-7xl mx-auto mt-8 bg-white rounded-xl shadow p-6"
   >
-    <h2 class="text-xl font-semibold mb-4">
+    <h2 class="text-2xl font-semibold mb-4">
       {{
         selectedType === "project"
           ? "โครงการวิจัย"
@@ -189,12 +189,12 @@
     </h2>
 
     <div class="overflow-x-auto">
-      <table class="w-full border border-gray-300">
+      <table class="w-full border border-gray-300 text-xl">
         <thead class="bg-[#FACC15]">
           <tr>
             <th class="p-3 border">ลำดับ</th>
-            <th class="p-3 border text-left">ชื่อเจ้าของผลงาน</th>
-            <th class="p-3 border text-left">ชื่องานวิจัย</th>
+            <th class="p-3 border text-center">ชื่อเจ้าของผลงาน</th>
+            <th class="p-3 border text-center">ชื่องานวิจัย</th>
           </tr>
         </thead>
 

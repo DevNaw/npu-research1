@@ -1,7 +1,7 @@
 <div class="contain-content bg-gray-100 p-3">
     <div class="max-w-7xl mx-auto px-6 py-6 bg-white rounded-xl">
       <div class="mt-5">
-        <h1 class="text-2xl font-semibold">
+        <h1 class="text-3xl font-semibold">
             รายงานข้อมูลจำนวนนักวิจัย แยกตามสาขาที่เชี่ยวชาญ
         </h1>
   
@@ -12,14 +12,14 @@
           <div class="flex gap-2">
             <button
               (click)="exportExcel()"
-              class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm cursor-pointer"
+              class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-lg text-white px-4 py-1 rounded-md cursor-pointer"
             >
               <i class="bi bi-file-earmark-excel"></i> Excel
             </button>
   
             <button
               (click)="printPage()"
-              class="flex items-center gap-2 bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-md text-sm cursor-pointer"
+              class="flex items-center gap-2 bg-gray-700 hover:bg-gray-800 text-white px-4 py-1 rounded-md text-lg cursor-pointer"
             >
               <i class="bi bi-printer"></i> Print
             </button>
@@ -27,12 +27,12 @@
   
           <!-- Search -->
           <div class="flex items-center">
-            <label class="text-lg mr-2">Search:</label>
+            <label class="text-xl mr-2">Search:</label>
             <input
               type="text"
               [(ngModel)]="searchText"
               (input)="onSearch()"
-              class="border border-gray-300 rounded px-2 py-1"
+              class="border border-gray-300 rounded px-2 py-1 text-xl"
               placeholder="ค้นหา..."
             />
           </div>
@@ -54,7 +54,7 @@
     </div>
         <table class="w-full border overflow-hidden">
           <thead>
-            <tr class="bg-[#FACC15] text-[#1E293B] border-b">
+            <tr class="bg-[#FACC15] text-[#1E293B] border-b text-xl">
               <th class="p-3 border-r text-center">ลำดับ</th>
               <th class="p-3 pl-6 text-left border-r">สาขาวิชาที่เชี่ยวชาญ</th>
               <th class="p-3 pl-6 text-center">รวม</th>
@@ -64,17 +64,17 @@
           <tbody>
             <tr
               *ngFor="let r of filteredDocuments; let i = index"
-              class="border-b hover:bg-gray-50"
+              class="border-b hover:bg-gray-50 text-xl"
             >
-              <td class="p-3 text-center border-r">
+              <td class="p-3 text-center text-xl border-r">
                 {{ (currentPage - 1) * pageSize + i + 1 }}
               </td>
   
-              <td class="p-3 pl-6 border-r font-medium">
+              <td class="p-3 pl-6 border-r text-xl font-medium">
                 {{ r.title }}
               </td>
   
-              <td class="p-3 text-center">
+              <td class="p-3 text-center text-xl">
                 {{ r.academic }}
               </td>
             </tr>
@@ -87,8 +87,8 @@
             </tr>
   
             <!-- รวมทั้งหมด -->
-            <tr class="bg-gray-100 font-semibold">
-              <td colspan="2" class="text-right p-3 border-r">รวมทั้งหมด</td>
+            <tr class="bg-gray-100 font-semibold text-xl">
+              <td colspan="2" class="text-right  p-3 border-r">รวมทั้งหมด</td>
               
               <td class="text-center p-3">
                 {{ totalAcademic }}
@@ -101,11 +101,11 @@
       <div
         class="flex flex-col md:flex-row md:justify-between md:items-center mt-4 gap-2"
       >
-        <p class="text-sm text-gray-600">
+        <p class="text-gray-600 text-xl">
           หน้า {{ currentPage }} จาก {{ totalPages }}
         </p>
   
-        <p class="text-sm text-gray-500">
+        <p class="text-gray-500 text-xl">
           แสดง {{ paginatedReseacrchs.length }} รายการ จาก
           {{ documents.length }} รายการ
         </p>
@@ -124,7 +124,7 @@
             (click)="changePage(page)"
             class="px-3 py-1 rounded border text-sm transition"
             [ngClass]="{
-              'bg-[#FACC15] text-[#1E293B] border-[#FACC15]': currentPage === page,
+              'bg-[#FACC15] text-[#1E293B] border-gray-600': currentPage === page,
               'hover:bg-gray-100': currentPage !== page
             }"
           >

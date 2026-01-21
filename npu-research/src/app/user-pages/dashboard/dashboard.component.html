@@ -8,10 +8,10 @@
       >
         <i class="bi bi-flask text-6xl"></i>
         <div class="ml-auto text-right">
-          <p class="text-sm">โครงการวิจัย</p>
-          <h2 class="text-3xl font-bold">1200</h2>
-          <p class="text-sm">ชาย 501 | หญิง 600</p>
-          <p class="text-xs italic text-gray-600">TH 100 · EN 100</p>
+          <p class="text-lg font-semibold">โครงการวิจัย</p>
+          <h2 class="text-3xl font-bold">1,200</h2>
+          <p class="text-lg font-semibold">ชาย 501 | หญิง 600</p>
+          <p class="text-lg font-semibold text-gray-600 italic">TH 100 · EN 100</p>
         </div>
       </div>
 
@@ -20,10 +20,10 @@
       >
         <i class="bi bi-file-earmark-text text-6xl"></i>
         <div class="ml-auto text-right">
-          <p class="text-sm">บทความ</p>
+          <p class="text-lg font-semibold">บทความ</p>
           <h2 class="text-3xl font-bold">860</h2>
-          <p class="text-sm">ชาย 501 | หญิง 600</p>
-          <p class="text-xs italic text-gray-600">TH 100 · EN 100</p>
+          <p class="text-lg font-semibold">ชาย 501 | หญิง 600</p>
+          <p class="text-lg font-semibold italic text-gray-600">TH 100 · EN 100</p>
         </div>
       </div>
 
@@ -32,10 +32,10 @@
       >
         <i class="bi bi-award text-6xl"></i>
         <div class="ml-auto text-right">
-          <p class="text-sm">นวัตกรรม</p>
+          <p class="text-lg font-semibold">นวัตกรรม</p>
           <h2 class="text-3xl font-bold">210</h2>
-          <p class="text-sm">ชาย 501 | หญิง 600</p>
-          <p class="text-xs italic text-gray-600">TH 100 · EN 100</p>
+          <p class="text-lg font-semibold">ชาย 501 | หญิง 600</p>
+          <p class="text-lg font-semibold italic text-gray-600">TH 100 · EN 100</p>
         </div>
       </div>
 
@@ -44,10 +44,10 @@
       >
         <i class="bi bi-people text-6xl"></i>
         <div class="ml-auto text-right">
-          <p class="text-sm">นักวิจัย</p>
+          <p class="text-lg font-semibold">นักวิจัย</p>
           <h2 class="text-3xl font-bold">340</h2>
-          <p class="text-sm">ชาย 501 | หญิง 600</p>
-          <p class="text-xs italic text-gray-600">TH 100 · EN 100</p>
+          <p class="text-lg font-semibold">ชาย 501 | หญิง 600</p>
+          <p class="text-lg font-semibold italic text-gray-600">TH 100 · EN 100</p>
         </div>
       </div>
     </div>
@@ -74,8 +74,8 @@
     <div class="bg-white rounded-xl p-6 shadow">
       <!-- Header -->
       <div class="flex items-center justify-between mb-6">
-        <h1 class="text-2xl font-semibold">ข่าวประชาสัมพันธ์</h1>
-        <a routerLink="/news" class="text-sm text-blue-600 hover:underline">
+        <h1 class="text-3xl font-semibold">ข่าวประชาสัมพันธ์</h1>
+        <a routerLink="/news" class="text-xl text-blue-600 hover:underline">
           ดูข่าวทั้งหมด →
         </a>
       </div>
@@ -94,11 +94,11 @@
 
           <!-- Content -->
           <div class="p-4 flex flex-col flex-1">
-            <h2 class="font-semibold line-clamp-2">
+            <h2 class="text-xl font-semibold line-clamp-2">
               {{ news.title }}
             </h2>
 
-            <p class="text-sm text-gray-600 line-clamp-3 mt-1 flex-1">
+            <p class="text-lg text-gray-600 line-clamp-3 mt-1 flex-1">
               {{ news.summary }}
             </p>
 
@@ -106,7 +106,7 @@
             <div class="mt-3 text-right">
               <a
                 [href]="news.link"
-                class="text-blue-600 text-sm font-medium hover:underline inline-flex items-center gap-1 cursor-pointer"
+                class="text-blue-600 text-lg font-medium hover:underline inline-flex items-center gap-1 cursor-pointer"
               >
                 อ่านเพิ่มเติม
                 <span>→</span>
@@ -120,7 +120,7 @@
     <!-- ===== Publications Table ===== -->
     <div class="bg-white rounded-xl p-6 shadow">
       <div class="flex items-center justify-between mb-4">
-        <h1 class="text-2xl font-semibold">ผลงานที่ตีพิมพ์</h1>
+        <h1 class="text-3xl font-semibold">ผลงานที่ตีพิมพ์</h1>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 md:flex md:justify-between">
@@ -128,14 +128,14 @@
           <button
             (click)="changeTab('research')"
             [ngClass]="selectedTab === 'research' ? 'bg-[#FDE68A] text-black' : 'text-black hover:bg-[#FDE68A]'"
-            class="px-4 py-2 rounded-lg cursor-pointer"
+            class="px-4 py-2 rounded-lg cursor-pointer text-xl"
           >
             โครงการวิจัย
           </button>
           <button
             (click)="changeTab('article')"
             [ngClass]="selectedTab === 'article' ? 'bg-[#FDE68A] text-black' : 'text-black hover:bg-[#FDE68A]'"
-            class="px-4 py-2 rounded-lg cursor-pointer"
+            class="px-4 py-2 rounded-lg cursor-pointer text-xl"
           >
             บทความ
           </button>
@@ -143,26 +143,26 @@
             (click)="changeTab('innovation')"
             [ngClass]="selectedTab === 'innovation'
             ? 'bg-[#FDE68A] text-black' : 'text-black hover:bg-[#FDE68A]'"
-            class="px-4 py-2 rounded-lg cursor-pointer"
+            class="px-4 py-2 rounded-lg cursor-pointer text-xl"
           >
             นวัตกรรมสิ่งประดิษฐ์
           </button>
         </div>
 
-        <div>
+        <div class="text-xl">
           Search:
           <input
             type="text"
             [(ngModel)]="searchText"
             (input)="onSearch()"
-            class="border border-gray-300 rounded px-2 py-1 ml-2"
+            class="border border-gray-300 rounded px-2"
             placeholder="ค้นหา..."
           />
         </div>
       </div>
       
 
-      <table class="w-full border">
+      <table class="w-full border text-xl">
         <thead class="bg-yellow-400">
           <tr>
             <th class="p-2 border-r">ลำดับ</th>
@@ -186,7 +186,7 @@
                 {{ p.title }}
               </div>
 
-              <div class="text-xs text-gray-500 mt-1 flex items-center gap-1">
+              <div class="text-lg text-gray-500 mt-1 flex items-center gap-1">
                 <i class="bi bi-calendar-event"></i>
                 วันที่สร้าง: {{ p.date }}
               </div>
@@ -219,7 +219,7 @@
         <button
           *ngFor="let page of pages"
           (click)="changePage(page)"
-          class="px-3 py-1 rounded border text-sm transition"
+          class="px-3 py-1 rounded border text-2sm transition"
           [ngClass]="{
             'bg-[#FACC15] text-[#1E293B] border-[#FACC15]': currentPage === page,
             'hover:bg-gray-100': currentPage !== page
@@ -252,8 +252,8 @@
         <i
           class="bi bi-book text-4xl text-amber-500 mb-3 group-hover:scale-110 transition"
         ></i>
-        <h2 class="text-lg font-semibold text-gray-800">โครงการวิจัย</h2>
-        <p class="text-sm text-gray-500 mt-1">Research Projects</p>
+        <h2 class="text-xl font-semibold text-gray-800">โครงการวิจัย</h2>
+        <p class="text-lg text-gray-500 mt-1">Research Projects</p>
       </div>
 
       <!-- Card 2 -->
@@ -264,8 +264,8 @@
         <i
           class="bi bi-graph-up text-4xl text-blue-600 mb-3 group-hover:scale-110 transition"
         ></i>
-        <h2 class="text-lg font-semibold text-gray-800">บทความ / วารสาร</h2>
-        <p class="text-sm text-gray-500 mt-1">Articles & Journals</p>
+        <h2 class="text-xl font-semibold text-gray-800">บทความ / วารสาร</h2>
+        <p class="text-lg text-gray-500 mt-1">Articles & Journals</p>
       </div>
 
       <!-- Card 3 -->
@@ -276,10 +276,10 @@
         <i
           class="bi bi-stars text-4xl text-indigo-500 mb-3 group-hover:scale-110 transition"
         ></i>
-        <h2 class="text-lg font-semibold text-gray-800">
+        <h2 class="text-xl font-semibold text-gray-800">
           นวัตกรรมสิ่งประดิษฐ์
         </h2>
-        <p class="text-sm text-gray-500 mt-1">Innovations</p>
+        <p class="text-lg text-gray-500 mt-1">Innovations</p>
       </div>
 
       <!-- Card 4 -->
@@ -290,8 +290,8 @@
         <i
           class="bi bi-person-lines-fill text-4xl text-amber-500 mb-3 group-hover:scale-110 transition"
         ></i>
-        <h2 class="text-lg font-semibold text-gray-800">คู่มือการใช้งาน</h2>
-        <p class="text-sm text-gray-500 mt-1">User Manual</p>
+        <h2 class="text-xl font-semibold text-gray-800">คู่มือการใช้งาน</h2>
+        <p class="text-lg text-gray-500 mt-1">User Manual</p>
       </div>
     </div>
   </div>

@@ -1,13 +1,16 @@
 /* You can add global styles to this file, and also import other style files */
 @import "tailwindcss";
 
+@font-face {
+  font-family: 'TH K2D July8';
+  src: url('/assets/fonts/TH K2D July8.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 body {
-    font-family: 'Sarabun', 'TH Sarabun New', 'TH Sarabun PSK', 'TH Niramit AS', 'TH KoHo', sans-serif;
-  }
-  
-  h1, h2, h3 {
-    font-family: 'TH Niramit AS', 'TH Chakra Petch', 'TH KoHo', 'Sarabun', sans-serif;
-  }
+  font-family: 'TH K2D July8', sans-serif;
+}
 
   /* ซ่อน header ตอนปกติ */
 .hidden-print {

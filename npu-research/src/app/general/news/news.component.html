@@ -17,17 +17,17 @@
           
                 <!-- Content -->
                 <div class="p-4 space-y-2">
-                  <h3 class="font-semibold text-gray-800 line-clamp-2">
+                  <h3 class="font-semibold text-xl text-gray-800 line-clamp-2">
                     {{ news.title }}
                   </h3>
           
-                  <p class="text-sm text-gray-500">
+                  <p class="text-lg text-gray-500">
                     {{ news.date }}
                   </p>
           
                   <a
                     [routerLink]="['/news', news.id]"
-                    class="text-orange-500 font-medium inline-flex items-center gap-1 hover:underline"
+                    class="text-orange-500 font-medium inline-flex items-center gap-1 hover:underline text-lg"
                   >
                     ดูเพิ่มเติม
                     <span>»</span>

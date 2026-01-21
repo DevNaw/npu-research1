@@ -53,18 +53,27 @@ export class NewsEditComponent implements OnInit {
     });
   }
 
-  onCoverChange(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      this.coverPreview = URL.createObjectURL(file);
-    }
+  onCoverChange(event: Event) {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = () => (this.coverPreview = reader.result as string);
+    reader.readAsDataURL(file);
   }
 
-  onGalleryChange(event: any) {
+  onGalleryChange(event: Event) {
+    const files = (event.target as HTMLInputElement).files;
+    if (!files) return;
+
     this.galleryPreview = [];
-    for (const file of event.target.files) {
-      this.galleryPreview.push(URL.createObjectURL(file));
-    }
+
+    Array.from(files).forEach(file => {
+      const reader = new FileReader();
+      reader.onload = () =>
+        this.galleryPreview.push(reader.result as string);
+      reader.readAsDataURL(file);
+    });
   }
 
   submit() {

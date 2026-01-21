@@ -1,5 +1,5 @@
 import { Component, HostListener } from '@angular/core';
-import { ApexChart, ApexLegend } from 'ng-apexcharts';
+import { ApexChart, ApexLegend, ApexPlotOptions } from 'ng-apexcharts';
 import { DataProfile } from '../../models/profile.model';
 import { Router } from '@angular/router';
 
@@ -87,6 +87,7 @@ export class ReportResearcherProfileComponent {
 
   donutLegend: ApexLegend = {
     position: 'bottom',
+    fontSize: '14px',
   };
 
   filteredResearchers: DataProfile[] = [];

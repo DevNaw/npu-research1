@@ -162,6 +162,8 @@ export class UserDashboardComponent implements OnInit {
       },
       legend: {
         position: 'right',
+        fontFamily: 'TH K2D July8',
+        fontSize: '20px',
       },
       plotOptions: {
         pie: {
@@ -232,6 +234,8 @@ export class UserDashboardComponent implements OnInit {
       },
       legend: {
         position: 'right',
+        fontFamily: 'TH K2D July8',
+        fontSize: '20px',
       },
       plotOptions: {
         pie: {
@@ -288,6 +292,8 @@ export class UserDashboardComponent implements OnInit {
       },
       legend: {
         position: 'right',
+        fontFamily: 'TH K2D July8',
+        fontSize: '20px',
       },
       plotOptions: {
         pie: {

@@ -103,6 +103,7 @@ export class ReportResearcherResearchComponent {
 
   donutLegend = {
     position: 'bottom' as const,
+    fontSize: '14px',
   };
 
   /** ===== SEARCH ===== */
