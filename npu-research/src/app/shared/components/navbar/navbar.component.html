@@ -1,7 +1,7 @@
 <!-- ===== Navbar General ===== -->
 <ng-container *ngIf="!isLoggedIn">
-  <nav class="text-black bg-gray-200 sticky top-0 z-50">
-    <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 cursor-pointer p-2">
+  <nav class="text-black sticky top-0 z-50 bg-gray-100">
+    <div class="max-w-full mx-auto px-8 cursor-pointer p-2 bg-white">
       <div class="flex items-center justify-between h-16">
         <div class="flex items-center gap-3">
           <img
@@ -11,21 +11,21 @@
           />
           <div class="leading-tight sm:block">
             <h1
-              class="text-lg font-semibold sm:text-xl md:text-3xl transition-all duration-300"
+              class="text-2xl font-black sm:text-2xl md:text-3xl transition-all duration-300"
             >
               ระบบฐานข้อมูลวิจัย มหาวิทยาลัยนครพนม
             </h1>
-            <p class="text-xs sm:text-lg font-semibold underline">Research Database System</p>
+            <p class="text-lg sm:text-xl font-black italic text-gray-400">Research Database System</p>
           </div>
         </div>
 
         <div class="hidden md:flex items-center gap-6">
           <a
             routerLink="/login"
-            class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm flex items-center justify-center hover:text-blue-400"
+            class="hover:bg-gray-50 px-3 py-2 rounded-md flex items-center justify-center hover:text-blue-400"
           >
             <i class="bi bi-box-arrow-in-right text-lg"></i>
-            <span class="ml-2 hidden md:inline text-lg">เข้าสู่ระบบ</span>
+            <span class="ml-2 hidden md:inline text-xl">เข้าสู่ระบบ</span>
           </a>
         </div>
 
@@ -45,7 +45,7 @@
       </div>
     </div>
 
-    <div class="flex justify-between items-center flex-wrap bg-[#FACC15] px-2">
+    <div class="flex justify-between items-center flex-wrap bg-[#FACC15] px-2 rounded-b-[2vw] shadow-lg/30">
       <div class="hidden md:flex m-2 ml-10 gap-2">
         <div class="ml-5 flex flex-wrap items-baseline space-x-1">
           <a
@@ -53,7 +53,7 @@
             class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-1"
           >
             <i class="bi bi-house text-lg"></i>
-            <span class="hidden md:inline font-semibold text-lg">หน้าหลัก</span>
+            <span class="hidden md:inline font-extrabold text-xl">หน้าหลัก</span>
           </a>
 
           <a
@@ -61,7 +61,7 @@
             class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-1"
           >
             <i class="bi bi-layers-half text-lg"></i>
-            <span class="hidden md:inline font-semibold text-lg">งานวิจัย</span>
+            <span class="hidden md:inline font-extrabold text-xl">งานวิจัย</span>
           </a>
 
           <a
@@ -69,7 +69,7 @@
             class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-1"
           >
             <i class="bi bi-book text-lg"></i>
-            <span class="hidden md:inline font-semibold text-lg">บทความ/วารสาร</span>
+            <span class="hidden md:inline font-extrabold text-xl">บทความ/วารสาร</span>
           </a>
 
           <a
@@ -77,7 +77,7 @@
             class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-1"
           >
             <i class="bi bi-award text-lg"></i>
-            <span class="hidden md:inline font-semibold text-lg">นวัตกรรมสิ่งประดิษฐ์</span>
+            <span class="hidden md:inline font-extrabold text-xl">นวัตกรรมสิ่งประดิษฐ์</span>
           </a>
 
           <a
@@ -85,7 +85,7 @@
             class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-1"
           >
             <i class="bi bi-rss text-lg"></i>
-            <span class="hidden md:inline font-semibold text-lg">ข่าวประชาสัมพันธ์</span>
+            <span class="hidden md:inline font-extrabold text-xl">ข่าวประชาสัมพันธ์</span>
           </a>
 
           <a
@@ -93,7 +93,7 @@
             class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-1"
           >
             <i class="bi bi-cloud-arrow-down text-lg"></i>
-            <span class="hidden md:inline font-semibold text-lg">เอกสารดาว์โหลด</span>
+            <span class="hidden md:inline font-extrabold text-xl">เอกสารดาว์โหลด</span>
           </a>
 
           <div class="relative group">
@@ -101,7 +101,7 @@
               class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-1"
             >
               <i class="bi bi-graph-up text-lg"></i>
-              <span class="hidden md:inline font-semibold text-lg">สถิติ/รายงาน</span>
+              <span class="hidden md:inline font-extrabold text-xl">สถิติ/รายงาน</span>
             </a>
 
             <div
@@ -109,31 +109,31 @@
             >
               <a
                 routerLink="/report-researcher-profile"
-                class="block px-4 py-2 hover:bg-gray-600 font-semibold text-lg"
+                class="block px-4 py-2 hover:bg-gray-600 font-extrabold text-xl"
               >
                 รายงานข้อมูลประวัตินักวิจัย
               </a>
               <a
                 routerLink="/report-research"
-                class="block px-4 py-2 hover:bg-gray-600 font-semibold text-lg"
+                class="block px-4 py-2 hover:bg-gray-600 font-extrabold text-xl"
               >
                 รายงานข้อมูลผลงานวิจัย
               </a>
               <a
                 routerLink="/report-expertise"
-                class="block px-4 py-2 hover:bg-gray-600 font-semibold text-lg"
+                class="block px-4 py-2 hover:bg-gray-600 font-extrabold text-xl"
               >
                 รายงานข้อมูลจำนวนนักวิจัยแยกตามสาขาเชี่ยวชาญ
               </a>
               <a
                 routerLink="/report-institution"
-                class="block px-4 py-2 hover:bg-gray-600 font-semibold text-lg"
+                class="block px-4 py-2 hover:bg-gray-600 font-extrabold text-xl"
               >
                 รายงานข้อมูลจำนวนนักวิจัยแยกตามหน่วยงานที่สังกัด
               </a>
               <a
                 routerLink="/report-researcher"
-                class="block px-4 py-2 hover:bg-gray-600 font-semibold text-lg"
+                class="block px-4 py-2 hover:bg-gray-600 font-extrabold text-xl"
               >
                 รายงานข้อมูลจำนวนนักวิจัยแยกตามประเภทนักวิจัย
               </a>
@@ -145,7 +145,7 @@
               class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-1"
             >
               <i class="bi bi-file-earmark-text text-lg"></i>
-              <span class="hidden md:inline font-semibold text-lg">คู่มือการใช้งาน</span>
+              <span class="hidden md:inline font-extrabold text-xl">คู่มือการใช้งาน</span>
             </a>
 
             <div
@@ -155,7 +155,7 @@
                 [href]="doc.researcher.fileUrl"
                 target="_blank"
                 rel="noopener"
-                class="block px-4 py-2 hover:bg-gray-600 font-semibold text-lg"
+                class="block px-4 py-2 hover:bg-gray-600 font-extrabold text-xl"
               >
                 สำหรับนักวิจัย
               </a>
@@ -163,7 +163,7 @@
                 [href]="doc.admin.fileUrl"
                 target="_blank"
                 rel="noopener"
-                class="block px-4 py-2 hover:bg-gray-600 font-semibold text-lg"
+                class="block px-4 py-2 hover:bg-gray-600 font-extrabold text-xl"
               >
                 สำหรับแอดมิน
               </a>
@@ -171,7 +171,7 @@
                 [href]="doc.executive.fileUrl"
                 target="_blank"
                 rel="noopener"
-                class="block px-4 py-2 hover:bg-gray-600 font-semibold text-lg"
+                class="block px-4 py-2 hover:bg-gray-600 font-extrabold text-xl"
               >
                 สำหรับผู้บริหาร
               </a>
@@ -363,8 +363,8 @@
 
 <!-- Navbar User -->
 <ng-container *ngIf="isLoggedIn && role === 'user'">
-  <nav class="text-black bg-gray-200 sticky top-0 z-50">
-    <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 cursor-pointer p-2">
+  <nav class="text-black bg-gray-100 sticky top-0 z-50">
+    <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 cursor-pointer p-2 bg-white">
       <div class="flex items-center justify-between h-16">
         <div class="flex items-center gap-3">
           <img
@@ -374,11 +374,11 @@
           />
           <div class="leading-tight sm:block">
             <h1
-              class="font-semibold text-lg sm:text-xl md:text-3xl transition-all duration-300"
+              class="font-black text-xl sm:text-2xl md:text-3xl transition-all duration-300"
             >
               ระบบฐานข้อมูลวิจัย มหาวิทยาลัยนครพนม
             </h1>
-            <p class="font-semibold text-xs sm:text-lg underline">Research Database System</p>
+            <p class="font-black text-lg sm:text-xl text-gray-400">Research Database System</p>
           </div>
         </div>
 
@@ -388,7 +388,7 @@
             class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm flex items-center justify-center"
           >
             <i class="bi bi-person text-lg"></i>
-            <span class="ml-1 hidden md:inline text-lg">นายทดสอบ เริ่มเลย</span>
+            <span class="ml-1 hidden md:inline text-xl">นายทดสอบ เริ่มเลย</span>
           </a>
 
           <a
@@ -396,7 +396,7 @@
             class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm flex items-center justify-center hover:text-red-400"
           >
             <i class="bi bi-box-arrow-left text-lg"></i>
-            <span class="ml-1 hidden md:inline text-lg">ออกจากระบบ</span>
+            <span class="ml-1 hidden md:inline text-xl">ออกจากระบบ</span>
           </a>
         </div>
 
@@ -416,7 +416,7 @@
       </div>
     </div>
 
-    <div class="flex justify-between items-center flex-wrap bg-[#FACC15] px-2">
+    <div class="flex justify-between items-center flex-wrap bg-[#FACC15] rounded-b-[2vw] shadow-lg/30 px-2">
       <div class="hidden md:flex m-2 ml-10 gap-2">
         <div class="ml-5 flex flex-wrap items-baseline space-x-1">
           <a
@@ -424,7 +424,7 @@
             class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-1"
           >
             <i class="bi bi-house text-lg"></i>
-            <span class="hidden md:inline font-semibold text-lg">หน้าหลัก</span>
+            <span class="hidden md:inline font-extrabold text-xl">หน้าหลัก</span>
           </a>
 
           <a
@@ -432,7 +432,7 @@
             class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-1"
           >
             <i class="bi bi-person text-lg"></i>
-            <span class="hidden md:inline font-semibold text-lg">โปรไฟล์</span>
+            <span class="hidden md:inline font-extrabold text-xl">โปรไฟล์</span>
           </a>
 
           <div class="relative group">
@@ -440,7 +440,7 @@
               class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-1"
             >
               <i class="bi bi-floppy text-lg"></i>
-              <span class="hidden md:inline font-semibold text-lg">บันทึกผลงาน</span>
+              <span class="hidden md:inline font-extrabold text-xl">บันทึกผลงาน</span>
             </a>
 
             <div
@@ -448,19 +448,19 @@
             >
               <a
                 routerLink="/user-add-research"
-                class="block px-4 py-2 hover:bg-gray-600 font-semibold text-lg"
+                class="block px-4 py-2 hover:bg-gray-600 font-extrabold text-xl"
               >
                 โครงการงานวิจัย
               </a>
               <a
                 routerLink="/user-add-aticle"
-                class="block px-4 py-2 hover:bg-gray-600 font-semibold text-lg"
+                class="block px-4 py-2 hover:bg-gray-600 font-extrabold text-xl"
               >
                 บทความ/วารสาร
               </a>
               <a
                 routerLink="/user-add-innovation"
-                class="block px-4 py-2 hover:bg-gray-600 font-semibold text-lg"
+                class="block px-4 py-2 hover:bg-gray-600 font-extrabold text-xl"
               >
                 นวัตกรรมสิ่งประดิษฐ์
               </a>
@@ -472,7 +472,7 @@
             class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-1"
           >
             <i class="bi bi-search text-lg"></i>
-            <span class="hidden md:inline font-semibold text-lg">ค้นหางานวิจัย</span>
+            <span class="hidden md:inline font-extrabold text-xl">ค้นหางานวิจัย</span>
           </a>
 
           <a
@@ -480,7 +480,7 @@
             class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-1"
           >
             <i class="bi bi-people text-lg"></i>
-            <span class="hidden md:inline font-semibold text-lg">ค้นหาข้อมูลนักวิจัย</span>
+            <span class="hidden md:inline font-extrabold text-xl">ค้นหาข้อมูลนักวิจัย</span>
           </a>
         </div>
       </div>
@@ -595,8 +595,8 @@
 
 <!-- ===== Navbar Admin ====== -->
 <ng-container *ngIf="isLoggedIn && role === 'admin'">
-  <nav class="text-black bg-gray-200 sticky top-0 z-50">
-    <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 cursor-pointer p-2">
+  <nav class="text-black bg-gray-100 sticky top-0 z-50">
+    <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 cursor-pointer p-2 bg-white">
       <div class="flex items-center justify-between h-16">
         <div class="flex items-center gap-3">
           <img
@@ -606,21 +606,21 @@
           />
           <div class="leading-tight sm:block">
             <h1
-              class="text-lg sm:text-xl md:text-3xl font-semibold transition-all duration-300"
+              class="text-xl sm:text-2xl md:text-3xl font-semibold transition-all duration-300"
             >
               ระบบฐานข้อมูลวิจัย มหาวิทยาลัยนครพนม
             </h1>
-            <p class="text-xs sm:text-lg underline font-semibold">Research Database System</p>
+            <p class="text-lg sm:text-xl font-black text-gray-400">Research Database System</p>
           </div>
         </div>
 
         <div class="hidden md:flex items-center gap-6">
           <a
             routerLink="/login"
-            class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm flex items-center justify-center"
+            class="hover:bg-gray-50 px-3 py-2 rounded-md flex items-center justify-center"
           >
             <i class="bi bi-person text-lg"></i>
-            <span class="ml-1 hidden md:inline font-semibold text-lg">นายAdmin เริ่มเลย</span>
+            <span class="ml-1 hidden md:inline font-extrabold text-xl">นายAdmin เริ่มเลย</span>
           </a>
 
           <a
@@ -628,7 +628,7 @@
             class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm flex items-center justify-center hover:text-red-400"
           >
             <i class="bi bi-box-arrow-left text-lg"></i>
-            <span class="ml-1 hidden md:inline font-semibold text-lg">ออกจากระบบ</span>
+            <span class="ml-1 hidden md:inline font-extrabold text-xl">ออกจากระบบ</span>
           </a>
         </div>
 
@@ -648,7 +648,7 @@
       </div>
     </div>
 
-    <div class="flex justify-between items-center flex-wrap bg-[#FACC15] px-2">
+    <div class="flex justify-between items-center flex-wrap bg-[#FACC15] rounded-b-[2vw] shadow-lg/30 px-2">
       <div class="hidden md:flex m-2 ml-10 gap-2">
         <div class="ml-5 flex flex-wrap items-baseline space-x-1">
           <a
@@ -656,7 +656,7 @@
             class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-1"
           >
             <i class="bi bi-house text-lg"></i>
-            <span class="hidden md:inline font-semibold text-lg">หน้าหลัก</span>
+            <span class="hidden md:inline font-extrabold text-xl">หน้าหลัก</span>
           </a>
 
           <a
@@ -664,7 +664,7 @@
             class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-1"
           >
             <i class="bi bi-person text-lg"></i>
-            <span class="hidden md:inline font-semibold text-lg">โปรไฟล์</span>
+            <span class="hidden md:inline font-extrabold text-xl">โปรไฟล์</span>
           </a>
 
           <div class="relative group">
@@ -672,7 +672,7 @@
               class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-1"
             >
               <i class="bi bi-floppy text-lg"></i>
-              <span class="hidden md:inline font-semibold text-lg">ข้อมูลพื้นฐาน</span>
+              <span class="hidden md:inline font-extrabold text-xl">ข้อมูลพื้นฐาน</span>
             </a>
 
             <div
@@ -680,13 +680,13 @@
             >
               <a
                 routerLink="/external-funding"
-                class="block px-4 py-2 hover:bg-gray-600 font-semibold text-lg"
+                class="block px-4 py-2 hover:bg-gray-600 font-extrabold text-xl"
               >
                 แหล่งทุนภายนอก
               </a>
               <a
                 routerLink="/specialization"
-                class="block px-4 py-2 hover:bg-gray-600 font-semibold text-lg"
+                class="block px-4 py-2 hover:bg-gray-600 font-extrabold text-xl"
               >
                 สาขาวิชาที่เชี่ยวชาญ
               </a>
@@ -698,7 +698,7 @@
               class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-1"
             >
               <i class="bi bi-floppy text-lg"></i>
-              <span class="hidden md:inline font-semibold text-lg">จัดการข่าว/ประกาศ</span>
+              <span class="hidden md:inline font-extrabold text-xl">จัดการข่าว/ประกาศ</span>
             </a>
 
             <div
@@ -706,13 +706,13 @@
             >
               <a
                 routerLink="/admin-news"
-                class="block px-4 py-2 hover:bg-gray-600 font-semibold text-lg"
+                class="block px-4 py-2 hover:bg-gray-600 font-extrabold text-xl"
               >
                 ข่าวประชาสัมพันธ์
               </a>
               <a
                 routerLink="/admin-download"
-                class="block px-4 py-2 hover:bg-gray-600 font-semibold text-lg"
+                class="block px-4 py-2 hover:bg-gray-600 font-extrabold text-xl"
               >
                 เอกสารดาว์โหลด
               </a>
@@ -724,7 +724,7 @@
               class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-1"
             >
               <i class="bi bi-floppy text-lg"></i>
-              <span class="hidden md:inline font-semibold text-lg">บันทึกผลงาน</span>
+              <span class="hidden md:inline font-extrabold text-xl">บันทึกผลงาน</span>
             </a>
 
             <div
@@ -732,19 +732,19 @@
             >
               <a
                 routerLink="/user-add-research"
-                class="block px-4 py-2 hover:bg-gray-600 font-semibold text-lg"
+                class="block px-4 py-2 hover:bg-gray-600 font-extrabold text-xl"
               >
                 โครงการงานวิจัย
               </a>
               <a
                 routerLink="/user-add-aticle"
-                class="block px-4 py-2 hover:bg-gray-600 font-semibold text-lg"
+                class="block px-4 py-2 hover:bg-gray-600 font-extrabold text-xl"
               >
                 บทความ/วารสาร
               </a>
               <a
                 routerLink="/user-add-innovation"
-                class="block px-4 py-2 hover:bg-gray-600 font-semibold text-lg"
+                class="block px-4 py-2 hover:bg-gray-600 font-extrabold text-xl"
               >
                 นวัตกรรมสิ่งประดิษฐ์
               </a>
@@ -756,7 +756,7 @@
             class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-1"
           >
             <i class="bi bi-search text-lg"></i>
-            <span class="hidden md:inline font-semibold text-lg">ค้นหางานวิจัย</span>
+            <span class="hidden md:inline font-extrabold text-xl">ค้นหางานวิจัย</span>
           </a>
 
           <a
@@ -764,14 +764,14 @@
             class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-1"
           >
             <i class="bi bi-people text-lg"></i>
-            <span class="hidden md:inline font-semibold text-lg">ค้นหาข้อมูลนักวิจัย</span>
+            <span class="hidden md:inline font-extrabold text-xl">ค้นหาข้อมูลนักวิจัย</span>
           </a>
           <a
             routerLink="/user-researchers"
             class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-1"
           >
             <i class="bi bi-file-earmark-text text-lg"></i>
-            <span class="hidden md:inline font-semibold text-lg">รายงาน</span>
+            <span class="hidden md:inline font-extrabold text-xl">รายงาน</span>
           </a>
         </div>
       </div>

@@ -15,6 +15,8 @@ import {
   DataPerformance,
   DataPerformanceItem,
 } from '../../models/dashboard.model';
+import { registerLocaleData } from '@angular/common';
+import localeTh from '@angular/common/locales/th';
 
 export interface PieChartConfig {
   title: string;
@@ -44,6 +46,7 @@ interface Publication {
   publishDate: string;
   year: number;
 }
+registerLocaleData(localeTh);
 
 @Component({
   selector: 'app-dashboard',
@@ -52,6 +55,9 @@ interface Publication {
   styleUrl: './dashboard.component.css',
 })
 export class UserDashboardComponent implements OnInit {
+  
+  today: Date = new Date();
+
   pageSize = 10;
   currentPage = 1;
   searchText = '';

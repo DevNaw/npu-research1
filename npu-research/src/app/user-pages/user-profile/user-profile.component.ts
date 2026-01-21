@@ -209,4 +209,16 @@ export class UserProfileComponent implements OnInit {
     this.router.navigate(['/performance', this.selectedTab, id]);
   }
   
+  hasAddressData(): boolean {
+    return !!(
+      this.address?.houseNo ||
+      this.address?.alley ||
+      this.address?.road ||
+      this.address?.subDistrict ||
+      this.address?.district ||
+      this.address?.province ||
+      this.address?.phone
+    );
+  }
+  
 }

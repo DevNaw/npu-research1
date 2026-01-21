@@ -1,7 +1,7 @@
-<div class="contain-content bg-gray-100 p-3">
+<div class="contain-content bg-gray-100 p-3 text-xl">
     <div class="max-w-7xl mt-5 mb-5 mx-auto px-20 py-10 bg-white rounded-xl shadow-md">
       <div class="max-w-7xl mx-auto px-6 py-10 rounded-xl">
-        <h2 class="text-2xl font-semibold ">{{ isEdit ? 'แก้ไขข้อมูลนวัตกรรมสิ่งประดิษฐ์' : 'เพิ่มข้อมูลนวัตกรรมสิ่งประดิษฐ์' }}</h2>
+        <h2 class="text-3xl font-semibold ">{{ isEdit ? 'แก้ไขข้อมูลนวัตกรรมสิ่งประดิษฐ์' : 'เพิ่มข้อมูลนวัตกรรมสิ่งประดิษฐ์' }}</h2>
       </div>
       <hr>
 
@@ -12,7 +12,7 @@
         </label>
         <input
           type="text"
-          class="md:col-span-3 w-full border rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400"
+          class="md:col-span-3 w-full border rounded-md px-4 py-2"
           placeholder="ระบุชื่อนวัตกรรม สิ่งประดิษฐ์"
         />
       </div>
@@ -36,7 +36,7 @@
           name="attention"
           id="attention"
           placeholder="ระบุหลักการและเหตุผล"
-          class="md:col-span-3 w-full border rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400"
+          class="md:col-span-3 w-full border rounded-md px-4 py-2"
         ></textarea>
       </div>
 
@@ -219,7 +219,7 @@
         </label>
         <input
           type="text"
-          class="md:col-span-2 w-full border rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400"
+          class="md:col-span-2 w-full border rounded-md px-4 py-2"
           placeholder="ระบุจำนวนงบประมาณ"
         />
       </div>
@@ -231,7 +231,7 @@
         </label>
         <input
           type="text"
-          class="md:col-span-2 w-full border rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400"
+          class="md:col-span-2 w-full border rounded-md px-4 py-2"
           placeholder="ระบุปีที่ได้รับทุน"
         />
       </div>
@@ -245,7 +245,7 @@
           name="attention"
           id="attention"
           placeholder="ระบุความร่วมมือกับหน่วยงานอื่นๆ"
-          class="md:col-span-3 w-full border rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400"
+          class="md:col-span-3 w-full border rounded-md px-4 py-2"
         ></textarea>
       </div>
 
@@ -256,7 +256,7 @@
         </label>
         <input
           type="text"
-          class="md:col-span-2 w-full border rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400"
+          class="md:col-span-2 w-full border rounded-md px-4 py-2"
           placeholder="ระบุเลขที่สิทธิบัตร"
         />
       </div>
@@ -268,7 +268,7 @@
         </label>
         <input
           type="text"
-          class="md:col-span-2 w-full border rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400"
+          class="md:col-span-2 w-full border rounded-md px-4 py-2"
           placeholder="ระบุเลขที่คำขอสิทธิบัตร"
         />
       </div>
@@ -280,7 +280,7 @@
         </label>
         <input
           type="text"
-          class="md:col-span-2 w-full border rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400"
+          class="md:col-span-2 w-full border rounded-md px-4 py-2"
           placeholder="ระบุเว็บไซต์ตรวจสิทธิบัตร"
         />
       </div>
@@ -302,7 +302,7 @@
   
         <!-- ปุ่ม + ชื่อไฟล์ -->
         <div class="md:col-span-2 flex gap-3 items-center">
-          <span class="text-gray-600 text-sm truncate">
+          <span class="text-gray-600 truncate">
             {{ reportFileName || "ยังไม่ได้เลือกไฟล์" }}
           </span>
           <button
@@ -332,7 +332,7 @@
   
         <!-- ปุ่ม + ชื่อไฟล์ -->
         <div class="md:col-span-2 flex gap-3 items-center">
-          <span class="text-gray-600 text-sm truncate">
+          <span class="text-gray-600 truncate">
             {{ selectedFileName || "ยังไม่ได้เลือกไฟล์" }}
           </span>
           <button

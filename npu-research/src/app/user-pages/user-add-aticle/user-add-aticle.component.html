@@ -1,7 +1,7 @@
-<div class="contain-content bg-gray-100 p-3">
+<div class="contain-content bg-gray-100 p-3 text-xl">
   <div class="max-w-7xl mt-5 mb-5 mx-auto px-20 py-10 bg-white rounded-xl shadow-md">
     <div class="max-w-7xl mx-auto px-6 py-10 rounded-xl">
-      <h2 class="text-2xl font-semibold ">{{ isEdit ? 'แก้ไขข้อมูลบทความ/วารสาร': 'เพิ่มข้อมูลบทความ/วารสาร' }}</h2>
+      <h2 class="text-3xl font-semibold ">{{ isEdit ? 'แก้ไขข้อมูลบทความ/วารสาร': 'เพิ่มข้อมูลบทความ/วารสาร' }}</h2>
     </div>
     <hr>
 
@@ -299,7 +299,7 @@
 
       <!-- ปุ่ม + ชื่อไฟล์ -->
       <div class="md:col-span-2 flex gap-3 items-center">
-        <span class="text-gray-600 text-sm truncate">
+        <span class="text-gray-600 truncate">
           {{ selectedFileName || "ยังไม่ได้เลือกไฟล์" }}
         </span>
         <button

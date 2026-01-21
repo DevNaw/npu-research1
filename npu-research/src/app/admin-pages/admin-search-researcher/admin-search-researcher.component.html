@@ -1,8 +1,8 @@
-<div class="bg-gray-100 min-h-screen p-6">
+<div class="bg-gray-100 min-h-screen p-6 text-xl">
     <!-- ===== SEARCH ===== -->
     <div class="max-w-7xl mx-auto bg-white rounded-xl p-6 shadow">
       <!-- Title -->
-      <h1 class="text-2xl font-semibold mb-6 flex items-center gap-2">
+      <h1 class="text-3xl font-semibold mb-6 flex items-center gap-2">
         <i class="bi bi-funnel"></i>
         ระบุเงื่อนไขในการค้นหา
       </h1>
@@ -70,7 +70,7 @@
   
         <select
           [(ngModel)]="selectedCareer"
-          class="md:col-span-3 w-full border rounded-md px-4 py-2 focus:ring focus:ring-yellow-200"
+          class="md:col-span-3 w-full border rounded-md px-4 py-2"
         >
           <option value="">ทั้งหมด</option>
           <option value="academic">สายวิชาการ</option>
@@ -87,7 +87,7 @@
         <input
           [(ngModel)]="researcherName"
           type="text"
-          class="md:col-span-3 w-full border rounded-md px-4 py-2 focus:ring focus:ring-yellow-200"
+          class="md:col-span-3 w-full border rounded-md px-4 py-2 "
           placeholder="กรอกชื่อนักวิจัย"
         />
       </div>
@@ -110,7 +110,7 @@
       class="max-w-7xl mx-auto mt-8 grid grid-cols-1 md:grid-cols-2 gap-6"
     >
       <div class="bg-white rounded-xl shadow p-6">
-        <h2 class="font-semibold mb-4">สัดส่วนนักวิจัย จำแนกตามสายงาน</h2>
+        <h2 class="font-semibold mb-4 text-2xl">สัดส่วนนักวิจัย จำแนกตามสายงาน</h2>
   
         <apx-chart
           *ngIf="donutSeries.length > 0; else noData"
@@ -132,7 +132,7 @@
           {{ l }} : {{ donutSeries[i] }} คน
         </p>
   
-        <p class="mt-4 text-sm text-gray-500">
+        <p class="mt-4 text-gray-500">
           รวมทั้งหมด {{ totalResearchers }} คน
         </p>
       </div>
@@ -143,7 +143,7 @@
       *ngIf="isSearched"
       class="max-w-7xl mx-auto mt-8 bg-white rounded-xl shadow p-6"
     >
-      <h2 class="text-xl font-semibold mb-4">รายชื่อนักวิจัย</h2>
+      <h2 class="text-2xl font-semibold mb-4">รายชื่อนักวิจัย</h2>
   
       <div class="overflow-x-auto">
         <table class="w-full border border-gray-300">

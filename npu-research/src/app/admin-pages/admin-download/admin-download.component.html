@@ -38,7 +38,7 @@
               <th class="p-3 pl-6 text-left border-r">
                 ชื่อเอกสาร
               </th>
-              <th class="p-3 pl-6 text-center">แก้ไข</th>
+              <th class="p-3 pl-6 text-center w-35">จัดการข้อมูล</th>
             </tr>
           </thead>
   
@@ -56,14 +56,27 @@
               </td>
   
               <td class="p-3 text-center border-r">
-                <i
-                (click)="openEditModal(doc, i)"
-                  class="bi bi-pencil text-blue-500 hover:text-blue-700 mr-3 cursor-pointer"
-                ></i>
-                <i
-                (click)="deleteDocument(i)"
-                  class="bi bi-trash3 text-red-500 cursor-pointer hover:text-red-700"
-                ></i>
+                <div class="flex justify-center items-center gap-2 flex-wrap">
+                  <button
+                    class="inline-flex items-center justify-center w-9 h-9 rounded-full
+                           bg-blue-50 hover:bg-blue-100 text-blue-600 transition
+                           cursor-pointer"
+                    title="แก้ไข"
+                    (click)="openEditModal(doc, i)"
+                  >
+                    <i class="bi bi-pencil-square"></i>
+                  </button>
+                
+                  <button
+                    class="inline-flex items-center justify-center w-9 h-9 rounded-full
+                           bg-red-50 hover:bg-red-100 text-red-600 transition
+                           cursor-pointer"
+                    title="ลบ"
+                    (click)="deleteDocument(i)"
+                  >
+                    <i class="bi bi-trash3"></i>
+                  </button>
+                </div>
               </td>
             </tr>
   

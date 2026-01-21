@@ -1,7 +1,7 @@
-<div class="contain-content bg-gray-100 p-3">
+<div class="contain-content bg-gray-100 p-3 text-xl">
   <div class="max-w-7xl mx-auto px-6 py-6 bg-white rounded-xl">
     <div class="mt-5">
-      <h1 class="text-2xl font-semibold">แหล่งทุนภายนอก</h1>
+      <h1 class="text-3xl font-semibold">แหล่งทุนภายนอก</h1>
 
       <div
         class="flex flex-col md:flex-row md:justify-between md:items-center mt-3 gap-3"
@@ -10,21 +10,21 @@
         <div class="flex gap-2">
           <button
             (click)="exportExcel()"
-            class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm cursor-pointer"
+            class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-lg cursor-pointer"
           >
             <i class="bi bi-file-earmark-excel"></i> Excel
           </button>
 
           <button
             (click)="printPage()"
-            class="flex items-center gap-2 bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-md text-sm cursor-pointer"
+            class="flex items-center gap-2 bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-md text-lg cursor-pointer"
           >
             <i class="bi bi-printer"></i> Print
           </button>
 
           <button
             (click)="openAddModal()"
-            class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm cursor-pointer"
+            class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-lg cursor-pointer"
           >
             <i class="bi bi-plus-circle"></i> เพิ่มแหล่งทุน
           </button>
@@ -32,13 +32,13 @@
 
         <!-- Search -->
         <div class="flex items-center">
-          <label class="text-lg mr-2">Search:</label>
+          <label class="mr-2">Search:</label>
           <input
             type="text"
             [(ngModel)]="searchText"
             (input)="onSearch()"
             class="border border-gray-300 rounded px-2 py-1"
-            placeholder="ค้นหาหน่วยงาน..."
+            placeholder="ค้นหา..."
           />
         </div>
       </div>
@@ -58,14 +58,14 @@
       <table class="w-full border overflow-hidden">
         <thead>
           <tr class="bg-[#FACC15] text-[#1E293B] border-b">
-            <th class="p-3 border-r text-center w-16">ลำดับ</th>
-            <th class="p-3 pl-6 text-left border-r">ชื่อแหล่งทุน</th>
-            <th class="p-3 pl-6 text-left border-r">คำอธิบาย</th>
-            <th class="p-3 text-center border-r w-28">สถานะใช้งาน</th>
-            <th class="p-3 text-center w-24">จัดการ</th>
+            <th class="p-3 border-r w-16">ลำดับ</th>
+            <th class="p-3 pl-6 border-r">ชื่อแหล่งทุน</th>
+            <th class="p-3 pl-6 border-r">คำอธิบาย</th>
+            <th class="p-3 border-r w-28">สถานะใช้งาน</th>
+            <th class="p-3 w-28">จัดการ</th>
           </tr>
         </thead>
-      
+
         <tbody>
           <tr
             *ngFor="let e of filteredExternalFunding; let i = index"
@@ -75,17 +75,17 @@
             <td class="p-3 text-center border-r">
               {{ (currentPage - 1) * pageSize + i + 1 }}
             </td>
-      
+
             <!-- ชื่อแหล่งทุน -->
             <td class="p-3 pl-6 border-r font-medium">
-              {{ e.title || '-' }}
+              {{ e.title || "-" }}
             </td>
-      
+
             <!-- คำอธิบาย -->
-            <td class="p-3 pl-6 border-r text-sm text-gray-700">
-              {{ e.explanation || '-' }}
+            <td class="p-3 pl-6 border-r text-gray-700">
+              {{ e.explanation || "-" }}
             </td>
-      
+
             <!-- สถานะ -->
             <td class="p-3 text-center border-r">
               <i
@@ -93,7 +93,7 @@
                 class="bi bi-check-circle-fill text-green-600 text-lg"
                 title="พร้อมใช้งาน"
               ></i>
-      
+
               <ng-template #notReady>
                 <i
                   class="bi bi-x-circle-fill text-red-600 text-lg"
@@ -101,23 +101,34 @@
                 ></i>
               </ng-template>
             </td>
-      
+
             <!-- แก้ไข / ลบ -->
             <td class="p-3 text-center">
-              <i
-                (click)="openEditModal(e,i)"
-                class="bi bi-pencil-square text-blue-500 hover:text-blue-700 cursor-pointer mr-3"
-                title="แก้ไข"
-              ></i>
-      
-              <i
-                (click)="delectFunding(e)"
-                class="bi bi-trash3 text-red-500 hover:text-red-700 cursor-pointer"
-                title="ลบ"
-              ></i>
+              <div class="flex justify-center items-center gap-2 flex-wrap">
+                <button
+                  class="inline-flex items-center justify-center w-9 h-9 rounded-full
+                         bg-blue-50 hover:bg-blue-100 text-blue-600 transition
+                         cursor-pointer"
+                  title="แก้ไข"
+                  (click)="openEditModal(e, i)"
+                >
+                  <i class="bi bi-pencil-square"></i>
+                </button>
+            
+                <button
+                  class="inline-flex items-center justify-center w-9 h-9 rounded-full
+                         bg-red-50 hover:bg-red-100 text-red-600 transition
+                         cursor-pointer"
+                  title="ลบ"
+                  (click)="delectFunding(e)"
+                >
+                  <i class="bi bi-trash3"></i>
+                </button>
+              </div>
             </td>
+            
           </tr>
-      
+
           <!-- ไม่พบข้อมูล -->
           <tr *ngIf="filteredExternalFunding.length === 0">
             <td colspan="5" class="text-center p-6 text-gray-400 italic">
@@ -126,17 +137,16 @@
           </tr>
         </tbody>
       </table>
-      
     </div>
 
     <div
       class="flex flex-col md:flex-row md:justify-between md:items-center mt-4 gap-2"
     >
-      <p class="text-sm text-gray-600">
+      <p class="text-lg text-gray-600">
         หน้า {{ currentPage }} จาก {{ totalPages }}
       </p>
 
-      <p class="text-sm text-gray-500">
+      <p class="text-lg text-gray-500">
         แสดง {{ paginatedExternalFunding.length }} รายการ จาก
         {{ externals.length }} รายการ
       </p>
@@ -177,14 +187,16 @@
 <!-- MODAL -->
 <div
   *ngIf="showModal"
-  class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-4"
+  class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-4 text-xl"
   (click)="closeModal()"
 >
   <div
     class="bg-white rounded-xl w-full max-w-lg p-6 max-h-[90vh] overflow-y-auto"
     (click)="$event.stopPropagation()"
   >
-    <h2 class="text-xl font-semibold mb-4 text-center md:text-left">{{ modalMode === 'add' ? 'เพิ่มแหล่งทุน' : 'แก้ไขแหล่งทุน' }}</h2>
+    <h2 class="text-2xl font-semibold mb-4 text-center md:text-left">
+      {{ modalMode === "add" ? "เพิ่มแหล่งทุน" : "แก้ไขแหล่งทุน" }}
+    </h2>
 
     <!-- ชื่อแหล่งทุน -->
     <div class="mb-4">
@@ -233,7 +245,7 @@
         (click)="modalMode === 'add' ? saveFunding() : updateFunding()"
         class="px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700"
       >
-        {{ modalMode === 'add' ? 'บันทึก' : 'อัปเอต'}}
+        {{ modalMode === "add" ? "บันทึก" : "อัปเอต" }}
       </button>
     </div>
   </div>
