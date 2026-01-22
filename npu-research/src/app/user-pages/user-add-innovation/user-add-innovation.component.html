@@ -1,221 +1,319 @@
-<div class="contain-content bg-gray-100 p-3 text-xl">
-    <div class="max-w-7xl mt-5 mb-5 mx-auto px-20 py-10 bg-white rounded-xl shadow-md">
-      <div class="max-w-7xl mx-auto px-6 py-10 rounded-xl">
-        <h2 class="text-3xl font-semibold ">{{ isEdit ? 'แก้ไขข้อมูลนวัตกรรมสิ่งประดิษฐ์' : 'เพิ่มข้อมูลนวัตกรรมสิ่งประดิษฐ์' }}</h2>
-      </div>
-      <hr>
+<div class="contain-content bg-gray-100 p-3 text-2xl">
+  <!-- Back -->
+  <div class="flex justify-end mb-4 max-w-7xl mx-auto">
+    <button
+      class="flex items-center gap-2 text-gray-600 font-medium group transition-colors cursor-pointer"
+    >
+      <span>ไปที่นวัตกรรมสิ่งประดิษฐ์ของคุณ</span>
 
-      <!-- ชื่อนวัตกรรม สิ่งประดิษฐ์ -->
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6 mt-10">
-        <label class="md:col-span-1 font-medium text-end text-gray-700">
-          ชื่อนวัตกรรม สิ่งประดิษฐ์ : <span class="text-red-500">*</span>
-        </label>
-        <input
-          type="text"
-          class="md:col-span-3 w-full border rounded-md px-4 py-2"
-          placeholder="ระบุชื่อนวัตกรรม สิ่งประดิษฐ์"
-        />
-      </div>
-  
-      <!-- สาขาของนวัตกรรม สิ่งประดิษฐ์ -->
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-        <label class="font-medium text-gray-700 text-end">
-          สาขาของนวัตกรรม สิ่งประดิษฐ์ : <span class="text-red-500">*</span>
-        </label>
-        <select class="md:col-span-3 w-full border rounded-md px-4 py-2">
-          <option disabled selected>--- สาขาของนวัตกรรม สิ่งประดิษฐ์ ---</option>
-        </select>
-      </div>
+      <i
+        class="bi bi-arrow-right-circle-fill text-xl transition-all group-hover:translate-x-1 group-hover:text-yellow-500"
+      ></i>
+    </button>
+  </div>
 
-      <!-- หลักการและเหตุผล : -->
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-        <label class="md:col-span-1 font-medium text-gray-700 text-end">
-          หลักการและเหตุผล :
-        </label>
-        <textarea
-          name="attention"
-          id="attention"
-          placeholder="ระบุหลักการและเหตุผล"
-          class="md:col-span-3 w-full border rounded-md px-4 py-2"
-        ></textarea>
-      </div>
+  <div
+    class="max-w-7xl mt-5 mb-5 mx-auto px-20 py-10 bg-white rounded-xl shadow-md"
+  >
+    <div
+      class="max-w-7xl mx-auto px-6 py-5 mb-6 flex items-center gap-4 rounded-xl bg-linear-to-r from-[#9DE1EF] to-[#D3DFEB] shadow"
+    >
+      <i class="bi bi-cloud-arrow-up-fill text-3xl text-gray-900"></i>
+      <h2 class="text-3xl font-semibold">
+        {{
+          isEdit
+            ? "แก้ไขข้อมูลนวัตกรรมสิ่งประดิษฐ์"
+            : "เพิ่มข้อมูลนวัตกรรมสิ่งประดิษฐ์"
+        }}
+      </h2>
+    </div>
 
-      <!-- ประเภทความรับผิดชอบ -->
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <label class="font-medium text-gray-700 text-end">
-          ประเภทความรับผิดชอบ : <span class="text-red-500">*</span>
-        </label>
-        <select class="md:col-span-2 w-full border rounded-md px-4 py-2">
-          <option disabled selected>เลือกประเภทความรับผิดชอบ</option>
-          <option>หัวหน้าโครงการ</option>
-          <option>ผู้ร่วมโครงการ</option>
-        </select>
-      </div>
-  
-      <!-- ผู้ร่วมโครงการ -->
-      <div class="w-full">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6 items-start">
-          <!-- Label -->
-          <label class="md:col-span-1 font-medium text-end text-gray-700 pt-2">
-            ผู้ร่วมโครงการอื่นๆ (ถ้ามี) :
-          </label>
-  
-          <!-- Table -->
-          <div class="md:col-span-3 overflow-x-auto mt-2">
-            <h1 class="mb-3 text-2xl">ระบุผู้ร่วมโครงการภายใน</h1>
-  
-            <table
-              class="w-full max-w-4xl border overflow-hidden ml-auto"
+    <!-- ชื่อนวัตกรรม สิ่งประดิษฐ์ -->
+    <div class="grid grid-cols-1 md:grid-cols-1 gap-2 mb-6 mt-10">
+      <label class="md:col-span-1 font-bold text-start text-gray-700">
+        ชื่อนวัตกรรม สิ่งประดิษฐ์ <span class="text-red-500">*</span>
+      </label>
+      <input
+        type="text"
+        class="md:col-span-3 w-full h-12 border rounded-md px-4 py-2"
+        placeholder="ระบุชื่อนวัตกรรม สิ่งประดิษฐ์"
+      />
+    </div>
+
+    <!-- สาขาของนวัตกรรม สิ่งประดิษฐ์ -->
+    <div class="grid grid-cols-1 md:grid-cols-1 gap-2 mb-6">
+      <label class="font-bold text-gray-700 text-start">
+        สาขาของนวัตกรรม สิ่งประดิษฐ์ <span class="text-red-500">*</span>
+      </label>
+      <div class="relative md:col-span-3">
+        <button
+          (click)="toggleDropdown('major', $event)"
+          type="button"
+          class="w-full border rounded-md px-3 py-2 flex justify-between items-center bg-white"
+        >
+          <span class="truncate">
+            {{ selectedMajor || "ระบุสาขาของโครงการวิจัย" }}
+          </span>
+          <i class="bi bi-chevron-down"></i>
+        </button>
+        <!-- Dropdown panel -->
+        <div
+          *ngIf="isOpen('major')"
+          class="absolute z-50 w-full bg-white border rounded-md mt-1 shadow"
+          (click)="$event.stopPropagation()"
+        >
+          <input
+            [(ngModel)]="searchMajor"
+            placeholder="ค้นหา..."
+            class="w-full px-3 py-2 border-b outline-none"
+          />
+
+          <ul class="max-h-48 overflow-y-auto">
+            <li
+              *ngFor="let m of filteredMajor()"
+              (click)="selectMajor(m)"
+              class="px-4 py-2 hover:bg-yellow-50 cursor-pointer"
             >
-              <thead>
-                <tr class="bg-[#FACC15] text-[#1E293B] text-center border">
-                  <th class="p-3 w-16 border-r">ที่</th>
-                  <th class="p-3 border-r">ระบุชื่อ</th>
-                  <th class="p-3 border-r">ประเภทความรับผิดชอบ</th>
-                  <th class="p-3">ลบ</th>
-                </tr>
-              </thead>
-  
-              <tbody>
-                <tr *ngFor="let j of rows2; let i = index; trackBy: trackByIndex" class="border-b">
-                  <td class="text-center p-3 border-r">{{ i + 1 }}</td>
-  
-                  <td class="text-center p-3 border-r">
-                      <input
-                        type="text"
-                        class="w-full border rounded-md px-3 py-2"
-                        placeholder="ระบุชื่อ"
-                        [(ngModel)]="j.name"
-                      />
-                    </td>
-  
-                    <td class="p-3 border-r">
-                      <select
-                        class="w-full border rounded-md px-3 py-2"
-                        [(ngModel)]="j.organization"
-                      >
-                        <option value="" disabled>
-                          --- ระบุประเภทความรับผิดชอบ ---
-                        </option>
-                        <option value="ที่ปรึกษา">ที่ปรึกษา</option>
-                        <option value="ผู้เชี่ยวชาญ">ผู้เชี่ยวชาญ</option>
-                        <option value="กรรมการ">กรรมการ</option>
-                      </select>
-                    </td>
-                  <td class="text-center">
-                      <i
-                        *ngIf="rows2.length > 1"
-                        class="bi bi-trash3 text-red-500 cursor-pointer hover:text-red-700"
-                        (click)="removeRow2(i)"
-                        title="ลบรายการ"
-                      ></i>
-                    </td>
-                </tr>
-              </tbody>
-            </table>
-            <div class="flex justify-center-safe mt-6 ">
-              <button
-                type="button"
-                class="mt-4 px-4 py-2 bg-[#FDE68A] text-[#1E293B] hover:bg-[#FACC15] rounded-md cursor-pointer"
-                (click)="addRow2()"
-              >
-                เพิ่มรายการ
-              </button>
-            </div>
-
-            <!-- ผู้ร่วมโครงการภายนอก -->
-            <h1 class="mb-3 font-semibold">ระบุผู้ร่วมโครงการภายนอก</h1>
-            <table
-              class="w-full max-w-4xl border overflow-hidden ml-auto"
+              {{ m }}
+            </li>
+            <li
+              *ngIf="filteredMajor().length === 0"
+              class="px-4 py-2 text-gray-400 text-center"
             >
-              <thead>
-                <tr class="bg-[#FACC15] text-[#1E293B] border text-center">
-                  <th class="p-3 border-r">ที่</th>
-                  <th class="p-3 border-r">ระบุชื่อ(บุคลากรภายนอก)</th>
-                  <th class="p-3 border-r">ประเภทความรับผิดชอบ</th>
-                  <th class="p-3 border-r">หน่วยงาน(บุคลากรภายนอก)</th>
-                  <th class="p-3">ลบ</th>
-                </tr>
-              </thead>
-  
-              <tbody>
-                <tr
-                  *ngFor="let item of rows; let i = index; trackBy: trackByIndex"
-                  class="border-b"
-                >
-                  <td class="text-center p-3 border-r">{{ i + 1 }}</td>
-  
-                  <td class="text-center p-3 border-r">
-                    <input
-                      type="text"
-                      class="w-full border rounded-md px-3 py-2"
-                      placeholder="ระบุชื่อ"
-                      [(ngModel)]="item.name"
-                    />
-                  </td>
-  
-                  <td class="p-3 border-r">
-                    <select
-                      class="w-full border rounded-md px-3 py-2"
-                      [(ngModel)]="item.role"
-                    >
-                      <option value="" disabled>
-                        --- ระบุประเภทความรับผิดชอบ ---
-                      </option>
-                      <option value="ที่ปรึกษา">ที่ปรึกษา</option>
-                      <option value="ผู้เชี่ยวชาญ">ผู้เชี่ยวชาญ</option>
-                      <option value="กรรมการ">กรรมการ</option>
-                    </select>
-                  </td>
-                  <td class="p-3 border-r">
-                    <input
-                      type="text"
-                      class="w-full border rounded-md px-3 py-2"
-                      placeholder="ระบุหน่วยงาน"
-                      [(ngModel)]="item.organization"
-                    />
-                  </td>
-                  <td class="text-center">
-                      <i
-                        *ngIf="rows.length > 1"
-                        class="bi bi-trash3 text-red-500 cursor-pointer hover:text-red-700"
-                        (click)="removeRow(i)"
-                        title="ลบรายการ"
-                      ></i>
-                    </td>
-                    
-                </tr>
-              </tbody>
-            </table>
-            <div class="flex justify-center-safe mt-6 ">
-              <button
-                type="button"
-                class="mt-4 px-4 py-2 bg-[#FDE68A] text-[#1E293B] hover:bg-[#FACC15] rounded-md cursor-pointer"
-                (click)="addRow()"
+              ไม่พบข้อมูล
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- หลักการและเหตุผล : -->
+    <div class="grid grid-cols-1 md:grid-cols-1 gap-2 mb-6">
+      <label class="md:col-span-1 font-bold text-gray-700 text-start">
+        หลักการและเหตุผล
+      </label>
+      <textarea
+        name="attention"
+        id="attention"
+        placeholder="ระบุหลักการและเหตุผล"
+        class="md:col-span-3 w-full border rounded-md px-4 py-2"
+      ></textarea>
+    </div>
+
+    <!-- ประเภทความรับผิดชอบ -->
+    <div class="grid grid-cols-1 md:grid-cols-1 gap-2 mb-8">
+      <label class="font-medium text-gray-700 text-start">
+        ประเภทความรับผิดชอบ <span class="text-red-500">*</span>
+      </label>
+      <select class="max-w-md w-full border rounded-md px-4 py-2">
+        <option disabled selected>เลือกประเภทความรับผิดชอบ</option>
+        <option>หัวหน้าโครงการ</option>
+        <option>ผู้ร่วมโครงการ</option>
+      </select>
+    </div>
+
+    <!-- ผู้ร่วมโครงการ -->
+    <div class="w-full">
+      <div class="grid grid-cols-1 md:grid-cols-1 gap-2 mb-6 items-start">
+        <!-- Label -->
+        <label class="md:col-span-1 font-bold text-start text-gray-700 pt-2">
+          ผู้ร่วมโครงการอื่นๆ (ถ้ามี)
+        </label>
+
+        <!-- Table -->
+        <div class="md:col-span-3 overflow-x-auto px-4 sm:px-8">
+          <h1
+            class="mb-3mt-4 text-2xl font-bold text-gray-700 flex items-center gap-2"
+          >
+            ระบุผู้ร่วมโครงการภายใน
+          </h1>
+
+          <table class="w-full max-w-4xl overflow-hidden">
+            <thead>
+              <tr
+                class="bg-[#394250] text-white border-b-2 border-gray-300 text-center"
               >
-                เพิ่มรายการ
-              </button></div>
+                <th class="p-3 w-16">ที่</th>
+                <th class="p-3">ระบุชื่อ</th>
+                <th class="p-3">ประเภทความรับผิดชอบ</th>
+                <th class="p-3">Action</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr
+                *ngFor="let j of rows2; let i = index; trackBy: trackByIndex"
+                class="border-b-2 border-gray-300 bg-gray-200"
+              >
+                <td class="text-center p-3">{{ i + 1 }}</td>
+
+                <td class="text-center p-3">
+                  <input
+                    type="text"
+                    class="w-full border border-gray-300 bg-white h-12 rounded-md px-3 py-2"
+                    placeholder="ระบุชื่อ"
+                    [(ngModel)]="j.name"
+                  />
+                </td>
+
+                <td class="p-3">
+                  <select
+                    class="w-full border border-gray-300 bg-white rounded-md px-3 py-2"
+                    [(ngModel)]="j.organization"
+                  >
+                    <option value="" disabled>
+                      --- ระบุประเภทความรับผิดชอบ ---
+                    </option>
+                    <option value="ที่ปรึกษา">ที่ปรึกษา</option>
+                    <option value="ผู้เชี่ยวชาญ">ผู้เชี่ยวชาญ</option>
+                    <option value="กรรมการ">กรรมการ</option>
+                  </select>
+                </td>
+                <td class="text-center">
+                  <i
+                    *ngIf="rows2.length > 1"
+                    class="bi bi-trash3 text-red-500 cursor-pointer hover:text-red-700"
+                    (click)="removeRow2(i)"
+                    title="ลบรายการ"
+                  ></i>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="flex justify-start mt-2">
+            <button
+              type="button"
+              class="mt-4 px-4 py-1 bg-[#FDE68A] text-[#1E293B] hover:bg-[#FACC15] rounded-md cursor-pointer"
+              (click)="addRow2()"
+            >
+              เพิ่มรายการ
+            </button>
+          </div>
+
+          <!-- ผู้ร่วมโครงการภายนอก -->
+          <h1
+            class="mb-3 mt-4 text-2xl font-bold text-gray-700 flex items-center gap-2"
+          >
+            ระบุผู้ร่วมโครงการภายนอก
+          </h1>
+          <table class="w-full max-w-full overflow-hidden">
+            <thead>
+              <tr
+                class="bg-[#394250] text-white border-b-2 border-gray-300 text-center"
+              >
+                <th class="p-3">ที่</th>
+                <th class="p-3">ระบุชื่อ(บุคลากรภายนอก)</th>
+                <th class="p-3">ประเภทความรับผิดชอบ</th>
+                <th class="p-3">หน่วยงาน(บุคลากรภายนอก)</th>
+                <th class="p-3">Action</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr
+                *ngFor="let item of rows; let i = index; trackBy: trackByIndex"
+                class="bg-gray-200 border-b-2 border-gray-300"
+              >
+                <td class="text-center p-3">{{ i + 1 }}</td>
+
+                <td class="text-center p-3">
+                  <input
+                    type="text"
+                    class="w-full border h-12 border-gray-300 bg-white rounded-md px-3 py-2"
+                    placeholder="ระบุชื่อ"
+                    [(ngModel)]="item.name"
+                  />
+                </td>
+
+                <td class="p-3">
+                  <select
+                    class="w-full border h-12 border-gray-300 bg-white rounded-md px-3 py-2"
+                    [(ngModel)]="item.role"
+                  >
+                    <option value="" disabled>
+                      --- ระบุประเภทความรับผิดชอบ ---
+                    </option>
+                    <option value="ที่ปรึกษา">ที่ปรึกษา</option>
+                    <option value="ผู้เชี่ยวชาญ">ผู้เชี่ยวชาญ</option>
+                    <option value="กรรมการ">กรรมการ</option>
+                  </select>
+                </td>
+                <td class="p-3">
+                  <input
+                    type="text"
+                    class="w-full border h-12 border-gray-300 bg-white rounded-md px-3 py-2"
+                    placeholder="ระบุหน่วยงาน"
+                    [(ngModel)]="item.organization"
+                  />
+                </td>
+                <td class="text-center">
+                  <i
+                    *ngIf="rows.length > 1"
+                    class="bi bi-trash3 text-red-500 cursor-pointer hover:text-red-700"
+                    (click)="removeRow(i)"
+                    title="ลบรายการ"
+                  ></i>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="flex justify-start mt-2">
+            <button
+              type="button"
+              class="mt-4 px-4 py-2 bg-[#FDE68A] text-[#1E293B] hover:bg-[#FACC15] rounded-md cursor-pointer"
+              (click)="addRow()"
+            >
+              เพิ่มรายการ
+            </button>
           </div>
         </div>
-        
       </div>
-  
-      <!-- แหล่งเงินทุน -->
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8 mt-10">
-        <label class="font-medium text-gray-700 text-end">
-          แหล่งเงินทุน : <span class="text-red-500">*</span>
-        </label>
-        <select class="md:col-span-2 w-full border rounded-md px-4 py-2">
-          <option disabled selected>เลือกแหล่งเงินทุน</option>
-          <option>ทุนภายใน</option>
-          <option>ทุนภายนอก</option>
-        </select>
+    </div>
+
+    <!-- แหล่งเงินทุน -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
+      <div class="space-y-4">
+        <div>
+          <label class="font-bold text-gray-700 text-start">
+            แหล่งเงินทุน <span class="text-red-500">*</span>
+          </label>
+          <select
+            class="w-full border h-12 rounded-md px-4 py-2"
+            [(ngModel)]="fundType"
+          >
+            <option value="" disabled selected>เลือกแหล่งเงินทุน</option>
+            <option value="internal">ทุนภายใน</option>
+            <option value="external">ทุนภายนอก</option>
+          </select>
+        </div>
+        <!-- ชื่อแหล่งทุน -->
+        <div *ngIf="fundType">
+          <label class="block font-bold text-gray-700 text-2xl mb-2">
+            ชื่อแหล่งทุน <span class="text-red-500">*</span>
+          </label>
+
+          <select
+            class="w-full border h-12 rounded-md px-4 py-2"
+            [(ngModel)]="fundName"
+          >
+            <option value="" disabled selected>เลือกชื่อแหล่งทุน</option>
+
+            <!-- ทุนภายใน -->
+            <option
+              *ngFor="
+                let f of fundType === 'internal' ? internalFunds : externalFunds
+              "
+              [value]="f"
+            >
+              {{ f }}
+            </option>
+          </select>
+        </div>
       </div>
-  
       <!-- จำนวนงบประมาณ -->
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-        <label class="md:col-span-1 font-medium text-gray-700 text-end">
-          จำนวนงบประมาณ : <span class="text-red-500">*</span>
+      <div>
+        <label class="md:col-span-1 font-bold text-gray-700 text-start">
+          จำนวนงบประมาณ <span class="text-red-500">*</span>
         </label>
         <input
           type="text"
@@ -223,74 +321,78 @@
           placeholder="ระบุจำนวนงบประมาณ"
         />
       </div>
-  
-      <!-- ปีที่ได้รับทุน -->
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-        <label class="md:col-span-1 font-medium text-gray-700 text-end">
-          ปีที่ได้รับทุน : <span class="text-red-500">*</span>
-        </label>
-        <input
-          type="text"
-          class="md:col-span-2 w-full border rounded-md px-4 py-2"
-          placeholder="ระบุปีที่ได้รับทุน"
-        />
-      </div>
+    </div>
 
-      <!-- ความร่วมมือกับหน่วยงานอื่นๆ : -->
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-        <label class="md:col-span-1 font-medium text-gray-700 text-end">
-          ความร่วมมือกับหน่วยงานอื่นๆ :
-        </label>
-        <textarea
-          name="attention"
-          id="attention"
-          placeholder="ระบุความร่วมมือกับหน่วยงานอื่นๆ"
-          class="md:col-span-3 w-full border rounded-md px-4 py-2"
-        ></textarea>
-      </div>
+    <!-- ปีที่ได้รับทุน -->
+    <div class="grid grid-cols-1 md:grid-cols-1 gap-2 mb-6 mt-6">
+      <label class="md:col-span-1 font-bold text-gray-700 text-start">
+        ปีที่ได้รับทุน <span class="text-red-500">*</span>
+      </label>
+      <input
+        type="text"
+        class="max-w-md h-12 w-full border rounded-md px-4 py-2"
+        placeholder="ระบุปีที่ได้รับทุน"
+      />
+    </div>
 
-      <!-- เลขที่สิทธิบัตร -->
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-        <label class="md:col-span-1 font-medium text-gray-700 text-end">
+    <!-- ความร่วมมือกับหน่วยงานอื่นๆ : -->
+    <div class="grid grid-cols-1 md:grid-cols-1 gap-2 mb-6">
+      <label class="md:col-span-1 font-bold text-gray-700 text-start">
+        ความร่วมมือกับหน่วยงานอื่นๆ
+      </label>
+      <textarea
+        name="attention"
+        id="attention"
+        placeholder="ระบุความร่วมมือกับหน่วยงานอื่นๆ"
+        class="md:col-span-3 w-full border rounded-md px-4 py-2"
+      ></textarea>
+    </div>
+
+    <!-- เลขที่สิทธิบัตร -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+      <div>
+        <label class="md:col-span-1 font-bold text-gray-700 text-start">
           เลขที่สิทธิบัตร : <span class="text-red-500">*</span>
         </label>
         <input
           type="text"
-          class="md:col-span-2 w-full border rounded-md px-4 py-2"
+          class="md:col-span-2 h-12 w-full border rounded-md px-4 py-2"
           placeholder="ระบุเลขที่สิทธิบัตร"
         />
       </div>
 
       <!-- เลขที่คำขอสิทธิบัตร -->
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-        <label class="md:col-span-1 font-medium text-gray-700 text-end">
+      <div>
+        <label class="md:col-span-1 font-bold text-gray-700 text-start">
           เลขที่คำขอสิทธิบัตร : <span class="text-red-500">*</span>
         </label>
         <input
           type="text"
-          class="md:col-span-2 w-full border rounded-md px-4 py-2"
+          class="md:col-span-2 h-12 w-full border rounded-md px-4 py-2"
           placeholder="ระบุเลขที่คำขอสิทธิบัตร"
         />
       </div>
+    </div>
 
-      <!-- เว็บไซต์ตรวจสิทธิบัตร -->
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-        <label class="md:col-span-1 font-medium text-gray-700 text-end">
-          เว็บไซต์ตรวจสิทธิบัตร : <span class="text-red-500">*</span>
-        </label>
-        <input
-          type="text"
-          class="md:col-span-2 w-full border rounded-md px-4 py-2"
-          placeholder="ระบุเว็บไซต์ตรวจสิทธิบัตร"
-        />
-      </div>
-  
-      <!-- ไฟล์รายงานฉบับสมบูรณ์ -->
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6 items-center">
-        <label class="md:col-span-1 font-medium text-gray-700 text-end">
+    <!-- เว็บไซต์ตรวจสิทธิบัตร -->
+    <div class="grid grid-cols-1 md:grid-cols-1 gap-2 mb-6">
+      <label class="md:col-span-1 font-bold text-gray-700 text-start">
+        เว็บไซต์ตรวจสิทธิบัตร : <span class="text-red-500">*</span>
+      </label>
+      <input
+        type="text"
+        class="md:col-span-2 w-full border rounded-md px-4 py-2"
+        placeholder="ระบุเว็บไซต์ตรวจสิทธิบัตร"
+      />
+    </div>
+
+    <!-- ไฟล์รายงานฉบับสมบูรณ์ -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6 items-center">
+      <div>
+        <label class="md:col-span-1 font-bold text-gray-700 text-start">
           ไฟล์รายงานฉบับสมบูรณ์ (PDF) :
         </label>
-  
+
         <!-- input file ซ่อน -->
         <input
           #reportFileInput
@@ -299,28 +401,28 @@
           class="hidden"
           (change)="onReportFileSelected($event)"
         />
-  
+
         <!-- ปุ่ม + ชื่อไฟล์ -->
-        <div class="md:col-span-2 flex gap-3 items-center">
+        <div class="md:col-span-2 flex gap-3 items-center mt-3">
           <span class="text-gray-600 truncate">
             {{ reportFileName || "ยังไม่ได้เลือกไฟล์" }}
           </span>
           <button
             type="button"
-            class="px-4 py-2 bg-[#FDE68A] text-[#1E293B] hover:bg-[#FACC15] rounded-md cursor-pointer"
+            class="px-4 py-1 bg-[#FDE68A] text-[#1E293B] hover:bg-[#FACC15] rounded-md cursor-pointer"
             (click)="reportFileInput.click()"
           >
             เลือกไฟล์
           </button>
         </div>
       </div>
-  
+
       <!-- ไฟล์รูปนวัตกรรมสิ่งประดิษฐ์ -->
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6 items-center">
-        <label class="md:col-span-1 font-medium text-gray-700 text-end">
+      <div>
+        <label class="md:col-span-1 font-bold text-gray-700 text-start">
           ไฟล์รูปนวัตกรรมสิ่งประดิษฐ์ :
         </label>
-  
+
         <!-- input file (ซ่อน) -->
         <input
           #fileInput
@@ -329,30 +431,32 @@
           class="hidden"
           (change)="onFileSelected($event)"
         />
-  
+
         <!-- ปุ่ม + ชื่อไฟล์ -->
-        <div class="md:col-span-2 flex gap-3 items-center">
+        <div class="md:col-span-2 flex gap-3 items-center mt-3">
           <span class="text-gray-600 truncate">
             {{ selectedFileName || "ยังไม่ได้เลือกไฟล์" }}
           </span>
           <button
             type="button"
-            class="px-4 py-2 bg-[#FDE68A] text-[#1E293B] hover:bg-[#FACC15] rounded-md cursor-pointer"
+            class="px-4 py-1 bg-[#FDE68A] text-[#1E293B] hover:bg-[#FACC15] rounded-md cursor-pointer"
             (click)="fileInput.click()"
           >
             เลือกไฟล์
           </button>
         </div>
       </div>
-  
-      <!-- ปุ่ม -->
-      <div class="flex justify-center mt-6">
-        <button
-          type="submit"
-          class="px-6 py-2 bg-[#FDE68A] text-[#1E293B] hover:bg-[#FACC15] rounded-md transition cursor-pointer"
-        >
-          บันทึกข้อมูล
-        </button>
-      </div>
+    </div>
+
+    <!-- ปุ่ม -->
+    <div class="flex justify-center mt-10">
+      <button
+        type="submit"
+        class="flex items-center justify-center gap-3 w-72 py-3 bg-[#FDE68A] hover:bg-[#FACC15] text-[#1E293B] text-2xl font-extrabold rounded-lg shadow transition duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 cursor-pointer"
+      >
+        <i class="bi bi-floppy2 text-2xl"></i>
+        <span>บันทึกข้อมูล</span>
+      </button>
     </div>
   </div>
+</div>

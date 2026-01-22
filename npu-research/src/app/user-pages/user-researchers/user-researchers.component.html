@@ -1,193 +1,276 @@
-<div class="bg-gray-100 min-h-screen p-6">
+<div class="bg-gray-100 min-h-screen p-6 text-2xl">
   <!-- ===== SEARCH ===== -->
-  <div class="max-w-7xl mx-auto bg-white rounded-xl p-6 shadow">
+  <div class="max-w-7xl mx-auto p-6">
     <!-- Title -->
-    <h1 class="text-2xl font-semibold mb-6 flex items-center gap-2">
-      <i class="bi bi-funnel"></i>
-      ระบุเงื่อนไขในการค้นหา
-    </h1>
+    <div class="flex flex-col justify-center items-center text-center">
+      <!-- Icon Circle -->
+      <div
+        class="w-24 h-24 rounded-full bg-linear-to-b from-sky-200 to-sky-100 flex items-center justify-center mb-4"
+      >
+        <i class="bi bi-search text-4xl text-gray-700"></i>
+      </div>
 
-    <h2 class="text-center mb-4 text-2xl">ค้นหาข้อมูลนักวิจัย</h2>
+      <!-- Title Text -->
+      <h1 class="text-3xl font-bold text-gray-700">ค้นหานักวิจัย</h1>
+    </div>
 
-    <!-- หน่วยงาน -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-start mb-6">
-      <!-- Label -->
-      <label class="md:text-right font-medium text-gray-700 pt-2">
-        หน่วยงาน :
-      </label>
-
-      <!-- Dropdown -->
-      <div class="md:col-span-3 relative">
-        <!-- Button -->
-        <button
-          type="button"
-          (click)="toggleDropdown('faculties', $event)"
-          class="w-full border rounded-md px-3 py-2 flex justify-between items-center bg-white"
+    <!-- ตัวกรอง -->
+    <div class="max-w-3xl mx-auto mt-10 mb-6">
+      <div class="grid grid-cols-12 gap-1 items-center">
+        <!-- Label -->
+        <label
+          class="col-span-12 text-bold text-3xl md:col-span-2 font-black text-gray-700"
         >
-          <span class="truncate">
-            {{ selectedFaculty || "เลือกหน่วยงาน" }}
-          </span>
-          <i class="bi bi-chevron-down"></i>
-        </button>
+          ตัวกรอง
+        </label>
 
-        <!-- Dropdown panel -->
+        <!-- Dropdown -->
+        <div class="col-span-12 md:col-span-10 relative">
+          <button
+            type="button"
+            (click)="toggleDropdown('faculties', $event)"
+            class="w-full h-11 border rounded-full px-6 flex justify-between items-center bg-white"
+          >
+            <span class="truncate">
+              {{ selectedFaculty || "เลือกหน่วยงาน" }}
+            </span>
+            <i class="bi bi-chevron-down"></i>
+          </button>
+
+          <!-- Dropdown panel -->
+          <div
+            *ngIf="isOpen('faculties')"
+            class="absolute z-50 w-full bg-white border rounded-md mt-1 shadow"
+            (click)="$event.stopPropagation()"
+          >
+            <input
+              [(ngModel)]="searchFaculitie"
+              placeholder="ค้นหา..."
+              class="w-full px-3 py-2 border-b outline-none"
+            />
+
+            <ul class="max-h-48 overflow-y-auto">
+              <li
+                *ngFor="let f of filteredFaculties()"
+                (click)="selectFaculities(f)"
+                class="px-4 py-2 hover:bg-yellow-50 cursor-pointer"
+              >
+                {{ f }}
+              </li>
+
+              <li
+                *ngIf="filteredFaculties().length === 0"
+                class="px-4 py-2 text-gray-400 text-center"
+              >
+                ไม่พบข้อมูล
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- สายงาน -->
+      <div class="grid grid-cols-1 md:grid-cols-1 gap-2 items-center mt-5">
+        <!-- Major Dropdown -->
+        <div class="md:col-span-3 relative">
+          <button
+            type="button"
+            (click)="toggleDropdown('major', $event)"
+            class="w-full h-11 border rounded-full px-6 flex justify-between items-center bg-white"
+          >
+            <span class="truncate">
+              {{ selectedMajor || "เลือกสาขาวิชา" }}
+            </span>
+            <i class="bi bi-chevron-down"></i>
+          </button>
+
+          <!-- Dropdown panel -->
+          <div
+            *ngIf="isOpen('major')"
+            class="absolute z-50 w-full bg-white border rounded-md mt-1 shadow"
+            (click)="$event.stopPropagation()"
+          >
+            <input
+              [(ngModel)]="searchMajor"
+              placeholder="ค้นหา..."
+              class="w-full px-3 py-2 border-b outline-none"
+            />
+
+            <ul class="max-h-48 overflow-y-auto">
+              <li
+                *ngFor="let m of filteredMajor()"
+                (click)="selectMajor(m)"
+                class="px-4 py-2 hover:bg-yellow-50 cursor-pointer"
+              >
+                {{ m }}
+              </li>
+
+              <li
+                *ngIf="filteredMajor().length === 0"
+                class="px-4 py-2 text-gray-400 text-center"
+              >
+                ไม่พบข้อมูล
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== Search Box ===== -->
+      <div class="flex justify-center mt-6">
         <div
-          *ngIf="isOpen('faculties')"
-          class="absolute z-50 w-full bg-white border rounded-md mt-1 shadow"
-          (click)="$event.stopPropagation()"
+          class="w-full max-w-3xl h-15 flex items-center border-2 border-gray-300 rounded-full overflow-hidden bg-white"
         >
-          <!-- Search -->
+          <!-- Input -->
           <input
-            [(ngModel)]="searchFaculitie"
-            placeholder="ค้นหา..."
-            class="w-full px-3 py-2 border-b outline-none"
+            [(ngModel)]="researcherName"
+            type="text"
+            placeholder="พิมพ์คำค้นหา ชื่อนักวิจัย"
+            class="flex-1 px-8 py-4 text-3xl outline-none"
           />
 
-          <!-- List -->
-          <ul class="max-h-48 overflow-y-auto">
-            <li
-              *ngFor="let f of filteredFaculties()"
-              (click)="selectFaculities(f)"
-              class="px-4 py-2 hover:bg-yellow-50 cursor-pointer"
+          <!-- Button -->
+          <button
+            (click)="search()"
+            class="flex items-center gap-4 mr-0.5 h-13 bg-yellow-400 hover:bg-yellow-300 text-gray-800 font-extrabold text-2xl px-10 py-4 rounded-full transition cursor-pointer"
+          >
+            ค้นหา
+            <span
+              class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-white"
             >
-              {{ f }}
-            </li>
-
-            <li
-              *ngIf="filteredFaculties().length === 0"
-              class="px-4 py-2 text-gray-400 text-center"
-            >
-              ไม่พบข้อมูล
-            </li>
-          </ul>
+              <i class="bi bi-arrow-right"></i>
+            </span>
+          </button>
         </div>
       </div>
     </div>
 
-    <!-- สายงาน -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-center mb-6">
-      <label class="md:text-right font-medium text-gray-700"> สายงาน : </label>
+    <!-- ===== DONUT CHART ===== -->
+    <div
+      *ngIf="isSearched"
+      class="max-w-7xl mx-auto mt-8 grid grid-cols-1 md:grid-cols-2 gap-6"
+    >
+      <div class="bg-[#394250] text-white rounded-xl shadow p-6">
+        <div class="flex items-center gap-2 mb-4">
+          <i class="bi bi-pie-chart-fill text-lg"></i>
+          <h2 class="font-extrabold text-3xl">
+            สัดส่วนนักวิจัย จำแนกตามสาขาวิชา
+          </h2>
+        </div>
 
-      <select
-        [(ngModel)]="selectedCareer"
-        class="md:col-span-3 w-full border rounded-md px-4 py-2 focus:ring focus:ring-yellow-200"
+        <ng-container *ngIf="hasDonutData; else noData">
+          <apx-chart
+            [series]="donutSeries"
+            [labels]="donutLabels"
+            [chart]="donutChart"
+            [legend]="donutLegend"
+          ></apx-chart>
+        </ng-container>
+
+        <ng-template #noData>
+          <div class="text-center text-gray-400 py-16">ไม่พบข้อมูล</div>
+        </ng-template>
+      </div>
+
+      <div
+        class="bg-white rounded-xl shadow p-6 flex flex-col justify-between h-full"
       >
-        <option value="">ทั้งหมด</option>
-        <option value="academic">สายวิชาการ</option>
-        <option value="support">สายสนับสนุน</option>
-      </select>
+        <div class="flex items-center gap-2 mb-4">
+          <i class="bi bi-pie-chart-fill text-lg"></i>
+          <h2 class="font-extrabold text-3xl">
+            สัดส่วนนักวิจัย จำแนกตามสาขาวิชา
+          </h2>
+        </div>
+
+        <div class="space-y-1 text-gray-700">
+          <p
+            *ngFor="let l of donutLabels; let i = index"
+            class="flex justify-between px-8"
+          >
+            <span>{{ l }}</span
+            ><span class="font-medium">{{ donutSeries[i] }} คน</span>
+          </p>
+        </div>
+        <div class="pt-4 border-t">
+          <p class="text-4xl text-center text-gray-500">
+            รวมทั้งหมด {{ totalResearchers }} คน
+          </p>
+        </div>
+      </div>
     </div>
+  </div>
+</div>
 
-    <!-- ชื่อนักวิจัย -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-center mb-6">
-      <label class="md:text-right font-medium text-gray-700">
-        ชื่อนักวิจัย :
-      </label>
-
+<!-- ===== TABLE ===== -->
+<div *ngIf="isSearched" class="bg-[#F9CB34] min-h-screen p-6 text-2xl">
+  <div class="max-w-7xl mx-auto flex justify-between">
+    <h2 class="text-3xl font-extrabold mb-4">รายชื่อนักวิจัย</h2>
+    <div>
+      Search:
       <input
-        [(ngModel)]="researcherName"
         type="text"
-        class="md:col-span-3 w-full border rounded-md px-4 py-2 focus:ring focus:ring-yellow-200"
-        placeholder="กรอกชื่อนักวิจัย"
+        [(ngModel)]="searchText"
+        (input)="onSearch()"
+        class="border rounded bg-white px-2 py-1 ml-2"
+        placeholder="ค้นหา..."
       />
     </div>
-
-    <!-- Buttons -->
-    <div class="flex justify-center gap-4 mt-8">
-      <button
-        (click)="search()"
-        class="px-6 py-2 bg-[#FACC15] text-[#1E293B] rounded-lg hover:bg-[#FDE68A] transition cursor-pointer"
-      >
-        <i class="bi bi-search mr-2"></i>
-        ค้นหา
-      </button>
-    </div>
   </div>
-
-  <!-- ===== DONUT CHART ===== -->
+  
   <div
-    *ngIf="isSearched"
-    class="max-w-7xl mx-auto mt-8 grid grid-cols-1 md:grid-cols-2 gap-6"
-  >
-  <div class="bg-white rounded-xl shadow p-6">
-    <h2 class="font-semibold mb-4">
-      สัดส่วนนักวิจัย จำแนกตามสายงาน
-    </h2>
-  
-    <ng-container *ngIf="hasDonutData; else noData">
-      <apx-chart
-        [series]="donutSeries"
-        [labels]="donutLabels"
-        [chart]="donutChart"
-        [legend]="donutLegend"
-      ></apx-chart>
-    </ng-container>
-  
-    <ng-template #noData>
-      <div class="text-center text-gray-400 py-16">
-        ไม่พบข้อมูล
-      </div>
-    </ng-template>
-  </div>
-  
-
-    <div
-      class="bg-white rounded-xl shadow p-6 flex flex-col justify-center items-center"
+      
+      class="max-w-7xl mx-18 mt-2 bg-white rounded-xl shadow p-8"
     >
-      <p *ngFor="let l of donutLabels; let i = index">
-        {{ l }} : {{ donutSeries[i] }} คน
-      </p>
 
-      <p class="mt-4 text-sm text-gray-500">
-        รวมทั้งหมด {{ totalResearchers }} คน
-      </p>
+      <div class="overflow-x-auto">
+        <table class="w-full border-gray-300">
+          <thead class="bg-[#394250] border-b-2 border-gray-300 text-white">
+            <tr>
+              <th class="p-3 ">#</th>
+              <th class="p-3 ">img</th>
+              <th class="p-3">ชื่อ - นามสกุล</th>
+              <th class="p-3 ">สาขาวิชา</th>
+              <th class="p-3 ">หน่วยงาน</th>
+              <th class="p-3 ">ตำแหน่ง</th>
+              <th class="p-3 ">Action</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr
+              *ngFor="let r of paginationData; let i = index"
+              class="hover:bg-gray-50 bg-gray-200 border-b-2 border-gray-300"
+            >
+              <td class="p-3 text-center">{{ i + 1 }}</td>
+              <td class="p-3 text-center">
+                <div class="mx-auto w-16 h-16 rounded-full border border-amber-400 flex items-center justify-center">
+                  <img
+                    src="/assets/logoNPU.png"
+                    alt="logo"
+                    class="w-12 h-12 object-contain"
+                  />
+                </div>
+              </td>
+              
+              <td class="p-3 ">{{ r.name }}</td>
+              <td class="p-3  text-center">{{ r.major }}</td>
+              <td class="p-3  text-center">{{ r.faculty }}</td>
+              <td class="p-3  text-center">{{ r.position }}</td>
+              <td class="p-3  text-center">
+                <i
+                  routerLink="/user-profile"
+                  class="bi bi-person text-lg cursor-pointer text-blue-500 hover:text-blue-300"
+                ></i>
+              </td>
+            </tr>
+
+            <tr *ngIf="paginationData.length === 0">
+              <td colspan="5" class="p-4 text-center text-gray-500">
+                ไม่พบข้อมูล
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
-  </div>
-
-  <!-- ===== TABLE ===== -->
-  <div
-    *ngIf="isSearched"
-    class="max-w-7xl mx-auto mt-8 bg-white rounded-xl shadow p-6"
-  >
-    <h2 class="text-xl font-semibold mb-4">รายชื่อนักวิจัย</h2>
-
-    <div class="overflow-x-auto">
-      <table class="w-full border border-gray-300">
-        <thead class="bg-[#FACC15]">
-          <tr>
-            <th class="p-3 border">ลำดับ</th>
-            <th class="p-3 border text-left">ชื่อ - นามสกุล</th>
-            <th class="p-3 border text-center">หน่วยงาน</th>
-            <th class="p-3 border text-center">สายงาน</th>
-            <th class="p-3 border text-center">ตำแหน่ง</th>
-            <th class="p-3 border text-center">โปรไฟล์</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <tr
-            *ngFor="let r of filteredResearchers; let i = index"
-            class="hover:bg-gray-50"
-          >
-            <td class="p-3 border text-center">{{ i + 1 }}</td>
-            <td class="p-3 border">{{ r.name }}</td>
-            <td class="p-3 border text-center">{{ r.faculty }}</td>
-            <td class="p-3 border text-center">
-              {{ r.career_path === "academic" ? "สายวิชาการ" : "สายสนับสนุน" }}
-            </td>
-            <td class="p-3 border text-center">{{ r.position }}</td>
-            <td class="p-3 border text-center">
-              <i routerLink="/user-profile" class="bi bi-person text-lg cursor-pointer text-blue-500 hover:text-blue-300"></i>
-            </td>
-          </tr>
-
-          <tr *ngIf="filteredResearchers.length === 0">
-            <td colspan="5" class="p-4 text-center text-gray-500">
-              ไม่พบข้อมูล
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
 </div>

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 interface ExternalPerson {
@@ -18,23 +18,47 @@ interface InternalPerson {
   styleUrl: './user-add-research.component.css',
 })
 export class UserAddResearchComponent {
+  openDropdown: string | null = null;
   isEdit = false;
   researchId?: number;
   reportFileName = '';
   selectedFileName = '';
+  selectedMajor = '';
+  searchMajor = '';
 
   rows: ExternalPerson[] = [];
   rows2: InternalPerson[] = [];
+
+  major = [
+    'วิทยาการคอมพิวเตอร์',
+    'เทคโนโลยีสารสนเทศ',
+    'วิศวกรรมซอฟต์แวร์',
+    'ระบบสารสนเทศเพื่อการจัดการ',
+    'ปัญญาประดิษฐ์และวิทยาการข้อมูล',
+  ];
+
+  fundType: string = '';
+  fundName: string = '';
+
+  internalFunds: string[] = [
+    'งบประมาณมหาวิทยาลัย',
+    'กองทุนวิจัยมหาวิทยาลัย',
+    'คณะ/วิทยาลัย',
+  ];
   
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router
-  ) {}
+  externalFunds: string[] = [
+    'สำนักงานการวิจัยแห่งชาติ (วช.)',
+    'สกสว.',
+    'กระทรวงการอุดมศึกษา',
+    'หน่วยงานเอกชน',
+  ];
+
+  constructor(private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit() {
-    this.route.paramMap.subscribe(params => {
+    this.route.paramMap.subscribe((params) => {
       const id = params.get('id');
-  
+
       if (id) {
         this.isEdit = true;
         this.researchId = +id;
@@ -43,25 +67,22 @@ export class UserAddResearchComponent {
         this.isEdit = false;
       }
     });
-  
+
     this.addRow();
     this.addRow2();
   }
   loadResearchData(id: number) {
     console.log('แก้ไขงานวิจัย ID:', id);
-  
+
     // mock data (แทน API)
     this.rows = [
-      { name: 'นาย A', role: 'ผู้เชี่ยวชาญ', organization: 'บริษัท ABC' }
+      { name: 'นาย A', role: 'ผู้เชี่ยวชาญ', organization: 'บริษัท ABC' },
     ];
-  
-    this.rows2 = [
-      { name: 'ดร. B', organization: 'มหาวิทยาลัย X' }
-    ];
-  
+
+    this.rows2 = [{ name: 'ดร. B', organization: 'มหาวิทยาลัย X' }];
+
     this.reportFileName = 'report.pdf';
   }
-  
 
   addRow() {
     this.rows = [
@@ -119,5 +140,33 @@ export class UserAddResearchComponent {
       this.reportFile = input.files[0];
       this.reportFileName = this.reportFile.name;
     }
+  }
+
+  toggleDropdown(name: string, event: MouseEvent) {
+    event.stopPropagation();
+    this.openDropdown = this.openDropdown === name ? null : name;
+  }
+
+  isOpen(name: string): boolean {
+    return this.openDropdown === name;
+  }
+
+  @HostListener('document:click')
+  closeAll() {
+    this.openDropdown = null;
+  }
+
+  selectMajor(m: string) {
+    this.selectedMajor = m;
+    this.openDropdown = null;
+    this.searchMajor = '';
+  }
+
+  filteredMajor(): string[] {
+    if (!this.searchMajor) return this.major;
+
+    return this.major.filter((m) =>
+      m.toLowerCase().includes(this.searchMajor.toLowerCase())
+    );
   }
 }
