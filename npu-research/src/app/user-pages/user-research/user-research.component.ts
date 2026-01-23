@@ -1,7 +1,10 @@
 import { Component, HostListener } from '@angular/core';
+import { Router } from '@angular/router';
 import { ApexChart, ApexLegend } from 'ng-apexcharts';
+import { AuthService } from '../../services/auth.service';
 
 interface Research {
+  id: number;
   type: 'project' | 'article' | 'innovation';
   faculty: string;
   funding: 'internal' | 'external';
@@ -18,22 +21,26 @@ interface Research {
 })
 export class UserResearchComponent {
   openDropdown: string | null = null;
-    /** ===== STATE ===== */
-    isSearched = false;
+  isSearched = false;
   
-    selectedType = '';
-    selectedFaculty = '';
-    selectedFunding = '';
-    selectedYear = '';
-    researchTitle = '';
+  selectedType = '';
+  selectedFaculty = '';
+  selectedFunding = '';
+  selectedYear = '';
+  researchTitle = '';
   
-    searchFaculitie = '';
-  
-    facultySearch: string = '';
+  searchFaculitie = '';
+  facultySearch: string = '';
+
+  constructor(
+    private router: Router,
+    private authService: AuthService
+  ) {}
   
     /** ===== DATA (ตัวอย่าง) ===== */
-    researches: Research[] = [
+  researches: Research[] = [
       {
+        id: 1,
         type: 'project',
         faculty: 'คณะวิศวกรรมศาสตร์',
         funding: 'external',
@@ -42,6 +49,7 @@ export class UserResearchComponent {
         title: 'ระบบ AI',
       },
       {
+        id: 2,
         type: 'article',
         faculty: 'คณะวิทยาศาสตร์',
         funding: 'internal',
@@ -50,6 +58,7 @@ export class UserResearchComponent {
         title: 'ชีววิทยาโมเลกุล',
       },
       {
+        id: 3,
         type: 'article',
         faculty: 'คณะเทคโนโลยีสารสนเทศ',
         funding: 'internal',
@@ -58,6 +67,7 @@ export class UserResearchComponent {
         title: 'ชีววิทยาโมเลกุล',
       },
       {
+        id: 4,
         type: 'article',
         faculty: 'คณะบริหารธุรกิจ',
         funding: 'internal',
@@ -66,6 +76,7 @@ export class UserResearchComponent {
         title: 'ชีววิทยาโมเลกุล',
       },
       {
+        id: 5,
         type: 'article',
         faculty: 'คณะครุศาสตร์',
         funding: 'internal',
@@ -75,7 +86,6 @@ export class UserResearchComponent {
       },
     ];
     
-  
     faculties = [
       'คณะวิศวกรรมศาสตร์',
       'คณะวิทยาศาสตร์',
@@ -171,4 +181,17 @@ export class UserResearchComponent {
       f.toLowerCase().includes(this.searchFaculitie.toLowerCase())
     );
   }
+
+  goToResearch(id: number) {
+    let basePath = '/performance';
+  
+    if (this.authService.isLoggedIn()) {
+      basePath = this.authService.isAdmin()
+        ? '/admin/performance'
+        : '/user/performance';
+    }
+  
+    // this.router.navigate([basePath, this.selectedTab, id]);
+  }
+  
 }

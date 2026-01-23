@@ -1,5 +1,7 @@
 import { Component, HostListener } from '@angular/core';
+import { Router } from '@angular/router';
 import { ApexChart, ApexLegend } from 'ng-apexcharts';
+import { AuthService } from '../../services/auth.service';
 
 interface Researcher {
   faculty: string;
@@ -16,7 +18,6 @@ interface Researcher {
 })
 export class UserResearchersComponent {
   openDropdown: string | null = null;
-  /** ===== STATE ===== */
   isSearched = false;
   selectedFaculty = '';
   selectedCareer: string = '';
@@ -35,6 +36,11 @@ export class UserResearchersComponent {
 
   pageSize = 10;
   currentPage = 1;
+
+  constructor(
+    private router: Router,
+    private authService: AuthService
+  ){}
 
   /** ===== DATA (ตัวอย่าง) ===== */
   publications: Researcher[] = [
@@ -124,44 +130,58 @@ export class UserResearchersComponent {
   /** ===== SEARCH ===== */
   search() {
     this.isSearched = true;
-
-    this.filteredResearchers = this.publications.filter((r) => {
+  
+    this.filteredData = this.publications.filter((r) => {
       const matchFaculty =
         !this.selectedFaculty ||
         this.selectedFaculty === 'ทั้งหมด' ||
         r.faculty === this.selectedFaculty;
-
+  
       const matchMajor =
         !this.selectedMajor ||
         this.selectedMajor === 'ทั้งหมด' ||
         r.major === this.selectedMajor;
-
+  
       const matchName =
         !this.researcherName ||
         r.name.toLowerCase().includes(this.researcherName.toLowerCase());
-
+  
       return matchFaculty && matchMajor && matchName;
     });
-
-    this.prepareDonutChart();
+  
+    this.currentPage = 1;
+    this.updatePagination();
+  
+    this.prepareDonutChart(); // ⭐ ต้องอยู่หลัง filter
   }
-
+  
   /** ===== DONUT CALCULATION (อิงข้อมูลตารางจริง) ===== */
   hasDonutData = false;
 
   prepareDonutChart() {
-    const majorMap: { [key: string]: number } = {};
-
-    this.filteredResearchers.forEach((r) => {
-      majorMap[r.major] = (majorMap[r.major] || 0) + 1;
+    const data = this.filteredData; // ⭐ สำคัญมาก
+  
+    if (!data || data.length === 0) {
+      this.hasDonutData = false;
+      this.donutSeries = [];
+      this.donutLabels = [];
+      this.totalResearchers = 0;
+      return;
+    }
+  
+    const majorMap: Record<string, number> = {};
+  
+    data.forEach((r) => {
+      const major = r.major || 'ไม่ระบุสาขา';
+      majorMap[major] = (majorMap[major] || 0) + 1;
     });
-
+  
     this.donutLabels = Object.keys(majorMap);
     this.donutSeries = Object.values(majorMap);
-
-    this.totalResearchers = this.donutSeries.reduce((a, b) => a + b, 0);
-    this.hasDonutData = this.totalResearchers > 0;
+    this.totalResearchers = data.length;
+    this.hasDonutData = true;
   }
+  
 
   toggleDropdown(name: string, event: MouseEvent) {
     event.stopPropagation();
@@ -227,4 +247,19 @@ export class UserResearchersComponent {
     this.paginationData = this.filteredData.slice(start, end);
   }
   
+  goToProfile(){
+    if (!this.authService.isLoggedIn()) {
+      this.router.navigateByUrl('/login');
+      return;
+    }
+    const user = this.authService.getUser();
+  const base = this.authService.isAdmin() ? '/admin' : '/user';
+
+  // ถ้ามี id
+  if (user?.id) {
+    this.router.navigateByUrl(`${base}/profile/${user.id}`);
+  } else {
+    this.router.navigateByUrl(`${base}/profile`);
+  }
+  }
 }

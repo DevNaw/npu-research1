@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -8,17 +8,19 @@ import Swal from 'sweetalert2';
   templateUrl: './user-edit-traning.component.html',
   styleUrl: './user-edit-traning.component.css'
 })
-export class UserEditTraningComponent {
-  // ===== Modal =====
+export class UserEditTraningComponent implements OnInit {
+ userId!: string | null;
   isModalAdd = false;
   isModalEdit = false;
 
-  // ===== Dropdown =====
   dropdownOpen: string | null = null;
   searchLocation = '';
   selectedLocation: string | null = null;
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
 
   location: string[] = [
     'กรุงเทพมหานคร',
@@ -92,8 +94,11 @@ export class UserEditTraningComponent {
     'อุทัยธานี',
     'อุบลราชธานี',
   ];
-  
 
+  ngOnInit(): void {
+    this.userId = this.route.snapshot.paramMap.get('id');
+  }
+  
   // ===== Modal Control =====
   openModalAdd() {
     this.isModalAdd = true;

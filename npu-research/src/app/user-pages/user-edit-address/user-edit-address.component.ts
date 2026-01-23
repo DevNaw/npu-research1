@@ -1,5 +1,5 @@
-import { Component, HostListener } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, HostListener, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
 type DropdownKey = 'address' | 'current_address';
@@ -10,8 +10,9 @@ type DropdownKey = 'address' | 'current_address';
   templateUrl: './user-edit-address.component.html',
   styleUrl: './user-edit-address.component.css',
 })
-export class UserEditAddressComponent {
+export class UserEditAddressComponent implements OnInit {
   openDropdown: DropdownKey | null = null;
+  userId!: string | null;
 
   searchAddress = '';
   searchCurrentAddress = '';
@@ -19,7 +20,14 @@ export class UserEditAddressComponent {
   selectedAddress = '';
   selectedCurrentAddress = '';
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+  ) {}
+
+  ngOnInit(): void {
+    this.userId = this.route.snapshot.paramMap.get('id');
+  }
 
   addresses: string[] = [
     'ตำบลในเมือง อำเภอเมือง จังหวัดขอนแก่น',

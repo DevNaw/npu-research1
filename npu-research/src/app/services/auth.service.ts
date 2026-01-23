@@ -13,9 +13,7 @@ export class AuthService {
       u => u.username === username && u.password === password
     );
 
-    if (!user) {
-      return false;
-    }
+    if (!user) return false;
 
     this.currentUser = user;
     return true;
@@ -25,20 +23,19 @@ export class AuthService {
     return this.currentUser?.role === 'admin';
   }
 
-  getUser(): User | null {
-    return this.currentUser;
-  }
-
-  logout() {
-    this.currentUser = null;
-  }
   isLoggedIn(): boolean {
     return !!this.currentUser;
   }
 
+  getUser(): User | null {
+    return this.currentUser;
+  }
 
   getRole(): 'user' | 'admin' | null {
     return this.currentUser?.role ?? null;
   }
 
+  logout() {
+    this.currentUser = null;
+  }
 }

@@ -11,6 +11,7 @@
           />
           <div class="leading-tight sm:block">
             <h1
+            routerLink="/dashboard"
               class="text-2xl font-black sm:text-2xl md:text-3xl transition-all duration-300"
             >
               ระบบฐานข้อมูลวิจัย มหาวิทยาลัยนครพนม
@@ -374,6 +375,7 @@
           />
           <div class="leading-tight sm:block">
             <h1
+            routerLink="/user/dashboard"
               class="font-black text-xl sm:text-2xl md:text-3xl transition-all duration-300"
             >
               ระบบฐานข้อมูลวิจัย มหาวิทยาลัยนครพนม
@@ -384,7 +386,7 @@
 
         <div class="hidden md:flex items-center gap-6">
           <a
-            routerLink="/login"
+            routerLink="/user/profile"
             class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm flex items-center justify-center"
           >
             <i class="bi bi-person text-lg"></i>
@@ -420,7 +422,7 @@
       <div class="hidden md:flex m-2 ml-10 gap-2">
         <div class="ml-5 flex flex-wrap items-baseline space-x-1">
           <a
-            routerLink="/dashboard"
+            routerLink="/user/dashboard"
             class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-1"
           >
             <i class="bi bi-house text-lg"></i>
@@ -428,7 +430,7 @@
           </a>
 
           <a
-            routerLink="/user-profile"
+            routerLink="/user/profile"
             class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-1"
           >
             <i class="bi bi-person text-lg"></i>
@@ -447,19 +449,19 @@
               class="absolute left-0 mt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 delay-150 bg-gray-700 text-white rounded-md shadow-lg w-max min-w-45 z-50"
             >
               <a
-                routerLink="/user-add-research"
+                routerLink="/user/add-research"
                 class="block px-4 py-2 hover:bg-gray-600 font-extrabold text-xl"
               >
                 โครงการงานวิจัย
               </a>
               <a
-                routerLink="/user-add-aticle"
+                routerLink="/user/add-aticle"
                 class="block px-4 py-2 hover:bg-gray-600 font-extrabold text-xl"
               >
                 บทความ/วารสาร
               </a>
               <a
-                routerLink="/user-add-innovation"
+                routerLink="/user/add-innovation"
                 class="block px-4 py-2 hover:bg-gray-600 font-extrabold text-xl"
               >
                 นวัตกรรมสิ่งประดิษฐ์
@@ -468,7 +470,7 @@
           </div>
 
           <a
-            routerLink="/user-research"
+            routerLink="/user/research"
             class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-1"
           >
             <i class="bi bi-search text-lg"></i>
@@ -476,7 +478,7 @@
           </a>
 
           <a
-            routerLink="/user-researchers"
+            routerLink="/user/researchers"
             class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-1"
           >
             <i class="bi bi-people text-lg"></i>
@@ -491,7 +493,7 @@
         class="md:hidden bg-yellow-400 px-2 py-4 space-x-4 flex w-full items-center"
       >
         <a
-          routerLink="/dashboard"
+          routerLink="/user/dashboard"
           (click)="closeMobileMenu()"
           class="flex justify-center p-2 hover:bg-yellow-300 rounded relative group"
         >
@@ -505,7 +507,7 @@
         </a>
 
         <a
-          routerLink="/user-profile"
+          routerLink="/user/profile"
           (click)="closeMobileMenu()"
           class="flex justify-center p-2 hover:bg-yellow-300 rounded relative group"
         >
@@ -533,17 +535,17 @@
             class="absolute left-0 mt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 delay-150 bg-gray-700 text-white rounded-md shadow-lg w-max min-w-45 z-50"
           >
             <a
-              routerLink="/user-add-research"
+              routerLink="/user/add-research"
               class="block px-4 py-2 hover:bg-gray-600 text-lg"
               >โครงการงานวิจัย</a
             >
             <a
-              routerLink="/user-add-aticle"
+              routerLink="/user/add-aticle"
               class="block px-4 py-2 hover:bg-gray-600 text-lg"
               >บทความ/วารสาร</a
             >
             <a
-              routerLink="/user-add-innovation"
+              routerLink="/user/add-innovation"
               class="block px-4 py-2 hover:bg-gray-600 text-lg"
               >นวัตกรรมสิ่งประดิษฐ์</a
             >
@@ -551,7 +553,7 @@
         </div>
 
         <a
-          routerLink="/user-research"
+          routerLink="/user/research"
           (click)="closeMobileMenu()"
           class="flex justify-center p-2 hover:bg-yellow-300 rounded relative group"
         >
@@ -564,7 +566,7 @@
         </a>
 
         <a
-          routerLink="/user-researchers"
+          routerLink="/user/researchers"
           (click)="closeMobileMenu()"
           class="flex justify-center p-2 hover:bg-yellow-300 rounded relative group"
         >
@@ -605,7 +607,7 @@
             class="h-12 w-12 object-contain"
           />
           <div class="leading-tight sm:block">
-            <h1
+            <h1 routerLink="/admin/dashboard"
               class="text-xl sm:text-2xl md:text-3xl font-semibold transition-all duration-300"
             >
               ระบบฐานข้อมูลวิจัย มหาวิทยาลัยนครพนม
@@ -652,7 +654,7 @@
       <div class="hidden md:flex m-2 ml-10 gap-2">
         <div class="ml-5 flex flex-wrap items-baseline space-x-1">
           <a
-            routerLink="/dashboard"
+            routerLink="/admin/dashboard"
             class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-1"
           >
             <i class="bi bi-house text-lg"></i>
@@ -660,7 +662,7 @@
           </a>
 
           <a
-            routerLink="/user-profile"
+            routerLink="/admin/profile"
             class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-1"
           >
             <i class="bi bi-person text-lg"></i>
@@ -679,13 +681,13 @@
               class="absolute left-0 mt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 delay-150 bg-gray-700 text-white rounded-md shadow-lg w-max min-w-45 z-50"
             >
               <a
-                routerLink="/external-funding"
+                routerLink="/admin/external-funding"
                 class="block px-4 py-2 hover:bg-gray-600 font-extrabold text-xl"
               >
                 แหล่งทุนภายนอก
               </a>
               <a
-                routerLink="/specialization"
+                routerLink="/admin/specialization"
                 class="block px-4 py-2 hover:bg-gray-600 font-extrabold text-xl"
               >
                 สาขาวิชาที่เชี่ยวชาญ
@@ -705,13 +707,13 @@
               class="absolute left-0 mt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 delay-150 bg-gray-700 text-white rounded-md shadow-lg w-max min-w-45 z-50"
             >
               <a
-                routerLink="/admin-news"
+                routerLink="/admin/news"
                 class="block px-4 py-2 hover:bg-gray-600 font-extrabold text-xl"
               >
                 ข่าวประชาสัมพันธ์
               </a>
               <a
-                routerLink="/admin-download"
+                routerLink="/admin/download"
                 class="block px-4 py-2 hover:bg-gray-600 font-extrabold text-xl"
               >
                 เอกสารดาว์โหลด
@@ -731,19 +733,19 @@
               class="absolute left-0 mt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 delay-150 bg-gray-700 text-white rounded-md shadow-lg w-max min-w-45 z-50"
             >
               <a
-                routerLink="/user-add-research"
+                routerLink="/admin/add-research"
                 class="block px-4 py-2 hover:bg-gray-600 font-extrabold text-xl"
               >
                 โครงการงานวิจัย
               </a>
               <a
-                routerLink="/user-add-aticle"
+                routerLink="/admin/add-aticle"
                 class="block px-4 py-2 hover:bg-gray-600 font-extrabold text-xl"
               >
                 บทความ/วารสาร
               </a>
               <a
-                routerLink="/user-add-innovation"
+                routerLink="/admin/add-innovation"
                 class="block px-4 py-2 hover:bg-gray-600 font-extrabold text-xl"
               >
                 นวัตกรรมสิ่งประดิษฐ์
@@ -752,7 +754,7 @@
           </div>
 
           <a
-            routerLink="/admin-search-paper"
+            routerLink="/admin/search-paper"
             class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-1"
           >
             <i class="bi bi-search text-lg"></i>
@@ -760,14 +762,14 @@
           </a>
 
           <a
-            routerLink="/admin-search-research"
+            routerLink="/admin/search-research"
             class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-1"
           >
             <i class="bi bi-people text-lg"></i>
             <span class="hidden md:inline font-extrabold text-xl">ค้นหาข้อมูลนักวิจัย</span>
           </a>
           <a
-            routerLink="/user-researchers"
+            routerLink="admin/report"
             class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-1"
           >
             <i class="bi bi-file-earmark-text text-lg"></i>
@@ -782,7 +784,7 @@
         class="md:hidden bg-yellow-400 px-2 py-4 space-x-4 flex w-full items-center"
       >
         <a
-          routerLink="/dashboard"
+          routerLink="admin/dashboard"
           (click)="closeMobileMenu()"
           class="flex justify-center p-2 hover:bg-yellow-300 rounded relative group"
         >
@@ -795,7 +797,7 @@
         </a>
 
         <a
-          routerLink="/user-profile"
+          routerLink="/admin/profile"
           (click)="closeMobileMenu()"
           class="flex justify-center p-2 hover:bg-yellow-300 rounded relative group"
         >
@@ -822,12 +824,12 @@
             class="absolute left-0 mt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 delay-150 bg-gray-700 text-white rounded-md shadow-lg w-max min-w-45 z-50"
           >
             <a
-              routerLink="/external-funding"
+              routerLink="/admin/external-funding"
               class="block px-4 py-2 hover:bg-gray-600 text-lg"
               >แหล่งทุนภายนอก</a
             >
             <a
-              routerLink="/specialization"
+              routerLink="/admin/specialization"
               class="block px-4 py-2 hover:bg-gray-600 text-lg"
               >สาขาวิชาที่เชี่ยวชาญ</a
             >
@@ -849,12 +851,12 @@
             class="absolute left-0 mt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 delay-150 bg-gray-700 text-white rounded-md shadow-lg w-max min-w-45 z-50"
           >
             <a
-              routerLink="/admin-news"
+              routerLink="/admin/news"
               class="block px-4 py-2 hover:bg-gray-600 text-lg"
               >ข่าวประชาสัมพันธ์</a
             >
             <a
-              routerLink="/admin-download"
+              routerLink="/admin/download"
               class="block px-4 py-2 hover:bg-gray-600 text-lg"
               >เอกสารดาวน์โหลด</a
             >
@@ -876,17 +878,17 @@
             class="absolute left-0 mt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 delay-150 bg-gray-700 text-white rounded-md shadow-lg w-max min-w-45 z-50"
           >
             <a
-              routerLink="/user-add-research"
+              routerLink="/admin/add-research"
               class="block px-4 py-2 hover:bg-gray-600 text-lg"
               >โครงการงานวิจัย</a
             >
             <a
-              routerLink="/user-add-aticle"
+              routerLink="/admin/add-aticle"
               class="block px-4 py-2 hover:bg-gray-600 text-lg"
               >บทความ/วารสาร</a
             >
             <a
-              routerLink="/user-add-innovation"
+              routerLink="/admin/add-innovation"
               class="block px-4 py-2 hover:bg-gray-600 text-lg"
               >นวัตกรรมสิ่งประดิษฐ์</a
             >
@@ -894,7 +896,7 @@
         </div>
 
         <a
-          routerLink="/admin-search-paper"
+          routerLink="/admin/search-paper"
           (click)="closeMobileMenu()"
           class="flex justify-center p-2 hover:bg-yellow-300 rounded relative group"
         >
@@ -907,7 +909,7 @@
         </a>
 
         <a
-          routerLink="/admin-search-research"
+          routerLink="/admin/search-research"
           (click)="closeMobileMenu()"
           class="flex justify-center p-2 hover:bg-yellow-300 rounded relative group"
         >
@@ -920,7 +922,7 @@
         </a>
 
         <a
-          routerLink="/user-researchers"
+          routerLink="/admin/report"
           (click)="closeMobileMenu()"
           class="flex justify-center p-2 hover:bg-yellow-300 rounded relative group"
         >
@@ -933,7 +935,7 @@
         </a>
 
         <a
-          routerLink="/user-researchers"
+          routerLink="/login"
           (click)="closeMobileMenu()"
           class="flex justify-center p-2 hover:bg-yellow-300 rounded ml-auto text-red-600 hover:text-red-500 relative group"
         >

@@ -6,6 +6,7 @@ import {
   DataPerformanceItem,
   Address,
 } from '../../models/data-performance.model';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-user-profile',
@@ -54,7 +55,7 @@ export class UserProfileComponent implements OnInit {
         id: 101,
         title: 'บทวิเคราะห์ผลกระทบของเทคโนโลยี 5G ต่ออุตสาหกรรมโทรคมนาคม',
         date: '15 ก.พ. 2563 เวลา 11:20:33 น.',
-      }
+      },
     ],
 
     innovation: [
@@ -79,7 +80,7 @@ export class UserProfileComponent implements OnInit {
   filteredData: DataPerformanceItem[] = [];
   paginationData: DataPerformanceItem[] = [];
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authService: AuthService) {}
 
   ngOnInit(): void {
     this.filteredData = [...this.data[this.selectedTab]];
@@ -100,23 +101,30 @@ export class UserProfileComponent implements OnInit {
   }
 
   editItem(id: number) {
+    const isAdmin = this.authService.isAdmin();
+  
+    let base = isAdmin ? '/admin' : '/user';
     let route = '';
   
     switch (this.selectedTab) {
       case 'research':
-        route = '/user-add-research';
+        route = `${base}/edit-research/${id}`;
         break;
   
       case 'article':
-        route = '/user-add-article';
+        route = `${base}/edit-aticle/${id}`;
         break;
   
       case 'innovation':
-        route = '/user-add-innovation';
+        route = `${base}/edit-innovation/${id}`;
         break;
+  
+      default:
+        console.warn('Unknown tab:', this.selectedTab);
+        return;
     }
   
-    this.router.navigate([route, id]);
+    this.router.navigateByUrl(route);
   }
   
 
@@ -190,25 +198,54 @@ export class UserProfileComponent implements OnInit {
   }
 
   goToEditProfile() {
-    this.router.navigateByUrl('/user-edit-profile');
+    const user = this.authService.getUser();
+    if (!user) return;
+
+    if (this.authService.isAdmin()) {
+      this.router.navigate(['/admin/edit-profile', user.id]);
+    } else {
+      this.router.navigate(['/user/edit-profile', user.id]);
+    }
   }
 
   goToEditStudy() {
-    this.router.navigateByUrl('/user-edit-study');
+    const user = this.authService.getUser();
+    if (!user) return;
+
+    if(this.authService.isAdmin()) {
+      this.router.navigate(['/admin/edit-study', user.id]);
+    } else {
+      this.router.navigate(['/user/edit-study', user.id]);
+    }
   }
 
   goToEditTraning() {
-    this.router.navigateByUrl('/user-edit-traning');
+    const user = this.authService.getUser();
+    if (!user) return;
+
+    if (this.authService.isAdmin()) {
+      this.router.navigate(['/admin/edit-traning', user.id]);
+    } else {
+      this.router.navigate(['/user/edit-traning', user.id]);
+    }
   }
 
   goToEditAddress() {
-    this.router.navigateByUrl('/user-edit-address');
+    const user = this.authService.getUser();
+
+    if(!user) return;
+
+    if (this.authService.isAdmin()) {
+      this.router.navigate(['/admin/edit-address', user.id]);
+    } else {
+      this.router.navigate(['/user/edit-address', user.id]);
+    }
   }
 
   viewItem(id: number) {
     this.router.navigate(['/performance', this.selectedTab, id]);
   }
-  
+
   hasAddressData(): boolean {
     return !!(
       this.address?.houseNo ||
@@ -220,5 +257,4 @@ export class UserProfileComponent implements OnInit {
       this.address?.phone
     );
   }
-  
 }

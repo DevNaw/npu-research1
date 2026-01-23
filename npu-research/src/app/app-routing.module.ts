@@ -37,72 +37,107 @@ import { AdminSearchResearcherComponent } from './admin-pages/admin-search-resea
 import { AdminSearchPaperComponent } from './admin-pages/admin-search-paper/admin-search-paper.component';
 import { NewsEditComponent } from './admin-pages/news-edit/news-edit.component';
 import { PerformanceComponent } from './user-pages/performance/performance.component';
-import { DashboardComponent } from './admin-pages/dashboard/dashboard.component';
+import { adminGuard } from './core/guards/admin.guard';
+import { userGuard } from './core/guards/user.guard';
 
 const routes: Routes = [
-  /* ================= AUTH ================= */
+  /* ================= PUBLIC (ไม่ต้อง login) ================= */
+  { path: 'dashboard', component: UserDashboardComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'dashboard', component: UserDashboardComponent },
 
-  /* ================= DASHBOARD ================= */
-  { path: 'user/dashboard', component: UserDashboardComponent },
-  { path: 'admin/dashboard', component: UserDashboardComponent },
-
-  // dashboard กลาง → จะ redirect ตาม role (ผ่าน guard ภายหลัง)
-  // { path: 'dashboard', redirectTo: 'login', pathMatch: 'full' },
-
-  /* ================= USER ================= */
-  { path: 'user-add-aticle', component: UserAddAticleComponent },
-  { path: 'user-add-aticle/:id', component: UserAddAticleComponent },
-  { path: 'user-edit-aticle/:id', component: UserAddAticleComponent },
-  { path: 'user-add-innovation', component: UserAddInnovationComponent },
-  { path: 'user-add-innovation/:id', component: UserAddInnovationComponent },
-  { path: 'user-edit-innovation/:id', component: UserAddInnovationComponent },
-  { path: 'user-add-research', component: UserAddResearchComponent },
-  { path: 'user-add-research/:id', component: UserAddResearchComponent },
-  { path: 'user-edit-research/:id', component: UserAddResearchComponent },
-  { path: 'user-research', component: UserResearchComponent },
-  { path: 'user-researchers', component: UserResearchersComponent },
-  { path: 'user-profile', component: UserProfileComponent },
-  { path: 'user-profile/:id', component: UserProfileComponent },
-  { path: 'user-edit-address', component: UserEditAddressComponent },
-  { path: 'user-edit-profile', component: UserEditProfileComponent },
-  { path: 'user-edit-study', component: UserEditStudyComponent },
-  { path: 'user-edit-traning', component: UserEditTraningComponent },
-  { path: 'performance/:type/:id', component: PerformanceComponent },
-
-  /* ================= GENERAL ================= */
   { path: 'aticle', component: AticleComponent },
+  { path: 'aticle/:id', component: AticleComponent },
   { path: 'download', component: DownloadComponent },
   { path: 'innovation', component: InnovationComponent },
+  { path: 'innovation/:id', component: InnovationComponent },
   { path: 'news', component: NewsComponent },
   { path: 'news/:id', component: NewsDetailComponent },
   { path: 'research', component: ResearchComponent },
+  { path: 'research/:id', component: ResearchComponent },
   { path: 'report-researcher', component: ReportResearcherTypeComponent },
-  { path: 'report-institution', component: ReportResearcherInstitutionComponent },
+  {
+    path: 'report-institution',
+    component: ReportResearcherInstitutionComponent,
+  },
   { path: 'report-expertise', component: ReportResearcherExpertiseComponent },
-  { path: 'report-researcher-profile', component: ReportResearcherProfileComponent },
+  {
+    path: 'report-researcher-profile',
+    component: ReportResearcherProfileComponent,
+  },
   { path: 'report-research', component: ReportResearcherResearchComponent },
   { path: 'manual', component: ManualComponent },
+  { path: 'performance/:type/:id', component: PerformanceComponent },
+
+
+  /* ================= USER ================= */
+  { path: 'user',
+    canActivate: [userGuard],
+    children: [
+      { path: 'dashboard', component: UserDashboardComponent },
+      { path: 'add-aticle', component: UserAddAticleComponent },
+      { path: 'aticle/:id', component: UserAddAticleComponent },
+      { path: 'edit-aticle/:id', component: UserAddAticleComponent },
+      { path: 'add-innovation', component: UserAddInnovationComponent },
+      { path: 'innovation/:id', component: UserAddInnovationComponent },
+      { path: 'edit-innovation/:id', component: UserAddInnovationComponent },
+      { path: 'add-research', component: UserAddResearchComponent },
+      { path: 'research/:id', component: UserAddResearchComponent },
+      { path: 'edit-research/:id', component: UserAddResearchComponent },
+      { path: 'research', component: UserResearchComponent },
+      { path: 'researchers', component: UserResearchersComponent },
+      { path: 'profile', component: UserProfileComponent },
+      { path: 'profile/:id', component: UserProfileComponent },
+      { path: 'edit-address/:id', component: UserEditAddressComponent },
+      { path: 'edit-profile/:id', component: UserEditProfileComponent },
+      { path: 'edit-study/:id', component: UserEditStudyComponent },
+      { path: 'edit-traning/:id', component: UserEditTraningComponent },
+      { path: 'performance/:type/:id', component: PerformanceComponent },
+    ]
+  },
 
   /* ================= ADMIN ================= */
-  { path: 'admin-news', component: AdminNewsComponent },
-  { path: 'admin-download', component: AdminDownloadComponent },
-  { path: 'admin-search-research', component: AdminSearchResearcherComponent },
-  { path: 'admin-search-paper', component: AdminSearchPaperComponent },
-  { path: 'external-funding', component: ExternalFundingComponent },
-  { path: 'specialization', component: SpecializationComponent },
-  { path: 'admin-news/create', component: NewsEditComponent },
-  { path: 'admin-news/edit/:id', component: NewsEditComponent },
-
-  /* ================= DEFAULT ================= */
-  // { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-  // { path: '**', redirectTo: 'dashboard' }
+  {
+    path: 'admin',
+    canActivate: [adminGuard],
+    children: [
+      { path: 'dashboard', component: UserDashboardComponent },
+      { path: 'download', component: AdminDownloadComponent },
+      { path: 'external-funding', component: ExternalFundingComponent },
+      { path: 'search-research', component: AdminSearchResearcherComponent },
+      { path: 'search-paper', component: AdminSearchPaperComponent },
+      { path: 'specialization', component: SpecializationComponent },
+      { path: 'news', component: AdminNewsComponent },
+      { path: 'news/create', component: NewsEditComponent },
+      { path: 'news/edit/:id', component: NewsEditComponent },
+      { path: 'profile', component: UserProfileComponent },
+      { path: 'profile/:id', component: UserProfileComponent },
+      { path: 'edit-profile/:id', component: UserEditProfileComponent },
+      { path: 'edit-address/:id', component: UserEditAddressComponent },
+      { path: 'edit-study/:id', component: UserEditStudyComponent },
+      { path: 'edit-traning/:id', component: UserEditTraningComponent },
+      { path: 'add-research', component: UserAddResearchComponent },
+      { path: 'research/:id', component: UserAddResearchComponent },
+      { path: 'edit-research/:id', component: UserAddResearchComponent },
+      { path: 'add-aticle', component: UserAddAticleComponent },
+      { path: 'aticle/:id', component: UserAddAticleComponent },
+      { path: 'edit-aticle/:id', component: UserAddAticleComponent },
+      { path: 'add-innovation', component: UserAddInnovationComponent },
+      {
+        path: 'innovation/:id',
+        component: UserAddInnovationComponent,
+      },
+      {
+        path: 'edit-innovation/:id',
+        component: UserAddInnovationComponent,
+      },
+      { path: 'performance/:type/:id', component: PerformanceComponent },
+    ],
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

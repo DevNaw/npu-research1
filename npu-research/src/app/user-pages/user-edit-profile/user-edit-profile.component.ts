@@ -1,5 +1,5 @@
-import { Component, ElementRef, HostListener } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, HostListener, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -8,11 +8,16 @@ import Swal from 'sweetalert2';
   templateUrl: './user-edit-profile.component.html',
   styleUrl: './user-edit-profile.component.css',
 })
-export class UserEditProfileComponent {
-  /* ===== dropdown control ===== */
+export class UserEditProfileComponent implements OnInit{
   openDropdown: string | null = null;
+  userId!: string | null;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private route: ActivatedRoute) {}
+
+  ngOnInit(): void {
+    this.userId = this.route.snapshot.paramMap.get('id');
+    console.log('Editing profile ID:', this.userId);
+  }
 
   toggle(name: string, event: MouseEvent) {
     event.stopPropagation();

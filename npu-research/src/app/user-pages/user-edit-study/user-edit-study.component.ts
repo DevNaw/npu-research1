@@ -1,5 +1,5 @@
-import { Component, HostListener } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, HostListener, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -8,7 +8,8 @@ import Swal from 'sweetalert2';
   templateUrl: './user-edit-study.component.html',
   styleUrl: './user-edit-study.component.css'
 })
-export class UserEditStudyComponent {
+export class UserEditStudyComponent implements OnInit {
+  userId!: string | null;
   isModalOpen = false;
   isModalOpenEdit = false;
   openDropdown: string | null = null;
@@ -229,7 +230,14 @@ export class UserEditStudyComponent {
   startYear = '';
   endYear = '';
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
+
+  ngOnInit(): void {
+    this.userId = this.route.snapshot.paramMap.get('id');
+  }
 
   toggle(el: string, event: MouseEvent) {
     event.stopPropagation();
