@@ -40,9 +40,14 @@ export class NavbarComponent {
     this.isMobileMenuOpen = false;
   }
 
+  onLogout() {
+    this.logout();
+    this.closeMobileMenu();
+  }
+
   logout() {
     this.auth.logout();
-    this.router.navigate(['/login']);
+    this.router.navigate(['/dashboard']);
   }
 
   get role() {

@@ -5,7 +5,7 @@ import { AuthService } from '../../services/auth.service';
 
 interface Research {
   id: number;
-  type: 'project' | 'article' | 'innovation';
+  type: 'research' | 'article' | 'innovation';
   faculty: string;
   funding: 'internal' | 'external';
   year: number;
@@ -17,181 +17,176 @@ interface Research {
   selector: 'app-user-research',
   standalone: false,
   templateUrl: './user-research.component.html',
-  styleUrl: './user-research.component.css'
+  styleUrl: './user-research.component.css',
 })
 export class UserResearchComponent {
   openDropdown: string | null = null;
   isSearched = false;
-  
+
   selectedType = '';
   selectedFaculty = '';
   selectedFunding = '';
   selectedYear = '';
   researchTitle = '';
-  
+
   searchFaculitie = '';
   facultySearch: string = '';
 
-  constructor(
-    private router: Router,
-    private authService: AuthService
-  ) {}
-  
-    /** ===== DATA (ตัวอย่าง) ===== */
+  constructor(private router: Router, private authService: AuthService) {}
+
+  /** ===== DATA (ตัวอย่าง) ===== */
   researches: Research[] = [
-      {
-        id: 1,
-        type: 'project',
-        faculty: 'คณะวิศวกรรมศาสตร์',
-        funding: 'external',
-        year: 2024,
-        name: 'นาย ก',
-        title: 'ระบบ AI',
-      },
-      {
-        id: 2,
-        type: 'article',
-        faculty: 'คณะวิทยาศาสตร์',
-        funding: 'internal',
-        year: 2023,
-        name: 'นาง ข',
-        title: 'ชีววิทยาโมเลกุล',
-      },
-      {
-        id: 3,
-        type: 'article',
-        faculty: 'คณะเทคโนโลยีสารสนเทศ',
-        funding: 'internal',
-        year: 2023,
-        name: 'นาง ข',
-        title: 'ชีววิทยาโมเลกุล',
-      },
-      {
-        id: 4,
-        type: 'article',
-        faculty: 'คณะบริหารธุรกิจ',
-        funding: 'internal',
-        year: 2023,
-        name: 'นาง ข',
-        title: 'ชีววิทยาโมเลกุล',
-      },
-      {
-        id: 5,
-        type: 'article',
-        faculty: 'คณะครุศาสตร์',
-        funding: 'internal',
-        year: 2025,
-        name: 'นาง f',
-        title: 'ชีววิทยาโมเลกุล',
-      },
-    ];
-    
-    faculties = [
-      'คณะวิศวกรรมศาสตร์',
-      'คณะวิทยาศาสตร์',
-      'คณะครุศาสตร์',
-      'คณะบริหารธุรกิจ',
-      'คณะเทคโนโลยีสารสนเทศ',
-      'คณะเทคโนโลยีสารสนเทศ',
-      'คณะเทคโนโลยีสารสนเทศ',
-      'คณะเทคโนโลยีสารสนเทศ',
-    ];
-    years = [2022, 2023, 2024];
-  
-    /** ===== FILTERED (ตาราง + กราฟใช้ชุดนี้) ===== */
-    filteredResearchers: Research[] = [];
-  
-    /** ===== DONUT CHART ===== */
-    donutLabels: string[] = [];
-    donutSeries: number[] = [];
-    totalResearchers = 0;
-  
-    donutChart = {
-      type: 'donut' as const,
-      height: 300,
-    };
-  
-    donutLegend = {
-      position: 'bottom' as const,
-    };
-  
-    /** ===== SEARCH ===== */
-    search() {
-      this.isSearched = true;
-  
-      this.filteredResearchers = this.researches.filter((r) => {
-        return (
-          (!this.selectedType || r.type === this.selectedType) &&
-          (!this.selectedFaculty || r.faculty === this.selectedFaculty) &&
-          (!this.selectedFunding || r.funding === this.selectedFunding) &&
-          (!this.selectedYear || r.year === +this.selectedYear) &&
-          (!this.researchTitle ||
-            r.title.toLowerCase().includes(this.researchTitle.toLowerCase()))
-        );
-      });
-  
-      this.prepareDonut();
-    }
-  
-    /** ===== DONUT CALCULATION (อิงข้อมูลตารางจริง) ===== */
-    prepareDonut() {
-      const map: Record<string, number> = {};
-  
-      this.filteredResearchers.forEach((r) => {
-        map[r.type] = (map[r.type] || 0) + 1;
-      });
-  
-      this.donutLabels = Object.keys(map).map((t) =>
-        t === 'project'
-          ? 'โครงการวิจัย'
-          : t === 'article'
-          ? 'บทความ/วารสาร'
-          : 'นวัตกรรม'
+    {
+      id: 1,
+      type: 'research',
+      faculty: 'คณะวิศวกรรมศาสตร์',
+      funding: 'external',
+      year: 2024,
+      name: 'นาย ก',
+      title: 'ระบบ AI',
+    },
+    {
+      id: 2,
+      type: 'article',
+      faculty: 'คณะวิทยาศาสตร์',
+      funding: 'internal',
+      year: 2023,
+      name: 'นาง ข',
+      title: 'ชีววิทยาโมเลกุล',
+    },
+    {
+      id: 3,
+      type: 'article',
+      faculty: 'คณะเทคโนโลยีสารสนเทศ',
+      funding: 'internal',
+      year: 2023,
+      name: 'นาง ข',
+      title: 'ชีววิทยาโมเลกุล',
+    },
+    {
+      id: 4,
+      type: 'article',
+      faculty: 'คณะบริหารธุรกิจ',
+      funding: 'internal',
+      year: 2023,
+      name: 'นาง ข',
+      title: 'ชีววิทยาโมเลกุล',
+    },
+    {
+      id: 5,
+      type: 'article',
+      faculty: 'คณะครุศาสตร์',
+      funding: 'internal',
+      year: 2025,
+      name: 'นาง f',
+      title: 'ชีววิทยาโมเลกุล',
+    },
+  ];
+
+  faculties = [
+    'คณะวิศวกรรมศาสตร์',
+    'คณะวิทยาศาสตร์',
+    'คณะครุศาสตร์',
+    'คณะบริหารธุรกิจ',
+    'คณะเทคโนโลยีสารสนเทศ',
+    'คณะเทคโนโลยีสารสนเทศ',
+    'คณะเทคโนโลยีสารสนเทศ',
+    'คณะเทคโนโลยีสารสนเทศ',
+  ];
+  years = [2022, 2023, 2024];
+
+  /** ===== FILTERED (ตาราง + กราฟใช้ชุดนี้) ===== */
+  filteredResearchers: Research[] = [];
+
+  /** ===== DONUT CHART ===== */
+  donutLabels: string[] = [];
+  donutSeries: number[] = [];
+  totalResearchers = 0;
+
+  donutChart = {
+    type: 'donut' as const,
+    height: 300,
+  };
+
+  donutLegend = {
+    position: 'bottom' as const,
+  };
+
+  /** ===== SEARCH ===== */
+  search() {
+    this.isSearched = true;
+
+    this.filteredResearchers = this.researches.filter((r) => {
+      return (
+        (!this.selectedType || r.type === this.selectedType) &&
+        (!this.selectedFaculty || r.faculty === this.selectedFaculty) &&
+        (!this.selectedFunding || r.funding === this.selectedFunding) &&
+        (!this.selectedYear || r.year === +this.selectedYear) &&
+        (!this.researchTitle ||
+          r.title.toLowerCase().includes(this.researchTitle.toLowerCase()))
       );
-  
-      this.donutSeries = Object.values(map);
-      this.totalResearchers = this.filteredResearchers.length;
-    }
-  
-  
-  toggleDropdown(name: string, event:MouseEvent) {
+    });
+
+    this.prepareDonut();
+  }
+
+  /** ===== DONUT CALCULATION (อิงข้อมูลตารางจริง) ===== */
+  prepareDonut() {
+    const map: Record<string, number> = {};
+
+    this.filteredResearchers.forEach((r) => {
+      map[r.type] = (map[r.type] || 0) + 1;
+    });
+
+    this.donutLabels = Object.keys(map).map((t) =>
+      t === 'project'
+        ? 'โครงการวิจัย'
+        : t === 'article'
+        ? 'บทความ/วารสาร'
+        : 'นวัตกรรม'
+    );
+
+    this.donutSeries = Object.values(map);
+    this.totalResearchers = this.filteredResearchers.length;
+  }
+
+  toggleDropdown(name: string, event: MouseEvent) {
     event.stopPropagation();
     this.openDropdown = this.openDropdown === name ? null : name;
   }
-  
+
   isOpen(name: string): boolean {
     return this.openDropdown === name;
   }
-  
+
   @HostListener('document:click')
   closeAll() {
     this.openDropdown = null;
   }
-  
+
   selectFaculities(f: string) {
     this.selectedFaculty = f;
     this.openDropdown = null;
     this.searchFaculitie = '';
   }
-  
+
   filteredFaculties(): string[] {
     if (!this.searchFaculitie) return this.faculties;
-  
-    return this.faculties.filter(f =>
+
+    return this.faculties.filter((f) =>
       f.toLowerCase().includes(this.searchFaculitie.toLowerCase())
     );
   }
 
-  goToResearch(id: number) {
+  goToResearch(id: number, type: 'research' | 'article' | 'innovation') {
     let basePath = '/performance';
-  
+
     if (this.authService.isLoggedIn()) {
       basePath = this.authService.isAdmin()
         ? '/admin/performance'
-        : '/user/performance';
+        : 'user/performance';
     }
-  
-    // this.router.navigate([basePath, this.selectedTab, id]);
+
+    this.router.navigate([basePath, type, id]);
   }
-  
 }
