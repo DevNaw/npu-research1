@@ -43,6 +43,11 @@ import { AdminSearchResearcherComponent } from './admin-pages/admin-search-resea
 import { AdminSearchPaperComponent } from './admin-pages/admin-search-paper/admin-search-paper.component';
 import { NewsEditComponent } from './admin-pages/news-edit/news-edit.component';
 import { PerformanceComponent } from './user-pages/performance/performance.component';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { ReportComponent } from './general/report/report.component';
 
 @NgModule({
   declarations: [
@@ -85,6 +90,7 @@ import { PerformanceComponent } from './user-pages/performance/performance.compo
     AdminSearchPaperComponent,
     NewsEditComponent,
     PerformanceComponent,
+    ReportComponent,
   ],
   imports: [
     BrowserModule,
@@ -92,7 +98,10 @@ import { PerformanceComponent } from './user-pages/performance/performance.compo
     NgApexchartsModule,
     FormsModule,
     ReactiveFormsModule,
-    
+    MatFormFieldModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatInputModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

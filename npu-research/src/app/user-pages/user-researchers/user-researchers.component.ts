@@ -262,4 +262,22 @@ export class UserResearchersComponent {
     this.router.navigateByUrl(`${base}/profile`);
   }
   }
+
+  changePage(page: number) {
+    if (page < 1 || page > this.totalPages) return;
+    if (page === this.currentPage) return;
+  
+    this.currentPage = page;
+    this.updatePagination();
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.filteredResearchers.length / this.pageSize);
+  }
+  get totalItems(): number {
+    return this.filteredResearchers.length;
+  }
+  get pages(): number[] {
+    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  }
 }

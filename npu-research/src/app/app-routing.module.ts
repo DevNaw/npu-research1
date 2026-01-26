@@ -39,6 +39,7 @@ import { NewsEditComponent } from './admin-pages/news-edit/news-edit.component';
 import { PerformanceComponent } from './user-pages/performance/performance.component';
 import { adminGuard } from './core/guards/admin.guard';
 import { userGuard } from './core/guards/user.guard';
+import { ReportComponent } from './general/report/report.component';
 
 const routes: Routes = [
   /* ================= PUBLIC (ไม่ต้อง login) ================= */
@@ -68,6 +69,7 @@ const routes: Routes = [
   { path: 'report-research', component: ReportResearcherResearchComponent },
   { path: 'manual', component: ManualComponent },
   { path: 'performance/:type/:id', component: PerformanceComponent },
+  
 
 
   /* ================= USER ================= */
@@ -132,6 +134,7 @@ const routes: Routes = [
         component: UserAddInnovationComponent,
       },
       { path: 'performance/:type/:id', component: PerformanceComponent },
+      { path: 'report', component: ReportComponent },
     ],
   },
 ];

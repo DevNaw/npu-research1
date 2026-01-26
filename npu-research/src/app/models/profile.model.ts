@@ -1,7 +1,7 @@
 export interface DataProfile {
-    id: number;
+    id: number
     faculty: string;
-    name: string;
-    career_path: 'academic' | 'support';
-    position: string;
+  name: string;
+  major: string;
+  position: string;
 }

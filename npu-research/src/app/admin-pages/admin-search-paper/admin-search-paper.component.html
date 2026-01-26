@@ -1,184 +1,323 @@
-<div class="bg-gray-100 min-h-screen p-6">
-    <!-- ===== SEARCH ===== -->
-    <div class="max-w-7xl mx-auto bg-white rounded-xl p-6 shadow">
-      <!-- Title -->
-      <h1 class="text-3xl font-semibold mb-6 flex items-center gap-2">
-        <i class="bi bi-funnel"></i>
-        ระบุเงื่อนไขในการค้นหา
-      </h1>
-
-      <h2 class="text-center mb-4 text-2xl">ค้นหาข้อมูลงานวิจัย</h2>
-  
-      <!-- ประเภทงานวิจัย -->
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-center mb-6 text-xl">
-        <label class="md:text-right font-medium text-gray-700">
-          ประเภทงานวิจัย:
-        </label>
-  
-        <select
-          [(ngModel)]="selectedType"
-          class="md:col-span-3 w-full border rounded-md px-4 py-2"
-        >
-          <option value="">ทั้งหมด</option>
-          <option value="project">โครงการวิจัย</option>
-          <option value="article">บทความ/วารสาร</option>
-          <option value="innovation">นวัตกรรมสิ่งประดิษฐ์</option>
-        </select>
+<div class="bg-gray-100 min-h-screen p-6 text-2xl">
+  <!-- ===== SEARCH ===== -->
+  <div class="max-w-3xl mx-auto p-6">
+    <!-- Title -->
+    <div class="flex flex-col justify-center items-center text-center">
+      <div
+        class="w-24 h-24 rounded-full bg-linear-to-b from-sky-200 to-sky-100 flex items-center justify-center mb-4"
+      >
+        <i class="bi bi-search text-4xl text-gray-700"></i>
       </div>
-  
-      <!-- หน่วยงาน -->
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-start mb-6 text-xl">
-          <!-- Label -->
-          <label class="md:text-right font-medium text-gray-700 pt-2">
-            หน่วยงาน :
-          </label>
-        
-          <!-- Dropdown -->
-          <div class="md:col-span-3 relative">
-            <!-- Button -->
-            <button
-              type="button"
-              (click)="toggleDropdown('faculties', $event)"
-              class="w-full border rounded-md px-3 py-2 flex justify-between items-center bg-white"
-            >
-              <span class="truncate">
-                {{ selectedFaculty || 'เลือกหน่วยงาน' }}
-              </span>
-              <i class="bi bi-chevron-down"></i>
-            </button>
-        
-            <!-- Dropdown panel -->
-            <div
-              *ngIf="isOpen('faculties')"
-              class="absolute z-50 w-full bg-white border rounded-md mt-1 shadow"
-              (click)="$event.stopPropagation()"
-            >
-              <!-- Search -->
-              <input
-                [(ngModel)]="searchFaculitie"
-                placeholder="ค้นหา..."
-                class="w-full px-3 py-2 border-b outline-none"
-              />
-        
-              <!-- List -->
-              <ul class="max-h-48 overflow-y-auto">
-                <li
-                  *ngFor="let f of filteredFaculties()"
-                  (click)="selectFaculities(f)"
-                  class="px-4 py-2 hover:bg-yellow-50 cursor-pointer"
-                >
-                  {{ f }}
-                </li>
-        
-                <li
-                  *ngIf="filteredFaculties().length === 0"
-                  class="px-4 py-2 text-gray-400 text-center"
-                >
-                  ไม่พบข้อมูล
-                </li>
-              </ul>
-            </div>
+      <h1 class="text-4xl font-bold text-gray-700">ค้นหาข้อมูลงานวิจัย</h1>
+    </div>
+
+    <div class="mx-w-full mx-auto mt-10 mb-6">
+      <!-- === ตัวกรอง === -->
+      <div class="grid grid-cols-12 gap-3 items-center">
+        <!-- ===== label ===== -->
+        <label
+          class="col-span-12 md:col-span-2 text-3xl font-black text-gray-700"
+        >
+          ตัวกรอง
+        </label>
+
+        <!-- ===== เลือกประเภทผลงาน ===== -->
+        <div class="col-span-12 md:col-span-5 relative">
+          <button
+            type="button"
+            (click)="toggleDropdown('type', $event)"
+            class="w-full h-11 border border-gray-300 rounded-full px-6 flex justify-between items-center bg-white"
+          >
+            <span class="truncate">
+              {{ displaySelectedType() }}
+            </span>
+            <i class="bi bi-chevron-down"></i>
+          </button>
+
+          <!-- dropdown type -->
+          <div
+            *ngIf="isOpen('type')"
+            class="absolute z-50 w-full bg-white border rounded-md mt-1 shadow"
+            (click)="$event.stopPropagation()"
+          >
+            <input
+              [(ngModel)]="searchType"
+              placeholder="ค้นหา..."
+              class="w-full px-3 py-2 border-b outline-none"
+            />
+            <ul class="max-h-48 overflow-y-auto">
+              <li
+                *ngFor="let t of filteredType()"
+                (click)="selectType(t)"
+                class="px-4 py-2 cursor-pointer hover:bg-gray-100"
+              >
+                {{ t }}
+              </li>
+            </ul>
+          </div>
+
+          <!-- dropdown subtype -->
+          <div
+            *ngIf="
+              selectedType &&
+              subTypeMap[selectedType].length > 0 &&
+              isOpen('subType')
+            "
+            class="absolute z-40 w-full bg-white border rounded-md mt-1 shadow"
+            (click)="$event.stopPropagation()"
+          >
+            <input
+              [(ngModel)]="searchSubType"
+              placeholder="ค้นหา..."
+              class="w-full px-3 py-2 border-b outline-none"
+            />
+            <ul class="max-h-48 overflow-y-auto">
+              <li
+                *ngFor="let st of filteredSubType()"
+                (click)="selectSubType(st)"
+                class="px-4 py-2 cursor-pointer hover:bg-gray-100"
+              >
+                {{ st }}
+              </li>
+            </ul>
           </div>
         </div>
-        
-  
+
+        <!-- ===== เลือกหน่วยงาน ===== -->
+        <div class="col-span-12 md:col-span-5 relative">
+          <button
+            type="button"
+            (click)="toggleDropdown('agency', $event)"
+            class="w-full h-11 border border-gray-300 rounded-full px-6 flex justify-between items-center bg-white"
+          >
+            <span class="truncate">
+              {{ selectedAgency || "เลือกหน่วยงาน" }}
+            </span>
+            <i class="bi bi-chevron-down"></i>
+          </button>
+
+          <div
+            *ngIf="isOpen('agency')"
+            class="absolute z-50 w-full bg-white border rounded-md mt-1 shadow"
+            (click)="$event.stopPropagation()"
+          >
+            <input
+              [(ngModel)]="searchAgency"
+              placeholder="ค้นหา..."
+              class="w-full px-3 py-2 border-b outline-none"
+            />
+            <ul class="max-h-48 overflow-y-auto">
+              <li
+                *ngFor="let a of filteredAgency()"
+                (click)="selectAgency(a)"
+                class="px-4 py-2 hover:bg-yellow-50 cursor-pointer"
+              >
+                {{ a }}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
       <!-- แหล่งเงินทุน -->
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-center mb-6 text-xl">
-        <label class="md:text-right font-medium text-gray-700">
-          แหล่งเงินทุน :
-        </label>
-  
-        <select
-          [(ngModel)]="selectedFunding"
-          class="md:col-span-3 w-70 border rounded-md px-4 py-2"
+      <div class="grid grid-cols-12 gap-3 items-center mt-4 mb-4">
+        <!-- แหล่งเงินทุนภายนอก -->
+        <label
+          class="col-span-12 md:col-span-4
+                 flex items-center gap-3
+                 border border-gray-200 rounded-full
+                 px-5 h-12 cursor-pointer
+                 hover:border-yellow-400 transition"
         >
-          <option value="">ทั้งหมด</option>
-          <option value="external">ภายนอก</option>
-          <option value="internal">ภายใน</option>
-        </select>
-      </div>
-  
-      <!-- ปีที่วิจัย -->
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-center mb-6 text-xl">
-        <label class="md:text-right font-medium text-gray-700">
-          ปีที่วิจัย :
+          <input
+            type="checkbox"
+            class="w-4 h-4 text-yellow-500
+                   border-gray-300 rounded
+                   focus:ring-2 focus:ring-yellow-400"
+          />
+          <span class="font-medium text-gray-700">
+            แหล่งเงินทุนภายนอก
+          </span>
         </label>
-  
-        <select
-          [(ngModel)]="selectedYear"
-          class="md:col-span-3 w-70 border rounded-md px-4 py-2"
+      
+        <!-- แหล่งเงินทุนภายใน -->
+        <label
+          class="col-span-12 md:col-span-4
+                 flex items-center gap-3
+                 border border-gray-200 rounded-full
+                 px-5 h-12 cursor-pointer
+                 hover:border-yellow-400 transition"
         >
-          <option value="">ทั้งหมด</option>
-          <option *ngFor="let y of years" [value]="y">{{ y }}</option>
-        </select>
-      </div>
-  
-      <!-- ชื่อนักวิจัย -->
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-center mb-6 text-xl">
-        <label class="md:text-right font-medium text-gray-700">
-          ชื่องานวิจัย :
+          <input
+            type="checkbox"
+            class="w-4 h-4 text-yellow-500
+                   border-gray-300 rounded
+                   focus:ring-2 focus:ring-yellow-400"
+          />
+          <span class="font-medium text-gray-700">
+            แหล่งเงินทุนภายใน
+          </span>
         </label>
-  
-        <input
-          [(ngModel)]="researchTitle"
-          type="text"
-          class="md:col-span-3 w-full border rounded-md px-4 py-2 focus:ring focus:ring-yellow-200"
-          placeholder="กรอกชื่อนักวิจัย"
-        />
+      
+        <!-- ช่วงเวลา -->
+        <div class="col-span-12 md:col-span-4 relative">
+          <!-- icon -->
+          <div
+            class="absolute inset-y-0 left-0 flex items-center ps-4 pointer-events-none text-gray-500 z-10"
+          >
+            <i class="bi bi-calendar-event text-lg"></i>
+          </div>
+      
+          <input
+            type="text"
+            readonly
+            (click)="picker.open()"
+            [value]="displayRange"
+            placeholder="ช่วงเวลา"
+            class="block w-full h-12 ps-11 pe-4 text-2xl
+                   text-gray-800 bg-white
+                   border border-gray-300
+                   rounded-full cursor-pointer
+                   focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
+          />
+      
+          <mat-date-range-picker #picker></mat-date-range-picker>
+      
+          <mat-date-range-input
+            [rangePicker]="picker"
+            class="hidden-datepicker"
+          >
+            <input matStartDate [(ngModel)]="startDate" />
+            <input matEndDate [(ngModel)]="endDate" />
+          </mat-date-range-input>
+        </div>
       </div>
-  
-      <!-- Buttons -->
-      <div class="flex justify-center gap-4 mt-8 text-xl">
+      
+
+      <!-- ===== เลือกสาขาวิชา ===== -->
+      <div class="col-span-12 md:col-span-10 relative">
         <button
-          (click)="search()"
-          class="px-6 py-2 bg-[#FACC15] text-[#1E293B] rounded-lg hover:bg-[#FDE68A] transition cursor-pointer"
+          (click)="toggleDropdown('faculties', $event)"
+          class="w-full h-11 border rounded-full px-6 flex justify-between items-center bg-white border-gray-300"
         >
-          <i class="bi bi-search mr-2"></i>
-          ค้นหา
+          <span class="truncate">{{ selectedFaculty || "เลือกสาขาวิชา" }}</span>
+          <i class="bi bi-chevron-down"></i>
         </button>
+
+        <div
+          *ngIf="isOpen('faculties')"
+          class="absolute z-50 w-full bg-white border rounded-md mt-1 shadow"
+          (click)="$event.stopPropagation()"
+        >
+          <input
+            [(ngModel)]="searchFaculitie"
+            placeholder="ค้นหา..."
+            class="w-full px-3 py-2 border-b outline-none"
+          />
+
+          <ul class="max-h-48 overflow-y-auto">
+            <li
+              *ngFor="let f of filteredFaculties()"
+              (click)="selectFaculities(f)"
+              class="px-4 py-2 hover:bg-yellow-50 cursor-pointer"
+            >
+              {{ f }}
+            </li>
+
+            <li
+              *ngIf="filteredFaculties().length === 0"
+              class="px-4 py-2 text-gray-400 text-center"
+            >
+              ไม่พบข้อมูล
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ==== Search Box ===== -->
+      <div class="flex justify-center mt-6">
+        <div
+          class="w-full max-w-3xl h-16 flex items-center border border-gray-300 rounded-full overflow-hidden bg-white"
+        >
+          <input
+            [(ngModel)]="researchItems"
+            placeholder="พิมพ์คำค้นหา ชื่อเรื่อง/บทความ/นวัตกรรม"
+            class="flex-1 px-6 md:px-8 text-2xl outline-none border-none"
+          />
+
+          <button
+            (click)="search()"
+            class="flex items-center justify-center h-14 md:h-full bg-yellow-400 hover:bg-yellow-300 text-gray-800 font-extrabold px-4 md:px-10 rounded-full transition cursor-pointer"
+          >
+            <span class="hidden md:inline text-2xl mr-4">ค้นหา</span>
+            <span
+              class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-white"
+              ><i class="bi bi-arrow-right"></i
+            ></span>
+          </button>
+        </div>
       </div>
     </div>
-  
-    <!-- ===== DONUT CHART ===== -->
-    <div
-      *ngIf="isSearched"
-      class="max-w-7xl mx-auto mt-8 grid grid-cols-1 md:grid-cols-2 gap-6 text-xl"
-    >
-      <div class="bg-white rounded-xl shadow p-6">
-        <h2 class="font-semibold mb-4 text-2xl">สัดส่วนนักวิจัย จำแนกตามสายงาน</h2>
-  
-        <apx-chart
-          *ngIf="donutSeries.length > 0; else noData"
-          [series]="donutSeries"
-          [labels]="donutLabels"
-          [chart]="donutChart"
-          [legend]="donutLegend"
-        ></apx-chart>
-  
-        <ng-template #noData>
-          <div class="text-center text-gray-400 py-16">ไม่พบข้อมูล</div>
-        </ng-template>
+  </div>
+
+  <!-- ===== DONUT CHART ===== -->
+  <div
+    *ngIf="isSearched"
+    class="max-w-7xl mx-auto mt-8 grid grid-cols-1 md:grid-cols-2 gap-6"
+  >
+    <div class="bg-[#394250] text-white rounded-xl shadow p-6">
+      <div class="flex items-center gap-2 mb-4">
+        <i class="bi bi-pie-chart-fill text-lg"></i>
+        <h2 class="ont-extrabold text-3xl">สัดส่วนนักวิจัย จำแนกตามสาขาวิชา</h2>
       </div>
-  
-      <div
-        class="bg-white text-xl rounded-xl shadow p-6 flex flex-col justify-center items-center"
-      >
-        <p *ngFor="let l of donutLabels; let i = index">
-          {{ l }} : {{ donutSeries[i] }} งาน
+
+      <apx-chart
+        *ngIf="donutSeries.length > 0; else noData"
+        [series]="donutSeries"
+        [labels]="donutLabels"
+        [chart]="donutChart"
+        [legend]="donutLegend"
+      ></apx-chart>
+
+      <ng-template #noData>
+        <div class="text-center text-gray-400 py-16">ไม่พบข้อมูล</div>
+      </ng-template>
+    </div>
+
+    <div
+      class="bg-white rounded-xl shadow p-6 flex flex-col justify-between items-center"
+    >
+      <div class="flex items-center gap-2 mb-4">
+        <i class="bi bi-pie-chart-fill text-lg"></i>
+        <h2 class="font-extrabold text-3xl">
+          สัดส่วนนักวิจัย จำแนกตามสาขาวิชา
+        </h2>
+      </div>
+      <div class="space-y-1 text-gray-700">
+        <p
+          *ngFor="let l of donutLabels; let i = index"
+          class="flex justify-between px-8"
+        >
+          <span>{{ l }}</span
+          ><span class="font-medium">{{ donutSeries[i] }} งาน</span>
         </p>
-  
-        <p class="mt-4 text-gray-500">
+      </div>
+      <div class="pt-4 border-t">
+        <p class="text-4xl text-center text-gray-500">
           รวมทั้งหมด {{ totalResearchers }} งาน
         </p>
       </div>
     </div>
-  
-    <!-- ===== TABLE ===== -->
+  </div>
+</div>
+
+<!-- ===== TABLE ===== -->
+<div *ngIf="isSearched" class="bg-[#F9CB34] py-6 text-2xl">
+  <div class="max-w-7xl mx-auto p-6 md:px-6">
     <div
-      *ngIf="isSearched"
-      class="max-w-7xl mx-auto mt-8 bg-white rounded-xl shadow p-6 text-xl"
+      class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-4"
     >
-      <h2 class="text-2xl font-semibold mb-4">
+      <h2 class="text-3xl font-extrabold">
         {{
           selectedType === "project"
             ? "โครงการวิจัย"
@@ -189,27 +328,44 @@
             : "โครงการวิจัย / บทความ / วารสาร / นวัตกรรมสิ่งประดิษฐ์"
         }}
       </h2>
-  
+      <div class="flex items-center">
+        <span class="mr-2">Search:</span>
+        <input
+          [(ngModel)]="searchText"
+          (input)="onSearch()"
+          class="border h-10 bg-white rounded-xl shadow p-4 md:p-3"
+          placeholder="ค้นหา..."
+        />
+      </div>
+    </div>
+    <div class="bg-white rounded-xl shadow p-4 md:p-8">
       <div class="overflow-x-auto">
         <table class="w-full border border-gray-300">
-          <thead class="bg-[#FACC15]">
+          <thead class="bg-[#394250] text-white border-b-2 border-gray-300">
             <tr>
-              <th class="p-3 border">ลำดับ</th>
-              <th class="p-3 border">ชื่อเจ้าของผลงาน</th>
-              <th class="p-3 border">ชื่องานวิจัย</th>
+              <th class="p-3">#</th>
+              <th class="p-3">ชื่อเจ้าของผลงาน</th>
+              <th class="p-3">ชื่องานวิจัย</th>
+              <th class="p-3">รายละเอียด</th>
             </tr>
           </thead>
-  
+
           <tbody>
             <tr
               *ngFor="let r of filteredResearchers; let i = index"
-              class="hover:bg-gray-50"
+              class="hover:bg-gray-50 bg-gray-200 border-b border-gray-300"
             >
-              <td class="p-3 border text-center">{{ i + 1 }}</td>
-              <td class="p-3 border">{{ r.name }}</td>
-              <td class="p-3 border">{{ r.title }}</td>
+              <td class="p-3 text-center">{{ i + 1 }}</td>
+              <td class="p-3">{{ r.name }}</td>
+              <td class="p-3">{{ r.title }}</td>
+              <td class="p-3 text-center">
+                <i
+                  (click)="goToResearch(r.id, r.type)"
+                  class="bi bi-arrow-right-square text-blue-500 hover:text-blue-700 cursor-pointer"
+                ></i>
+              </td>
             </tr>
-  
+
             <tr *ngIf="filteredResearchers.length === 0">
               <td colspan="5" class="p-4 text-center text-gray-500">
                 ไม่พบข้อมูล
@@ -218,6 +374,43 @@
           </tbody>
         </table>
       </div>
+      <div
+    class="flex flex-col md:flex-row md:justify-end md:items-center mt-4 gap-2"
+  >
+    <div class="flex items-center space-x-1">
+      <!-- Prev -->
+      <button
+        (click)="changePage(currentPage - 1)"
+        [disabled]="currentPage === 1"
+        class="px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
+      >
+        ‹
+      </button>
+
+      <!-- Pages -->
+      <button
+        *ngFor="let page of pages"
+        (click)="changePage(page)"
+        class="px-3 py-1 rounded border text-sm min-w-8 transition"
+        [ngClass]="{
+          'bg-[#FACC15] text-[#1E293B] font-semibold':
+            currentPage === page,
+          'hover:bg-gray-100': currentPage !== page
+        }"
+      >
+        {{ page }}
+      </button>
+
+      <!-- Next -->
+      <button
+        (click)="changePage(currentPage + 1)"
+        [disabled]="currentPage === totalPages"
+        class="px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
+      >
+        ›
+      </button>
     </div>
   </div>
-  
+    </div>
+  </div>
+</div>
