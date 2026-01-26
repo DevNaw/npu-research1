@@ -92,6 +92,7 @@ import { PerformanceComponent } from './user-pages/performance/performance.compo
     NgApexchartsModule,
     FormsModule,
     ReactiveFormsModule,
+    
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -23,14 +23,20 @@ export class UserResearchComponent {
   openDropdown: string | null = null;
   isSearched = false;
 
-  selectedType = '';
   selectedFaculty = '';
   selectedFunding = '';
   selectedYear = '';
   researchTitle = '';
+  searchSubType = '';
 
   searchFaculitie = '';
+  searchType = '';
   facultySearch: string = '';
+  selectedType: string | null = null;
+  selectedSubType: string | null = null;
+
+  searchAgency = '';
+  selectedAgency: string | null = null;
 
   constructor(private router: Router, private authService: AuthService) {}
 
@@ -93,7 +99,42 @@ export class UserResearchComponent {
     'คณะเทคโนโลยีสารสนเทศ',
     'คณะเทคโนโลยีสารสนเทศ',
   ];
+
+  agency = [
+    'คณะวิทยาศาสตร์',
+    'คณะวิศวกรรมศาสตร์',
+    'คณะเทคโนโลยีสารสนเทศ',
+    'คณะบริหารธุรกิจ',
+    'คณะมนุษยศาสตร์และสังคมศาสตร์',
+    'คณะศึกษาศาสตร์',
+    'คณะสาธารณสุขศาสตร์',
+    'คณะพยาบาลศาสตร์',
+    'คณะเกษตรศาสตร์',
+    'คณะนิติศาสตร์',
+    'บัณฑิตวิทยาลัย',
+    'สำนักวิจัยและพัฒนา',
+    'สถาบันวิจัยและนวัตกรรม',
+  ];
+  
+
+  typeList = ['บทความ', 'วารสาร', 'นวัตกรรมสิ่งประดิษฐ์'];
+
+  subTypeMap: any = {
+    บทความ: ['ประชุมวิชาการระดับชาติ', 'ประชุมวิชาการระดับนานาชาติ'],
+    วารสาร: ['วารสารในประเทศ', 'วารสารต่างประเทศ'],
+    นวัตกรรมสิ่งประดิษฐ์: [], // ไม่มีตัวเลือกย่อย
+  };
+
   years = [2022, 2023, 2024];
+
+  dateRange: {
+    start: Date | null;
+    end: Date | null;
+  } = {
+    start: null,
+    end: null,
+  };
+  
 
   /** ===== FILTERED (ตาราง + กราฟใช้ชุดนี้) ===== */
   filteredResearchers: Research[] = [];
@@ -170,12 +211,73 @@ export class UserResearchComponent {
     this.searchFaculitie = '';
   }
 
+  selectType(t: string) {
+    this.selectedType = t;
+    this.selectedSubType = null;
+    this.searchType = '';
+    this.searchSubType = '';
+
+    // ปิด type
+    this.openDropdown = null;
+
+    // ถ้ามีประเภทย่อย → เปิด subType
+    if (this.subTypeMap[t] && this.subTypeMap[t].length > 0) {
+      setTimeout(() => {
+        this.openDropdown = 'subType';
+      }, 0);
+    }
+  }
+
+  selectSubType(st: string) {
+    this.selectedSubType = st;
+    this.searchSubType = '';
+    this.openDropdown = null;
+  }
+
+  selectAgency(a: string) {
+    this.selectedAgency = a;
+    this.searchAgency = '';
+    this.openDropdown = null;
+  }
+
+  filteredAgency(): string[] {
+    if (!this.searchAgency) return this.agency;
+
+    return this.agency.filter((a) =>
+    a.toLowerCase().includes(this.searchAgency.toLowerCase()));
+  }
+
   filteredFaculties(): string[] {
     if (!this.searchFaculitie) return this.faculties;
 
     return this.faculties.filter((f) =>
       f.toLowerCase().includes(this.searchFaculitie.toLowerCase())
     );
+  }
+
+  filteredType() {
+    return this.typeList.filter((t) =>
+      t.toLowerCase().includes(this.searchType.toLowerCase())
+    );
+  }
+
+  filteredSubType() {
+    if (!this.selectedType) return [];
+    return this.subTypeMap[this.selectedType].filter((st: string) =>
+      st.toLowerCase().includes(this.searchSubType.toLowerCase())
+    );
+  }
+
+  displaySelectedType(): string {
+    if (!this.selectedType) {
+      return 'เลือกประเภทผลงาน';
+    }
+
+    if (this.selectedSubType) {
+      return `${this.selectedType} / ${this.selectedSubType}`;
+    }
+
+    return this.selectedType;
   }
 
   goToResearch(id: number, type: 'research' | 'article' | 'innovation') {
