@@ -37,7 +37,7 @@ export class AdminNewsComponent {
   constructor(private router: Router) {}
 
   editNews(news: News) {
-    this.router.navigate(['/admin-news/edit', news.id]);
+    this.router.navigate(['/admin/news/edit', news.id]);
   }
 
   onSearch() {

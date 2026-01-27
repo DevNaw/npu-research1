@@ -1,0 +1,137 @@
+<div class="bg-slate-100 min-h-screen">
+
+  <div class="mx-auto px-8 py-10 space-y-14">
+
+    <!-- ================= HEADER ================= -->
+    <div class="flex flex-col gap-6 md:flex-row md:items-center md:justify-between px-8">
+      <div>
+        <p class="text-xl text-gray-500">ยินดีต้อนรับเข้าสู่</p>
+        <h1 class="text-4xl md:text-5xl font-extrabold text-indigo-700 tracking-tight">
+          ระบบฐานข้อมูลวิจัย
+        </h1>
+      </div>
+
+      <div class="flex items-center gap-2 text-gray-600 text-lg">
+        <i class="bi bi-calendar-event"></i>
+        <span>{{ today | date : "EEEE ที่ dd MMMM yyyy" : "" : "th-TH" }}</span>
+      </div>
+    </div>
+
+    <!-- ================= SUMMARY CARDS ================= -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
+
+      <div class="bg-linear-to-br from-amber-300 to-yellow-400 rounded-2xl p-6 shadow-md">
+        <div class="flex justify-between items-center">
+          <i class="bi bi-flask text-5xl text-slate-800"></i>
+          <span class="text-xl font-semibold">โครงการวิจัย</span>
+        </div>
+        <h2 class="mt-4 text-4xl font-extrabold">1,200</h2>
+        <p class="text-sm text-gray-700 mt-1">TH 100 · EN 100</p>
+      </div>
+
+      <div class="bg-linear-to-br from-blue-300 to-blue-400 rounded-2xl p-6 shadow-md">
+        <div class="flex justify-between items-center">
+          <i class="bi bi-file-earmark-text text-5xl"></i>
+          <span class="text-xl font-semibold">บทความ</span>
+        </div>
+        <h2 class="mt-4 text-4xl font-extrabold">860</h2>
+        <p class="text-sm text-gray-700 mt-1">วารสารระดับนานาชาติ</p>
+      </div>
+
+      <div class="bg-linear-to-br from-emerald-300 to-emerald-400 rounded-2xl p-6 shadow-md">
+        <div class="flex justify-between items-center">
+          <i class="bi bi-award text-5xl"></i>
+          <span class="text-xl font-semibold">นวัตกรรม</span>
+        </div>
+        <h2 class="mt-4 text-4xl font-extrabold">210</h2>
+        <p class="text-sm text-gray-700 mt-1">สิ่งประดิษฐ์ / งานพัฒนา</p>
+      </div>
+
+      <div class="bg-linear-to-br from-purple-300 to-purple-400 rounded-2xl p-6 shadow-md">
+        <div class="flex justify-between items-center">
+          <i class="bi bi-people text-5xl"></i>
+          <span class="text-xl font-semibold">นักวิจัย</span>
+        </div>
+        <h2 class="mt-4 text-4xl font-extrabold">340</h2>
+        <p class="text-sm text-gray-700 mt-1">คณาจารย์และบุคลากร</p>
+      </div>
+
+    </div>
+
+    <!-- ================= CHART SECTION ================= -->
+    <div class="bg-white rounded-3xl shadow-lg p-8 space-y-8">
+
+      <div class="flex items-center gap-3">
+        <i class="bi bi-bar-chart-fill text-3xl text-indigo-600"></i>
+        <h2 class="text-3xl font-bold text-gray-800">
+          ภาพรวมฐานข้อมูลงานวิจัย
+        </h2>
+      </div>
+
+      <div
+        *ngFor="let c of charts"
+        class="border rounded-2xl overflow-hidden shadow-sm"
+      >
+        <div class="bg-slate-800 px-6 py-4 flex justify-between items-center">
+          <div>
+            <h3 class="text-xl font-semibold text-white">{{ c.title }}</h3>
+            <p class="text-sm text-slate-300">{{ c.subtitle }}</p>
+          </div>
+
+          <button
+            class="bg-amber-400 hover:bg-amber-500 text-slate-900 px-4 py-2 rounded-xl text-lg font-medium transition"
+          >
+            ดูรายละเอียด
+          </button>
+        </div>
+
+        <div class="p-6 bg-white">
+          <apx-chart
+            [series]="c.series"
+            [chart]="c.chart"
+            [labels]="c.labels"
+            [legend]="c.legend"
+            [plotOptions]="c.plotOptions"
+            [dataLabels]="c.dataLabels"
+            [responsive]="c.responsive"
+            [colors]="c.colors"
+          ></apx-chart>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= NEWS ================= -->
+    <div class="bg-slate-800 rounded-3xl p-8 shadow-lg space-y-6">
+
+      <div class="flex justify-between items-center">
+        <h2 class="text-3xl font-bold text-white">ข่าวประชาสัมพันธ์</h2>
+        <a routerLink="/news" class="text-amber-400 text-lg hover:underline">
+          ดูทั้งหมด →
+        </a>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div
+          *ngFor="let news of newsList"
+          class="bg-white rounded-xl overflow-hidden shadow hover:shadow-xl transition"
+        >
+          <img [src]="news.imageUrl" class="h-44 w-full object-cover" />
+          <div class="p-4 space-y-2">
+            <h3 class="text-lg font-semibold line-clamp-2">{{ news.title }}</h3>
+            <p class="text-gray-600 text-sm line-clamp-3">
+              {{ news.summary }}
+            </p>
+            <a
+              [href]="news.link"
+              class="text-indigo-600 text-sm font-medium inline-flex items-center gap-1"
+            >
+              อ่านเพิ่มเติม →
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>

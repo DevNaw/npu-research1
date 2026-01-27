@@ -1,8 +1,9 @@
-<div class="contain-content bg-gray-100 p-3 text-xl">
+<div class="contain-content bg-gray-100 p-3 text-2xl">
+  <div class="max-w-7xl mx-auto px-6 py-6">
+    <h1 class="text-3xl font-black">แหล่งทุนภายนอก</h1>
+  </div>
   <div class="max-w-7xl mx-auto px-6 py-6 bg-white rounded-xl">
-    <div class="mt-5">
-      <h1 class="text-3xl font-semibold">แหล่งทุนภายนอก</h1>
-
+    
       <div
         class="flex flex-col md:flex-row md:justify-between md:items-center mt-3 gap-3"
       >
@@ -41,7 +42,7 @@
             placeholder="ค้นหา..."
           />
         </div>
-      </div>
+      
     </div>
 
     <div class="w-full overflow-x-auto mt-4" id="print-section">
@@ -55,39 +56,39 @@
           </p>
         </div>
       </div>
-      <table class="w-full border overflow-hidden">
+      <table class="w-full overflow-hidden">
         <thead>
-          <tr class="bg-[#FACC15] text-[#1E293B] border-b">
-            <th class="p-3 border-r w-16">ลำดับ</th>
-            <th class="p-3 pl-6 border-r">ชื่อแหล่งทุน</th>
-            <th class="p-3 pl-6 border-r">คำอธิบาย</th>
-            <th class="p-3 border-r w-28">สถานะใช้งาน</th>
-            <th class="p-3 w-28">จัดการ</th>
+          <tr class="bg-[#394250] text-white border-b">
+            <th class="p-3 w-16">#</th>
+            <th class="p-3 pl-6">ชื่อแหล่งทุน</th>
+            <th class="p-3 pl-6">คำอธิบาย</th>
+            <th class="p-3 w-30">สถานะใช้งาน</th>
+            <th class="p-3 w-28">Action</th>
           </tr>
         </thead>
 
         <tbody>
           <tr
             *ngFor="let e of filteredExternalFunding; let i = index"
-            class="border-b hover:bg-gray-50 transition"
+            class="border-b border-gray-300 bg-gray-200 hover:bg-gray-50 transition"
           >
             <!-- ลำดับ -->
-            <td class="p-3 text-center border-r">
+            <td class="p-3 text-center">
               {{ (currentPage - 1) * pageSize + i + 1 }}
             </td>
 
             <!-- ชื่อแหล่งทุน -->
-            <td class="p-3 pl-6 border-r font-medium">
+            <td class="p-3 pl-6 font-medium">
               {{ e.title || "-" }}
             </td>
 
             <!-- คำอธิบาย -->
-            <td class="p-3 pl-6 border-r text-gray-700">
+            <td class="p-3 pl-6 text-gray-700">
               {{ e.explanation || "-" }}
             </td>
 
             <!-- สถานะ -->
-            <td class="p-3 text-center border-r">
+            <td class="p-3 text-center">
               <i
                 *ngIf="e.status === 'พร้อมใช้งาน'; else notReady"
                 class="bi bi-check-circle-fill text-green-600 text-lg"

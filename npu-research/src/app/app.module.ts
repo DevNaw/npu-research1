@@ -48,6 +48,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ReportComponent } from './general/report/report.component';
+import { EditWorkComponent } from './user-pages/edit-work/edit-work.component';
 
 @NgModule({
   declarations: [
@@ -91,6 +92,7 @@ import { ReportComponent } from './general/report/report.component';
     NewsEditComponent,
     PerformanceComponent,
     ReportComponent,
+    EditWorkComponent,
   ],
   imports: [
     BrowserModule,

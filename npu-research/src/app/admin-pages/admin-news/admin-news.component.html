@@ -1,11 +1,13 @@
-<div class="bg-gray-100 p-6 text-xl">
-  <div class="max-w-7xl mx-auto bg-white rounded-xl p-6">
-    <h1 class="text-2xl font-semibold">ข่าวประชาสัมพันธ์</h1>
+<div class="bg-gray-100 p-6 text-2xl">
+  <div class="max-w-7xl mx-auto px-6 py-6">
+    <h1 class="text-3xl font-black">ข่าวประชาสัมพันธ์</h1>
+  </div>
 
-    <div class="flex justify-between items-center mb-4 mt-5">
+  <div class="max-w-7xl mx-auto bg-white rounded-xl p-6">
+    <div class="flex justify-between items-center mb-4">
       <button
-        routerLink="/admin-news/create"
-        class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded-md cursor-pointer"
+        routerLink="/admin/news/create"
+        class="flex items-center gap-2 bg-yellow-300 hover:bg-yellow-400 text-black px-4 py-1 rounded-md cursor-pointer"
       >
         <i class="bi bi-plus-circle mr-2"></i> เพิ่มข่าว
       </button>
@@ -22,45 +24,44 @@
       </div>
     </div>
 
-    <table class="w-full border">
-      <thead class="bg-yellow-300">
-        <tr class="border">
-          <th class="p-2 border-r">ลำดับ</th>
-          <th class="p-2 border-r">หัวข้อข่าว</th>
-          <th class="p-2 border-r">วันที่ประกาศ</th>
-          <th class="p-2 border-r">วันที่สิ้นสุด</th>
-          <th class="p-2">จัดการ</th>
+    <table class="w-full overflow-hidden">
+      <thead class="bg-[#394250] text-white border-b">
+        <tr>
+          <th class="p-2">#</th>
+          <th class="p-2">หัวข้อข่าว</th>
+          <th class="p-2">วันที่ประกาศ</th>
+          <th class="p-2">วันที่สิ้นสุด</th>
+          <th class="p-2">Action</th>
         </tr>
       </thead>
 
       <tbody>
-        <tr *ngFor="let news of paginatedNews; let i = index">
-          <td class="text-center p-2 border">
+        <tr
+          *ngFor="let news of paginatedNews; let i = index"
+          class="border-b border-gray-300 bg-gray-200 hover:bg-gray-50 transition"
+        >
+          <td class="text-center p-2">
             {{ (currentPage - 1) * pageSize + i + 1 }}
           </td>
-          <td class="p-2 border">{{ news.title }}</td>
-          <td class="text-center p-2 border">
+          <td class="p-2">{{ news.title }}</td>
+          <td class="text-center p-2">
             {{ news.date | date : "dd/MM/yyyy" }}
           </td>
-          <td class="text-center p-2 border">
+          <td class="text-center p-2">
             {{ news.dateend | date : "dd/MM/yyyy" }}
           </td>
-          <td class="text-center p-2 border">
+          <td class="text-center p-2">
             <div class="flex justify-center items-center gap-2 flex-wrap">
               <button
-                class="inline-flex items-center justify-center w-9 h-9 rounded-full
-                       bg-blue-50 hover:bg-blue-100 text-blue-600 transition
-                       cursor-pointer"
+                class="inline-flex items-center justify-center w-9 h-9 rounded-full bg-blue-50 hover:bg-blue-100 text-blue-600 transition cursor-pointer text-xl"
                 title="แก้ไข"
                 (click)="editNews(news)"
               >
                 <i class="bi bi-pencil-square"></i>
               </button>
-            
+
               <button
-                class="inline-flex items-center justify-center w-9 h-9 rounded-full
-                       bg-red-50 hover:bg-red-100 text-red-600 transition
-                       cursor-pointer"
+                class="inline-flex items-center justify-center w-9 h-9 rounded-full bg-red-50 hover:bg-red-100 text-red-600 transition cursor-pointer text-xl"
                 title="ลบ"
                 (click)="delectNews(i)"
               >

@@ -1,58 +1,53 @@
-<div class="contain-content bg-gray-100 p-3">
-    <div class="max-w-7xl mt-5 mb-5 mx-auto px-6 py-6 bg-white rounded-xl">
-        <div class="max-w-7xl mx-auto">
-            <!-- Title -->
-            <h1 class="text-3xl ml-5 text-gray-800 mb-6">
-              เอกสารดาวน์โหลด
-            </h1>
-          
-            <!-- Table -->
-            <div class="overflow-x-auto bg-white shadow">
-              <table class="min-w-full border-collapse border text-xl text-gray-700">
-                <thead class="bg-[#FACC15] border-b">
-                  <tr>
-                    <th class="px-6 py-4 text-center border-r font-bold">
-                      ที่
-                    </th>
-                    <th class="px-6 py-4 text-center border-r font-bold">
-                      เอกสาร
-                    </th>
-                    <th class="px-6 py-4 text-center  font-bold ">
-                      จำนวนครั้งดาวน์โหลด
-                    </th>
-                  </tr>
-                </thead>
-          
-                <tbody>
-                  <tr
-                    *ngFor="let doc of documents; let i = index"
-                    class="border-b hover:bg-gray-50 transition"
-                  >
-                    <!-- Index -->
-                    <td class="text-center text-gray-700 border-r">
-                      {{ i + 1 }}
-                    </td>
-          
-                    <!-- Document -->
-                    <td class="px-6 py-4 border-r">
-                      <a
-                        [href]="doc.fileUrl"
-                        target="_blank"
-                        class="text-indigo-600 hover:underline font-medium"
-                      >
-                        {{ doc.title }}
-                      </a>
-                    </td>
-          
-                    <!-- Download Count -->
-                    <td class="px-6 py-4 text-center text-gray-700">
-                      {{ doc.downloads | number }}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-          
+<div class="contain-content bg-gray-100 px-10 text-2xl">
+  <div class="mt-5 mx-auto py-6">
+    <!-- Title -->
+    <h1 class="text-3xl ml-5 text-gray-800 font-black">เอกสารดาวน์โหลด</h1>
+  </div>
+
+  <div class="mt-1 mb-10 mx-auto px-6 py-8 bg-white rounded-xl">
+    <div class="mx-auto">
+      <!-- Table -->
+      <div class="overflow-x-auto bg-white shadow">
+        <table class="min-w-full border-collapse">
+          <thead class="bg-[#394250] text-white">
+            <tr>
+              <th class="px-6 py-4 text-center font-bold">#</th>
+              <th class="px-6 py-4 text-center font-bold">เอกสาร</th>
+              <th class="px-6 py-4 text-center font-bold">
+                จำนวนครั้งดาวน์โหลด
+              </th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr
+              *ngFor="let doc of documents; let i = index"
+              class="border-b border-gray-300 bg-gray-200 hover:bg-gray-50 transition"
+            >
+              <!-- Index -->
+              <td class="text-center text-gray-700">
+                {{ i + 1 }}
+              </td>
+
+              <!-- Document -->
+              <td class="px-6 py-4">
+                <a
+                  [href]="doc.fileUrl"
+                  target="_blank"
+                  class="text-indigo-600 hover:underline font-medium"
+                >
+                  {{ doc.title }}
+                </a>
+              </td>
+
+              <!-- Download Count -->
+              <td class="px-6 py-4 text-center text-gray-700">
+                {{ doc.downloads | number }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
+  </div>
 </div>

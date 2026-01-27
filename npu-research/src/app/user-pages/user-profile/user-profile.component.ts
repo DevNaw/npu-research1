@@ -1,12 +1,45 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
-import {
-  DataPerformance,
-  DataPerformanceItem,
-  Address,
-} from '../../models/data-performance.model';
 import { AuthService } from '../../services/auth.service';
+import { DataPerformance, DataPerformanceItem, Address, } from '../../models/data-performance.model'; 
+import {
+  ChartComponent,
+  ApexChart,
+  ApexResponsive,
+  ApexNonAxisChartSeries,
+  ApexLegend,
+  ApexDataLabels,
+  ApexAxisChartSeries,
+  ApexPlotOptions,
+  ApexYAxis,
+  ApexStroke,
+  ApexXAxis,
+  ApexFill,
+  ApexTooltip,
+} from 'ng-apexcharts';
+
+export type PieChartOptions = {
+  series: ApexNonAxisChartSeries;
+  chart: ApexChart;
+  labels: string[];
+  responsive: ApexResponsive[];
+  legend: ApexLegend;
+  dataLabels: ApexDataLabels;
+};
+
+export type BarChartOptions = {
+  series: ApexAxisChartSeries;
+  chart: ApexChart;
+  dataLabels: ApexDataLabels;
+  plotOptions: ApexPlotOptions;
+  yaxis: ApexYAxis;
+  xaxis: ApexXAxis;
+  fill: ApexFill;
+  tooltip: ApexTooltip;
+  stroke: ApexStroke;
+  legend: ApexLegend;
+};
 
 @Component({
   selector: 'app-user-profile',
@@ -15,15 +48,30 @@ import { AuthService } from '../../services/auth.service';
   styleUrl: './user-profile.component.css',
 })
 export class UserProfileComponent implements OnInit {
+  @ViewChild('chart') chart!: ChartComponent;
+
+  /* ===== Charts ===== */
+  pieChartOptions!: Partial<PieChartOptions>;
+  barChartOptions!: Partial<BarChartOptions>;
+
+  /* ===== Table ===== */
+  selectedTab: keyof DataPerformance = 'research';
+  pageSize = 10;
+  currentPage = 1;
+  searchText = '';
+
   trainings: any[] = []; // ถ้าไม่มีข้อมูล
   address: Address = {};
   isEditModalOpen = false;
   editData: any = {};
 
-  pageSize = 10;
-  currentPage = 1;
-  searchText = '';
-  selectedTab: keyof DataPerformance = 'research';
+  isPersonalOpen = false;
+  isWorkOpen = false;
+  isEducation = false;
+  isTraining = false;
+  isAddress = false;
+
+  totalItems: number = 0;
 
   data: DataPerformance = {
     research: [
@@ -80,7 +128,92 @@ export class UserProfileComponent implements OnInit {
   filteredData: DataPerformanceItem[] = [];
   paginationData: DataPerformanceItem[] = [];
 
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(private router: Router, private authService: AuthService) {
+    this.pieChartOptions = {
+      series: [44, 55, 13],
+      chart: {
+        type: 'pie',
+        width: 250,
+      },
+      labels: ['โครงการวิจัย', 'บทความ', 'นวัตกรรม'],
+      legend: {
+        show: false,
+      },
+      dataLabels: {
+        enabled: true,
+      },
+      responsive: [
+        {
+          breakpoint: 480,
+          options: {
+            chart: {
+              width: 250,
+            },
+            legend: {
+              show: false,
+            },
+          },
+        },
+      ],
+    };
+
+    this.barChartOptions = {
+      series: [
+        {
+          name: 'โครงการวิจัย',
+          data: [4, 6, 10],
+        },
+        {
+          name: 'บทความ',
+          data: [6, 3, 1],
+        },
+        {
+          name: 'นวัตกรรม',
+          data: [3, 1, 6],
+        },
+      ],
+      chart: {
+        type: 'bar',
+        height: 250,
+      },
+      plotOptions: {
+        bar: {
+          horizontal: false,
+          columnWidth: '55%',
+          borderRadius: 6,
+        },
+      },
+      dataLabels: {
+        enabled: false,
+      },
+      stroke: {
+        show: true,
+        width: 2,
+        colors: ['transparent'],
+      },
+      xaxis: {
+        categories: [
+          '2023',
+          '2024',
+          '2025',
+        ],
+      },
+      yaxis: {
+        title: {},
+      },
+      fill: {
+        opacity: 1,
+      },
+      tooltip: {
+        y: {
+          formatter: (val) => `$ ${val} thousands`,
+        },
+      },
+      legend: {
+        show: true,
+      },
+    };
+  }
 
   ngOnInit(): void {
     this.filteredData = [...this.data[this.selectedTab]];
@@ -102,31 +235,30 @@ export class UserProfileComponent implements OnInit {
 
   editItem(id: number) {
     const isAdmin = this.authService.isAdmin();
-  
+
     let base = isAdmin ? '/admin' : '/user';
     let route = '';
-  
+
     switch (this.selectedTab) {
       case 'research':
         route = `${base}/edit-research/${id}`;
         break;
-  
+
       case 'article':
         route = `${base}/edit-aticle/${id}`;
         break;
-  
+
       case 'innovation':
         route = `${base}/edit-innovation/${id}`;
         break;
-  
+
       default:
         console.warn('Unknown tab:', this.selectedTab);
         return;
     }
-  
+
     this.router.navigateByUrl(route);
   }
-  
 
   deleteItem(id: number) {
     Swal.fire({
@@ -170,19 +302,9 @@ export class UserProfileComponent implements OnInit {
     });
   }
 
-  changeTab(tab: keyof DataPerformance): void {
-    this.selectedTab = tab;
-    this.searchText = '';
-    this.currentPage = 1;
-
-    this.filteredData = [...this.data[tab]];
-    this.updatePagination();
-  }
-
   updatePagination(): void {
     const start = (this.currentPage - 1) * this.pageSize;
     const end = start + this.pageSize;
-
     this.paginationData = this.filteredData.slice(start, end);
   }
 
@@ -208,11 +330,22 @@ export class UserProfileComponent implements OnInit {
     }
   }
 
+  goToEditWork() {
+    const user = this.authService.getUser();
+    if (!user) return;
+
+    if (this.authService.isAdmin()) {
+      this.router.navigate(['/admin/edit-work', user.id]);
+    } else {
+      this.router.navigate(['/user/edit-work', user.id]);
+    }
+  }
+
   goToEditStudy() {
     const user = this.authService.getUser();
     if (!user) return;
 
-    if(this.authService.isAdmin()) {
+    if (this.authService.isAdmin()) {
       this.router.navigate(['/admin/edit-study', user.id]);
     } else {
       this.router.navigate(['/user/edit-study', user.id]);
@@ -233,7 +366,7 @@ export class UserProfileComponent implements OnInit {
   goToEditAddress() {
     const user = this.authService.getUser();
 
-    if(!user) return;
+    if (!user) return;
 
     if (this.authService.isAdmin()) {
       this.router.navigate(['/admin/edit-address', user.id]);
@@ -257,4 +390,18 @@ export class UserProfileComponent implements OnInit {
       this.address?.phone
     );
   }
+  
+  onPageSizeChange() {
+    this.currentPage = 1; // reset กลับหน้าแรก
+    this.updatePagination();
+  }
+
+  changeTab(tab: keyof DataPerformance): void {
+    this.selectedTab = tab;
+    this.searchText = '';
+    this.currentPage = 1;
+    this.filteredData = [...this.data[tab]];
+    this.updatePagination();
+  }
+  
 }

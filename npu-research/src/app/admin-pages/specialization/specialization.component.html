@@ -1,8 +1,9 @@
-<div class="contain-content bg-gray-100 p-3 text-xl">
+<div class="contain-content bg-gray-100 p-3 text-2xl">
+  <div class="max-w-7xl mx-auto px-6 py-6">
+    <h1 class="text-3xl font-black">สาขาวิชาที่เชี่ยวชาญ</h1>
+  </div>
   <div class="max-w-7xl mx-auto px-6 py-6 bg-white rounded-xl">
     <div class="mt-5">
-      <h1 class="text-3xl font-semibold">สาขาวิชาที่เชี่ยวชาญ</h1>
-
       <div
         class="flex flex-col md:flex-row md:justify-between md:items-center mt-3 gap-3"
       >
@@ -55,36 +56,34 @@
           </p>
         </div>
       </div>
-      <table class="w-full border overflow-hidden">
+      <table class="w-full overflow-hidden">
         <thead>
-          <tr class="bg-[#FACC15] text-[#1E293B] border-b">
-            <th class="p-3 border-r text-center">ลำดับ</th>
-            <th class="p-3 pl-6 border-r">
-              ชื่อสาขาวิชาที่เชี่ยวชาญ
-            </th>
-            <th class="p-3 pl-6 text-center border-r">คำอธิบาย</th>
-            <th class="p-3 pl-6 text-center border-r">สถานะใช้งาาน</th>
-            <th class="p-3 pl-6 text-center">แก้ไข</th>
+          <tr class="bg-[#394250] text-white border-b">
+            <th class="p-3 text-center">#</th>
+            <th class="p-3">ชื่อสาขาวิชาที่เชี่ยวชาญ</th>
+            <th class="p-3 text-center">คำอธิบาย</th>
+            <th class="p-3 w-30 text-center">สถานะใช้งาน</th>
+            <th class="p-3 w-27 text-center">Action</th>
           </tr>
         </thead>
 
         <tbody>
           <tr
             *ngFor="let field of filteredExternalFunding; let i = index"
-            class="border-b hover:bg-gray-50"
+            class="border-b border-gray-300 bg-gray-200 hover:bg-gray-50"
           >
-            <td class="p-3 text-center border-r">
+            <td class="p-3 text-center">
               {{ (currentPage - 1) * pageSize + i + 1 }}
             </td>
 
-            <td class="p-3 pl-6 border-r font-medium">
+            <td class="p-3 pl-6 font-medium">
               {{ field.name }}
             </td>
 
-            <td class="p-3 text-left border-r">
+            <td class="p-3 text-left">
               {{ field.description }}
             </td>
-            <td class="p-3 text-center border-r">
+            <td class="p-3 text-center">
               <i
                 *ngIf="field.status === 'พร้อมใช้งาน'; else notReady"
                 class="bi bi-check-circle-fill text-green-600 text-lg"
@@ -95,14 +94,14 @@
               </ng-template>
             </td>
 
-            <td class="p-3 text-center border-r">
+            <td class="p-3 text-center">
               <i
                 (click)="openEditModal(field, i)"
-                class="bi bi-pencil-square text-blue-500 hover:text-blue-700 mr-3 cursor-pointer"
+                class="bi bi-pencil-square text-blue-500 hover:text-blue-700 mr-3 cursor-pointer text-xl"
               ></i>
               <i
                 (click)="deleteFunding(i)"
-                class="bi bi-trash3 text-red-500 cursor-pointer hover:text-red-700"
+                class="bi bi-trash3 text-red-500 cursor-pointer hover:text-red-700 text-xl"
               ></i>
             </td>
           </tr>
@@ -164,7 +163,7 @@
 
 <div
   *ngIf="showModal"
-  class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
+  class="fixed inset-0 z-50 text-2xl flex items-center justify-center bg-black/50 px-4"
   (click)="closeModal()"
 >
   <div
@@ -172,7 +171,7 @@
     (click)="$event.stopPropagation()"
   >
     <!-- Title -->
-    <h2 class="text-xl font-semibold mb-4 text-center md:text-left">
+    <h2 class="font-semibold mb-4 text-center md:text-left">
       {{
         modalMode === "add" ? "เพิ่มสาขาที่เชี่ยวชาญ" : "แก้ไขสาขาที่เชี่ยวชาญ"
       }}
@@ -216,14 +215,14 @@
     <div class="flex flex-col sm:flex-row justify-end gap-2">
       <button
         (click)="closeModal()"
-        class="w-full sm:w-auto px-4 py-2 rounded-md border hover:bg-gray-100"
+        class="w-full sm:w-auto px-4 py-2 rounded-md border hover:bg-gray-100 cursor-pointer"
       >
         ยกเลิก
       </button>
 
       <button
         (click)="modalMode === 'add' ? saveFunding() : updateFunding()"
-        class="w-full sm:w-auto px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700"
+        class="w-full sm:w-auto px-4 py-2 rounded-md bg-[#F9CB34] text-black border hover:bg-[#fde07f] cursor-pointer"
       >
         {{ modalMode === "add" ? "บันทึก" : "อัปเดต" }}
       </button>

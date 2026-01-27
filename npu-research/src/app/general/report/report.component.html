@@ -1,26 +1,126 @@
-<div class="min-h-screen flex items-center justify-center bg-gray-100">
-    <div class="text-center bg-white p-10 rounded-2xl shadow-lg max-w-md w-full">
-      <!-- Icon -->
-      <div
-        class="mx-auto mb-6 flex items-center justify-center
-               w-20 h-20 rounded-full bg-yellow-100 text-yellow-500"
-      >
-        <i class="bi bi-tools text-4xl"></i>
+<div class="p-6 space-y-6 bg-gray-50 min-h-screen text-2xl">
+
+  <!-- ===== Stat Cards ===== -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="bg-white rounded-xl p-5 shadow flex items-center justify-between">
+      <div>
+        <p class="text-sm text-gray-400">Active Researchers</p>
+        <h3 class="text-2xl font-bold">247</h3>
       </div>
-  
-      <!-- Title -->
-      <h1 class="text-2xl font-semibold text-gray-800 mb-3">
-        หน้ารายงาน (Report)
-      </h1>
-  
-      <!-- Subtitle -->
-      <p class="text-lg text-gray-600">
-        กำลังพัฒนา 🚧
-      </p>
-  
-      <p class="text-sm text-gray-500 mt-2">
-        เร็ว ๆ นี้
-      </p>
+      <span class="text-green-500 text-sm">+12%</span>
+    </div>
+
+    <div class="bg-white rounded-xl p-5 shadow flex items-center justify-between">
+      <div>
+        <p class="text-sm text-gray-400">Research Projects</p>
+        <h3 class="text-2xl font-bold">89</h3>
+      </div>
+      <span class="text-green-500 text-sm">+8%</span>
+    </div>
+
+    <div class="bg-white rounded-xl p-5 shadow flex items-center justify-between">
+      <div>
+        <p class="text-sm text-gray-400">Published Articles</p>
+        <h3 class="text-2xl font-bold">1,342</h3>
+      </div>
+      <span class="text-green-500 text-sm">+24%</span>
+    </div>
+
+    <div class="bg-white rounded-xl p-5 shadow flex items-center justify-between">
+      <div>
+        <p class="text-sm text-gray-400">Innovations</p>
+        <h3 class="text-2xl font-bold">56</h3>
+      </div>
+      <span class="text-green-500 text-sm">+15%</span>
     </div>
   </div>
-  
+
+  <!-- ===== Charts ===== -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div class="bg-white rounded-xl p-6 shadow">
+      <h3 class="font-semibold mb-4">Publications Over Time</h3>
+      <div class="h-64 flex items-center justify-center text-gray-400">
+        Line Chart
+      </div>
+    </div>
+
+    <div class="bg-white rounded-xl p-6 shadow">
+      <h3 class="font-semibold mb-4">Research Areas Distribution</h3>
+      <div class="h-64 flex items-center justify-center text-gray-400">
+        Donut Chart
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Top Researchers ===== -->
+  <div class="bg-white rounded-xl shadow p-6">
+    <div class="flex justify-between mb-4">
+      <h3 class="font-semibold">Top Researchers</h3>
+      <a class="text-indigo-600 text-sm cursor-pointer">View All</a>
+    </div>
+
+    <div *ngFor="let r of topResearchers" class="flex items-center justify-between py-3 border-b last:border-0">
+      <div class="flex items-center gap-3">
+        <img [src]="r.avatar" class="w-10 h-10 rounded-full" />
+        <div>
+          <p class="font-medium">{{ r.name }}</p>
+          <p class="text-sm text-gray-400">{{ r.field }}</p>
+        </div>
+      </div>
+
+      <div class="flex gap-6 text-sm">
+        <div class="text-center">
+          <p class="font-semibold">{{ r.publications }}</p>
+          <p class="text-gray-400">Publications</p>
+        </div>
+        <div class="text-center">
+          <p class="font-semibold">{{ r.projects }}</p>
+          <p class="text-gray-400">Projects</p>
+        </div>
+        <div class="text-center text-indigo-600 font-semibold">
+          {{ r.citations }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Bottom Section ===== -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Active Projects -->
+    <div class="bg-white rounded-xl shadow p-6">
+      <div class="flex justify-between mb-4">
+        <h3 class="font-semibold">Active Research Projects</h3>
+        <span class="text-indigo-600 text-sm cursor-pointer">View All</span>
+      </div>
+
+      <div *ngFor="let p of projects" class="mb-4">
+        <div class="flex justify-between text-sm mb-1">
+          <p class="font-medium">{{ p.title }}</p>
+          <span class="text-gray-400">{{ p.progress }}%</span>
+        </div>
+        <div class="w-full bg-gray-200 rounded-full h-2">
+          <div
+            class="h-2 rounded-full"
+            [style.width.%]="p.progress"
+            [ngClass]="p.color"
+          ></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Innovations -->
+    <div class="bg-white rounded-xl shadow p-6">
+      <div class="flex justify-between mb-4">
+        <h3 class="font-semibold">Recent Innovations</h3>
+        <span class="text-indigo-600 text-sm cursor-pointer">View All</span>
+      </div>
+
+      <div *ngFor="let i of innovations" class="p-4 rounded-lg mb-3" [ngClass]="i.bg">
+        <p class="font-medium">{{ i.title }}</p>
+        <p class="text-sm text-gray-600">{{ i.desc }}</p>
+        <p class="text-xs text-gray-400 mt-1">{{ i.date }}</p>
+      </div>
+    </div>
+  </div>
+
+</div>

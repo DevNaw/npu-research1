@@ -40,13 +40,15 @@ import { PerformanceComponent } from './user-pages/performance/performance.compo
 import { adminGuard } from './core/guards/admin.guard';
 import { userGuard } from './core/guards/user.guard';
 import { ReportComponent } from './general/report/report.component';
+import { EditWorkComponent } from './user-pages/edit-work/edit-work.component';
 
 const routes: Routes = [
   /* ================= PUBLIC (ไม่ต้อง login) ================= */
+
   { path: 'dashboard', component: UserDashboardComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-
+  { path: 'test', component: TestComponent },
   { path: 'aticle', component: AticleComponent },
   { path: 'aticle/:id', component: AticleComponent },
   { path: 'download', component: DownloadComponent },
@@ -95,6 +97,7 @@ const routes: Routes = [
       { path: 'edit-study/:id', component: UserEditStudyComponent },
       { path: 'edit-traning/:id', component: UserEditTraningComponent },
       { path: 'performance/:type/:id', component: PerformanceComponent },
+      { path: 'edit-work/:id', component: EditWorkComponent },
     ]
   },
 
@@ -135,6 +138,7 @@ const routes: Routes = [
       },
       { path: 'performance/:type/:id', component: PerformanceComponent },
       { path: 'report', component: ReportComponent },
+      { path: 'edit-work/:id', component: EditWorkComponent },
     ],
   },
 ];
