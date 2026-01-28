@@ -1,5 +1,5 @@
-<div class="bg-gray-100 min-h-screen p-6">
-    <div class="max-w-7xl mx-auto bg-white rounded-2xl shadow-lg p-8 space-y-8">
+<div class="bg-gray-100 min-h-screen p-10 text-2xl">
+    <div class="mx-auto bg-white rounded-2xl shadow-lg p-8 space-y-8">
   
       <!-- Header -->
       <div class="flex items-center gap-3">
@@ -18,33 +18,33 @@
   
         <!-- ตำแหน่ง -->
         <div>
-          <label class="block text-gray-700 font-medium mb-1">ตำแหน่ง</label>
+          <label class="block text-gray-700 font-bold mb-1">ตำแหน่ง</label>
           <input
             type="text"
             [(ngModel)]="work.position"
             name="position"
-            class="w-full rounded-lg border-gray-300 focus:ring-indigo-500 focus:border-indigo-500"
+            class="w-full rounded-lg text-2xl border-gray-300 focus:ring-indigo-500 focus:border-indigo-500"
           />
         </div>
   
         <!-- สังกัด -->
         <div>
-          <label class="block text-gray-700 font-medium mb-1">สังกัด</label>
+          <label class="block text-gray-700 font-bold mb-1">สังกัด</label>
           <input
             type="text"
             [(ngModel)]="work.department"
             name="department"
-            class="w-full rounded-lg border-gray-300 focus:ring-indigo-500 focus:border-indigo-500"
+            class="w-full rounded-lg text-2xl border-gray-300 focus:ring-indigo-500 focus:border-indigo-500"
           />
         </div>
   
         <!-- ประเภท -->
         <div>
-          <label class="block text-gray-700 font-medium mb-1">ประเภท</label>
+          <label class="block text-gray-700 font-bold mb-1">ประเภท</label>
           <select
             [(ngModel)]="work.type"
             name="type"
-            class="w-full rounded-lg border-gray-300 focus:ring-indigo-500 focus:border-indigo-500"
+            class="w-full rounded-lg text-2xl border-gray-300 focus:ring-indigo-500 focus:border-indigo-500"
           >
             <option value="พนักงาน">พนักงาน</option>
             <option value="ลูกจ้าง">ลูกจ้าง</option>
@@ -54,31 +54,31 @@
   
         <!-- สายงาน -->
         <div>
-          <label class="block text-gray-700 font-medium mb-1">สายงาน</label>
+          <label class="block text-gray-700 font-bold mb-1">สายงาน</label>
           <input
             type="text"
             [(ngModel)]="work.line"
             name="line"
-            class="w-full rounded-lg border-gray-300 focus:ring-indigo-500 focus:border-indigo-500"
+            class="w-full rounded-lg text-2xl border-gray-300 focus:ring-indigo-500 focus:border-indigo-500"
           />
         </div>
   
         <!-- ตำแหน่งทางวิชาการ -->
         <div>
-          <label class="block text-gray-700 font-medium mb-1">
+          <label class="block text-gray-700 font-bold mb-1">
             ตำแหน่งทางวิชาการ
           </label>
           <input
             type="text"
             [(ngModel)]="work.academicPosition"
             name="academicPosition"
-            class="w-full rounded-lg border-gray-300 focus:ring-indigo-500 focus:border-indigo-500"
+            class="w-full rounded-lg text-2xl border-gray-300 focus:ring-indigo-500 focus:border-indigo-500"
           />
         </div>
   
         <!-- ความสนใจ -->
         <div>
-          <label class="block text-gray-700 font-medium mb-1">ความสนใจ</label>
+          <label class="block text-gray-700 font-bold mb-1">ความสนใจ</label>
           <textarea
             rows="3"
             [(ngModel)]="work.interests"
@@ -89,25 +89,25 @@
   
         <!-- สาขาที่เชี่ยวชาญ -->
         <div>
-          <label class="block text-gray-700 font-medium mb-1">
+          <label class="block text-gray-700 font-bold mb-1">
             สาขาวิชาที่เชี่ยวชาญ
           </label>
           <input
             type="text"
             [(ngModel)]="work.expertise"
             name="expertise"
-            class="w-full rounded-lg border-gray-300 focus:ring-indigo-500 focus:border-indigo-500"
+            class="w-full rounded-lg text-2xl border-gray-300 focus:ring-indigo-500 focus:border-indigo-500"
           />
         </div>
   
         <!-- วันที่เริ่มงาน -->
         <div>
-          <label class="block text-gray-700 font-medium mb-1">วันที่เริ่มงาน</label>
+          <label class="block text-gray-700 font-bold mb-1">วันที่เริ่มงาน</label>
           <input
             type="date"
             [(ngModel)]="work.startDate"
             name="startDate"
-            class="w-full rounded-lg border-gray-300 focus:ring-indigo-500 focus:border-indigo-500"
+            class="w-full rounded-lg text-2xl border-gray-300 focus:ring-indigo-500 focus:border-indigo-500"
           />
         </div>
   
@@ -115,7 +115,7 @@
         <div class="flex justify-end gap-4 pt-4">
           <button
             type="button"
-            class="px-6 py-2 rounded-xl bg-gray-200 hover:bg-gray-300"
+            class="px-6 py-2 rounded-xl bg-gray-200 hover:bg-gray-300 cursor-pointer"
             (click)="goBack()"
           >
             ยกเลิก
@@ -123,7 +123,7 @@
   
           <button
             type="submit"
-            class="px-6 py-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 shadow"
+            class="px-6 py-2 rounded-xl bg-yellow-300 text-black hover:bg-yellow-400 shadow cursor-pointer"
             (click)="saveWork()"
           >
             บันทึกข้อมูล

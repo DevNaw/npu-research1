@@ -26,7 +26,7 @@ export class AdminSearchPaperComponent {
     isSearched = false;
   
     selectedFaculty = '';
-    selectedFunding = '';
+    selectedFunding: 'external' | 'internal' | null = null;
     selectedYear = '';
     researchTitle = '';
     searchSubType = '';
@@ -68,7 +68,7 @@ export class AdminSearchPaperComponent {
         subType: 'ประชุมวิชาการระดับชาติ',
         faculty: 'คณะวิทยาศาสตร์',
         agency: 'คณะวิทยาศาสตร์',
-        funding: 'internal',
+        funding: 'external',
         year: 2024,
         date: new Date('2024-11-05'),
         name: 'นาง ข',
@@ -150,6 +150,15 @@ export class AdminSearchPaperComponent {
       internal: 'internal',
       external: 'external',
     };
+
+    
+
+onFundingChange(value: 'external' | 'internal', event: Event) {
+  const checked = (event.target as HTMLInputElement).checked;
+
+  this.selectedFunding = checked ? value : null;
+}
+
   
     search() {
       this.isSearched = true;

@@ -323,10 +323,9 @@ export class UserEditStudyComponent implements OnInit {
     Swal.fire({
       title: 'ยืนยันการบันทึกข้อมูล',
       text: 'คุณต้องการบันทึกข้อมูลการศึกษาทั้งหมดหรือไม่?',
-      icon: 'question',
       showCancelButton: true,
-      confirmButtonText: 'บันทึก',
       cancelButtonText: 'ยกเลิก',
+      confirmButtonText: 'บันทึก',
       confirmButtonColor: '#22c55e',
       cancelButtonColor: '#9ca3af',
       reverseButtons: true,
@@ -411,36 +410,44 @@ export class UserEditStudyComponent implements OnInit {
       reverseButtons: true,
     }).then((result) => {
       if (!result.isConfirmed) return;
-
-      // ===== payload สำหรับแก้ไข =====
-      const payload = {
-        id: this.editEducationId, // id ของรายการที่แก้ไข
-        educationLevel: this.selectedEducationLevel,
-        major: this.selectedMajors,
-        qualification: this.selectedQualifications,
-        institution: this.selectedInstitutions,
-        country: this.selectedCountries,
-        gpa: this.gpa,
-        startYear: this.startYear,
-        endYear: this.endYear,
-      };
-
-      console.log('EDIT EDUCATION :', payload);
-
-      // ===== success =====
-      Swal.fire({
-        icon: 'success',
-        title: 'แก้ไขสำเร็จ',
-        text: 'ข้อมูลการศึกษาถูกแก้ไขเรียบร้อยแล้ว',
-        confirmButtonColor: '#22c55e',
-        timer: 1500,
-        showConfirmButton: false,
-      }).then(() => {
-        this.closeModalEdit();
-        this.resetForm();
-      });
+  
+      const payload = this.buildEditEducationPayload();
+      console.log('EDIT EDUCATION PAYLOAD:', payload);
+  
+      // 🔥 ตรงนี้ในอนาคต = call API
+      // this.educationService.update(payload).subscribe(() => { ... })
+  
+      this.handleEditSuccess();
     });
   }
+
+  private buildEditEducationPayload() {
+    return {
+      id: this.editEducationId,
+      educationLevel: this.selectedEducationLevel,
+      major: this.selectedMajors,
+      qualification: this.selectedQualifications,
+      institution: this.selectedInstitutions,
+      country: this.selectedCountries,
+      gpa: this.gpa,
+      startYear: this.startYear,
+      endYear: this.endYear,
+    };
+  }
+
+  private handleEditSuccess() {
+    Swal.fire({
+      icon: 'success',
+      title: 'แก้ไขสำเร็จ',
+      text: 'ข้อมูลการศึกษาถูกแก้ไขเรียบร้อยแล้ว',
+      timer: 1500,
+      showConfirmButton: false,
+    }).then(() => {
+      this.closeModalEdit();
+      this.resetForm();
+    });
+  }
+  
 
   resetForm() {
     this.selectedEducationLevel = '';
@@ -466,11 +473,16 @@ export class UserEditStudyComponent implements OnInit {
       icon: 'success',
       title: 'บันทึกสำเร็จ',
       text: 'ระบบได้บันทึกข้อมูลเรียบร้อยแล้ว',
-      confirmButtonColor: '#4f46e5',
       timer: 1500,
       showConfirmButton: false,
     }).then(() => {
-      this.router.navigate(['/user-profile']);
+      const role = localStorage.getItem('role');
+  
+    setTimeout(() => {
+      this.router.navigateByUrl(
+        role === 'admin' ? '/admin/profile' : '/user/profile'
+      );
+    }, 1500);
     });
   }
 

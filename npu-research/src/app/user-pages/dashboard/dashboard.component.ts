@@ -6,6 +6,7 @@ import {
   ApexNonAxisChartSeries,
   ApexPlotOptions,
   ApexResponsive,
+  ApexTooltip,
 } from 'ng-apexcharts';
 import Swal from 'sweetalert2';
 import jsPDF from 'jspdf';
@@ -29,6 +30,7 @@ export interface PieChartConfig {
   dataLabels: ApexDataLabels;
   responsive: ApexResponsive[];
   colors: string[];
+  tooltip?: ApexTooltip;
 }
 
 interface News {
@@ -55,7 +57,6 @@ registerLocaleData(localeTh);
   styleUrl: './dashboard.component.css',
 })
 export class UserDashboardComponent implements OnInit {
-  
   today: Date = new Date();
 
   pageSize = 10;
@@ -169,7 +170,9 @@ export class UserDashboardComponent implements OnInit {
       legend: {
         position: 'right',
         fontFamily: 'TH K2D July8',
-        fontSize: '20px',
+        formatter: (seriesName: string) => {
+          return `<span style="font-size:20px;">${seriesName}</span>`;
+        },
       },
       plotOptions: {
         pie: {
@@ -241,7 +244,9 @@ export class UserDashboardComponent implements OnInit {
       legend: {
         position: 'right',
         fontFamily: 'TH K2D July8',
-        fontSize: '20px',
+        formatter: (seriesName: string) => {
+          return `<span style="font-size:20px;">${seriesName}</span>`;
+        },
       },
       plotOptions: {
         pie: {
@@ -299,7 +304,9 @@ export class UserDashboardComponent implements OnInit {
       legend: {
         position: 'right',
         fontFamily: 'TH K2D July8',
-        fontSize: '20px',
+        formatter: (seriesName: string) => {
+          return `<span style="font-size:20px;">${seriesName}</span>`;
+        },
       },
       plotOptions: {
         pie: {
@@ -511,11 +518,11 @@ export class UserDashboardComponent implements OnInit {
   get pages(): number[] {
     return Array.from({ length: this.totalPages }, (_, i) => i + 1);
   }
-  
-  
 
   get totalPages(): number {
-    return Math.ceil(this.publications[this.selectedTab].length / this.pageSize);
+    return Math.ceil(
+      this.publications[this.selectedTab].length / this.pageSize
+    );
   }
 
   // Nevigate to

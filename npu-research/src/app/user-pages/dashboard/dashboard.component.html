@@ -271,22 +271,22 @@
           </div>
         </div>
 
-        <table class="w-full border text-xl">
-          <thead class="bg-[#F9CB34]">
+        <table class="w-full text-xl">
+          <thead class="bg-[#394250] text-white">
             <tr>
-              <th class="p-2 border-r">ลำดับ</th>
-              <th class="p-2 border-r">ชื่อผลงาน</th>
-              <th class="p-2 border-r">ผู้วิจัย</th>
+              <th class="p-2">#</th>
+              <th class="p-2 text-start">ชื่อผลงาน</th>
+              <th class="p-2 text-start">ผู้วิจัย</th>
               <th class="p-2">ปี</th>
             </tr>
           </thead>
           <tbody>
             <tr
               *ngFor="let p of paginatedPublications; let i = index"
-              class="border-t hover:bg-gray-50"
+              class="border-b border-gray-300 hover:bg-gray-50"
             >
-              <td class="p-2 text-center border-r">{{ i + 1 }}</td>
-              <td class="p-2 border-r">
+              <td class="p-2 text-center">{{ i + 1 }}</td>
+              <td class="p-2">
                 <div
                   class="font-medium text-indigo-600 hover:underline cursor-pointer truncate max-w-125 text-wrap"
                   title="{{ p.title }}"
@@ -300,7 +300,7 @@
                   วันที่สร้าง: {{ p.date }}
                 </div>
               </td>
-              <td class="p-2 border-r">{{ p.researchers }}</td>
+              <td class="p-2">{{ p.researchers }}</td>
               <td class="p-2 text-center">{{ p.year }}</td>
             </tr>
 

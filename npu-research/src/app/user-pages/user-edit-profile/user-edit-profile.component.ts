@@ -8,7 +8,7 @@ import Swal from 'sweetalert2';
   templateUrl: './user-edit-profile.component.html',
   styleUrl: './user-edit-profile.component.css',
 })
-export class UserEditProfileComponent implements OnInit{
+export class UserEditProfileComponent implements OnInit {
   openDropdown: string | null = null;
   userId!: string | null;
 
@@ -149,7 +149,6 @@ export class UserEditProfileComponent implements OnInit{
     Swal.fire({
       title: 'ยืนยันการบันทึกข้อมูล',
       text: 'คุณต้องการบันทึกข้อมูลนี้ใช่หรือไม่?',
-      icon: 'question',
       showCancelButton: true,
       confirmButtonText: 'บันทึก',
       cancelButtonText: 'ยกเลิก',
@@ -188,8 +187,12 @@ export class UserEditProfileComponent implements OnInit{
         });
 
         // 👉 redirect หลังบันทึก
+        const role = localStorage.getItem('role');
+
         setTimeout(() => {
-          this.router.navigate(['/user-profile']);
+          this.router.navigateByUrl(
+            role === 'admin' ? '/admin/profile' : '/user/profile'
+          );
         }, 1500);
       }, 1200);
     });

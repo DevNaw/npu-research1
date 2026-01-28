@@ -1,6 +1,7 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { AuthService } from '../../services/auth.service';
 
 type DropdownKey = 'address' | 'current_address';
 
@@ -23,6 +24,7 @@ export class UserEditAddressComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -107,7 +109,13 @@ export class UserEditAddressComponent implements OnInit {
       timer: 1500,
       timerProgressBar: true
     }).then((result) => {
-      this.router.navigateByUrl('/user-profile');
+      const role = localStorage.getItem('role');
+
+      setTimeout(() => {
+        this.router.navigateByUrl(
+          role === 'admin' ? '/admin/profile' : '/user/profile'
+        );
+      }, 1500);
     });
   }
 }

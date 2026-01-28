@@ -24,7 +24,6 @@ export class EditWorkComponent {
   constructor(private router: Router) {}
 
   saveWork() {
-    // 🔥 ตรงนี้ปกติจะ call API
     Swal.fire({
       icon: 'success',
       title: 'บันทึกสำเร็จ',
@@ -32,11 +31,21 @@ export class EditWorkComponent {
       timer: 1500,
       showConfirmButton: false,
     }).then(() => {
-      this.goBack();
+      this.navigateByRole();
     });
   }
+  
 
   goBack() {
-    this.router.navigate(['/user/profile']); // ปรับ route ตามจริง
+    this.navigateByRole(); // ปรับ route ตามจริง
   }
+
+  private navigateByRole() {
+    const role = localStorage.getItem('role');
+  
+    this.router.navigateByUrl(
+      role === 'admin' ? '/admin/profile' : '/user/profile'
+    );
+  }
+  
 }

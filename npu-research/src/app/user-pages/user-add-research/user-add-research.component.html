@@ -1,6 +1,6 @@
-<div class="contain-content bg-gray-100 p-3 text-2xl">
+<div class="contain-content bg-gray-100 px-10 text-2xl">
   <!-- Back -->
-  <div class="flex justify-end mb-4 max-w-7xl mx-auto">
+  <div class="flex justify-end mb-4 mx-auto">
     <button
       class="flex items-center gap-2 text-gray-600 font-medium group transition-colors cursor-pointer"
     >
@@ -13,10 +13,10 @@
   </div>
 
   <div
-    class="max-w-7xl mt-5 mb-5 mx-auto px-20 py-10 bg-white rounded-xl shadow-md"
+    class="mt-5 mb-10 mx-auto px-20 py-10 bg-white rounded-xl shadow-md"
   >
     <div
-      class="max-w-7xl mx-auto px-6 py-5 mb-6 flex items-center gap-4 rounded-xl bg-linear-to-r from-[#9DE1EF] to-[#D3DFEB] shadow"
+      class="mx-auto px-6 py-5 mb-6 flex items-center gap-4 rounded-xl bg-linear-to-r from-[#9DE1EF] to-[#D3DFEB] shadow"
     >
       <i class="bi bi-cloud-arrow-up-fill text-3xl text-gray-900"></i>
 
@@ -32,7 +32,7 @@
       </label>
       <input
         type="text"
-        class="md:col-span-3 w-full border h-12 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400"
+        class="md:col-span-3 w-full text-xl border h-12 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400"
         placeholder="ระบุชื่องานวิจัย"
       />
     </div>
@@ -48,7 +48,7 @@
           type="button"
           class="w-full border rounded-md px-3 py-2 flex justify-between items-center bg-white"
         >
-          <span class="truncate">
+          <span class="truncate text-xl">
             {{ selectedMajor || "ระบุสาขาของโครงการวิจัย" }}
           </span>
           <i class="bi bi-chevron-down"></i>
@@ -90,7 +90,7 @@
       <label class="font-bold text-gray-700 text-start text-2xl">
         ประเภทความรับผิดชอบ <span class="text-red-500">*</span>
       </label>
-      <select class="max-w-md w-full border h-12 rounded-md px-4 py-2">
+      <select class="max-w-md text-xl w-full border h-12 rounded-md px-4 py-2">
         <option disabled selected>เลือกประเภทความรับผิดชอบ</option>
         <option>หัวหน้าโครงการ</option>
         <option>ผู้ร่วมโครงการ</option>
@@ -135,7 +135,7 @@
                 <td class="text-center p-3">
                   <input
                     type="text"
-                    class="w-full border border-gray-300 h-12 rounded-md px-3 py-2 bg-white"
+                    class="w-full border text-xl border-gray-300 h-12 rounded-md px-3 py-2 bg-white"
                     placeholder="ระบุชื่อ"
                     [(ngModel)]="j.name"
                   />
@@ -143,7 +143,7 @@
 
                 <td class="p-3">
                   <select
-                    class="w-full border border-gray-300 bg-white h-12 rounded-md px-3 py-2"
+                    class="w-full border border-gray-300 text-xl bg-white h-12 rounded-md px-3 py-2"
                     [(ngModel)]="j.organization"
                   >
                     <option value="" disabled>
@@ -202,7 +202,7 @@
                 <td class="text-center p-3">
                   <input
                     type="text"
-                    class="w-full border h-12 border-gray-300 bg-white rounded-md px-3 py-2"
+                    class="w-full border h-12 text-xl border-gray-300 bg-white rounded-md px-3 py-2"
                     placeholder="ระบุชื่อ"
                     [(ngModel)]="item.name"
                   />
@@ -210,7 +210,7 @@
 
                 <td class="p-3">
                   <select
-                    class="w-full border h-12 border-gray-300 bg-white rounded-md px-3 py-2"
+                    class="w-full border h-12 text-xl border-gray-300 bg-white rounded-md px-3 py-2"
                     [(ngModel)]="item.role"
                   >
                     <option value="" disabled>
@@ -263,7 +263,7 @@
           </label>
       
           <select
-            class="w-full border h-12 rounded-md px-4 py-2"
+            class="w-full border text-xl h-12 rounded-md px-4 py-2"
             [(ngModel)]="fundType"
           >
             <option value="" disabled selected>เลือกแหล่งเงินทุน</option>
@@ -279,7 +279,7 @@
           </label>
       
           <select
-            class="w-full border h-12 rounded-md px-4 py-2"
+            class="w-full border h-12 text-xl rounded-md px-4 py-2"
             [(ngModel)]="fundName"
           >
             <option value="" disabled selected>เลือกชื่อแหล่งทุน</option>
@@ -303,7 +303,7 @@
         </label>
         <input
           type="text"
-          class="w-full border rounded-md h-12 px-4 py-2 focus:ring-2 focus:ring-blue-400"
+          class="w-full border text-xl rounded-md h-12 px-4 py-2 focus:ring-2 focus:ring-blue-400"
           placeholder="ระบุจำนวนงบประมาณ"
         />
       </div>
@@ -315,7 +315,7 @@
         </label>
         <input
           type="text"
-          class="w-full border rounded-md px-4 h-12 py-2 focus:ring-2 focus:ring-blue-400"
+          class="w-full border rounded-md text-xl px-4 h-12 py-2 focus:ring-2 focus:ring-blue-400"
           placeholder="ระบุปีที่ได้รับทุน"
         />
       </div>
@@ -325,7 +325,7 @@
         <label class="block font-bold text-gray-700 text-2xl mb-2">
           สถานะดำเนินการ <span class="text-red-500">*</span>
         </label>
-        <select class="w-full border h-12 rounded-md px-4 py-2">
+        <select class="w-full border text-xl h-12 rounded-md px-4 py-2">
           <option disabled selected>เลือกสถานะดำเนินการ</option>
           <option>เสร็จสิ้น</option>
           <option>อยู่ระหว่างดำเนินการ</option>
@@ -342,7 +342,7 @@
         name="attention"
         id="attention"
         placeholder="ระบุความร่วมมือกับหน่วยงานอื่นๆ"
-        class="md:col-span-3 w-full border rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400"
+        class="md:col-span-3 w-full border text-xl rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400"
       ></textarea>
     </div>
 
@@ -355,7 +355,7 @@
         name="attention"
         id="attention"
         placeholder="ระบุพื้นที่วิจัย"
-        class="md:col-span-3 w-full text-2xl border rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400"
+        class="md:col-span-3 w-full text-xl border rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400"
       ></textarea>
     </div>
 
@@ -368,7 +368,7 @@
         name="attention"
         id="attention"
         placeholder="ระบุพื้นที่ใช้ประโยชน์"
-        class="md:col-span-3 w-full border rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400"
+        class="md:col-span-3 text-xl w-full border rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400"
       ></textarea>
     </div>
 
@@ -438,7 +438,7 @@
     <div class="flex justify-center mt-10">
       <button
         type="submit"
-        class="flex items-center justify-center gap-3 w-72 py-3 bg-[#FDE68A] hover:bg-[#FACC15] text-[#1E293B] text-2xl font-extrabold rounded-lg shadow transition duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 cursor-pointer"
+        class="flex items-center justify-center gap-3 w-72 py-3 bg-yellow-300 hover:bg-yellow-400 text-black text-2xl font-extrabold rounded-lg shadow transition duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 cursor-pointer"
       >
         <i class="bi bi-floppy2 text-2xl"></i>
         <span>บันทึกข้อมูล</span>

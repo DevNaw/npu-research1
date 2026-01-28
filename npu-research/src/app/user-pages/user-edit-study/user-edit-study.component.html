@@ -1,5 +1,5 @@
-<div class="bg-gray-100 min-h-screen p-6">
-  <div class="max-w-7xl mx-auto bg-white rounded-2xl shadow p-8 space-y-10">
+<div class="bg-gray-100 min-h-screen p-10 text-2xl">
+  <div class="mx-auto bg-white rounded-2xl shadow p-8 space-y-10">
     <!-- Header -->
     <div>
       <h1 class="text-3xl text-gray-800">แก้ไขข้อมูลนักวิจัย</h1>
@@ -11,34 +11,34 @@
     </div>
 
     <div class="flex justify-end">
-      <button (click)="openModal()" class="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition"><i class="bi bi-plus"></i>เพิ่มข้อมูลการศึกษา</button>
+      <button (click)="openModal()" class="flex items-center gap-2 text-xl bg-yellow-300 text-black px-4 py-2 rounded-lg hover:bg-yellow-400 transition"><i class="bi bi-plus"></i>เพิ่มข้อมูลการศึกษา</button>
     </div>
 
     <div class="w-full overflow-x-auto bg-white shadow-sm">
-      <table class="min-w-225 w-full border-collapse  border">
+      <table class="min-w-225 w-full border-collapse">
     
         <!-- Table Header -->
         <thead>
-          <tr class="bg-[#FACC15] text-[#1E293B] border-b">
-            <th class="px-4 py-3 text-center whitespace-nowrap border-r font-semibold">
+          <tr class="bg-[#394250] text-white">
+            <th class="px-4 py-3 text-center whitespace-nowrap font-semibold">
               ระดับ
             </th>
-            <th class="px-4 py-3 text-center border-r font-semibold">
+            <th class="px-4 py-3 text-center font-semibold">
               สาขา / คุณวุฒิ
             </th>
-            <th class="px-4 py-3 text-center border-r font-semibold">
+            <th class="px-4 py-3 text-center font-semibold">
               สถานศึกษา
             </th>
-            <th class="px-4 py-3 text-center border-r font-semibold">
+            <th class="px-4 py-3 text-center font-semibold">
               ประเทศ
             </th>
-            <th class="px-4 py-3 text-center whitespace-nowrap border-r font-semibold">
+            <th class="px-4 py-3 text-center whitespace-nowrap font-semibold">
               GPAX
             </th>
-            <th class="px-4 py-3 text-center whitespace-nowrap border-r font-semibold">
+            <th class="px-4 py-3 text-center whitespace-nowrap font-semibold">
               ปีที่เข้า
             </th>
-            <th class="px-4 py-3 text-center whitespace-nowrap border-r font-semibold">
+            <th class="px-4 py-3 text-center whitespace-nowrap font-semibold">
               ปีที่สำเร็จ
             </th>
             <th class="px-4 py-3 text-center whitespace-nowrap font-semibold">
@@ -49,33 +49,33 @@
     
         <!-- Table Body -->
         <tbody>
-          <tr class="hover:bg-gray-50 transition">
+          <tr class="border-b border-gray-300 bg-gray-200 hover:bg-gray-50 transition">
     
-            <td class="px-4 py-3 max-w-88 wrap-break-word border-r">
+            <td class="px-4 py-3 max-w-88 wrap-break-word">
               ปริญญาเอก
             </td>
     
-            <td class="px-4 py-3 max-w-60 wrap-break-word border-r">
+            <td class="px-4 py-3 max-w-60 wrap-break-word">
               วิศวกรรมคอมพิวเตอร์
             </td>
     
-            <td class="px-4 py-3 max-w-56 wrap-break-word border-r">
+            <td class="px-4 py-3 max-w-56 wrap-break-word">
               มหาวิทยาลัยนครพนม
             </td>
     
-            <td class="px-4 py-3 whitespace-nowrap border-r">
+            <td class="px-4 py-3 whitespace-nowrap">
               ไทยแลนด์
             </td>
     
-            <td class="px-4 py-3 whitespace-nowrap border-r">
+            <td class="px-4 py-3 whitespace-nowrap">
               4.00
             </td>
     
-            <td class="px-4 py-3 whitespace-nowrap border-r">
+            <td class="px-4 py-3 whitespace-nowrap">
               1/1/2020
             </td>
     
-            <td class="px-4 py-3 whitespace-nowrap border-r">
+            <td class="px-4 py-3 whitespace-nowrap">
               1/1/2024
             </td>
     
@@ -84,15 +84,15 @@
               <button
                 (click)="openModalEdit()"
                 class="inline-flex items-center justify-center w-9 h-9 rounded-full
-                       text-sky-600 hover:bg-sky-100 hover:text-sky-700 transition"
+                       text-sky-600 hover:bg-sky-100 hover:text-sky-700 transition cursor-pointer"
                 title="แก้ไข"
               >
-                <i class="bi bi-pencil"></i>
+                <i class="bi bi-pencil-square"></i>
               </button>
     
               <button
                 class="inline-flex items-center justify-center w-9 h-9 rounded-full
-                       text-red-500 hover:bg-red-100 hover:text-red-700 transition"
+                       text-red-500 hover:bg-red-100 hover:text-red-700 transition cursor-pointer"
                 title="ลบ"
               >
                 <i class="bi bi-trash3"></i>
@@ -109,7 +109,7 @@
     <button
       type="submit"
       (click)="save()"
-      class="px-6 py-2 bg-[#FDE68A] text-[#1E293B] hover:bg-[#FACC15] rounded-md transition cursor-pointer"
+      class="px-6 py-2 bg-yellow-300 text-black hover:bg-yellow-400 rounded-md transition cursor-pointer"
     >
       บันทึกข้อมูล
     </button>
