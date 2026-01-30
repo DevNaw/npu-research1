@@ -43,40 +43,48 @@ import { ReportComponent } from './general/report/report.component';
 import { EditWorkComponent } from './user-pages/edit-work/edit-work.component';
 
 const routes: Routes = [
-  /* ================= PUBLIC (ไม่ต้อง login) ================= */
-
-  { path: 'dashboard', component: UserDashboardComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'test', component: TestComponent },
-  { path: 'aticle', component: AticleComponent },
-  { path: 'aticle/:id', component: AticleComponent },
-  { path: 'download', component: DownloadComponent },
-  { path: 'innovation', component: InnovationComponent },
-  { path: 'innovation/:id', component: InnovationComponent },
-  { path: 'news', component: NewsComponent },
-  { path: 'news/:id', component: NewsDetailComponent },
-  { path: 'research', component: ResearchComponent },
-  { path: 'research/:id', component: ResearchComponent },
-  { path: 'report-researcher', component: ReportResearcherTypeComponent },
-  {
-    path: 'report-institution',
-    component: ReportResearcherInstitutionComponent,
-  },
-  { path: 'report-expertise', component: ReportResearcherExpertiseComponent },
-  {
-    path: 'report-researcher-profile',
-    component: ReportResearcherProfileComponent,
-  },
-  { path: 'report-research', component: ReportResearcherResearchComponent },
-  { path: 'manual', component: ManualComponent },
-  { path: 'performance/:type/:id', component: PerformanceComponent },
-  
 
-
+  /* ================= PUBLIC (ไม่ต้อง login) ================= */
+  {
+    path: '',
+    component: MainComponent,
+    children: [
+      { path: 'dashboard', component: UserDashboardComponent },
+      { path: 'test', component: TestComponent },
+      { path: 'aticle', component: AticleComponent },
+      { path: 'aticle/:id', component: AticleComponent },
+      { path: 'download', component: DownloadComponent },
+      { path: 'innovation', component: InnovationComponent },
+      { path: 'innovation/:id', component: InnovationComponent },
+      { path: 'news', component: NewsComponent },
+      { path: 'news/:id', component: NewsDetailComponent },
+      { path: 'research', component: ResearchComponent },
+      { path: 'research/:id', component: ResearchComponent },
+      { path: 'report-researcher', component: ReportResearcherTypeComponent },
+      {
+        path: 'report-institution',
+        component: ReportResearcherInstitutionComponent,
+      },
+      {
+        path: 'report-expertise',
+        component: ReportResearcherExpertiseComponent,
+      },
+      {
+        path: 'report-researcher-profile',
+        component: ReportResearcherProfileComponent,
+      },
+      { path: 'report-research', component: ReportResearcherResearchComponent },
+      { path: 'manual', component: ManualComponent },
+      { path: 'performance/:type/:id', component: PerformanceComponent },
+    ],
+  },
   /* ================= USER ================= */
-  { path: 'user',
+  {
+    path: 'user',
     canActivate: [userGuard],
+    component: MainComponent,
     children: [
       { path: 'dashboard', component: UserDashboardComponent },
       { path: 'add-aticle', component: UserAddAticleComponent },
@@ -98,13 +106,14 @@ const routes: Routes = [
       { path: 'edit-traning/:id', component: UserEditTraningComponent },
       { path: 'performance/:type/:id', component: PerformanceComponent },
       { path: 'edit-work/:id', component: EditWorkComponent },
-    ]
+    ],
   },
 
   /* ================= ADMIN ================= */
   {
     path: 'admin',
     canActivate: [adminGuard],
+    component: MainComponent,
     children: [
       { path: 'dashboard', component: UserDashboardComponent },
       { path: 'download', component: AdminDownloadComponent },
@@ -144,7 +153,12 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [
+    RouterModule.forRoot(routes, {
+      scrollPositionRestoration: 'top', // ⭐ สำคัญมาก
+      anchorScrolling: 'enabled',
+    }),
+  ],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}

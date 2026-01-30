@@ -1,4 +1,4 @@
-<div class="bg-gray-100 min-h-screen p-6 text-2xl">
+<div class="bg-gray-100 min-h-screen p-6 text-2xl font-bold text-[#394250]">
   <!-- ===== SEARCH ===== -->
   <div class="mx-auto p-6">
     <!-- Title -->
@@ -11,7 +11,7 @@
       </div>
 
       <!-- Title Text -->
-      <h1 class="text-3xl font-bold text-gray-700">ค้นหานักวิจัย</h1>
+      <h1 class="text-4xl font-bold">ค้นหานักวิจัย</h1>
     </div>
 
     <!-- ตัวกรอง -->
@@ -19,7 +19,7 @@
       <div class="grid grid-cols-12 gap-1 items-center">
         <!-- Label -->
         <label
-          class="col-span-12 text-bold text-3xl md:col-span-2 font-black text-gray-700"
+          class="col-span-12 text-2xl md:col-span-2 font-black"
         >
           ตัวกรอง
         </label>
@@ -29,7 +29,7 @@
           <button
             type="button"
             (click)="toggleDropdown('faculties', $event)"
-            class="w-full h-11 border rounded-full px-6 flex justify-between items-center bg-white"
+            class="w-full h-11 border border-gray-300 font-medium rounded-full px-6 flex justify-between items-center bg-white"
           >
             <span class="truncate">
               {{ selectedFaculty || "เลือกหน่วยงาน" }}
@@ -40,13 +40,13 @@
           <!-- Dropdown panel -->
           <div
             *ngIf="isOpen('faculties')"
-            class="absolute z-50 w-full bg-white border rounded-md mt-1 shadow"
+            class="absolute z-50 w-full bg-white border font-medium rounded-md mt-1 shadow"
             (click)="$event.stopPropagation()"
           >
             <input
               [(ngModel)]="searchFaculitie"
               placeholder="ค้นหา..."
-              class="w-full px-3 py-2 border-b outline-none"
+              class="w-full px-3 py-2 border-b outline-none "
             />
 
             <ul class="max-h-48 overflow-y-auto">
@@ -70,13 +70,13 @@
       </div>
 
       <!-- สายงาน -->
-      <div class="grid grid-cols-1 md:grid-cols-1 gap-2 items-center mt-5">
+      <div class="grid grid-cols-1 md:grid-cols-1 font-medium gap-2 items-center mt-5">
         <!-- Major Dropdown -->
         <div class="md:col-span-3 relative">
           <button
             type="button"
             (click)="toggleDropdown('major', $event)"
-            class="w-full h-11 border rounded-full px-6 flex justify-between items-center bg-white"
+            class="w-full h-11 border border-gray-300 rounded-full px-6 flex justify-between items-center bg-white"
           >
             <span class="truncate">
               {{ selectedMajor || "เลือกสาขาวิชา" }}
@@ -136,7 +136,7 @@
               flex items-center justify-center
               h-14 md:h-full
               bg-yellow-400 hover:bg-yellow-300
-              text-gray-800 font-extrabold
+              text-[#394250] font-bold
               px-4 md:px-10
               rounded-full transition cursor-pointer
             "
@@ -164,7 +164,7 @@
       <div class="bg-[#394250] text-white rounded-xl shadow p-6">
         <div class="flex items-center gap-2 mb-4">
           <i class="bi bi-pie-chart-fill text-lg"></i>
-          <h2 class="font-extrabold text-3xl">
+          <h2 class="font-bold text-3xl ">
             สัดส่วนนักวิจัย จำแนกตามสาขาวิชา
           </h2>
         </div>
@@ -179,7 +179,7 @@
         </ng-container>
 
         <ng-template #noData>
-          <div class="text-center text-gray-400 py-16">ไม่พบข้อมูล</div>
+          <div class="text-center text-red-500 py-16">ไม่พบข้อมูล</div>
         </ng-template>
       </div>
 
@@ -188,7 +188,7 @@
       >
         <div class="flex items-center gap-2 mb-4">
           <i class="bi bi-pie-chart-fill text-lg"></i>
-          <h2 class="font-extrabold text-3xl">
+          <h2 class="font-bold text-3xl">
             สัดส่วนนักวิจัย จำแนกตามสาขาวิชา
           </h2>
         </div>
@@ -203,7 +203,7 @@
           </p>
         </div>
         <div class="pt-4 border-t">
-          <p class="text-4xl text-center text-gray-500">
+          <p class="text-4xl text-center text-[#394250]">
             รวมทั้งหมด {{ totalResearchers }} คน
           </p>
         </div>
@@ -213,21 +213,21 @@
 </div>
 
 <!-- ===== TABLE ===== -->
-<div *ngIf="isSearched" class="bg-[#F9CB34] px-10 text-2xl">
+<div *ngIf="isSearched" class="bg-[#F9CB34] px-10 text-2xl text-[#394250]">
   <div class="mx-auto py-6">
     <!-- Header -->
     <div
       class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-4"
     >
-      <h2 class="text-3xl font-extrabold">รายชื่อนักวิจัย</h2>
+      <h2 class="text-3xl font-bold">รายชื่อนักวิจัย</h2>
 
       <div class="flex items-center">
-        <span class="mr-2">Search:</span>
+        <span class="font-bold mr-2">Search:</span>
         <input
           type="text"
           [(ngModel)]="searchText"
           (input)="onSearch()"
-          class="border h-10 rounded bg-white px-3 py-2 w-full md:w-64"
+          class="border h-10 rounded text-2xl bg-white px-3 py-1 w-full md:w-64"
           placeholder="ค้นหา..."
         />
       </div>
@@ -263,7 +263,7 @@
                   <img
                     src="/assets/logoNPU.png"
                     alt="logo"
-                    class="w-12 h-12 object-contain"
+                    class="w-13 h-13 object-contain"
                   />
                 </div>
               </td>
@@ -275,7 +275,7 @@
               <td class="p-3 text-center">
                 <i
                   (click)="goToProfile()"
-                  class="bi bi-person text-lg cursor-pointer text-blue-500 hover:text-blue-300"
+                  class="bi bi-person text-xl cursor-pointer text-blue-500 hover:text-blue-300"
                 ></i>
               </td>
             </tr>

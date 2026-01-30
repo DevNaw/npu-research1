@@ -1,26 +1,28 @@
-<div class="contain-content bg-gray-100 px-10 text-2xl">
-  <div class="mt-3 mx-auto py-6">
-    <h1 class="text-3xl ml-5 font-black">บทความ/วารสาร</h1>
-    <div class="flex justify-end items-center mt-1">
-      <label class="text-xl mr-2">Search:</label>
+<div class="contain-content bg-gray-100 px-10 text-2xl text-[#394250]">
+  <div
+    class="mt-6 mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between"
+  >
+    <h1 class="text-3xl ml-5 font-bold">บทความ/วารสาร</h1>
+    <div class="flex items-center mt-1">
+      <label class="text-xl font-bold mr-2">Search:</label>
       <input
         type="text"
         [(ngModel)]="searchText"
         (input)="onSearch()"
-        class="border border-gray-300 rounded px-2 text-xl ml-2"
+        class="border border-gray-300 rounded px-2 py-1 text-xl ml-2"
         placeholder="ค้นหา..."
       />
     </div>
   </div>
-  <div class="mb-10 mx-auto px-6 py-2 bg-white rounded-xl">
-    <div class="w-full overflow-x-auto mt-6 bg-white shadow-sm">
+  <div class="mb-10 mx-auto px-6 py-6 bg-white rounded-xl">
+    <div class="w-full overflow-x-auto bg-white shadow-sm">
       <table class="w-full text-gray-700">
         <!-- Header -->
         <thead class="bg-[#394250] text-white">
           <tr>
-            <th class="px-4 py-4 w-20 text-center font-semibold">#</th>
-            <th class="px-6 py-4 text-center font-semibold">ผู้วิจัย</th>
-            <th class="px-6 py-4 text-center font-semibold">
+            <th class="px-4 py-2 w-20 text-center font-bold">#</th>
+            <th class="px-4 py-2 text-start font-bold">ผู้วิจัย</th>
+            <th class="px-4 py-2 text-start font-bold">
               ชื่อบทความ / วารสาร
             </th>
           </tr>
@@ -38,7 +40,7 @@
             </td>
 
             <!-- Researcher -->
-            <td class="px-6 py-4">
+            <td class="px-4 py-2">
               <div class="flex items-center gap-4">
                 <img
                   src="assets/logoNPU.png"
@@ -53,7 +55,7 @@
             </td>
 
             <!-- Title -->
-            <td class="px-6 py-4">
+            <td class="px-4 py-2">
               <div
                 title="{{ publication.title }}"
                 (click)="viewAticleDetails(publication.id)"
@@ -76,13 +78,13 @@
     </div>
 
     <div
-      class="flex flex-col md:flex-row md:justify-between md:items-center mt-4 gap-2"
+      class="flex flex-col md:flex-row md:justify-between md:items-center mt-2 gap-2"
     >
-      <p class="text-xl text-gray-600">
+      <p class="text-xl text-[#394250]">
         หน้า {{ currentPage }} จาก {{ totalPages }}
       </p>
 
-      <p class="text-xl text-gray-500">
+      <p class="text-xl text-[#394250]">
         แสดง {{ paginatedAticles.length }} รายการ จาก
         {{ aticles.length }} รายการ
       </p>
@@ -103,7 +105,7 @@
           (click)="changePage(page)"
           class="px-3 py-1 rounded border text-sm transition"
           [ngClass]="{
-            'bg-[#FACC15] text-[#1E293B] border-gray-400': currentPage === page,
+            'bg-[#FACC15] text-[#394250] border-gray-400': currentPage === page,
             'hover:bg-gray-100': currentPage !== page
           }"
         >

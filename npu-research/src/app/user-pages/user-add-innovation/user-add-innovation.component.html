@@ -1,6 +1,6 @@
-<div class="contain-content bg-gray-100 px-10 text-2xl">
+<div class="contain-content bg-gray-100 px-10 text-2xl font-bold text-[#394250]">
   <!-- Back -->
-  <div class="flex justify-end py-10 mx-auto">
+  <div class="flex justify-end mb-4 mx-auto mt-6">
     <button
       class="flex items-center gap-2 text-gray-600 font-medium group transition-colors cursor-pointer"
     >
@@ -18,8 +18,8 @@
     <div
       class="mx-auto px-6 py-5 mb-6 flex items-center gap-4 rounded-xl bg-linear-to-r from-[#9DE1EF] to-[#D3DFEB] shadow"
     >
-      <i class="bi bi-cloud-arrow-up-fill text-3xl text-gray-900"></i>
-      <h2 class="text-3xl font-semibold">
+      <i class="bi bi-cloud-arrow-up-fill text-3xl"></i>
+      <h2 class="text-3xl">
         {{
           isEdit
             ? "แก้ไขข้อมูลนวัตกรรมสิ่งประดิษฐ์"
@@ -30,19 +30,19 @@
 
     <!-- ชื่อนวัตกรรม สิ่งประดิษฐ์ -->
     <div class="grid grid-cols-1 md:grid-cols-1 gap-2 mb-6 mt-10">
-      <label class="md:col-span-1 font-bold text-start text-gray-700">
+      <label class="md:col-span-1 text-start">
         ชื่อนวัตกรรม สิ่งประดิษฐ์ <span class="text-red-500">*</span>
       </label>
       <input
         type="text"
-        class="md:col-span-3 text-xl w-full h-12 border rounded-md px-4 py-2"
+        class="md:col-span-3 text-2xl font-medium w-full h-12 border rounded-md px-4 py-2"
         placeholder="ระบุชื่อนวัตกรรม สิ่งประดิษฐ์"
       />
     </div>
 
     <!-- สาขาของนวัตกรรม สิ่งประดิษฐ์ -->
     <div class="grid grid-cols-1 md:grid-cols-1 gap-2 mb-6">
-      <label class="font-bold text-gray-700 text-start">
+      <label class="text-start">
         สาขาของนวัตกรรม สิ่งประดิษฐ์ <span class="text-red-500">*</span>
       </label>
       <div class="relative md:col-span-3">
@@ -51,7 +51,7 @@
           type="button"
           class="w-full border rounded-md px-3 py-2 flex justify-between items-center bg-white"
         >
-          <span class="truncate text-xl">
+          <span class="truncate text-2xl font-medium">
             {{ selectedMajor || "ระบุสาขาของโครงการวิจัย" }}
           </span>
           <i class="bi bi-chevron-down"></i>
@@ -59,7 +59,7 @@
         <!-- Dropdown panel -->
         <div
           *ngIf="isOpen('major')"
-          class="absolute z-50 w-full bg-white border rounded-md mt-1 shadow"
+          class="absolute z-50 w-full bg-white font-medium border rounded-md mt-1 shadow"
           (click)="$event.stopPropagation()"
         >
           <input
@@ -89,23 +89,23 @@
 
     <!-- หลักการและเหตุผล : -->
     <div class="grid grid-cols-1 md:grid-cols-1 gap-2 mb-6">
-      <label class="md:col-span-1 font-bold text-gray-700 text-start">
+      <label class="md:col-span-1 text-start">
         หลักการและเหตุผล
       </label>
       <textarea
         name="attention"
         id="attention"
         placeholder="ระบุหลักการและเหตุผล"
-        class="md:col-span-3 w-full border text-xl rounded-md px-4 py-2"
+        class="md:col-span-3 w-full border text-2xl font-medium rounded-md px-4 py-2"
       ></textarea>
     </div>
 
     <!-- ประเภทความรับผิดชอบ -->
     <div class="grid grid-cols-1 md:grid-cols-1 gap-2 mb-8">
-      <label class="font-medium text-gray-700 text-start">
+      <label class="font-medium text-start">
         ประเภทความรับผิดชอบ <span class="text-red-500">*</span>
       </label>
-      <select class="max-w-md w-full text-xl border rounded-md px-4 py-2">
+      <select class="max-w-md w-full text-2xl font-medium border rounded-md px-4 py-2">
         <option disabled selected>เลือกประเภทความรับผิดชอบ</option>
         <option>หัวหน้าโครงการ</option>
         <option>ผู้ร่วมโครงการ</option>
@@ -116,14 +116,14 @@
     <div class="w-full">
       <div class="grid grid-cols-1 md:grid-cols-1 gap-2 mb-6 items-start">
         <!-- Label -->
-        <label class="md:col-span-1 font-bold text-start text-gray-700 pt-2">
+        <label class="md:col-span-1 text-start pt-2">
           ผู้ร่วมโครงการอื่นๆ (ถ้ามี)
         </label>
 
         <!-- Table -->
         <div class="md:col-span-3 overflow-x-auto px-4 sm:px-8">
           <h1
-            class="mb-3mt-4 text-2xl font-bold text-gray-700 flex items-center gap-2"
+            class="mb-3mt-4 text-2xl flex items-center gap-2"
           >
             ระบุผู้ร่วมโครงการภายใน
           </h1>
@@ -133,32 +133,32 @@
               <tr
                 class="bg-[#394250] text-white border-b-2 border-gray-300 text-center"
               >
-                <th class="p-3 w-16">ที่</th>
-                <th class="p-3">ระบุชื่อ</th>
-                <th class="p-3">ประเภทความรับผิดชอบ</th>
-                <th class="p-3">Action</th>
+                <th class="p-2 w-16">ที่</th>
+                <th class="p-2">ระบุชื่อ</th>
+                <th class="p-2">ประเภทความรับผิดชอบ</th>
+                <th class="p-2">Action</th>
               </tr>
             </thead>
 
             <tbody>
               <tr
                 *ngFor="let j of rows2; let i = index; trackBy: trackByIndex"
-                class="border-b-2 border-gray-300 bg-gray-200"
+                class="border-b-2 border-gray-300 bg-gray-200 font-medium"
               >
-                <td class="text-center p-3">{{ i + 1 }}</td>
+                <td class="text-center p-2">{{ i + 1 }}</td>
 
-                <td class="text-center p-3">
+                <td class="text-center p-2">
                   <input
                     type="text"
-                    class="w-full border text-xl border-gray-300 bg-white h-12 rounded-md px-3 py-2"
+                    class="w-full border text-2xl border-gray-300 bg-white h-12 rounded-md px-3 py-2"
                     placeholder="ระบุชื่อ"
                     [(ngModel)]="j.name"
                   />
                 </td>
 
-                <td class="p-3">
+                <td class="p-2">
                   <select
-                    class="w-full border border-gray-300 bg-white text-xl rounded-md px-3 py-2"
+                    class="w-full border border-gray-300 bg-white text-2xl rounded-md px-3 py-2"
                     [(ngModel)]="j.organization"
                   >
                     <option value="" disabled>
@@ -192,7 +192,7 @@
 
           <!-- ผู้ร่วมโครงการภายนอก -->
           <h1
-            class="mb-3 mt-4 text-2xl font-bold text-gray-700 flex items-center gap-2"
+            class="mb-3 mt-4 text-2xl flex items-center gap-2"
           >
             ระบุผู้ร่วมโครงการภายนอก
           </h1>
@@ -201,33 +201,33 @@
               <tr
                 class="bg-[#394250] text-white border-b-2 border-gray-300 text-center"
               >
-                <th class="p-3">ที่</th>
-                <th class="p-3">ระบุชื่อ(บุคลากรภายนอก)</th>
-                <th class="p-3">ประเภทความรับผิดชอบ</th>
-                <th class="p-3">หน่วยงาน(บุคลากรภายนอก)</th>
-                <th class="p-3">Action</th>
+                <th class="p-2">ที่</th>
+                <th class="p-2">ระบุชื่อ(บุคลากรภายนอก)</th>
+                <th class="p-2">ประเภทความรับผิดชอบ</th>
+                <th class="p-2">หน่วยงาน(บุคลากรภายนอก)</th>
+                <th class="p-2">Action</th>
               </tr>
             </thead>
 
             <tbody>
               <tr
                 *ngFor="let item of rows; let i = index; trackBy: trackByIndex"
-                class="bg-gray-200 border-b-2 border-gray-300"
+                class="bg-gray-200 border-b-2 border-gray-300 font-medium"
               >
-                <td class="text-center p-3">{{ i + 1 }}</td>
+                <td class="text-center p-2">{{ i + 1 }}</td>
 
-                <td class="text-center p-3">
+                <td class="text-center p-2">
                   <input
                     type="text"
-                    class="w-full border h-12 text-xl border-gray-300 bg-white rounded-md px-3 py-2"
+                    class="w-full border h-12 text-2xl border-gray-300 bg-white rounded-md px-3 py-2"
                     placeholder="ระบุชื่อ"
                     [(ngModel)]="item.name"
                   />
                 </td>
 
-                <td class="p-3">
+                <td class="p-2">
                   <select
-                    class="w-full border h-12 border-gray-300 text-xl bg-white rounded-md px-3 py-2"
+                    class="w-full border h-12 border-gray-300 text-2xl bg-white rounded-md px-3 py-2"
                     [(ngModel)]="item.role"
                   >
                     <option value="" disabled>
@@ -238,10 +238,10 @@
                     <option value="กรรมการ">กรรมการ</option>
                   </select>
                 </td>
-                <td class="p-3">
+                <td class="p-2">
                   <input
                     type="text"
-                    class="w-full border h-12 text-xl border-gray-300 bg-white rounded-md px-3 py-2"
+                    class="w-full border h-12 text-2xl border-gray-300 bg-white rounded-md px-3 py-2"
                     placeholder="ระบุหน่วยงาน"
                     [(ngModel)]="item.organization"
                   />
@@ -274,11 +274,11 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
       <div class="space-y-4">
         <div>
-          <label class="font-bold text-gray-700 text-start">
+          <label class="text-start">
             แหล่งเงินทุน <span class="text-red-500">*</span>
           </label>
           <select
-            class="w-full border h-12 text-xl rounded-md px-4 py-2"
+            class="w-full border h-12 text-2xl font-medium rounded-md px-4 py-2"
             [(ngModel)]="fundType"
           >
             <option value="" disabled selected>เลือกแหล่งเงินทุน</option>
@@ -288,12 +288,12 @@
         </div>
         <!-- ชื่อแหล่งทุน -->
         <div *ngIf="fundType">
-          <label class="block font-bold text-gray-700 text-2xl mb-2">
+          <label class="block text-2xl mb-2">
             ชื่อแหล่งทุน <span class="text-red-500">*</span>
           </label>
 
           <select
-            class="w-full border h-12 text-xl rounded-md px-4 py-2"
+            class="w-full border h-12 text-2xl font-medium rounded-md px-4 py-2"
             [(ngModel)]="fundName"
           >
             <option value="" disabled selected>เลือกชื่อแหล่งทุน</option>
@@ -312,12 +312,12 @@
       </div>
       <!-- จำนวนงบประมาณ -->
       <div>
-        <label class="md:col-span-1 font-bold text-gray-700 text-start">
+        <label class="md:col-span-1 text-start">
           จำนวนงบประมาณ <span class="text-red-500">*</span>
         </label>
         <input
           type="text"
-          class="md:col-span-2 w-full text-xl border rounded-md px-4 py-2"
+          class="md:col-span-2 w-full text-2xl font-medium border rounded-md px-4 py-2"
           placeholder="ระบุจำนวนงบประมาณ"
         />
       </div>
@@ -325,50 +325,50 @@
 
     <!-- ปีที่ได้รับทุน -->
     <div class="grid grid-cols-1 md:grid-cols-1 gap-2 mb-6 mt-6">
-      <label class="md:col-span-1 font-bold text-gray-700 text-start">
+      <label class="md:col-span-1 text-start">
         ปีที่ได้รับทุน <span class="text-red-500">*</span>
       </label>
       <input
         type="text"
-        class="max-w-md h-12 text-xl w-full border rounded-md px-4 py-2"
+        class="max-w-md h-12 text-2xl font-medium w-full border rounded-md px-4 py-2"
         placeholder="ระบุปีที่ได้รับทุน"
       />
     </div>
 
     <!-- ความร่วมมือกับหน่วยงานอื่นๆ : -->
     <div class="grid grid-cols-1 md:grid-cols-1 gap-2 mb-6">
-      <label class="md:col-span-1 font-bold text-gray-700 text-start">
+      <label class="md:col-span-1 text-start">
         ความร่วมมือกับหน่วยงานอื่นๆ
       </label>
       <textarea
         name="attention"
         id="attention"
         placeholder="ระบุความร่วมมือกับหน่วยงานอื่นๆ"
-        class="md:col-span-3 w-full border text-xl rounded-md px-4 py-2"
+        class="md:col-span-3 w-full border text-2xl font-medium rounded-md px-4 py-2"
       ></textarea>
     </div>
 
     <!-- เลขที่สิทธิบัตร -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
       <div>
-        <label class="md:col-span-1 font-bold text-gray-700 text-start">
+        <label class="md:col-span-1 text-start">
           เลขที่สิทธิบัตร : <span class="text-red-500">*</span>
         </label>
         <input
           type="text"
-          class="md:col-span-2 h-12 w-full text-xl border rounded-md px-4 py-2"
+          class="md:col-span-2 h-12 w-full text-2xl font-medium border rounded-md px-4 py-2"
           placeholder="ระบุเลขที่สิทธิบัตร"
         />
       </div>
 
       <!-- เลขที่คำขอสิทธิบัตร -->
       <div>
-        <label class="md:col-span-1 font-bold text-gray-700 text-start">
+        <label class="md:col-span-1 text-start">
           เลขที่คำขอสิทธิบัตร : <span class="text-red-500">*</span>
         </label>
         <input
           type="text"
-          class="md:col-span-2 h-12 w-full text-xl border rounded-md px-4 py-2"
+          class="md:col-span-2 h-12 w-full text-2xl font-medium border rounded-md px-4 py-2"
           placeholder="ระบุเลขที่คำขอสิทธิบัตร"
         />
       </div>
@@ -376,12 +376,12 @@
 
     <!-- เว็บไซต์ตรวจสิทธิบัตร -->
     <div class="grid grid-cols-1 md:grid-cols-1 gap-2 mb-6">
-      <label class="md:col-span-1 font-bold text-gray-700 text-start">
+      <label class="md:col-span-1 text-start">
         เว็บไซต์ตรวจสิทธิบัตร : <span class="text-red-500">*</span>
       </label>
       <input
         type="text"
-        class="md:col-span-2 w-full border text-xl rounded-md px-4 py-2"
+        class="md:col-span-2 w-full border text-2xl font-medium rounded-md px-4 py-2"
         placeholder="ระบุเว็บไซต์ตรวจสิทธิบัตร"
       />
     </div>
@@ -389,7 +389,7 @@
     <!-- ไฟล์รายงานฉบับสมบูรณ์ -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6 items-center">
       <div>
-        <label class="md:col-span-1 font-bold text-gray-700 text-start">
+        <label class="md:col-span-1 text-start">
           ไฟล์รายงานฉบับสมบูรณ์ (PDF) :
         </label>
 
@@ -404,12 +404,12 @@
 
         <!-- ปุ่ม + ชื่อไฟล์ -->
         <div class="md:col-span-2 flex gap-3 items-center mt-3">
-          <span class="text-gray-600 truncate">
+          <span class="text-gray-400 font-medium truncate">
             {{ reportFileName || "ยังไม่ได้เลือกไฟล์" }}
           </span>
           <button
             type="button"
-            class="px-4 py-1 bg-[#FDE68A] text-[#1E293B] hover:bg-[#FACC15] rounded-md cursor-pointer"
+            class="px-4 py-1 bg-[#FDE68A] text-[#394250] hover:bg-[#FACC15] rounded-md cursor-pointer"
             (click)="reportFileInput.click()"
           >
             เลือกไฟล์
@@ -419,7 +419,7 @@
 
       <!-- ไฟล์รูปนวัตกรรมสิ่งประดิษฐ์ -->
       <div>
-        <label class="md:col-span-1 font-bold text-gray-700 text-start">
+        <label class="md:col-span-1 text-start">
           ไฟล์รูปนวัตกรรมสิ่งประดิษฐ์ :
         </label>
 
@@ -434,12 +434,12 @@
 
         <!-- ปุ่ม + ชื่อไฟล์ -->
         <div class="md:col-span-2 flex gap-3 items-center mt-3">
-          <span class="text-gray-600 truncate">
+          <span class="text-gray-400 font-medium truncate">
             {{ selectedFileName || "ยังไม่ได้เลือกไฟล์" }}
           </span>
           <button
             type="button"
-            class="px-4 py-1 bg-[#FDE68A] text-[#1E293B] hover:bg-[#FACC15] rounded-md cursor-pointer"
+            class="px-4 py-1 bg-[#FDE68A] text-[#394250] hover:bg-[#FACC15] rounded-md cursor-pointer"
             (click)="fileInput.click()"
           >
             เลือกไฟล์
@@ -452,7 +452,7 @@
     <div class="flex justify-center mt-10">
       <button
         type="submit"
-        class="flex items-center justify-center gap-3 w-72 py-3 bg-[#FDE68A] hover:bg-[#FACC15] text-[#1E293B] text-2xl font-extrabold rounded-lg shadow transition duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 cursor-pointer"
+        class="flex items-center justify-center gap-3 w-72 py-3 bg-[#FDE68A] hover:bg-[#FACC15] text-[#394250] text-2xl rounded-lg shadow transition duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 cursor-pointer"
       >
         <i class="bi bi-floppy2 text-2xl"></i>
         <span>บันทึกข้อมูล</span>

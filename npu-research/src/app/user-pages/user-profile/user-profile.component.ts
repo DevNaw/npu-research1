@@ -133,7 +133,7 @@ export class UserProfileComponent implements OnInit {
       series: [44, 55, 13],
       chart: {
         type: 'pie',
-        width: 250,
+        width: 200,
       },
       labels: ['โครงการวิจัย', 'บทความ', 'นวัตกรรม'],
       legend: {
@@ -174,7 +174,7 @@ export class UserProfileComponent implements OnInit {
       ],
       chart: {
         type: 'bar',
-        height: 250,
+        height: 200,
       },
       plotOptions: {
         bar: {

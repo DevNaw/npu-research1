@@ -104,6 +104,7 @@ import { EditWorkComponent } from './user-pages/edit-work/edit-work.component';
     MatDatepickerModule,
     MatNativeDateModule,
     MatInputModule,
+    AppRoutingModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

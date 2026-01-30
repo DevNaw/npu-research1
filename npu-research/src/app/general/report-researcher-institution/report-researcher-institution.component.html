@@ -1,12 +1,12 @@
-<div class="contain-content bg-gray-100 px-10 text-2xl">
+<div class="contain-content bg-gray-100 px-10 text-2xl font-bold text-[#394250]">
   <div class="mx-auto py-6">
-    <h1 class="text-3xl font-black">
+    <h1 class="text-3xl">
       รายงานข้อมูลจำนวนนักวิจัย แยกตามหน่วยงาน
   </h1>
   </div>
 
-    <div class="mx-auto px-6 py-6 bg-white rounded-xl mb-10">
-      <div class="mt-5">
+    <div class="mx-auto px-6 py-2 bg-white rounded-xl mb-10">
+      <div>
       
         <div
           class="flex flex-col md:flex-row md:justify-between md:items-center mt-3 gap-3"
@@ -30,7 +30,7 @@
   
           <!-- Search -->
           <div class="flex items-center">
-            <label class="text-xl mr-2">Search:</label>
+            <label class="text-2xl mr-2">Search:</label>
             <input
               type="text"
               [(ngModel)]="searchText"
@@ -43,8 +43,6 @@
       </div>
   
       <div class="w-full overflow-x-auto mt-4" id="print-section">
-  
-          <!-- PRINT HEADER -->
     <div class="print-header hidden-print">
       <div class="text-center">
         <h2>รายงานข้อมูลจำนวนนักวิจัย</h2>
@@ -54,13 +52,14 @@
           วันที่พิมพ์: {{ today | date:'dd/MM/yyyy HH:mm' }}
         </p>
       </div>
+      
     </div>
         <table class="w-full overflow-hidden">
           <thead>
             <tr class="bg-[#394250] text-white border-b">
-              <th class="p-3 text-center">#</th>
-              <th class="p-3 pl-6 text-left">หน่วยงาน</th>
-              <th class="p-3 pl-6 text-center">รวม</th>
+              <th class="p-2 text-center">#</th>
+              <th class="p-2 pl-6 text-left">หน่วยงาน</th>
+              <th class="p-2 pl-6 text-center">รวม</th>
             </tr>
           </thead>
   
@@ -69,15 +68,15 @@
               *ngFor="let r of filteredDocuments; let i = index"
               class="border-b border-gray-300 bg-gray-200 hover:bg-gray-50"
             >
-              <td class="p-3 text-center">
+              <td class="p-2 text-center font-medium">
                 {{ (currentPage - 1) * pageSize + i + 1 }}
               </td>
   
-              <td class="p-3 pl-6 font-medium">
+              <td class="p-2 pl-6 font-medium">
                 {{ r.title }}
               </td>
   
-              <td class="p-3 text-center">
+              <td class="p-2 text-center font-medium">
                 {{ r.academic }}
               </td>
             </tr>
@@ -104,11 +103,11 @@
       <div
         class="flex flex-col md:flex-row md:justify-between md:items-center mt-4 gap-2"
       >
-        <p class="text-xl text-gray-600">
+        <p class="text-xl font-medium">
           หน้า {{ currentPage }} จาก {{ totalPages }}
         </p>
   
-        <p class="text-xl text-gray-500">
+        <p class="text-xl font-medium">
           แสดง {{ paginatedReseacrchs.length }} รายการ จาก
           {{ documents.length }} รายการ
         </p>

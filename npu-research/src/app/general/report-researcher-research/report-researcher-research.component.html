@@ -1,4 +1,4 @@
-<div class="bg-gray-100 min-h-screen p-6 text-2xl">
+<div class="bg-gray-100 min-h-screen p-6 text-2xl text-[#394250]">
   <!-- ===== SEARCH ===== -->
   <div class="max-w-3xl mx-auto p-6">
     <!-- Title -->
@@ -16,7 +16,7 @@
       <div class="grid grid-cols-12 gap-3 items-center">
         <!-- ===== label ===== -->
         <label
-          class="col-span-12 md:col-span-2 text-3xl font-black text-gray-700"
+          class="col-span-12 md:col-span-2 text-2xl font-black text-gray-700"
         >
           ตัวกรอง
         </label>
@@ -242,12 +242,12 @@
           <input
             [(ngModel)]="researchItems"
             placeholder="พิมพ์คำค้นหา ชื่อเรื่อง/บทความ/นวัตกรรม"
-            class="flex-1 px-6 md:px-8 text-2xl outline-none border-none"
+            class="flex-1 px-6 md:px-8 text-2xl outline-none border-none font-semibold"
           />
 
           <button
             (click)="search()"
-            class="flex items-center justify-center h-14 md:h-full bg-yellow-400 hover:bg-yellow-300 text-gray-800 font-extrabold px-4 md:px-10 rounded-full transition cursor-pointer"
+            class="flex items-center justify-center h-14 md:h-full bg-yellow-400 hover:bg-yellow-300 text-gray-800 font-bold px-4 md:px-10 rounded-full transition cursor-pointer"
           >
             <span class="hidden md:inline text-2xl mr-4">ค้นหา</span>
             <span
@@ -268,7 +268,7 @@
     <div class="bg-[#394250] text-white rounded-xl shadow p-6">
       <div class="flex items-center gap-2 mb-4">
         <i class="bi bi-pie-chart-fill text-lg"></i>
-        <h2 class="ont-extrabold text-3xl">สัดส่วนนักวิจัย จำแนกตามสาขาวิชา</h2>
+        <h2 class="font-bold text-3xl">สัดส่วนนักวิจัย จำแนกตามสาขาวิชา</h2>
       </div>
 
       <apx-chart
@@ -280,20 +280,20 @@
       ></apx-chart>
 
       <ng-template #noData>
-        <div class="text-center text-gray-400 py-16">ไม่พบข้อมูล</div>
+        <div class="text-center text-red-500 py-16">ไม่พบข้อมูล</div>
       </ng-template>
     </div>
 
     <div
-      class="bg-white rounded-xl shadow p-6 flex flex-col justify-between items-center"
+      class="bg-white rounded-xl shadow p-6 flex flex-col justify-between items-center text-[#394250]"
     >
       <div class="flex items-center gap-2 mb-4">
         <i class="bi bi-pie-chart-fill text-lg"></i>
-        <h2 class="font-extrabold text-3xl">
+        <h2 class="font-bold text-3xl">
           สัดส่วนนักวิจัย จำแนกตามสาขาวิชา
         </h2>
       </div>
-      <div class="space-y-1 text-gray-700">
+      <div class="space-y-1">
         <p
           *ngFor="let l of donutLabels; let i = index"
           class="flex justify-between px-8"
@@ -303,7 +303,7 @@
         </p>
       </div>
       <div class="pt-4 border-t">
-        <p class="text-4xl text-center text-gray-500">
+        <p class="text-4xl text-center">
           รวมทั้งหมด {{ totalResearchers }} งาน
         </p>
       </div>
@@ -317,7 +317,7 @@
     <div
       class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-4"
     >
-      <h2 class="text-3xl font-extrabold">
+      <h2 class="text-3xl font-bold">
         {{
           selectedType === "project"
             ? "โครงการวิจัย"
@@ -329,7 +329,7 @@
         }}
       </h2>
       <div class="flex items-center">
-        <span class="mr-2">Search:</span>
+        <span class="mr-2 font-bold">Search:</span>
         <input
           [(ngModel)]="searchText"
           (input)="onSearch()"
@@ -343,10 +343,10 @@
         <table class="w-full border border-gray-300">
           <thead class="bg-[#394250] text-white border-b-2 border-gray-300">
             <tr>
-              <th class="p-3">#</th>
-              <th class="p-3">ชื่อเจ้าของผลงาน</th>
-              <th class="p-3">ชื่องานวิจัย</th>
-              <th class="p-3">รายละเอียด</th>
+              <th class="p-2">#</th>
+              <th class="p-2 text-start">ชื่อเจ้าของผลงาน</th>
+              <th class="p-2 text-start">ชื่องานวิจัย</th>
+              <th class="p-2">รายละเอียด</th>
             </tr>
           </thead>
 
@@ -355,10 +355,10 @@
               *ngFor="let r of filteredResearchers; let i = index"
               class="hover:bg-gray-50 bg-gray-200 border-b border-gray-300"
             >
-              <td class="p-3 text-center">{{ i + 1 }}</td>
-              <td class="p-3">{{ r.name }}</td>
-              <td class="p-3">{{ r.title }}</td>
-              <td class="p-3 text-center">
+              <td class="p-2 text-center">{{ i + 1 }}</td>
+              <td class="p-2">{{ r.name }}</td>
+              <td class="p-2">{{ r.title }}</td>
+              <td class="p-2 text-center">
                 <i
                   (click)="goToResearch(r.id, r.type)"
                   class="bi bi-arrow-right-square text-blue-500 hover:text-blue-700 cursor-pointer"

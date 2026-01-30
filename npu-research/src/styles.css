@@ -1,12 +1,52 @@
 /* You can add global styles to this file, and also import other style files */
 @import "tailwindcss";
 
+/* Regular */
 @font-face {
   font-family: 'TH K2D July8';
   src: url('/assets/fonts/TH K2D July8.ttf') format('truetype');
-  font-weight: normal;
+  font-weight: 400;
   font-style: normal;
 }
+
+/* Bold */
+@font-face {
+  font-family: 'TH K2D July8';
+  src: url('/assets/fonts/TH K2D July8 Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+/* Italic */
+@font-face {
+  font-family: 'TH K2D July8';
+  src: url('/assets/fonts/TH K2D July8 Italic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+}
+
+/* Bold Italic */
+@font-face {
+  font-family: 'TH K2D July8';
+  src: url('/assets/fonts/TH K2D July8 Bold Italic.ttf') format('truetype');
+  font-weight: 700;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'TH K2D July8';
+  src: url('/assets/fonts/TH K2D July8 ExtraBold.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'TH K2D July8';
+  src: url('/assets/fonts/TH K2D July8 Black.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+}
+
 
 body {
   font-family: 'TH K2D July8', sans-serif;
