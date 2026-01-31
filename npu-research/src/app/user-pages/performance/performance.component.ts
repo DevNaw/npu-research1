@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+
 type WorkType = 'research' | 'article' | 'innovation';
 
 @Component({
@@ -11,6 +12,7 @@ type WorkType = 'research' | 'article' | 'innovation';
 export class PerformanceComponent {
   type!: WorkType;
   id!: number;
+  selectedImage: string | null = null;
 
   data: any; // mock data (แทน API)
 
@@ -88,28 +90,6 @@ export class PerformanceComponent {
       };
     }
   }
-
-  goEdit() {
-    let route = '';
-
-    switch (this.type) {
-      case 'research':
-        route = '/user-edit-research';
-        break;
-
-      case 'article':
-        route = '/user-edit-aticle';
-        break;
-
-      case 'innovation':
-        route = '/user-edit-innovation';
-        break;
-    }
-
-    this.router.navigate([route, this.id]);
-  }
-
-  selectedImage: string | null = null;
 
   openImage(img: string) {
     this.selectedImage = img;

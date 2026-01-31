@@ -1,4 +1,4 @@
-<div class="bg-gray-100 min-h-screen p-6 text-2xl">
+<div class="bg-gray-100 min-h-screen p-6 text-2xl font-bold text-[#394250]">
   <!-- ===== SEARCH ===== -->
   <div class="max-w-7xl mx-auto p-6">
     <!-- Title -->
@@ -7,11 +7,11 @@
       <div
         class="w-24 h-24 rounded-full bg-linear-to-b from-sky-200 to-sky-100 flex items-center justify-center mb-4"
       >
-        <i class="bi bi-search text-4xl text-gray-700"></i>
+        <i class="bi bi-search text-4xl"></i>
       </div>
 
       <!-- Title Text -->
-      <h1 class="text-3xl font-bold text-gray-700">ค้นหานักวิจัย</h1>
+      <h1 class="text-4xl">ค้นหานักวิจัย</h1>
     </div>
 
     <!-- ตัวกรอง -->
@@ -19,13 +19,13 @@
       <div class="grid grid-cols-12 gap-1 items-center">
         <!-- Label -->
         <label
-          class="col-span-12 text-bold text-3xl md:col-span-2 font-black text-gray-700"
+          class="col-span-12 text-4xl md:col-span-2"
         >
           ตัวกรอง
         </label>
 
         <!-- Dropdown -->
-        <div class="col-span-12 md:col-span-10 relative">
+        <div class="col-span-12 md:col-span-10 relative font-medium">
           <button
             type="button"
             (click)="toggleDropdown('faculties', $event)"
@@ -60,7 +60,7 @@
 
               <li
                 *ngIf="filteredFaculties().length === 0"
-                class="px-4 py-2 text-gray-400 text-center"
+                class="px-4 py-2 text-gray-400 text-center font-bold"
               >
                 ไม่พบข้อมูล
               </li>
@@ -70,7 +70,7 @@
       </div>
 
       <!-- สายงาน -->
-      <div class="grid grid-cols-1 md:grid-cols-1 gap-2 items-center mt-5">
+      <div class="grid grid-cols-1 md:grid-cols-1 gap-2 items-center mt-5 font-medium">
         <!-- Major Dropdown -->
         <div class="md:col-span-3 relative">
           <button
@@ -107,7 +107,7 @@
 
               <li
                 *ngIf="filteredMajor().length === 0"
-                class="px-4 py-2 text-gray-400 text-center"
+                class="px-4 py-2 text-gray-400 text-center font-bold"
               >
                 ไม่พบข้อมูล
               </li>
@@ -136,7 +136,7 @@
               flex items-center justify-center
               h-14 md:h-full
               bg-yellow-400 hover:bg-yellow-300
-              text-gray-800 font-extrabold
+              text-gray-800 font-bold
               px-4 md:px-10
               rounded-full transition cursor-pointer
             "
@@ -164,7 +164,7 @@
       <div class="bg-[#394250] text-white rounded-xl shadow p-6">
         <div class="flex items-center gap-2 mb-4">
           <i class="bi bi-pie-chart-fill text-lg"></i>
-          <h2 class="font-extrabold text-3xl">
+          <h2 class="text-3xl">
             สัดส่วนนักวิจัย จำแนกตามสาขาวิชา
           </h2>
         </div>
@@ -188,17 +188,17 @@
       >
         <div class="flex items-center gap-2 mb-4">
           <i class="bi bi-pie-chart-fill text-lg"></i>
-          <h2 class="font-extrabold text-3xl">
+          <h2 class="text-3xl">
             สัดส่วนนักวิจัย จำแนกตามสาขาวิชา
           </h2>
         </div>
 
-        <div class="space-y-1 text-gray-700">
+        <div class="space-y-1 ">
           <p
             *ngFor="let l of donutLabels; let i = index"
             class="flex justify-between px-8"
           >
-            <span>{{ l }}</span
+            <span class="font-medium">{{ l }}</span
             ><span class="font-medium">{{ donutSeries[i] }} คน</span>
           </p>
         </div>
@@ -219,15 +219,15 @@
     <div
       class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-4"
     >
-      <h2 class="text-3xl font-extrabold">รายชื่อนักวิจัย</h2>
+      <h2 class="text-3xl font-bold">รายชื่อนักวิจัย</h2>
 
       <div class="flex items-center">
-        <span class="mr-2">Search:</span>
+        <span class="font-bold mr-2">Search:</span>
         <input
           type="text"
           [(ngModel)]="searchText"
           (input)="onSearch()"
-          class="border h-10 rounded bg-white px-3 py-2 w-full md:w-64"
+          class="border h-10 rounded text-2xl bg-white px-3 py-2 w-full md:w-64"
           placeholder="ค้นหา..."
         />
       </div>
@@ -239,13 +239,13 @@
         <table class="w-full min-w-225 border-gray-300">
           <thead class="bg-[#394250] text-white border-b-2 border-gray-300">
             <tr>
-              <th class="p-3 text-center">#</th>
-              <th class="p-3 text-center">img</th>
-              <th class="p-3 text-left">ชื่อ - นามสกุล</th>
-              <th class="p-3 text-center">สาขาวิชา</th>
-              <th class="p-3 text-center">หน่วยงาน</th>
-              <th class="p-3 text-center">ตำแหน่ง</th>
-              <th class="p-3 text-center">Action</th>
+              <th class="p-2 text-center">#</th>
+              <th class="p-2 text-center">img</th>
+              <th class="p-2 text-left">ชื่อ - นามสกุล</th>
+              <th class="p-2 text-center">สาขาวิชา</th>
+              <th class="p-2 text-center">หน่วยงาน</th>
+              <th class="p-2 text-center">ตำแหน่ง</th>
+              <th class="p-2 text-center">Action</th>
             </tr>
           </thead>
 
@@ -254,9 +254,9 @@
               *ngFor="let r of paginationData; let i = index"
               class="hover:bg-gray-50 bg-gray-200 border-b border-gray-300"
             >
-              <td class="p-3 text-center">{{ i + 1 }}</td>
+              <td class="p-2 text-center">{{ i + 1 }}</td>
 
-              <td class="p-3 text-center">
+              <td class="p-2 text-center">
                 <div
                   class="mx-auto w-16 h-16 rounded-full border border-amber-400 flex items-center justify-center"
                 >
@@ -268,11 +268,11 @@
                 </div>
               </td>
 
-              <td class="p-3">{{ r.name }}</td>
-              <td class="p-3 text-center">{{ r.major }}</td>
-              <td class="p-3 text-center">{{ r.faculty }}</td>
-              <td class="p-3 text-center">{{ r.position }}</td>
-              <td class="p-3 text-center">
+              <td class="p-2">{{ r.name }}</td>
+              <td class="p-2 text-center">{{ r.major }}</td>
+              <td class="p-2 text-center">{{ r.faculty }}</td>
+              <td class="p-2 text-center">{{ r.position }}</td>
+              <td class="p-2 text-center">
                 <i
                   (click)="goToProfile()"
                   class="bi bi-person text-lg cursor-pointer text-blue-500 hover:text-blue-300"

@@ -387,7 +387,7 @@ export class UserDashboardComponent implements OnInit {
       {
         id: 2,
         title: 'ผลกระทบของการเปลี่ยนแปลงสภาพภูมิอากาศต่อการเกษตร',
-        researchers: 'ผศ.สมชาย ใจดีผศ.สมชาย ใจดีผศ.สมชาย ใจดีผศ.สมชาย ใจดี',
+        researchers: 'ผศ.สมชาย ใจดี',
         date: '15 มี.ค. 2567',
         year: 2567,
       },

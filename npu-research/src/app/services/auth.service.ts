@@ -8,6 +8,19 @@ import { User } from '../models/user.model';
 export class AuthService {
   private currentUser: User | null = null;
 
+  // ===== helper อ่านจาก localStorage แบบปลอดภัย =====
+  private getUserFromStorage(): User | null {
+    const raw = localStorage.getItem('user');
+    if (!raw) return null;
+
+    try {
+      return JSON.parse(raw) as User;
+    } catch {
+      return null;
+    }
+  }
+
+  // ===== login =====
   login(username: string, password: string): boolean {
     const user = MOCK_USERS.find(
       u => u.username === username && u.password === password
@@ -16,43 +29,38 @@ export class AuthService {
     if (!user) return false;
 
     this.currentUser = user;
-    // 🔐 บันทึก
-    localStorage.setItem('user', JSON.stringify(user));
+    localStorage.setItem('user', JSON.stringify(user)); // 🔐 เก็บทั้ง object
     return true;
   }
 
-  isAdmin(): boolean {
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
-    this.currentUser = user;
-    return this.currentUser?.role === 'admin';
-  }
-
+  // ===== เช็คว่า login อยู่ไหม =====
   isLoggedIn(): boolean {
-    console.log(localStorage.getItem('user'));
-    
-    if (!localStorage.getItem('user')) {
-      return false;
-    }
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
-    
+    const user = this.getUserFromStorage();
     this.currentUser = user;
-    // console.log(this.currentUser);
-    
-    return !!this.currentUser;
+    return user !== null;
   }
 
+  // ===== ดึง user ปัจจุบัน =====
   getUser(): User | null {
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
-    this.currentUser = user;
+    if (!this.currentUser) {
+      this.currentUser = this.getUserFromStorage();
+    }
     return this.currentUser;
   }
 
-  getRole(): 'user' | 'admin' | null {
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
-    this.currentUser = user;
-    return this.currentUser?.role ?? null;
+  // ===== เช็ค role admin =====
+  isAdmin(): boolean {
+    const user = this.getUser();
+    return user?.role === 'admin';
   }
 
+  // ===== เอา role ไปใช้ตรง ๆ =====
+  getRole(): 'user' | 'admin' | null {
+    const user = this.getUser();
+    return user?.role ?? null;
+  }
+
+  // ===== logout =====
   logout() {
     localStorage.removeItem('user');
     this.currentUser = null;

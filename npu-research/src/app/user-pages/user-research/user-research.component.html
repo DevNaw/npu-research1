@@ -249,7 +249,7 @@
             (click)="search()"
             class="flex items-center justify-center h-14 md:h-full bg-yellow-400 hover:bg-yellow-300 px-4 font-semibold md:px-10 rounded-full transition cursor-pointer"
           >
-            <span class="hidden md:inline text-3xl mr-4">ค้นหา</span>
+            <span class="hidden md:inline text-2xl mr-4">ค้นหา</span>
             <span
               class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-white"
               ><i class="bi bi-arrow-right"></i
@@ -300,7 +300,7 @@
           class="flex justify-between border-b last:border-b-0 pb-1"
         >
           <span class="font-medium">{{ l }}</span>
-          <span class="font-semibold">{{ donutSeries[i] }} งาน</span>
+          <span class="font-medium">{{ donutSeries[i] }} งาน</span>
         </p>
       </div>
     
@@ -371,7 +371,7 @@
             </tr>
 
             <tr *ngIf="filteredResearchers.length === 0">
-              <td colspan="5" class="p-4 text-center text-gray-500">
+              <td colspan="5" class="p-4 text-center text-gray-500 font-bold">
                 ไม่พบข้อมูล
               </td>
             </tr>
