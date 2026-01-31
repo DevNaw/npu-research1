@@ -26,6 +26,7 @@ export type PieChartOptions = {
   responsive: ApexResponsive[];
   legend: ApexLegend;
   dataLabels: ApexDataLabels;
+  plotOptions: ApexPlotOptions;
 };
 
 export type BarChartOptions = {

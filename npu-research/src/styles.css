@@ -58,6 +58,14 @@ body {
 }
 
 @media print {
+  @page {
+    margin: 1.5cm;
+  }
+
+  body {
+    margin: 0;
+  }
+
   body * {
     visibility: hidden !important;
   }
@@ -67,52 +75,62 @@ body {
     visibility: visible !important;
   }
 
+  /* ดันส่วนพิมพ์ไปชิดบนซ้ายของหน้า */
   #print-section {
-    position: absolute;
-    left: 0;
+    position: static;
     top: 0;
+    left: 0;
     width: 100%;
   }
 
-  /* แสดงหัวรายงานเฉพาะตอนพิมพ์ */
+  /* หัวรายงานแบบเอกสารราชการ */
   .print-header {
     display: block !important;
-    margin-bottom: 16px;
+    text-align: center;
+    margin-bottom: 12px;
   }
 
   .print-header h2 {
-    font-size: 20px;
+    font-size: 18pt;
     font-weight: bold;
-    margin: 4px 0;
-  }
-
-  .print-header h3 {
-    font-size: 16px;
-    margin: 2px 0;
+    margin: 0;
   }
 
   .print-header p {
-    font-size: 12px;
-    margin-top: 6px;
+    font-size: 12pt;
+    margin: 4px 0 0 0;
+    line-height: 1.4;
   }
 
-  .print-logo {
-    height: 60px;
-    margin-bottom: 8px;
-  }
-
+  /* ตารางแบบราชการ */
   table {
     border-collapse: collapse !important;
     width: 100%;
+    font-size: 12pt;
+  }
+
+  thead tr {
+    background: #fff !important;
   }
 
   th,
   td {
     border: 1px solid #000 !important;
-    padding: 6px !important;
+    padding: 6px 8px !important;
     color: #000 !important;
+    background: #fff !important;
   }
 
+  th {
+    text-align: center;
+    font-weight: bold;
+  }
+
+  td {
+    vertical-align: middle;
+  }
+
+  /* ซ่อนปุ่มและส่วนที่ไม่ใช่เอกสาร */
   button,
   input,
   nav,

@@ -169,4 +169,14 @@ export class UserAddResearchComponent {
       m.toLowerCase().includes(this.searchMajor.toLowerCase())
     );
   }
+
+  goToResearchDetail(type: string, id: number | string) {
+    const role = localStorage.getItem('role');
+  
+    const base =
+      role === 'admin' ? '/admin/performance' : '/user/performance';
+  
+    this.router.navigate([base, type, id]);
+  }
+  
 }

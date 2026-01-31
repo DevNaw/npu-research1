@@ -171,7 +171,7 @@ export class UserDashboardComponent implements OnInit {
         position: 'right',
         fontFamily: 'TH K2D July8',
         formatter: (seriesName: string) => {
-          return `<span style="font-size:20px; text-[#394250];">${seriesName}</span>`;
+          return `<span style="font-size:20px; color:#394250;">${seriesName}</span>`;
         },
       },
       plotOptions: {
@@ -245,7 +245,7 @@ export class UserDashboardComponent implements OnInit {
         position: 'right',
         fontFamily: 'TH K2D July8',
         formatter: (seriesName: string) => {
-          return `<span style="font-size:20px;">${seriesName}</span>`;
+          return `<span style="font-size:20px; color:#394250;">${seriesName}</span>`;
         },
       },
       plotOptions: {
@@ -305,7 +305,7 @@ export class UserDashboardComponent implements OnInit {
         position: 'right',
         fontFamily: 'TH K2D July8',
         formatter: (seriesName: string) => {
-          return `<span style="font-size:20px;">${seriesName}</span>`;
+          return `<span style="font-size:20px; color:#394250;">${seriesName}</span>`;
         },
       },
       plotOptions: {
