@@ -13,13 +13,19 @@ export class AdminNewsComponent {
   news: News[] = [
     {
       id: 1,
-      title: 'ข่าวประชาสัมพันธ์ที่ 1',
+      title: 'มหาวิทยาลัยนครพนมเผยผลงานวิจัย เสริมศักยภาพการพัฒนาท้องถิ่นอย่างยั่งยืน',
       date: '2026-01-01',
       dateend: '2026-01-31',
     },
     {
       id: 2,
-      title: 'ข่าวประชาสัมพันธ์ที่ 2',
+      title: 'งานวิจัย มนพ. ขับเคลื่อนองค์ความรู้สู่การใช้ประโยชน์เชิงพื้นที่',
+      date: '2026-02-01',
+      dateend: '2026-02-28',
+    },
+    {
+      id: 2,
+      title: 'งานวิจัย มนพ. พลังเล็ก ๆ ที่สร้างการเปลี่ยนแปลงใหญ่ให้สังคม',
       date: '2026-02-01',
       dateend: '2026-02-28',
     },
@@ -59,6 +65,10 @@ export class AdminNewsComponent {
     if (page >= 1 && page <= this.totalPages) {
       this.currentPage = page;
     }
+  }
+
+  get pages(): number[] {
+    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
   }
 
   createNews() {

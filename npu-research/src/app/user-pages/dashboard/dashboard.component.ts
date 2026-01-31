@@ -65,8 +65,8 @@ export class UserDashboardComponent implements OnInit {
   selectedTab: keyof DataPerformance = 'research';
 
   series: ApexNonAxisChartSeries = [
-    18.2, 12.5, 10.8, 8.6, 7.4, 6.2, 5.5, 4.8, 4.1, 3.7, 3.2, 2.8, 2.4, 2.1,
-    1.9, 1.6, 1.3, 1.1, 0.9, 0.8, 0.7,
+    2, 2, 8, 6, 4, 6, 5, 4, 2, 3, 3, 2, 2, 2,
+    4, 6, 3, 4, 2, 8, 7,
   ];
 
   colors: string[] = [
@@ -204,8 +204,8 @@ export class UserDashboardComponent implements OnInit {
       title: 'กราฟสรุปจำนวนบทความ จำแนกตามหน่วยงาน',
       subtitle: this.getLastUpdatedText(),
       series: [
-        124, 611, 505, 225, 382, 206, 560, 5, 17, 80, 43, 184, 309, 28, 322, 18,
-        4, 59, 5, 12, 8, 1, 16, 2,
+        2, 6, 5, 2, 3, 2, 5, 5, 2, 8, 3, 4, 3, 2, 2, 2,
+        4, 5, 5, 4, 8, 2, 3, 2,
       ],
       labels: [
         'คณะเกษตรและเทคโนโลยี',
@@ -277,7 +277,7 @@ export class UserDashboardComponent implements OnInit {
     {
       title: 'กราฟสรุปจำนวนนวัตกรรมสิ่งประดิษฐ์ จำแนกตามหน่วยงาน',
       subtitle: this.getLastUpdatedText(),
-      series: [3, 5, 9, 2, 3, 5, 2, 6, 5, 61, 31, 1, 42],
+      series: [3, 5, 9, 2, 3, 5, 2, 6, 5, 6, 3, 2, 2],
       labels: [
         'คณะเกษตรและเทคโนโลยี',
         'คณะครุศาสตร์',

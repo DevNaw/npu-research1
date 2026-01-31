@@ -1,200 +1,120 @@
-<div class="bg-gray-100 min-h-screen px-10 py-10 text-2xl">
-  <div class="mx-auto bg-white rounded-2xl shadow-lg p-6 space-y-2">
-    <!-- Header -->
-    <div class="flex justify-between items-center">
-      <h1 class="text-3xl font-semibold text-gray-800">
-        {{ isEdit ? "แก้ไขข่าว" : "เพิ่มข่าว" }}
-      </h1>
+<div class="mx-auto bg-gray-100 p-10">
+  <!-- Header -->
+   <div class="border bg-white rounded-lg ">
+  <div class="bg-gray-700 text-white px-6 py-4 flex items-center gap-3 rounded-t-lg border">
+    <i class="bi bi-plus-circle text-xl"></i>
+    <h2 class="text-lg font-semibold">เพิ่มข่าวประชาสัมพันธ์</h2>
+  </div>
 
-      <a
-        routerLink="/admin/news"
-        class="text-xl text-gray-500 hover:text-indigo-600 flex items-center gap-1"
-      >
-        ← กลับ
-      </a>
+  <!-- Body -->
+  <div class="p-6 space-y-6">
+
+    <!-- หัวข้อข่าว -->
+    <div>
+      <label class="block text-sm font-medium mb-1">
+        หัวข้อข่าว <span class="text-red-500">*</span>
+      </label>
+      <input
+        type="text"
+        placeholder="หัวข้อข่าว"
+        class="w-full border rounded-md px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+      />
     </div>
 
-    <form [formGroup]="newsForm" (ngSubmit)="submit()" class="space-y-8">
-      <!-- ข้อมูลข่าว -->
-      <div class="rounded-xl p-6 space-y-4">
-        <h2
-          class="text-2xl font-semibold text-indigo-700 flex items-center gap-2"
-        >
-          <i class="bi bi-file-earmark-text"></i> ข้อมูลข่าว
-        </h2>
-
-        <input
-          formControlName="title"
-          placeholder="หัวข้อข่าว"
-          class="w-full border text-xl rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-400"
-        />
-
-        <textarea
-          formControlName="description"
-          rows="3"
-          placeholder="คำอธิบายสั้น"
-          class="w-full border text-xl rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-400"
-        ></textarea>
-
-        <textarea
-          formControlName="content"
-          rows="6"
-          placeholder="เนื้อหาข่าว"
-          class="w-full border text-xl rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-400"
-        ></textarea>
-
-        <input
-          formControlName="sourceUrl"
-          placeholder="ลิงก์แหล่งข่าว"
-          class="w-full border text-xl rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-400"
-        />
-
-        <div class="flex gap-16">
-          <div>
-            <label class="block text-gray-600 mb-1">
-              วันที่เผยแพร่
-            </label>
-            <input
-              type="date"
-              formControlName="publishedAt"
-              class="border rounded-lg px-4 py-2"
-            />
-          </div>
-          <div>
-            <label class="block text-gray-600 mb-1">
-              วันที่สิ้นสุดเผยแพร่
-            </label>
-            <input
-              type="date"
-              formControlName="publishedAt"
-              class="border rounded-lg px-4 py-2"
-            />
-          </div>
-        </div>
-      </div>
-
-      <!-- รูปปกข่าว -->
-      <div
-        class="rounded-xl border p-6 space-y-5 bg-white flex flex-col items-center"
-      >
-        <h2
-          class="text-xl font-semibold text-indigo-700 flex items-center gap-2 self-start"
-        >
-          <i class="bi bi-image"></i> รูปปกข่าว
-        </h2>
-
-        <!-- Preview -->
-        <div *ngIf="coverPreview" class="mt-2">
-          <a [href]="coverPreview" target="_blank">
-            <div
-              class="bg-gray-50 rounded-lg p-3 flex justify-center items-center"
-            >
-              <img
-                [src]="coverPreview"
-                alt="cover"
-                class="max-w-md w-full max-h-90 object-contain rounded-lg shadow-sm hover:shadow-md transition"
-              />
-            </div>
-          </a>
-        </div>
-
-        <!-- input file (hidden) -->
-        <input
-          id="coverInput"
-          type="file"
-          accept="image/*"
-          (change)="onCoverChange($event)"
-          class="hidden"
-        />
-
-        <!-- Button -->
-        <label
-          for="coverInput"
-          class="inline-flex items-center gap-2 px-5 py-1 rounded-lg bg-yellow-300 hover:bg-yellow-400 text-black text-xl cursor-pointer transition"
-        >
-          <i class="bi bi-upload"></i>
-          เลือกรูปปก
+    <!-- วันที่ประกาศ + วันที่สิ้นสุด -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <label class="block text-sm font-medium mb-1">
+          วันที่ประกาศ <span class="text-red-500">*</span>
         </label>
-      </div>
-
-      <!-- แกลเลอรี -->
-      <div
-        class="rounded-xl border p-6 space-y-5 bg-white flex flex-col items-center"
-      >
-        <h2
-          class="text-xl font-semibold text-indigo-700 flex items-center gap-2 self-start"
-        >
-          <i class="bi bi-images"></i> รูปภาพเพิ่มเติม
-        </h2>
-
-        <!-- Gallery Preview -->
-        <div
-          *ngIf="galleryPreview.length > 0"
-          class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 w-full mt-2"
-        >
-          <a
-            *ngFor="let img of galleryPreview"
-            [href]="img"
-            target="_blank"
-            class="block"
-          >
-            <div
-              class="bg-gray-50 rounded-xl p-2 flex items-center justify-center"
-            >
-              <img
-                [src]="img"
-                alt="gallery"
-                class="h-32 w-full object-contain rounded-lg hover:shadow-md hover:scale-[1.03] transition"
-              />
-            </div>
-          </a>
+        <div class="relative">
+          <input
+            type="date"
+            class="w-full border rounded-md px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
         </div>
+      </div>
 
-        <!-- ไม่มีรูป -->
-        <p
-          *ngIf="!galleryPreview || galleryPreview.length === 0"
-          class="text-xl text-gray-400 italic"
-        >
-          ยังไม่มีรูปภาพเพิ่มเติม
-        </p>
-
-        <!-- input file (hidden) -->
-        <input
-          id="galleryInput"
-          type="file"
-          accept="image/*"
-          multiple
-          (change)="onGalleryChange($event)"
-          class="hidden"
-        />
-
-        <!-- Button -->
-        <label
-          for="galleryInput"
-          class="inline-flex items-center gap-2 px-5 py-1 rounded-lg bg-yellow-300 hover:bg-yellow-400 text-black text-xl cursor-pointer transition"
-        >
-          <i class="bi bi-upload"></i>
-          เพิ่มรูปภาพ
+      <div>
+        <label class="block text-sm font-medium mb-1">
+          วันที่สิ้นสุด <span class="text-red-500">*</span>
         </label>
+        <input
+          type="date"
+          class="w-full border rounded-md px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
+      </div>
+    </div>
+
+    <!-- รายละเอียดข่าว -->
+    <div>
+      <label class="block text-sm font-medium mb-1">
+        รายละเอียดข่าว <span class="text-red-500">*</span>
+      </label>
+
+      <!-- toolbar -->
+      <div class="border rounded-t-md bg-gray-50 px-2 py-1 flex gap-2 text-sm">
+        <button class="font-bold px-2 py-1 border rounded hover:bg-gray-200">B</button>
+        <button class="italic px-2 py-1 border rounded hover:bg-gray-200">I</button>
+        <button class="underline px-2 py-1 border rounded hover:bg-gray-200">U</button>
       </div>
 
-      <!-- Actions -->
-      <div class="flex justify-end gap-4">
-        <button
-          type="button"
-          routerLink="/admin-news"
-          class="px-6 py-1 rounded-lg border hover:bg-gray-100"
-        >
-          ยกเลิก
-        </button>
+      <!-- textarea -->
+      <textarea
+        rows="8"
+        placeholder="กรอกรายละเอียดข่าวให้ชัดเจนและครบถ้วน"
+        class="w-full border border-t-0 rounded-b-md px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none"
+      ></textarea>
+    </div>
 
-        <button
-          type="submit"
-          class="px-6 py-1 rounded-lg bg-yellow-300 hover:bg-yellow-400 text-black"
-        >
-          บันทึก
-        </button>
-      </div>
-    </form>
+    <!-- รูปภาพหลัก -->
+    <div>
+      <label class="block text-sm font-medium mb-2">
+        รูปภาพข่าว <span class="text-red-500">*</span>
+      </label>
+
+      <label
+        class="flex flex-col items-center justify-center w-full h-52 border-2 border-dashed border-blue-300 rounded-md cursor-pointer hover:bg-blue-50"
+      >
+        <i class="bi bi-image text-5xl text-gray-400"></i>
+        <p class="mt-2 text-sm text-gray-600">คลิกเพื่อเลือกรูปภาพ</p>
+        <p class="text-xs text-gray-500">รองรับไฟล์: รูปภาพ (ขนาดไม่เกิน 10MB)</p>
+        <input type="file" class="hidden" />
+      </label>
+    </div>
+
+    <!-- แกลลอรี่ -->
+    <div>
+      <label class="block text-sm font-medium mb-2">
+        แกลลอรี่ <span class="text-red-500">*</span>
+      </label>
+
+      <label
+        class="flex flex-col items-center justify-center w-full h-44 border-2 border-dashed border-blue-300 rounded-md cursor-pointer hover:bg-blue-50"
+      >
+        <i class="bi bi-images text-5xl text-gray-400"></i>
+        <p class="mt-2 text-sm text-gray-600">คลิกเพื่อเลือกรูปภาพ</p>
+        <p class="text-xs text-gray-500">รองรับไฟล์: รูปภาพ (ขนาดไม่เกิน 10MB)</p>
+        <input type="file" multiple class="hidden" />
+      </label>
+    </div>
+
+    <!-- ปุ่มล่าง -->
+    <div class="flex justify-end gap-3 pt-4">
+      <button
+        class="px-4 py-2 rounded-md bg-gray-300 hover:bg-gray-400 text-gray-800 flex items-center gap-2"
+      >
+        <i class="bi bi-x-circle"></i>
+        ยกเลิก
+      </button>
+
+      <button
+        class="px-5 py-2 rounded-md bg-yellow-400 hover:bg-yellow-500 text-black font-medium flex items-center gap-2 shadow"
+      >
+        <i class="bi bi-save"></i>
+        บันทึก
+      </button>
+    </div>
+  </div>
   </div>
 </div>
