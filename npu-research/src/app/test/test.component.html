@@ -1,0 +1,19 @@
+<ngx-editor-menu
+  [editor]="editor"
+  [toolbar]="toolbar"
+  class="mb-3"
+></ngx-editor-menu>
+
+<ngx-editor
+  class="prose max-w-none border rounded-lg p-4 bg-white"
+  [editor]="editor"
+  [(ngModel)]="html"
+  placeholder="Type here..."
+></ngx-editor>
+
+<button
+  class="mt-4 px-4 py-2 bg-indigo-600 text-white rounded"
+  (click)="save()"
+>
+  Save
+</button>

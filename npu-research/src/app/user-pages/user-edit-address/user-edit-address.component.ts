@@ -92,6 +92,12 @@ export class UserEditAddressComponent implements OnInit {
         title: 'ข้อมูลไม่ครบ',
         text: 'กรุณาเลือกที่อยู่ให้ครบถ้วน',
         confirmButtonText: 'ตกลง',
+        customClass: {
+          title: 'swal-title-lg',
+          htmlContainer: 'swal-text-2xl',
+          confirmButton: 'swal-btn-3xl',
+          cancelButton: 'swal-btn-3xl',
+        }
       });
       return;
     }
@@ -107,7 +113,13 @@ export class UserEditAddressComponent implements OnInit {
       text: 'ระบบได้บันทึกข้อมูลเรียบร้อยแล้ว',
       showCancelButton: false,
       timer: 1500,
-      timerProgressBar: true
+      timerProgressBar: true,
+      customClass: {
+        title: 'swal-title-lg',
+        htmlContainer: 'swal-text-2xl',
+        confirmButton: 'swal-btn-3xl',
+        cancelButton: 'swal-btn-3xl',
+      }
     }).then((result) => {
       const role = localStorage.getItem('role');
 

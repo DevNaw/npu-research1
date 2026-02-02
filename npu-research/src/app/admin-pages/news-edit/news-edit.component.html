@@ -1,120 +1,128 @@
-<div class="mx-auto bg-gray-100 p-10">
+<div class="mx-auto bg-gray-100 p-10 text-2xl font-bold text-[#394250]">
   <!-- Header -->
-   <div class="border bg-white rounded-lg ">
-  <div class="bg-gray-700 text-white px-6 py-4 flex items-center gap-3 rounded-t-lg border">
-    <i class="bi bi-plus-circle text-xl"></i>
-    <h2 class="text-lg font-semibold">เพิ่มข่าวประชาสัมพันธ์</h2>
-  </div>
-
-  <!-- Body -->
-  <div class="p-6 space-y-6">
-
-    <!-- หัวข้อข่าว -->
-    <div>
-      <label class="block text-sm font-medium mb-1">
-        หัวข้อข่าว <span class="text-red-500">*</span>
-      </label>
-      <input
-        type="text"
-        placeholder="หัวข้อข่าว"
-        class="w-full border rounded-md px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
-      />
+  <div class="bg-white rounded-lg">
+    <div
+      class="bg-gray-700 text-white px-6 py-4 flex items-center gap-3 rounded-t-lg border"
+    >
+      <i class="bi bi-plus-circle text-xl"></i>
+      <h2 class="text-3xl">{{ isEdit ? 'แก้ไขข่าวประชาสัมพันธ์' : 'เพิ่มข่าวประชาสัมพันธ์' }}</h2>
     </div>
 
-    <!-- วันที่ประกาศ + วันที่สิ้นสุด -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <!-- Body -->
+    <div class="p-6 space-y-6">
+      <!-- หัวข้อข่าว -->
       <div>
-        <label class="block text-sm font-medium mb-1">
-          วันที่ประกาศ <span class="text-red-500">*</span>
+        <label class="block mb-1">
+          หัวข้อข่าว <span class="text-red-500">*</span>
         </label>
-        <div class="relative">
+        <input
+          type="text"
+          placeholder="หัวข้อข่าว"
+          class="w-full border rounded-md px-3 text-2xl font-medium py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
+      </div>
+
+      <!-- วันที่ประกาศ + วันที่สิ้นสุด -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block mb-1">
+            วันที่ประกาศ <span class="text-red-500">*</span>
+          </label>
+          <div class="relative">
+            <input
+              type="date"
+              class="w-full text-2xl font-medium border rounded-md px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label class="block mb-1">
+            วันที่สิ้นสุด <span class="text-red-500">*</span>
+          </label>
           <input
             type="date"
-            class="w-full border rounded-md px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+            class="w-full border text-2xl font-medium rounded-md px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
         </div>
       </div>
 
+      <!-- รายละเอียดข่าว -->
       <div>
-        <label class="block text-sm font-medium mb-1">
-          วันที่สิ้นสุด <span class="text-red-500">*</span>
+        <label class="block mb-1 text-gray-700">
+          รายละเอียดข่าว <span class="text-red-500">*</span>
         </label>
-        <input
-          type="date"
-          class="w-full border rounded-md px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
-        />
+
+        <div class="NgxEditor__Wrapper">
+          <ngx-editor-menu [editor]="editor" [toolbar]="toolbar">
+          </ngx-editor-menu>
+          <!-- <ngx-editor
+            [editor]="editor"
+            [ngModel]="html"
+            [disabled]="false"
+            [placeholder]="'รายละเอียดข่าว...'"
+          ></ngx-editor> -->
+          <ngx-editor
+            [editor]="editor"
+            formControlName="content"
+            [disabled]="false"
+            [placeholder]="'รายละเอียดข่าว...'"
+          ></ngx-editor>
+        </div>
+      </div>
+
+      <!-- รูปภาพหลัก -->
+      <div>
+        <label class="block mb-2">
+          รูปภาพข่าว <span class="text-red-500">*</span>
+        </label>
+
+        <label
+          class="flex flex-col items-center justify-center w-full h-52 border-2 border-dashed border-blue-300 rounded-md cursor-pointer hover:bg-blue-50"
+        >
+          <i class="bi bi-image text-5xl text-gray-400"></i>
+          <p class="mt-2 text-gray-600">คลิกเพื่อเลือกรูปภาพ</p>
+          <p class="text-xl text-gray-500">
+            รองรับไฟล์: รูปภาพ (ขนาดไม่เกิน 10MB)
+          </p>
+          <input type="file" class="hidden" />
+        </label>
+      </div>
+
+      <!-- แกลลอรี่ -->
+      <div>
+        <label class="block mb-2">
+          แกลลอรี่ <span class="text-red-500">*</span>
+        </label>
+
+        <label
+          class="flex flex-col items-center justify-center w-full h-44 border-2 border-dashed border-blue-300 rounded-md cursor-pointer hover:bg-blue-50"
+        >
+          <i class="bi bi-images text-5xl text-gray-400"></i>
+          <p class="mt-2 text-gray-600">คลิกเพื่อเลือกรูปภาพ</p>
+          <p class="text-xl text-gray-500">
+            รองรับไฟล์: รูปภาพ (ขนาดไม่เกิน 10MB)
+          </p>
+          <input type="file" multiple class="hidden" />
+        </label>
+      </div>
+
+      <!-- ปุ่มล่าง -->
+      <div class="flex justify-end gap-3 pt-4">
+        <button
+          class="px-4 py-2 rounded-md bg-gray-300 hover:bg-gray-400 text-gray-800 flex items-center gap-2"
+        >
+          <i class="bi bi-x-circle"></i>
+          ยกเลิก
+        </button>
+
+        <button
+          class="px-5 py-2 rounded-md bg-yellow-400 hover:bg-yellow-500 text-black font-medium flex items-center gap-2 shadow"
+        >
+          <i class="bi bi-floppy"></i>
+          บันทึก
+        </button>
       </div>
     </div>
-
-    <!-- รายละเอียดข่าว -->
-    <div>
-      <label class="block text-sm font-medium mb-1">
-        รายละเอียดข่าว <span class="text-red-500">*</span>
-      </label>
-
-      <!-- toolbar -->
-      <div class="border rounded-t-md bg-gray-50 px-2 py-1 flex gap-2 text-sm">
-        <button class="font-bold px-2 py-1 border rounded hover:bg-gray-200">B</button>
-        <button class="italic px-2 py-1 border rounded hover:bg-gray-200">I</button>
-        <button class="underline px-2 py-1 border rounded hover:bg-gray-200">U</button>
-      </div>
-
-      <!-- textarea -->
-      <textarea
-        rows="8"
-        placeholder="กรอกรายละเอียดข่าวให้ชัดเจนและครบถ้วน"
-        class="w-full border border-t-0 rounded-b-md px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none"
-      ></textarea>
-    </div>
-
-    <!-- รูปภาพหลัก -->
-    <div>
-      <label class="block text-sm font-medium mb-2">
-        รูปภาพข่าว <span class="text-red-500">*</span>
-      </label>
-
-      <label
-        class="flex flex-col items-center justify-center w-full h-52 border-2 border-dashed border-blue-300 rounded-md cursor-pointer hover:bg-blue-50"
-      >
-        <i class="bi bi-image text-5xl text-gray-400"></i>
-        <p class="mt-2 text-sm text-gray-600">คลิกเพื่อเลือกรูปภาพ</p>
-        <p class="text-xs text-gray-500">รองรับไฟล์: รูปภาพ (ขนาดไม่เกิน 10MB)</p>
-        <input type="file" class="hidden" />
-      </label>
-    </div>
-
-    <!-- แกลลอรี่ -->
-    <div>
-      <label class="block text-sm font-medium mb-2">
-        แกลลอรี่ <span class="text-red-500">*</span>
-      </label>
-
-      <label
-        class="flex flex-col items-center justify-center w-full h-44 border-2 border-dashed border-blue-300 rounded-md cursor-pointer hover:bg-blue-50"
-      >
-        <i class="bi bi-images text-5xl text-gray-400"></i>
-        <p class="mt-2 text-sm text-gray-600">คลิกเพื่อเลือกรูปภาพ</p>
-        <p class="text-xs text-gray-500">รองรับไฟล์: รูปภาพ (ขนาดไม่เกิน 10MB)</p>
-        <input type="file" multiple class="hidden" />
-      </label>
-    </div>
-
-    <!-- ปุ่มล่าง -->
-    <div class="flex justify-end gap-3 pt-4">
-      <button
-        class="px-4 py-2 rounded-md bg-gray-300 hover:bg-gray-400 text-gray-800 flex items-center gap-2"
-      >
-        <i class="bi bi-x-circle"></i>
-        ยกเลิก
-      </button>
-
-      <button
-        class="px-5 py-2 rounded-md bg-yellow-400 hover:bg-yellow-500 text-black font-medium flex items-center gap-2 shadow"
-      >
-        <i class="bi bi-save"></i>
-        บันทึก
-      </button>
-    </div>
-  </div>
   </div>
 </div>

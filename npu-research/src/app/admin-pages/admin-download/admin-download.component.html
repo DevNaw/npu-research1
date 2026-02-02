@@ -1,6 +1,6 @@
-<div class="contain-content bg-gray-100 px-10 text-2xl">
+<div class="contain-content bg-gray-100 px-10 text-2xl text-[#394250]">
   <div class="mx-auto px-6 py-6">
-    <h1 class="text-3xl font-black">เอกสารดาวน์โหลด</h1>
+    <h1 class="text-3xl font-bold">เอกสารดาวน์โหลด</h1>
   </div>
     <div class="mx-auto px-6 py-6 mb-10 bg-white rounded-xl">
       
@@ -11,7 +11,7 @@
           <div class="flex gap-2">
             <button
               (click)="openAddModal()"
-              class="flex items-center gap-2 bg-yellow-300 hover:bg-yellow-400 text-black px-4 py-1 rounded-md text-xl cursor-pointer"
+              class="flex items-center gap-2 bg-yellow-300 hover:bg-yellow-400 px-4 py-1 rounded-md text-xl cursor-pointer"
             >
               <i class="bi bi-plus-circle"></i> เพิ่มเอกสาร
             </button>
@@ -35,7 +35,7 @@
         <table class="w-full overflow-hidden">
           <thead>
             <tr class="bg-[#394250] text-white border-b">
-              <th class="p-3 text-center">ลำดับ</th>
+              <th class="p-3 text-center">#</th>
               <th class="p-3 pl-6 text-left">
                 ชื่อเอกสาร
               </th>
@@ -45,7 +45,7 @@
   
           <tbody>
             <tr
-              *ngFor="let doc of filteredDocument; let i = index"
+              *ngFor="let doc of paginatedDocument; let i = index"
               class="border-b border-gray-300 bg-gray-200 hover:bg-gray-50"
             >
               <td class="p-3 text-center">
@@ -139,7 +139,7 @@
   <!-- ===== Modal ===== -->
   <div
     *ngIf="showModal"
-    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 text-[#394250]"
     (click)="closeModal()"
   >
     <div
@@ -153,40 +153,40 @@
   
       <!-- ชื่อสาขา -->
       <div class="mb-4">
-        <label class="block mb-1 text-2xl font-medium">ชื่อเอกสาร</label>
+        <label class="block mb-1 text-2xl font-bold">ชื่อเอกสาร</label>
         <input
           type="text"
           [(ngModel)]="newDocument.name"
-          class="w-full border rounded-md px-3 text-xl py-2 focus:ring focus:ring-blue-200"
+          class="w-full border rounded-md px-3 text-2xl py-2 focus:ring focus:ring-blue-200"
           placeholder="กรอกชื่อเอกสาร"
         />
       </div>
   
       <!-- รายละเอียด -->
       <div class="mb-4">
-        <label class="block mb-1 font-medium text-2xl">ไฟล์เอกสาร</label>
+        <label class="block mb-1 font-bold text-2xl">ไฟล์เอกสาร</label>
         <input
           type="file"
           [(ngModel)]="newDocument.fileUrl"
-          class="w-full border rounded-md px-3 py-2 text-xl focus:ring focus:ring-blue-200"
-          placeholder="กรอกไฟล์เอกสาร"
+          class="file-input w-full border rounded-md px-3 py-2 text-2xl focus:ring focus:ring-blue-200"
         />
       </div>
+      
   
       <!-- Buttons -->
-      <div class="flex flex-col sm:flex-row justify-end gap-2 text-xl">
-        <button
-          (click)="closeModal()"
-          class="w-full sm:w-auto px-4 py-2 rounded-md border hover:bg-gray-100"
-        >
-          ยกเลิก
-        </button>
-  
+      <div class="flex flex-col sm:flex-row justify-center gap-2 text-xl">
         <button
           (click)="modalMode === 'add' ? saveDocument() : updateDocument()"
-          class="w-full sm:w-auto px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700"
+          class="w-full sm:w-auto px-4 py-2 rounded-md bg-[#F9CB34] hover:bg-yellow-500 cursor-pointer"
         >
           {{ modalMode === 'add' ? 'บันทึก' : 'อัปเดต' }}
+        </button>
+
+        <button
+          (click)="closeModal()"
+          class="w-full sm:w-auto px-4 py-2 rounded-md border hover:bg-gray-100 cursor-pointer"
+        >
+          ยกเลิก
         </button>
       </div>
     </div>

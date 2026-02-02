@@ -321,13 +321,20 @@ export class UserEditStudyComponent implements OnInit {
 
   save() {
     Swal.fire({
+      icon: 'question',
       title: 'ยืนยันการบันทึกข้อมูล',
       text: 'คุณต้องการบันทึกข้อมูลการศึกษาทั้งหมดหรือไม่?',
       showCancelButton: true,
-      cancelButtonText: 'ยกเลิก',
       confirmButtonText: 'บันทึก',
+      cancelButtonText: 'ยกเลิก',
       confirmButtonColor: '#22c55e',
       cancelButtonColor: '#9ca3af',
+      customClass: {
+        title: 'swal-title-lg',
+        htmlContainer: 'swal-text-2xl',
+        confirmButton: 'swal-btn-3xl',
+        cancelButton: 'swal-btn-3xl',
+      },
       reverseButtons: true,
     }).then((result) => {
       if (!result.isConfirmed) return;
@@ -352,15 +359,21 @@ export class UserEditStudyComponent implements OnInit {
 
   saveAdd() {
     Swal.fire({
+      icon: 'question',
       title: 'ยืนยันการบันทึกข้อมูล',
       text: 'คุณต้องการบันทึกข้อมูลการศึกษานี้ใช่หรือไม่?',
-      icon: 'question',
       showCancelButton: true,
       confirmButtonText: 'บันทึก',
       cancelButtonText: 'ยกเลิก',
       confirmButtonColor: '#4f46e5', // indigo
       cancelButtonColor: '#9ca3af',
       reverseButtons: true,
+      customClass: {
+        title: 'swal-title-lg',
+        htmlContainer: 'swal-text-2xl',
+        confirmButton: 'swal-btn-3xl',
+        cancelButton: 'swal-btn-3xl',
+      }
     }).then((result) => {
       if (!result.isConfirmed) return;
 
@@ -385,6 +398,12 @@ export class UserEditStudyComponent implements OnInit {
         text: 'ข้อมูลการศึกษาถูกบันทึกเรียบร้อยแล้ว',
         confirmButtonText: 'ตกลง',
         confirmButtonColor: '#22c55e',
+        customClass: {
+          title: 'swal-title-lg',
+          htmlContainer: 'swal-text-2xl',
+          confirmButton: 'swal-btn-3xl',
+          cancelButton: 'swal-btn-3xl',
+        },
         timer: 1500,
         showConfirmButton: false,
       }).then(() => {
@@ -408,6 +427,12 @@ export class UserEditStudyComponent implements OnInit {
       confirmButtonColor: '#4f46e5',
       cancelButtonColor: '#9ca3af',
       reverseButtons: true,
+      customClass: {
+        title: 'swal-title-lg',
+        htmlContainer: 'swal-text-2xl',
+        confirmButton: 'swal-btn-3xl',
+        cancelButton: 'swal-btn-3xl',
+      }
     }).then((result) => {
       if (!result.isConfirmed) return;
   
@@ -442,6 +467,12 @@ export class UserEditStudyComponent implements OnInit {
       text: 'ข้อมูลการศึกษาถูกแก้ไขเรียบร้อยแล้ว',
       timer: 1500,
       showConfirmButton: false,
+      customClass: {
+        title: 'swal-title-lg',
+        htmlContainer: 'swal-text-2xl',
+        confirmButton: 'swal-btn-3xl',
+        cancelButton: 'swal-btn-3xl',
+      }
     }).then(() => {
       this.closeModalEdit();
       this.resetForm();
@@ -475,6 +506,12 @@ export class UserEditStudyComponent implements OnInit {
       text: 'ระบบได้บันทึกข้อมูลเรียบร้อยแล้ว',
       timer: 1500,
       showConfirmButton: false,
+      customClass: {
+        title: 'swal-title-lg',
+        htmlContainer: 'swal-text-2xl',
+        confirmButton: 'swal-btn-3xl',
+        cancelButton: 'swal-btn-3xl',
+      }
     }).then(() => {
       const role = localStorage.getItem('role');
   

@@ -147,6 +147,7 @@ export class UserEditProfileComponent implements OnInit {
 
   save() {
     Swal.fire({
+      icon: 'warning',
       title: 'ยืนยันการบันทึกข้อมูล',
       text: 'คุณต้องการบันทึกข้อมูลนี้ใช่หรือไม่?',
       showCancelButton: true,
@@ -154,6 +155,12 @@ export class UserEditProfileComponent implements OnInit {
       cancelButtonText: 'ยกเลิก',
       confirmButtonColor: '#22c55e',
       cancelButtonColor: '#ef4444',
+      customClass: {
+        title: 'swal-title-lg',
+        htmlContainer: 'swal-text-2xl',
+        confirmButton: 'swal-btn-3xl',
+        cancelButton: 'swal-btn-3xl',
+      }
     }).then((result) => {
       if (!result.isConfirmed) return;
 
@@ -183,6 +190,12 @@ export class UserEditProfileComponent implements OnInit {
           title: 'บันทึกสำเร็จ',
           text: 'ข้อมูลถูกบันทึกเรียบร้อยแล้ว',
           showConfirmButton: false,
+          customClass: {
+            title: 'swal-title-lg',
+            htmlContainer: 'swal-text-2xl',
+            confirmButton: 'swal-btn-3xl',
+            cancelButton: 'swal-btn-3xl',
+          },
           timer: 1500,
         });
 

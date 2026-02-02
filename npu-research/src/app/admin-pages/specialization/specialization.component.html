@@ -1,6 +1,6 @@
-<div class="contain-content bg-gray-100 px-10 text-2xl">
+<div class="contain-content bg-gray-100 px-10 text-2xl text-[#394250]">
   <div class="mx-auto px-6 py-6">
-    <h1 class="text-3xl font-black">สาขาวิชาที่เชี่ยวชาญ</h1>
+    <h1 class="text-3xl font-bold">สาขาวิชาที่เชี่ยวชาญ</h1>
   </div>
   <div class="mx-auto px-6 mb-10 py-6 bg-white rounded-xl">
     <div class="mt-5">
@@ -25,7 +25,7 @@
 
           <button
             (click)="openAddModal()"
-            class="flex items-center gap-2 bg-yellow-300 hover:bg-yellow-400 text-black px-4 py-2 rounded-md text-lg cursor-pointer"
+            class="flex items-center gap-2 bg-yellow-300 hover:bg-yellow-400 px-4 py-2 rounded-md text-lg cursor-pointer font-bold"
           >
             <i class="bi bi-plus-circle"></i> เพื่มสาขาที่เชี่ยวชาญ
           </button>
@@ -62,7 +62,7 @@
             <th class="p-3 text-center">#</th>
             <th class="p-3">ชื่อสาขาวิชาที่เชี่ยวชาญ</th>
             <th class="p-3 text-center">คำอธิบาย</th>
-            <th class="p-3 w-30 text-center">สถานะใช้งาน</th>
+            <th class="p-3 w-35 text-center">สถานะใช้งาน</th>
             <th class="p-3 w-27 text-center">Action</th>
           </tr>
         </thead>
@@ -163,7 +163,7 @@
 
 <div
   *ngIf="showModal"
-  class="fixed inset-0 z-50 text-2xl flex items-center justify-center bg-black/50 px-4"
+  class="fixed inset-0 z-50 text-2xl flex items-center justify-center bg-black/50 px-4 text-[#394250]"
   (click)="closeModal()"
 >
   <div
@@ -171,7 +171,7 @@
     (click)="$event.stopPropagation()"
   >
     <!-- Title -->
-    <h2 class="font-semibold mb-4 text-center md:text-left">
+    <h2 class="font-semibold mb-4 text-center text-3xl md:text-left">
       {{
         modalMode === "add" ? "เพิ่มสาขาที่เชี่ยวชาญ" : "แก้ไขสาขาที่เชี่ยวชาญ"
       }}
@@ -179,18 +179,18 @@
 
     <!-- ชื่อสาขา -->
     <div class="mb-4">
-      <label class="block mb-1 font-medium">ชื่อสาขาวิชาที่เชี่ยวชาญ</label>
+      <label class="block mb-1 font-bold">ชื่อสาขาวิชาที่เชี่ยวชาญ</label>
       <input
         type="text"
         [(ngModel)]="newMajors.name"
-        class="w-full border rounded-md px-3 py-2 focus:ring focus:ring-blue-200"
+        class="w-full border rounded-md px-3 py-2 focus:ring focus:ring-blue-200 text-2xl"
         placeholder="กรอกชื่อสาขาวิชาที่เชี่ยวชาญ"
       />
     </div>
 
     <!-- รายละเอียด -->
     <div class="mb-4">
-      <label class="block mb-1 font-medium">รายละเอียด</label>
+      <label class="block mb-1 font-bold">รายละเอียด</label>
       <textarea
         [(ngModel)]="newMajors.description"
         rows="3"
@@ -201,7 +201,7 @@
 
     <!-- สถานะ -->
     <div class="mb-6">
-      <label class="block mb-1 font-medium">สถานะ</label>
+      <label class="block mb-1 font-bold">สถานะ</label>
       <select
         [(ngModel)]="newMajors.status"
         class="w-full border rounded-md px-3 py-2 focus:ring focus:ring-blue-200"
@@ -212,19 +212,18 @@
     </div>
 
     <!-- Buttons -->
-    <div class="flex flex-col sm:flex-row justify-end gap-2">
+    <div class="flex flex-col sm:flex-row justify-center gap-2">
+      <button
+        (click)="modalMode === 'add' ? saveFunding() : updateFunding()"
+        class="w-full sm:w-auto px-4 py-2 rounded-md bg-[#F9CB34] hover:bg-[#fde07f] cursor-pointer"
+      >
+        {{ modalMode === "add" ? "บันทึก" : "อัปเดต" }}
+      </button>
       <button
         (click)="closeModal()"
         class="w-full sm:w-auto px-4 py-2 rounded-md border hover:bg-gray-100 cursor-pointer"
       >
         ยกเลิก
-      </button>
-
-      <button
-        (click)="modalMode === 'add' ? saveFunding() : updateFunding()"
-        class="w-full sm:w-auto px-4 py-2 rounded-md bg-[#F9CB34] text-black border hover:bg-[#fde07f] cursor-pointer"
-      >
-        {{ modalMode === "add" ? "บันทึก" : "อัปเดต" }}
       </button>
     </div>
   </div>

@@ -49,6 +49,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ReportComponent } from './general/report/report.component';
 import { EditWorkComponent } from './user-pages/edit-work/edit-work.component';
+import { NgxEditorModule } from 'ngx-editor';
 
 @NgModule({
   declarations: [
@@ -105,6 +106,7 @@ import { EditWorkComponent } from './user-pages/edit-work/edit-work.component';
     MatNativeDateModule,
     MatInputModule,
     AppRoutingModule,
+    NgxEditorModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

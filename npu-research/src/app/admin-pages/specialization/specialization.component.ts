@@ -116,6 +116,19 @@ export class SpecializationComponent {
     this.majors[this.editIndex] = { ...this.newMajors };
     this.onSearch();
     this.closeModal();
+
+    Swal.fire({
+          icon: 'success',
+          title: 'อัปเดตสำเร็จ',
+          text: 'แก้ไขข้อมูลแหล่งทุนเรียบร้อยแล้ว',
+          showConfirmButton: false,
+          timer: 1000,
+          timerProgressBar: true,
+          customClass: {
+            title: 'swal-title-lg',
+            htmlContainer: 'swal-text-2xl'
+          }
+        });
   }
 
   closeModal() {
@@ -130,6 +143,11 @@ export class SpecializationComponent {
         title: 'ข้อมูลไม่ครบ',
         text: 'กรุณากรอกข้อมูลให้ครบถ้วน',
         confirmButtonText: 'ตกลง',
+        customClass: {
+          title: 'swal-title-lg',
+          htmlContainer: 'swal-text-2xl',
+          confirmButton: 'swal-btn-3xl',
+        }
       });
       return;
     }
@@ -144,6 +162,11 @@ export class SpecializationComponent {
       text: 'เพิ่มข้อมูลสาขาเรียบร้อยแล้ว',
       timer: 1500,
       showConfirmButton: false,
+      customClass: {
+        title: 'swal-title-lg',
+        htmlContainer: 'swal-text-2xl',
+        confirmButton: 'swal-btn-3xl',
+      }
     });
   }
 
@@ -165,6 +188,12 @@ export class SpecializationComponent {
       cancelButtonColor: '#6b7280',
       confirmButtonText: 'ลบ',
       cancelButtonText: 'ยกเลิก',
+      customClass: {
+        title: 'swal-title-lg',
+        htmlContainer: 'swal-text-2xl',
+        confirmButton: 'swal-btn-3xl',
+        cancelButton: 'swal-btn-3xl',
+      }
     }).then((result) => {
       if (result.isConfirmed) {
         // ลบข้อมูล
@@ -179,6 +208,11 @@ export class SpecializationComponent {
           text: 'ข้อมูลถูกลบแล้ว',
           timer: 1500,
           showConfirmButton: false,
+          customClass: {
+            title: 'swal-title-lg',
+            htmlContainer: 'swal-text-2xl',
+            confirmButton: 'swal-btn-3xl',
+          }
         });
       }
     });

@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { Editor, Toolbar } from 'ngx-editor';
 
 @Component({
   selector: 'app-news-edit',
@@ -9,13 +10,25 @@ import Swal from 'sweetalert2';
   templateUrl: './news-edit.component.html',
   styleUrl: './news-edit.component.css'
 })
-export class NewsEditComponent implements OnInit {
+export class NewsEditComponent implements OnInit, OnDestroy  {
   newsForm!: FormGroup;
   isEdit: boolean = false;
   newsId! : number;
   
   coverPreview: string | null = null;
   galleryPreview: string[] = [];
+
+  html = '';
+  editor!: Editor;
+  toolbar: Toolbar = [
+    ['bold', 'italic', 'underline', 'strike'],
+    ['code', 'blockquote'],
+    ['ordered_list', 'bullet_list'],
+    [{ heading: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'] }],
+    ['link', 'image'],
+    ['text_color', 'background_color'],
+    ['align_left', 'align_center', 'align_right', 'align_justify'],
+  ];
 
   constructor(
     private fb: FormBuilder,
@@ -24,6 +37,8 @@ export class NewsEditComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.editor = new Editor();
+
     this.newsForm = this.fb.group({
       title: [''],
       description: [''],
@@ -42,6 +57,10 @@ export class NewsEditComponent implements OnInit {
     });
   }
 
+  ngOnDestroy(): void {
+    this.editor.destroy();
+  }
+
   loadNews() {
     // mock data
     this.newsForm.patchValue({
@@ -53,6 +72,18 @@ export class NewsEditComponent implements OnInit {
     });
   }
 
+  // loadNews() {
+  //   this.newsService.getById(this.newsId).subscribe(res => {
+  //     this.newsForm.patchValue({
+  //       title: res.title,
+  //       description: res.description,
+  //       content: res.content, // 👈 HTML จะเข้า editor อัตโนมัติ
+  //       sourceUrl: res.sourceUrl,
+  //       publishedAt: res.publishedAt
+  //     });
+  //   });
+  // }
+  
   onCoverChange(event: Event) {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
@@ -121,5 +152,6 @@ export class NewsEditComponent implements OnInit {
       }
     });
   }
+  
   
 }

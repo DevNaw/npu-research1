@@ -30,6 +30,12 @@ export class EditWorkComponent {
       text: 'ข้อมูลการทำงานถูกอัปเดตแล้ว',
       timer: 1500,
       showConfirmButton: false,
+      customClass: {
+        title: 'swal-title-lg',
+        htmlContainer: 'swal-text-2xl',
+        confirmButton: 'swal-btn-3xl',
+        cancelButton: 'swal-btn-3xl',
+      }
     }).then(() => {
       this.navigateByRole();
     });

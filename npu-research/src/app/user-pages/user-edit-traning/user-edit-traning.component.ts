@@ -153,6 +153,12 @@ export class UserEditTraningComponent implements OnInit {
       title: 'เพิ่มข้อมูลสำเร็จ',
       timer: 1500,
       showConfirmButton: false,
+      customClass: {
+        title: 'swal-title-lg',
+        htmlContainer: 'swal-text-2xl',
+        confirmButton: 'swal-btn-3xl',
+        cancelButton: 'swal-btn-3xl',
+      }
     });
     this.closeModalAdd();
   }
@@ -163,6 +169,12 @@ export class UserEditTraningComponent implements OnInit {
       title: 'บันทึกข้อมูลสำเร็จ',
       timer: 1500,
       showConfirmButton: false,
+      customClass: {
+        title: 'swal-title-lg',
+        htmlContainer: 'swal-text-2xl',
+        confirmButton: 'swal-btn-3xl',
+        cancelButton: 'swal-btn-3xl',
+      }
     });
     this.closeModalEdit();
   }
@@ -175,6 +187,12 @@ export class UserEditTraningComponent implements OnInit {
       showCancelButton: true,
       confirmButtonText: 'ลบ',
       cancelButtonText: 'ยกเลิก',
+      customClass: {
+        title: 'swal-title-lg',
+        htmlContainer: 'swal-text-2xl',
+        confirmButton: 'swal-btn-3xl',
+        cancelButton: 'swal-btn-3xl',
+      }
     }).then((result) => {
       if (result.isConfirmed) {
         Swal.fire({
@@ -182,6 +200,12 @@ export class UserEditTraningComponent implements OnInit {
           title: 'ลบข้อมูลสำเร็จ',
           timer: 1200,
           showConfirmButton: false,
+          customClass: {
+            title: 'swal-title-lg',
+            htmlContainer: 'swal-text-2xl',
+            confirmButton: 'swal-btn-3xl',
+            cancelButton: 'swal-btn-3xl',
+          }
         });
       }
     });
@@ -193,6 +217,12 @@ export class UserEditTraningComponent implements OnInit {
       title: 'บันทึกข้อมูลทั้งหมดสำเร็จ',
       timer: 1500,
       showConfirmButton: false,
+      customClass: {
+        title: 'swal-title-lg',
+        htmlContainer: 'swal-text-2xl',
+        confirmButton: 'swal-btn-3xl',
+        cancelButton: 'swal-btn-3xl',
+      }
     });
   
     const role = localStorage.getItem('role');
