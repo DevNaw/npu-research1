@@ -1,0 +1,44 @@
+<div class="contain-content bg-gray-100 px-10 text-2xl text-[#394250] font-bold" >
+    <div class="mx-auto py-6">
+        <!-- ค่าเริ่มต้น -->
+    <ng-container *ngIf="!reportType">
+        <h1 class="text-3xl">
+            รายงานจำนวนโครงการวิจัย จำแนกตามหน่วยงาน |
+        รายงานจำนวนบทความ/วารสาร จำแนกตามหน่วยงาน |
+        รายงานจำนวนนวัตกรรมสิ่งประดิษฐ์ จำแนกตามหน่วยงาน
+        </h1>
+      </ng-container>
+        <!-- กดดูโครงการวิจัย -->
+    <ng-container *ngIf="reportType === 'research'">
+        <h1 class="text-3xl">รายงานจำนวนโครงการวิจัย จำแนกตามหน่วยงาน</h1>
+      </ng-container>
+  
+      <!-- กดดูบทความ -->
+      <ng-container *ngIf="reportType === 'article'">
+        <h1 class="text-3xl">รายงานจำนวนบทความ/วารสาร จำแนกตามหน่วยงาน</h1>
+      </ng-container>
+  
+      <!-- กดดูนวัตกรรม -->
+      <ng-container *ngIf="reportType === 'innovation'">
+        <h1 class="text-3xl">รายงานจำนวนนวัตกรรมสิ่งประดิษฐ์ จำแนกตามหน่วยงาน</h1>
+      </ng-container>
+    </div>
+
+    <div class="mx-auto px-6 py-6 bg-white rounded-xl">
+        <div class="">
+            <table class="min-w-full border-collapse">
+                <thead class="bg-[#394250] text-white">
+                    <tr>#</tr>
+                    <tr>ชื่อหน่วยงาน</tr>
+                    <tr>จำนวน</tr>
+                </thead>
+
+                <tbody>
+                    <tr>1</tr>
+                    <tr>สาขา</tr>
+                    <tr>1</tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

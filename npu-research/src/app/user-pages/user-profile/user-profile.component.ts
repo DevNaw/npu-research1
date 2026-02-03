@@ -2,7 +2,11 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { AuthService } from '../../services/auth.service';
-import { DataPerformance, DataPerformanceItem, Address, } from '../../models/data-performance.model'; 
+import {
+  DataPerformance,
+  DataPerformanceItem,
+  Address,
+} from '../../models/data-performance.model';
 import {
   ChartComponent,
   ApexChart,
@@ -71,6 +75,13 @@ export class UserProfileComponent implements OnInit {
   isEducation = false;
   isTraining = false;
   isAddress = false;
+
+  idCard = '12345678909877';
+  currentUserId!: number; // คนที่ login อยู่
+  profileUserId!: number; // เจ้าของโปรไฟล์
+
+  // ตัวอย่างเงื่อนไข
+  isOwner = this.currentUserId === this.profileUserId;
 
   totalItems: number = 0;
 
@@ -193,11 +204,7 @@ export class UserProfileComponent implements OnInit {
         colors: ['transparent'],
       },
       xaxis: {
-        categories: [
-          '2023',
-          '2024',
-          '2025',
-        ],
+        categories: ['2023', '2024', '2025'],
       },
       yaxis: {
         title: {},
@@ -217,6 +224,12 @@ export class UserProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // ตัวอย่าง mock (เปลี่ยนเป็นของจริงจาก auth / api)
+    this.currentUserId = 1;
+    this.profileUserId = 1;
+
+    this.isOwner = this.currentUserId === this.profileUserId;
+
     this.filteredData = [...this.data[this.selectedTab]];
     this.updatePagination();
   }
@@ -391,7 +404,7 @@ export class UserProfileComponent implements OnInit {
       this.address?.phone
     );
   }
-  
+
   onPageSizeChange() {
     this.currentPage = 1; // reset กลับหน้าแรก
     this.updatePagination();
@@ -404,5 +417,4 @@ export class UserProfileComponent implements OnInit {
     this.filteredData = [...this.data[tab]];
     this.updatePagination();
   }
-  
 }

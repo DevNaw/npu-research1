@@ -56,10 +56,11 @@
           </div>
 
           <ul class="space-y-3 text-gray-600 font-medium">
-            <li class="flex gap-2 flex-wrap">
+            <li *ngIf="isOwner" class="flex gap-2 flex-wrap">
               <span class="text-gray-400 font-bold"> • เลขบัตรประชาชน : </span>
-              12345678909877
+              {{ idCard }}
             </li>
+            
 
             <li class="flex gap-2 flex-wrap">
               <span class="text-gray-400 font-bold"> • วันเดือนปีเกิด : </span>
@@ -497,7 +498,7 @@
           <div
             class="flex items-center justify-between mb-4 text-gray-600 mt-5"
           >
-            <div class="text-xl">
+            <div class="text-xl font-medium">
               Show
               <select class="border rounded px-2 py-1 mx-1 w-15">
                 <option>10</option>
@@ -513,7 +514,7 @@
                 type="text"
                 [(ngModel)]="searchText"
                 (input)="onSearch()"
-                class="border rounded px-2 py-1 ml-2 text-xl"
+                class="border rounded px-2 py-1 ml-2 text-xl font-medium"
                 placeholder="ค้นหา..."
               />
             </div>
@@ -557,7 +558,7 @@
                     </div>
 
                     <div
-                      class="text-lg text-gray-500 mt-1 flex items-center gap-1"
+                      class="text-lg text-gray-500 mt-1 flex items-center gap-1 font-medium"
                     >
                       <i class="bi bi-calendar-event"></i>
                       วันที่สร้าง: {{ item.date }}

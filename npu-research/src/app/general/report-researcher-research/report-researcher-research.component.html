@@ -285,7 +285,7 @@
     </div>
 
     <div
-      class="bg-white rounded-xl shadow p-6 flex flex-col justify-between items-center text-[#394250]"
+      class="bg-white rounded-xl shadow p-6 flex flex-col justify-between h-full text-[#394250]"
     >
       <div class="flex items-center gap-2 mb-4">
         <i class="bi bi-pie-chart-fill text-lg"></i>
@@ -298,7 +298,7 @@
           *ngFor="let l of donutLabels; let i = index"
           class="flex justify-between px-8"
         >
-          <span>{{ l }}</span
+          <span class="font-medium">{{ l }}</span
           ><span class="font-medium">{{ donutSeries[i] }} งาน</span>
         </p>
       </div>

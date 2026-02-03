@@ -41,6 +41,8 @@ import { adminGuard } from './core/guards/admin.guard';
 import { userGuard } from './core/guards/user.guard';
 import { ReportComponent } from './general/report/report.component';
 import { EditWorkComponent } from './user-pages/edit-work/edit-work.component';
+import { PerformanceByDepartmentComponent } from './general/performance-by-department/performance-by-department.component';
+import { PerformanceDetailByDepartmentComponent } from './general/performance-detail-by-department/performance-detail-by-department.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -63,6 +65,9 @@ const routes: Routes = [
       { path: 'research', component: ResearchComponent },
       { path: 'research/:id', component: ResearchComponent },
       { path: 'report-researcher', component: ReportResearcherTypeComponent },
+      { path: 'profile/:id', component: UserProfileComponent },
+      { path: 'performance-by-departmaent', component: PerformanceByDepartmentComponent },
+      { path: 'performance-detail-by-departmaent', component: PerformanceDetailByDepartmentComponent },
       {
         path: 'report-institution',
         component: ReportResearcherInstitutionComponent,
@@ -106,6 +111,8 @@ const routes: Routes = [
       { path: 'edit-traning/:id', component: UserEditTraningComponent },
       { path: 'performance/:type/:id', component: PerformanceComponent },
       { path: 'edit-work/:id', component: EditWorkComponent },
+      { path: 'performance-by-departmaent', component: PerformanceByDepartmentComponent },
+      { path: 'performance-by-departmaent', component: PerformanceDetailByDepartmentComponent },
     ],
   },
 
@@ -148,6 +155,8 @@ const routes: Routes = [
       { path: 'performance/:type/:id', component: PerformanceComponent },
       { path: 'report', component: ReportComponent },
       { path: 'edit-work/:id', component: EditWorkComponent },
+      { path: 'performance-by-departmaent', component: PerformanceByDepartmentComponent },
+      { path: 'performance-by-departmaent', component: PerformanceDetailByDepartmentComponent },
     ],
   },
 ];

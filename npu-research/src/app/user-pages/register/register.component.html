@@ -1,5 +1,5 @@
 <div
-  class="min-h-screen flex items-center justify-center bg-gray-100 px-4 text-2xl font-bold text-[#394250]"
+  class="min-h-screen flex lg:items-center justify-center bg-gray-100 px-4 text-2xl font-bold text-[#394250]"
 >
   <div class="w-full max-w-xl space-y-2 p-8">
     <!-- Header -->
@@ -72,13 +72,13 @@
               สาขาวิชาที่เชี่ยวชาญ
             </label>
 
-            <p class="text-2lg text-red-600 mb-1 ml-3">
+            <p class="text-xl text-red-600 mb-1 ml-3">
               * เลือกได้มากกว่า 1 รายการ
             </p>
           </div>
 
           <div
-            class="min-h-10.5 border rounded-md px-3 py-2 flex flex-wrap gap-2 text-2xl cursor-pointer"
+            class="min-h-10.5 border rounded-md px-3 py-2 flex flex-wrap gap-2 text-2xl cursor-pointer font-medium"
             (click)="toggle('majors', $event)"
           >
             <span
@@ -100,7 +100,7 @@
             >
               <span class="text-gray-400 font-medium"> คลิกเพื่อเลือก </span>
 
-              <i class="bi bi-caret-down-fill text-gray-400"></i>
+              <i class="bi bi-caret-down-fill text-gray-400 transition-transform duration-300"></i>
             </div>
           </div>
 

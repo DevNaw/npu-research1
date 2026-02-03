@@ -50,6 +50,8 @@ import { MatInputModule } from '@angular/material/input';
 import { ReportComponent } from './general/report/report.component';
 import { EditWorkComponent } from './user-pages/edit-work/edit-work.component';
 import { NgxEditorModule } from 'ngx-editor';
+import { PerformanceByDepartmentComponent } from './general/performance-by-department/performance-by-department.component';
+import { PerformanceDetailByDepartmentComponent } from './general/performance-detail-by-department/performance-detail-by-department.component';
 
 @NgModule({
   declarations: [
@@ -94,6 +96,8 @@ import { NgxEditorModule } from 'ngx-editor';
     PerformanceComponent,
     ReportComponent,
     EditWorkComponent,
+    PerformanceByDepartmentComponent,
+    PerformanceDetailByDepartmentComponent,
   ],
   imports: [
     BrowserModule,

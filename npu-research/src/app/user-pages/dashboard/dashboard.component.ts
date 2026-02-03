@@ -65,8 +65,8 @@ export class UserDashboardComponent implements OnInit {
   selectedTab: keyof DataPerformance = 'research';
 
   series: ApexNonAxisChartSeries = [
-    2, 2, 8, 6, 4, 6, 5, 4, 2, 3, 3, 2, 2, 2,
-    4, 6, 3, 4, 2, 8, 7,
+    2, 2, 1, 3, 4, 2, 1, 4, 2, 3, 3, 2, 2, 2,
+    4, 2, 3, 4, 2, 2, 3,
   ];
 
   colors: string[] = [
@@ -177,11 +177,11 @@ export class UserDashboardComponent implements OnInit {
       plotOptions: {
         pie: {
           donut: {
-            size: '40%',
+            size: '15%',
           },
           dataLabels: {
-            offset: 12, // ⬅ ดัน label ออกนอกวง
-            minAngleToShowLabel: 10,
+            offset: 10, // ⬅ ดัน label ออกนอกวง
+            minAngleToShowLabel: 2,
           },
         },
       },
@@ -204,8 +204,8 @@ export class UserDashboardComponent implements OnInit {
       title: 'กราฟสรุปจำนวนบทความ จำแนกตามหน่วยงาน',
       subtitle: this.getLastUpdatedText(),
       series: [
-        2, 6, 5, 2, 3, 2, 5, 5, 2, 8, 3, 4, 3, 2, 2, 2,
-        4, 5, 5, 4, 8, 2, 3, 2,
+        2, 4, 3, 2, 3, 2, 2, 4, 2, 3, 3, 4, 3, 2, 2, 2,
+        4, 5, 5, 4, 5, 2, 3, 2,
       ],
       labels: [
         'คณะเกษตรและเทคโนโลยี',
@@ -251,11 +251,11 @@ export class UserDashboardComponent implements OnInit {
       plotOptions: {
         pie: {
           donut: {
-            size: '40%',
+            size: '15%',
           },
           dataLabels: {
             offset: 12, // ⬅ ดัน label ออกนอกวง
-            minAngleToShowLabel: 10,
+            minAngleToShowLabel: 2,
           },
         },
       },
@@ -277,7 +277,7 @@ export class UserDashboardComponent implements OnInit {
     {
       title: 'กราฟสรุปจำนวนนวัตกรรมสิ่งประดิษฐ์ จำแนกตามหน่วยงาน',
       subtitle: this.getLastUpdatedText(),
-      series: [3, 5, 9, 2, 3, 5, 2, 6, 5, 6, 3, 2, 2],
+      series: [3, 5, 1, 2, 3, 1, 2, 4, 5, 3, 3, 2, 2],
       labels: [
         'คณะเกษตรและเทคโนโลยี',
         'คณะครุศาสตร์',
@@ -311,11 +311,11 @@ export class UserDashboardComponent implements OnInit {
       plotOptions: {
         pie: {
           donut: {
-            size: '40%',
+            size: '15%',
           },
           dataLabels: {
             offset: 12, // ⬅ ดัน label ออกนอกวง
-            minAngleToShowLabel: 10,
+            minAngleToShowLabel: 2,
           },
         },
       },
@@ -550,5 +550,9 @@ export class UserDashboardComponent implements OnInit {
 
     this.filteredResearch = [...this.publications[tab]];
     this.updatePagination();
+  }
+
+  SeeMoreDetails() {
+    this.router.navigateByUrl('/performance-by-departmaent');
   }
 }

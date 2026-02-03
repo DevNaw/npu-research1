@@ -1,5 +1,6 @@
 import { Component, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 interface ExternalPerson {
   name: string;
@@ -177,6 +178,17 @@ export class UserAddResearchComponent {
       role === 'admin' ? '/admin/performance' : '/user/performance';
   
     this.router.navigate([base, type, id]);
+  }
+  
+  saveResearch() {
+    
+    // ✅ รวมข้อมูลทั้งหมด
+    const payload = {};
+  
+    // ✅ เตรียม FormData (รองรับไฟล์)
+    const formData = new FormData();
+    formData.append('data', JSON.stringify(payload));
+  
   }
   
 }
