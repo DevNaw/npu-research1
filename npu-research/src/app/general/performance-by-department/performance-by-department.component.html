@@ -1,44 +1,102 @@
-<div class="contain-content bg-gray-100 px-10 text-2xl text-[#394250] font-bold" >
-    <div class="mx-auto py-6">
-        <!-- ค่าเริ่มต้น -->
+<div
+  class="contain-content bg-gray-100 px-10 text-2xl text-[#394250] font-bold"
+>
+  <div class="mx-auto py-6">
+    <!-- ค่าเริ่มต้น -->
     <ng-container *ngIf="!reportType">
-        <h1 class="text-3xl">
-            รายงานจำนวนโครงการวิจัย จำแนกตามหน่วยงาน |
-        รายงานจำนวนบทความ/วารสาร จำแนกตามหน่วยงาน |
-        รายงานจำนวนนวัตกรรมสิ่งประดิษฐ์ จำแนกตามหน่วยงาน
-        </h1>
-      </ng-container>
-        <!-- กดดูโครงการวิจัย -->
+      <h1 class="text-3xl">
+        รายงานจำนวนโครงการวิจัย จำแนกตามหน่วยงาน | รายงานจำนวนบทความ/วารสาร
+        จำแนกตามหน่วยงาน | รายงานจำนวนนวัตกรรมสิ่งประดิษฐ์ จำแนกตามหน่วยงาน
+      </h1>
+    </ng-container>
+    <!-- กดดูโครงการวิจัย -->
     <ng-container *ngIf="reportType === 'research'">
-        <h1 class="text-3xl">รายงานจำนวนโครงการวิจัย จำแนกตามหน่วยงาน</h1>
-      </ng-container>
-  
-      <!-- กดดูบทความ -->
-      <ng-container *ngIf="reportType === 'article'">
-        <h1 class="text-3xl">รายงานจำนวนบทความ/วารสาร จำแนกตามหน่วยงาน</h1>
-      </ng-container>
-  
-      <!-- กดดูนวัตกรรม -->
-      <ng-container *ngIf="reportType === 'innovation'">
-        <h1 class="text-3xl">รายงานจำนวนนวัตกรรมสิ่งประดิษฐ์ จำแนกตามหน่วยงาน</h1>
-      </ng-container>
+      <h1 class="text-3xl">รายงานจำนวนโครงการวิจัย จำแนกตามหน่วยงาน</h1>
+    </ng-container>
+
+    <!-- กดดูบทความ -->
+    <ng-container *ngIf="reportType === 'article'">
+      <h1 class="text-3xl">รายงานจำนวนบทความ/วารสาร จำแนกตามหน่วยงาน</h1>
+    </ng-container>
+
+    <!-- กดดูนวัตกรรม -->
+    <ng-container *ngIf="reportType === 'innovation'">
+      <h1 class="text-3xl">รายงานจำนวนนวัตกรรมสิ่งประดิษฐ์ จำแนกตามหน่วยงาน</h1>
+    </ng-container>
+  </div>
+
+  <div class="mx-auto px-6 py-6 bg-white rounded-xl">
+    <div class="">
+      <table class="min-w-full border-collapse">
+        <thead class="bg-[#394250] text-white px-4">
+          <tr>
+            <th class="text-start px-4 py-2">#</th>
+            <th class="text-start px-4 py-2">ชื่อหน่วยงาน</th>
+            <th class="px-4 py-2">จำนวน</th>
+          </tr>
+        </thead>
+
+        <tbody class="bg-gray-200 border-b border-gray-300 font-medium">
+          <tr *ngFor="let d of filteredDocuments; let i = index">
+            <td class="px-4 py-2">{{ (currentPage -1) * pageSize + i + 1 }}</td>
+            <td class="px-4 py-2">
+              <div
+              (click)="goToDetail()"
+                class="text-indigo-600 truncate text-wrap hover:underline cursor-pointer"
+              >
+                {{ d.major }}
+              </div>
+            </td>
+            <td class="text-center px-4 py-2">{{ d.academic }}</td>
+          </tr>
+
+          <tr *ngIf="filteredDocuments.length === 0">
+            <td colspan="5" class="text-center p-4 text-gray-500">
+              ไม่พบข้อมูล
+            </td>
+          </tr>
+
+          <tr class="bg-gray-100 font-semibold">
+            <td colspan="2" class="text-right p-3">รวมทั้งหมด</td>
+            <td class="text-center p-3">{{ totalDepartment }}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
-    <div class="mx-auto px-6 py-6 bg-white rounded-xl">
-        <div class="">
-            <table class="min-w-full border-collapse">
-                <thead class="bg-[#394250] text-white">
-                    <tr>#</tr>
-                    <tr>ชื่อหน่วยงาน</tr>
-                    <tr>จำนวน</tr>
-                </thead>
+    <div
+      class="flex flex-col mt-4 gap-2 md:flex-row md:justify-between md:items-center"
+    >
+      <p class="text-xl font-medium">หน้า {{ currentPage }} จาก {{ totalPages }}</p>
+      <p class="text-xl font-medium">แสดง {{ paginatedDepartment.length }} รายการ จาก {{ documents.length }} รายการ</p>
 
-                <tbody>
-                    <tr>1</tr>
-                    <tr>สาขา</tr>
-                    <tr>1</tr>
-                </tbody>
-            </table>
-        </div>
+      <div class="flex justify-end space-x-1">
+        <button
+          (click)="changePage(currentPage - 1)"
+          [disabled]="currentPage === 1"
+          class="px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
+        >
+          ‹
+        </button>
+        <button
+          *ngFor="let page of pages"
+          (click)="changePage(page)"
+          class="px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
+          [ngClass]="{
+            'bg-[#FACC15] text-[#394250]': currentPage === page,
+            'hover:bg-gray-100': currentPage !== page
+          }"
+        >
+          {{ page }}
+        </button>
+        <button
+          (click)="(currentPage + 1)"
+          [disabled]="currentPage === totalPages"
+          class="px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
+        >
+          ›
+        </button>
+      </div>
     </div>
+  </div>
 </div>
