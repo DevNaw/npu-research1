@@ -19,7 +19,10 @@ import {
 import { registerLocaleData } from '@angular/common';
 import localeTh from '@angular/common/locales/th';
 
+export type ReportType = 'research' | 'article' | 'innovation';
+
 export interface PieChartConfig {
+  type: ReportType;
   title: string;
   subtitle: string;
   series: ApexNonAxisChartSeries;
@@ -48,6 +51,7 @@ interface Publication {
   publishDate: string;
   year: number;
 }
+
 registerLocaleData(localeTh);
 
 @Component({
@@ -63,6 +67,7 @@ export class UserDashboardComponent implements OnInit {
   currentPage = 1;
   searchText = '';
   selectedTab: keyof DataPerformance = 'research';
+  reportType: 'research' | 'article' | 'innovation' | null = null;
 
   series: ApexNonAxisChartSeries = [
     2, 2, 1, 3, 4, 2, 1, 4, 2, 3, 3, 2, 2, 2,
@@ -133,6 +138,7 @@ export class UserDashboardComponent implements OnInit {
 
   charts: PieChartConfig[] = [
     {
+      type: 'research',
       title: 'กราฟสรุปจำนวนโครงการวิจัย จำแนกตามหน่วยงาน',
       subtitle: this.getLastUpdatedText(),
       series: this.series,
@@ -201,6 +207,7 @@ export class UserDashboardComponent implements OnInit {
       colors: this.colors,
     },
     {
+      type: 'article',
       title: 'กราฟสรุปจำนวนบทความ จำแนกตามหน่วยงาน',
       subtitle: this.getLastUpdatedText(),
       series: [
@@ -275,6 +282,7 @@ export class UserDashboardComponent implements OnInit {
       colors: this.colors,
     },
     {
+      type: 'innovation',
       title: 'กราฟสรุปจำนวนนวัตกรรมสิ่งประดิษฐ์ จำแนกตามหน่วยงาน',
       subtitle: this.getLastUpdatedText(),
       series: [3, 5, 1, 2, 3, 1, 2, 4, 5, 3, 3, 2, 2],
@@ -552,7 +560,8 @@ export class UserDashboardComponent implements OnInit {
     this.updatePagination();
   }
 
-  SeeMoreDetails() {
-    this.router.navigateByUrl('/performance-by-departmaent');
+  SeeMoreDetails(type: ReportType) {
+
+    this.router.navigate(['/performance-by-departmaent', type]);
   }
 }

@@ -136,13 +136,14 @@
 
           <!-- Action Button -->
           <button
+          (click)="SeeMoreDetails(c.type)"
             type="button"
             class="flex items-center justify-center gap-2 bg-yellow-400 hover:bg-yellow-500 text-[#394250] hover:text-white px-4 py-2 rounded-xl shadow cursor-pointer transition sm:self-auto self-center focus:outline-none focus:ring-2 focus:ring-yellow-300"
           >
             <i
               class="bi bi-file-earmark-bar-graph-fill text-xl sm:text-2xl"
             ></i>
-            <span (click)="SeeMoreDetails()" class="inline md:hidden lg:inline text-lg sm:text-xl font-semibold">
+            <span class="inline md:hidden lg:inline text-lg sm:text-xl font-semibold">
               ดูรายละเอียดเพิ่มเติม
             </span>
           </button>

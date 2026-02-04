@@ -1,5 +1,8 @@
 export interface MajorData {
-    id: number;
-    branch_name: string;
-    academic: number;
+  id: number;
+  departmentId: number;
+  branch_name: string;
+  research: number;
+  article: number;
+  innovation: number;
 }

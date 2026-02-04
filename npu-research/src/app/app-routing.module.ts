@@ -66,8 +66,8 @@ const routes: Routes = [
       { path: 'research/:id', component: ResearchComponent },
       { path: 'report-researcher', component: ReportResearcherTypeComponent },
       { path: 'profile/:id', component: UserProfileComponent },
-      { path: 'performance-by-departmaent', component: PerformanceByDepartmentComponent },
-      { path: 'performance-detail-by-departmaent', component: PerformanceDetailByDepartmentComponent },
+      { path: 'performance-by-departmaent/:type', component: PerformanceByDepartmentComponent },
+      { path: 'performance-detail-by-departmaent/:type/:id', component: PerformanceDetailByDepartmentComponent },
       {
         path: 'report-institution',
         component: ReportResearcherInstitutionComponent,
@@ -111,8 +111,8 @@ const routes: Routes = [
       { path: 'edit-traning/:id', component: UserEditTraningComponent },
       { path: 'performance/:type/:id', component: PerformanceComponent },
       { path: 'edit-work/:id', component: EditWorkComponent },
-      { path: 'performance-by-departmaent', component: PerformanceByDepartmentComponent },
-      { path: 'performance-by-departmaent', component: PerformanceDetailByDepartmentComponent },
+      { path: 'performance-by-departmaent/:type', component: PerformanceByDepartmentComponent },
+      { path: 'performance-by-departmaent/:type/:id', component: PerformanceDetailByDepartmentComponent },
     ],
   },
 
@@ -155,8 +155,8 @@ const routes: Routes = [
       { path: 'performance/:type/:id', component: PerformanceComponent },
       { path: 'report', component: ReportComponent },
       { path: 'edit-work/:id', component: EditWorkComponent },
-      { path: 'performance-by-departmaent', component: PerformanceByDepartmentComponent },
-      { path: 'performance-by-departmaent', component: PerformanceDetailByDepartmentComponent },
+      { path: 'performance-by-departmaent/:type', component: PerformanceByDepartmentComponent },
+      { path: 'performance-by-departmaent/:type/:id', component: PerformanceDetailByDepartmentComponent },
     ],
   },
 ];
