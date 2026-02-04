@@ -1,5 +1,6 @@
 import { Component, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 interface ExternalPerson {
   name: string;
@@ -152,4 +153,18 @@ export class UserAddAticleComponent {
       m.toLowerCase().includes(this.searchMajor.toLowerCase())
     );
   }
+
+  saveData() {
+      Swal.fire({
+            icon: 'success',
+            title: 'บันทึกข้อมูลสำเร็จ',
+            text: 'ระบบได้บันทึกข้อมูลเรียบร้อยแล้ว',
+            showConfirmButton: false,
+            timer: 1500,
+            customClass: {
+              title: 'swal-title-lg',
+              htmlContainer: 'swal-text-2xl',
+            },
+          });
+    }
 }

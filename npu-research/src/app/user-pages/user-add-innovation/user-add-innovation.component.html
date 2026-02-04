@@ -1,4 +1,6 @@
-<div class="contain-content bg-gray-100 px-10 text-2xl font-bold text-[#394250]">
+<div
+  class="contain-content bg-gray-100 px-10 text-2xl font-bold text-[#394250]"
+>
   <!-- Back -->
   <div class="flex justify-end mb-4 mx-auto mt-6">
     <button
@@ -12,9 +14,7 @@
     </button>
   </div>
 
-  <div
-    class="mb-10 mx-auto px-20 py-10 bg-white rounded-xl shadow-md"
-  >
+  <div class="mb-10 mx-auto px-20 py-10 bg-white rounded-xl shadow-md">
     <div
       class="mx-auto px-6 py-5 mb-6 flex items-center gap-4 rounded-xl bg-linear-to-r from-[#9DE1EF] to-[#D3DFEB] shadow"
     >
@@ -89,9 +89,7 @@
 
     <!-- หลักการและเหตุผล : -->
     <div class="grid grid-cols-1 md:grid-cols-1 gap-2 mb-6">
-      <label class="md:col-span-1 text-start">
-        หลักการและเหตุผล
-      </label>
+      <label class="md:col-span-1 text-start"> หลักการและเหตุผล </label>
       <textarea
         name="attention"
         id="attention"
@@ -105,7 +103,9 @@
       <label class="font-medium text-start">
         ประเภทความรับผิดชอบ <span class="text-red-500">*</span>
       </label>
-      <select class="max-w-md w-full text-2xl font-medium border rounded-md px-4 py-2">
+      <select
+        class="max-w-md w-full text-2xl font-medium border rounded-md px-4 py-2"
+      >
         <option disabled selected>เลือกประเภทความรับผิดชอบ</option>
         <option>หัวหน้าโครงการ</option>
         <option>ผู้ร่วมโครงการ</option>
@@ -122,9 +122,7 @@
 
         <!-- Table -->
         <div class="md:col-span-3 overflow-x-auto px-4 sm:px-8">
-          <h1
-            class="mb-3mt-4 text-2xl flex items-center gap-2"
-          >
+          <h1 class="mb-3mt-4 text-2xl flex items-center gap-2">
             ระบุผู้ร่วมโครงการภายใน
           </h1>
 
@@ -191,9 +189,7 @@
           </div>
 
           <!-- ผู้ร่วมโครงการภายนอก -->
-          <h1
-            class="mb-3 mt-4 text-2xl flex items-center gap-2"
-          >
+          <h1 class="mb-3 mt-4 text-2xl flex items-center gap-2">
             ระบุผู้ร่วมโครงการภายนอก
           </h1>
           <table class="w-full max-w-full overflow-hidden">
@@ -451,6 +447,7 @@
     <!-- ปุ่ม -->
     <div class="flex justify-center mt-10">
       <button
+        (click)="saveData()"
         type="submit"
         class="flex items-center justify-center gap-3 w-72 py-3 bg-[#FDE68A] hover:bg-[#FACC15] text-[#394250] text-2xl rounded-lg shadow transition duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 cursor-pointer"
       >

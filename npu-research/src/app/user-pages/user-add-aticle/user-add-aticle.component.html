@@ -1,4 +1,6 @@
-<div class="contain-content bg-gray-100 px-10 text-2xl font-bold text-[#394250]">
+<div
+  class="contain-content bg-gray-100 px-10 text-2xl font-bold text-[#394250]"
+>
   <!-- Back -->
   <div class="flex justify-end mb-4 mx-auto mt-6">
     <button
@@ -12,9 +14,7 @@
     </button>
   </div>
 
-  <div
-    class="mt-5 mb-10 mx-auto px-20 py-10 bg-white rounded-xl shadow-md"
-  >
+  <div class="mt-5 mb-10 mx-auto px-20 py-10 bg-white rounded-xl shadow-md">
     <div
       class="mx-auto px-6 py-5 mb-6 flex items-center gap-4 rounded-xl bg-linear-to-r from-[#9DE1EF] to-[#D3DFEB] shadow"
     >
@@ -26,7 +26,7 @@
 
     <!-- ชื่องานวิจัย -->
     <div class="grid grid-cols-1 md:grid-cols-1 gap-2 mb-6 mt-5">
-      <label class="md:col-span-1  text-start">
+      <label class="md:col-span-1 text-start">
         ชื่อบทความ/วารสาร <span class="text-red-500">*</span>
       </label>
       <input
@@ -41,7 +41,9 @@
       <label class="font-bold text-start">
         ประเภท <span class="text-red-500">*</span>
       </label>
-      <select class="md:col-span-3 text-2xl font-medium w-full border rounded-md px-4 py-2">
+      <select
+        class="md:col-span-3 text-2xl font-medium w-full border rounded-md px-4 py-2"
+      >
         <option disabled selected>--- ระบุประเภท ---</option>
         <option>Journal</option>
         <option>Conference</option>
@@ -62,7 +64,7 @@
     </div>
 
     <!-- หน้าที่ตีพิมพ์ -->
-     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
       <div>
         <label class="md:col-span-1 text-start">
           หน้าที่ตีพิมพ์ <span class="text-red-500">*</span>
@@ -73,10 +75,10 @@
           placeholder="ระบุหน้าที่ตีพิมพ์"
         />
       </div>
-  
+
       <!-- ปีที่ตีพิมพ์ -->
       <div>
-        <label class="md:col-span-1  text-start">
+        <label class="md:col-span-1 text-start">
           ปีที่ตีพิมพ์ <span class="text-red-500">*</span>
         </label>
         <input
@@ -85,11 +87,11 @@
           placeholder="ระบุปีบทความวิชาการ"
         />
       </div>
-     </div>
-    
+    </div>
+
     <!-- สาขาของบทความ/วารสาร -->
     <div class="grid grid-cols-1 md:grid-cols-1 gap-2 mb-6">
-      <label class=" text-start">
+      <label class="text-start">
         สาขาของบทความ/วารสาร <span class="text-red-500">*</span>
       </label>
       <div class="md:col-span-3 relative">
@@ -136,25 +138,29 @@
     </div>
 
     <!-- ประเภทความรับผิดชอบ -->
-     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
       <div>
-        <label class=" text-start">
+        <label class="text-start">
           ประเภทความรับผิดชอบ <span class="text-red-500">*</span>
         </label>
-        <select class="md:col-span-2 h-12 w-full text-2xl font-medium border rounded-md px-4 py-2">
+        <select
+          class="md:col-span-2 h-12 w-full text-2xl font-medium border rounded-md px-4 py-2"
+        >
           <option disabled selected>เลือกประเภทความรับผิดชอบ</option>
           <option>Frist Author</option>
           <option>Corresponding Author</option>
           <option>Co Author</option>
         </select>
       </div>
-  
+
       <!-- ค่าน้ำหนัก/ระดับคุณภาพ -->
       <div>
         <label class="text-start">
           ค่าน้ำหนัก/ระดับคุณภาพ <span class="text-red-500">*</span>
         </label>
-        <select class="md:col-span-2 h-12 text-2xl font-medium w-full border rounded-md px-4 py-2">
+        <select
+          class="md:col-span-2 h-12 text-2xl font-medium w-full border rounded-md px-4 py-2"
+        >
           <option disabled selected>ระบุตัวเลขค่าน้ำหนัก/ระดับคุณภาพ</option>
           <option>.20 หมายถึง</option>
           <option>.40 หมายถึง</option>
@@ -163,8 +169,7 @@
           <option>1.00 หมายถึง</option>
         </select>
       </div>
-     </div>
-    
+    </div>
 
     <!-- ผู้ร่วมโครงการ -->
     <div class="w-full">
@@ -180,7 +185,9 @@
 
           <table class="w-full max-w-4xl overflow-hidden">
             <thead>
-              <tr class="bg-[#394250] text-white border-b-2 border-gray-300 text-center">
+              <tr
+                class="bg-[#394250] text-white border-b-2 border-gray-300 text-center"
+              >
                 <th class="p-2 w-16">ที่</th>
                 <th class="p-2">ระบุชื่อ</th>
                 <th class="p-2">ประเภทความรับผิดชอบ</th>
@@ -239,11 +246,15 @@
           </div>
 
           <!-- ผู้ร่วมโครงการภายนอก -->
-          <h1 class="mb-3 mt-4 text-2xl  flex items-center gap-2">ระบุผู้ร่วมโครงการภายนอก</h1>
+          <h1 class="mb-3 mt-4 text-2xl flex items-center gap-2">
+            ระบุผู้ร่วมโครงการภายนอก
+          </h1>
 
           <table class="w-full max-w-full overflow-hidden">
             <thead>
-              <tr class="bg-[#394250] text-white text-center border-b-2 border-gray-300">
+              <tr
+                class="bg-[#394250] text-white text-center border-b-2 border-gray-300"
+              >
                 <th class="p-2">ที่</th>
                 <th class="p-2">ระบุชื่อ(บุคลากรภายนอก)</th>
                 <th class="p-2">ประเภทความรับผิดชอบ</th>
@@ -315,7 +326,7 @@
 
     <!-- ความร่วมมือกับหน่วยงานอื่นๆ : -->
     <div class="grid grid-cols-1 md:grid-cols-1 gap-2 mb-6">
-      <label class="md:col-span-1  text-start">
+      <label class="md:col-span-1 text-start">
         ความร่วมมือกับหน่วยงานอื่นๆ
       </label>
       <textarea
@@ -328,7 +339,7 @@
 
     <!-- เว็บไซต์อ้างอิง/เผยแพร่ -->
     <div class="grid grid-cols-1 md:grid-cols-1 gap-2 mb-6">
-      <label class="md:col-span-1  text-start">
+      <label class="md:col-span-1 text-start">
         เว็บไซต์อ้างอิง/เผยแพร่ (doi.org) : <span class="text-red-500">*</span>
       </label>
       <input
@@ -340,9 +351,7 @@
 
     <!-- ไฟล์บทความ PDF -->
     <div class="grid grid-cols-1 md:grid-cols-1 gap-2 mb-2 items-center">
-      <label class="md:col-span-1  text-start">
-        ไฟล์บทความ (PDF) :
-      </label>
+      <label class="md:col-span-1 text-start"> ไฟล์บทความ (PDF) : </label>
 
       <!-- input file (ซ่อน) -->
       <input
@@ -371,6 +380,7 @@
     <!-- ปุ่ม -->
     <div class="flex justify-center mt-10">
       <button
+        (click)="saveData()"
         type="submit"
         class="flex items-center justify-center gap-3 w-72 py-3 bg-yellow-300 hover:bg-yellow-400 rounded-lg shadow transition duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 cursor-pointer"
       >

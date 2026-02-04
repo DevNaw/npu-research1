@@ -46,7 +46,7 @@ export class UserAddResearchComponent {
     'กองทุนวิจัยมหาวิทยาลัย',
     'คณะ/วิทยาลัย',
   ];
-  
+
   externalFunds: string[] = [
     'สำนักงานการวิจัยแห่งชาติ (วช.)',
     'สกสว.',
@@ -173,22 +173,29 @@ export class UserAddResearchComponent {
 
   goToResearchDetail(type: string, id: number | string) {
     const role = localStorage.getItem('role');
-  
-    const base =
-      role === 'admin' ? '/admin/performance' : '/user/performance';
-  
+
+    const base = role === 'admin' ? '/admin/performance' : '/user/performance';
+
     this.router.navigate([base, type, id]);
   }
-  
+
   saveResearch() {
-    
     // ✅ รวมข้อมูลทั้งหมด
     const payload = {};
-  
+
     // ✅ เตรียม FormData (รองรับไฟล์)
     const formData = new FormData();
     formData.append('data', JSON.stringify(payload));
-  
+    Swal.fire({
+      icon: 'success',
+      title: 'บันทึกข้อมูลสำเร็จ',
+      text: 'ระบบได้บันทึกข้อมูลเรียบร้อยแล้ว',
+      showConfirmButton: false,
+      timer: 1500,
+      customClass: {
+        title: 'swal-title-lg',
+        htmlContainer: 'swal-text-2xl',
+      },
+    });
   }
-  
 }

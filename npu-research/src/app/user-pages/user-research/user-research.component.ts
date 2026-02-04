@@ -25,26 +25,29 @@ export class UserResearchComponent {
   openDropdown: string | null = null;
   isSearched = false;
 
+  selectedType: string | null = null;
+  selectedSubType: string | null = null;
+
   selectedFaculty = '';
   selectedFunding = '';
   selectedYear = '';
   researchTitle = '';
   searchSubType = '';
   searchText = '';
+  researchItems = '';
 
   searchFaculitie = '';
   searchType = '';
   facultySearch: string = '';
-  selectedType: string | null = null;
-  selectedSubType: string | null = null;
 
   searchAgency = '';
   selectedAgency: string | null = null;
 
-  researchItems = '';
-
   startDate?: Date;
   endDate?: Date;
+
+  fundingExternal = false;
+  fundingInternal = false;
 
   constructor(private router: Router, private authService: AuthService) {}
 
@@ -68,7 +71,7 @@ export class UserResearchComponent {
       subType: 'ประชุมวิชาการระดับชาติ',
       faculty: 'คณะวิทยาศาสตร์',
       agency: 'คณะวิทยาศาสตร์',
-      funding: 'internal',
+      funding: 'external',
       year: 2024,
       date: new Date('2024-11-05'),
       name: 'นาง ข',
@@ -161,6 +164,11 @@ export class UserResearchComponent {
         (!this.startDate || researchDate >= this.startDate) &&
         (!this.endDate || researchDate <= this.endDate);
 
+      const fundingMatch =
+        (!this.fundingExternal && !this.fundingInternal) || // ไม่เลือกอะไร = ผ่าน
+        (this.fundingExternal && r.funding === 'external') ||
+        (this.fundingInternal && r.funding === 'internal');
+
       return (
         // ประเภท
         (!this.selectedType || r.type === this.selectedType) &&
@@ -169,7 +177,7 @@ export class UserResearchComponent {
         // หน่วยงาน
         (!this.selectedAgency || r.agency === this.selectedAgency) &&
         // แหล่งทุน
-        (!this.selectedFunding || r.funding === this.selectedFunding) &&
+        fundingMatch &&
         // ปี
         (!this.selectedYear || r.year === +this.selectedYear) &&
         // คำค้น
@@ -352,7 +360,7 @@ export class UserResearchComponent {
   changePage(page: number) {
     if (page < 1 || page > this.totalPages) return;
     if (page === this.currentPage) return;
-  
+
     this.currentPage = page;
     this.updatePagination();
   }
