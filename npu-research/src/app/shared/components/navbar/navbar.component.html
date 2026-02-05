@@ -28,7 +28,9 @@
             class="hover:bg-gray-50 px-3 py-2 rounded-md flex items-center justify-center hover:text-blue-400"
           >
             <i class="bi bi-box-arrow-in-right text-lg"></i>
-            <span class="ml-2 hidden md:inline text-xl text-[#394250]">เข้าสู่ระบบ</span>
+            <span class="ml-2 hidden md:inline text-xl text-[#394250]"
+              >เข้าสู่ระบบ</span
+            >
           </a>
         </div>
 
@@ -200,7 +202,7 @@
       <!-- ======== Menu Mobile ======= -->
       <div
         *ngIf="isMobileMenuOpen"
-        class="md:hidden bg-yellow-400 px-2 py-4 space-x-4 flex w-full items-center"
+        class="md:hidden bg-yellow-400 px-2 py-4 grid grid-cols-9 gap-1 w-full"
       >
         <a
           routerLink="/dashboard"
@@ -282,40 +284,54 @@
         </a>
 
         <div class="relative group">
-          <a
-            class="flex justify-center p-2 hover:bg-yellow-300 rounded cursor-pointer relative group"
+          <button
+          (click)="toggleReportMenu()"
+            class="flex justify-center p-2 hover:bg-yellow-300 rounded relative"
           >
-            <i class="bi bi-graph-up text-xl"></i>
-            <span
-              class="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-2xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
+            <i class="bi bi-graph-up text-xl"></i
+            ><span
+              class="hidden md:block absolute bottom-full mb-1 left-1/2
+              transform -translate-x-1/2 px-2 py-1 text-xs
+              text-white bg-black rounded opacity-0
+              group-hover:opacity-100 transition-opacity"
             >
               สถิติ/รายงาน
             </span>
-          </a>
+          </button>
+
           <div
-            class="absolute left-0 mt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 delay-150 bg-gray-700 text-white rounded-md shadow-lg w-max min-w-45 z-50"
+            *ngIf="openMobileReport"
+            class="absolute top-full left-1/2 -translate-x-[65%] mt-2
+            w-72 max-w-[90vw]
+            bg-gray-700 text-white
+            rounded-md shadow-lg z-50"
           >
             <a
+            (click)="closeReportMenu()"
               routerLink="/report-researcher-profile"
               class="block px-4 py-2 hover:bg-gray-600 text-lg"
               >รายงานข้อมูลประวัตินักวิจัย</a
             >
             <a
+            (click)="closeReportMenu()"
               routerLink="/report-research"
               class="block px-4 py-2 hover:bg-gray-600 text-lg"
               >รายงานข้อมูลผลงานวิจัย</a
             >
             <a
+            (click)="closeReportMenu()"
               routerLink="/report-expertise"
               class="block px-4 py-2 hover:bg-gray-600 text-lg"
               >รายงานข้อมูลจำนวนนักวิจัยแยกตามสาขาเชี่ยวชาญ</a
             >
             <a
+            (click)="closeReportMenu()"
               routerLink="/report-institution"
               class="block px-4 py-2 hover:bg-gray-600 text-lg"
               >รายงานข้อมูลจำนวนนักวิจัยแยกตามหน่วยงานที่สังกัด</a
             >
             <a
+            (click)="closeReportMenu()"
               routerLink="/report-researcher"
               class="block px-4 py-2 hover:bg-gray-600 text-lg"
               >รายงานข้อมูลจำนวนนักวิจัยแยกตามประเภทนักวิจัย</a
@@ -324,41 +340,17 @@
         </div>
 
         <div class="relative group">
-          <a
-            class="flex justify-center p-2 hover:bg-yellow-300 rounded cursor-pointer relative group"
-          >
+          <button (click)="goToManual()" class="flex justify-center p-2 hover:bg-yellow-300 rounded relqtive">
             <i class="bi bi-file-earmark-text text-xl"></i>
             <span
-              class="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-2xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
+              class="hidden md:block absolute bottom-full mb-1 left-1/2
+              transform -translate-x-1/2 px-2 py-1 text-xs
+              text-white bg-black rounded opacity-0
+              group-hover:opacity-100 transition-opacity"
             >
               คู่มือการใช้งาน
             </span>
-          </a>
-          <div
-            class="absolute left-0 mt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 delay-150 bg-gray-700 text-white rounded-md shadow-lg w-max min-w-45 z-50"
-          >
-            <a
-              [href]="doc.researcher.fileUrl"
-              target="_blank"
-              rel="noopener"
-              class="block px-4 py-2 hover:bg-gray-600 text-lg"
-              >สำหรับนักวิจัย</a
-            >
-            <a
-              [href]="doc.admin.fileUrl"
-              target="_blank"
-              rel="noopener"
-              class="block px-4 py-2 hover:bg-gray-600 text-lg"
-              >สำหรับแอดมิน</a
-            >
-            <a
-              [href]="doc.executive.fileUrl"
-              target="_blank"
-              rel="noopener"
-              class="block px-4 py-2 hover:bg-gray-600 text-lg"
-              >สำหรับผู้บริหาร</a
-            >
-          </div>
+          </button>
         </div>
 
         <a
@@ -553,17 +545,19 @@
 
         <!-- ======== บันทึกข้อมูลงานวิจัย บทความ นวัตกรรม ======== -->
         <div class="relative group">
-          <a
-            class="flex justify-center p-2 hover:bg-yellow-300 rounded cursor-pointer relative group"
+          <button
+            class="flex justify-center p-2 hover:bg-yellow-300 rounded relative"
           >
             <i class="bi bi-floppy text-xl"></i>
             <span
-              class="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-2xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
+              class="hidden mb:block absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-xs text-white bg-[#394250] rounded opacity-0 group-hover:opacity-100 transition-opacity"
             >
               บันทึกข้อมูลผลงาน
             </span>
-          </a>
+          </button>
+
           <div
+          *ngIf="toggleSaveMenu()"
             class="absolute left-0 mt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 delay-150 bg-gray-700 text-white rounded-md shadow-lg w-max min-w-45 z-50"
           >
             <a

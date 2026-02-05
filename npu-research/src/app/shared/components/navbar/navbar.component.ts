@@ -6,31 +6,28 @@ import { AuthService } from '../../../services/auth.service';
   selector: 'app-navbar',
   standalone: false,
   templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.css'
+  styleUrl: './navbar.component.css',
 })
 export class NavbarComponent {
   isMobileMenuOpen = false;
+  openMobileReport = false;
 
   doc = {
     researcher: {
       label: 'สำหรับนักวิจัย',
-      fileUrl: 'assets/manual/researcher.pdf'
+      fileUrl: 'assets/manual/researcher.pdf',
     },
     admin: {
       label: 'สำหรับแอดมิน',
-      fileUrl: 'assets/manual/admin.pdf'
+      fileUrl: 'assets/manual/admin.pdf',
     },
     executive: {
       label: 'สำหรับผู้บริหาร',
-      fileUrl: 'assets/manual/executive.pdf'
-    }
+      fileUrl: 'assets/manual/executive.pdf',
+    },
   };
-  
 
-  constructor(
-    public auth: AuthService,
-    private router: Router
-  ) {}
+  constructor(public auth: AuthService, private router: Router) {}
 
   toggleMobileMenu() {
     this.isMobileMenuOpen = !this.isMobileMenuOpen;
@@ -56,5 +53,24 @@ export class NavbarComponent {
 
   get isLoggedIn() {
     return this.auth.isLoggedIn();
+  }
+
+  toggleReportMenu() {
+    this.openMobileReport = !this.openMobileReport;
+  }
+
+  closeReportMenu() {
+    this.openMobileReport = false;
+  }
+  toggleSaveMenu() {
+    this.openMobileReport = !this.openMobileReport;
+  }
+
+  closeSaveMenu() {
+    this.openMobileReport = false;
+  }
+
+  goToManual() {
+    this.router.navigate(['/manual']);
   }
 }
