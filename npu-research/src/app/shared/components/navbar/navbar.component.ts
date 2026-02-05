@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 
@@ -11,6 +11,14 @@ import { AuthService } from '../../../services/auth.service';
 export class NavbarComponent {
   isMobileMenuOpen = false;
   openMobileReport = false;
+  openMobileSave = false;
+  openMobileNews = false;
+  openMobileFunding = false;
+  openReport = false;
+  closeTimeout: any;
+
+  isOpen = false;
+  isTouchDevice = false;
 
   doc = {
     researcher: {
@@ -28,6 +36,41 @@ export class NavbarComponent {
   };
 
   constructor(public auth: AuthService, private router: Router) {}
+
+  ngOnInit() {
+    this.isTouchDevice =
+      'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  }
+
+  // onMouseEnter() {
+  //   if (!this.isTouchDevice) {
+  //     this.isOpen = true;
+  //   }
+  // }
+
+  // onMouseLeave() {
+  //   if (!this.isTouchDevice) {
+  //     this.isOpen = false;
+  //   }
+  // }
+
+  onClick(event: Event) {
+    if (this.isTouchDevice) {
+      event.stopPropagation();
+      this.isOpen = !this.isOpen;
+    }
+  }
+
+  @HostListener('document:click')
+  closeDropdown() {
+    if (this.isTouchDevice) {
+      this.isOpen = false;
+    }
+  }
+
+  close() {
+    this.openReport = false;
+  }
 
   toggleMobileMenu() {
     this.isMobileMenuOpen = !this.isMobileMenuOpen;
@@ -62,15 +105,69 @@ export class NavbarComponent {
   closeReportMenu() {
     this.openMobileReport = false;
   }
+
   toggleSaveMenu() {
-    this.openMobileReport = !this.openMobileReport;
+    this.openMobileSave = !this.openMobileSave;
   }
 
   closeSaveMenu() {
-    this.openMobileReport = false;
+    this.openMobileSave = false;
+    this.closeReportMenu();
+  }
+
+  toggleNewaMenu() {
+    this.openMobileNews = !this.openMobileNews;
+  }
+
+  closeNewsMenu() {
+    this.openMobileNews = false;
+    this.closeReportMenu();
+  }
+
+  toggleFundingMenu() {
+    this.openMobileFunding = !this.openMobileFunding;
+  }
+
+  closeFundingMenu() {
+    this.openMobileFunding = false;
+    this.closeReportMenu();
   }
 
   goToManual() {
     this.router.navigate(['/manual']);
   }
+
+
+
+isDesktop(): boolean {
+  return window.innerWidth >= 768; // md
+}
+
+onMouseEnter() {
+  if (!this.isDesktop()) return;
+
+  // ยกเลิกการปิด ถ้าเอาเมาส์กลับมา
+  if (this.closeTimeout) {
+    clearTimeout(this.closeTimeout);
+  }
+
+  this.isOpen = true;
+}
+
+onMouseLeave() {
+  if (!this.isDesktop()) return;
+
+  // หน่วงก่อนปิด (300ms)
+  this.closeTimeout = setTimeout(() => {
+    this.isOpen = false;
+  }, 200);
+}
+
+// Mobile / Tablet click
+onToggle() {
+  if (!this.isDesktop()) {
+    this.isOpen = !this.isOpen;
+  }
+}
+
 }
