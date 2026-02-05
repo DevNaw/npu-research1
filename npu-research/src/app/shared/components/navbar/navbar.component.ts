@@ -15,7 +15,7 @@ export class NavbarComponent {
   openMobileNews = false;
   openMobileFunding = false;
   openReport = false;
-  closeTimeout: any;
+  closeTimeout: any = null;
 
   isOpen = false;
   isTouchDevice = false;
@@ -136,38 +136,41 @@ export class NavbarComponent {
   goToManual() {
     this.router.navigate(['/manual']);
   }
-
-
-
-isDesktop(): boolean {
-  return window.innerWidth >= 768; // md
-}
-
-onMouseEnter() {
-  if (!this.isDesktop()) return;
-
-  // ยกเลิกการปิด ถ้าเอาเมาส์กลับมา
-  if (this.closeTimeout) {
-    clearTimeout(this.closeTimeout);
+  
+  isDesktop(): boolean {
+    return window.innerWidth >= 768; // md
+  }
+  
+  /* ===== Desktop (hover) ===== */
+  onMouseEnter() {
+    if (!this.supportsHover()) return;
+  
+    if (this.closeTimeout) {
+      clearTimeout(this.closeTimeout);
+      this.closeTimeout = null;
+    }
+  
+    this.isOpen = true;
   }
 
-  this.isOpen = true;
-}
+  supportsHover(): boolean {
+    return window.matchMedia('(hover: hover)').matches;
+  }
+  
+  onMouseLeave() {
+  if (!this.supportsHover()) return;
 
-onMouseLeave() {
-  if (!this.isDesktop()) return;
-
-  // หน่วงก่อนปิด (300ms)
   this.closeTimeout = setTimeout(() => {
     this.isOpen = false;
   }, 200);
 }
+  
+onToggle(event: Event) {
+  if (this.supportsHover()) return;
 
-// Mobile / Tablet click
-onToggle() {
-  if (!this.isDesktop()) {
-    this.isOpen = !this.isOpen;
-  }
+  event.stopPropagation();
+  event.preventDefault();
+
+  this.isOpen = !this.isOpen;
 }
-
 }
