@@ -1,7 +1,7 @@
 <!-- ===== Navbar General ===== -->
 <ng-container *ngIf="!isLoggedIn">
   <nav class="text-[#394250] font-bold sticky top-0 z-50 bg-gray-100">
-    <div class="max-w-full mx-auto px-8 cursor-pointer p-1 bg-white">
+    <div class="max-w-full mx-auto px-4 md:px-8 cursor-pointer p-1 bg-white">
       <div class="flex items-center justify-between h-16">
         <div class="flex items-center gap-3">
           <img
@@ -12,9 +12,10 @@
           <div class="leading-none sm:block">
             <h1
               routerLink="/dashboard"
-              class="text-2xl text-[#394250] leading-none sm:text-2xl md:text-3xl transition-all duration-300"
+              class="text-xl text-[#394250] leading-none sm:text-2xl md:text-3xl transition-all duration-300"
             >
-              ระบบฐานข้อมูลวิจัย มหาวิทยาลัยนครพนม
+              ระบบฐานข้อมูลวิจัย
+              <span class="block md:inline"> มหาวิทยาลัยนครพนม </span>
             </h1>
             <p class="text-lg leading-none sm:text-xl italic text-gray-400">
               Research Database System
@@ -112,68 +113,77 @@
           </a>
 
           <div
-  class="relative"
-  (mouseenter)="onMouseEnter()"
-  (mouseleave)="onMouseLeave()"
->
-  <button
-    type="button"
-    (click)="onToggle($event)"
-    class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium
-           flex items-center justify-center gap-1"
-  >
-    <i class="bi bi-graph-up text-lg"></i>
-    <span class="hidden md:inline font-bold text-xl">
-      สถิติ/รายงาน
-    </span>
-  </button>
+            class="relative"
+            (mouseenter)="onMouseEnter('report')"
+            (mouseleave)="onMouseLeave()"
+          >
+            <button
+              type="button"
+              (click)="onToggle('report', $event)"
+              class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-1"
+            >
+              <i class="bi bi-graph-up text-lg"></i>
+              <span class="hidden md:inline font-bold text-xl">
+                สถิติ/รายงาน
+              </span>
+            </button>
 
-  <!-- Dropdown -->
-  <div
-    *ngIf="isOpen"
-    class="absolute left-1/2 mt-2 -translate-x-1/2
-           w-72 max-w-[90vw]
-           bg-[#394250] text-white
-           rounded-md shadow-lg z-50"
-  >
-    <a routerLink="/report-researcher-profile"
-       class="block px-4 py-2 hover:bg-gray-600 font-bold text-xl">
-      รายงานข้อมูลประวัตินักวิจัย
-    </a>
-    <a routerLink="/report-research"
-       class="block px-4 py-2 hover:bg-gray-600 font-bold text-xl">
-      รายงานข้อมูลผลงานวิจัย
-    </a>
-    <a routerLink="/report-expertise"
-       class="block px-4 py-2 hover:bg-gray-600 font-bold text-xl">
-      รายงานข้อมูลจำนวนนักวิจัยแยกตามสาขาเชี่ยวชาญ
-    </a>
-    <a routerLink="/report-institution"
-       class="block px-4 py-2 hover:bg-gray-600 font-bold text-xl">
-      รายงานข้อมูลจำนวนนักวิจัยแยกตามหน่วยงานที่สังกัด
-    </a>
-    <a routerLink="/report-researcher"
-       class="block px-4 py-2 hover:bg-gray-600 font-bold text-xl">
-      รายงานข้อมูลจำนวนนักวิจัยแยกตามประเภทนักวิจัย
-    </a>
-  </div>
-</div>
+            <!-- Dropdown -->
+            <div
+              *ngIf="isOpen"
+              class="absolute left-1/2 mt-2 -translate-x-1/2 w-72 max-w-[90vw] bg-[#394250] text-white rounded-md shadow-lg z-50"
+            >
+              <a
+                routerLink="/report-researcher-profile"
+                class="block px-4 py-2 hover:bg-gray-600 font-bold text-xl"
+              >
+                รายงานข้อมูลประวัตินักวิจัย
+              </a>
+              <a
+                routerLink="/report-research"
+                class="block px-4 py-2 hover:bg-gray-600 font-bold text-xl"
+              >
+                รายงานข้อมูลผลงานวิจัย
+              </a>
+              <a
+                routerLink="/report-expertise"
+                class="block px-4 py-2 hover:bg-gray-600 font-bold text-xl"
+              >
+                รายงานข้อมูลจำนวนนักวิจัยแยกตามสาขาเชี่ยวชาญ
+              </a>
+              <a
+                routerLink="/report-institution"
+                class="block px-4 py-2 hover:bg-gray-600 font-bold text-xl"
+              >
+                รายงานข้อมูลจำนวนนักวิจัยแยกตามหน่วยงานที่สังกัด
+              </a>
+              <a
+                routerLink="/report-researcher"
+                class="block px-4 py-2 hover:bg-gray-600 font-bold text-xl"
+              >
+                รายงานข้อมูลจำนวนนักวิจัยแยกตามประเภทนักวิจัย
+              </a>
+            </div>
+          </div>
 
-
-
-
-          <div class="relative group">
-            <a
+          <div
+            class="relative"
+            (mouseenter)="onMouseEnter('manual')"
+            (mouseleave)="onMouseLeave()"
+          >
+            <button
+              (click)="onToggle('manual', $event)"
               class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-1"
             >
               <i class="bi bi-file-earmark-text text-lg"></i>
               <span class="hidden md:inline font-bold text-xl"
                 >คู่มือการใช้งาน</span
               >
-            </a>
+            </button>
 
             <div
-              class="absolute left-0 mt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 delay-150 bg-gray-700 text-white rounded-md shadow-lg w-max min-w-45 z-50"
+              *ngIf="openManual"
+              class="absolute left-1/2 mt-2 -translate-x-1/2 w-40 max-w-[90vw] bg-[#394250] text-white rounded-md shadow-lg z-50"
             >
               <a
                 [href]="doc.researcher.fileUrl"
@@ -455,18 +465,24 @@
             <span class="hidden md:inline font-bold text-xl">โปรไฟล์</span>
           </a>
 
-          <div class="relative group">
-            <a
+          <div
+            class="relative"
+            (mouseenter)="onMouseEnter('save')"
+            (mouseleave)="onMouseLeave()"
+          >
+            <button
+              (click)="onToggle('save', $event)"
               class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-1"
             >
               <i class="bi bi-floppy text-lg"></i>
               <span class="hidden md:inline font-bold text-xl"
                 >บันทึกผลงาน</span
               >
-            </a>
+            </button>
 
             <div
-              class="absolute left-0 mt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 delay-150 bg-gray-700 text-white rounded-md shadow-lg w-max min-w-45 z-50"
+              *ngIf="openSave"
+              class="absolute left-0 mt-2 bg-gray-700 text-white rounded-md shadow-lg w-max max-w-[90vw] z-50"
             >
               <a
                 routerLink="/user/add-research"
@@ -707,18 +723,24 @@
             <span class="hidden md:inline font-bold text-xl">โปรไฟล์</span>
           </a>
 
-          <div class="relative group">
-            <a
+          <div
+            class="relative"
+            (mouseenter)="onMouseEnter('funding')"
+            (mouseleave)="onMouseLeave()"
+          >
+            <button
+              (click)="onToggle('funding', $event)"
               class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-1"
             >
               <i class="bi bi-floppy text-lg"></i>
               <span class="hidden md:inline font-bold text-xl"
                 >ข้อมูลพื้นฐาน</span
               >
-            </a>
+            </button>
 
             <div
-              class="absolute left-0 mt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 delay-150 bg-gray-700 text-white rounded-md shadow-lg w-max min-w-45 z-50"
+              *ngIf="openFunding"
+              class="absolute left-0 mt-2 bg-gray-700 text-white rounded-md shadow-lg w-max max-w-[90vw] z-50"
             >
               <a
                 routerLink="/admin/external-funding"
@@ -735,18 +757,24 @@
             </div>
           </div>
 
-          <div class="relative group">
-            <a
+          <div
+            class="relative"
+            (mouseenter)="onMouseEnter('news')"
+            (mouseleave)="onMouseLeave()"
+          >
+            <button
+              (click)="onToggle('news', $event)"
               class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-1"
             >
               <i class="bi bi-floppy text-lg"></i>
               <span class="hidden md:inline font-bold text-xl"
                 >จัดการข่าว/ประกาศ</span
               >
-            </a>
+            </button>
 
             <div
-              class="absolute left-0 mt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 delay-150 bg-gray-700 text-white rounded-md shadow-lg w-max min-w-45 z-50"
+              *ngIf="openNews"
+              class="absolute left-0 mt-2 bg-gray-700 text-white rounded-md shadow-lg w-max max-w-[90vw] z-50"
             >
               <a
                 routerLink="/admin/news"
@@ -763,18 +791,24 @@
             </div>
           </div>
 
-          <div class="relative group">
-            <a
+          <div
+            class="relative"
+            (mouseenter)="onMouseEnter('save')"
+            (mouseleave)="onMouseLeave()"
+          >
+            <button
+              (click)="onToggle('save', $event)"
               class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-1"
             >
               <i class="bi bi-floppy text-lg"></i>
               <span class="hidden md:inline font-bold text-xl"
                 >บันทึกผลงาน</span
               >
-            </a>
+            </button>
 
             <div
-              class="absolute left-0 mt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 delay-150 bg-gray-700 text-white rounded-md shadow-lg w-max min-w-45 z-50"
+              *ngIf="openSave"
+              class="absolute left-0 mt-2 bg-gray-700 text-white rounded-md shadow-lg w-max max-w-[90vw] z-50"
             >
               <a
                 routerLink="/admin/add-research"

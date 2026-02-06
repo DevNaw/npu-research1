@@ -1,11 +1,18 @@
 <div
-  class="contain-content bg-gray-100 px-10 text-2xl text-[#394250] font-bold"
+  class="contain-content bg-gray-100 px-2 md:px-10 text-xl md:text-2xl text-[#394250] font-bold"
 >
-  <div class="mx-auto py-6">
-    <h1 class="text-3xl">{{ reportType ? titles[reportType] : '' }}</h1>
+  <div class="mx-auto md:py-6">
+    <h1 class="font-bold leading-snug">
+      <span class="text-3xl">
+        {{ reportType ? titles[reportType].main : '' }}
+      </span>
+      <span class="block text-3xl md:inline">
+        {{ reportType ? titles[reportType].sub : '' }}
+      </span>
+    </h1>
   </div>
 
-  <div class="mx-auto px-6 py-6 bg-white rounded-xl mb-10">
+  <div class="mx-auto px-2 md:px-6 py-2 md:py-6 bg-white rounded-xl md:mb-10 mt-2">
     <div>
       <table class="min-w-full border-collapse">
         <thead class="bg-[#394250] text-white px-4">
@@ -47,7 +54,7 @@
     </div>
 
     <div
-      class="flex flex-col mt-4 gap-2 md:flex-row md:justify-between md:items-center"
+      class="flex flex-col mt-2 md:mt-4 md:gap-2 md:flex-row md:justify-between md:items-center"
     >
       <p class="text-xl font-medium">
         หน้า {{ currentPage }} จาก {{ totalPages }}
@@ -61,14 +68,14 @@
         <button
           (click)="changePage(currentPage - 1)"
           [disabled]="currentPage === 1"
-          class="px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
+          class="px-2 md:px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
         >
           ‹
         </button>
         <button
           *ngFor="let page of pages"
           (click)="changePage(page)"
-          class="px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
+          class="px-2 md:px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
           [ngClass]="{
             'bg-[#FACC15] text-[#394250]': currentPage === page,
             'hover:bg-gray-100': currentPage !== page
@@ -79,7 +86,7 @@
         <button
           (click)="(currentPage + 1)"
           [disabled]="currentPage === totalPages"
-          class="px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
+          class="px-2 md:px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
         >
           ›
         </button>

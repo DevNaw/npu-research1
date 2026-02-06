@@ -48,11 +48,21 @@ documents: DepartmentData[] = [
 
 filteredDocuments: DepartmentData[] = [];
 
-titles: Record<ReportType, string> = {
-  research: 'รายงานจำนวนโครงการวิจัย จำแนกตามหน่วยงาน',
-  article: 'รายงานจำนวนบทความ/วารสาร จำแนกตามหน่วยงาน',
-  innovation: 'รายงานจำนวนนวัตกรรมสิ่งประดิษฐ์ จำแนกตามหน่วยงาน',
+titles: Record<ReportType, { main: string; sub: string }> = {
+  research: {
+    main: 'รายงานจำนวนโครงการวิจัย',
+    sub: 'จำแนกตามหน่วยงาน',
+  },
+  article: {
+    main: 'รายงานจำนวนบทความ/วารสาร',
+    sub: 'จำแนกตามหน่วยงาน',
+  },
+  innovation: {
+    main: 'รายงานจำนวนนวัตกรรมสิ่งประดิษฐ์',
+    sub: 'จำแนกตามหน่วยงาน',
+  },
 };
+
 
 constructor(private router: Router, private route: ActivatedRoute) {}
 

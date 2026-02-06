@@ -1,6 +1,6 @@
-<div class="bg-gray-100 min-h-screen p-6 text-2xl font-bold text-[#394250]">
+<div class="bg-gray-100 min-h-screen md:p-6 text-xl md:text-2xl font-bold text-[#394250]">
   <!-- ===== SEARCH ===== -->
-  <div class="mx-auto p-6">
+  <div class="mx-auto p-2 md:p-6">
     <!-- Title -->
     <div class="flex flex-col justify-center items-center text-center">
       <!-- Icon Circle -->
@@ -15,11 +15,11 @@
     </div>
 
     <!-- ตัวกรอง -->
-    <div class="max-w-3xl mx-auto mt-10 mb-6">
+    <div class="max-w-3xl mx-auto mt-4 md:mt-10 mb-6">
       <div class="grid grid-cols-12 gap-1 items-center">
         <!-- Label -->
         <label
-          class="col-span-12 text-2xl md:col-span-2 font-black"
+          class="col-span-12 text-2xl md:col-span-2 font-bold md:font-black"
         >
           ตัวกรอง
         </label>
@@ -126,7 +126,7 @@
             [(ngModel)]="researcherName"
             type="text"
             placeholder="พิมพ์คำค้นหา ชื่อนักวิจัย"
-            class="flex-1 px-6 border-none md:px-8 text-lg md:text-2xl outline-none"
+            class="flex-1 px-6 border-none md:px-8 text-xl md:text-2xl outline-none"
           />
       
           <!-- Button -->
@@ -159,12 +159,12 @@
     <!-- ===== DONUT CHART ===== -->
     <div
       *ngIf="isSearched"
-      class="mx-auto mt-8 grid grid-cols-1 md:grid-cols-2 gap-8"
+      class="mx-auto md:mt-8 grid grid-cols-1 md:grid-cols-2 gap-8"
     >
       <div class="bg-[#394250] text-white rounded-xl shadow p-6">
         <div class="flex items-center gap-2 mb-4">
           <i class="bi bi-pie-chart-fill text-lg"></i>
-          <h2 class="font-bold text-3xl ">
+          <h2 class="font-bold text-2xl md:text-3xl ">
             สัดส่วนนักวิจัย จำแนกตามสาขาวิชา
           </h2>
         </div>
@@ -179,7 +179,7 @@
         </ng-container>
 
         <ng-template #noData>
-          <div class="text-center text-red-500 py-16">ไม่พบข้อมูล</div>
+          <div class="text-center text-gray-500 py-16">ไม่พบข้อมูล</div>
         </ng-template>
       </div>
 
@@ -188,7 +188,7 @@
       >
         <div class="flex items-center gap-2 mb-4">
           <i class="bi bi-pie-chart-fill text-lg"></i>
-          <h2 class="font-bold text-3xl">
+          <h2 class="font-bold text-2xl md:text-3xl">
             สัดส่วนนักวิจัย จำแนกตามสาขาวิชา
           </h2>
         </div>
@@ -198,11 +198,11 @@
             *ngFor="let l of donutLabels; let i = index"
             class="flex justify-between px-8"
           >
-            <span class="font-medium">{{ l }}</span
-            ><span class="font-medium">{{ donutSeries[i] }} คน</span>
+            <span class="font-medium text-2xl">{{ l }}</span
+            ><span class="font-medium text-2xl">{{ donutSeries[i] }} คน</span>
           </p>
         </div>
-        <div class="pt-4 border-t">
+        <div class="pt-4 border-t border-gray-300">
           <p class="text-4xl text-center text-[#394250]">
             รวมทั้งหมด {{ totalResearchers }} คน
           </p>
@@ -213,13 +213,13 @@
 </div>
 
 <!-- ===== TABLE ===== -->
-<div *ngIf="isSearched" class="bg-[#F9CB34] px-10 text-2xl text-[#394250]">
+<div *ngIf="isSearched" class="bg-[#F9CB34] p-2 md:px-10 text-2xl text-[#394250]">
   <div class="mx-auto py-6">
     <!-- Header -->
     <div
-      class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-4"
+      class="flex md:flex-row justify-between md:items-center md:gap-4 mb-4"
     >
-      <h2 class="text-3xl font-bold">รายชื่อนักวิจัย</h2>
+      <h2 class="text-2xl md:text-3xl font-bold">รายชื่อนักวิจัย</h2>
 
       <div class="flex items-center">
         <span class="font-bold mr-2">Search:</span>
@@ -227,14 +227,14 @@
           type="text"
           [(ngModel)]="searchText"
           (input)="onSearch()"
-          class="border h-10 rounded text-2xl bg-white px-3 py-1 w-full md:w-64"
+          class="border border-gray-300 h-10 rounded text-2xl bg-white md:px-3 py-1 w-35 md:w-64"
           placeholder="ค้นหา..."
         />
       </div>
     </div>
 
     <!-- Card -->
-    <div class="bg-white rounded-xl shadow p-4 md:p-8 mb-10">
+    <div class="bg-white rounded-xl shadow p-4 md:p-8 md:mb-10">
       <div class="overflow-x-auto">
         <table class="w-full min-w-225 border-gray-300">
           <thead class="bg-[#394250] text-white border-b-2 border-gray-300">
@@ -288,15 +288,16 @@
           </tbody>
         </table>
       </div>
+
       <div
-    class="flex flex-col md:flex-row md:justify-end md:items-center mt-4 gap-2"
+    class="flex md:flex-row justify-end md:items-center mt-2 md:mt-4 gap-2"
   >
     <div class="flex items-center space-x-1">
       <!-- Prev -->
       <button
         (click)="changePage(currentPage - 1)"
         [disabled]="currentPage === 1"
-        class="px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
+        class="px-2 md:px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
       >
         ‹
       </button>
@@ -305,7 +306,7 @@
       <button
         *ngFor="let page of pages"
         (click)="changePage(page)"
-        class="px-3 py-1 rounded border text-sm min-w-8 transition"
+        class="px-2 md:px-3 py-1 rounded border text-sm min-w-8 transition"
         [ngClass]="{
           'bg-[#FACC15] text-[#1E293B] font-semibold':
             currentPage === page,
@@ -319,7 +320,7 @@
       <button
         (click)="changePage(currentPage + 1)"
         [disabled]="currentPage === totalPages"
-        class="px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
+        class="px-2 md:px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
       >
         ›
       </button>

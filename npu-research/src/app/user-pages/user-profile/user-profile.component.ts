@@ -70,7 +70,7 @@ export class UserProfileComponent implements OnInit {
   isEditModalOpen = false;
   editData: any = {};
 
-  isPersonalOpen = false;
+  isPersonalOpen = true;
   isWorkOpen = false;
   isEducation = false;
   isTraining = false;

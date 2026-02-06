@@ -4,7 +4,7 @@ import { AuthService } from '../../services/auth.service';
 
 export interface Research {
   id: number;
-  type: 'article' | 'research' | 'innovation';
+  type: 'article' | 'research' | 'innovation' | 'journal';
   subType?: string;
   faculty: string;
   agency: string;
@@ -38,6 +38,8 @@ export class ReportResearcherResearchComponent {
   selectedType: string | null = null;
   selectedSubType: string | null = null;
 
+  selectedTypeLabel: string | null = null; // ภาษาไทย (UI)
+
   searchAgency = '';
   selectedAgency: string | null = null;
 
@@ -64,7 +66,7 @@ export class ReportResearcherResearchComponent {
     },
     {
       id: 2,
-      type: 'article',
+      type: 'research',
       subType: 'ประชุมวิชาการระดับชาติ',
       faculty: 'คณะวิทยาศาสตร์',
       agency: 'คณะวิทยาศาสตร์',
@@ -103,12 +105,13 @@ export class ReportResearcherResearchComponent {
     'สถาบันวิจัยและนวัตกรรม',
   ];
 
-  typeList = ['บทความ', 'วารสาร', 'นวัตกรรมสิ่งประดิษฐ์'];
+  typeList = ['โครงการวิจัย', 'บทความ', 'วารสาร', 'นวัตกรรมสิ่งประดิษฐ์'];
 
   subTypeMap: any = {
+    โครงการวิจัย: [],
     บทความ: ['ประชุมวิชาการระดับชาติ', 'ประชุมวิชาการระดับนานาชาติ'],
     วารสาร: ['วารสารในประเทศ', 'วารสารต่างประเทศ'],
-    นวัตกรรมสิ่งประดิษฐ์: [], // ไม่มีตัวเลือกย่อย
+    นวัตกรรมสิ่งประดิษฐ์: [],
   };
 
   dateRange: {
@@ -141,8 +144,9 @@ export class ReportResearcherResearchComponent {
   };
 
   typeMap: any = {
+    โครงการวิจัย: 'research',
     บทความ: 'article',
-    วารสาร: 'research',
+    วารสาร: 'journal',
     นวัตกรรมสิ่งประดิษฐ์: 'innovation',
   };
 
@@ -156,48 +160,47 @@ export class ReportResearcherResearchComponent {
 
   search() {
     this.isSearched = true;
-
+  
     this.filteredResearchers = this.researches.filter((r) => {
       const researchDate = new Date(r.date);
-
+  
       const inDateRange =
         (!this.startDate || researchDate >= this.startDate) &&
         (!this.endDate || researchDate <= this.endDate);
-
-      // ⭐ logic แหล่งเงินทุน
+  
       const fundingMatch =
-        (!this.fundingExternal && !this.fundingInternal) || // ไม่เลือกอะไร = ผ่าน
+        (!this.fundingExternal && !this.fundingInternal) ||
         (this.fundingExternal && r.funding === 'external') ||
         (this.fundingInternal && r.funding === 'internal');
-
+  
+      // ⭐ ประเภท (รองรับ บทความ = article + journal)
+      const typeMatch =
+        !this.selectedType ||
+        this.typeMap[this.selectedType]?.includes(r.type);
+  
       return (
-        // ประเภท
-        (!this.selectedType || r.type === this.selectedType) &&
-        // ประเภทย่อย
+        typeMatch &&
         (!this.selectedSubType || r.subType === this.selectedSubType) &&
-        // หน่วยงาน
         (!this.selectedAgency || r.agency === this.selectedAgency) &&
-        // แหล่งทุน
         fundingMatch &&
-        // ปี
         (!this.selectedYear || r.year === +this.selectedYear) &&
-        // คำค้น
         (!this.researchTitle ||
           r.title.toLowerCase().includes(this.researchTitle.toLowerCase())) &&
-        // ⭐ ช่วงเวลา
         inDateRange
       );
     });
-
+  
     this.prepareDonut();
   }
+  
 
   /** ===== DONUT CALCULATION (อิงข้อมูลตารางจริง) ===== */
   prepareDonut() {
     const map: Record<string, number> = {};
     const typeLabelMap: Record<string, string> = {
       project: 'โครงการวิจัย',
-      article: 'บทความ / วารสาร',
+      article: 'บทความ',
+      journal: 'วารสาร',
       innovation: 'นวัตกรรม',
     };
 
@@ -303,7 +306,10 @@ export class ReportResearcherResearchComponent {
     return this.selectedType;
   }
 
-  goToResearch(id: number, type: 'research' | 'article' | 'innovation') {
+  goToResearch(
+    id: number,
+    type: 'research' | 'article' | 'innovation' | 'journal'
+  ) {
     let basePath = '/performance';
 
     if (this.authService.isLoggedIn()) {
@@ -325,11 +331,10 @@ export class ReportResearcherResearchComponent {
   }
 
   format(date: Date): string {
-    return date.toLocaleDateString('en-GB'); // dd/mm/yyyy
+    return date.toLocaleDateString('en-GB');
   }
 
   onPickerClose() {
-    // ถ้าเลือกวันเดียว ให้ endDate = startDate
     if (this.startDate && !this.endDate) {
       this.endDate = this.startDate;
     }
@@ -344,7 +349,6 @@ export class ReportResearcherResearchComponent {
         items.faculty.toLowerCase().includes(keyword) ||
         items.funding.toLowerCase().includes(keyword) ||
         items.title.toLowerCase().includes(keyword)
-      // items.year.toLowerCase().includes(keyword)
     );
 
     this.currentPage = 1;

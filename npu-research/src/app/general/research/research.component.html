@@ -1,9 +1,9 @@
-<div class="contain-content bg-gray-100 px-10 text-2xl text-[#394250]">
+<div class="contain-content bg-gray-100 p-2 md:px-10 text-xl md:text-2xl text-[#394250]">
   <div
-    class="mt-6 mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between"
+    class="md:mt-6 mb-4 flex flex-col md:gap-3 md:flex-row md:items-center justify-between"
   >
     <h1 class="text-3xl ml-5 font-bold">โครงการงานวิจัย</h1>
-    <div class="flex items-center mt-1">
+    <div class="flex items-center mt-1 justify-end">
       <label class="text-xl font-bold mr-2">Search:</label>
       <input
         type="text"
@@ -17,7 +17,7 @@
     </div>
   </div>
 
-  <div class="mb-10 mx-auto px-6 py-6 bg-white rounded-xl">
+  <div class="mb-10 mx-auto px-2 py-2 md:px-6 md:py-6 bg-white rounded-xl">
     <div class="w-full overflow-x-auto bg-white shadow-sm">
       <table class="w-full text-gray-700">
         <!-- Header -->
@@ -42,11 +42,11 @@
 
             <!-- Researcher -->
             <td class="px-4 py-2">
-              <div class="flex items-center gap-4">
+              <div class="flex items-center gap-4 flex-wrap">
                 <img
                   src="assets/logoNPU.png"
                   alt="researcher"
-                  class="h-14 w-14 rounded-full object-contain border shrink-0 bg-white"
+                  class="h-14 w-14 rounded-full object-contain border border-gray-400 shrink-0 bg-white"
                 />
 
                 <div class="leading-relaxed wrap-break-word whitespace-normal">
@@ -69,7 +69,7 @@
 
           <!-- No result from search -->
           <tr *ngIf="filteredReseacrchs.length === 0">
-            <td colspan="3" class="text-center py-10 text-red-500">
+            <td colspan="3" class="text-center py-10 text-gray-500">
               <i class="bi bi-folder-x text-3xl block mb-2"></i>
               ไม่พบผลงานที่ค้นหา
             </td>
@@ -79,13 +79,13 @@
     </div>
 
     <div
-      class="flex flex-col md:flex-row md:justify-between md:items-center mt-2 gap-2"
+      class="flex flex-col md:flex-row md:justify-between md:items-center mt-2 md:gap-2"
     >
-      <p class="text-xl text-[#394250]">
+      <p class="text-lg md:text-xl text-[#394250]">
         หน้า {{ currentPage }} จาก {{ totalPages }}
       </p>
 
-      <p class="text-xl text-[#394250]">
+      <p class="text-lg md:text-xl text-[#394250]">
         แสดง {{ paginatedReseacrchs.length }} รายการ จาก
         {{ reseacrchs.length }} รายการ
       </p>
@@ -95,7 +95,7 @@
         <button
           (click)="changePage(currentPage - 1)"
           [disabled]="currentPage === 1"
-          class="px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
+          class="px-2 md:px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
         >
           ‹
         </button>
@@ -104,7 +104,7 @@
         <button
           *ngFor="let page of pages"
           (click)="changePage(page)"
-          class="px-3 py-1 rounded border text-sm transition"
+          class="px-2 md:px-3 py-1 rounded border text-sm transition"
           [ngClass]="{
             'bg-[#FACC15] text-[#394250] border-gray-400': currentPage === page,
             'hover:bg-gray-100': currentPage !== page
@@ -117,7 +117,7 @@
         <button
           (click)="changePage(currentPage + 1)"
           [disabled]="currentPage === totalPages"
-          class="px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
+          class="px-2 md:px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
         >
           ›
         </button>
