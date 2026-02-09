@@ -37,7 +37,7 @@
 
         <div class="md:hidden">
           <button
-            (click)="toggleMobileMenu()"
+            (click)="toggleMobileMenu($event)"
             class="p-2 rounded hover:bg-gray-300"
           >
             <i
@@ -114,8 +114,9 @@
 
           <div
             class="relative"
+            (click)="$event.stopPropagation()"
             (mouseenter)="onMouseEnter('report')"
-            (mouseleave)="onMouseLeave()"
+            (mouseleave)="onMouseLeave('report')"
           >
             <button
               type="button"
@@ -130,8 +131,8 @@
 
             <!-- Dropdown -->
             <div
-              *ngIf="isOpen"
-              class="absolute left-1/2 mt-2 -translate-x-1/2 w-72 max-w-[90vw] bg-[#394250] text-white rounded-md shadow-lg z-50"
+              *ngIf="openMenu === 'report'"
+              class="absolute left-1/2 mt-2 -translate-x-1/2 w-72 max-w-[90vw] bg-[#394250] text-white rounded-md shadow-lg z-50 pointer-events-auto"
             >
               <a
                 routerLink="/report-researcher-profile"
@@ -168,8 +169,9 @@
 
           <div
             class="relative"
+            (click)="$event.stopPropagation()"
             (mouseenter)="onMouseEnter('manual')"
-            (mouseleave)="onMouseLeave()"
+            (mouseleave)="onMouseLeave('manual')"
           >
             <button
               (click)="onToggle('manual', $event)"
@@ -182,7 +184,7 @@
             </button>
 
             <div
-              *ngIf="openManual"
+              *ngIf="openMenu === 'manual'"
               class="absolute left-1/2 mt-2 -translate-x-1/2 w-40 max-w-[90vw] bg-[#394250] text-white rounded-md shadow-lg z-50"
             >
               <a
@@ -217,11 +219,12 @@
       <!-- ======== Menu Mobile ======= -->
       <div
         *ngIf="isMobileMenuOpen"
+        (click)="$event.stopPropagation()"
         class="md:hidden bg-yellow-400 px-2 py-4 grid grid-cols-9 gap-1 w-full"
       >
         <a
           routerLink="/dashboard"
-          (click)="closeMobileMenu()"
+          (click)="closeAllMobileMenus()"
           class="flex justify-center p-2 hover:bg-yellow-300 rounded relative group"
         >
           <i class="bi bi-house text-xl"></i>
@@ -235,7 +238,7 @@
 
         <a
           routerLink="/research"
-          (click)="closeMobileMenu()"
+          (click)="closeAllMobileMenus()"
           class="flex justify-center p-2 hover:bg-yellow-300 rounded relative group"
         >
           <i class="bi bi-layers-half text-xl"></i>
@@ -248,7 +251,7 @@
 
         <a
           routerLink="/aticle"
-          (click)="closeMobileMenu()"
+          (click)="closeAllMobileMenus()"
           class="flex justify-center p-2 hover:bg-yellow-300 rounded relative group"
         >
           <i class="bi bi-book text-xl"></i>
@@ -261,7 +264,7 @@
 
         <a
           routerLink="/innovation"
-          (click)="closeMobileMenu()"
+          (click)="closeAllMobileMenus()"
           class="flex justify-center p-2 hover:bg-yellow-300 rounded relative group"
         >
           <i class="bi bi-award text-xl"></i>
@@ -274,7 +277,7 @@
 
         <a
           routerLink="/news"
-          (click)="closeMobileMenu()"
+          (click)="closeAllMobileMenus()"
           class="flex justify-center p-2 hover:bg-yellow-300 rounded relative group"
         >
           <i class="bi bi-rss text-xl"></i>
@@ -287,7 +290,7 @@
 
         <a
           routerLink="/download"
-          (click)="closeMobileMenu()"
+          (click)="closeAllMobileMenus()"
           class="flex justify-center p-2 hover:bg-yellow-300 rounded relative group"
         >
           <i class="bi bi-cloud-arrow-down text-xl"></i>
@@ -300,7 +303,7 @@
 
         <div class="relative group">
           <button
-            (click)="toggleReportMenu()"
+            (click)="toggleMobileSubMenu('report', $event)"
             class="flex justify-center p-2 hover:bg-yellow-300 rounded relative"
           >
             <i class="bi bi-graph-up text-xl"></i
@@ -312,35 +315,35 @@
           </button>
 
           <div
-            *ngIf="openMobileReport; isMobileMenuOpen"
+            *ngIf="openMobileSubMenu === 'report'"
             class="absolute top-full left-1/2 -translate-x-[70%] mt-2 w-85 max-w-[90vw] bg-gray-700 text-white rounded-md shadow-lg z-50"
           >
             <a
-              (click)="closeReportMenu(); closeMobileMenu()"
+              (click)="closeAllMobileMenus()"
               routerLink="/report-researcher-profile"
               class="block px-4 py-2 hover:bg-gray-600 text-lg"
               >รายงานข้อมูลประวัตินักวิจัย</a
             >
             <a
-              (click)="closeReportMenu(); closeMobileMenu()"
+              (click)="closeAllMobileMenus()"
               routerLink="/report-research"
               class="block px-4 py-2 hover:bg-gray-600 text-lg"
               >รายงานข้อมูลผลงานวิจัย</a
             >
             <a
-              (click)="closeReportMenu(); closeMobileMenu()"
+              (click)="closeAllMobileMenus()"
               routerLink="/report-expertise"
               class="block px-4 py-2 hover:bg-gray-600 text-lg"
               >รายงานข้อมูลจำนวนนักวิจัยแยกตามสาขาเชี่ยวชาญ</a
             >
             <a
-              (click)="closeReportMenu(); closeMobileMenu()"
+              (click)="closeAllMobileMenus()"
               routerLink="/report-institution"
               class="block px-4 py-2 hover:bg-gray-600 text-lg"
               >รายงานข้อมูลจำนวนนักวิจัยแยกตามหน่วยงานที่สังกัด</a
             >
             <a
-              (click)="closeReportMenu(); closeMobileMenu()"
+              (click)="closeAllMobileMenus()"
               routerLink="/report-researcher"
               class="block px-4 py-2 hover:bg-gray-600 text-lg"
               >รายงานข้อมูลจำนวนนักวิจัยแยกตามประเภทนักวิจัย</a
@@ -350,7 +353,7 @@
 
         <div class="relative group">
           <button
-            (click)="goToManual(); closeMobileMenu()"
+            (click)="goToManual(); closeAllMobileMenus()"
             class="flex justify-center p-2 hover:bg-yellow-300 rounded relqtive"
           >
             <i class="bi bi-file-earmark-text text-xl"></i>
@@ -430,7 +433,7 @@
 
         <div class="md:hidden">
           <button
-            (click)="toggleMobileMenu()"
+            (click)="toggleMobileMenu($event)"
             class="p-2 rounded hover:bg-gray-300"
           >
             <i
@@ -467,8 +470,9 @@
 
           <div
             class="relative"
+            (click)="$event.stopPropagation()"
             (mouseenter)="onMouseEnter('save')"
-            (mouseleave)="onMouseLeave()"
+            (mouseleave)="onMouseLeave('save')"
           >
             <button
               (click)="onToggle('save', $event)"
@@ -481,7 +485,7 @@
             </button>
 
             <div
-              *ngIf="openSave"
+              *ngIf="openMenu === 'save'"
               class="absolute left-0 mt-2 bg-gray-700 text-white rounded-md shadow-lg w-max max-w-[90vw] z-50"
             >
               <a
@@ -530,11 +534,12 @@
       <!-- ======== Menu Mobile ======== -->
       <div
         *ngIf="isMobileMenuOpen"
+        (click)="$event.stopPropagation()"
         class="md:hidden bg-yellow-400 px-2 py-4 space-x-4 flex w-full items-center"
       >
         <a
           routerLink="/user/dashboard"
-          (click)="closeMobileMenu()"
+          (click)="closeAllMobileMenus()"
           class="flex justify-center p-2 hover:bg-yellow-300 rounded relative group"
         >
           <i class="bi bi-house text-xl"></i>
@@ -548,7 +553,7 @@
 
         <a
           routerLink="/user/profile"
-          (click)="closeMobileMenu()"
+          (click)="closeAllMobileMenus()"
           class="flex justify-center p-2 hover:bg-yellow-300 rounded relative group"
         >
           <i class="bi bi-person text-xl"></i>
@@ -562,7 +567,7 @@
         <!-- ======== บันทึกข้อมูลงานวิจัย บทความ นวัตกรรม ======== -->
         <div class="relative group">
           <button
-            (click)="toggleSaveMenu()"
+          (click)="toggleMobileSubMenu('save', $event)"
             class="flex justify-center p-2 hover:bg-yellow-300 rounded relative"
           >
             <i class="bi bi-floppy text-xl"></i>
@@ -574,23 +579,23 @@
           </button>
 
           <div
-            *ngIf="openMobileSave; isMobileMenuOpen"
+          *ngIf="openMobileSubMenu === 'save'"
             class="absolute top-full left-1/2 mt-2 -translate-x-[65%] w-40 max-w-[90vw] bg-gray-700 text-white rounded-md shadow-lg z-50"
           >
             <a
-              (click)="closeSaveMenu(); closeMobileMenu()"
+            (click)="closeAllMobileMenus()"
               routerLink="/user/add-research"
               class="block px-4 py-2 hover:bg-gray-600 text-lg"
               >โครงการงานวิจัย</a
             >
             <a
-              (click)="closeSaveMenu(); closeMobileMenu()"
+              (click)="closeAllMobileMenus()"
               routerLink="/user/add-aticle"
               class="block px-4 py-2 hover:bg-gray-600 text-lg"
               >บทความ/วารสาร</a
             >
             <a
-              (click)="closeSaveMenu(); closeMobileMenu()"
+              (click)="closeAllMobileMenus()"
               routerLink="/user/add-innovation"
               class="block px-4 py-2 hover:bg-gray-600 text-lg"
               >นวัตกรรมสิ่งประดิษฐ์</a
@@ -600,7 +605,7 @@
 
         <a
           routerLink="/user/research"
-          (click)="closeMobileMenu()"
+          (click)="closeAllMobileMenus()"
           class="flex justify-center p-2 hover:bg-yellow-300 rounded relative group"
         >
           <i class="bi bi-search text-xl"></i>
@@ -613,7 +618,7 @@
 
         <a
           routerLink="/user/researchers"
-          (click)="closeMobileMenu()"
+          (click)="closeAllMobileMenus()"
           class="flex justify-center p-2 hover:bg-yellow-300 rounded relative group"
         >
           <i class="bi bi-people text-xl"></i>
@@ -626,7 +631,7 @@
 
         <a
           (click)="logout()"
-          (click)="closeMobileMenu()"
+          (click)="closeAllMobileMenus()"
           class="flex justify-center p-2 hover:bg-yellow-300 rounded ml-auto text-red-600 hover:text-red-500 relative group"
         >
           <i class="bi bi-box-arrow-right text-xl"></i>
@@ -688,7 +693,7 @@
 
         <div class="md:hidden">
           <button
-            (click)="toggleMobileMenu()"
+            (click)="toggleMobileMenu($event)"
             class="p-2 rounded hover:bg-gray-300"
           >
             <i
@@ -725,8 +730,9 @@
 
           <div
             class="relative"
+            (click)="$event.stopPropagation()"
             (mouseenter)="onMouseEnter('funding')"
-            (mouseleave)="onMouseLeave()"
+            (mouseleave)="onMouseLeave('funding')"
           >
             <button
               (click)="onToggle('funding', $event)"
@@ -739,8 +745,8 @@
             </button>
 
             <div
-              *ngIf="openFunding"
-              class="absolute left-0 mt-2 bg-gray-700 text-white rounded-md shadow-lg w-max max-w-[90vw] z-50"
+              *ngIf="openMenu === 'funding'"
+              class="absolute left-0 mt-2 bg-gray-700 text-white rounded-md shadow-lg w-max max-w-[90vw] z-50 pointer-events-auto"
             >
               <a
                 routerLink="/admin/external-funding"
@@ -759,8 +765,9 @@
 
           <div
             class="relative"
+            (click)="$event.stopPropagation()"
             (mouseenter)="onMouseEnter('news')"
-            (mouseleave)="onMouseLeave()"
+            (mouseleave)="onMouseLeave('news')"
           >
             <button
               (click)="onToggle('news', $event)"
@@ -773,8 +780,8 @@
             </button>
 
             <div
-              *ngIf="openNews"
-              class="absolute left-0 mt-2 bg-gray-700 text-white rounded-md shadow-lg w-max max-w-[90vw] z-50"
+              *ngIf="openMenu === 'news'"
+              class="absolute left-0 mt-2 bg-gray-700 text-white rounded-md shadow-lg w-max max-w-[90vw] z-50 pointer-events-auto"
             >
               <a
                 routerLink="/admin/news"
@@ -793,8 +800,9 @@
 
           <div
             class="relative"
+            (click)="$event.stopPropagation()"
             (mouseenter)="onMouseEnter('save')"
-            (mouseleave)="onMouseLeave()"
+            (mouseleave)="onMouseLeave('save')"
           >
             <button
               (click)="onToggle('save', $event)"
@@ -807,8 +815,8 @@
             </button>
 
             <div
-              *ngIf="openSave"
-              class="absolute left-0 mt-2 bg-gray-700 text-white rounded-md shadow-lg w-max max-w-[90vw] z-50"
+              *ngIf="openMenu === 'save'"
+              class="absolute left-0 mt-2 bg-gray-700 text-white rounded-md shadow-lg w-max max-w-[90vw] z-50 pointer-events-auto"
             >
               <a
                 routerLink="/admin/add-research"
@@ -863,11 +871,12 @@
       <!-- ======== Menu Mobile ======== -->
       <div
         *ngIf="isMobileMenuOpen"
+        (click)="$event.stopPropagation()"
         class="md:hidden bg-yellow-400 px-2 py-4 space-x-4 grid grid-cols-9 gap-1 w-full"
       >
         <a
           routerLink="/admin/dashboard"
-          (click)="closeMobileMenu()"
+          (click)="closeAllMobileMenus()"
           class="flex justify-center p-2 hover:bg-yellow-300 rounded relative group"
         >
           <i class="bi bi-house text-xl"></i>
@@ -880,7 +889,7 @@
 
         <a
           routerLink="/admin/profile"
-          (click)="closeMobileMenu()"
+          (click)="closeAllMobileMenus()"
           class="flex justify-center p-2 hover:bg-yellow-300 rounded relative group"
         >
           <i class="bi bi-person text-xl"></i>
@@ -893,7 +902,7 @@
 
         <div class="relative group">
           <button
-            (click)="toggleFundingMenu()"
+            (click)="toggleMobileSubMenu('funding', $event)"
             class="flex justify-center p-2 hover:bg-yellow-300 rounded relative"
           >
             <i class="bi bi-gear text-xl"></i>
@@ -905,17 +914,17 @@
           </button>
 
           <div
-            *ngIf="openMobileFunding; isMobileMenuOpen"
+            *ngIf="openMobileSubMenu === 'funding'"
             class="absolute left-1/2 top-full mt-2 bg-gray-700 text-white rounded-md shadow-lg z-50 -translate-x-[50%] w-40 max-w-[90vw]"
           >
             <a
-              (click)="closeFundingMenu(); closeMobileMenu()"
+              (click)="closeAllMobileMenus()"
               routerLink="/admin/external-funding"
               class="block px-4 py-2 hover:bg-gray-600 text-lg"
               >แหล่งทุนภายนอก</a
             >
             <a
-              (click)="closeFundingMenu(); closeMobileMenu()"
+              (click)="closeAllMobileMenus()"
               routerLink="/admin/specialization"
               class="block px-4 py-2 hover:bg-gray-600 text-lg"
               >สาขาวิชาที่เชี่ยวชาญ</a
@@ -925,7 +934,7 @@
 
         <div class="relative group">
           <button
-            (click)="toggleNewaMenu()"
+            (click)="toggleMobileSubMenu('news', $event)"
             class="flex justify-center p-2 hover:bg-yellow-300 rounded relative"
           >
             <i class="bi bi-newspaper text-xl"></i>
@@ -937,17 +946,17 @@
           </button>
 
           <div
-            *ngIf="openMobileNews; isMobileMenuOpen"
+            *ngIf="openMobileSubMenu === 'news'"
             class="absolute top-full left-1/2 -translate-x-[65%] w-40 max-w-[90vw] mt-2 bg-gray-700 text-white rounded-md shadow-lg z-50"
           >
             <a
-              (click)="closeNewsMenu(); closeMobileMenu()"
+              (click)="closeAllMobileMenus()"
               routerLink="/admin/news"
               class="block px-4 py-2 hover:bg-gray-600 text-lg"
               >ข่าวประชาสัมพันธ์</a
             >
             <a
-              (click)="closeNewsMenu(); closeMobileMenu()"
+              (click)="closeAllMobileMenus()"
               routerLink="/admin/download"
               class="block px-4 py-2 hover:bg-gray-600 text-lg"
               >เอกสารดาวน์โหลด</a
@@ -957,7 +966,7 @@
 
         <div class="relative group">
           <button
-            (click)="toggleSaveMenu()"
+            (click)="toggleMobileSubMenu('save', $event)"
             class="flex justify-center p-2 hover:bg-yellow-300 rounded relative"
           >
             <i class="bi bi-floppy text-xl"></i>
@@ -969,23 +978,23 @@
           </button>
 
           <div
-            *ngIf="openMobileSave; isMobileMenuOpen"
+            *ngIf="openMobileSubMenu === 'save'"
             class="absolute top-full left-1/2 mt-2 -translate-x-[65%] w-40 max-w-[90vw] bg-gray-700 text-white rounded-md shadow-lgz-50"
           >
             <a
-              (click)="closeSaveMenu(); closeMobileMenu()"
+              (click)="closeAllMobileMenus()"
               routerLink="/admin/add-research"
               class="block px-4 py-2 hover:bg-gray-600 text-lg"
               >โครงการงานวิจัย</a
             >
             <a
-              (click)="closeSaveMenu(); closeMobileMenu()"
+              (click)="closeAllMobileMenus()"
               routerLink="/admin/add-aticle"
               class="block px-4 py-2 hover:bg-gray-600 text-lg"
               >บทความ/วารสาร</a
             >
             <a
-              (click)="closeSaveMenu(); closeMobileMenu()"
+              (click)="closeAllMobileMenus()"
               routerLink="/admin/add-innovation"
               class="block px-4 py-2 hover:bg-gray-600 text-lg"
               >นวัตกรรมสิ่งประดิษฐ์</a
@@ -995,7 +1004,7 @@
 
         <a
           routerLink="/admin/search-paper"
-          (click)="closeMobileMenu()"
+          (click)="closeAllMobileMenus()"
           class="flex justify-center p-2 hover:bg-yellow-300 rounded relative group"
         >
           <i class="bi bi-search text-xl"></i>
@@ -1008,7 +1017,7 @@
 
         <a
           routerLink="/admin/search-research"
-          (click)="closeMobileMenu()"
+          (click)="closeAllMobileMenus()"
           class="flex justify-center p-2 hover:bg-yellow-300 rounded relative group"
         >
           <i class="bi bi-people text-xl"></i>
@@ -1021,7 +1030,7 @@
 
         <a
           routerLink="/admin/report"
-          (click)="closeMobileMenu()"
+          (click)="closeAllMobileMenus()"
           class="flex justify-center p-2 hover:bg-yellow-300 rounded relative group"
         >
           <i class="bi bi-file-earmark-text text-xl"></i>

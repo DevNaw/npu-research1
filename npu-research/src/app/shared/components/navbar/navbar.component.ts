@@ -2,6 +2,9 @@ import { Component, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 
+type MenuType = 'report' | 'manual' | 'save' | 'funding' | 'news';
+type MobileSubMenu = 'funding' | 'news' | 'save' | 'report' | null;
+
 @Component({
   selector: 'app-navbar',
   standalone: false,
@@ -10,18 +13,16 @@ import { AuthService } from '../../../services/auth.service';
 })
 export class NavbarComponent {
   isMobileMenuOpen = false;
-  openMobileReport = false;
-  openMobileSave = false;
-  openMobileNews = false;
-  openMobileFunding = false;
+  // openMobileReport = false;
+  // openMobileSave = false;
+  // openMobileNews = false;
+  // openMobileFunding = false;
   openReport = false;
-  closeTimeout: any = null;
 
-  isOpen = false;
-  openManual = false;
-  openSave = false;
-  openFunding = false;
-  openNews = false;
+  openMobileSubMenu: MobileSubMenu = null;
+
+  openMenu: MenuType | null = null;
+  closeTimeout: any = null;
   isTouchDevice = false;
 
   doc = {
@@ -46,17 +47,36 @@ export class NavbarComponent {
       'ontouchstart' in window || navigator.maxTouchPoints > 0;
   }
 
-  toggleMobileMenu() {
+  // toggleMobileMenu() {
+  //   this.isMobileMenuOpen = !this.isMobileMenuOpen;
+  // }
+  toggleMobileMenu(event?: Event) {
+    event?.stopPropagation();
     this.isMobileMenuOpen = !this.isMobileMenuOpen;
+
+    if (!this.isMobileMenuOpen) {
+      this.openMobileSubMenu = null;
+    }
+  }
+
+  toggleMobileSubMenu(type: MobileSubMenu, event: Event) {
+    event.stopPropagation();
+    this.openMobileSubMenu =
+      this.openMobileSubMenu === type ? null : type;
   }
 
   closeMobileMenu() {
     this.isMobileMenuOpen = false;
   }
 
+  closeAllMobileMenus() {
+    this.openMobileSubMenu = null;
+    this.isMobileMenuOpen = false;
+  }
+
   onLogout() {
     this.logout();
-    this.closeMobileMenu();
+    // this.closeMobileMenu();
   }
 
   logout() {
@@ -72,40 +92,40 @@ export class NavbarComponent {
     return this.auth.isLoggedIn();
   }
 
-  toggleReportMenu() {
-    this.openMobileReport = !this.openMobileReport;
-  }
+  // toggleReportMenu() {
+  //   this.openMobileReport = !this.openMobileReport;
+  // }
 
-  closeReportMenu() {
-    this.openMobileReport = false;
-  }
+  // closeReportMenu() {
+  //   this.openMobileReport = false;
+  // }
 
-  toggleSaveMenu() {
-    this.openMobileSave = !this.openMobileSave;
-  }
+  // toggleSaveMenu() {
+  //   this.openMobileSave = !this.openMobileSave;
+  // }
 
-  closeSaveMenu() {
-    this.openMobileSave = false;
-    this.closeReportMenu();
-  }
+  // closeSaveMenu() {
+  //   this.openMobileSave = false;
+  //   this.closeReportMenu();
+  // }
 
-  toggleNewaMenu() {
-    this.openMobileNews = !this.openMobileNews;
-  }
+  // toggleNewaMenu() {
+  //   this.openMobileNews = !this.openMobileNews;
+  // }
 
-  closeNewsMenu() {
-    this.openMobileNews = false;
-    this.closeReportMenu();
-  }
+  // closeNewsMenu() {
+  //   this.openMobileNews = false;
+  //   this.closeReportMenu();
+  // }
 
-  toggleFundingMenu() {
-    this.openMobileFunding = !this.openMobileFunding;
-  }
+  // toggleFundingMenu() {
+  //   this.openMobileFunding = !this.openMobileFunding;
+  // }
 
-  closeFundingMenu() {
-    this.openMobileFunding = false;
-    this.closeReportMenu();
-  }
+  // closeFundingMenu() {
+  //   this.openMobileFunding = false;
+  //   this.closeReportMenu();
+  // }
 
   goToManual() {
     this.router.navigate(['/manual']);
@@ -115,97 +135,52 @@ export class NavbarComponent {
     return window.innerWidth >= 768; // md
   }
 
-  @HostListener('document:click')
-  closeDropdown() {
-    if (!this.isTouchDevice) return;
-
-    this.isOpen = false;
-    this.openManual = false;
-    this.openSave = false;
-    this.openFunding = false;
-    this.openNews = false;
-  }
-
-  /* ===== Desktop (hover) ===== */
-  onMouseEnter(type: 'report' | 'manual' | 'save' | 'funding' | 'news') {
-    if (!this.supportsHover()) return;
-
-    if (this.closeTimeout) {
-      clearTimeout(this.closeTimeout);
-      this.closeTimeout = null;
-    }
-
-    this.closeDropdown();
-    const map = {
-      report: () => (this.isOpen = true),
-      manual: () => (this.openManual = true),
-      save: () => (this.openSave = true),
-      funding: () => (this.openFunding = true),
-      news: () => (this.openNews = true),
-    };
-
-    map[type]();
-  }
-
   supportsHover(): boolean {
     return window.matchMedia('(hover: hover)').matches;
   }
 
-  onMouseLeave() {
+  onMouseEnter(type: MenuType) {
+    if (!this.supportsHover()) return;
+
+    this.clearCloseTimeout();
+    this.openMenu = type;
+  }
+
+  onMouseLeave(type: MenuType) {
     if (!this.supportsHover()) return;
 
     this.closeTimeout = setTimeout(() => {
-      this.closeDropdown();
-    }, 200);
+      if (this.openMenu === type) {
+        this.openMenu = null;
+      }
+    }, 120);
   }
 
-  onToggle(
-    type: 'report' | 'manual' | 'save' | 'funding' | 'news',
-    event: Event
-  ) {
+  onToggle(type: MenuType, event: Event) {
     if (this.supportsHover()) return;
 
-    event.stopPropagation();
     event.preventDefault();
+    event.stopPropagation();
 
-    if (type === 'report') {
-      this.isOpen = !this.isOpen;
-      this.openManual = false;
-      this.openSave = false;
-      this.openNews = false;
-      this.openFunding = false;
-    }
+    this.openMenu = this.openMenu === type ? null : type;
+  }
 
-    if (type === 'manual') {
-      this.openManual = !this.openManual;
-      this.isOpen = false;
-      this.openSave = false;
-      this.openNews = false;
-      this.openFunding = false;
+  private clearCloseTimeout() {
+    if (this.closeTimeout) {
+      clearTimeout(this.closeTimeout);
+      this.closeTimeout = null;
     }
+  }
 
-    if (type === 'save') {
-      this.openSave = !this.openSave;
-      this.isOpen = false;
-      this.openManual = false;
-      this.openNews = false;
-      this.openFunding = false;
-    }
+  @HostListener('document:click')
+  onDocumentClick() {
+    // Desktop ใช้ hover ไม่ต้องยุ่ง
+    if (this.supportsHover()) return;
 
-    if (type === 'funding') {
-      this.openFunding = !this.openFunding;
-      this.isOpen = false;
-      this.openManual = false;
-      this.openNews = false;
-      this.openSave = false;
-    }
+    // ปิดเมนู desktop (เผื่อ iPad บางรุ่น)
+    this.openMenu = null;
 
-    if (type === 'news') {
-      this.openNews = !this.openNews;
-      this.isOpen = false;
-      this.openManual = false;
-      this.openFunding = false;
-      this.openSave = false;
-    }
+    // Mobile
+    this.closeAllMobileMenus();
   }
 }
