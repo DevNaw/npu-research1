@@ -1,15 +1,15 @@
 <div
-  class="contain-content bg-gray-100 px-10 text-2xl font-bold text-[#394250]"
+  class="contain-content bg-gray-100 p-5 md:px-10 text-2xl font-bold text-[#394250]"
 >
-  <div class="mx-auto px-6 py-6">
+  <div class="mx-auto md:p-6 mb-1">
     <h1 class="text-3xl">จัดการข่าวประชาสัมพันธ์</h1>
   </div>
 
-  <div class="mx-auto px-6 mb-10 py-6 bg-white rounded-xl">
+  <div class="mx-auto p-2 mb:p-6 md:mb-10 bg-white rounded-xl">
     <div class="flex justify-between items-center mb-4">
       <button
         routerLink="/admin/news/create"
-        class="flex items-center gap-2 text-xl bg-yellow-300 hover:bg-yellow-400 px-4 py-1 rounded-md cursor-pointer"
+        class="flex items-center md:gap-2 text-xl bg-yellow-300 hover:bg-yellow-400 px-2 md:px-4 py-1 rounded-md cursor-pointer"
       >
         <i class="bi bi-plus-circle mr-2"></i> เพิ่มข่าว
       </button>
@@ -25,7 +25,7 @@
         />
       </div>
     </div>
-
+    <div class="w-full overflow-x-auto mt-4">
     <table class="w-full overflow-hidden">
       <thead class="bg-[#394250] text-white border-b">
         <tr>
@@ -78,6 +78,7 @@
         </tr>
       </tbody>
     </table>
+    </div>
 
     <div class="flex justify-end mt-3 space-x-1">
       <button

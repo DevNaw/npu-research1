@@ -1,4 +1,4 @@
-<div class="contain-content bg-gray-100 p-3 md:p-6 min-h-screen text-2xl font-bold text-[#394250]">
+<div class="contain-content bg-gray-100 p-5 md:p-6 min-h-screen text-2xl font-bold text-[#394250]">
   <!-- Heaer -->
   <div class="flex items-center mx-auto md:px-10">
     <div
@@ -450,6 +450,7 @@
 
           <div class="flex flex-wrap gap-2 mt-4 mb-4 md:mt-8 items-center">
             <!-- งานวิจัย -->
+            <div class="flex flex-wrap gap-2 items-center">
             <button
               (click)="changeTab('research')"
               [ngClass]="
@@ -489,9 +490,9 @@
             >
               <i class="bi bi-award text-lg"></i>
               <span>นวัตกรรมสิ่งประดิษฐ์</span>
-            </button>
+            </button></div>
 
-            <div>
+            <div class="flex items-center w-full md:w-auto mt-2 md:mt-0 justify-end md:ml-auto">
               Search:
               <input
                 type="text"
@@ -533,7 +534,7 @@
                   <!-- Title -->
                   <td class="px-4 py-3">
                     <div
-                      class="font-medium text-indigo-600 hover:underline cursor-pointer truncate max-w-125"
+                      class="font-medium text-indigo-600 hover:underline cursor-pointer truncate max-w-125 "
                       title="{{ item.title }}"
                       (click)="viewItem(item.id)"
                     >

@@ -1,11 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import * as XLSX from 'xlsx';
 import Swal from 'sweetalert2';
 
+type MajorStatus = 'พร้อมใช้งาน' | 'ไม่พร้อมใช้งาน';
+
 export interface Majors {
-  name: string; // ชื่อหน่วยงาน
-  description: string; // สาขาที่เชี่ยวชาญ
-  status: 'พร้อมใช้งาน' | 'ไม่พร้อมใช้งาน';
+  name: string;
+  description: string;
+  status: MajorStatus;
 }
 
 @Component({
@@ -23,6 +25,8 @@ export class SpecializationComponent {
   showModal = false;
   modalMode: 'add' | 'edit' = 'add';
   editIndex: number | null = null;
+
+  isStatusOpen = false;
 
   majors: Majors[] = [
     {
@@ -133,6 +137,7 @@ export class SpecializationComponent {
 
   closeModal() {
     this.showModal = false;
+    this.isStatusOpen = false;
     this.resetForm();
   }
 
@@ -216,5 +221,17 @@ export class SpecializationComponent {
         });
       }
     });
+  }
+
+  @HostListener('document:click')
+  onDocumentClick() {
+    if (this.isStatusOpen){
+      this.isStatusOpen = false;
+    }
+  }
+
+  selectStatus(value: MajorStatus) {
+    this.newMajors.status = value;
+    this.isStatusOpen = false;
   }
 }

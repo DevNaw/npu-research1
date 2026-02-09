@@ -1,5 +1,5 @@
 <div class="bg-gray-100 min-h-screen text-[#394250]">
-  <div class="mx-auto px-2 py-5 md:px-10 md:py-10 space-y-4 md:space-y-16">
+  <div class="mx-auto p-5 md:px-10 md:py-10 space-y-4 md:space-y-16">
     <!-- ==== Title ==== -->
     <div
       class="flex flex-wrap items-center gap-2 md:gap-6 mb-6 md:mb-8 text-center md:text-left"
@@ -46,7 +46,7 @@
           </div>
         </div>
       </div>
-<!-- bg-linear-to-r from-blue-200 to-blue-300 -->
+
       <div
         class="items-center p-6 bg-white rounded-xl shadow"
       >
@@ -65,7 +65,7 @@
           </div>
         </div>
       </div>
-<!-- bg-linear-to-r from-green-200 to-green-300 -->
+
       <div
         class="items-center p-6 bg-white rounded-xl shadow"
       >
@@ -84,7 +84,7 @@
           </div>
         </div>
       </div>
-<!-- bg-linear-to-r from-purple-200 to-purple-300 -->
+
       <div
         class="items-center p-6 bg-white rounded-xl shadow"
       >
@@ -105,10 +105,10 @@
     </div>
 
     <!-- ===== Charts ===== -->
-    <div class="bg-[#F9CB34] p-3 md:p-2 sm:p-8 rounded-2xl shadow-lg space-y-5">
+    <div class="bg-[#F9CB34] p-2 md:p-6 sm:p-8 rounded-2xl shadow-lg space-y-5">
       <!-- Dashboard Title -->
       <div
-        class="flex items-center gap-4 text-3xl sm:text-4xl font-bold"
+        class="flex items-center gap-4 text-2xl mb-2 md:text-3xl sm:text-4xl font-bold"
       >
         <i class="bi bi-pie-chart-fill"></i>
         <h1>ภาพรวมฐานข้อมูลงานวิจัย</h1>
@@ -121,7 +121,7 @@
       >
         <!-- Chart Header -->
         <div
-          class="bg-[#394250] px-2 py-2 md:px-6 sm:px-8 md:py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+          class="bg-[#394250] p-1 md:px-6 sm:px-8 md:py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
         >
           <!-- Title + Subtitle -->
           <div>
@@ -168,11 +168,11 @@
 
     <!-- ===== News Section ===== -->
     <div
-      class="bg-[#394250] px-6 sm:px-8 py-8 rounded-2xl shadow-lg space-y-15"
+      class="bg-[#394250] p-3 sm:px-8 rounded-2xl shadow-lg space-y-15"
     >
       <!-- Header -->
-      <div class="flex items-center justify-between mb-6">
-        <h1 class="text-3xl font-bold text-white">ข่าวประชาสัมพันธ์</h1>
+      <div class="flex items-center justify-between mb-4">
+        <h1 class="text-2xl md:text-3xl font-bold text-white">ข่าวประชาสัมพันธ์</h1>
         <a routerLink="/news" class="text-xl text-white hover:underline hover:text-[#F9CB34]">
           ดูข่าวทั้งหมด →
         </a>
@@ -219,7 +219,7 @@
       <!-- ===== Publications Table ===== -->
       <div class="bg-white rounded-xl p-2 md:p-6 shadow font-bold text-[#394250]">
         <div class="flex items-center justify-between mb-2 md:mb-4">
-          <h1 class="text-3xl">ผลงานที่ตีพิมพ์</h1>
+          <h1 class="text-2xl md:text-3xl">ผลงานที่ตีพิมพ์</h1>
         </div>
 
         <div
@@ -261,7 +261,7 @@
             </button>
           </div>
 
-          <div class="text-xl mb-4">
+          <div class="text-xl mb-4 flex justify-end gap-2">
             Search:
             <input
               type="text"
@@ -321,7 +321,7 @@
           <button
             (click)="changePage(currentPage - 1)"
             [disabled]="currentPage === 1"
-            class="px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
+            class="px-2 md:px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
           >
             ‹
           </button>
@@ -330,7 +330,7 @@
           <button
             *ngFor="let page of pages"
             (click)="changePage(page)"
-            class="px-3 py-1 rounded border text-2sm transition"
+            class="px-2 md:px-3 py-1 rounded border text-2sm transition"
             [ngClass]="{
               'bg-[#FACC15] text-[#1E293B] border-[#FACC15]':
                 currentPage === page,
@@ -344,7 +344,7 @@
           <button
             (click)="changePage(currentPage + 1)"
             [disabled]="currentPage === totalPages"
-            class="px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
+            class="px-2 md:px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
           >
             ›
           </button>
@@ -354,7 +354,7 @@
   </div>
 
   <!-- ===== Quick Access Cards ===== -->
-  <div class="mx-auto px-2 py-2 md:px-10 md:py-10">
+  <div class="mx-auto p-5 md:px-10 md:py-10">
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-6 max-w-6xl mx-auto">
       <!-- Card 1 -->
       <div

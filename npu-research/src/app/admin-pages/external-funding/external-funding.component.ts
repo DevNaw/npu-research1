@@ -1,12 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import * as XLSX from 'xlsx';
 import Swal from 'sweetalert2';
+
+type FundingStatus = 'พร้อมใช้งาน' | 'ไม่พร้อมใช้งาน';
 
 interface ExternalFunding {
   id: number;
   title: string;
   explanation: string;
-  status: 'พร้อมใช้งาน' | 'ไม่พร้อมใช้งาน';
+  status: FundingStatus;
 }
 
 @Component({
@@ -24,6 +26,7 @@ export class ExternalFundingComponent {
   showModal = false;
   modalMode: 'add' | 'edit' = 'add';
   editIndex: number | null = null;
+  isStatusOpen = false;
 
   externals: ExternalFunding[] = [
     {
@@ -115,8 +118,6 @@ export class ExternalFundingComponent {
     window.print();
   }
 
-  
-
   newFunding: ExternalFunding = {
     id: 0,
     title: '',
@@ -126,7 +127,12 @@ export class ExternalFundingComponent {
 
   openAddModal() {
     this.modalMode = 'add';
-    this.newFunding = { id:0 ,title: '', explanation: '', status: 'พร้อมใช้งาน' };
+    this.newFunding = {
+      id: 0,
+      title: '',
+      explanation: '',
+      status: 'พร้อมใช้งาน',
+    };
     this.showModal = true;
   }
 
@@ -153,13 +159,14 @@ export class ExternalFundingComponent {
       timerProgressBar: true,
       customClass: {
         title: 'swal-title-lg',
-        htmlContainer: 'swal-text-2xl'
-      }
+        htmlContainer: 'swal-text-2xl',
+      },
     });
   }
 
   closeModal() {
     this.showModal = false;
+    this.isStatusOpen = false;
     this.resetForm();
   }
 
@@ -173,8 +180,8 @@ export class ExternalFundingComponent {
         customClass: {
           title: 'swal-title-lg',
           htmlContainer: 'swal-text-2xl',
-          confirmButton: 'swal-btn-3xl'
-        }
+          confirmButton: 'swal-btn-3xl',
+        },
       });
       return;
     }
@@ -192,7 +199,7 @@ export class ExternalFundingComponent {
       customClass: {
         title: 'swal-title-lg',
         htmlContainer: 'swal-text-2xl',
-      }
+      },
     });
   }
 
@@ -221,10 +228,10 @@ export class ExternalFundingComponent {
         htmlContainer: 'swal-text-2xl',
         confirmButton: 'swal-btn-3xl',
         cancelButton: 'swal-btn-3xl',
-      }
-    }).then(result => {
+      },
+    }).then((result) => {
       if (result.isConfirmed) {
-        this.externals = this.externals.filter(e => e.id !== item.id);
+        this.externals = this.externals.filter((e) => e.id !== item.id);
 
         this.onSearch();
 
@@ -237,9 +244,21 @@ export class ExternalFundingComponent {
           customClass: {
             title: 'swal-title-lg',
             htmlContainer: 'swal-text-2xl',
-          }
+          },
         });
       }
     });
+  }
+
+  @HostListener('document:click')
+  onDocumentClick() {
+    if (this.isStatusOpen) {
+      this.isStatusOpen = false;
+    }
+  }
+
+  selectStatus(value: FundingStatus) {
+    this.newFunding.status = value;
+    this.isStatusOpen = false;
   }
 }
