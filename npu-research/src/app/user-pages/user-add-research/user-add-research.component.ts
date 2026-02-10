@@ -1,16 +1,13 @@
 import { Component, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
-
-interface ExternalPerson {
-  name: string;
-  role: string;
-  organization: string;
-}
-interface InternalPerson {
-  name: string;
-  organization: string;
-}
+import {
+  Responsibility,
+  ResponsibilityRole,
+  InternalPerson,
+  ExternalPerson,
+  ResearchData,
+} from '../../models/add.research.model';
 
 @Component({
   selector: 'app-user-add-research',
@@ -22,13 +19,60 @@ export class UserAddResearchComponent {
   openDropdown: string | null = null;
   isEdit = false;
   researchId?: number;
+
   reportFileName = '';
   selectedFileName = '';
   selectedMajor = '';
   searchMajor = '';
 
-  rows: ExternalPerson[] = [];
-  rows2: InternalPerson[] = [];
+  activeDropdown:
+  | 'major'
+  | 'responsibility'
+  | 'internal'
+  | 'external'
+  | 'funding'
+  | 'fundName'
+  | 'status'
+  | null = null;
+
+  isResponsibilityOpen = false;
+  openInternalIndex: number | null = null;
+  openExternalIndex: number | null = null;
+  openStatus: number | null = null;
+
+  researchData: ResearchData = {
+    responsibility: '',
+    funding: '',
+    status: '',
+  };
+
+  rows: ExternalPerson[] = [
+    {
+      name: '',
+      role: '',
+      organization: ''
+    }
+  ];
+  
+  rows2: InternalPerson[] = [
+    {
+      name: '',
+      organization: ''
+    }
+  ];
+
+  internalPeople: InternalPerson[] = [];
+  externalPeople: ExternalPerson[] = [];
+
+  responsibilityRoles: ResponsibilityRole[] = [
+    'ที่ปรึกษา',
+    'ผู้เชี่ยวชาญ',
+    'กรรมการ',
+  ];
+
+  isResponsibility = false;
+  isResponsibilityOfInternal = false;
+  isResponsibilityOfExternal = false;
 
   major = [
     'วิทยาการคอมพิวเตอร์',
@@ -54,6 +98,21 @@ export class UserAddResearchComponent {
     'หน่วยงานเอกชน',
   ];
 
+  internalMembers = [
+    {
+      name: '',
+      organization: ''
+    }
+  ];
+  externalMembers = [
+    {
+      name: '',
+      organization: '',
+      role: '',
+    }
+  ];
+  
+
   constructor(private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit() {
@@ -69,22 +128,73 @@ export class UserAddResearchComponent {
       }
     });
 
-    this.addRow();
-    this.addRow2();
+    this.addInternal();
+    this.addExternal();
   }
   loadResearchData(id: number) {
     console.log('แก้ไขงานวิจัย ID:', id);
 
     // mock data (แทน API)
-    this.rows = [
-      { name: 'นาย A', role: 'ผู้เชี่ยวชาญ', organization: 'บริษัท ABC' },
-    ];
+    // this.rows = [
+    //   { name: 'นาย A', role: 'ผู้เชี่ยวชาญ', organization: 'บริษัท ABC' },
+    // ];
 
-    this.rows2 = [{ name: 'ดร. B', organization: 'มหาวิทยาลัย X' }];
+    // this.rows2 = [{ name: 'ดร. B', organization: 'มหาวิทยาลัย X' }];
 
-    this.reportFileName = 'report.pdf';
+    // this.reportFileName = 'report.pdf';
   }
 
+  addInternal() {
+    this.internalMembers.push({
+      name: '',
+      organization: ''
+    });
+  }
+
+  addExternal() {
+    this.externalMembers.push({
+      name: '',
+      organization: '',
+      role: '',
+    })
+  }
+
+  removeInternal(index: number) {
+    if (this.internalPeople.length > 1) {
+      this.internalPeople.splice(index, 1);
+    }
+  }
+
+  // toggleInternal(index: number, event: Event) {
+  //   event.stopPropagation();
+  //   this.openInternalIndex =
+  //     this.openInternalIndex === index ? null : index;
+  // }
+
+  selectInternalRole(role: string, member: any) {
+    member.organization = role;
+    this.openInternalIndex = null;
+  }
+
+  selectExternalRole(role: string, member: any) {
+    member.organization = role;
+    this.openExternalIndex = null;
+  }
+
+  toggleInternal(index: number, event: Event) {
+    event.stopPropagation();
+    this.activeDropdown = 'internal';
+    this.openInternalIndex =
+      this.openInternalIndex === index ? null : index;
+  }
+
+  toggleExternal(index: number, event: Event) {
+    event.stopPropagation();
+    this.activeDropdown = 'external';
+    this.openExternalIndex =
+      this.openExternalIndex === index ? null : index;
+  }
+  
   addRow() {
     this.rows = [
       ...this.rows,
@@ -101,6 +211,23 @@ export class UserAddResearchComponent {
       this.rows.splice(index, 1);
     }
   }
+
+  // saveResearch() {
+  //   const payload = {
+  //     research: this.researchData,
+  //     internal: this.internalPeople,
+  //     external: this.externalPeople,
+  //   };
+
+  //   console.log(payload);
+
+  //   Swal.fire({
+  //     icon: 'success',
+  //     title: 'บันทึกข้อมูลสำเร็จ',
+  //     showConfirmButton: false,
+  //     timer: 1500,
+  //   });
+  // }
 
   addRow2() {
     this.rows2 = [
@@ -132,6 +259,7 @@ export class UserAddResearchComponent {
       this.selectedFileName = this.selectedFile.name;
     }
   }
+
   reportFile: File | null = null;
 
   onReportFileSelected(event: Event) {
@@ -143,18 +271,53 @@ export class UserAddResearchComponent {
     }
   }
 
-  toggleDropdown(name: string, event: MouseEvent) {
+  toggleDropdown(type: string, event: MouseEvent) {
     event.stopPropagation();
-    this.openDropdown = this.openDropdown === name ? null : name;
+    this.openDropdown = this.openDropdown === type ? null : type;
   }
 
-  isOpen(name: string): boolean {
-    return this.openDropdown === name;
+  toggleMajor(event: Event) {
+    event.stopPropagation();
+    this.activeDropdown =
+      this.activeDropdown === 'major' ? null : 'major';
+  }
+
+  toggleStatus(event: Event) {
+    event.stopPropagation();
+    this.activeDropdown =
+      this.activeDropdown === 'status' ? null : 'status';
+  }
+
+  selectStatus(status: string) {
+    this.researchData.status = status;
+    this.activeDropdown = null;
+  }
+
+  toggleResponsibility(event: Event) {
+    event.stopPropagation();
+    this.activeDropdown =
+      this.activeDropdown === 'responsibility'
+        ? null
+        : 'responsibility';
+  }
+  
+  selectResponsibility(value: string) {
+    // this.researchData.responsibility = value;
+  this.activeDropdown = null;
+  }
+
+  isOpen(type: string): boolean {
+    return this.openDropdown === type;
   }
 
   @HostListener('document:click')
-  closeAll() {
-    this.openDropdown = null;
+  closeAllDropdowns() {
+    this.activeDropdown = null;
+    this.openInternalIndex = null;
+  }
+
+  onDocumentClick() {
+    this.isResponsibility = false;
   }
 
   selectMajor(m: string) {
@@ -162,6 +325,14 @@ export class UserAddResearchComponent {
     this.openDropdown = null;
     this.searchMajor = '';
   }
+
+  // selectResponsibilityOfInternal(
+  //   value: ResponsibilityOfInternal,
+  //   person: InternalPerson
+  // ) {
+  //   person.organization = value;
+  //   this.isResponsibilityOfInternal = false;
+  // }
 
   filteredMajor(): string[] {
     if (!this.searchMajor) return this.major;
@@ -197,5 +368,31 @@ export class UserAddResearchComponent {
         htmlContainer: 'swal-text-2xl',
       },
     });
+  }
+
+  // ===== dropdown control =====
+  toggleFunding(event: MouseEvent) {
+    event.stopPropagation();
+    this.activeDropdown =
+      this.activeDropdown === 'funding' ? null : 'funding';
+  }
+
+  toggleNameFunding(event: MouseEvent) {
+    event.stopPropagation();
+    this.activeDropdown =
+      this.activeDropdown === 'fundName' ? null : 'fundName';
+  }
+
+  // ===== select funding =====
+  selectFunding(type: string) {
+    this.researchData.funding = type;
+    this.fundName = '';           // reset ชื่อแหล่งทุน
+    this.activeDropdown = null;
+  }
+
+  // ===== select fund name =====
+  selectFundName(name: string) {
+    this.fundName = name;
+    this.activeDropdown = null;
   }
 }
