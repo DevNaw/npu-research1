@@ -1,10 +1,10 @@
-<div class="contain-content bg-gray-100 px-2 md:px-10 text-xl md:text-2xl font-bold text-[#394250]">
-  <div class="mx-auto md:py-6 py-2">
+<div class="contain-content bg-gray-100 p-5 md:px-10 text-xl md:text-2xl font-bold text-[#394250]">
+  <div class="mx-auto md:py-6 mb-2">
     <!-- Title -->
-    <h1 class="text-3xl ml-5 text-gray-800">คู่มือการใช้งาน</h1>
+    <h1 class="text-3xl md:ml-5 text-gray-800">คู่มือการใช้งาน</h1>
   </div>
 
-  <div class="mb-2 md:mb-10 mx-auto px-2 py-6 bg-white rounded-xl">
+  <div class="mb-2 md:mb-10 mx-auto px-2 py-2 md:py-6 bg-white rounded-xl">
     <div class="mx-auto md:px-6">
       <!-- Table -->
       <div class="w-full overflow-x-auto bg-white shadow-sm">
@@ -14,11 +14,11 @@
             class="bg-[#394250] text-white"
           >
             <tr>
-              <th class="px-2 py-2 w-20 text-center">
+              <th class="p-1 md:p-2 w-20 text-center">
                 #
               </th>
-              <th class="px-2 py-2 text-left">เอกสาร</th>
-              <th class="px-2 py-2 text-center md:w-56">
+              <th class="p-1 md:p-2 text-left">เอกสาร</th>
+              <th class="p-1 md:p-2 text-center md:w-56">
                 ดาวน์โหลด
               </th>
             </tr>
@@ -31,12 +31,12 @@
               class="border-b border-gray-300 bg-gray-200 hover:bg-indigo-50 transition"
             >
               <!-- Index -->
-              <td class="text-center py-4 font-medium">
+              <td class="text-center p-1 md:py-4 font-medium">
                 {{ i + 1 }}
               </td>
 
               <!-- Document -->
-              <td class="px-6 py-4">
+              <td class="p-1 md:p-2">
                 <div class="flex items-center gap-3">
                   <i
                     class="bi bi-file-earmark-text text-indigo-500 text-xl"
@@ -53,7 +53,7 @@
               </td>
 
               <!-- Download Count -->
-              <td class="px-6 py-4 text-center">
+              <td class="p-1 md:p-2 text-center">
                 {{ doc.downloads | number }}
                 <span class="text-xl ml-1">ครั้ง</span>
               </td>

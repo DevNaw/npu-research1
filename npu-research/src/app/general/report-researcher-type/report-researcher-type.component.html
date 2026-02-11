@@ -1,4 +1,4 @@
-<div class="contain-content bg-gray-100 p-2 md:px-10 text-xl md:text-2xl font-bold text-[#394250]">
+<div class="contain-content bg-gray-100 p-5 md:px-10 text-xl md:text-2xl font-bold text-[#394250]">
   <div class="mx-auto md:py-6">
     <h1 class="text-3xl">
       รายงานข้อมูลจำนวนนักวิจัย <span class="block md:inline">แยกตามประเภทนักวิจัย</span>
@@ -57,11 +57,11 @@
       <table class="w-full overflow-hidden">
         <thead>
           <tr class="bg-[#394250] text-white border-b">
-            <th class="p-2 text-center">#</th>
-            <th class="p-2 pl-6 text-left">หน่วยงาน</th>
-            <th class="p-2 pl-6 text-center">สายวิชาการ</th>
-            <th class="p-2 pl-6 text-center">สายสนับสนุน</th>
-            <th class="p-2 pl-6 text-center">รวม</th>
+            <th class="p-1 md:p-2 text-center">#</th>
+            <th class="p-1 md:p-2 text-left">หน่วยงาน</th>
+            <th class="p-1 md:p-2 text-center">สายวิชาการ</th>
+            <th class="p-1 md:p-2 text-center">สายสนับสนุน</th>
+            <th class="p-1 md:p-2 text-center">รวม</th>
           </tr>
         </thead>
 
@@ -70,23 +70,23 @@
             *ngFor="let r of filteredDocuments; let i = index"
             class="border-b border-gray-300 bg-gray-200 hover:bg-gray-50 font-medium"
           >
-            <td class="p-2 text-center">
+            <td class="p-1 md:p-2 text-center">
               {{ (currentPage - 1) * pageSize + i + 1 }}
             </td>
 
-            <td class="p-2 pl-6">
+            <td class="p-1 md:p-2">
               {{ r.title }}
             </td>
 
-            <td class="p-2 text-center">
+            <td class="p-1 md:p-2 text-center">
               {{ r.academic }}
             </td>
 
-            <td class="p-2 text-center">
+            <td class="p-1 md:p-2 text-center">
               {{ r.support }}
             </td>
 
-            <td class="p-2 text-center">
+            <td class="p-1 md:p-2 text-center">
               {{ r.academic + r.support }}
             </td>
           </tr>
@@ -116,7 +116,7 @@
     </div>
 
     <div
-      class="flex flex-col md:flex-row md:justify-between md:items-center mt-2 md:mt-4 md:gap-2 font-medium"
+      class="flex flex-col md:flex-row md:justify-between md:items-center md:mt-4 md:gap-2 font-medium"
     >
       <p class="text-lg :text-xl text-gray-600">
         หน้า {{ currentPage }} จาก {{ totalPages }}

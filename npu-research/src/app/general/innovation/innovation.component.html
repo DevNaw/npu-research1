@@ -1,6 +1,6 @@
-<div class="contain-content bg-gray-100 p-2 md:px-10 text-xl md:text-2xl text-[#394250]">
+<div class="contain-content bg-gray-100 p-5 md:px-10 text-xl md:text-2xl text-[#394250]">
   <div class="md:mt-6 mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-    <h1 class="text-3xl ml-5 font-bold">นวัตกรรมสิ่งประดิษฐ์</h1>
+    <h1 class="text-3xl md:ml-5 font-bold">นวัตกรรมสิ่งประดิษฐ์</h1>
     <div class="flex items-center mt-1 justify-end">
       <label class="text-xl font-bold mr-2">Search:</label>
       <input
@@ -20,8 +20,8 @@
         <thead class="bg-[#394250] text-white">
           <tr>
             <th class="w-20 text-center font-bold">#</th>
-            <th class="px-4 py-2 text-start font-bold">ผู้วิจัย</th>
-            <th class="px-4 py-2 text-start font-bold">
+            <th class="p-1 md:p-2 md:text-start font-bold">ผู้วิจัย</th>
+            <th class="p-1 md:p-2 text-start font-bold">
               ชื่อผลงานนวัตกรรมสิ่งประดิษฐ์
             </th>
           </tr>
@@ -34,13 +34,13 @@
             class="border-b border-gray-300 bg-gray-200 hover:bg-indigo-50 transition"
           >
             <!-- Index -->
-            <td class="text-center py-4 font-medium">
+            <td class="text-center md:py-4 font-medium">
               {{ (currentPage - 1) * pageSize + i + 1 }}
             </td>
 
             <!-- Researcher -->
-            <td class="px-4 py-2">
-              <div class="flex items-center gap-4 flex-wrap">
+            <td class="p-1 md:p-2">
+              <div class="flex items-center gap-4 flex-wrap justify-center">
                 <img
                   src="assets/logoNPU.png"
                   alt="researcher"
@@ -54,7 +54,7 @@
             </td>
 
             <!-- Title -->
-            <td class="px-4 py-2">
+            <td class="p-1 md:p-2">
               <div
                 title="{{ innovation.title }}"
                 (click)="viewDetails(innovation.id)"

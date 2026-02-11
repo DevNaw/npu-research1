@@ -1,16 +1,13 @@
 import { Component, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
-
-interface ExternalPerson {
-  name: string;
-  role: string;
-  organization: string;
-}
-interface InternalPerson {
-  name: string;
-  organization: string;
-}
+import {
+  Responsibility,
+  ResponsibilityRole,
+  InternalPerson,
+  ExternalPerson,
+  ResearchData,
+} from '../../models/add.research.model';
 
 @Component({
   selector: 'app-user-add-aticle',
@@ -27,8 +24,60 @@ export class UserAddAticleComponent {
   searchMajor = '';
   selectedMajor = '';
 
-  rows: ExternalPerson[] = [];
-  rows2: InternalPerson[] = [];
+  activeDropdown:
+    | 'type'
+    | 'major'
+    | 'responsibility'
+    | 'quality'
+    | 'internal'
+    | 'external'
+    | null = null;
+
+  responsibilityRoles: ResponsibilityRole[] = [
+    'ที่ปรึกษา',
+    'ผู้เชี่ยวชาญ',
+    'กรรมการ',
+  ];
+
+  openInternalIndex: number | null = null;
+  openExternalIndex: number | null = null;
+  openStatus: number | null = null;
+
+  rows: ExternalPerson[] = [{ name: '', role: '', organization: '' }];
+
+  rows2: InternalPerson[] = [
+    {
+      name: '',
+      organization: '',
+    },
+  ];
+
+  internalMembers = [
+    {
+      name: '',
+      organization: '',
+    },
+  ];
+  externalMembers = [
+    {
+      name: '',
+      organization: '',
+      role: '',
+    },
+  ];
+
+  article = {
+    responsibility: '',
+    type: '',
+    quality: '',
+  };
+
+  isResponsibilityOpen = false;
+  internalPeople: InternalPerson[] = [];
+  externalPeople: ExternalPerson[] = [];
+
+  isResponsibilityOfInternal = false;
+  isResponsibilityOfExternal = false;
 
   major = [
     'วิทยาการคอมพิวเตอร์',
@@ -53,8 +102,32 @@ export class UserAddAticleComponent {
       }
     });
 
-    this.addRow();
-    this.addRow2();
+    // this.addRow();
+    // this.addRow2();
+
+    this.addInternal();
+    this.addExternal();
+  }
+
+  addInternal() {
+    this.internalMembers.push({
+      name: '',
+      organization: '',
+    });
+  }
+
+  addExternal() {
+    this.externalMembers.push({
+      name: '',
+      organization: '',
+      role: '',
+    });
+  }
+
+  removeInternal(index: number) {
+    if (this.internalPeople.length > 1) {
+      this.internalPeople.splice(index, 1);
+    }
   }
 
   loadAticleData(id: number) {
@@ -62,9 +135,9 @@ export class UserAddAticleComponent {
       { name: 'นาย A', role: 'ผู้เชี่ยวชาญ', organization: 'บริษัท ABC' },
     ];
 
-    this.rows2 = [{ name: 'ดร. B', organization: 'มหาวิทยาลัย X' }];
+    // this.rows2 = [{ name: 'ดร. B', organization: 'มหาวิทยาลัย X' }];
 
-    this.reportFileName = 'report.pdf';
+    // this.reportFileName = 'report.pdf';
   }
 
   addRow() {
@@ -137,6 +210,7 @@ export class UserAddAticleComponent {
 
   @HostListener('document:click')
   closeAll() {
+    this.activeDropdown = null;
     this.openDropdown = null;
   }
 
@@ -155,16 +229,69 @@ export class UserAddAticleComponent {
   }
 
   saveData() {
-      Swal.fire({
-            icon: 'success',
-            title: 'บันทึกข้อมูลสำเร็จ',
-            text: 'ระบบได้บันทึกข้อมูลเรียบร้อยแล้ว',
-            showConfirmButton: false,
-            timer: 1500,
-            customClass: {
-              title: 'swal-title-lg',
-              htmlContainer: 'swal-text-2xl',
-            },
-          });
-    }
+    Swal.fire({
+      icon: 'success',
+      title: 'บันทึกข้อมูลสำเร็จ',
+      text: 'ระบบได้บันทึกข้อมูลเรียบร้อยแล้ว',
+      showConfirmButton: false,
+      timer: 1500,
+      customClass: {
+        title: 'swal-title-lg',
+        htmlContainer: 'swal-text-2xl',
+      },
+    });
+  }
+
+  selectInternalRole(role: string, member: any) {
+    member.organization = role;
+    this.openInternalIndex = null;
+  }
+
+  selectExternalRole(role: string, member: any) {
+    member.organization = role;
+    this.openExternalIndex = null;
+  }
+
+  toggleInternal(index: number, event: Event) {
+    event.stopPropagation();
+    this.activeDropdown = 'internal';
+    this.openInternalIndex = this.openInternalIndex === index ? null : index;
+  }
+
+  toggleExternal(index: number, event: Event) {
+    event.stopPropagation();
+    this.activeDropdown = 'external';
+    this.openExternalIndex = this.openExternalIndex === index ? null : index;
+  }
+
+  toggleType(event: Event) {
+    event.stopPropagation();
+    this.activeDropdown = this.activeDropdown === 'type' ? null : 'type';
+  }
+
+  toggleQuality(event: Event) {
+    event.stopPropagation();
+    this.activeDropdown = this.activeDropdown === 'quality' ? null : 'quality';
+  }
+
+  toggleResponsibility(event: Event) {
+    event.stopPropagation();
+    this.activeDropdown =
+      this.activeDropdown === 'responsibility' ? null : 'responsibility';
+  }
+
+  selectType(type: string) {
+    this.article.type = type;
+    this.activeDropdown = null;
+  }
+
+  selectResponsibility(r: string) {
+    this.article.responsibility = r;
+    this.activeDropdown = null;
+  }
+
+  selectQuality(quality: string) {
+    this.article.quality = quality;
+    this.activeDropdown = null;
+  }
 }

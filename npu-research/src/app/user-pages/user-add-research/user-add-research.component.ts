@@ -26,14 +26,14 @@ export class UserAddResearchComponent {
   searchMajor = '';
 
   activeDropdown:
-  | 'major'
-  | 'responsibility'
-  | 'internal'
-  | 'external'
-  | 'funding'
-  | 'fundName'
-  | 'status'
-  | null = null;
+    | 'major'
+    | 'responsibility'
+    | 'internal'
+    | 'external'
+    | 'funding'
+    | 'fundName'
+    | 'status'
+    | null = null;
 
   isResponsibilityOpen = false;
   openInternalIndex: number | null = null;
@@ -50,15 +50,15 @@ export class UserAddResearchComponent {
     {
       name: '',
       role: '',
-      organization: ''
-    }
+      organization: '',
+    },
   ];
-  
+
   rows2: InternalPerson[] = [
     {
       name: '',
-      organization: ''
-    }
+      organization: '',
+    },
   ];
 
   internalPeople: InternalPerson[] = [];
@@ -101,17 +101,16 @@ export class UserAddResearchComponent {
   internalMembers = [
     {
       name: '',
-      organization: ''
-    }
+      organization: '',
+    },
   ];
   externalMembers = [
     {
       name: '',
       organization: '',
       role: '',
-    }
+    },
   ];
-  
 
   constructor(private route: ActivatedRoute, private router: Router) {}
 
@@ -147,7 +146,7 @@ export class UserAddResearchComponent {
   addInternal() {
     this.internalMembers.push({
       name: '',
-      organization: ''
+      organization: '',
     });
   }
 
@@ -156,7 +155,7 @@ export class UserAddResearchComponent {
       name: '',
       organization: '',
       role: '',
-    })
+    });
   }
 
   removeInternal(index: number) {
@@ -184,17 +183,15 @@ export class UserAddResearchComponent {
   toggleInternal(index: number, event: Event) {
     event.stopPropagation();
     this.activeDropdown = 'internal';
-    this.openInternalIndex =
-      this.openInternalIndex === index ? null : index;
+    this.openInternalIndex = this.openInternalIndex === index ? null : index;
   }
 
   toggleExternal(index: number, event: Event) {
     event.stopPropagation();
     this.activeDropdown = 'external';
-    this.openExternalIndex =
-      this.openExternalIndex === index ? null : index;
+    this.openExternalIndex = this.openExternalIndex === index ? null : index;
   }
-  
+
   addRow() {
     this.rows = [
       ...this.rows,
@@ -278,14 +275,12 @@ export class UserAddResearchComponent {
 
   toggleMajor(event: Event) {
     event.stopPropagation();
-    this.activeDropdown =
-      this.activeDropdown === 'major' ? null : 'major';
+    this.activeDropdown = this.activeDropdown === 'major' ? null : 'major';
   }
 
   toggleStatus(event: Event) {
     event.stopPropagation();
-    this.activeDropdown =
-      this.activeDropdown === 'status' ? null : 'status';
+    this.activeDropdown = this.activeDropdown === 'status' ? null : 'status';
   }
 
   selectStatus(status: string) {
@@ -296,14 +291,12 @@ export class UserAddResearchComponent {
   toggleResponsibility(event: Event) {
     event.stopPropagation();
     this.activeDropdown =
-      this.activeDropdown === 'responsibility'
-        ? null
-        : 'responsibility';
+      this.activeDropdown === 'responsibility' ? null : 'responsibility';
   }
-  
+
   selectResponsibility(value: string) {
     // this.researchData.responsibility = value;
-  this.activeDropdown = null;
+    this.activeDropdown = null;
   }
 
   isOpen(type: string): boolean {
@@ -373,8 +366,7 @@ export class UserAddResearchComponent {
   // ===== dropdown control =====
   toggleFunding(event: MouseEvent) {
     event.stopPropagation();
-    this.activeDropdown =
-      this.activeDropdown === 'funding' ? null : 'funding';
+    this.activeDropdown = this.activeDropdown === 'funding' ? null : 'funding';
   }
 
   toggleNameFunding(event: MouseEvent) {
@@ -386,7 +378,7 @@ export class UserAddResearchComponent {
   // ===== select funding =====
   selectFunding(type: string) {
     this.researchData.funding = type;
-    this.fundName = '';           // reset ชื่อแหล่งทุน
+    this.fundName = ''; // reset ชื่อแหล่งทุน
     this.activeDropdown = null;
   }
 

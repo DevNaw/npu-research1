@@ -1,5 +1,5 @@
-<div class="bg-gray-100 min-h-screen p-10 text-2xl">
-  <div class="mx-auto bg-white rounded-2xl shadow p-8 space-y-10">
+<div class="bg-gray-100 min-h-screen p-5 md:p-10 text-2xl">
+  <div class="mx-auto bg-white rounded-2xl shadow p-4 md:p-8 space-y-10">
     <!-- Header -->
     <div>
       <h1 class="text-3xl text-gray-800">แก้ไขข้อมูลนักวิจัย</h1>
@@ -12,7 +12,7 @@
 
     <!-- === Content=== -->
     <!-- ปุ่ม -->
-    <div class="flex justify-end">
+    <div class="flex justify-end mb-4 md:mb-8">
       <button
         (click)="openModalAdd()"
         type="button"
@@ -23,25 +23,25 @@
     </div>
 
     <!-- ตาราง -->
-    <div class="w-full overflow-x-auto bg-white shadow-sm">
+    <div class="w-full overflow-x-auto bg-white shadow-sm mb-4 md:mb-8">
       <table class="min-w-255 w-full">
     
         <!-- Header -->
         <thead>
           <tr class="bg-[#394250] text-white border-b">
-            <th class="px-4 py-3 text-center whitespace-nowrap font-semibold">
+            <th class="p-1 md:p-2 text-center whitespace-nowrap font-semibold">
               ชื่อหัวข้อการอบรม
             </th>
-            <th class="px-4 py-3 text-center whitespace-nowrap font-semibold">
+            <th class="p-1 md:p-2 text-center whitespace-nowrap font-semibold">
               หน่วยงานที่จัด
             </th>
-            <th class="px-4 py-3 text-center whitespace-nowrap font-semibold">
+            <th class="p-1 md:p-2 text-center whitespace-nowrap font-semibold">
               สถานที่จัดอบรม
             </th>
-            <th class="px-4 py-3 text-center whitespace-nowrap font-semibold">
+            <th class="p-1 md:p-2 text-center whitespace-nowrap font-semibold">
               ปีที่จัดอบรม
             </th>
-            <th class="px-4 py-3 text-center whitespace-nowrap font-semibold">
+            <th class="p-1 md:p-2 text-center whitespace-nowrap font-semibold">
               การจัดการ
             </th>
           </tr>
@@ -51,24 +51,24 @@
         <tbody>
           <tr class="border-b border-gray-300 bg-gray-200 hover:bg-gray-50 transition">
     
-            <td class="px-4 py-3 max-w-88 wrap-break-word text-center">
+            <td class="p-1 md:p-2 max-w-88 wrap-break-word text-center">
               TopGunNer
             </td>
     
-            <td class="px-4 py-3 max-w-88 wrap-break-word text-center">
+            <td class="p-1 md:p-2 max-w-88 wrap-break-word text-center">
               Islander
             </td>
     
-            <td class="px-4 py-3 max-w-88 wrap-break-word text-center">
+            <td class="p-1 md:p-2 max-w-88 wrap-break-word text-center">
               Nakhon
             </td>
     
-            <td class="px-4 py-3 whitespace-nowrap text-center">
+            <td class="p-1 md:p-2 whitespace-nowrap text-center">
               2025
             </td>
     
             <!-- Actions -->
-            <td class="px-4 py-3 text-center whitespace-nowrap">
+            <td class="p-1 md:p-2 text-center whitespace-nowrap">
               <button
                 (click)="openModalEdit()"
                 class="inline-flex items-center justify-center w-9 h-9 rounded-full
@@ -116,7 +116,7 @@
   <div class="bg-white w-full max-w-lg rounded-2xl shadow-lg p-6 z-50 relative">
     <!-- Header -->
     <div class="flex justify-between items-center mb-4">
-      <h2 class="text-lg">เพิ่มข้อมูลการฝึกอบรม</h2>
+      <h2 class="text-xl">เพิ่มข้อมูลการฝึกอบรม</h2>
       <button
         (click)="closeModalAdd()"
         class="text-gray-400 hover:text-gray-600"
@@ -184,7 +184,7 @@
       <button
         type="submit"
         (click)="saveAdd()"
-        class="px-6 py-2 bg-[#FDE68A] text-[#1E293B] hover:bg-[#FACC15] rounded-md transition cursor-pointer"
+        class="px-6 py-2 bg-[#FDE68A] text-[#1E293B] hover:bg-[#FACC15] text-xl rounded-md transition cursor-pointer"
       >
         เพิ่มข้อมูล
       </button>
