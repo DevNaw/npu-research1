@@ -92,6 +92,11 @@ export class NavbarComponent {
     return this.auth.isLoggedIn();
   }
 
+  closeMenu() {
+    this.openMenu = null;
+  }
+  
+
   // toggleReportMenu() {
   //   this.openMobileReport = !this.openMobileReport;
   // }

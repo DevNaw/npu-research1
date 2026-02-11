@@ -359,7 +359,7 @@
 
         <div
           *ngIf="activeDropdown === 'funding'"
-          class="absolute z-9999 mt-1 w-full bg-white border rounded-md shadow font-medium"
+          class="absolute left-0 top-full mt-1 w-full bg-white border rounded-md shadow-lg z-50 font-medium"
         >
           <div
             class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
@@ -394,7 +394,7 @@
 
         <div
           *ngIf="activeDropdown === 'fundName'"
-          class="absolute z-9999 mt-1 w-full bg-white border rounded-md shadow"
+          class="absolute z-9999 mt-1 w-full bg-white border rounded-md shadow font-medium"
         >
           <div
             *ngFor="
@@ -505,7 +505,7 @@
       ></textarea>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mt-10">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-10">
       <!-- รายงานวิจัยฉบับสมบูรณ์ -->
       <div>
         <label class="md:col-span-1 font-bold text-start">

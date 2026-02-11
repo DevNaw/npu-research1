@@ -135,30 +135,35 @@
               class="absolute left-1/2 mt-2 -translate-x-1/2 w-72 max-w-[90vw] bg-[#394250] text-white rounded-md shadow-lg z-50 pointer-events-auto"
             >
               <a
+              (click)="closeMenu()"
                 routerLink="/report-researcher-profile"
                 class="block px-4 py-2 hover:bg-gray-600 font-bold text-xl"
               >
                 รายงานข้อมูลประวัตินักวิจัย
               </a>
               <a
+              (click)="closeMenu()"
                 routerLink="/report-research"
                 class="block px-4 py-2 hover:bg-gray-600 font-bold text-xl"
               >
                 รายงานข้อมูลผลงานวิจัย
               </a>
               <a
+              (click)="closeMenu()"
                 routerLink="/report-expertise"
                 class="block px-4 py-2 hover:bg-gray-600 font-bold text-xl"
               >
                 รายงานข้อมูลจำนวนนักวิจัยแยกตามสาขาเชี่ยวชาญ
               </a>
               <a
+              (click)="closeMenu()"
                 routerLink="/report-institution"
                 class="block px-4 py-2 hover:bg-gray-600 font-bold text-xl"
               >
                 รายงานข้อมูลจำนวนนักวิจัยแยกตามหน่วยงานที่สังกัด
               </a>
               <a
+              (click)="closeMenu()"
                 routerLink="/report-researcher"
                 class="block px-4 py-2 hover:bg-gray-600 font-bold text-xl"
               >
@@ -188,6 +193,7 @@
               class="absolute left-1/2 mt-2 -translate-x-1/2 w-40 max-w-[90vw] bg-[#394250] text-white rounded-md shadow-lg z-50"
             >
               <a
+              (click)="closeMenu()"
                 [href]="doc.researcher.fileUrl"
                 target="_blank"
                 rel="noopener"
@@ -196,6 +202,7 @@
                 สำหรับนักวิจัย
               </a>
               <a
+              (click)="closeMenu()"
                 [href]="doc.admin.fileUrl"
                 target="_blank"
                 rel="noopener"
@@ -204,6 +211,7 @@
                 สำหรับแอดมิน
               </a>
               <a
+              (click)="closeMenu()"
                 [href]="doc.executive.fileUrl"
                 target="_blank"
                 rel="noopener"
@@ -489,18 +497,21 @@
               class="absolute left-0 mt-2 bg-gray-700 text-white rounded-md shadow-lg w-max max-w-[90vw] z-50"
             >
               <a
+              (click)="closeMenu()"
                 routerLink="/user/add-research"
                 class="block px-4 py-2 hover:bg-gray-600 font-bold text-xl"
               >
                 โครงการงานวิจัย
               </a>
               <a
+              (click)="closeMenu()"
                 routerLink="/user/add-aticle"
                 class="block px-4 py-2 hover:bg-gray-600 font-bold text-xl"
               >
                 บทความ/วารสาร
               </a>
               <a
+              (click)="closeMenu()"
                 routerLink="/user/add-innovation"
                 class="block px-4 py-2 hover:bg-gray-600 font-bold text-xl"
               >
@@ -749,12 +760,14 @@
               class="absolute left-0 mt-2 bg-gray-700 text-white rounded-md shadow-lg w-max max-w-[90vw] z-50 pointer-events-auto"
             >
               <a
+              (click)="closeMenu()"
                 routerLink="/admin/external-funding"
                 class="block px-4 py-2 hover:bg-gray-600 font-bold text-xl"
               >
                 แหล่งทุนภายนอก
               </a>
               <a
+              (click)="closeMenu()"
                 routerLink="/admin/specialization"
                 class="block px-4 py-2 hover:bg-gray-600 font-bold text-xl"
               >
@@ -784,12 +797,14 @@
               class="absolute left-0 mt-2 bg-gray-700 text-white rounded-md shadow-lg w-max max-w-[90vw] z-50 pointer-events-auto"
             >
               <a
+              (click)="closeMenu()"
                 routerLink="/admin/news"
                 class="block px-4 py-2 hover:bg-gray-600 font-bold text-xl"
               >
                 ข่าวประชาสัมพันธ์
               </a>
               <a
+              (click)="closeMenu()"
                 routerLink="/admin/download"
                 class="block px-4 py-2 hover:bg-gray-600 font-bold text-xl"
               >
@@ -819,18 +834,21 @@
               class="absolute left-0 mt-2 bg-gray-700 text-white rounded-md shadow-lg w-max max-w-[90vw] z-50 pointer-events-auto"
             >
               <a
+              (click)="closeMenu()"
                 routerLink="/admin/add-research"
                 class="block px-4 py-2 hover:bg-gray-600 font-bold text-xl"
               >
                 โครงการงานวิจัย
               </a>
               <a
+              (click)="closeMenu()"
                 routerLink="/admin/add-aticle"
                 class="block px-4 py-2 hover:bg-gray-600 font-bold text-xl"
               >
                 บทความ/วารสาร
               </a>
               <a
+              (click)="closeMenu()"
                 routerLink="/admin/add-innovation"
                 class="block px-4 py-2 hover:bg-gray-600 font-bold text-xl"
               >
