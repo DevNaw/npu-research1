@@ -23,7 +23,7 @@ export class ResearchComponent implements OnInit {
     {
       id: 2,
       title: 'ผลกระทบของการเปลี่ยนแปลงสภาพภูมิอากาศต่อการเกษตร',
-      researchers: 'ผศ.สมชาย ใจดีผศ.สมชาย ใจดีผศ.สมชาย ใจดี',
+      researchers: 'ผศ.สมชาย ใจดี',
     },
   ];
 

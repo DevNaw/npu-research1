@@ -57,7 +57,17 @@
         </div>
       </div>
 
-      <table class="w-full overflow-hidden">
+      <div class="overflow-x-auto">
+      <table class="min-w-225 w-full table-auto">
+
+        <colgroup>
+          <col class="w-[5%]" />   <!-- # -->
+          <col class="w-[35%]" />  <!-- ชื่อสาขา -->
+          <col class="w-[35%]" />  <!-- คำอธิบาย -->
+          <col class="w-[15%]" />  <!-- สถานะ -->
+          <col class="w-[10%]" />  <!-- Action -->
+        </colgroup>
+        
         <thead>
           <tr class="bg-[#394250] text-white border-b">
             <th class="p-1 md:p-3 text-center">#</th>
@@ -115,6 +125,7 @@
           </tr>
         </tbody>
       </table>
+    </div>
     </div>
 
     <div

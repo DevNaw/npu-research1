@@ -26,7 +26,15 @@
       </div>
     </div>
     <div class="w-full overflow-x-auto mt-4">
-    <table class="w-full overflow-hidden">
+    <table class="w-full min-w-225 table-fixed">
+      <colgroup>
+        <col class="w-[5%]" />    <!-- # -->
+        <col class="w-[50%]" />   <!-- หัวข้อข่าว -->
+        <col class="w-[15%]" />   <!-- วันที่ประกาศ -->
+        <col class="w-[15%]" />   <!-- วันที่สิ้นสุด -->
+        <col class="w-[15%]" />   <!-- Action -->
+      </colgroup>
+
       <thead class="bg-[#394250] text-white border-b">
         <tr>
           <th class="p-2">#</th>
@@ -47,10 +55,10 @@
           </td>
           <td class="p-2">{{ news.title }}</td>
           <td class="text-center p-2">
-            {{ news.date | date : "dd MMMM yyyy" : "" : "th-TH" }}
+            {{ news.date | date : "dd/MM/yyyy" : ""  }}
           </td>
           <td class="text-center p-2">
-            {{ news.dateend | date : "dd MMMM yyyy" : "" : "th-TH" }}
+            {{ news.dateend | date : "dd/MM/yyyy" : "" }}
           </td>
           <td class="text-center p-2">
             <div class="flex justify-center items-center gap-2 flex-wrap">

@@ -1,6 +1,6 @@
-<div class="bg-gray-100 min-h-screen md:p-6 text-xl md:text-2xl font-bold text-[#394250]">
+<div class="bg-gray-100 min-h-screen p-5 md:p-6 text-xl md:text-2xl font-bold text-[#394250]">
   <!-- ===== SEARCH ===== -->
-  <div class="mx-auto p-2 md:p-6">
+  <div class="mx-auto md:p-6">
     <!-- Title -->
     <div class="flex flex-col justify-center items-center text-center">
       <!-- Icon Circle -->
@@ -213,8 +213,8 @@
 </div>
 
 <!-- ===== TABLE ===== -->
-<div *ngIf="isSearched" class="bg-[#F9CB34] p-2 md:px-10 text-2xl text-[#394250]">
-  <div class="mx-auto py-6">
+<div *ngIf="isSearched" class="bg-[#F9CB34] p-5 md:px-10 text-2xl text-[#394250]">
+  <div class="mx-auto md:py-6">
     <!-- Header -->
     <div
       class="flex md:flex-row justify-between md:items-center md:gap-4 mb-4"
@@ -239,13 +239,13 @@
         <table class="w-full min-w-225 border-gray-300">
           <thead class="bg-[#394250] text-white border-b-2 border-gray-300">
             <tr>
-              <th class="p-3 text-center">#</th>
-              <th class="p-3 text-center">img</th>
-              <th class="p-3 text-left">ชื่อ - นามสกุล</th>
-              <th class="p-3 text-center">สาขาวิชา</th>
-              <th class="p-3 text-center">หน่วยงาน</th>
-              <th class="p-3 text-center">ตำแหน่ง</th>
-              <th class="p-3 text-center">Action</th>
+              <th class="p-1 md:p-3 text-center">#</th>
+              <th class="p-1 md:p-3 text-center">img</th>
+              <th class="p-1 md:p-3 text-left">ชื่อ - นามสกุล</th>
+              <th class="p-1 md:p-3 text-center">สาขาวิชา</th>
+              <th class="p-1 md:p-3 text-center">หน่วยงาน</th>
+              <th class="p-1 md:p-3 text-center">ตำแหน่ง</th>
+              <th class="p-1 md:p-3 text-center">Action</th>
             </tr>
           </thead>
 
@@ -254,9 +254,9 @@
               *ngFor="let r of paginationData; let i = index"
               class="hover:bg-gray-50 bg-gray-200 border-b border-gray-300"
             >
-              <td class="p-3 text-center">{{ i + 1 }}</td>
+              <td class="p-1 md:p-3 text-center">{{ i + 1 }}</td>
 
-              <td class="p-3 text-center">
+              <td class="p-1 md:p-3 text-center">
                 <div
                   class="mx-auto w-16 h-16 rounded-full border border-amber-400 flex items-center justify-center"
                 >
@@ -268,11 +268,11 @@
                 </div>
               </td>
 
-              <td class="p-3">{{ r.name }}</td>
-              <td class="p-3 text-center">{{ r.major }}</td>
-              <td class="p-3 text-center">{{ r.faculty }}</td>
-              <td class="p-3 text-center">{{ r.position }}</td>
-              <td class="p-3 text-center">
+              <td class="p-1 md:p-3">{{ r.name }}</td>
+              <td class="p-1 md:p-3 text-center">{{ r.major }}</td>
+              <td class="p-1 md:p-3 text-center">{{ r.faculty }}</td>
+              <td class="p-1 md:p-3 text-center">{{ r.position }}</td>
+              <td class="p-1 md:p-3 text-center">
                 <i
                   (click)="goToUserProfile(r.id)"
                   class="bi bi-person text-xl cursor-pointer text-blue-500 hover:text-blue-300"

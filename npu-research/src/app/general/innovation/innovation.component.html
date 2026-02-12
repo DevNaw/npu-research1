@@ -15,12 +15,17 @@
 
   <div class="mb-10 mx-auto px-2 py-2 md:px-6 md:py-6 bg-white rounded-xl">
     <div class="w-full overflow-x-auto bg-white shadow-sm">
-      <table class="w-full text-gray-700">
+      <table class="w-full text-gray-700 min-w-225 table-auto">
+        <colgroup>
+          <col class="w-[5%]">
+          <col class="w-[35%]">
+          <col class="w-[60%]">
+        </colgroup>
         <!-- Header -->
         <thead class="bg-[#394250] text-white">
           <tr>
             <th class="w-20 text-center font-bold">#</th>
-            <th class="p-1 md:p-2 md:text-start font-bold">ผู้วิจัย</th>
+            <th class="p-1 md:p-2 text-start font-bold">ผู้วิจัย</th>
             <th class="p-1 md:p-2 text-start font-bold">
               ชื่อผลงานนวัตกรรมสิ่งประดิษฐ์
             </th>
@@ -40,7 +45,7 @@
 
             <!-- Researcher -->
             <td class="p-1 md:p-2">
-              <div class="flex items-center gap-4 flex-wrap justify-center">
+              <div class="flex items-center gap-4 flex-wrap justify-start">
                 <img
                   src="assets/logoNPU.png"
                   alt="researcher"

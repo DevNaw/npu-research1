@@ -6,7 +6,7 @@
       <div
         class="w-24 h-24 rounded-full bg-linear-to-b from-sky-200 to-sky-100 flex items-center justify-center mb-4"
       >
-        <i class="bi bi-search text-4xl "></i>
+        <i class="bi bi-search text-4xl"></i>
       </div>
       <h1 class="text-4xl font-bold">ค้นหาข้อมูลงานวิจัย</h1>
     </div>
@@ -15,11 +15,7 @@
       <!-- === ตัวกรอง === -->
       <div class="grid grid-cols-12 gap-3 items-center">
         <!-- ===== label ===== -->
-        <label
-          class="col-span-12 md:col-span-2 text-4xl"
-        >
-          ตัวกรอง
-        </label>
+        <label class="col-span-12 md:col-span-2 text-4xl"> ตัวกรอง </label>
 
         <!-- ===== เลือกประเภทผลงาน ===== -->
         <div class="col-span-12 md:col-span-5 relative font-medium">
@@ -123,30 +119,28 @@
       <div class="grid grid-cols-12 gap-3 items-center mt-4 mb-4">
         <!-- แหล่งเงินทุนภายนอก -->
         <label
-          
           class="col-span-12 md:col-span-4 flex items-center gap-3 border border-gray-200 rounded-full px-5 h-12 cursor-pointer hover:border-yellow-400 transition"
         >
           <input
-          [checked]="selectedFunding === 'external'"
-          (change)="onFundingChange('external', $event)"
+            [checked]="selectedFunding === 'external'"
+            (change)="onFundingChange('external', $event)"
             type="checkbox"
             class="w-4 h-4 text-yellow-500 border-gray-300 rounded focus:ring-2 focus:ring-yellow-400"
           />
-          <span class="font-medium "> แหล่งเงินทุนภายนอก </span>
+          <span class="font-medium"> แหล่งเงินทุนภายนอก </span>
         </label>
 
         <!-- แหล่งเงินทุนภายใน -->
         <label
-          
           class="col-span-12 md:col-span-4 flex items-center gap-3 border border-gray-200 rounded-full px-5 h-12 cursor-pointer hover:border-yellow-400 transition"
         >
           <input
-          [checked]="selectedFunding === 'internal'"
-          (change)="onFundingChange('internal', $event)"
+            [checked]="selectedFunding === 'internal'"
+            (change)="onFundingChange('internal', $event)"
             type="checkbox"
             class="w-4 h-4 text-yellow-500 border-gray-300 rounded focus:ring-2 focus:ring-yellow-400"
           />
-          <span class="font-medium "> แหล่งเงินทุนภายใน </span>
+          <span class="font-medium"> แหล่งเงินทุนภายใน </span>
         </label>
 
         <!-- ช่วงเวลา -->
@@ -227,7 +221,7 @@
           <input
             [(ngModel)]="researchItems"
             placeholder="พิมพ์คำค้นหา ชื่อเรื่อง/บทความ/นวัตกรรม"
-            class="flex-1 px-6 md:px-8 text-2xl outline-none border-none"
+            class="flex-1 px-6 md:px-8 text-xl md:text-2xl outline-none border-none"
           />
 
           <button
@@ -237,8 +231,9 @@
             <span class="hidden md:inline text-2xl mr-4">ค้นหา</span>
             <span
               class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-white"
-              ><i class="bi bi-arrow-right"></i
-            ></span>
+            >
+              <i class="bi bi-arrow-right"></i>
+            </span>
           </button>
         </div>
       </div>
@@ -278,15 +273,17 @@
           สัดส่วนนักวิจัย จำแนกตามสาขาวิชา
         </h2>
       </div>
-      <div class="space-y-1 ">
+
+      <div class="space-y-1">
         <p
           *ngFor="let l of donutLabels; let i = index"
-          class="flex justify-between px-8"
+          class="flex justify-between md:px-8"
         >
-          <span class="font-medium">{{ l }}</span
-          ><span class="font-medium">{{ donutSeries[i] }} งาน</span>
+          <span class="font-medium">{{ l }}</span>
+          <span class="font-medium">{{ donutSeries[i] }} งาน</span>
         </p>
       </div>
+
       <div class="pt-4 border-t">
         <p class="text-3xl md:text-4xl text-center text-[#394250]">
           รวมทั้งหมด {{ totalResearchers }} งาน
@@ -304,11 +301,13 @@
     >
       <h2 class="text-2xl md:text-3xl font-bold">
         {{
-          selectedType === "project"
+          selectedType === "โครงการวิจัย"
             ? "โครงการวิจัย"
-            : selectedType === "article"
-            ? "บทความ / วารสาร"
-            : selectedType === "innovation"
+            : selectedType === "บทความ"
+            ? "บทความ"
+            : selectedType === "วารสาร"
+            ? "วารสาร"
+            : selectedType === "นวัตกรรมสิ่งประดิษฐ์"
             ? "นวัตกรรมสิ่งประดิษฐ์"
             : "โครงการวิจัย / บทความ / วารสาร / นวัตกรรมสิ่งประดิษฐ์"
         }}
@@ -326,7 +325,14 @@
     </div>
     <div class="bg-white rounded-xl shadow p-4 md:p-8">
       <div class="overflow-x-auto">
-        <table class="w-full border border-gray-300">
+        <table class="w-full border border-gray-300 min-w-225 table-auto">
+          <colgroup>
+            <col class="w-[5%]" />
+            <col class="w-[40%]" />
+            <col class="w-[40%]" />
+            <col class="w-[15%]" />
+          </colgroup>
+
           <thead class="bg-[#394250] text-white border-b-2 border-gray-300">
             <tr>
               <th class="p-1 md:p-2">#</th>
@@ -377,7 +383,7 @@
           <button
             *ngFor="let page of pages"
             (click)="changePage(page)"
-            class="px-2 md:px-3 py-1 rounded border text-sm  transition"
+            class="px-2 md:px-3 py-1 rounded border text-sm transition"
             [ngClass]="{
               'bg-[#FACC15] text-[#1E293B] font-semibold': currentPage === page,
               'hover:bg-gray-100': currentPage !== page

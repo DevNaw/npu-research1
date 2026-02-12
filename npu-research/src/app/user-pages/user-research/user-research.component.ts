@@ -106,9 +106,10 @@ export class UserResearchComponent {
     'สถาบันวิจัยและนวัตกรรม',
   ];
 
-  typeList = ['บทความ', 'วารสาร', 'นวัตกรรมสิ่งประดิษฐ์'];
+  typeList = ['โครงการวิจัย', 'บทความ', 'วารสาร', 'นวัตกรรมสิ่งประดิษฐ์'];
 
   subTypeMap: any = {
+    โครงการวิจัย: [],
     บทความ: ['ประชุมวิชาการระดับชาติ', 'ประชุมวิชาการระดับนานาชาติ'],
     วารสาร: ['วารสารในประเทศ', 'วารสารต่างประเทศ'],
     นวัตกรรมสิ่งประดิษฐ์: [], // ไม่มีตัวเลือกย่อย
@@ -144,6 +145,7 @@ export class UserResearchComponent {
   };
 
   typeMap: any = {
+    โครงการวิจัย: 'research',
     บทความ: 'article',
     วารสาร: 'research',
     นวัตกรรมสิ่งประดิษฐ์: 'innovation',
@@ -169,21 +171,18 @@ export class UserResearchComponent {
         (this.fundingExternal && r.funding === 'external') ||
         (this.fundingInternal && r.funding === 'internal');
 
+        const typeMatch =
+        !this.selectedType ||
+        this.typeMap[this.selectedType]?.includes(r.type);
+
       return (
-        // ประเภท
-        (!this.selectedType || r.type === this.selectedType) &&
-        // ประเภทย่อย
+        typeMatch &&
         (!this.selectedSubType || r.subType === this.selectedSubType) &&
-        // หน่วยงาน
         (!this.selectedAgency || r.agency === this.selectedAgency) &&
-        // แหล่งทุน
         fundingMatch &&
-        // ปี
         (!this.selectedYear || r.year === +this.selectedYear) &&
-        // คำค้น
         (!this.researchTitle ||
           r.title.toLowerCase().includes(this.researchTitle.toLowerCase())) &&
-        // ⭐ ช่วงเวลา
         inDateRange
       );
     });
