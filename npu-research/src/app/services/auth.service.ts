@@ -90,7 +90,7 @@ export class AuthService {
 
   // ลงทะเบียน
   register(data: any) {
-    return this.http.post(`${this.baseUrl}/register`, data);
+    return this.http.post(`${this.baseUrl}/register-true`, data);
   }
 
   // Login Admin
