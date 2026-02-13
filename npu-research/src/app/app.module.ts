@@ -52,6 +52,8 @@ import { EditWorkComponent } from './user-pages/edit-work/edit-work.component';
 import { NgxEditorModule } from 'ngx-editor';
 import { PerformanceByDepartmentComponent } from './general/performance-by-department/performance-by-department.component';
 import { PerformanceDetailByDepartmentComponent } from './general/performance-detail-by-department/performance-detail-by-department.component';
+import { HttpClientModule } from '@angular/common/http';
+
 
 @NgModule({
   declarations: [
@@ -111,6 +113,7 @@ import { PerformanceDetailByDepartmentComponent } from './general/performance-de
     MatInputModule,
     AppRoutingModule,
     NgxEditorModule,
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

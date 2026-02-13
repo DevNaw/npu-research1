@@ -6,8 +6,10 @@ import {
   ResponsibilityRole,
   InternalPerson,
   ExternalPerson,
-  ResearchData,
 } from '../../models/add.research.model';
+
+import { ResearchData } from '../../models/research.model';
+import { ResearchService } from '../../services/research.service';
 
 @Component({
   selector: 'app-user-add-research',
@@ -41,9 +43,27 @@ export class UserAddResearchComponent {
   openStatus: number | null = null;
 
   researchData: ResearchData = {
-    responsibility: '',
-    funding: '',
-    status: '',
+    id: 0,
+    title_th: '',
+    title_en: '',
+    abstract: '',
+    year: '',
+    published_date: '',
+    call_other: '',
+    image: null,
+    source_funds: '',
+    name_funding: '',
+    budget_amount: '',
+    budget: '',
+    year_received_budget: '',
+    research_area: '',
+    usable_area: '',
+    start_date: '',
+    end_date: '',
+    internal_members: [],
+    external_members: [],
+    full_report: null,
+    contract_file: null,
   };
 
   rows: ExternalPerson[] = [
@@ -112,7 +132,11 @@ export class UserAddResearchComponent {
     },
   ];
 
-  constructor(private route: ActivatedRoute, private router: Router) {}
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private reseachService: ResearchService
+  ) {}
 
   ngOnInit() {
     this.route.paramMap.subscribe((params) => {
@@ -130,6 +154,37 @@ export class UserAddResearchComponent {
     this.addInternal();
     this.addExternal();
   }
+
+  submit() {
+    Swal.fire({
+      title: 'กรุณารอสักครู่',
+      allowEscapeKey: false,
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+
+    this.reseachService.createResearch(this.researchData).subscribe({
+      next: (res) => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Successfully',
+          showConfirmButton: false,
+          timer: 1000,
+        });
+      },
+      error(err) {
+        Swal.fire({
+          icon: 'error',
+          title: 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง',
+          text: err.error.message || 'กรุณาลองใหม่อีกครั้ง',
+          showCancelButton: false,
+        });
+      },
+    });
+  }
+
   loadResearchData(id: number) {
     console.log('แก้ไขงานวิจัย ID:', id);
 
@@ -284,7 +339,7 @@ export class UserAddResearchComponent {
   }
 
   selectStatus(status: string) {
-    this.researchData.status = status;
+    // this.researchData.status = status;
     this.activeDropdown = null;
   }
 
@@ -343,26 +398,6 @@ export class UserAddResearchComponent {
     this.router.navigate([base, type, id]);
   }
 
-  saveResearch() {
-    // ✅ รวมข้อมูลทั้งหมด
-    const payload = {};
-
-    // ✅ เตรียม FormData (รองรับไฟล์)
-    const formData = new FormData();
-    formData.append('data', JSON.stringify(payload));
-    Swal.fire({
-      icon: 'success',
-      title: 'บันทึกข้อมูลสำเร็จ',
-      text: 'ระบบได้บันทึกข้อมูลเรียบร้อยแล้ว',
-      showConfirmButton: false,
-      timer: 1500,
-      customClass: {
-        title: 'swal-title-lg',
-        htmlContainer: 'swal-text-2xl',
-      },
-    });
-  }
-
   // ===== dropdown control =====
   toggleFunding(event: MouseEvent) {
     event.stopPropagation();
@@ -377,7 +412,7 @@ export class UserAddResearchComponent {
 
   // ===== select funding =====
   selectFunding(type: string) {
-    this.researchData.funding = type;
+    // this.researchData.funding = type;
     this.fundName = ''; // reset ชื่อแหล่งทุน
     this.activeDropdown = null;
   }

@@ -1,28 +1,21 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
+import { ResearchData } from '../models/research.model';
 
 export type ResearchType = 'project' | 'article' | 'innovation';
-
-export interface ResearchPayload {
-  title: string;
-  description: string;
-  year: number;
-  type: ResearchType;
-}
-
 
 @Injectable({
   providedIn: 'root',
 })
 export class ResearchService {
   private readonly baseUrl = `${environment.apiBaseUrl}/v1/extreme/research`;
-
+  
   constructor(private http: HttpClient) {}
 
   // ✅ สร้าง research ทุกประเภท
-  createResearch(data: ResearchPayload) {
-    return this.http.post(this.baseUrl, data);
+  createResearch(data: any) {
+    return this.http.post(`${this.baseUrl}/add-project`, data);
   }
 
   // ✅ ดึงทั้งหมด
@@ -36,9 +29,9 @@ export class ResearchService {
   }
 
   // ✅ อัปเดต
-  updateResearch(id: number, data: ResearchPayload) {
-    return this.http.put(`${this.baseUrl}/${id}`, data);
-  }
+  // updateResearch(id: number, data: ResearchPayload) {
+  //   return this.http.put(`${this.baseUrl}/${id}`, data);
+  // }
 
   // ✅ ลบ
   deleteResearch(id: number) {

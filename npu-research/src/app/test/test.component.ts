@@ -1,11 +1,8 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import {
-  NgxEditorComponent,
-  NgxEditorMenuComponent,
-  Editor,
-  Toolbar,
-} from 'ngx-editor';
-import { schema } from 'ngx-editor/schema';
+import { AuthService } from '../services/auth.service';
+import { Route, Router } from '@angular/router';
+import { RegisterData } from '../models/profile.model';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-test',
@@ -13,30 +10,6 @@ import { schema } from 'ngx-editor/schema';
   templateUrl: './test.component.html',
   styleUrl: './test.component.css',
 })
-export class TestComponent implements OnInit, OnDestroy{
-  editor!: Editor;
-  html = '';
-
-  toolbar: Toolbar = [
-    ['bold', 'italic', 'underline', 'strike'],
-    ['blockquote', 'code'],
-    ['ordered_list', 'bullet_list'],
-    [{ heading: ['h1', 'h2', 'h3', 'h4'] }],
-    ['link', 'image'],
-    ['text_color', 'background_color'],
-    ['align_left', 'align_center', 'align_right'],
-    ['undo', 'redo'],
-  ];
-
-  ngOnInit(): void {
-    this.editor = new Editor();
-  }
-
-  ngOnDestroy(): void {
-    this.editor.destroy();
-  }
-
-  save() {
-    console.log(this.html); // ส่งไป backend Laravel ได้เลย
-  }
+export class TestComponent {
+  
 }

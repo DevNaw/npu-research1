@@ -14,7 +14,7 @@ interface Researcher {
   selector: 'app-admin-search-researcher',
   standalone: false,
   templateUrl: './admin-search-researcher.component.html',
-  styleUrl: './admin-search-researcher.component.css'
+  styleUrl: './admin-search-researcher.component.css',
 })
 export class AdminSearchResearcherComponent {
   openDropdown: string | null = null;
@@ -37,10 +37,7 @@ export class AdminSearchResearcherComponent {
   pageSize = 10;
   currentPage = 1;
 
-  constructor(
-    private router: Router,
-    private authService: AuthService
-  ){}
+  constructor(private router: Router, private authService: AuthService) {}
 
   /** ===== DATA (ตัวอย่าง) ===== */
   publications: Researcher[] = [
@@ -123,44 +120,44 @@ export class AdminSearchResearcherComponent {
     position: 'bottom',
     labels: {
       colors: '#fffff', // สีตัวหนังสือ (เช่น gray-800)
-    }
+    },
   };
 
   filteredResearchers: Researcher[] = [];
   /** ===== SEARCH ===== */
   search() {
     this.isSearched = true;
-  
+
     this.filteredData = this.publications.filter((r) => {
       const matchFaculty =
         !this.selectedFaculty ||
         this.selectedFaculty === 'ทั้งหมด' ||
         r.faculty === this.selectedFaculty;
-  
+
       const matchMajor =
         !this.selectedMajor ||
         this.selectedMajor === 'ทั้งหมด' ||
         r.major === this.selectedMajor;
-  
+
       const matchName =
         !this.researcherName ||
         r.name.toLowerCase().includes(this.researcherName.toLowerCase());
-  
+
       return matchFaculty && matchMajor && matchName;
     });
-  
+
     this.currentPage = 1;
     this.updatePagination();
-  
+
     this.prepareDonutChart(); // ⭐ ต้องอยู่หลัง filter
   }
-  
+
   /** ===== DONUT CALCULATION (อิงข้อมูลตารางจริง) ===== */
   hasDonutData = false;
 
   prepareDonutChart() {
     const data = this.filteredData; // ⭐ สำคัญมาก
-  
+
     if (!data || data.length === 0) {
       this.hasDonutData = false;
       this.donutSeries = [];
@@ -168,20 +165,19 @@ export class AdminSearchResearcherComponent {
       this.totalResearchers = 0;
       return;
     }
-  
+
     const majorMap: Record<string, number> = {};
-  
+
     data.forEach((r) => {
       const major = r.major || 'ไม่ระบุสาขา';
       majorMap[major] = (majorMap[major] || 0) + 1;
     });
-  
+
     this.donutLabels = Object.keys(majorMap);
     this.donutSeries = Object.values(majorMap);
     this.totalResearchers = data.length;
     this.hasDonutData = true;
   }
-  
 
   toggleDropdown(name: string, event: MouseEvent) {
     event.stopPropagation();
@@ -246,27 +242,27 @@ export class AdminSearchResearcherComponent {
 
     this.paginationData = this.filteredData.slice(start, end);
   }
-  
-  goToProfile(){
+
+  goToProfile() {
     if (!this.authService.isLoggedIn()) {
       this.router.navigateByUrl('/login');
       return;
     }
-    const user = this.authService.getUser();
-  const base = this.authService.isAdmin() ? '/admin' : '/user';
+    const user = this.authService.getUserFromStorage();
+    const base = this.authService.isAdmin() ? '/admin' : '/user';
 
-  // ถ้ามี id
-  if (user?.id) {
-    this.router.navigateByUrl(`${base}/profile/${user.id}`);
-  } else {
-    this.router.navigateByUrl(`${base}/profile`);
-  }
+    // ถ้ามี id
+    if (user?.id) {
+      this.router.navigateByUrl(`${base}/profile/${user.id}`);
+    } else {
+      this.router.navigateByUrl(`${base}/profile`);
+    }
   }
 
   changePage(page: number) {
     if (page < 1 || page > this.totalPages) return;
     if (page === this.currentPage) return;
-  
+
     this.currentPage = page;
     this.updatePagination();
   }

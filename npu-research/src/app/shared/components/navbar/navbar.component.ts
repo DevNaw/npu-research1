@@ -84,12 +84,13 @@ export class NavbarComponent {
     this.router.navigate(['/dashboard']);
   }
 
-  get role() {
-    return this.auth.getRole();
-  }
-
   get isLoggedIn() {
     return this.auth.isLoggedIn();
+  }
+
+  get role(): 'use' | 'adm' | null {
+    return this.auth.getRole();
+    
   }
 
   closeMenu() {

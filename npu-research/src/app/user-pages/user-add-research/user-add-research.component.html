@@ -34,6 +34,7 @@
         ชื่องานวิจัย <span class="text-red-500">*</span>
       </label>
       <input
+      [(ngModel)]="researchData.title_th"
         type="text"
         class="md:col-span-3 w-full text-2xl font-medium border h-12 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400"
         placeholder="ระบุชื่องานวิจัย"
@@ -99,7 +100,7 @@
         (click)="toggleResponsibility($event)"
         class="w-full border rounded-md px-3 py-2 flex justify-between items-center font-medium"
       >
-        {{ researchData.responsibility || "เลือกประเภทความรับผิดชอบ" }}
+        {{ researchData || "เลือกประเภทความรับผิดชอบ" }}
         <i class="bi bi-chevron-down"></i>
       </button>
 
@@ -352,7 +353,7 @@
           class="w-full h-12 border rounded-md px-3 flex justify-between items-center font-medium bg-white"
         >
           <span class="flex-1 truncate text-left">
-            {{ researchData.funding || "เลือกแหล่งทุน" }}
+            {{ researchData.source_funds || "เลือกแหล่งทุน" }}
           </span>
           <i class="bi bi-chevron-down shrink-0 ml-2"></i>
         </button>
@@ -376,7 +377,7 @@
         </div>
       </div>
 
-      <div *ngIf="researchData.funding" class="relative">
+      <div *ngIf="researchData.source_funds" class="relative">
         <label class="block font-bold text-2xl mb-2">
           ชื่อแหล่งทุน <span class="text-red-500">*</span>
         </label>
@@ -398,7 +399,7 @@
         >
           <div
             *ngFor="
-              let name of researchData.funding === 'แหล่งทุนภายใน'
+              let name of researchData.name_funding === 'แหล่งทุนภายใน'
                 ? internalFunds
                 : externalFunds
             "
@@ -428,6 +429,7 @@
           ปีที่ได้รับทุน <span class="text-red-500">*</span>
         </label>
         <input
+        [(ngModel)]="researchData.year_received_budget"
           type="text"
           class="w-full border rounded-md text-2xl font-medium px-4 h-12 py-2 focus:ring-2 focus:ring-blue-400"
           placeholder="ระบุปีที่ได้รับทุน"
@@ -444,7 +446,7 @@
           (click)="toggleStatus($event)"
           class="w-full border rounded-md px-3 py-2 flex justify-between items-center font-medium"
         >
-          {{ researchData.status || "สถานะ" }}
+          {{ researchData || "สถานะ" }}
           <i class="bi bi-chevron-down"></i>
         </button>
 
@@ -485,6 +487,7 @@
     <div class="grid grid-cols-1 md:grid-cols-1 gap-2 mb-2 md:mb-6">
       <label class="md:col-span-1 font-bold text-start"> พื้นที่วิจัย </label>
       <textarea
+      [(ngModel)]="researchData.research_area"
         name="attention"
         id="attention"
         placeholder="ระบุพื้นที่วิจัย"
@@ -498,6 +501,7 @@
         พื้นที่ใช้ประโยชน์
       </label>
       <textarea
+      [(ngModel)]="researchData.usable_area"
         name="attention"
         id="attention"
         placeholder="ระบุพื้นที่ใช้ประโยชน์"
@@ -514,6 +518,7 @@
 
         <!-- input file ซ่อน -->
         <input
+        [(ngModel)]="researchData.full_report"
           #reportFileInput
           type="file"
           accept="application/pdf"
@@ -544,6 +549,7 @@
 
         <!-- input file (ซ่อน) -->
         <input
+        [(ngModel)]="researchData.contract_file"
           #fileInput
           type="file"
           accept="application/pdf"
@@ -571,7 +577,7 @@
     <div class="flex justify-center mt-10">
       <button
         type="submit"
-        (click)="saveResearch()"
+        (click)="submit()"
         class="flex items-center justify-center gap-3 w-72 py-3 bg-yellow-300 hover:bg-yellow-400 text-2xl rounded-lg shadow transition duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 cursor-pointer"
       >
         <i class="bi bi-floppy2 text-2xl"></i>

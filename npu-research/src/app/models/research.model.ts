@@ -1,21 +1,39 @@
-export interface ResearchData {
-    id: number;
-    title: string;
-    photo: string;
-    branches_of_the_research: string;
-    branches_of_sub_research: string;
-    internal_project_participants: string;
-    external_project_participants: string;
-    funding: string;
-    external_funding: string;
-    internal_funding: string;
+export interface InternalMember {
+    user_id: string;
+    role: string;
+    no: string;
+  }
+  
+  export interface ExternalMember {
+    full_name: string;
+    role: string;
+    organization: string;
+    no: string;
+  }
+
+  export interface ResearchData {
+    id?: number;
+    title_th: string;
+    title_en: string;
+    abstract: string;
+    year: string;
+    published_date: string;
+    call_other: string;
+    image: File | null;
+    source_funds: string;
+    name_funding: string;
+    budget_amount: string;
     budget: string;
-    year_the_scholarship_was_received: string;
-    status: string;
-    year_completed: string;
-    collaboration_with_other_organizations: string;
+    year_received_budget: string;
     research_area: string;
-    area_of_use: string;
-    final_research_report: string;
-    publication: string;
-}
+    usable_area: string;
+    start_date: string;
+    end_date: string;
+  
+    internal_members: InternalMember[];
+    external_members: ExternalMember[];
+  
+    full_report: File | null;
+    contract_file: File | null;
+  }
+  

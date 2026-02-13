@@ -3,123 +3,139 @@ import { MOCK_USERS } from '../models/mock-user';
 import { User } from '../models/user.model';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
+import { map, tap } from 'rxjs';
+import { Expertise, ExpertiseResponse } from '../models/expertise.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  apiUrl = environment.apiBaseUrl;
+  private readonly baseUrl = `${environment.apiBaseUrl}/v1/extreme/auth`;
 
-  private currentUser: User | null = null;
+  expertises: Expertise[] = [];
+
+  private TOKEN_KEY = 'token';
+  private USER_KEY = 'use';
 
   constructor(private http: HttpClient) {}
 
-  // ===== helper อ่านจาก localStorage แบบปลอดภัย =====
-  private getUserFromStorage(): User | null {
-    const raw = localStorage.getItem('user');
-    if (!raw) return null;
+  private setSession(token: string, user: any) {
+    localStorage.setItem(this.TOKEN_KEY, token);
+    localStorage.setItem(this.USER_KEY, JSON.stringify(user));
+  }
 
-    try {
-      return JSON.parse(raw) as User;
-    } catch {
-      return null;
-    }
+  private clearSession() {
+    localStorage.removeItem(this.TOKEN_KEY);
+    localStorage.removeItem(this.USER_KEY);
+  }
+
+  // ===== helper อ่านจาก localStorage แบบปลอดภัย =====
+  getUserFromStorage(): any {
+    const user = localStorage.getItem(this.USER_KEY);
+    return user ? JSON.parse(user) : null;
   }
 
   // ===== login =====
-  login(username: string, password: string): boolean {
-    const user = MOCK_USERS.find(
-      (u) => u.username === username && u.password === password
-    );
+  login(username: string, password: string) {
+    return this.http
+      .post<any>(`${this.baseUrl}/users/login`, { username, password })
+      .pipe(
+        tap((res) => {
+          // 🔥 ปรับตาม response จริงของ backend
+          const token = res?.data?.token;
+          const user = res?.data?.user;
 
-    if (!user) return false;
-
-    this.currentUser = user;
-    localStorage.setItem('user', JSON.stringify(user)); // 🔐 เก็บทั้ง object
-    return true;
+          if (token && user) {
+            this.setSession(token, user);
+          }
+        })
+      );
   }
 
   // ===== เช็คว่า login อยู่ไหม =====
   isLoggedIn(): boolean {
-    const user = this.getUserFromStorage();
-    this.currentUser = user;
-    return user !== null;
+    return !!localStorage.getItem(this.TOKEN_KEY);
   }
 
   // ===== ดึง user ปัจจุบัน =====
-  getUser(): User | null {
-    if (!this.currentUser) {
-      this.currentUser = this.getUserFromStorage();
-    }
-    return this.currentUser;
+  getUser() {
+    return this.http.get(`${this.baseUrl}/admin/user`);
   }
 
   // ===== เช็ค role admin =====
-  isAdmin(): boolean {
-    const user = this.getUser();
-    return user?.role === 'admin';
+  isAdmin() {
+    const user = this.getUserFromStorage();
+    return user?.role === 'adm';
   }
 
   // ===== เอา role ไปใช้ตรง ๆ =====
-  getRole(): 'user' | 'admin' | null {
-    const user = this.getUser();
+  getRole(): 'use' | 'adm' | null {
+    const user = this.getUserFromStorage();
     return user?.role ?? null;
   }
 
   // ===== logout =====
   logout() {
-    localStorage.removeItem('user');
-    this.currentUser = null;
+    this.clearSession();
+  }
+
+  // ดึงข้อมูลสาขาที่เชี่ยวชาญ
+  getExpertise() {
+    return this.http
+    .get<ExpertiseResponse>(`${this.baseUrl}/list-expertises`)
+    .pipe(
+      map(res => res.data.expertises)
+    );
   }
 
   // ลงทะเบียน
   register(data: any) {
-    return this.http.post(`${this.apiUrl}/v1/extreme/auth/register`, data);
+    return this.http.post(`${this.baseUrl}/register`, data);
   }
 
-  // Login Users
-  // login(data: {user: string, password: string}) { return this.http.post(`${this.apiUrl}/v1/extreme/auth/users/login`, data); }
-
   // Login Admin
-  // loginAdmin (data: {user: string, password: string}) { return this.http.post(`${this.apiUrl}/v1/extreme/auth/admin/login`, data); }
+  loginAdmin(data: { user: string; password: string }) {
+    return this.http.post(`${this.baseUrl}/admin/login`, data);
+  }
 
   // Logout
-  // logout() { return this.http.post(`${this.apiUrl}/v1/extreme/auth/logout`); }
+  // logout() {
+  //   return this.http.post(`${this.baseUrl}/logout`);
+  // }
 
   // Logout All
-  // logoutAll() { return this.http.post(`${this.apiUrl}/v1/extreme/auth/logout-all`); }
+  // logoutAll() {
+  //   return this.http.post(`${this.baseUrl}/logout-all`);
+  // }
 
   // ลืมรหัสผ่าน
   forgot(email: string) {
-    return this.http.post(`${this.apiUrl}/v1/extreme/auth/forgot`, {email});
+    return this.http.post(`${this.baseUrl}/forgot`, { email });
   }
 
   // Verify Email
   verifyEmail(token: string) {
-    return this.http.get(`${this.apiUrl}/v1/extreme/auth/verify-email?token=${token}`);
+    return this.http.get(`${this.baseUrl}/verify-email?token=${token}`);
   }
 
   // Validate Token
   validateToken() {
-    return this.http.get<{ valid: boolean }>(
-      `${this.apiUrl}/v1/extreme/auth/validate-token`
-    );
+    return this.http.get<{ valid: boolean }>(`${this.baseUrl}/validate-token`);
   }
 
   // Delete User
   deleteUser() {
-    return this.http.delete(`${this.apiUrl}/v1/extreme/user-account/delete`);
+    return this.http.delete(`${this.baseUrl}/v1/extreme/user-account/delete`);
   }
 
   // Change Password
   changePassword(oldPassword: string, newPassword: string) {
     return this.http.put(
-      `${this.apiUrl}/v1/extreme/user-account/change-password`,
+      `${this.baseUrl}/v1/extreme/user-account/change-password`,
       {
         oldPassword,
-        newPassword
+        newPassword,
       }
     );
   }
-  
 }

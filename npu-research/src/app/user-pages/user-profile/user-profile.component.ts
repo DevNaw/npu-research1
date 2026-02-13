@@ -334,8 +334,12 @@ export class UserProfileComponent implements OnInit {
   }
 
   goToEditProfile() {
-    const user = this.authService.getUser();
-    if (!user) return;
+    if (!this.authService.isLoggedIn()) {
+      this.router.navigateByUrl('/login');
+      return;
+    }
+
+    const user = this.authService.getUserFromStorage();
 
     if (this.authService.isAdmin()) {
       this.router.navigate(['/admin/edit-profile', user.id]);
@@ -345,7 +349,7 @@ export class UserProfileComponent implements OnInit {
   }
 
   goToEditWork() {
-    const user = this.authService.getUser();
+    const user = this.authService.getUserFromStorage();
     if (!user) return;
 
     if (this.authService.isAdmin()) {
@@ -356,7 +360,7 @@ export class UserProfileComponent implements OnInit {
   }
 
   goToEditStudy() {
-    const user = this.authService.getUser();
+    const user = this.authService.getUserFromStorage();
     if (!user) return;
 
     if (this.authService.isAdmin()) {
@@ -367,7 +371,7 @@ export class UserProfileComponent implements OnInit {
   }
 
   goToEditTraning() {
-    const user = this.authService.getUser();
+    const user = this.authService.getUserFromStorage();
     if (!user) return;
 
     if (this.authService.isAdmin()) {
@@ -378,7 +382,7 @@ export class UserProfileComponent implements OnInit {
   }
 
   goToEditAddress() {
-    const user = this.authService.getUser();
+    const user = this.authService.getUserFromStorage();
 
     if (!user) return;
 

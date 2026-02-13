@@ -5,3 +5,13 @@ export interface DataProfile {
   major: string;
   position: string;
 }
+
+// Register Data
+export interface RegisterData {
+  first_name: string;
+  last_name: string;
+  email: string;
+  expertise_ids: number[];
+  password: string;
+  password_confirmation: string;
+}

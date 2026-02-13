@@ -1,4 +1,4 @@
 export const environment = {
     production: false,
-    apiBaseUrl: 'https://extrem/v1/extreme',
+    apiBaseUrl: 'https://research-api.cscons.org/api',
   } as const;

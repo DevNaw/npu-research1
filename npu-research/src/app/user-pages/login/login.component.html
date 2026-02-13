@@ -39,6 +39,7 @@
 
           <!-- Input -->
           <input
+          [(ngModel)]="username"
             name="username"
             type="text"
             [(ngModel)]="username"
@@ -54,6 +55,7 @@
         <div class="flex items-center gap-3">
           <i class="bi bi-lock-fill text-2xl"></i>
           <input
+          [(ngModel)]="password"
             [(ngModel)]="password"
             name="password"
             type="password"
