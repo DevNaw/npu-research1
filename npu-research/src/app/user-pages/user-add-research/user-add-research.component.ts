@@ -264,23 +264,6 @@ export class UserAddResearchComponent {
     }
   }
 
-  // saveResearch() {
-  //   const payload = {
-  //     research: this.researchData,
-  //     internal: this.internalPeople,
-  //     external: this.externalPeople,
-  //   };
-
-  //   console.log(payload);
-
-  //   Swal.fire({
-  //     icon: 'success',
-  //     title: 'บันทึกข้อมูลสำเร็จ',
-  //     showConfirmButton: false,
-  //     timer: 1500,
-  //   });
-  // }
-
   addRow2() {
     this.rows2 = [
       ...this.rows2,
@@ -422,4 +405,12 @@ export class UserAddResearchComponent {
     this.fundName = name;
     this.activeDropdown = null;
   }
+
+  // ดึงข้อมูล
+  getDataResearch() {
+    this.reseachService.getPublicData().subscribe({
+      next: (res) => {
+      }
+    });
+  }  
 }

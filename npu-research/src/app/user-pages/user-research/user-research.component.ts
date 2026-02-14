@@ -1,19 +1,21 @@
 import { Component, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { ResearchService } from '../../services/research.service';
+import { Research } from '../../models/research.model';
 
-export interface Research {
-  id: number;
-  type: 'article' | 'research' | 'innovation';
-  subType?: string;
-  faculty: string;
-  agency: string;
-  funding: 'internal' | 'external';
-  year: number;
-  date: Date;
-  name: string;
-  title: string;
-}
+// export interface Research {
+//   id: number;
+//   type: 'article' | 'research' | 'innovation';
+//   subType?: string;
+//   faculty: string;
+//   agency: string;
+//   funding: 'internal' | 'external';
+//   year: number;
+//   date: Date;
+//   name: string;
+//   title: string;
+// }
 
 @Component({
   selector: 'app-user-research',
@@ -49,35 +51,19 @@ export class UserResearchComponent {
   fundingExternal = false;
   fundingInternal = false;
 
-  constructor(private router: Router, private authService: AuthService) {}
+  researches: Research[] = [];
 
-  /** ===== DATA (ตัวอย่าง) ===== */
-  researches: Research[] = [
-    {
-      id: 1,
-      type: 'article',
-      subType: 'ประชุมวิชาการระดับนานาชาติ',
-      faculty: 'คณะวิทยาศาสตร์',
-      agency: 'คณะวิทยาศาสตร์',
-      funding: 'internal',
-      year: 2025,
-      date: new Date('2025-01-10'), // ⭐
-      name: 'นาย ก',
-      title: 'ระบบ AI',
-    },
-    {
-      id: 2,
-      type: 'article',
-      subType: 'ประชุมวิชาการระดับชาติ',
-      faculty: 'คณะวิทยาศาสตร์',
-      agency: 'คณะวิทยาศาสตร์',
-      funding: 'external',
-      year: 2024,
-      date: new Date('2024-11-05'),
-      name: 'นาง ข',
-      title: 'ชีววิทยาโมเลกุล',
-    },
-  ];
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private researchService: ResearchService
+  ) {}
+
+  ngOnInit() {
+    this.loadAllResearch();
+  }
+
+  
 
   faculties = [
     'คณะวิศวกรรมศาสตร์',
@@ -171,9 +157,10 @@ export class UserResearchComponent {
         (this.fundingExternal && r.funding === 'external') ||
         (this.fundingInternal && r.funding === 'internal');
 
-        const typeMatch =
-        !this.selectedType ||
-        this.typeMap[this.selectedType]?.includes(r.type);
+      // const typeMatch =
+      //   !this.selectedType || this.typeMap[this.selectedType]?.includes(r.type);
+      const typeMatch =
+        !this.selectedType || this.typeMap[this.selectedType] === r.type;
 
       return (
         typeMatch &&
@@ -187,6 +174,8 @@ export class UserResearchComponent {
       );
     });
 
+    this.currentPage = 1;
+    this.updatePagination();
     this.prepareDonut();
   }
 
@@ -373,4 +362,23 @@ export class UserResearchComponent {
   get pages(): number[] {
     return Array.from({ length: this.totalPages }, (_, i) => i + 1);
   }
+
+  // ดึงข้อมูล
+  getDataResearch() {
+    this.researchService.getResearch().subscribe({
+      next: (res) => {
+        console.log(res);
+      },
+    });
+  }
+
+  loadAllResearch() {
+    this.researchService.getResearch().subscribe(data => {
+      this.researches = data;
+      this.filteredResearchers = data;
+  
+      this.updatePagination();
+      this.prepareDonut();
+    });
+  }  
 }

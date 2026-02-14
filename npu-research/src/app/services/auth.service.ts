@@ -76,8 +76,21 @@ export class AuthService {
 
   // ===== logout =====
   logout() {
-    this.clearSession();
+    const token = localStorage.getItem(this.TOKEN_KEY);
+  
+    return this.http.post(
+      `${this.baseUrl}/logout`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    ).pipe(
+      tap(() => this.clearSession())
+    );
   }
+  
 
   // ดึงข้อมูลสาขาที่เชี่ยวชาญ
   getExpertise() {
@@ -97,16 +110,6 @@ export class AuthService {
   loginAdmin(data: { user: string; password: string }) {
     return this.http.post(`${this.baseUrl}/admin/login`, data);
   }
-
-  // Logout
-  // logout() {
-  //   return this.http.post(`${this.baseUrl}/logout`);
-  // }
-
-  // Logout All
-  // logoutAll() {
-  //   return this.http.post(`${this.baseUrl}/logout-all`);
-  // }
 
   // ลืมรหัสผ่าน
   forgot(email: string) {

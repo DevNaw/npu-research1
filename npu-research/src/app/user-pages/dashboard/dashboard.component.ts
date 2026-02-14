@@ -18,6 +18,8 @@ import {
 } from '../../models/dashboard.model';
 import { registerLocaleData } from '@angular/common';
 import localeTh from '@angular/common/locales/th';
+import { ResearchService } from '../../services/research.service';
+import { Research, ResearchPublicResponse } from '../../models/research.model';
 
 export type ReportType = 'research' | 'article' | 'innovation';
 
@@ -69,9 +71,11 @@ export class UserDashboardComponent implements OnInit {
   selectedTab: keyof DataPerformance = 'research';
   reportType: 'research' | 'article' | 'innovation' | null = null;
 
+    loading = false;
+    error: string | null = null;
+
   series: ApexNonAxisChartSeries = [
-    2, 2, 1, 3, 4, 2, 1, 4, 2, 3, 3, 2, 2, 2,
-    4, 2, 3, 4, 2, 2, 3,
+    2, 2, 1, 3, 4, 2, 1, 4, 2, 3, 3, 2, 2, 2, 4, 2, 3, 4, 2, 2, 3,
   ];
 
   colors: string[] = [
@@ -211,8 +215,7 @@ export class UserDashboardComponent implements OnInit {
       title: 'กราฟสรุปจำนวนบทความ จำแนกตามหน่วยงาน',
       subtitle: this.getLastUpdatedText(),
       series: [
-        2, 4, 3, 2, 3, 2, 2, 4, 2, 3, 3, 4, 3, 2, 2, 2,
-        4, 5, 5, 4, 5, 2, 3, 2,
+        2, 4, 3, 2, 3, 2, 2, 4, 2, 3, 3, 4, 3, 2, 2, 2, 4, 5, 5, 4, 5, 2, 3, 2,
       ],
       labels: [
         'คณะเกษตรและเทคโนโลยี',
@@ -384,116 +387,27 @@ export class UserDashboardComponent implements OnInit {
   ];
 
   publications: DataPerformance = {
-    research: [
-      {
-        id: 1,
-        title: 'การพัฒนาระบบฐานข้อมูลวิจัย',
-        researchers: 'ดร.เศริยา มั่งมี',
-        date: '30 มิ.ย. 2567',
-        year: 2567,
-      },
-      {
-        id: 2,
-        title: 'ผลกระทบของการเปลี่ยนแปลงสภาพภูมิอากาศต่อการเกษตร',
-        researchers: 'ผศ.สมชาย ใจดี',
-        date: '15 มี.ค. 2567',
-        year: 2567,
-      },
-      {
-        id: 3,
-        title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
-        researchers: 'ดร.สมหญิง แก้วใส',
-        date: '10 ก.พ. 2567',
-        year: 2567,
-      },
-      {
-        id: 4,
-        title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
-        researchers: 'ดร.สมหญิง แก้วใส',
-        date: '10 ก.พ. 2567',
-        year: 2567,
-      },
-    ],
-    article: [
-      {
-        id: 5,
-        title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
-        researchers: 'ดร.สมหญิง แก้วใส',
-        date: '10 ก.พ. 2567',
-        year: 2567,
-      },
-      {
-        id: 6,
-        title:
-          'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
-        researchers: 'ดร.สมหญิง แก้วใส',
-        date: '10 ก.พ. 2567',
-        year: 2567,
-      },
-      {
-        id: 7,
-        title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
-        researchers: 'ดร.สมหญิง แก้วใส',
-        date: '10 ก.พ. 2567',
-        year: 2567,
-      },
-      {
-        id: 8,
-        title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
-        researchers: 'ดร.สมหญิง แก้วใส',
-        date: '10 ก.พ. 2567',
-        year: 2567,
-      },
-    ],
-    innovation: [
-      {
-        id: 9,
-        title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
-        researchers: 'ดร.สมหญิง แก้วใส',
-        date: '10 ก.พ. 2567',
-        year: 2567,
-      },
-      {
-        id: 10,
-        title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
-        researchers: 'ดร.สมหญิง แก้วใส',
-        date: '10 ก.พ. 2567',
-        year: 2567,
-      },
-      {
-        id: 11,
-        title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
-        researchers: 'ดร.สมหญิง แก้วใส',
-        date: '10 ก.พ. 2567',
-        year: 2567,
-      },
-      {
-        id: 12,
-        title: 'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
-        researchers: 'ดร.สมหญิง แก้วใส',
-        date: '10 ก.พ. 2567',
-        year: 2567,
-      },
-      {
-        id: 13,
-        title:
-          'นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์นวัตกรรมการผลิตพลังงานจากขยะอินทรีย์',
-        researchers: 'ดร.สมหญิง แก้วใส',
-        date: '10 ก.พ. 2567',
-        year: 2567,
-      },
-    ],
+    research: [],
+    article: [],
+    innovation: [],
   };
 
-  constructor(private router: Router) {}
+  researches: DataPerformanceItem[] = [];
+
+  constructor(
+    private router: Router,
+    private researchService: ResearchService
+  ) {}
 
   filteredResearch: DataPerformanceItem[] = [];
   paginatedPublications: DataPerformanceItem[] = [];
 
   ngOnInit(): void {
+    this.loadData();
     this.filteredResearch = [...this.publications[this.selectedTab]];
     this.updatePagination();
   }
+
   onSearch() {
     const keyword = this.searchText.toLowerCase().trim();
 
@@ -511,26 +425,21 @@ export class UserDashboardComponent implements OnInit {
   updatePagination(): void {
     const start = (this.currentPage - 1) * this.pageSize;
     const end = start + this.pageSize;
-
     this.paginatedPublications = this.filteredResearch.slice(start, end);
   }
 
   changePage(page: number) {
     if (page < 1 || page > this.totalPages) return;
-    if (page === this.currentPage) return;
-
     this.currentPage = page;
     this.updatePagination();
   }
 
-  get pages(): number[] {
-    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  get totalPages(): number {
+    return Math.ceil(this.filteredResearch.length / this.pageSize);
   }
 
-  get totalPages(): number {
-    return Math.ceil(
-      this.publications[this.selectedTab].length / this.pageSize
-    );
+  get pages(): number[] {
+    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
   }
 
   // Nevigate to
@@ -561,7 +470,49 @@ export class UserDashboardComponent implements OnInit {
   }
 
   SeeMoreDetails(type: ReportType) {
-
     this.router.navigate(['/performance-by-departmaent', type]);
+  }
+
+  loadData() {
+    this.loading = true;
+    this.error = null;
+
+    this.researchService.getPublicData().subscribe({
+      next: (res) => {
+        this.publications.research = this.mapToDashboard(res.research);
+        this.publications.article = this.mapToDashboard(res.article);
+        this.publications.innovation = this.mapToDashboard(res.innovation);
+
+        this.filteredResearch = [...this.publications[this.selectedTab]];
+        this.updatePagination();
+        console.log('res me', res);
+
+        this.loading = false;
+      },
+      error: (err) => {
+        this.error = 'ไม่สามารถโหลดข้อมูลได้';
+        this.loading = false;
+        console.error(err);
+      },
+    });
+  }
+
+  private mapToDashboard(data: Research[]): DataPerformanceItem[] {
+    return data.map((r) => ({
+      id: r.id,
+      title: r.title,
+      researchers: r.name,
+      date: this.formatThaiDate(r.date),
+      year: r.year,
+    }));
+  }
+
+  formatThaiDate(date: Date): string {
+    const d = new Date(date);
+    const day = d.getDate();
+    const month = d.toLocaleDateString('th-TH', { month: 'long' });
+    const year = d.getFullYear() + 543;
+
+    return `${day} ${month} ${year}`;
   }
 }

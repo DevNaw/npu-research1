@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Data } from '../../models/data-performance.model';
+import { ResearchService } from '../../services/research.service';
 
 @Component({
   selector: 'app-aticle',
@@ -13,33 +14,28 @@ export class AticleComponent implements OnInit {
   currentPage = 1;
   searchText = '';
 
-  aticles: Data[] = [
-    {
-      id: 1,
-      title: 'การพัฒนาระบบฐานข้อมูลวิจัย',
-      researchers: 'ดร.เศริยา มั่งมี',
-    },
-    {
-      id: 2,
-      title: 'ผลกระทบของการเปลี่ยนแปลงสภาพภูมิอากาศต่อการเกษตร',
-      researchers: 'ผศ.สมชาย ใจดี',
-    },
-  ];
+  articles: Data[] = [];
 
-  constructor(private router: Router) {}
+  filteredArticles: Data[] = [];
+  paginatedArticles: Data[] = [];
 
-  filteredAticles: Data[] = [];
-  paginatedAticles: Data[] = [];
+  constructor(
+    private router: Router,
+    private researchService: ResearchService,
+  ) {}
+
+  
 
   ngOnInit(): void {
-      this.filteredAticles = [...this.aticles];
+    this.getDatArticle();
+      this.filteredArticles = [...this.articles];
       this.updatePagination();
   }
 
   onSearch(): void {
     const keyword = this.searchText.toLowerCase().trim();
 
-    this.filteredAticles = this.aticles.filter(
+    this.filteredArticles = this.articles.filter(
       (a) =>
         a.title.toLowerCase().includes(keyword) ||
       a.researchers.toLowerCase().includes(keyword)
@@ -53,7 +49,7 @@ export class AticleComponent implements OnInit {
     const start = (this.currentPage - 1) * this.pageSize;
     const end = start + this.pageSize;
 
-    this.paginatedAticles = this.filteredAticles.slice(start, end);
+    this.paginatedArticles = this.filteredArticles.slice(start, end);
   }
 
   changePage(page: number): void {
@@ -67,7 +63,7 @@ export class AticleComponent implements OnInit {
   }
 
   get totalPages(): number {
-    return Math.ceil(this.aticles.length / this.pageSize);
+    return Math.ceil(this.articles.length / this.pageSize);
   }
 
   viewAticleDetails(id: number): void {
@@ -76,5 +72,47 @@ export class AticleComponent implements OnInit {
 
   get pages(): number[] {
     return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  }
+
+  getDatArticle() {
+    this.researchService.getDataArticlePublic().subscribe({
+      next: (res) => {
+        const article = res.data.articles;
+
+        this.articles = article.map((a: any) => ({
+          id: a.article_id,
+          title: a.title_th,
+          date: this.formatThaiDate(a.published_date),
+          researchers: this.mapArticle(a.own),
+          imgUrl: a.img_url
+        }));
+
+        this.filteredArticles = [...this.articles];
+        this.updatePagination();
+      },
+      error: (err) => {
+        console.error('โหลดข้อมูลล้มเหลว', err);
+      }
+    });
+  }
+
+  mapArticle(owners: any[]): string {
+    if (!owners || owners.length === 0) return '-';
+
+    return owners
+    .map(o => o.full_name)
+    .join(', ');
+  }
+
+  formatThaiDate(dateString: string): string {
+    if (!dateString) return '-';
+  
+    const d = new Date(dateString);
+  
+    const day = d.getDate();
+    const month = d.toLocaleDateString('th-TH', { month: 'long' });
+    const year = d.getFullYear() + 543;
+  
+    return `${day} ${month} ${year}`;
   }
 }

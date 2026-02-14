@@ -1,7 +1,7 @@
 <div
-  class="min-h-screen flex lg:items-center justify-center bg-gray-100 px-4 text-2xl font-bold text-[#394250]"
+  class="min-h-screen flex lg:items-center justify-center bg-gray-100 md:px-4 text-2xl font-bold text-[#394250]"
 >
-  <div class="w-full max-w-xl space-y-2 p-8">
+  <div class="w-full max-w-xl space-y-2 p-5 md:p-8">
     <!-- Header -->
     <div class="text-center space-y-1">
       <h2 class="text-3xl font-bold text-gray-800">ลงทะเบียนผู้ใช้งาน</h2>
@@ -19,8 +19,8 @@
     </div>
 
     <!-- Card -->
-    <div class="bg-white rounded-2xl shadow-lg p-6 sm:p-8 space-y-6">
-      <form class="space-y-5" (ngSubmit)="submit()">
+    <div class="bg-white rounded-2xl shadow-lg p-2 sm:p-8 space-y-6">
+      <form class="space-y-2 md:space-y-5" (ngSubmit)="submit()">
         <!-- Username -->
         <!-- <div>
           <div class="flex items-center">
@@ -44,7 +44,7 @@
           </div>
         </div> -->
 
-        <div class="flex gap-6">
+        <div class="flex gap-2 md:gap-6">
           <div>
             <div class="flex items-center">
               <label class="block mb-1">ชื่อ</label>
@@ -123,7 +123,7 @@
             <input
               name="Password"
               [(ngModel)]="registerData.password"
-              type="password"
+              type="text"
               class="w-full pl-12 pr-4 py-2 border rounded-md font-medium text-2xl"
               placeholder="รหัส"
             />
@@ -147,7 +147,7 @@
             <input
               name="password_confirmation"
               [(ngModel)]="registerData.password_confirmation"
-              type="password"
+              type="text"
               class="w-full pl-12 pr-4 py-2 border rounded-md font-medium text-2xl"
               placeholder="ยืนยันรหัสผ่าน"
             />

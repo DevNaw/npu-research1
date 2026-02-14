@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Data } from '../../models/data-performance.model';
+import { ResearchService } from '../../services/research.service';
 
 @Component({
   selector: 'app-research',
@@ -13,30 +14,19 @@ export class ResearchComponent implements OnInit {
   currentPage = 1;
   searchText = '';
 
-  // 🔹 ข้อมูลทั้งหมด
-  reseacrchs: Data[] = [
-    {
-      id: 1,
-      title: 'การพัฒนาระบบฐานข้อมูลวิจัย',
-      researchers: 'ดร.เศริยา มั่งมี',
-    },
-    {
-      id: 2,
-      title: 'ผลกระทบของการเปลี่ยนแปลงสภาพภูมิอากาศต่อการเกษตร',
-      researchers: 'ผศ.สมชาย ใจดี',
-    },
-  ];
+  research: Data[] = [];
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private researchService: ResearchService
+  ) {}
 
-  // 🔹 หลังค้นหา
   filteredReseacrchs: Data[] = [];
-
-  // 🔹 แสดงในตาราง
   paginatedReseacrchs: Data[] = [];
 
   ngOnInit(): void {
-    this.filteredReseacrchs = [...this.reseacrchs];
+    this.getDataResearch();
+    this.filteredReseacrchs = [...this.research];
     this.updatePagination();
   }
 
@@ -44,7 +34,7 @@ export class ResearchComponent implements OnInit {
   onSearch(): void {
     const keyword = this.searchText.toLowerCase().trim();
 
-    this.filteredReseacrchs = this.reseacrchs.filter(
+    this.filteredReseacrchs = this.research.filter(
       (r) =>
         r.title.toLowerCase().includes(keyword) ||
         r.researchers.toLowerCase().includes(keyword)
@@ -65,13 +55,12 @@ export class ResearchComponent implements OnInit {
   changePage(page: number) {
     if (page < 1 || page > this.totalPages) return;
     if (page === this.currentPage) return;
-  
+
     this.currentPage = page;
     this.updatePagination();
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
-  
 
   get totalPages(): number {
     return Math.ceil(this.filteredReseacrchs.length / this.pageSize);
@@ -83,6 +72,45 @@ export class ResearchComponent implements OnInit {
 
   get pages(): number[] {
     return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  }
+
+  getDataResearch() {
+    this.researchService.getDataResearchPublic().subscribe({
+      next: (res) => {
+        const projects = res.data.projects;
+
+        this.research = projects.map((p: any) => ({
+          id: p.research_id,
+          title: p.title_th || p.title_en,
+          date: this.formatThaiDate(p.published_date),
+          researchers: this.mapResearchers(p.own),
+          imgUrl: p.img_url,
+        }));
+        
+        this.filteredReseacrchs = [...this.research];
+        this.updatePagination();
+      },
+      error: (err) => {
+        console.error('โหลดข้อมูลล้มเหลว', err);
+      },
+    });
+  }
+  mapResearchers(owners: any[]): string {
+    if (!owners || owners.length === 0) return '-';
+
+    return owners.map((o) => o.full_name).join(', ');
+  }
+
+  formatThaiDate(dateString: string): string {
+    if (!dateString) return '-';
+  
+    const d = new Date(dateString);
+  
+    const day = d.getDate();
+    const month = d.toLocaleDateString('th-TH', { month: 'long' });
+    const year = d.getFullYear() + 543;
+  
+    return `${day} ${month} ${year}`;
   }
   
 }

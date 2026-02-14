@@ -24,4 +24,6 @@ export interface DataPerformanceItem {
     id: number;
     title: string;
     researchers: string;
+    date: string;
+    imgUrl: string;
   }

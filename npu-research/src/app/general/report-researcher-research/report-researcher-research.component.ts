@@ -1,6 +1,8 @@
 import { Component, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { ResearchService } from '../../services/research.service';
+import { DataPerformanceItem } from '../../models/dashboard.model';
 
 export interface Research {
   id: number;
@@ -48,35 +50,17 @@ export class ReportResearcherResearchComponent {
   startDate?: Date;
   endDate?: Date;
 
-  constructor(private router: Router, private authService: AuthService) {}
+  loading = false;
+  error: string | null = null;
+
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private researchService: ResearchService,
+  ) {}
 
   /** ===== DATA (ตัวอย่าง) ===== */
-  researches: Research[] = [
-    {
-      id: 1,
-      type: 'article',
-      subType: 'ประชุมวิชาการระดับนานาชาติ',
-      faculty: 'คณะวิทยาศาสตร์',
-      agency: 'คณะวิทยาศาสตร์',
-      funding: 'internal',
-      year: 2025,
-      date: new Date('2025-01-10'), // ⭐
-      name: 'นาย ก',
-      title: 'ระบบ AI',
-    },
-    {
-      id: 2,
-      type: 'research',
-      subType: 'ประชุมวิชาการระดับชาติ',
-      faculty: 'คณะวิทยาศาสตร์',
-      agency: 'คณะวิทยาศาสตร์',
-      funding: 'internal',
-      year: 2024,
-      date: new Date('2024-11-05'),
-      name: 'นาง ข',
-      title: 'ชีววิทยาโมเลกุล',
-    },
-  ];
+  researches: Research[] = [];
 
   faculties = [
     'คณะวิศวกรรมศาสตร์',
@@ -158,6 +142,10 @@ export class ReportResearcherResearchComponent {
   fundingExternal = false;
   fundingInternal = false;
 
+  ngOnInit(): void {
+    this.loadAllResearch();
+  }
+
   search() {
     this.isSearched = true;
   
@@ -173,10 +161,9 @@ export class ReportResearcherResearchComponent {
         (this.fundingExternal && r.funding === 'external') ||
         (this.fundingInternal && r.funding === 'internal');
   
-      // ⭐ ประเภท (รองรับ บทความ = article + journal)
-      const typeMatch =
+        const typeMatch =
         !this.selectedType ||
-        this.typeMap[this.selectedType]?.includes(r.type);
+        r.type === this.typeMap[this.selectedType];
   
       return (
         typeMatch &&
@@ -198,7 +185,7 @@ export class ReportResearcherResearchComponent {
   prepareDonut() {
     const map: Record<string, number> = {};
     const typeLabelMap: Record<string, string> = {
-      project: 'โครงการวิจัย',
+      research: 'โครงการวิจัย',
       article: 'บทความ',
       journal: 'วารสาร',
       innovation: 'นวัตกรรม',
@@ -379,4 +366,45 @@ export class ReportResearcherResearchComponent {
   get pages(): number[] {
     return Array.from({ length: this.totalPages }, (_, i) => i + 1);
   }
+
+  loadAllResearch() {
+    this.researchService.getPublicData().subscribe(data => {
+  
+      const combined = [
+        ...data.research,
+        ...data.article,
+        ...data.innovation
+      ];
+  
+      this.researches = combined.map((r: any) => ({
+        ...r,
+        date: new Date(r.date)
+      }));
+  
+      this.filteredResearchers = this.researches;
+  
+      this.updatePagination();
+      this.prepareDonut();
+    });
+  }
+  
+
+  private mapToDashboard(data: Research[]): DataPerformanceItem[] {
+      return data.map((r) => ({
+        id: r.id,
+        title: r.title,
+        researchers: r.name,
+        date: this.formatThaiDate(r.date),
+        year: r.year,
+      }));
+    }
+
+    formatThaiDate(date: Date): string {
+      const d = new Date(date);
+      const day = d.getDate();
+      const month = d.toLocaleDateString('th-TH', { month: 'long' });
+      const year = d.getFullYear() + 543;
+  
+      return `${day} ${month} ${year}`;
+    }
 }

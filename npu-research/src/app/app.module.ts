@@ -9,7 +9,7 @@ import { NavbarComponent } from './shared/components/navbar/navbar.component';
 import { MainComponent } from './shared/layouts/main/main.component';
 import { LoginComponent } from './user-pages/login/login.component';
 import { RegisterComponent } from './user-pages/register/register.component';
-import { NgApexchartsModule } from "ng-apexcharts";
+import { NgApexchartsModule } from 'ng-apexcharts';
 import { TestComponent } from './test/test.component';
 import { UserDashboardComponent } from './user-pages/dashboard/dashboard.component';
 import { UserAddResearchComponent } from './user-pages/user-add-research/user-add-research.component';
@@ -52,8 +52,8 @@ import { EditWorkComponent } from './user-pages/edit-work/edit-work.component';
 import { NgxEditorModule } from 'ngx-editor';
 import { PerformanceByDepartmentComponent } from './general/performance-by-department/performance-by-department.component';
 import { PerformanceDetailByDepartmentComponent } from './general/performance-detail-by-department/performance-detail-by-department.component';
-import { HttpClientModule } from '@angular/common/http';
-
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { AuthInterceptor } from './services/auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -115,7 +115,13 @@ import { HttpClientModule } from '@angular/common/http';
     NgxEditorModule,
     HttpClientModule,
   ],
-  providers: [],
-  bootstrap: [AppComponent]
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true,
+    },
+  ],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

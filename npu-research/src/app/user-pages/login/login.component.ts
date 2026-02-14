@@ -40,7 +40,7 @@ export class LoginComponent {
         // console.log(res);
 
         localStorage.setItem('user', JSON.stringify(res.user));
-        
+
         if (this.authService.isAdmin()) {
           this.router.navigate(['/admin/dashboard']);
         } else {
@@ -51,8 +51,15 @@ export class LoginComponent {
         Swal.fire({
           icon: 'error',
           title: 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง',
-          text: err.error.message || 'กรุณาลองใหม่อีกครั้ง',
+          text: err.error.message,
           showCancelButton: false,
+          confirmButtonText: 'ตกลง',
+          customClass: {
+            popup: 'my-popup',
+            title: 'my-title',
+            htmlContainer: 'my-text',
+            confirmButton: 'my-button',
+          },
         });
       },
     });

@@ -1,6 +1,7 @@
 import { Component, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
+import Swal from 'sweetalert2';
 
 type MenuType = 'report' | 'manual' | 'save' | 'funding' | 'news';
 type MobileSubMenu = 'funding' | 'news' | 'save' | 'report' | null;
@@ -61,8 +62,7 @@ export class NavbarComponent {
 
   toggleMobileSubMenu(type: MobileSubMenu, event: Event) {
     event.stopPropagation();
-    this.openMobileSubMenu =
-      this.openMobileSubMenu === type ? null : type;
+    this.openMobileSubMenu = this.openMobileSubMenu === type ? null : type;
   }
 
   closeMobileMenu() {
@@ -80,8 +80,11 @@ export class NavbarComponent {
   }
 
   logout() {
-    this.auth.logout();
-    this.router.navigate(['/dashboard']);
+    this.auth.logout().subscribe({
+      next: () => {
+        this.router.navigate(['/dashboard']);
+      },
+    });
   }
 
   get isLoggedIn() {
@@ -90,55 +93,18 @@ export class NavbarComponent {
 
   get role(): 'use' | 'adm' | null {
     return this.auth.getRole();
-    
   }
 
   closeMenu() {
     this.openMenu = null;
   }
-  
-
-  // toggleReportMenu() {
-  //   this.openMobileReport = !this.openMobileReport;
-  // }
-
-  // closeReportMenu() {
-  //   this.openMobileReport = false;
-  // }
-
-  // toggleSaveMenu() {
-  //   this.openMobileSave = !this.openMobileSave;
-  // }
-
-  // closeSaveMenu() {
-  //   this.openMobileSave = false;
-  //   this.closeReportMenu();
-  // }
-
-  // toggleNewaMenu() {
-  //   this.openMobileNews = !this.openMobileNews;
-  // }
-
-  // closeNewsMenu() {
-  //   this.openMobileNews = false;
-  //   this.closeReportMenu();
-  // }
-
-  // toggleFundingMenu() {
-  //   this.openMobileFunding = !this.openMobileFunding;
-  // }
-
-  // closeFundingMenu() {
-  //   this.openMobileFunding = false;
-  //   this.closeReportMenu();
-  // }
 
   goToManual() {
     this.router.navigate(['/manual']);
   }
 
   isDesktop(): boolean {
-    return window.innerWidth >= 768; // md
+    return window.innerWidth >= 768;
   }
 
   supportsHover(): boolean {
@@ -180,13 +146,9 @@ export class NavbarComponent {
 
   @HostListener('document:click')
   onDocumentClick() {
-    // Desktop ใช้ hover ไม่ต้องยุ่ง
     if (this.supportsHover()) return;
 
-    // ปิดเมนู desktop (เผื่อ iPad บางรุ่น)
     this.openMenu = null;
-
-    // Mobile
     this.closeAllMobileMenus();
   }
 }
