@@ -1,13 +1,9 @@
 import { Component, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
-import {
-  Responsibility,
-  ResponsibilityRole,
-  InternalPerson,
-  ExternalPerson,
-  ResearchData,
-} from '../../models/add.research.model';
+import { ResearchService } from '../../services/research.service';
+import { Major, SubArea, ArticleForm } from '../../models/subject.model';
+import { Researcher } from '../../models/researchers.model';
 
 @Component({
   selector: 'app-user-add-aticle',
@@ -16,41 +12,32 @@ import {
   styleUrl: './user-add-aticle.component.css',
 })
 export class UserAddAticleComponent {
-  openDropdown: string | null = null;
   isEdit = false;
   researchId?: number;
   reportFilename = '';
   selectedFileName = '';
+
   searchMajor = '';
-  selectedMajor = '';
+  searchSub = '';
+  selectedMajor: Major | null = null;
+  majors: Major[] = [];
+  selectedSub: SubArea | null = null;
 
-  activeDropdown:
-    | 'type'
-    | 'major'
-    | 'responsibility'
-    | 'quality'
-    | 'internal'
-    | 'external'
-    | null = null;
+  activeDropdown: string | null = null;
+  activeMajor: Major | null = null;
 
-  responsibilityRoles: ResponsibilityRole[] = [
-    'ที่ปรึกษา',
-    'ผู้เชี่ยวชาญ',
-    'กรรมการ',
-  ];
+  researchers: Researcher[] = [];
+  searchResearcher = '';
+  selectedResearcher: string | null = null;
+  filteredResearchers: Researcher[] = [];
+  activeRowIndex: number | null = null;
+  searchKeyword = '';
 
-  openInternalIndex: number | null = null;
-  openExternalIndex: number | null = null;
-  openStatus: number | null = null;
+  // ผู้ร่วมโครงการภายใน
+  rows2 = [{id: Date.now(), name: '', responsibility: '' }];
 
-  rows: ExternalPerson[] = [{ name: '', role: '', organization: '' }];
-
-  rows2: InternalPerson[] = [
-    {
-      name: '',
-      organization: '',
-    },
-  ];
+  // ผู้ร่วมโครงการภายนอก
+  rows = [{ name: '', organization: '', responsibility: '' }];
 
   internalMembers = [
     {
@@ -66,30 +53,140 @@ export class UserAddAticleComponent {
     },
   ];
 
-  article = {
+  article: ArticleForm = {
     responsibility: '',
     type: '',
+    database_types: '',
     quality: '',
+    major_id: null,
+    sub_id: null,
   };
 
-  isResponsibilityOpen = false;
-  internalPeople: InternalPerson[] = [];
-  externalPeople: ExternalPerson[] = [];
-
-  isResponsibilityOfInternal = false;
-  isResponsibilityOfExternal = false;
-
-  major = [
-    'วิทยาการคอมพิวเตอร์',
-    'เทคโนโลยีสารสนเทศ',
-    'วิศวกรรมซอฟต์แวร์',
-    'ระบบสารสนเทศเพื่อการจัดการ',
-    'ปัญญาประดิษฐ์และวิทยาการข้อมูล',
+  selectedCountries = '';
+  searchCountries = '';
+  countries = [
+    { code: 'AF', name: 'อัฟกานิสถาน' },
+    { code: 'AL', name: 'แอลเบเนีย' },
+    { code: 'DZ', name: 'แอลจีเรีย' },
+    { code: 'AD', name: 'อันดอร์รา' },
+    { code: 'AO', name: 'แองโกลา' },
+    { code: 'AG', name: 'แอนติกาและบาร์บูดา' },
+    { code: 'AR', name: 'อาร์เจนตินา' },
+    { code: 'AM', name: 'อาร์มีเนีย' },
+    { code: 'AU', name: 'ออสเตรเลีย' },
+    { code: 'AT', name: 'ออสเตรีย' },
+    { code: 'AZ', name: 'อาเซอร์ไบจาน' },
+    { code: 'BS', name: 'บาฮามาส' },
+    { code: 'BH', name: 'บาห์เรน' },
+    { code: 'BD', name: 'บังกลาเทศ' },
+    { code: 'BB', name: 'บาร์เบโดส' },
+    { code: 'BY', name: 'เบลารุส' },
+    { code: 'BE', name: 'เบลเยียม' },
+    { code: 'BZ', name: 'เบลีซ' },
+    { code: 'BJ', name: 'เบนิน' },
+    { code: 'BT', name: 'ภูฏาน' },
+    { code: 'BO', name: 'โบลิเวีย' },
+    { code: 'BA', name: 'บอสเนียและเฮอร์เซโกวีนา' },
+    { code: 'BW', name: 'บอตสวานา' },
+    { code: 'BR', name: 'บราซิล' },
+    { code: 'BN', name: 'บรูไน' },
+    { code: 'BG', name: 'บัลแกเรีย' },
+    { code: 'BF', name: 'บูร์กินาฟาโซ' },
+    { code: 'BI', name: 'บุรุนดี' },
+    { code: 'KH', name: 'กัมพูชา' },
+    { code: 'CM', name: 'แคเมอรูน' },
+    { code: 'CA', name: 'แคนาดา' },
+    { code: 'CV', name: 'เคปเวิร์ด' },
+    { code: 'CF', name: 'สาธารณรัฐแอฟริกากลาง' },
+    { code: 'TD', name: 'ชาด' },
+    { code: 'CL', name: 'ชิลี' },
+    { code: 'CN', name: 'จีน' },
+    { code: 'CO', name: 'โคลอมเบีย' },
+    { code: 'KM', name: 'คอโมโรส' },
+    { code: 'CG', name: 'คองโก' },
+    { code: 'CR', name: 'คอสตาริกา' },
+    { code: 'HR', name: 'โครเอเชีย' },
+    { code: 'CU', name: 'คิวบา' },
+    { code: 'CY', name: 'ไซปรัส' },
+    { code: 'CZ', name: 'สาธารณรัฐเช็ก' },
+    { code: 'DK', name: 'เดนมาร์ก' },
+    { code: 'DJ', name: 'จิบูตี' },
+    { code: 'DO', name: 'โดมินิกัน' },
+    { code: 'EC', name: 'เอกวาดอร์' },
+    { code: 'EG', name: 'อียิปต์' },
+    { code: 'SV', name: 'เอลซัลวาดอร์' },
+    { code: 'EE', name: 'เอสโตเนีย' },
+    { code: 'ET', name: 'เอธิโอเปีย' },
+    { code: 'FI', name: 'ฟินแลนด์' },
+    { code: 'FR', name: 'ฝรั่งเศส' },
+    { code: 'GE', name: 'จอร์เจีย' },
+    { code: 'DE', name: 'เยอรมนี' },
+    { code: 'GH', name: 'กานา' },
+    { code: 'GR', name: 'กรีซ' },
+    { code: 'GT', name: 'กัวเตมาลา' },
+    { code: 'HT', name: 'เฮติ' },
+    { code: 'HN', name: 'ฮอนดูรัส' },
+    { code: 'HK', name: 'ฮ่องกง' },
+    { code: 'HU', name: 'ฮังการี' },
+    { code: 'IS', name: 'ไอซ์แลนด์' },
+    { code: 'IN', name: 'อินเดีย' },
+    { code: 'ID', name: 'อินโดนีเซีย' },
+    { code: 'IR', name: 'อิหร่าน' },
+    { code: 'IQ', name: 'อิรัก' },
+    { code: 'IE', name: 'ไอร์แลนด์' },
+    { code: 'IL', name: 'อิสราเอล' },
+    { code: 'IT', name: 'อิตาลี' },
+    { code: 'JP', name: 'ญี่ปุ่น' },
+    { code: 'JO', name: 'จอร์แดน' },
+    { code: 'KZ', name: 'คาซัคสถาน' },
+    { code: 'KE', name: 'เคนยา' },
+    { code: 'KR', name: 'เกาหลีใต้' },
+    { code: 'KW', name: 'คูเวต' },
+    { code: 'LA', name: 'ลาว' },
+    { code: 'LV', name: 'ลัตเวีย' },
+    { code: 'LB', name: 'เลบานอน' },
+    { code: 'LY', name: 'ลิเบีย' },
+    { code: 'LT', name: 'ลิทัวเนีย' },
+    { code: 'LU', name: 'ลักเซมเบิร์ก' },
+    { code: 'MY', name: 'มาเลเซีย' },
+    { code: 'MX', name: 'เม็กซิโก' },
+    { code: 'MM', name: 'เมียนมา' },
+    { code: 'NP', name: 'เนปาล' },
+    { code: 'NL', name: 'เนเธอร์แลนด์' },
+    { code: 'NZ', name: 'นิวซีแลนด์' },
+    { code: 'NO', name: 'นอร์เวย์' },
+    { code: 'PK', name: 'ปากีสถาน' },
+    { code: 'PH', name: 'ฟิลิปปินส์' },
+    { code: 'PL', name: 'โปแลนด์' },
+    { code: 'PT', name: 'โปรตุเกส' },
+    { code: 'QA', name: 'กาตาร์' },
+    { code: 'RU', name: 'รัสเซีย' },
+    { code: 'SA', name: 'ซาอุดีอาระเบีย' },
+    { code: 'SG', name: 'สิงคโปร์' },
+    { code: 'ZA', name: 'แอฟริกาใต้' },
+    { code: 'ES', name: 'สเปน' },
+    { code: 'SE', name: 'สวีเดน' },
+    { code: 'CH', name: 'สวิตเซอร์แลนด์' },
+    { code: 'TH', name: 'ไทย' },
+    { code: 'TR', name: 'ตุรกี' },
+    { code: 'UA', name: 'ยูเครน' },
+    { code: 'AE', name: 'สหรัฐอาหรับเอมิเรตส์' },
+    { code: 'GB', name: 'สหราชอาณาจักร' },
+    { code: 'US', name: 'สหรัฐอเมริกา' },
+    { code: 'VN', name: 'เวียดนาม' },
+    { code: 'ZW', name: 'ซิมบับเว' },
   ];
 
-  constructor(private route: ActivatedRoute, private router: Router) {}
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private researchService: ResearchService
+  ) {}
 
   ngOnInit() {
+    this.loadSubjectAreas();
+    this.loadResearchersData();
+
     this.route.paramMap.subscribe((params) => {
       const id = params.get('id');
 
@@ -101,9 +198,6 @@ export class UserAddAticleComponent {
         this.isEdit = false;
       }
     });
-
-    // this.addRow();
-    // this.addRow2();
 
     this.addInternal();
     this.addExternal();
@@ -124,53 +218,30 @@ export class UserAddAticleComponent {
     });
   }
 
-  removeInternal(index: number) {
-    if (this.internalPeople.length > 1) {
-      this.internalPeople.splice(index, 1);
-    }
-  }
-
   loadAticleData(id: number) {
     this.rows = [
-      { name: 'นาย A', role: 'ผู้เชี่ยวชาญ', organization: 'บริษัท ABC' },
+      {
+        name: 'นาย A',
+        organization: 'ผู้เชี่ยวชาญ',
+        responsibility: 'บริษัท ABC',
+      },
     ];
-
-    // this.rows2 = [{ name: 'ดร. B', organization: 'มหาวิทยาลัย X' }];
-
-    // this.reportFileName = 'report.pdf';
   }
 
   addRow() {
-    this.rows = [
-      ...this.rows,
-      {
-        name: '',
-        role: '',
-        organization: '',
-      },
-    ];
-  }
-  removeRow(index: number) {
-    // กันไม่ให้ลบแถวสุดท้าย
-    if (this.rows.length > 1) {
-      this.rows.splice(index, 1);
-    }
+    this.rows.push({ name: '', organization: '', responsibility: '' });
   }
 
   addRow2() {
-    this.rows2 = [
-      ...this.rows2,
-      {
-        name: '',
-        organization: '',
-      },
-    ];
+    this.rows2.push({id: Date.now()+ Math.random(), name: '', responsibility: '' });
   }
+
+  removeRow(index: number) {
+    this.rows.splice(index, 1);
+  }
+
   removeRow2(index: number) {
-    // กันไม่ให้ลบแถวสุดท้าย
-    if (this.rows2.length > 1) {
-      this.rows2.splice(index, 1);
-    }
+    this.rows2.splice(index, 1);
   }
 
   trackByIndex(index: number) {
@@ -199,32 +270,46 @@ export class UserAddAticleComponent {
     }
   }
 
-  toggleDropdown(name: string, event: MouseEvent) {
+  toggleDropdown(type: string, event: Event): void {
     event.stopPropagation();
-    this.openDropdown = this.openDropdown === name ? null : name;
+    this.activeDropdown = this.activeDropdown === type ? null : type;
   }
 
-  isOpen(name: string): boolean {
-    return this.openDropdown === name;
+  selectValue<K extends keyof typeof this.article>(
+    field: K,
+    value: ArticleForm[K]
+  ): void {
+    if (
+      field === 'responsibility' &&
+      value === 'First Author (ผู้ประพันธ์อันดับแรก)'
+    ) {
+      if (this.isFirstAuthorTaken()) {
+        return;
+      }
+    }
+
+    this.article[field] = value;
+    this.activeDropdown = null;
   }
 
   @HostListener('document:click')
   closeAll() {
     this.activeDropdown = null;
-    this.openDropdown = null;
+    this.activeMajor = null;
+    this.activeRowIndex = null;
   }
 
-  selectMajor(m: string) {
-    this.selectedMajor = m;
-    this.openDropdown = null;
+  selectMajor(major: Major) {
+    this.selectedMajor = major;
+    this.selectedSub = null;
     this.searchMajor = '';
   }
 
-  filteredMajor(): string[] {
-    if (!this.searchMajor) return this.major;
+  filteredMajor(): Major[] {
+    if (!this.searchMajor) return this.majors;
 
-    return this.major.filter((m) =>
-      m.toLowerCase().includes(this.searchMajor.toLowerCase())
+    return this.majors.filter((m) =>
+      m.name_en.toLowerCase().includes(this.searchMajor.toLowerCase())
     );
   }
 
@@ -242,56 +327,117 @@ export class UserAddAticleComponent {
     });
   }
 
-  selectInternalRole(role: string, member: any) {
-    member.organization = role;
-    this.openInternalIndex = null;
-  }
+  selectRowResponsibility(row: any, value: string) {
+    if (
+      value === 'First Author (ผู้ประพันธ์อันดับแรก)' &&
+      this.isFirstAuthorTaken(row)
+    ) {
+      return;
+    }
 
-  selectExternalRole(role: string, member: any) {
-    member.organization = role;
-    this.openExternalIndex = null;
-  }
-
-  toggleInternal(index: number, event: Event) {
-    event.stopPropagation();
-    this.activeDropdown = 'internal';
-    this.openInternalIndex = this.openInternalIndex === index ? null : index;
-  }
-
-  toggleExternal(index: number, event: Event) {
-    event.stopPropagation();
-    this.activeDropdown = 'external';
-    this.openExternalIndex = this.openExternalIndex === index ? null : index;
-  }
-
-  toggleType(event: Event) {
-    event.stopPropagation();
-    this.activeDropdown = this.activeDropdown === 'type' ? null : 'type';
-  }
-
-  toggleQuality(event: Event) {
-    event.stopPropagation();
-    this.activeDropdown = this.activeDropdown === 'quality' ? null : 'quality';
-  }
-
-  toggleResponsibility(event: Event) {
-    event.stopPropagation();
-    this.activeDropdown =
-      this.activeDropdown === 'responsibility' ? null : 'responsibility';
-  }
-
-  selectType(type: string) {
-    this.article.type = type;
+    row.responsibility = value;
     this.activeDropdown = null;
   }
 
-  selectResponsibility(r: string) {
-    this.article.responsibility = r;
+  selectCountrie(c: { code: string; name: string }) {
+    this.selectedCountries = c.name;
+    this.searchCountries = '';
+
     this.activeDropdown = null;
   }
 
-  selectQuality(quality: string) {
-    this.article.quality = quality;
+  filteredCountries() {
+    const keyword = this.searchCountries.toLowerCase();
+
+    return this.countries.filter(
+      (c) =>
+        c.name.toLowerCase().includes(keyword) ||
+        c.code.toLowerCase().includes(keyword)
+    );
+  }
+
+  isFirstAuthorTaken(currentRow?: any): boolean {
+    if (
+      this.article?.responsibility === 'First Author (ผู้ประพันธ์อันดับแรก)'
+    ) {
+      return true;
+    }
+
+    const allRows = [...this.rows2, ...this.rows];
+
+    return allRows.some(
+      (row) =>
+        row !== currentRow &&
+        row.responsibility === 'First Author (ผู้ประพันธ์อันดับแรก)'
+    );
+  }
+
+  loadSubjectAreas() {
+    this.researchService.getSubjectArea().subscribe({
+      next: (res) => {
+        this.majors = res.data.subject_areas;
+      },
+      error: (err) => {
+        console.error('โหลด subject area ไม่สำเร็จ', err);
+      },
+    });
+  }
+
+  selectSub(sub: SubArea) {
+    this.selectedSub = sub;
     this.activeDropdown = null;
+    this.activeMajor = null;
+
+    this.article.major_id = sub.major_id;
+    this.article.sub_id = sub.sub_id;
+  }
+
+  filteredSub() {
+    if (!this.selectedMajor) return [];
+
+    return this.selectedMajor.children.filter((s) =>
+      s.name_en.toLowerCase().includes(this.searchSub.toLowerCase())
+    );
+  }
+
+  toggleMajor(major: Major, event: Event) {
+    event.stopPropagation();
+
+    if (this.activeMajor?.major_id === major.major_id) {
+      this.activeMajor = null; // กดซ้ำ = ปิด
+    } else {
+      this.activeMajor = major;
+    }
+  }
+
+  loadResearchersData() {
+    this.researchService.getResearchers().subscribe({
+      next: (res) => {
+        this.researchers = res.data.$researchers ?? [];
+        this.filteredResearchers = this.researchers;
+      },
+    });
+  }
+  onFocus(index: any) {
+    this.activeRowIndex = index.id;
+    this.filteredResearchers = this.researchers;
+  }
+
+  onSearch(value: string) {
+    if (!value) {
+      this.filteredResearchers = this.researchers;
+      return;
+    }
+
+    this.filteredResearchers = this.researchers.filter((r) =>
+      r.full_name?.toLowerCase().includes(value.toLowerCase())
+    );
+  }
+
+  selectResearcher(r: Researcher, j: any) {
+    j.name = r.full_name;
+    j.user_id = r.user_id;
+
+    this.activeRowIndex = null;
   }
 }

@@ -187,15 +187,6 @@ export class UserAddResearchComponent {
 
   loadResearchData(id: number) {
     console.log('แก้ไขงานวิจัย ID:', id);
-
-    // mock data (แทน API)
-    // this.rows = [
-    //   { name: 'นาย A', role: 'ผู้เชี่ยวชาญ', organization: 'บริษัท ABC' },
-    // ];
-
-    // this.rows2 = [{ name: 'ดร. B', organization: 'มหาวิทยาลัย X' }];
-
-    // this.reportFileName = 'report.pdf';
   }
 
   addInternal() {
@@ -247,7 +238,12 @@ export class UserAddResearchComponent {
     this.openExternalIndex = this.openExternalIndex === index ? null : index;
   }
 
-  addRow() {
+  toggle(type: string, event: MouseEvent) {
+    event.stopPropagation();
+    this.openDropdown = this.openDropdown === type ? null : type;
+  }
+
+  addRow(){
     this.rows = [
       ...this.rows,
       {
@@ -257,6 +253,7 @@ export class UserAddResearchComponent {
       },
     ];
   }
+
   removeRow(index: number) {
     // กันไม่ให้ลบแถวสุดท้าย
     if (this.rows.length > 1) {
@@ -273,6 +270,7 @@ export class UserAddResearchComponent {
       },
     ];
   }
+
   removeRow2(index: number) {
     // กันไม่ให้ลบแถวสุดท้าย
     if (this.rows2.length > 1) {
@@ -335,10 +333,6 @@ export class UserAddResearchComponent {
   selectResponsibility(value: string) {
     // this.researchData.responsibility = value;
     this.activeDropdown = null;
-  }
-
-  isOpen(type: string): boolean {
-    return this.openDropdown === type;
   }
 
   @HostListener('document:click')
@@ -406,11 +400,4 @@ export class UserAddResearchComponent {
     this.activeDropdown = null;
   }
 
-  // ดึงข้อมูล
-  getDataResearch() {
-    this.reseachService.getPublicData().subscribe({
-      next: (res) => {
-      }
-    });
-  }  
 }

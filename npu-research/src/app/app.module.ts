@@ -54,6 +54,7 @@ import { PerformanceByDepartmentComponent } from './general/performance-by-depar
 import { PerformanceDetailByDepartmentComponent } from './general/performance-detail-by-department/performance-detail-by-department.component';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { AuthInterceptor } from './services/auth.interceptor';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -114,6 +115,8 @@ import { AuthInterceptor } from './services/auth.interceptor';
     AppRoutingModule,
     NgxEditorModule,
     HttpClientModule,
+    RouterModule,
+    RouterModule.forRoot([])
   ],
   providers: [
     {
