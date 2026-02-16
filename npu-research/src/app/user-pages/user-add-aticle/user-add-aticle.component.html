@@ -34,6 +34,7 @@
         ชื่อบทความ/วารสาร <span class="text-red-500">*</span>
       </label>
       <input
+      [(ngModel)]="articleData.title_th"
         type="text"
         class="md:col-span-3 text-2xl font-medium w-full h-12 border rounded-md px-4 py-2"
         placeholder="ระบุบทความ/วารสาร"
@@ -167,7 +168,9 @@
       <label class="md:col-span-1 text-start">
         สถานที่นำเสนอ <span class="text-red-500">*</span>
       </label>
+
       <textarea
+      [(ngModel)]="articleData.pre_location"
         name="attention"
         id="attention"
         placeholder="สถานที่นำเสนอ"
@@ -190,6 +193,7 @@
       />
     </div>
 
+    <!-- ชื่อการประชุมวิชาการ -->
     <div
       *ngIf="article.type === 'Conference'"
       class="grid grid-cols-1 md:grid-cols-1 md:gap-2 mb-2 mt-2 md:mb-6 md:mt-5"
@@ -204,7 +208,7 @@
       />
     </div>
 
-    <!-- หน้าที่ตีพิมพ์ -->
+    <!-- ฉบับที่/เล่มที่ -->
     <div class="grid grid-cols-1 md:grid-cols-3 md:gap-6 md:mb-6">
       <div class="mb-2">
         <label class="md:col-span-1 text-start">
@@ -217,11 +221,13 @@
         />
       </div>
 
+      <!-- หน้าที่ตีพิมพ์ -->
       <div class="mb-2">
         <label class="md:col-span-1 text-start">
           หน้าที่ตีพิมพ์ <span class="text-red-500">*</span>
         </label>
         <input
+        [(ngModel)]="articleData.pages"
           type="text"
           class="md:col-span-2 text-2xl font-medium w-full h-12 border rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400"
           placeholder="ระบุหน้าที่ตีพิมพ์"
@@ -234,7 +240,8 @@
           ปีที่ตีพิมพ์ <span class="text-red-500">*</span>
         </label>
         <input
-          type="year"
+        [(ngModel)]="articleData.year_published"
+          type="text"
           class="md:col-span-2 w-full h-12 border text-2xl font-medium rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400"
           placeholder="ระบุปีบทความวิชาการ"
         />
@@ -246,6 +253,7 @@
       <label class="md:col-span-1 text-start">
         สาขาของบทความ <span class="text-red-500">*</span>
       </label>
+
       <div class="relative">
         <!-- Trigger -->
         <button
@@ -467,7 +475,7 @@
                       (click)="$event.stopPropagation()"
                       (ngModelChange)="onSearch($event)"
                     />
-                  
+
                     <!-- Dropdown -->
                     <ul
                       *ngIf="activeRowIndex === j.id"
@@ -481,7 +489,7 @@
                       >
                         {{ r.full_name }}
                       </li>
-                  
+
                       <li
                         *ngIf="filteredResearchers.length === 0"
                         class="px-4 py-2 text-gray-400 text-center"
@@ -490,7 +498,7 @@
                       </li>
                     </ul>
                   </td>
-                  
+
                   <!-- ประเภทความรับผิดชอบของผู้ร่วมโครงการภายใน -->
                   <td class="p-1 md:p-3 relative">
                     <div
@@ -717,12 +725,20 @@
 
       <div class="flex gap-10 mt-2">
         <label class="flex items-center gap-4">
-          <input type="radio" name="collaboration" value="yes" />
+          <input
+            type="radio"
+            name="collaboration"
+            value="yes"
+          />
           มี
         </label>
 
         <label class="flex items-center gap-4">
-          <input type="radio" name="collaboration" value="no" />
+          <input
+            type="radio"
+            name="collaboration"
+            value="no"
+          />
           ไม่มี
         </label>
       </div>

@@ -14,7 +14,9 @@
     </button>
   </div>
 
-  <div class="mb-6 md:mb-10 mx-auto p-2 md:px-20 md:py-10 bg-white rounded-xl shadow-md">
+  <div
+    class="mb-6 md:mb-10 mx-auto p-2 md:px-20 md:py-10 bg-white rounded-xl shadow-md"
+  >
     <div
       class="mx-auto p-4 md:px-6 md:py-5 md:mb-6 flex items-center gap-4 rounded-xl bg-linear-to-r from-[#9DE1EF] to-[#D3DFEB] shadow"
     >
@@ -28,10 +30,12 @@
       </h2>
     </div>
 
-    <!-- ชื่อนวัตกรรม สิ่งประดิษฐ์ -->
-    <div class="grid grid-cols-1 md:grid-cols-1 md:gap-2  mb-2 mt-4 md:mb-6 md:mt-10">
+    <!-- ชื่อนวัตกรรมสิ่งประดิษฐ์ -->
+    <div
+      class="grid grid-cols-1 md:grid-cols-1 md:gap-2 mb-2 mt-4 md:mb-6 md:mt-10"
+    >
       <label class="md:col-span-1 text-start">
-        ชื่อนวัตกรรม สิ่งประดิษฐ์ <span class="text-red-500">*</span>
+        ชื่อนวัตกรรมสิ่งประดิษฐ์ <span class="text-red-500">*</span>
       </label>
       <input
         type="text"
@@ -40,11 +44,12 @@
       />
     </div>
 
-    <!-- สาขาของนวัตกรรม สิ่งประดิษฐ์ -->
+    <!-- สาขาของนวัตกรรมสิ่งประดิษฐ์ -->
     <div class="grid grid-cols-1 md:grid-cols-1 md:gap-2 mb-2 md:mb-6">
       <label class="text-start">
-        สาขาของนวัตกรรม สิ่งประดิษฐ์ <span class="text-red-500">*</span>
+        สาขาของนวัตกรรมสิ่งประดิษฐ์ <span class="text-red-500">*</span>
       </label>
+
       <div class="relative md:col-span-3">
         <button
           (click)="toggleDropdown('major', $event)"
@@ -52,35 +57,53 @@
           class="w-full border rounded-md px-3 py-2 flex justify-between items-center bg-white"
         >
           <span class="truncate text-2xl font-medium">
-            {{ selectedMajor || "ระบุสาขาของโครงการวิจัย" }}
+            {{ selectedSub?.name_en || "ระบุสาขาของนวัตกรรมสิ่งประดิษฐ์" }}
           </span>
           <i class="bi bi-chevron-down"></i>
         </button>
+
         <!-- Dropdown panel -->
         <div
-          *ngIf="isOpen('major')"
+          *ngIf="activeDropdown === 'major'"
           class="absolute z-50 w-full bg-white font-medium border rounded-md mt-1 shadow"
           (click)="$event.stopPropagation()"
         >
-          <input
-            [(ngModel)]="searchMajor"
-            placeholder="ค้นหา..."
-            class="w-full px-3 py-2 border-b outline-none"
-          />
+          <ul class="relative max-h-48 overflow-y-auto">
+            <li *ngFor="let m of filteredMajor()" class="relative">
+              <div
+                (click)="toggleMajor(m, $event)"
+                class="flex justify-between items-center px-4 py-2 hover:bg-gray-200 cursor-pointer transition"
+                [class.bg-gray-200]="activeMajor?.major_id === m.major_id"
+              >
+                {{ m.name_en }}
+                <i
+                  class="bi"
+                  [ngClass]="
+                    activeMajor?.major_id === m.major_id
+                      ? 'bi-chevrin-down'
+                      : 'bi-chevron-right'
+                  "
+                ></i>
+              </div>
 
-          <ul class="max-h-48 overflow-y-auto">
-            <li
-              *ngFor="let m of filteredMajor()"
-              (click)="selectMajor(m)"
-              class="px-4 py-2 hover:bg-yellow-50 cursor-pointer"
-            >
-              {{ m }}
-            </li>
-            <li
-              *ngIf="filteredMajor().length === 0"
-              class="px-4 py-2 text-gray-400 text-center"
-            >
-              ไม่พบข้อมูล
+              <ul
+                *ngIf="activeMajor?.major_id === m.major_id"
+                class="bg-gray-100 rounded-xl shadow-lg"
+              >
+                <li
+                  *ngFor="let s of m.children"
+                  (click)="selectSub(s)"
+                  class="px-4 py-2 hover:bg-gray-200 cursor-pointer transition"
+                >
+                  {{ s.name_en }}
+                </li>
+                <li
+                  *ngIf="filteredMajor().length === 0"
+                  class="px-4 py-2 text-gray-400 text-center"
+                >
+                  ไม่พบข้อมูล
+                </li>
+              </ul>
             </li>
           </ul>
         </div>
@@ -106,10 +129,10 @@
 
       <button
         type="button"
-        (click)="toggleResponsibility($event)"
+        (click)="toggleDropdown('responsibility', $event)"
         class="w-full border rounded-md px-3 py-2 flex justify-between items-center font-medium"
       >
-        {{ innovation.responsibility || "เลือกประเภทความรับผิดชอบ" }}
+        {{ innovation.responsibility || "ประเภทความรับผิดชอบ" }}
         <i class="bi bi-chevron-down"></i>
       </button>
 
@@ -151,10 +174,10 @@
           <div class="w-full">
             <table class="w-full table-fixed min-w-150">
               <colgroup>
-                <col class="w-12" />        <!-- # -->
-                <col class="w-[45%]" />     <!-- ระบุชื่อ -->
-                <col class="w-[80%]" />     <!-- ประเภทความรับผิดชอบ -->
-                <col class="w-30" />        <!-- Action -->
+                <col class="w-[5%]" />
+                <col class="w-[30%]" />
+                <col class="w-[50%]" />
+                <col class="w-[15%]" />
               </colgroup>
               <thead>
                 <tr
@@ -174,49 +197,92 @@
                 >
                   <td class="text-center p-1 md:p-3">{{ i + 1 }}</td>
 
-                  <td class="text-center p-1 md:p-3">
+                  <td class="text-center p-1 md:p-3 relative">
                     <input
                       type="text"
                       class="w-full border text-2xl font-medium border-gray-300 h-12 rounded-md p-1 md:px-3 md:py-2 bg-white"
                       placeholder="ระบุชื่อ"
                       [(ngModel)]="j.name"
+                      (focus)="onFocus(j)"
+                      (click)="$event.stopPropagation()"
+                      (ngModelChange)="onSearch($event)"
                     />
+
+                    <!-- Dropdown -->
+                    <ul
+                      *ngIf="activeRowIndex === j.id"
+                      (click)="$event.stopPropagation()"
+                      class="absolute z-50 w-full bg-white border rounded-md shadow mt-1 max-h-60 overflow-y-auto text-left"
+                    >
+                      <li
+                        *ngFor="let r of filteredResearchers"
+                        (click)="selectResearcher(r, j)"
+                        class="px-4 py-2 hover:bg-indigo-50 cursor-pointer"
+                      >
+                        {{ r.full_name }}
+                      </li>
+
+                      <li
+                        *ngIf="filteredResearchers.length === 0"
+                        class="px-4 py-2 text-gray-400 text-center"
+                      >
+                        ไม่พบข้อมูล
+                      </li>
+                    </ul>
                   </td>
 
                   <!-- ประเภทความรับผิดชอบของผู้ร่วมโครงการภายใน -->
                   <td class="p-1 md:p-3 relative">
                     <div
-                      class="relative font-medium"
-                      (click)="$event.stopPropagation()"
+                      class="relative bg-white border border-gray-300 rounded-md"
                     >
                       <button
-                        type="button"
-                        class="w-full h-12 border border-gray-300 rounded-md px-3 flex justify-between items-center bg-white"
-                        (click)="toggleInternal(i, $event)"
+                        (click)="toggleDropdown('internal-' + i, $event)"
+                        class="w-full rounded-md px-3 py-2 flex justify-between items-center font-medium"
                       >
-                        <span
-                          class="truncate whitespace-nowrap overflow-hidden"
-                        >
-                          {{ j.organization || "ระบุประเภทความรับผิดชอบ" }}
-                        </span>
-
+                        {{ j.responsibility || "ประเภทความรับผิดชอบ" }}
                         <i class="bi bi-chevron-down"></i>
                       </button>
 
                       <div
-                        *ngIf="
-                          activeDropdown === 'internal' &&
-                          openInternalIndex === i
-                        "
-                        (click)="$event.stopPropagation()"
-                        class="absolute z-50 mt-1 w-full bg-white border rounded-md shadow"
+                        *ngIf="activeDropdown === 'internal-' + i"
+                        class="absolute z-50 mt-1 w-full bg-white border rounded-md shadow font-medium"
                       >
                         <div
-                          *ngFor="let role of responsibilityRoles"
-                          class="px-3 py-2 hover:bg-indigo-50 cursor-pointer"
-                          (click)="selectInternalRole(role, j)"
+                          (click)="
+                            !isFirstAuthorTaken(j) &&
+                              selectRowResponsibility(
+                                j,
+                                'First Author (ผู้ประพันธ์อันดับแรก)'
+                              )
+                          "
+                          [class.opacity-50]="isFirstAuthorTaken(j)"
+                          [class.pointer-events-none]="isFirstAuthorTaken(j)"
+                          class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
                         >
-                          {{ role }}
+                          First Author (ผู้ประพันธ์อันดับแรก)
+                        </div>
+                        <div
+                          (click)="
+                            selectRowResponsibility(
+                              j,
+                              'Corresponding Author (ผู้ประพันธ์บรรณกิจ/ผู้ประสานงาน)'
+                            )
+                          "
+                          class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
+                        >
+                          Corresponding Author (ผู้ประพันธ์บรรณกิจ/ผู้ประสานงาน)
+                        </div>
+                        <div
+                          (click)="
+                            selectRowResponsibility(
+                              j,
+                              'Co Author (ผู้ประพันธ์ร่วม)'
+                            )
+                          "
+                          class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
+                        >
+                          Co Author (ผู้ประพันธ์ร่วม)
                         </div>
                       </div>
                     </div>
@@ -252,7 +318,14 @@
           </h1>
 
           <div class="w-full">
-            <table class="w-full md:max-w-4xl">
+            <table class="w-full table-fixed min-w-150">
+              <colgroup>
+                <col class="w-[5%]" />
+                <col class="w-[20%]" />
+                <col class="w-[45%]" />
+                <col class="w-[25%]" />
+                <col class="w-[5%]" />
+              </colgroup>
               <thead>
                 <tr
                   class="bg-[#394250] whitespace-nowrap text-white border-b-2 border-gray-300 text-center"
@@ -288,35 +361,55 @@
                   <!-- ประเภทความรับผิดชอบของผู้ร่วมโครงการภายนอก -->
                   <td class="p-1 md:p-3 relative">
                     <div
-                      class="relative font-medium"
-                      (click)="$event.stopPropagation()"
+                      class="relative bg-white border border-gray-300 rounded-md"
                     >
                       <button
-                        type="button"
-                        class="w-full h-12 border border-gray-300 rounded-md px-3 flex justify-between items-center bg-white"
-                        (click)="toggleExternal(i, $event)"
+                        (click)="toggleDropdown('external-' + i, $event)"
+                        class="w-full rounded-md px-3 py-2 flex justify-between items-center font-medium"
                       >
-                        <span class="truncate whitespace-nowrap overflow-none">
-                          {{ item.organization || "ระบุประเภทความรับผิดชอบ" }}
-                        </span>
-
+                        {{ item.responsibility || "ประเภทความรับผิดชอบ" }}
                         <i class="bi bi-chevron-down"></i>
                       </button>
 
                       <div
-                        *ngIf="
-                          activeDropdown === 'external' &&
-                          openExternalIndex === i
-                        "
-                        (click)="$event.stopPropagation()"
-                        class="absolute mt-1 w-full bg-white border rounded-md shadow z-9999"
+                        *ngIf="activeDropdown === 'external-' + i"
+                        class="absolute z-50 mt-1 w-full bg-white border rounded-md shadow font-medium"
                       >
                         <div
-                          *ngFor="let role of responsibilityRoles"
-                          class="px-3 py-2 hover:bg-indigo-50 cursor-pointer"
-                          (click)="selectExternalRole(role, item)"
+                          (click)="
+                            !isFirstAuthorTaken(item) &&
+                              selectRowResponsibility(
+                                item,
+                                'First Author (ผู้ประพันธ์อันดับแรก)'
+                              )
+                          "
+                          [class.opacity-50]="isFirstAuthorTaken(item)"
+                          [class.pointer-events-none]="isFirstAuthorTaken(item)"
+                          class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
                         >
-                          {{ role }}
+                          First Author (ผู้ประพันธ์อันดับแรก)
+                        </div>
+                        <div
+                          (click)="
+                            selectRowResponsibility(
+                              item,
+                              'Corresponding Author (ผู้ประพันธ์บรรณกิจ/ผู้ประสานงาน)'
+                            )
+                          "
+                          class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
+                        >
+                          Corresponding Author (ผู้ประพันธ์บรรณกิจ/ผู้ประสานงาน)
+                        </div>
+                        <div
+                          (click)="
+                            selectRowResponsibility(
+                              item,
+                              'Co Author (ผู้ประพันธ์ร่วม)'
+                            )
+                          "
+                          class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
+                        >
+                          Co Author (ผู้ประพันธ์ร่วม)
                         </div>
                       </div>
                     </div>

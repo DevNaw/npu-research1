@@ -26,3 +26,13 @@ export interface ArticleForm {
   major_id?: number | null;
   sub_id?: number | null;
 }
+
+export interface InnovationForm {
+  responsibility: string;
+  type: string;
+  status: string;
+  funding: string;
+  quality: string;
+  major_id?: number | null;
+  sub_id?: number | null;
+}

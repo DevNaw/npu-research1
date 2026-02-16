@@ -4,6 +4,7 @@ import Swal from 'sweetalert2';
 import { ResearchService } from '../../services/research.service';
 import { Major, SubArea, ArticleForm } from '../../models/subject.model';
 import { Researcher } from '../../models/researchers.model';
+import { Article } from '../../models/aticle.model';
 
 @Component({
   selector: 'app-user-add-aticle',
@@ -61,6 +62,41 @@ export class UserAddAticleComponent {
     major_id: null,
     sub_id: null,
   };
+
+  articleData: Article = {
+    title_th: '',
+    title_en: '',
+    abstract: '',
+    year: '',
+    published_date: '',
+    call_other: '',
+    image: null,
+    db_type: '',
+    country: '',
+    article_file: null,
+    journal_name: '',
+    pre_location: '',
+    pages: '',
+    year_published: '',
+    volume: '',
+    volume_no: '',
+    is_cooperation: '',
+    doi: '',
+    subject_area_id: '',
+    responsibilities: '',
+    internal_members: [{
+      user_id: 0,
+      role: '',
+      no: ''
+    }],
+    external_members: [{
+      full_name: '',
+      role: '',
+      organization: '',
+      no: '',
+    }],
+    article_type: ''
+  }
 
   selectedCountries = '';
   searchCountries = '';
@@ -439,5 +475,78 @@ export class UserAddAticleComponent {
     j.user_id = r.user_id;
 
     this.activeRowIndex = null;
+  }
+
+  // Send Data 
+  createArticle() {
+    const formData = new FormData();
+  
+    // ===== Basic Article =====
+    formData.append('title_th', this.articleData.title_th);
+    formData.append('title_en', this.articleData.title_en);
+    formData.append('abstract', this.articleData.abstract);
+    formData.append('year', this.articleData.year);
+    formData.append('published_date', this.articleData.published_date);
+    formData.append('call_other', this.articleData.call_other);
+    formData.append('db_type', this.articleData.db_type);
+    formData.append('country', this.articleData.country);
+    formData.append('journal_name', this.articleData.journal_name);
+    formData.append('pre_location', this.articleData.pre_location);
+    formData.append('pages', this.articleData.pages);
+    formData.append('year_published', this.articleData.year_published);
+    formData.append('volume', this.articleData.volume);
+    formData.append('volume_no', this.articleData.volume_no);
+    formData.append('is_cooperation', this.articleData.is_cooperation);
+    formData.append('doi', this.articleData.doi);
+    formData.append('subject_area_id', this.articleData.subject_area_id);
+    formData.append('responsibilities', this.articleData.responsibilities);
+    formData.append('article_type', this.articleData.article_type);
+  
+    // ===== Internal Members =====
+    const internal = this.rows2.map((r, index) => ({
+      no: index + 1,
+      user_id: r.id || 0,
+      role: r.responsibility
+    }));
+  
+    formData.append('internal_members', JSON.stringify(internal));
+  
+    // ===== External Members =====
+    const external = this.rows.map((r, index) => ({
+      no: index + 1,
+      full_name: r.name,
+      organization: r.organization,
+      role: r.responsibility
+    }));
+  
+    formData.append('external_members', JSON.stringify(external));
+  
+    // ===== File =====
+    if (this.articleData.article_file) {
+      formData.append('article_file', this.articleData.article_file);
+    }
+  
+    if (this.articleData.image) {
+      formData.append('image', this.articleData.image);
+    }
+  
+    // ===== Call API =====
+    this.researchService.createArticle(formData).subscribe({
+      next: () => {
+        Swal.fire({
+          icon: 'success',
+          title: 'บันทึกสำเร็จ',
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      },
+      error: (err) => {
+        console.error(err);
+        Swal.fire({
+          icon: 'error',
+          title: 'เกิดข้อผิดพลาด',
+        });
+      }
+    });
   }
 }

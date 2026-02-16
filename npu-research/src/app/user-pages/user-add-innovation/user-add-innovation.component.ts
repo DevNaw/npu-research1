@@ -8,6 +8,9 @@ import {
   ExternalPerson,
   ResearchData,
 } from '../../models/add.research.model';
+import { InnovationForm, Major, SubArea } from '../../models/subject.model';
+import { ResearchService } from '../../services/research.service';
+import { Researcher } from '../../models/researchers.model';
 
 @Component({
   selector: 'app-user-add-innovation',
@@ -16,11 +19,14 @@ import {
   styleUrl: './user-add-innovation.component.css',
 })
 export class UserAddInnovationComponent {
-  openDropdown: string | null = null;
   isEdit = false;
   researchId?: number;
-  selectedMajor = '';
+
+  selectedMajor: Major | null = null;
   searchMajor = '';
+  searchSub = '';
+  majors: Major[] = [];
+  selectedSub: SubArea | null = null;
 
   fundType: string = '';
   fundName: string = '';
@@ -32,17 +38,12 @@ export class UserAddInnovationComponent {
   internalPeople: InternalPerson[] = [];
   externalPeople: ExternalPerson[] = [];
 
-  activeDropdown:
-    | 'type'
-    | 'major'
-    | 'responsibility'
-    | 'quality'
-    | 'internal'
-    | 'external'
-    | 'status'
-    | 'fundName'
-    | 'funding'
-    | null = null;
+  activeDropdown: string | null = null;
+  activeMajor: Major | null = null;
+  activeRowIndex: number | null = null;
+
+  researchers: Researcher[] = [];
+  filteredResearchers: Researcher[] = [];
 
   responsibilityRoles: ResponsibilityRole[] = [
     'ที่ปรึกษา',
@@ -54,11 +55,12 @@ export class UserAddInnovationComponent {
   openExternalIndex: number | null = null;
   openStatus: number | null = null;
 
-  rows: ExternalPerson[] = [{ name: '', role: '', organization: '' }];
-  rows2: InternalPerson[] = [
+  rows2 = [{ id: Date.now(), name: '', responsibility: '' }];
+  rows = [
     {
       name: '',
       organization: '',
+      responsibility: '',
     },
   ];
 
@@ -77,14 +79,6 @@ export class UserAddInnovationComponent {
     },
   ];
 
-  major = [
-    'วิทยาการคอมพิวเตอร์',
-    'เทคโนโลยีสารสนเทศ',
-    'วิศวกรรมซอฟต์แวร์',
-    'ระบบสารสนเทศเพื่อการจัดการ',
-    'ปัญญาประดิษฐ์และวิทยาการข้อมูล',
-  ];
-
   internalFunds: string[] = [
     'งบประมาณมหาวิทยาลัย',
     'กองทุนวิจัยมหาวิทยาลัย',
@@ -98,17 +92,26 @@ export class UserAddInnovationComponent {
     'หน่วยงานเอกชน',
   ];
 
-  innovation = {
+  innovation: InnovationForm = {
     responsibility: '',
     type: '',
     quality: '',
     status: '',
     funding: '',
-  }
+    major_id: null,
+    sub_id: null,
+  };
 
-  constructor(private route: ActivatedRoute, private router: Router) {}
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private researchService: ResearchService
+  ) {}
 
   ngOnInit() {
+    this.loadSubjectArea();
+    this.loadResearcherData();
+
     this.route.paramMap.subscribe((params) => {
       const id = params.get('id');
 
@@ -121,25 +124,43 @@ export class UserAddInnovationComponent {
       }
     });
 
-    // this.addRow();
-    // this.addRow2();
     this.addInternal();
     this.addExternal();
+  }
+
+  loadSubjectArea() {
+    this.researchService.getSubjectArea().subscribe({
+      next: (res) => {
+        this.majors = res.data.subject_areas;
+      },
+      error: (err) => {
+        console.error('Not Found!', err);
+      },
+    });
+  }
+
+  loadResearcherData() {
+    this.researchService.getResearchers().subscribe({
+      next: (res) => {
+        this.researchers = res.data.$researchers;
+        this.filteredResearchers = this.researchers;
+      },
+    });
   }
 
   addInternal() {
     this.internalMembers.push({
       name: '',
       organization: '',
-    })
+    });
   }
 
   addExternal() {
     this.externalMembers.push({
       name: '',
       organization: '',
-      role: ''
-    })
+      role: '',
+    });
   }
 
   removeInternal(index: number) {
@@ -149,46 +170,38 @@ export class UserAddInnovationComponent {
   }
 
   loadInnovationData(id: number) {
-    this.rows = [
-      { name: 'นาย A', role: 'ผู้เชี่ยวชาญ', organization: 'บริษัท ABC' },
-    ];
-
+    
     // this.rows2 = [{ name: 'ดร. B', organization: 'มหาวิทยาลัย X' }];
 
     // this.reportFileName = 'report.pdf';
   }
 
   addRow() {
-    this.rows = [
-      ...this.rows,
-      {
-        name: '',
-        role: '',
-        organization: '',
-      },
-    ];
-  }
-  removeRow(index: number) {
-    // กันไม่ให้ลบแถวสุดท้าย
-    if (this.rows.length > 1) {
-      this.rows.splice(index, 1);
-    }
+    this.rows.push({ name: '', organization: '', responsibility: '' });
   }
 
   addRow2() {
-    this.rows2 = [
-      ...this.rows2,
-      {
-        name: '',
-        organization: '',
-      },
-    ];
+    this.rows2.push({ id: Date.now() + Math.random(), name: '', responsibility: '' });
   }
+
+  removeRow(index: number) {
+      this.rows.splice(index, 1);
+  }
+
   removeRow2(index: number) {
-    // กันไม่ให้ลบแถวสุดท้าย
-    if (this.rows2.length > 1) {
       this.rows2.splice(index, 1);
+  }
+
+  selectRowResponsibility(row: any, value: string) {
+    if (
+      value === 'First Author (ผู้ประพันธ์อันดับแรก)' &&
+      this.isFirstAuthorTaken(row)
+    ) {
+      return;
     }
+
+    row.responsibility = value;
+    this.activeDropdown = null;
   }
 
   trackByIndex(index: number) {
@@ -220,30 +233,25 @@ export class UserAddInnovationComponent {
 
   toggleDropdown(name: string, event: MouseEvent) {
     event.stopPropagation();
-    this.openDropdown = this.openDropdown === name ? null : name;
-  }
-
-  isOpen(n: string): boolean {
-    return this.openDropdown === n;
+    this.activeDropdown = this.activeDropdown === name ? null : name;
   }
 
   @HostListener('document:click')
   closeAll() {
     this.activeDropdown = null;
-    this.openDropdown = null;
   }
 
-  selectMajor(m: string) {
+  selectMajor(m: Major) {
     this.selectedMajor = m;
-    this.openDropdown = null;
+    this.activeDropdown = null;
     this.searchMajor = '';
   }
 
-  filteredMajor(): string[] {
-    if (!this.searchMajor) return this.major;
+  filteredMajor(): Major[] {
+    if (!this.searchMajor) return this.majors;
 
-    return this.major.filter((m) =>
-      m.toLowerCase().includes(this.searchMajor.toLowerCase())
+    return this.majors.filter((m) =>
+      m.name_en.toLowerCase().includes(this.searchMajor.toLowerCase())
     );
   }
 
@@ -267,7 +275,7 @@ export class UserAddInnovationComponent {
     this.openInternalIndex = this.openInternalIndex === index ? null : index;
   }
 
-  toggleExternal(index:number, event: Event) {
+  toggleExternal(index: number, event: Event) {
     event.stopPropagation();
     this.activeDropdown = 'external';
     this.openExternalIndex = this.openExternalIndex === index ? null : index;
@@ -275,7 +283,7 @@ export class UserAddInnovationComponent {
 
   toggleType(event: Event) {
     event.stopPropagation();
-    this.activeDropdown = this.activeDropdown === 'type' ? null : 'type'
+    this.activeDropdown = this.activeDropdown === 'type' ? null : 'type';
   }
 
   toggleResponsibility(event: Event) {
@@ -329,5 +337,71 @@ export class UserAddInnovationComponent {
   selectFundName(name: string) {
     this.fundName = name;
     this.activeDropdown = null;
+  }
+
+  selectSub(sub: SubArea) {
+    this.selectedSub = sub;
+    this.activeDropdown = null;
+    this.activeMajor = null;
+
+    this.innovation.major_id = sub.major_id;
+    this.innovation.sub_id = sub.sub_id;
+  }
+
+  selectResearcher(r: Researcher, j: any) {
+    j.name = r.full_name;
+    j.user_id = r.user_id;
+
+    this.activeRowIndex = null;
+  }
+
+  filteredSub() {
+    if (!this.selectedMajor) return [];
+
+    return this.selectedMajor.children.filter((s) =>
+      s.name_en.toLowerCase().includes(this.searchSub.toLowerCase())
+    );
+  }
+
+  toggleMajor(major: Major, event: Event) {
+    event.stopPropagation();
+
+    if (this.activeMajor?.major_id === major.major_id) {
+      this.activeMajor = null;
+    } else {
+      this.activeMajor = major;
+    }
+  }
+
+  onFocus(index: any) {
+    this.activeRowIndex = index.id;
+    this.filteredResearchers = this.researchers;
+  }
+
+  onSearch(value: string) {
+    if (!value) {
+      this.filteredResearchers = this.researchers;
+      return;
+    }
+
+    this.filteredResearchers = this.researchers.filter((r) =>
+      r.full_name?.toLowerCase().includes(value.toLowerCase())
+    );
+  }
+
+  isFirstAuthorTaken(currentRow?: any): boolean {
+    if (
+      this.innovation?.responsibility === 'First Author (ผู้ประพันธ์อันดับแรก)'
+    ) {
+      return true;
+    }
+
+    const allRows = [...this.rows2, ...this.rows];
+
+    return allRows.some(
+      (row) =>
+        row !== currentRow &&
+        row.responsibility === 'First Author (ผู้ประพันธ์อันดับแรก)'
+    );
   }
 }
