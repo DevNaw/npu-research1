@@ -35,10 +35,17 @@ export class UserAddAticleComponent {
   searchKeyword = '';
 
   // ผู้ร่วมโครงการภายใน
-  rows2 = [{id: Date.now(), name: '', responsibility: '' }];
+  rows2 = [
+    {
+      id: 0, // id ของ row (เอาไว้ trackBy)
+      researcher_id: null, // id ของคนที่เลือก
+      name: '', // แสดงใน input
+      responsibilities: '',
+    },
+  ];
 
   // ผู้ร่วมโครงการภายนอก
-  rows = [{ name: '', organization: '', responsibility: '' }];
+  rows = [{ name: '', organization: '', responsibilities: '' }];
 
   internalMembers = [
     {
@@ -54,22 +61,16 @@ export class UserAddAticleComponent {
     },
   ];
 
-  article: ArticleForm = {
-    responsibility: '',
-    type: '',
-    database_types: '',
-    quality: '',
-    major_id: null,
-    sub_id: null,
-  };
+  articleId: number | null = null;
 
   articleData: Article = {
+    id: 0,
     title_th: '',
     title_en: '',
     abstract: '',
     year: '',
     published_date: '',
-    call_other: '',
+    call_other: null,
     image: null,
     db_type: '',
     country: '',
@@ -82,21 +83,27 @@ export class UserAddAticleComponent {
     volume_no: '',
     is_cooperation: '',
     doi: '',
-    subject_area_id: '',
+    subject_area_id: 0,
     responsibilities: '',
-    internal_members: [{
-      user_id: 0,
-      role: '',
-      no: ''
-    }],
-    external_members: [{
-      full_name: '',
-      role: '',
-      organization: '',
-      no: '',
-    }],
-    article_type: ''
-  }
+    internal_members: [
+      {
+        user_id: 0,
+        role: '',
+        no: '',
+      },
+    ],
+    external_members: [
+      {
+        full_name: '',
+        role: '',
+        organization: '',
+        no: '',
+      },
+    ],
+    article_type: '',
+    major_id: null,
+    sub_id: null,
+  };
 
   selectedCountries = '';
   searchCountries = '';
@@ -254,22 +261,61 @@ export class UserAddAticleComponent {
     });
   }
 
+  // loadAticleData(id: number) {
+  //   this.researchService.getArticleById(id).subscribe({
+  //     next: (res) => {
+
+  //       this.articleData = res.data.researchArticle;
+
+  //       console.log(this.articleData);
+  //     },
+  //     error: (err) => {
+  //       console.error('Error fetching article data:', err);
+  //     },
+  //   });
+  // }
   loadAticleData(id: number) {
-    this.rows = [
-      {
-        name: 'นาย A',
-        organization: 'ผู้เชี่ยวชาญ',
-        responsibility: 'บริษัท ABC',
+    this.researchService.getArticleById(id).subscribe({
+      next: (res) => {
+        this.articleData = res.data.researchArticle;
+
+        // ✅ set country
+        this.selectedCountries = this.articleData.country;
+
+        // ✅ set subject sub
+        const subjectId = this.articleData.subject_area_id;
+
+        if (subjectId) {
+          for (const major of this.majors) {
+            const foundSub = major.children.find((s) => s.sub_id === subjectId);
+
+            if (foundSub) {
+              this.selectedMajor = major;
+              this.selectedSub = foundSub;
+              break;
+            }
+          }
+        }
+
+        console.log(this.articleData);
       },
-    ];
+      error: (err) => {
+        console.error('Error fetching article data:', err);
+      },
+    });
   }
 
   addRow() {
-    this.rows.push({ name: '', organization: '', responsibility: '' });
+    this.rows.push({ name: '', organization: '', responsibilities: '' });
   }
 
   addRow2() {
-    this.rows2.push({id: Date.now()+ Math.random(), name: '', responsibility: '' });
+    this.rows2.push({
+      id: 0,
+      researcher_id: null,
+      name: '',
+      responsibilities: '',
+    });
   }
 
   removeRow(index: number) {
@@ -280,8 +326,8 @@ export class UserAddAticleComponent {
     this.rows2.splice(index, 1);
   }
 
-  trackByIndex(index: number) {
-    return index;
+  trackById(index: number, item: any) {
+    return item.id;
   }
 
   selectedFile: File | null = null;
@@ -311,12 +357,12 @@ export class UserAddAticleComponent {
     this.activeDropdown = this.activeDropdown === type ? null : type;
   }
 
-  selectValue<K extends keyof typeof this.article>(
+  selectValue<K extends keyof typeof this.articleData>(
     field: K,
-    value: ArticleForm[K]
+    value: Article[K]
   ): void {
     if (
-      field === 'responsibility' &&
+      field === 'responsibilities' &&
       value === 'First Author (ผู้ประพันธ์อันดับแรก)'
     ) {
       if (this.isFirstAuthorTaken()) {
@@ -324,7 +370,7 @@ export class UserAddAticleComponent {
       }
     }
 
-    this.article[field] = value;
+    this.articleData[field] = value;
     this.activeDropdown = null;
   }
 
@@ -349,20 +395,6 @@ export class UserAddAticleComponent {
     );
   }
 
-  saveData() {
-    Swal.fire({
-      icon: 'success',
-      title: 'บันทึกข้อมูลสำเร็จ',
-      text: 'ระบบได้บันทึกข้อมูลเรียบร้อยแล้ว',
-      showConfirmButton: false,
-      timer: 1500,
-      customClass: {
-        title: 'swal-title-lg',
-        htmlContainer: 'swal-text-2xl',
-      },
-    });
-  }
-
   selectRowResponsibility(row: any, value: string) {
     if (
       value === 'First Author (ผู้ประพันธ์อันดับแรก)' &&
@@ -371,12 +403,13 @@ export class UserAddAticleComponent {
       return;
     }
 
-    row.responsibility = value;
+    row.responsibilities = value;
     this.activeDropdown = null;
   }
 
   selectCountrie(c: { code: string; name: string }) {
     this.selectedCountries = c.name;
+    this.articleData.country = c.name;
     this.searchCountries = '';
 
     this.activeDropdown = null;
@@ -391,10 +424,12 @@ export class UserAddAticleComponent {
         c.code.toLowerCase().includes(keyword)
     );
   }
+  private FIRST_AUTHOR = 'First Author (ผู้ประพันธ์อันดับแรก)';
 
   isFirstAuthorTaken(currentRow?: any): boolean {
     if (
-      this.article?.responsibility === 'First Author (ผู้ประพันธ์อันดับแรก)'
+      this.articleData?.responsibilities ===
+      'First Author (ผู้ประพันธ์อันดับแรก)'
     ) {
       return true;
     }
@@ -404,7 +439,7 @@ export class UserAddAticleComponent {
     return allRows.some(
       (row) =>
         row !== currentRow &&
-        row.responsibility === 'First Author (ผู้ประพันธ์อันดับแรก)'
+        row.responsibilities === 'First Author (ผู้ประพันธ์อันดับแรก)'
     );
   }
 
@@ -419,13 +454,20 @@ export class UserAddAticleComponent {
     });
   }
 
+  // selectSub(sub: SubArea) {
+  //   this.selectedSub = sub;
+  //   this.activeDropdown = null;
+  //   this.activeMajor = null;
+
+  //   this.articleData.subject_area_id = String(sub.sub_id);
+  // }
+
   selectSub(sub: SubArea) {
     this.selectedSub = sub;
     this.activeDropdown = null;
     this.activeMajor = null;
 
-    this.article.major_id = sub.major_id;
-    this.article.sub_id = sub.sub_id;
+    this.articleData.subject_area_id = sub.sub_id;
   }
 
   filteredSub() {
@@ -472,81 +514,206 @@ export class UserAddAticleComponent {
 
   selectResearcher(r: Researcher, j: any) {
     j.name = r.full_name;
-    j.user_id = r.user_id;
+    j.researcher_id = r.user_id;
 
     this.activeRowIndex = null;
   }
 
-  // Send Data 
+  // Send Data
   createArticle() {
     const formData = new FormData();
-  
-    // ===== Basic Article =====
+
     formData.append('title_th', this.articleData.title_th);
-    formData.append('title_en', this.articleData.title_en);
-    formData.append('abstract', this.articleData.abstract);
-    formData.append('year', this.articleData.year);
-    formData.append('published_date', this.articleData.published_date);
-    formData.append('call_other', this.articleData.call_other);
+    formData.append('article_type', this.articleData.article_type);
     formData.append('db_type', this.articleData.db_type);
     formData.append('country', this.articleData.country);
     formData.append('journal_name', this.articleData.journal_name);
-    formData.append('pre_location', this.articleData.pre_location);
     formData.append('pages', this.articleData.pages);
     formData.append('year_published', this.articleData.year_published);
     formData.append('volume', this.articleData.volume);
     formData.append('volume_no', this.articleData.volume_no);
-    formData.append('is_cooperation', this.articleData.is_cooperation);
     formData.append('doi', this.articleData.doi);
-    formData.append('subject_area_id', this.articleData.subject_area_id);
     formData.append('responsibilities', this.articleData.responsibilities);
-    formData.append('article_type', this.articleData.article_type);
-  
-    // ===== Internal Members =====
-    const internal = this.rows2.map((r, index) => ({
-      no: index + 1,
-      user_id: r.id || 0,
-      role: r.responsibility
-    }));
-  
-    formData.append('internal_members', JSON.stringify(internal));
-  
-    // ===== External Members =====
-    const external = this.rows.map((r, index) => ({
-      no: index + 1,
-      full_name: r.name,
-      organization: r.organization,
-      role: r.responsibility
-    }));
-  
-    formData.append('external_members', JSON.stringify(external));
-  
-    // ===== File =====
-    if (this.articleData.article_file) {
-      formData.append('article_file', this.articleData.article_file);
+    formData.append(
+      'subject_area_id',
+      this.articleData.subject_area_id.toString()
+    );
+    formData.append('is_cooperation', this.articleData.is_cooperation);
+
+    if (this.selectedFile) {
+      formData.append('article_file', this.selectedFile);
     }
-  
-    if (this.articleData.image) {
-      formData.append('image', this.articleData.image);
+
+    // ✅ internal members (แบบเดียวกับ Postman)
+    this.rows2.forEach((r, i) => {
+      formData.append(
+        `internal_members[${i}][user_id]`,
+        String(r.researcher_id)
+      );
+      formData.append(`internal_members[${i}][role]`, r.responsibilities);
+      formData.append(`internal_members[${i}][no]`, (i + 1).toString());
+    });
+
+    // ✅ external members
+    this.rows.forEach((r, i) => {
+      formData.append(`external_members[${i}][full_name]`, r.name);
+      formData.append(`external_members[${i}][role]`, r.responsibilities);
+      formData.append(`external_members[${i}][organization]`, r.organization);
+      formData.append(`external_members[${i}][no]`, (i + 1).toString());
+    });
+
+    // debug ดูของจริงที่ส่งออก
+    for (let pair of formData.entries()) {
+      console.log(pair[0] + ':', pair[1]);
     }
-  
-    // ===== Call API =====
+    Swal.fire({
+      title: 'กำลังบันทึก...',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+
     this.researchService.createArticle(formData).subscribe({
-      next: () => {
+      next: () =>
         Swal.fire({
           icon: 'success',
           title: 'บันทึกสำเร็จ',
           showConfirmButton: false,
-          timer: 1500,
-        });
-      },
-      error: (err) => {
-        console.error(err);
-        Swal.fire({
-          icon: 'error',
-          title: 'เกิดข้อผิดพลาด',
-        });
-      }
+          timer: 1000,
+        }),
+      error: (err) => console.log('422 ERROR:', err.error),
     });
+    this.resetData();
+  }
+
+  resetData() {
+    this.articleData = {
+      id: 0,
+      title_th: '',
+      title_en: '',
+      abstract: '',
+      year: '',
+      published_date: '',
+      call_other: '',
+      image: null,
+      db_type: '',
+      country: '',
+      article_file: null,
+      journal_name: '',
+      pre_location: '',
+      pages: '',
+      year_published: '',
+      volume: '',
+      volume_no: '',
+      is_cooperation: '',
+      doi: '',
+      subject_area_id: 0,
+      responsibilities: '',
+      internal_members: [
+        {
+          user_id: 0,
+          role: '',
+          no: '',
+        },
+      ],
+      external_members: [
+        {
+          full_name: '',
+          role: '',
+          organization: '',
+          no: '',
+        },
+      ],
+      article_type: '',
+      major_id: null,
+      sub_id: null,
+    };
+
+    this.rows2 = [
+      {
+        id: 0,
+        researcher_id: null,
+        name: '',
+        responsibilities: '',
+      },
+    ];
+
+    this.rows = [{ name: '', organization: '', responsibilities: '' }];
+
+    this.selectedFile = null;
+    this.selectedFileName = '';
+    this.reportFile = null;
+    this.reportFileName = '';
+    this.selectedMajor = null;
+    this.selectedSub = null;
+    this.searchMajor = '';
+    this.searchSub = '';
+    this.selectedCountries = '';
+    this.searchCountries = '';
+  }
+
+  // submitArticle() {
+  //   if (this.isEdit && this.articleData) {
+  //     // 🔵 UPDATE
+  //     this.researchService.updateArticle(this.articleData.id, this.articleData)
+  //       .subscribe({
+  //         next: (res) => {
+  //           console.log('Update success', res);
+  //         },
+  //         error: (err) => {
+  //           console.error('Update error', err);
+  //         }
+  //       });
+
+  //   } else {
+  //     // 🟢 CREATE
+  //     this.researchService.createArticle(this.articleData)
+  //       .subscribe({
+  //         next: (res) => {
+  //           console.log('Create success', res);
+  //         },
+  //         error: (err) => {
+  //           console.error('Create error', err);
+  //         }
+  //       });
+  //   }
+  // }
+
+  submitArticle() {
+    const formData = new FormData();
+
+    formData.append('title_th', this.articleData.title_th);
+    formData.append('article_type', this.articleData.article_type);
+    formData.append('db_type', this.articleData.db_type);
+    formData.append('country', this.articleData.country);
+    formData.append('journal_name', this.articleData.journal_name);
+    formData.append('pages', this.articleData.pages);
+    formData.append('year_published', this.articleData.year_published);
+    formData.append('volume', this.articleData.volume);
+    formData.append('volume_no', this.articleData.volume_no);
+    formData.append('doi', this.articleData.doi);
+    formData.append('responsibilities', this.articleData.responsibilities);
+    formData.append(
+      'subject_area_id',
+      this.articleData.subject_area_id.toString()
+    );
+    formData.append('is_cooperation', this.articleData.is_cooperation);
+
+    if (this.selectedFile) {
+      formData.append('article_file', this.selectedFile);
+    }
+
+    if (this.isEdit) {
+      this.researchService
+        .updateArticle(this.articleData.id, formData)
+        .subscribe(() => {
+          Swal.fire('สำเร็จ', 'อัพเดทข้อมูลแล้ว', 'success');
+        });
+    } else {
+      this.researchService.createArticle(formData).subscribe(() => {
+        Swal.fire('สำเร็จ', 'บันทึกข้อมูลแล้ว', 'success');
+      });
+    }
   }
 }

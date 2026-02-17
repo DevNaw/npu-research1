@@ -42,7 +42,7 @@
     </div>
 
     <!-- ประเภท -->
-    <div class="grid grid-cols-1 md:grid-cols-1 md:gap-2 mb:-2 md:mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-1 md:gap-2 mb-2 md:mb-6">
       <label class="font-bold text-start">
         ประเภท <span class="text-red-500">*</span>
       </label>
@@ -53,7 +53,7 @@
           class="w-full border rounded-md px-3 py-2 flex justify-between items-center bg-white"
         >
           <span class="truncate font-medium">{{
-            article.type || "เลือกประเภท"
+            articleData.article_type || "เลือกประเภท"
           }}</span>
           <i class="bi bi-chevron-down"></i>
         </button>
@@ -64,13 +64,13 @@
           class="absolute z-50 mt-1 w-full bg-white border rounded-md shadow font-medium"
         >
           <div
-            (click)="selectValue('type', 'Journal')"
+            (click)="selectValue('article_type', 'Journal')"
             class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
           >
             Journal
           </div>
           <div
-            (click)="selectValue('type', 'Conference')"
+            (click)="selectValue('article_type', 'Conference')"
             class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
           >
             Conference
@@ -81,7 +81,7 @@
 
     <!-- ประเภทฐานข้อมูล -->
     <div
-      *ngIf="article.type === 'Journal'"
+      *ngIf="articleData.article_type === 'Journal'"
       class="grid grid-cols-1 md:grid-cols-1 md:gap-2 mb:-2 md:mb-6"
     >
       <label class="font-bold text-start">
@@ -94,7 +94,7 @@
           class="w-full border rounded-md px-3 py-2 flex justify-between items-center bg-white"
         >
           <span class="truncate font-medium">{{
-            article.database_types || "เลือกประเภท"
+            articleData.db_type || "เลือกประเภท"
           }}</span>
           <i class="bi bi-chevron-down"></i>
         </button>
@@ -105,13 +105,13 @@
           class="absolute z-50 mt-1 w-full bg-white border rounded-md shadow font-medium"
         >
           <div
-            (click)="selectValue('database_types', 'Scopus')"
+            (click)="selectValue('db_type', 'Scopus')"
             class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
           >
             Scopus
           </div>
           <div
-            (click)="selectValue('database_types', 'TCI')"
+            (click)="selectValue('db_type', 'TCI')"
             class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
           >
             TCI
@@ -121,13 +121,13 @@
     </div>
 
     <!-- Country -->
-    <div *ngIf="article.type === 'Journal'" class="relative mb:-2 md:mb-6">
+    <div *ngIf="articleData.article_type === 'Journal'" class="relative mb:-2 md:mb-6">
       <label class="mb-1 block">ประเทศ</label>
       <button
         (click)="toggleDropdown('countries', $event)"
         class="flex justify-between items-center w-full border rounded-lg px-3 py-2 font-medium"
       >
-        {{ selectedCountries || "เลือก" }}
+        {{ selectedCountries || articleData.country || 'เลือกประเทศ' }}
         <i class="bi bi-chevron-down text-sm"></i>
       </button>
 
@@ -162,7 +162,7 @@
 
     <!-- สถานที่นำเสนอ : -->
     <div
-      *ngIf="article.type === 'Conference'"
+      *ngIf="articleData.article_type === 'Conference'"
       class="grid grid-cols-1 md:grid-cols-1 md:gap-2 mt-2 mb-2 md:mb-6"
     >
       <label class="md:col-span-1 text-start">
@@ -180,13 +180,14 @@
 
     <!-- ชื่องานวิจัย -->
     <div
-      *ngIf="article.type === 'Journal'"
+      *ngIf="articleData.article_type === 'Journal'"
       class="grid grid-cols-1 md:grid-cols-1 md:gap-2 mb-2 mt-2 md:mb-6 md:mt-5"
     >
       <label class="md:col-span-1 text-start">
         ชื่อวารสาร <span class="text-red-500">*</span>
       </label>
       <input
+      [(ngModel)]="articleData.journal_name"
         type="text"
         class="md:col-span-3 text-2xl font-medium w-full h-12 border rounded-md px-4 py-2"
         placeholder="ระบุบชื่อวารสาร"
@@ -195,13 +196,14 @@
 
     <!-- ชื่อการประชุมวิชาการ -->
     <div
-      *ngIf="article.type === 'Conference'"
+      *ngIf="articleData.article_type === 'Conference'"
       class="grid grid-cols-1 md:grid-cols-1 md:gap-2 mb-2 mt-2 md:mb-6 md:mt-5"
     >
       <label class="md:col-span-1 text-start">
         ชื่อการประชุมวิชาการ <span class="text-red-500">*</span>
       </label>
       <input
+      [(ngModel)]="articleData.journal_name"
         type="text"
         class="md:col-span-3 text-2xl font-medium w-full h-12 border rounded-md px-4 py-2"
         placeholder="ระบุบชื่อการประชุมวิชาการ"
@@ -215,6 +217,7 @@
           ฉบับที่/เล่มที่ <span class="text-red-500">*</span>
         </label>
         <input
+        [(ngModel)]="articleData.volume_no"
           type="text"
           class="md:col-span-2 text-2xl font-medium w-full h-12 border rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400"
           placeholder="ฉบับที่/เล่มที่"
@@ -262,7 +265,10 @@
           class="w-full border rounded-lg px-4 py-2 flex justify-between items-center bg-white shadow-sm transition"
         >
           <span class="truncate font-medium">
-            {{ selectedSub?.name_en || "ระบุสาขาของบทความ" }}
+            {{ selectedSub?.name_en 
+              || articleData.subject_area?.[0]?.name_en 
+              || 'ระบุสาขาของบทความ' }}
+           
           </span>
           <i class="bi bi-chevron-down"></i>
         </button>
@@ -330,7 +336,7 @@
           (click)="toggleDropdown('responsibility', $event)"
           class="w-full border rounded-md px-3 py-2 flex justify-between items-center font-medium"
         >
-          {{ article.responsibility || "ประเภทความรับผิดชอบ" }}
+          {{ articleData.responsibilities || "ประเภทความรับผิดชอบ" }}
           <i class="bi bi-chevron-down"></i>
         </button>
 
@@ -341,7 +347,7 @@
           <div
             (click)="
               selectValue(
-                'responsibility',
+                'responsibilities',
                 'First Author (ผู้ประพันธ์อันดับแรก)'
               )
             "
@@ -352,7 +358,7 @@
           <div
             (click)="
               selectValue(
-                'responsibility',
+                'responsibilities',
                 'Corresponding Author (ผู้ประพันธ์บรรณกิจ/ผู้ประสานงาน)'
               )
             "
@@ -362,7 +368,7 @@
           </div>
           <div
             (click)="
-              selectValue('responsibility', 'Co Author (ผู้ประพันธ์ร่วม)')
+              selectValue('responsibilities', 'Co Author (ผู้ประพันธ์ร่วม)')
             "
             class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
           >
@@ -381,7 +387,7 @@
           (click)="toggleDropdown('quality', $event)"
           class="w-full border rounded-md px-3 py-2 flex justify-between items-center font-medium"
         >
-          {{ article.quality || "ระดับคุณภาพ" }}
+          {{ articleData.volume || "ระดับคุณภาพ" }}
           <i class="bi bi-chevron-down"></i>
         </button>
 
@@ -390,31 +396,31 @@
           class="absolute z-50 mt-1 w-full bg-white border rounded-md shadow font-medium"
         >
           <div
-            (click)="selectValue('quality', '.20 หมายถึง')"
+            (click)="selectValue('volume', '.20 หมายถึง')"
             class="px-3 py-2 cursor-pointer hover:bg-gray-100"
           >
             .20 หมายถึง
           </div>
           <div
-            (click)="selectValue('quality', '.40 หมายถึง')"
+            (click)="selectValue('volume', '.40 หมายถึง')"
             class="px-3 py-2 cursor-pointer hover:bg-gray-100"
           >
             .40 หมายถึง
           </div>
           <div
-            (click)="selectValue('quality', '.60 หมายถึง')"
+            (click)="selectValue('volume', '.60 หมายถึง')"
             class="px-3 py-2 cursor-pointer hover:bg-gray-100"
           >
             .60 หมายถึง
           </div>
           <div
-            (click)="selectValue('quality', '.80 หมายถึง')"
+            (click)="selectValue('volume', '.80 หมายถึง')"
             class="px-3 py-2 cursor-pointer hover:bg-gray-100"
           >
             .80 หมายถึง
           </div>
           <div
-            (click)="selectValue('quality', '1.00 หมายถึง')"
+            (click)="selectValue('volume', '1.00 หมายถึง')"
             class="px-3 py-2 cursor-pointer hover:bg-gray-100"
           >
             1.00 หมายถึง
@@ -460,7 +466,7 @@
 
               <tbody>
                 <tr
-                  *ngFor="let j of rows2; let i = index; trackBy: trackByIndex"
+                  *ngFor="let j of rows2; let i = index; trackBy: trackById"
                   class="border-b-2 border-gray-300 bg-gray-200"
                 >
                   <td class="text-center p-1 md:p-3">{{ i + 1 }}</td>
@@ -487,7 +493,7 @@
                         (click)="selectResearcher(r, j)"
                         class="px-4 py-2 hover:bg-indigo-50 cursor-pointer"
                       >
-                        {{ r.full_name }}
+                        {{ r.full_name || articleData.internal_members[0]?.full_name || 'ไม่พบข้อมูล' }}
                       </li>
 
                       <li
@@ -508,7 +514,7 @@
                         (click)="toggleDropdown('internal-' + i, $event)"
                         class="w-full rounded-md px-3 py-2 flex justify-between items-center font-medium"
                       >
-                        {{ j.responsibility || "ประเภทความรับผิดชอบ" }}
+                        {{ j.responsibilities || articleData.internal_members[0].role }}
                         <i class="bi bi-chevron-down"></i>
                       </button>
 
@@ -611,7 +617,7 @@
                   *ngFor="
                     let item of rows;
                     let i = index;
-                    trackBy: trackByIndex
+                    trackBy: trackById
                   "
                   class="bg-gray-200 border-b-2 border-gray-300"
                 >
@@ -635,7 +641,7 @@
                         (click)="toggleDropdown('external-' + i, $event)"
                         class="w-full rounded-md px-3 py-2 flex justify-between items-center font-medium"
                       >
-                        {{ item.responsibility || "ประเภทความรับผิดชอบ" }}
+                        {{ item.responsibilities || articleData.external_members[0].role }}
                         <i class="bi bi-chevron-down"></i>
                       </button>
 
@@ -729,6 +735,7 @@
             type="radio"
             name="collaboration"
             value="yes"
+            [(ngModel)]="articleData.is_cooperation"
           />
           มี
         </label>
@@ -738,6 +745,7 @@
             type="radio"
             name="collaboration"
             value="no"
+            [(ngModel)]="articleData.is_cooperation"
           />
           ไม่มี
         </label>
@@ -750,6 +758,7 @@
         เว็บไซต์อ้างอิง/เผยแพร่ (doi.org) : <span class="text-red-500">*</span>
       </label>
       <input
+      [(ngModel)]="articleData.doi"
         type="text"
         class="md:col-span-3 w-full border rounded-md text-2xl font-medium px-4 py-2 focus:ring-2 focus:ring-blue-400"
         placeholder="ระบุเว็บไซต์อ้างอิง/เผยแพร่ เช่น https://doi.org/..."
@@ -788,12 +797,12 @@
     <!-- ปุ่ม -->
     <div class="flex justify-center mt-10">
       <button
-        (click)="saveData()"
+      (click)="submitArticle()"
         type="submit"
         class="flex items-center justify-center gap-3 w-72 py-3 bg-yellow-300 hover:bg-yellow-400 rounded-lg shadow transition duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 cursor-pointer"
       >
-        <i class="bi bi-floppy2 text-2xl"></i>
-        <span>บันทึกข้อมูล</span>
+      <i class="bi" [ngClass]="isEdit ? 'bi-pencil-square' : 'bi-floppy2'"></i>
+        <span>{{ isEdit ? 'อัปเดตข้อมูล' : 'บันทึกข้อมูล' }}</span>
       </button>
     </div>
   </div>

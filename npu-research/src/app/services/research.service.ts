@@ -10,7 +10,7 @@ import { Observable } from 'rxjs/internal/Observable';
 import { map } from 'rxjs/operators';
 import { SubjectAreaResponse } from '../models/subject.model';
 import { ResearcherResponse } from '../models/researchers.model';
-import { Article } from '../models/aticle.model';
+import { ArticleApiResponse } from '../models/article-show.model';
 
 export type ResearchType = 'project' | 'article' | 'innovation';
 
@@ -144,12 +144,19 @@ export class ResearchService {
   }
 
   // Create to Article Project
-  createArticle(data: FormData) {
-    return this.http.post(
-      `${this.baseUrl}/research/add-article`,
-      data
+  createArticle(data: any) {
+    return this.http.post(`${this.baseUrl}/research/add-article`, data);
+  }
+
+  // Retrieve data for Article Project
+  getArticleById(id: number): Observable<any> {
+    return this.http.get<any>(
+      `${this.baseUrl}/research/${id}/article`
     );
   }
-  
-  
+
+  // Update Article Project
+  updateArticle(id: number, data: any) {
+    return this.http.post(`${this.baseUrl}/research/${id}/update-article`, data);
+  }
 }

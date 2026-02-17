@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ResearchService } from '../../services/research.service';
+import { ResearchArticle } from '../../models/article-show.model';
+import { AuthService } from '../../services/auth.service';
 
 type WorkType = 'research' | 'article' | 'innovation';
 
@@ -14,15 +17,43 @@ export class PerformanceComponent {
   id!: number;
   selectedImage: string | null = null;
 
-  data: any; // mock data (แทน API)
+  selectedFile: File | null = null;
+  previewImage: string | null = null;
 
-  constructor(private route: ActivatedRoute, private router: Router) {}
+  data: any; // mock data (แทน API)
+  articleData: ResearchArticle | null = null;
+  img: any;
+
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private articleService: ResearchService,
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
-    this.type = this.route.snapshot.paramMap.get('type') as WorkType;
-    this.id = Number(this.route.snapshot.paramMap.get('id'));
+    this.route.paramMap.subscribe((params) => {
+      this.type = params.get('type') as WorkType;
 
-    this.loadMockData();
+      const id = params.get('id');
+
+      if (id) {
+        this.id = Number(id);
+        this.loadArticleData(this.id);
+      }
+    });
+  }
+
+  loadArticleData(id: number) {
+    this.articleService.getArticleById(id).subscribe({
+      next: (res) => {
+        this.articleData = res.data.researchArticle;
+        console.log(this.articleData);
+      },
+      error: (err) => {
+        console.error('Error fetching article data:', err);
+      },
+    });
   }
 
   loadMockData() {
@@ -97,5 +128,72 @@ export class PerformanceComponent {
 
   closeImage() {
     this.selectedImage = null;
+  }
+
+  // Update Image
+  uploadImage() {
+    if (!this.selectedFile) return;
+  
+    const formData = new FormData();
+    formData.append('image', this.selectedFile);
+  
+    this.articleService.updateArticle(this.id, formData).subscribe({
+      next: (res: any) => {
+        this.img = res;
+        
+        this.previewImage = null;
+        this.selectedFile = null;
+  
+        console.log('Upload success');
+      },
+      error: (err) => {
+        console.error('Upload error:', err);
+      }
+    });
+  }
+  
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+
+    if (file) {
+      this.selectedFile = file;
+
+      // แสดง preview
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.previewImage = reader.result as string;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  editItem(id: number | undefined) {
+    if (!id) return;
+
+    const isAdmin = this.authService.isAdmin();
+  const base = isAdmin ? '/admin' : '/user';
+
+  let route = '';
+
+  switch (this.type) {
+    case 'research':
+      route = `${base}/edit-research/${id}`;
+      break;
+
+    case 'article':
+      route = `${base}/edit-aticle/${id}`;
+      break;
+
+    case 'innovation':
+      route = `${base}/edit-innovation/${id}`;
+      break;
+
+    default:
+      console.warn('Unknown type:', this.type);
+      return;
+  }
+
+    this.router.navigateByUrl(route);
   }
 }
