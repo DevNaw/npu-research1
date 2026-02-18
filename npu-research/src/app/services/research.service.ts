@@ -151,7 +151,7 @@ export class ResearchService {
   // Retrieve data for Article Project
   getArticleById(id: number): Observable<any> {
     return this.http.get<any>(
-      `${this.baseUrl}/research/${id}/article`
+      `${this.baseUrl}/research/${id}/article-for-update`
     );
   }
 
