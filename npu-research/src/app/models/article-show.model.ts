@@ -41,7 +41,7 @@ export interface ArticleApiResponse {
     internal_members: InternalMember[];
     external_members: ExternalMember[];
   
-    articleFile: ArticleFile;
+    article_file: ArticleFile;
   }
 
   export interface SubjectArea {

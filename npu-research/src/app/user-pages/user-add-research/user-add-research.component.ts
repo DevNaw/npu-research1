@@ -1,17 +1,43 @@
 import { Component, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
-import {
-  Responsibility,
-  ResponsibilityRole,
-  InternalPerson,
-  ExternalPerson,
-} from '../../models/add.research.model';
 
 import { ResearchData } from '../../models/research.model';
 import { ResearchService } from '../../services/research.service';
 import { ArticleForm, Major, SubArea } from '../../models/subject.model';
 import { Researcher } from '../../models/researchers.model';
+import {
+  ExternalMemberRow,
+  InternalMemberRow,
+} from '../../models/member.model';
+
+const FIRST_AUTHOR = 'หัวหน้าโครงการ';
+
+const DEFAULT_RESEARCH: ResearchData = {
+  id: 0,
+  title_th: '',
+  title_en: '',
+  abstract: '',
+  published_date: '',
+  call_other: '',
+  image: null,
+  source_funds: '',
+  name_funding: '',
+  budget_amount: '',
+  budget: '',
+  year_received_budget: '',
+  research_area: '',
+  usable_area: '',
+  start_date: '',
+  end_date: '',
+  status: '',
+  responsibilities: '',
+  subject_area_id: 0,
+  internal_members: [{ user_id: 0, role: '', no: '' }],
+  external_members: [{ full_name: '', role: '', organization: '', no: '' }],
+  full_report: null,
+  contract_file: null,
+};
 
 @Component({
   selector: 'app-user-add-research',
@@ -20,7 +46,6 @@ import { Researcher } from '../../models/researchers.model';
   styleUrl: './user-add-research.component.css',
 })
 export class UserAddResearchComponent {
-  openDropdown: string | null = null;
   isEdit = false;
   researchId?: number;
 
@@ -31,10 +56,12 @@ export class UserAddResearchComponent {
   selectedFileName = '';
   selectedMajor: Major | null = null;
   searchMajor = '';
-  searchSub = '';
   selectedSub: SubArea | null = null;
 
   activeDropdown: string | null = null;
+
+  selectedFile: File | null = null;
+  reportFile: File | null = null;
 
   isResponsibilityOpen = false;
   openInternalIndex: number | null = null;
@@ -51,61 +78,26 @@ export class UserAddResearchComponent {
     quality: '',
     major_id: null,
     sub_id: null,
-  }
-
-  researchData: ResearchData = {
-    id: 0,
-    title_th: '',
-    title_en: '',
-    abstract: '',
-    year: '',
-    published_date: '',
-    call_other: '',
-    image: null,
-    source_funds: '',
-    name_funding: '',
-    budget_amount: '',
-    budget: '',
-    year_received_budget: '',
-    research_area: '',
-    usable_area: '',
-    start_date: '',
-    end_date: '',
-    internal_members: [],
-    external_members: [],
-    full_report: null,
-    contract_file: null,
   };
 
-  rows = [
+  researchData: ResearchData = { ...DEFAULT_RESEARCH };
+
+  internalRows: InternalMemberRow[] = [
+    {
+      id: 0,
+      researcher_id: null,
+      name: '',
+      responsibilities: '',
+    },
+  ];
+
+  externalRows: ExternalMemberRow[] = [
     {
       name: '',
-      responsibility: '',
       organization: '',
+      responsibilities: '',
     },
   ];
-
-  rows2 = [
-    {
-      id: Date.now(),
-      name: '',
-      responsibility: '',
-    },
-  ];
-
-  internalPeople: InternalPerson[] = [];
-  externalPeople: ExternalPerson[] = [];
-
-  responsibilityRoles: ResponsibilityRole[] = [
-    'ที่ปรึกษา',
-    'ผู้เชี่ยวชาญ',
-    'กรรมการ',
-  ];
-
-  isResponsibility = false;
-  isResponsibilityOfInternal = false;
-  isResponsibilityOfExternal = false;
-
   major: Major[] = [];
 
   fundType: string = '';
@@ -122,20 +114,6 @@ export class UserAddResearchComponent {
     'สกสว.',
     'กระทรวงการอุดมศึกษา',
     'หน่วยงานเอกชน',
-  ];
-
-  internalMembers = [
-    {
-      name: '',
-      organization: '',
-    },
-  ];
-  externalMembers = [
-    {
-      name: '',
-      organization: '',
-      role: '',
-    },
   ];
 
   constructor(
@@ -159,19 +137,16 @@ export class UserAddResearchComponent {
         this.isEdit = false;
       }
     });
-
-    this.addInternal();
-    this.addExternal();
   }
-
-  loadSubjectAreas() {
+  // =========================== Load Data ===========================
+  loadSubjectAreas(): void {
     this.researchService.getSubjectArea().subscribe({
       next: (res) => {
         this.major = res.data.subject_areas;
       },
       error: (err) => {
         console.error('โหลด Subject Area ไม่สำเร็จ', err);
-      }
+      },
     });
   }
 
@@ -180,100 +155,190 @@ export class UserAddResearchComponent {
       next: (res) => {
         this.researchers = res.data.$researchers ?? [];
         this.filteredResearchers = this.researchers;
-      }
-    })
-  }
-
-  submit() {
-  }
-
-  loadResearchData(id: number) {
-    console.log('แก้ไขงานวิจัย ID:', id);
-  }
-
-  addInternal() {
-    this.internalMembers.push({
-      name: '',
-      organization: '',
+      },
+      error: (err) => console.error('Failed to load researchers:', err),
     });
   }
 
-  addExternal() {
-    this.externalMembers.push({
-      name: '',
-      organization: '',
-      role: '',
+  loadResearchData(id: number): void {
+    this.researchService.getProjectById(id).subscribe({
+      next: (res) => {
+        const data = res.data.project;
+        this.researchData = {
+          ...this.researchData,
+          ...data,
+        };
+
+        this.reportFileName = data.full_report_file_name ?? '';
+        this.selectedFileName = data.contract_file_name ?? '';
+
+        if (data.internal_members?.length) {
+          this.internalRows = data.internal_members.map(
+            (m: any, index: number) => ({
+              id: index,
+              researcher_id: m.user_id,
+              name: m.full_name,
+              responsibilities: m.role,
+            })
+          );
+        }
+
+        if (data.external_members?.length) {
+          this.externalRows = data.external_members.map((m: any) => ({
+            name: m.full_name,
+            organization: m.organization,
+            responsibilities: m.role,
+          }));
+        }
+
+        if (this.researchData.subject_area_id) {
+          for (const m of this.major) {
+            const foundSub = m.children.find(
+              (s) => s.sub_id === this.researchData.subject_area_id
+            );
+            if (foundSub) {
+              this.selectedMajor = m;
+              this.selectedSub = foundSub;
+              break;
+            }
+          }
+        }
+      },
+      error: (err) => console.error('Failed to load research data:', err),
     });
   }
 
-  removeInternal(index: number) {
-    if (this.internalPeople.length > 1) {
-      this.internalPeople.splice(index, 1);
-    }
-  }
-
-  selectInternalRole(role: string, member: any) {
-    member.organization = role;
-    this.openInternalIndex = null;
-  }
-
-  selectExternalRole(role: string, member: any) {
-    member.organization = role;
-    this.openExternalIndex = null;
-  }
-
-  toggleInternal(index: number, event: Event) {
-    event.stopPropagation();
-    this.activeDropdown = 'internal';
-    this.openInternalIndex = this.openInternalIndex === index ? null : index;
-  }
-
-  toggleExternal(index: number, event: Event) {
-    event.stopPropagation();
-    this.activeDropdown = 'external';
-    this.openExternalIndex = this.openExternalIndex === index ? null : index;
-  }
-
+  // =========================== Toggle Event Handlers ===========================
   toggle(type: string, event: MouseEvent) {
     event.stopPropagation();
-    this.openDropdown = this.openDropdown === type ? null : type;
+    this.activeDropdown = this.activeDropdown === type ? null : type;
   }
 
-  addRow(){
-    this.rows = [
-      ...this.rows,
-      {
-        name: '',
-        responsibility: '',
-        organization: '',
-      },
-    ];
+  toggleMajor(major: Major, event: Event): void {
+    event.stopPropagation();
+
+    this.activeMajor =
+      this.activeMajor?.major_id === major.major_id ? null : major;
   }
 
-  removeRow(index: number) {
-    // กันไม่ให้ลบแถวสุดท้าย
-    if (this.rows.length > 1) {
-      this.rows.splice(index, 1);
+  @HostListener('document:click')
+  closeAllDropdowns() {
+    this.activeDropdown = null;
+    this.activeMajor = null;
+    this.activeRowIndex = null;
+  }
+
+  // =========================== Select Value ===========================
+  selectValue<K extends keyof ResearchData>(
+    field: K,
+    value: ResearchData[K]
+  ): void {
+    if (
+      field === 'responsibilities' &&
+      value === FIRST_AUTHOR &&
+      this.isFirstAuthorTaken()
+    ){return;}
+
+    this.researchData[field] = value;
+
+    if (field === 'source_funds') {
+      this.researchData.name_funding = '';
     }
+      
+    this.activeDropdown = null;
   }
 
-  addRow2() {
-    this.rows2.push({id: Date.now()+ Math.random(), name: '', responsibility: '' });
+  selectSub(sub: SubArea) {
+    this.selectedSub = sub;
+    this.researchData.subject_area_id = sub.sub_id;
+    this.activeDropdown = null;
+    this.activeMajor = null;
+
+    this.research.major_id = sub.major_id;
+    this.research.sub_id = sub.sub_id;
   }
 
-  removeRow2(index: number) {
-    // กันไม่ให้ลบแถวสุดท้าย
-    if (this.rows2.length > 1) {
-      this.rows2.splice(index, 1);
+  selectResponsibility(row: any, value: string): void {
+    if (value === FIRST_AUTHOR && this.isFirstAuthorTaken(row)) {
+      return;
     }
+
+    row.responsibilities = value;
+    this.activeDropdown = null;
   }
 
   trackByIndex(index: number) {
     return index;
   }
 
-  selectedFile: File | null = null;
+  selectStatus(status: string) {
+    this.researchData.status = status;
+    this.activeDropdown = null;
+  }
 
+  // ============================ Filter ===========================
+  filteredMajor(): Major[] {
+    if (!this.searchMajor) return this.major;
+
+    const keyword = this.searchMajor.toLowerCase();
+    return this.major.filter((m) => m.name_en.toLowerCase().includes(keyword));
+  }
+
+  isFirstAuthorTaken(currentRow?: any): boolean {
+    if (this.researchData.responsibilities === FIRST_AUTHOR) return true;
+    return [...this.internalRows, ...this.externalRows].some(
+      (row) => row !== currentRow && row.responsibilities === FIRST_AUTHOR
+    );
+  }
+
+  // =========================== Add/Remove Member ===========================
+  addInternal(): void {
+    this.internalRows.push({
+      id: Date.now(),
+      researcher_id: null,
+      name: '',
+      responsibilities: '',
+    });
+  }
+
+  removeInternal(index: number): void {
+    this.internalRows.splice(index, 1);
+  }
+
+  addExternal() {
+    this.externalRows.push({
+      name: '',
+      organization: '',
+      responsibilities: '',
+    });
+  }
+
+  removeExternal(index: number) {
+    this.externalRows.splice(index, 1);
+  }
+
+  // ====================== Researcher & Role Selection =======================
+  onFocus(index: InternalMemberRow): void {
+    this.activeRowIndex = index.id;
+    this.filteredResearchers = this.researchers;
+  }
+
+  onSearch(value: string): void {
+    this.filteredResearchers = value
+      ? this.researchers.filter((r) =>
+          r.full_name.toLowerCase().includes(value.toLowerCase())
+        )
+      : this.researchers;
+  }
+
+  selectResearcher(r: Researcher, row: InternalMemberRow): void {
+    row.name = r.full_name;
+    row.researcher_id = r.user_id;
+
+    this.activeRowIndex = null;
+  }
+
+  // ============= File =================
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
 
@@ -282,8 +347,6 @@ export class UserAddResearchComponent {
       this.selectedFileName = this.selectedFile.name;
     }
   }
-
-  reportFile: File | null = null;
 
   onReportFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
@@ -294,80 +357,117 @@ export class UserAddResearchComponent {
     }
   }
 
-  toggleDropdown(type: string, event: Event): void {
-    event.stopPropagation();
-    this.activeDropdown = this.activeDropdown === type ? null : type;
+  // ============== Submit Research ==============
+  submitResearch() {
+    const formData = this.prepareFormData();
+
+    Swal.fire({
+      title: 'กำลังบันทึก...',
+      allowOutsideClick: false,
+      didOpen: () => Swal.showLoading(),
+    });
+
+    const request$ = this.isEdit
+      ? this.researchService.updateProject(this.researchData.id, formData)
+      : this.researchService.createProject(formData);
+
+    request$.subscribe({
+      next: () => this.handleSuccess(),
+      error: () => this.handleError(),
+    });
   }
 
-  toggleMajor(major: Major, event: Event) {
-    event.stopPropagation();
-    
-    if (this.activeMajor?.major_id === major.major_id) {
-      this.activeMajor = null;
+  // ============== FormData Preparation ==============
+  private prepareFormData(): FormData {
+    const fd = new FormData();
+    const d = this.researchData;
+
+    Object.entries(d).forEach(([key, value]) => {
+      if (
+        value !== null &&
+        value !== undefined &&
+        value !== '' &&
+        !Array.isArray(value)
+      ) {
+        fd.append(key, value as any);
+      }
+    });
+
+    this.appendMembers(fd);
+
+    if (this.selectedFile) {
+      fd.append('contract_file', this.selectedFile);
+    }
+
+    if (this.reportFile) {
+      fd.append('full_report', this.reportFile);
+    }
+
+    return fd;
+  }
+
+  private resetForm() {
+    this.researchData = { ...DEFAULT_RESEARCH };
+    this.internalRows = [
+      {
+        id: 0,
+        researcher_id: null,
+        name: '',
+        responsibilities: '',
+      },
+    ];
+    this.externalRows = [
+      {
+        name: '',
+        organization: '',
+        responsibilities: '',
+      },
+    ];
+    this.selectedFile = null;
+    this.reportFile = null;
+    this.selectedFileName = '';
+    this.reportFileName = '';
+  }
+
+  private appendMembers(fd: FormData): void {
+    this.internalRows
+      .filter(r => r.researcher_id)
+      .forEach((r, i) => {
+        fd.append(`internal_members[${i}][user_id]`, String(r.researcher_id));
+        fd.append(`internal_members[${i}][role]`, r.responsibilities ?? '');
+        fd.append(`internal_members[${i}][no]`, String(i + 1));
+      });
+
+    this.externalRows
+      .filter(r => r.name)
+      .forEach((r, i) => {
+        fd.append(`external_members[${i}][full_name]`, r.name);
+        fd.append(`external_members[${i}][role]`, r.responsibilities ?? '');
+        fd.append(`external_members[${i}][organization]`, r.organization);
+        fd.append(`external_members[${i}][no]`, String(i + 1));
+      });
+  }
+
+  private handleSuccess(): void {
+    Swal.fire({
+      icon: 'success',
+      title: this.isEdit ? 'อัพเดทสำเร็จ' : 'บันทึกสำเร็จ',
+      timer: 1000,
+      showConfirmButton: false,
+    });
+
+    if (this.isEdit) {
+      this.router.navigate(['/performance/research', this.researchData.id]);
     } else {
-      this.activeMajor = major;
+      this.resetForm();
     }
   }
 
-  toggleStatus(event: Event) {
-    event.stopPropagation();
-    this.activeDropdown = this.activeDropdown === 'status' ? null : 'status';
-  }
-
-  selectStatus(status: string) {
-    // this.researchData.status = status;
-    this.activeDropdown = null;
-  }
-
-  toggleResponsibility(event: Event) {
-    event.stopPropagation();
-    this.activeDropdown =
-      this.activeDropdown === 'responsibility' ? null : 'responsibility';
-  }
-
-  selectResponsibility(value: string) {
-    // this.researchData.responsibility = value;
-    this.activeDropdown = null;
-  }
-
-  @HostListener('document:click')
-  closeAllDropdowns() {
-    this.activeDropdown = null;
-    this.openInternalIndex = null;
-  }
-
-  onDocumentClick() {
-    this.isResponsibility = false;
-  }
-
-  selectMajor(m: Major) {
-    this.selectedMajor = m;
-    this.openDropdown = null;
-    this.searchMajor = '';
-  }
-
-  selectSub(sub: SubArea) {
-    this.selectedSub = sub;
-    this.activeDropdown = null;
-    this.activeMajor = null;
-
-    this.research.major_id = sub.major_id;
-    this.research.sub_id = sub.sub_id;
-  }
-
-  filteredSub() {
-    if (!this.selectedMajor) return [];
-
-    return this.selectedMajor.children.filter((s) =>
-    s.name_en.toLowerCase().includes(this.searchSub.toLowerCase()));
-  }
-
-  filteredMajor(): Major[] {
-    if (!this.searchMajor) return this.major;
-
-    return this.major.filter((m) =>
-      m.name_en.toLowerCase().includes(this.searchMajor.toLowerCase())
-    );
+  private handleError(): void {
+    Swal.fire({
+      icon: 'error',
+      title: this.isEdit ? 'อัพเดทไม่สำเร็จ' : 'บันทึกไม่สำเร็จ',
+    });
   }
 
   goToResearchDetail(type: string, id: number | string) {
@@ -400,52 +500,6 @@ export class UserAddResearchComponent {
   // ===== select fund name =====
   selectFundName(name: string) {
     this.fundName = name;
-    this.activeDropdown = null;
-  }
-
-  selectResearcher(r: Researcher, j: any) {
-    j.name = r.full_name;
-    j.user_id = r.user_id;
-
-    this.activeRowIndex = null;
-  }
-
-  onFocus(index: any) {
-    this.activeRowIndex = index.id;
-    this.filteredResearchers = this.researchers;
-  }
-
-  onSearch(value: string) {
-    if (!value) {
-      this.filteredResearchers = this.researchers;
-      return;
-    }
-    this.filteredResearchers = this.researchers.filter((r) =>
-    r.full_name?.toLowerCase().includes(value.toLowerCase()));
-  }
-
-  isFirstAuthorTaken(currentRow?: any): boolean {
-    if (
-      this.research?.responsibility === 'First Author (ผู้ประพันธ์อันดับแรก)'
-    ) {
-      return true;
-    }
-
-    const allRows = [...this.rows2, ...this.rows];
-
-    return allRows.some(
-      (row) =>
-        row !== currentRow &&
-        row.responsibility === 'First Author (ผู้ประพันธ์อันดับแรก)'
-    );
-  }
-
-  selectRowResponsibility(row: any, value: string) {
-    if ( value === 'First Author (ผู้ประพันธ์อันดับแรก)' && this.isFirstAuthorTaken(row)) {
-      return;
-    }
-
-    row.responsibility = value;
     this.activeDropdown = null;
   }
 }

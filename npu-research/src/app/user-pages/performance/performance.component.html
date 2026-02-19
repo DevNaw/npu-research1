@@ -9,11 +9,21 @@
       class="mx-auto bg-white rounded-2xl shadow-lg overflow-hidden"
     >
       <!-- Header -->
-      <div class="bg-[#394250] text-white px-4 md:px-8 py-2 md:py-6">
+      <div class="bg-[#394250] text-white px-4 md:px-8 py-2 md:py-6 flex justify-between">
+        <div>
         <p class="text-xl md:text-2xl opacity-80">โครงการวิจัย</p>
         <h1 class="text-2xl md:text-3xl mt-1">
-          การวิเคราะห์ผลกระทบของการเปลี่ยนแปลงสภาพภูมิอากาศต่อผลผลิตทางการเกษตร
-        </h1>
+          {{ researchData?.title_th }}
+        </h1></div>
+
+        <div class="mt-4 text-center flex justify-end">
+          <button
+            class="bg-blue-600 text-white p-3 rounded-lg shadow hover:bg-blue-700 text-xl"
+            (click)="editItem(researchData?.research_id)"
+          >
+            แก้ไขข้อมูล <i class="bi bi-pencil"></i>
+          </button>
+        </div>
       </div>
 
       <!-- Content -->
@@ -27,6 +37,17 @@
               <i class="bi bi-image text-7xl mx-auto mb-2"></i>
               <p class="text-xl">รูปภาพปก</p>
             </div>
+          </div>
+
+          <!-- ปุ่มบันทึก -->
+          <div *ngIf="selectedFile" class="mt-4 text-center">
+            <button
+              class="bg-blue-600 text-white px-6 py-2 rounded-lg shadow hover:bg-blue-700 disabled:bg-gray-400"
+              [disabled]="!selectedFile"
+              (click)="uploadImage()"
+            >
+              บันทึกรูปภาพ
+            </button>
           </div>
 
           <!-- PDF Button -->
@@ -46,7 +67,7 @@
             <div class="grid grid-cols-1 gap-2 md:gap-4">
               <div>
                 <p class="text-[#767676]">สาขาของงานวิจัย</p>
-                <p class="font-bold">วิทยาศาสตร์สิ่งแวดล้อม</p>
+                <p class="font-bold">{{ researchData?.subject_area?.[0]?.name_en }}</p>
               </div>
 
               <div>
@@ -68,8 +89,8 @@
                     </tr>
                   </thead>
                   <tbody class="divide-y">
-                    <tr class="bg-gray-200 border-b border-gray-300">
-                      <td class="p-1 md:p-2">1</td>
+                    <tr *ngFor="let internal of researchData?.internal_members; let i = index" class="bg-gray-200 border-b border-gray-300">
+                      <td class="p-1 md:p-2">{{ i + 1 }}</td>
                       <td
                         class="p-1 md:p-2 flex items-center gap-2 flex-wrap justify-center md:justify-start"
                       >
@@ -78,9 +99,9 @@
                         >
                           <i class="bi bi-person-fill"></i>
                         </div>
-                        สมบัติ นกศิล
+                        {{ internal?.full_name }}
                       </td>
-                      <td class="p-1 md:p-2">ที่ปรึกษา</td>
+                      <td class="p-1 md:p-2">{{ internal?.role }}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -103,11 +124,11 @@
                     </tr>
                   </thead>
                   <tbody class="divide-y">
-                    <tr class="bg-gray-200 border-b border-gray-300">
-                      <td class="p-1 md:p-2">1</td>
-                      <td class="p-1 md:p-2">กนกวรรณ อำนาญ</td>
-                      <td class="p-1 md:p-2">ที่ปรึกษา</td>
-                      <td class="p-1 md:p-2">มหาวิทยาลัยสารคาม</td>
+                    <tr *ngFor="let external of researchData?.external_members; let i = index;" class="bg-gray-200 border-b border-gray-300">
+                      <td class="p-1 md:p-2">{{ i + 1}}</td>
+                      <td class="p-1 md:p-2">{{ external?.full_name }}</td>
+                      <td class="p-1 md:p-2">{{ external?.role }}</td>
+                      <td class="p-1 md:p-2">{{ external?.organization }}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -122,35 +143,28 @@
                 <p class="font-semibold text-[#767676] md:mb-1">
                   ที่มาแหล่งทุน
                 </p>
-                <p class="text-gray-800">กองทุนวิจัยแห่งชาติ</p>
+                <p class="text-gray-800">{{ researchData?.source_funds }}</p>
               </div>
 
               <div>
                 <p class="font-semibold text-[#767676] md:mb-1">
-                  ระบุแหล่งทุนภายนอกอื่นๆ
+                  ชื่อแหล่งทุน
                 </p>
-                <p class="text-gray-800">-</p>
-              </div>
-
-              <div>
-                <p class="font-semibold text-[#767676] md:mb-1">
-                  แหล่งทุนภายใน
-                </p>
-                <p class="text-gray-800">มหาวิทยาลัยนครพนม</p>
+                <p class="text-gray-800">{{ researchData?.name_funding }}</p>
               </div>
 
               <div>
                 <p class="font-semibold text-[#767676] md:mb-1">
                   จำนวนงบประมาณ
                 </p>
-                <p class="text-gray-800">1,200,000 บาท</p>
+                <p class="text-gray-800">{{ researchData?.budget_amount }} บาท</p>
               </div>
 
               <div>
                 <p class="font-semibold text-[#767676] md:mb-1">
                   ปีที่ได้รับทุน
                 </p>
-                <p class="text-gray-800">2023</p>
+                <p class="text-gray-800">{{ researchData?.year_received_budget }}</p>
               </div>
 
               <div>
@@ -160,7 +174,7 @@
                 <span
                   class="inline-block px-3 py-1 rounded-full bg-green-100 text-green-700"
                 >
-                  สำเร็จ
+                  {{ researchData?.status || '-' }}
                 </span>
               </div>
 
@@ -168,26 +182,26 @@
                 <p class="font-semibold text-[#767676] md:mb-1">
                   ปีที่เสร็จสิ้น
                 </p>
-                <p class="text-gray-800">2025</p>
+                <p class="text-gray-800">{{ researchData?.end_date || '-' }}</p>
               </div>
 
               <div>
                 <p class="font-semibold text-[#767676] md:mb-1">
                   ความร่วมมือกับหน่วยงานอื่นๆ
                 </p>
-                <p class="text-gray-800">กรมอุตุนิยมวิทยา</p>
+                <p class="text-gray-800">{{ researchData?.call_other }}</p>
               </div>
 
               <div>
                 <p class="font-semibold text-[#767676] md:mb-1">พื้นที่วิจัย</p>
-                <p class="text-gray-800">ภาคตะวันออกเฉียงเหนือ</p>
+                <p class="text-gray-800">{{ researchData?.research_area }}</p>
               </div>
 
               <div>
                 <p class="font-semibold text-[#767676] md:mb-1">
                   พื้นที่ใช้ประโยชน์
                 </p>
-                <p class="text-gray-800">แปลงเกษตรต้นแบบ 5 จังหวัด</p>
+                <p class="text-gray-800">{{ researchData?.research_area }}</p>
               </div>
 
               <div>
@@ -195,16 +209,25 @@
                   รายงานวิจัยฉบับสมบูรณ์
                 </p>
                 <a href="#" class="text-blue-600 hover:underline">
-                  ดาวน์โหลดไฟล์ PDF
+                  {{ researchData?.full_report?.file_name || '-' }}
                 </a>
               </div>
 
+              <div>
+                <p class="font-semibold text-[#767676] md:mb-1">
+                  ไฟล์สัญญารับทุน
+                </p>
+                <a href="#" class="text-blue-600 hover:underline">
+                  {{ researchData?.contract_file?.file_name || '-' }}
+                </a>
+              </div>
+<!-- 
               <div>
                 <p class="font-semibold text-[#767676] md:mb-1">การเผยแพร่</p>
                 <a href="#" class="text-blue-600 hover:underline break-all">
                   https://doi.org/xx.xxxx/abcd
                 </a>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
@@ -349,10 +372,10 @@
                   </thead>
                   <tbody class="divide-y">
                     <tr
-                      *ngFor="let member of articleData?.internal_members"
+                      *ngFor="let member of articleData?.internal_members; let i = index;"
                       class="bg-gray-200 border-b border-gray-300"
                     >
-                      <td class="px-4 py-3">1</td>
+                      <td class="px-4 py-3">{{ i + 1 }}</td>
                       <td
                         class="px-4 py-3 flex items-center flex-wrap justify-center md:justify-start gap-2"
                       >
@@ -387,10 +410,10 @@
                   </thead>
                   <tbody class="divide-y">
                     <tr
-                      *ngFor="let external of articleData?.external_members"
+                      *ngFor="let external of articleData?.external_members; let i = index;"
                       class="bg-gray-200 border-b border-gray-300"
                     >
-                      <td class="px-4 py-3">1</td>
+                      <td class="px-4 py-3">{{ i + 1 }}</td>
                       <td class="px-4 py-3">{{ external.full_name }}</td>
                       <td class="px-4 py-3">{{ external.role }}</td>
                       <td class="px-4 py-3">{{ external.organization }}</td>
@@ -444,7 +467,7 @@
                   ไฟล์บทความ PDF
                 </p>
                 <p class="text-gray-800">
-                  {{ articleData?.articleFile?.file_name || "-" }}
+                  {{ articleData?.article_file?.file_name || "-" }}
                 </p>
               </div>
 
@@ -466,11 +489,22 @@
     <div *ngIf="type === 'innovation'">
       <div class="mx-auto bg-white rounded-2xl shadow-lg overflow-hidden">
         <!-- Header -->
-        <div class="bg-[#394250] text-white px-4 md:px-8 py-2 md:py-6">
-          <p class="text-xl md:text-2xl opacity-80">นวัตกรรมสิ่งประดิษฐ์</p>
-          <h1 class="text-2xl md:text-3xl mt-1">
-            การวิเคราะห์ผลกระทบของการเปลี่ยนแปลงสภาพภูมิอากาศต่อผลผลิตทางการเกษตร
-          </h1>
+        <div class="bg-[#394250] text-white px-4 md:px-8 py-2 md:py-6 flex justify-between">
+          <div>
+            <p class="text-xl md:text-2xl opacity-80">นวัตกรรมสิ่งประดิษฐ์</p>
+            <h1 class="text-2xl md:text-3xl mt-1">
+              {{ innovationData?.title_th }}
+            </h1>
+          </div>
+          
+          <div class="mt-4 text-center flex justify-end">
+            <button
+              class="bg-blue-600 text-white p-3 rounded-lg shadow hover:bg-blue-700 text-xl"
+              (click)="editItem(innovationData?.research_id)"
+            >
+              แก้ไขข้อมูล <i class="bi bi-pencil"></i>
+            </button>
+          </div>
         </div>
 
         <!-- Content -->
@@ -478,8 +512,9 @@
           <!-- Left: Cover Image -->
           <div class="md:col-span-1">
             <div
-              class="bg-gray-200 rounded-xl shadow-inner flex items-center justify-center h-80"
-            >
+              class="bg-gray-200 rounded-xl shadow-inner flex items-center justify-center h-80 overflow-hidden cursor-pointer"
+            
+              >
               <div class="text-center text-gray-500">
                 <i class="bi bi-image text-7xl mx-auto mb-2"></i>
                 <p class="text-xl">รูปภาพปก</p>
@@ -502,7 +537,7 @@
             <div class="grid grid-cols-1 gap-4">
               <div>
                 <p class="text-[#767676]">สาขาของนวัตกรรมสิ่งประดิษฐ์</p>
-                <p class="font-bold">วิทยาศาสตร์สิ่งแวดล้อม</p>
+                <p class="font-bold">{{ innovationData?.subject_area?.[0]?.name_en || '-' }}</p>
               </div>
 
               <div>
@@ -512,9 +547,7 @@
               <div class="">
                 <p class="text-[#767676] mb-1">หลักการและเหตุผล</p>
                 <p class="eading-relaxed">
-                  การเปลี่ยนแปลงสภาพภูมิอากาศส่งผลกระทบต่อผลผลิตทางการเกษตรอย่างมีนัยสำคัญ
-                  ทั้งในด้านปริมาณและคุณภาพ จึงจำเป็นต้องมีการศึกษา วิเคราะห์
-                  และพัฒนาแนวทางในการปรับตัวและลดผลกระทบที่อาจเกิดขึ้นในอนาคต
+                  {{ innovationData?.principle }}
                 </p>
               </div>
             </div>
@@ -532,8 +565,8 @@
                     </tr>
                   </thead>
                   <tbody class="divide-y">
-                    <tr class="bg-gray-200 border-b border-gray-300">
-                      <td class="px-4 py-3">1</td>
+                    <tr *ngFor="let internal of innovationData?.internal_members; let i = index" class="bg-gray-200 border-b border-gray-300">
+                      <td class="px-4 py-3">{{ i + 1 }}</td>
                       <td
                         class="px-4 py-3 flex flex-wrap justify-center md:justify-start items-center gap-2"
                       >
@@ -542,9 +575,9 @@
                         >
                           <i class="bi bi-person-fill"></i>
                         </div>
-                        สมบัติ นกศิล
+                        {{ internal?.full_name }}
                       </td>
-                      <td class="px-4 py-3">ที่ปรึกษา</td>
+                      <td class="px-4 py-3">{{ internal?.role }}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -567,11 +600,11 @@
                     </tr>
                   </thead>
                   <tbody class="divide-y">
-                    <tr class="bg-gray-200 border-b border-gray-300">
-                      <td class="px-4 py-3">1</td>
-                      <td class="px-4 py-3">กนกวรรณ อำนาญ</td>
-                      <td class="px-4 py-3">ที่ปรึกษา</td>
-                      <td class="px-4 py-3">มหาวิทยาลัยสารคาม</td>
+                    <tr *ngFor="let external of innovationData?.external_members; let i = index" class="bg-gray-200 border-b border-gray-300">
+                      <td class="px-4 py-3">{{ i + 1 }}</td>
+                      <td class="px-4 py-3">{{ external?.full_name }}</td>
+                      <td class="px-4 py-3">{{ external?.role }}</td>
+                      <td class="px-4 py-3">{{ external?.organization || '-' }}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -586,51 +619,51 @@
                 <p class="font-semibold text-[#767676] md:mb-1">
                   ที่มาแหล่งทุน
                 </p>
-                <p class="text-gray-800">กองทุนวิจัยแห่งชาติ</p>
+                <p class="text-gray-800">{{ innovationData?.source_funds }}</p>
               </div>
 
               <div>
                 <p class="font-semibold text-[#767676] md:mb-1">
-                  ระบุแหล่งทุนภายนอกอื่นๆ
+                  ชื่อแหล่งทุน
                 </p>
-                <p class="text-gray-800">-</p>
+                <p class="text-gray-800">{{ innovationData?.name_funding }}</p>
               </div>
 
               <div>
                 <p class="font-semibold text-[#767676] md:mb-1">
-                  แหล่งทุนภายใน
+                  งบประมาณ
                 </p>
-                <p class="text-gray-800">มหาวิทยาลัยนครพนม</p>
+                <p class="text-gray-800">{{ innovationData?.budget_amount }} บาท</p>
               </div>
 
               <div>
                 <p class="font-semibold text-[#767676] md:mb-1">
                   ปีที่เสร็จสิ้น
                 </p>
-                <p class="text-gray-800">2025</p>
+                <p class="text-gray-800">{{ innovationData?.year }}</p>
               </div>
 
               <div>
                 <p class="font-semibold text-[#767676] md:mb-1">
                   ความร่วมมือกับหน่วยงานอื่นๆ
                 </p>
-                <p class="text-gray-800">กรมอุตุนิยมวิทยา</p>
+                <p class="text-gray-800">{{ innovationData?.call_other }}</p>
               </div>
 
               <div>
                 <p class="font-semibold text-[#767676] md:mb-1">
                   เลขที่ คำขอ/สิทธิบัตร
                 </p>
-                <p class="text-gray-800">TH-INV-2025-00123</p>
+                <p class="text-gray-800">{{ innovationData?.patent_number }}</p>
               </div>
 
               <div>
                 <p class="font-semibold text-[#767676] md:mb-1">
                   เว็บไซต์ตรวจสิทธิบัตร
                 </p>
-                <a href="#" class="text-blue-600 hover:underline break-all">
-                  https://ipsearch.example.go.th/TH-INV-2025-00123
-                </a>
+                <p class="text-blue-600 hover:underline break-all">
+                  {{ innovationData?.examination_url}}
+                </p>
               </div>
 
               <div>
@@ -638,7 +671,7 @@
                   รายงานวิจัยฉบับสมบูรณ์
                 </p>
                 <a href="#" class="text-blue-600 hover:underline">
-                  ดาวน์โหลดไฟล์ PDF
+                  {{ innovationData?.full_report?.file_name || '-' }}
                 </a>
               </div>
 

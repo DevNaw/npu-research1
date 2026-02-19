@@ -143,20 +143,46 @@ export class ResearchService {
     );
   }
 
-  // Create to Article Project
+  // ================= Article Project =====================
   createArticle(data: any) {
     return this.http.post(`${this.baseUrl}/research/add-article`, data);
   }
 
-  // Retrieve data for Article Project
   getArticleById(id: number): Observable<any> {
     return this.http.get<any>(
       `${this.baseUrl}/research/${id}/article-for-update`
     );
   }
 
-  // Update Article Project
   updateArticle(id: number, data: any) {
     return this.http.post(`${this.baseUrl}/research/${id}/update-article`, data);
+  }
+
+  // ====================== Project =======================
+  createProject(data: any) {
+    return this.http.post(`${this.baseUrl}/research/add-project`, data);
+  }
+
+  getProjectById(id: number): Observable<any> {
+    return this.http.get<any>(
+      `${this.baseUrl}/research/${id}/project`
+    );
+  }
+
+  updateProject(id: number, data: any) {
+    return this.http.post(`${this.baseUrl}/research/${id}/update-project`, data);
+  }
+
+  // ==================== Innovation =====================
+  createInnovation(data: any) {
+    return this.http.post(`${this.baseUrl}/research/add-innovation`, data);
+  }
+
+  updateInnovation(id: number, data: any) {
+    return this.http.post(`${this.baseUrl}research/${id}/update-innovation`, data);
+  }
+
+  getInnovationById(id: number): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/research/${id}/innovation`);
   }
 }

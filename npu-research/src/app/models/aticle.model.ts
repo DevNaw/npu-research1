@@ -43,46 +43,30 @@ export interface ArticleSubjectArea {
   // -----------------------------
   export interface Article {
     id: number;
-  
     title_th: string;
     title_en: string;
     abstract: string;
-  
     year: string;
     published_date: string;
-  
     call_other: string | null;
     image: string | null;
-    article_file: ArticleFileResponse[] | null;
-  
+    article_file: ArticleFileResponse | null;
     db_type: string;
     country: string;
-  
     journal_name: string;
     pre_location: string;
-
-  
     pages: string;
     year_published: string;
     volume: string;
     volume_no: string;
-  
     is_cooperation: string;
     doi: string;
-  
-    // ✅ ใช้ตอน "ส่ง API"
     subject_area_id: number;
-  
-    // ✅ ใช้ตอน "รับจาก API"
     subject_area?: ArticleSubjectArea[];
-  
     responsibilities: string;
-  
     internal_members: InternalMember[];
     external_members: ExternalMember[];
-  
     article_type: string;
-  
     major_id: number | null;
     sub_id: number | null;
   }

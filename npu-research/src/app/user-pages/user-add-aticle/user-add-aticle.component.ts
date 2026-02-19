@@ -2,7 +2,7 @@ import { Component, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { ResearchService } from '../../services/research.service';
-import { Major, SubArea, ArticleForm } from '../../models/subject.model';
+import { Major, SubArea } from '../../models/subject.model';
 import { Researcher } from '../../models/researchers.model';
 import { Article } from '../../models/aticle.model';
 
@@ -253,15 +253,14 @@ export class UserAddAticleComponent {
       next: (res) => {
         const data = res.data.researchArticle;
 
+        // this.articleData = data;
         this.articleData = {
           ...this.articleData,
-          ...data,
-          article_file: null,
+          ...data
         };
 
-        this.selectedFileName = data.article_file?.file_name ?? '';
+        this.selectedFileName = data.articleFile?.file_name ?? '';
         this.selectedCountries = this.articleData.country;
-        console.log(data.articleFile);
         
         if (data.internal_members?.length) {
           this.internalRow = data.internal_members.map(
@@ -347,7 +346,6 @@ export class UserAddAticleComponent {
   }
 
   // -----Country -------------------------------------------------------
-
   selectCountrie(c: { code: string; name: string }): void {
     this.selectedCountries = c.name;
     this.articleData.country = c.name;
@@ -381,6 +379,7 @@ export class UserAddAticleComponent {
       responsibilities: '',
     });
   }
+
   removeInternalRow(index: number): void {
     this.internalRow.splice(index, 1);
   }
@@ -441,6 +440,13 @@ export class UserAddAticleComponent {
       this.selectedFileName = this.selectedFile.name;
     }
   }
+
+  removeFile() {
+    this.selectedFile = null;
+    this.selectedFileName = '';
+    this.articleData.article_file = null;
+  }
+  
 
   // ----- Submit -------------------------------------------------------
   submitArticle() {

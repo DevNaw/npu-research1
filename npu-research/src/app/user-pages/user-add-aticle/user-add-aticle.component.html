@@ -222,7 +222,7 @@
           ฉบับที่/เล่มที่ <span class="text-red-500">*</span>
         </label>
         <input
-          [(ngModel)]="articleData.volume_no"
+          [(ngModel)]="articleData.volume"
           type="text"
           class="md:col-span-2 text-2xl font-medium w-full h-12 border rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400"
           placeholder="ฉบับที่/เล่มที่"
@@ -394,7 +394,7 @@
           (click)="toggleDropdown('quality', $event)"
           class="w-full border rounded-md px-3 py-2 flex justify-between items-center font-medium"
         >
-          {{ articleData.volume || "ระดับคุณภาพ" }}
+          {{ articleData.volume_no || "ระดับคุณภาพ" }}
           <i class="bi bi-chevron-down"></i>
         </button>
 
@@ -759,8 +759,21 @@
       <!-- ปุ่ม + ชื่อไฟล์ -->
       <div class="md:col-span-1 flex gap-3 items-center mt-2">
         <span class="text-gray-400 font-medium truncate">
-          {{ selectedFileName || "ยังไม่ได้เลือกไฟล์" }}
+          {{
+            selectedFileName ||
+              articleData.article_file?.file_name ||
+              "ยังไม่ได้เลือกไฟล์"
+          }}
         </span>
+
+        <button
+          *ngIf="selectedFile || articleData.article_file"
+          type="button"
+          class="text-red-500 hover:text-red-700 text-lg"
+          (click)="removeFile()"
+        >
+          ✕
+        </button>
 
         <button
           type="button"
