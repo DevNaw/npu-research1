@@ -47,6 +47,8 @@ export class PerformanceComponent {
   
           this.type = type;
           this.id = Number(id);
+          
+          
   
           return this.getRequestByType(type, this.id);
         })
@@ -54,8 +56,10 @@ export class PerformanceComponent {
       .subscribe({
         next: (res) => {
           if (!res) return;
-  
+
+          
           this.handleResponseByType(res);
+          console.log(this.handleResponseByType(res));
         },
         error: (err) => {
           console.error('Error loading data:', err);
@@ -209,7 +213,7 @@ uploadImage(): void {
         break;
   
       case 'research':
-        this.researchData = res.data.projectDetailApi;
+        this.researchData = res.data.projectDetail;
         break;
   
       case 'innovation':

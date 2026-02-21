@@ -54,7 +54,7 @@
           class="w-full border rounded-md px-3 py-2 flex justify-between items-center bg-white"
         >
           <span class="truncate text-2xl font-medium">
-            {{ selectedSub?.name_en || "ระบุสาขาของโครงการวิจัย" }}
+            {{ selectedSub?.name_en || researchData.subject_area?.[0]?.name_en || 'เลือกสาขาวิชา' }}
           </span>
           <i class="bi bi-chevron-down"></i>
         </button>
@@ -627,7 +627,6 @@
 
         <!-- input file ซ่อน -->
         <input
-          [(ngModel)]="researchData.full_report"
           #reportFileInput
           type="file"
           accept="application/pdf"
@@ -658,7 +657,6 @@
 
         <!-- input file (ซ่อน) -->
         <input
-          [(ngModel)]="researchData.contract_file"
           #fileInput
           type="file"
           accept="application/pdf"

@@ -7,7 +7,7 @@
       <img src="/assets/logoNPU.png" class="w-20 h-20 md:w-30 md:h-30" />
     </div>
     <div>
-      <h1 class="text-4xl md:text-5xl leading-none">ดร.ศรราม พิทักกรุง</h1>
+      <h1 class="text-4xl md:text-5xl leading-none">{{ profileData?.full_name }}</h1>
       <h2 class="text-2xl italic leading-none">Dr. Sornram Phitakrung</h2>
     </div>
   </div>
@@ -58,33 +58,33 @@
           <ul class="space-y-3 text-gray-600 font-medium">
             <li *ngIf="isOwner" class="flex gap-2 flex-wrap">
               <span class="text-gray-400 font-bold"> • เลขบัตรประชาชน : </span>
-              {{ idCard }}
+              {{ profileData?.generalInfo?.id_card_number }}
             </li>
             
 
             <li class="flex gap-2 flex-wrap">
               <span class="text-gray-400 font-bold"> • วันเดือนปีเกิด : </span>
-              1 มกราคม 1234
+              {{ profileData?.generalInfo?.date_of_birth }}
             </li>
 
             <li class="flex gap-2 flex-wrap">
               <span class="text-gray-400 font-bold"> • อายุ : </span>
-              12
+              {{ profileData?.generalInfo?.age }}
             </li>
 
             <li class="flex gap-2 flex-wrap">
               <span class="text-gray-400 font-bold"> • เชื้อชาติ : </span>
-              ไทย
+              {{ profileData?.generalInfo?.ethnicity }}
             </li>
 
             <li class="flex gap-2 flex-wrap">
               <span class="text-gray-400 font-bold"> • สัญชาติ : </span>
-              ไทย
+              {{ profileData?.generalInfo?.nationality }}
             </li>
 
             <li class="flex gap-2 flex-wrap">
               <span class="text-gray-400 font-bold"> • ศาสนา : </span>
-              ศาสนาพุทธ
+              {{ profileData?.generalInfo?.religion }}
             </li>
           </ul>
         </div>
@@ -128,42 +128,41 @@
           <ul class="space-y-3 text-gray-600 font-medium">
             <li class="flex gap-2 flex-wrap wrap-break-word">
               <span class="text-gray-400 font-bold">• ตำแหน่ง :</span>
-              อาจารย์
+              {{ profileData?.workInfo?.position }}
             </li>
             <li class="flex gap-2 flex-wrap wrap-break-word">
               <span class="text-gray-400 font-bold">• สังกัด :</span>
-              คณะวิศวกรรมศาสตร์
+              {{ profileData?.workInfo?.expertise }}
             </li>
             <li class="flex gap-2 flex-wrap wrap-break-word">
               <span class="text-gray-400 font-bold">• ประเภท :</span>
-              พนักงาน
+              {{ profileData?.workInfo?.type }}
             </li>
             <li class="flex gap-2 flex-wrap wrap-break-word">
               <span class="text-gray-400 font-bold">• สายงาน :</span>
-              วิชาการ
+              {{ profileData?.workInfo?.line_work }}
             </li>
             <li class="flex gap-2 flex-wrap wrap-break-word">
               <span class="text-gray-400 font-bold">• ตำแหน่งทางวิชาการ :</span>
-              อาจารย์
+              {{ profileData?.workInfo?.academic_position }}
             </li>
             <li class="flex gap-2 flex-wrap wrap-break-word">
               <span class="text-gray-400 font-bold">• ความความสนใจ :</span>
-              เครือข่ายเซ็นเซอร์ไร้สาย เครือข่ายเฉพาะกิจ
-              การประเมินประสิธิภาพโพรโทคอล การควบคุมความคับคั่งในเครือข่าย
+              {{ profileData?.workInfo?.interest }}
             </li>
             <li class="flex gap-2 flex-wrap wrap-break-word">
               <span class="text-gray-400 font-bold"
                 >• สาขาวิชาที่เชี่ยวชาญ :</span
               >
-              สาขาวิทยาศาสตร์กายภาพและคณิตศาสตร์
+              {{ profileData?.workInfo?.organization }}
             </li>
             <li class="flex gap-2 flex-wrap wrap-break-word">
               <span class="text-gray-400 font-bold">• วันที่เริ่มงาน :</span>
-              2013-12-02
+              {{ profileData?.workInfo?.work_start_date }}
             </li>
             <li class="flex gap-2 flex-wrap wrap-break-word">
               <span class="text-gray-400 font-bold">• อายุงาน :</span>
-              20 ปี
+              {{ profileData?.workInfo?.year_of_service }} ปี
             </li>
           </ul>
         </div>
@@ -206,35 +205,35 @@
           <ul class="space-y-3 text-gray-600 font-medium">
             <li class="flex gap-2 flex-wrap wrap-break-word">
               <span class="text-gray-400 font-bold">• การศึกษาสูงสุด :</span>
-              ปริญญาเอก
+              {{profileData?.educationalInfo?.highest_education}}
             </li>
             <li class="flex gap-2 flex-wrap wrap-break-word">
               <span class="text-gray-400 font-bold">• สาขาวิชา :</span>
-              วิศวกรรมคอมพิวเตอร์
+              {{ profileData?.educationalInfo?.field_of_study }}
             </li>
             <li class="flex gap-2 flex-wrap wrap-break-word">
               <span class="text-gray-400 font-bold">• คุณวุฒิ :</span>
-              กกกกกก
+              {{ profileData?.educationalInfo?.qualification }}
             </li>
             <li class="flex gap-2 flex-wrap wrap-break-word">
               <span class="text-gray-400 font-bold">• GPA :</span>
-              4.00
+              {{ profileData?.educationalInfo?.gpa }}
             </li>
             <li class="flex gap-2 flex-wrap wrap-break-word">
               <span class="text-gray-400 font-bold">• สถานศึกษา :</span>
-              มหาวิทยาลัยขอนแก่น
+              {{ profileData?.educationalInfo?.institution }}
             </li>
             <li class="flex gap-2 flex-wrap wrap-break-word">
               <span class="text-gray-400 font-bold"
                 >• ปี/วันที่ ที่เข้าศึกษา :</span
               >
-              1/1/1111
+              {{ profileData?.educationalInfo?.date_enrollment }}
             </li>
             <li class="flex gap-2 flex-wrap wrap-break-word">
               <span class="text-gray-400 font-bold"
                 >• ปี/วันที่ ที่สำเร็จการศึกษา :</span
               >
-              09/07/2563
+              {{ profileData?.educationalInfo?.date_graduation}}
             </li>
           </ul>
         </div>

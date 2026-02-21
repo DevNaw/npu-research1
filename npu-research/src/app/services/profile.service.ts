@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 
 export interface UserProfile {
+  data: any;
   id: number;
   name: string;
   email: string;
@@ -22,6 +23,7 @@ export interface UpdateProfilePayload {
 })
 export class ProfileService {
   private readonly baseUrl = `${environment.apiBaseUrl}/v1/extreme/profile`;
+  private api = `${environment.apiBaseUrl}/v1/extreme`;
 
   constructor(private http: HttpClient) {}
 
@@ -47,5 +49,17 @@ export class ProfileService {
       `${this.baseUrl}/avatar`,
       formData
     );
+  }
+
+  updateGeneral(data: any) {
+    return this.http.patch(`${this.api}/user/infomation/general`, data);
+  }
+
+  updateEducation(data: any) {
+    return this.http.patch(`${this.api}/user/infomation/education`, data);
+  }
+
+  updateWork(data: any) {
+    return this.http.patch(`${this.api}/user/infomation/work`, data);
   }
 }

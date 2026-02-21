@@ -165,7 +165,7 @@ export class ResearchService {
 
   getProjectById(id: number): Observable<any> {
     return this.http.get<any>(
-      `${this.baseUrl}/research/${id}/project`
+      `${this.baseUrl}/research/${id}/project-for-update`
     );
   }
 
@@ -179,10 +179,10 @@ export class ResearchService {
   }
 
   updateInnovation(id: number, data: any) {
-    return this.http.post(`${this.baseUrl}research/${id}/update-innovation`, data);
+    return this.http.post(`${this.baseUrl}/research/${id}/update-innovation`, data);
   }
 
   getInnovationById(id: number): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/research/${id}/innovation`);
+    return this.http.get<any>(`${this.baseUrl}/research/${id}/innovation-for-update`);
   }
 }

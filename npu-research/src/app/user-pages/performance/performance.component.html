@@ -31,12 +31,35 @@
         <!-- Left: Cover Image -->
         <div class="md:col-span-1">
           <div
-            class="bg-gray-200 rounded-xl shadow-inner flex items-center justify-center h-80"
+            class="bg-gray-200 rounded-xl shadow-inner flex items-center justify-center h-80 overflow-hidden cursor-pointer relative"
+            (click)="fileInput.click()"
           >
-            <div class="text-center text-gray-500">
-              <i class="bi bi-image text-7xl mx-auto mb-2"></i>
-              <p class="text-xl">รูปภาพปก</p>
-            </div>
+            <!-- ถ้ามีรูป -->
+            <ng-container
+              *ngIf="previewImage || researchData?.img_url; else noImage"
+            >
+              <img
+                [src]="previewImage || researchData?.img_url"
+                class="w-full h-full object-cover rounded-xl"
+              />
+            </ng-container>
+
+            <!-- ถ้าไม่มีรูป -->
+            <ng-template #noImage>
+              <div class="text-center text-gray-500">
+                <i class="bi bi-image text-7xl mx-auto mb-2"></i>
+                <p class="text-xl">คลิกเพื่อเลือกรูป</p>
+              </div>
+            </ng-template>
+
+            <!-- input ซ่อนไว้ -->
+            <input
+              #fileInput
+              type="file"
+              accept="image/*"
+              class="hidden"
+              (change)="onFileSelected($event)"
+            />
           </div>
 
           <!-- ปุ่มบันทึก -->
@@ -51,7 +74,7 @@
           </div>
 
           <!-- PDF Button -->
-          <div class="mt-4 mb-2 md:mt-6 flex justify-center">
+          <div class="mt-2 md:mt-6 flex justify-center">
             <button
               class="w-32 bg-blue-300 hover:bg-blue-400 text-[#394250] py-3 rounded-lg shadow transition"
             >
@@ -512,17 +535,50 @@
           <!-- Left: Cover Image -->
           <div class="md:col-span-1">
             <div
-              class="bg-gray-200 rounded-xl shadow-inner flex items-center justify-center h-80 overflow-hidden cursor-pointer"
-            
+              class="bg-gray-200 rounded-xl shadow-inner flex items-center justify-center h-80 overflow-hidden cursor-pointer relative"
+              (click)="fileInput.click()"
+            >
+              <!-- ถ้ามีรูป -->
+              <ng-container
+                *ngIf="previewImage || innovationData?.img_url; else noImage"
               >
-              <div class="text-center text-gray-500">
-                <i class="bi bi-image text-7xl mx-auto mb-2"></i>
-                <p class="text-xl">รูปภาพปก</p>
-              </div>
+                <img
+                  [src]="previewImage || innovationData?.img_url"
+                  class="w-full h-full object-cover rounded-xl"
+                />
+              </ng-container>
+
+              <!-- ถ้าไม่มีรูป -->
+              <ng-template #noImage>
+                <div class="text-center text-gray-500">
+                  <i class="bi bi-image text-7xl mx-auto mb-2"></i>
+                  <p class="text-xl">คลิกเพื่อเลือกรูป</p>
+                </div>
+              </ng-template>
+
+              <!-- input ซ่อนไว้ -->
+              <input
+                #fileInput
+                type="file"
+                accept="image/*"
+                class="hidden"
+                (change)="onFileSelected($event)"
+              />
+            </div>
+
+            <!-- ปุ่มบันทึก -->
+            <div *ngIf="selectedFile" class="mt-4 text-center">
+              <button
+                class="bg-blue-600 text-white px-6 py-2 rounded-lg shadow hover:bg-blue-700 disabled:bg-gray-400"
+                [disabled]="!selectedFile"
+                (click)="uploadImage()"
+              >
+                บันทึกรูปภาพ
+              </button>
             </div>
 
             <!-- PDF Button -->
-            <div class="mt-4 md:mt-6 flex justify-center">
+            <div class="mt-2 md:mt-6 flex justify-center">
               <button
                 class="w-32 bg-blue-300 hover:bg-blue-400 text-[#394250] py-3 rounded-lg shadow transition"
               >
