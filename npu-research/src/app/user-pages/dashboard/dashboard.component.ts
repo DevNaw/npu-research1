@@ -20,6 +20,8 @@ import { registerLocaleData } from '@angular/common';
 import localeTh from '@angular/common/locales/th';
 import { ResearchService } from '../../services/research.service';
 import { Research, ResearchPublicResponse } from '../../models/research.model';
+import { NewsService } from '../../services/news.service';
+import { NewsItem } from '../../models/news.model';
 
 export type ReportType = 'research' | 'article' | 'innovation';
 
@@ -64,6 +66,7 @@ registerLocaleData(localeTh);
 })
 export class UserDashboardComponent implements OnInit {
   today: Date = new Date();
+  newsList: NewsItem[] = [];
 
   pageSize = 10;
   currentPage = 1;
@@ -364,27 +367,27 @@ export class UserDashboardComponent implements OnInit {
     return `ข้อมูล ณ วันที่ ${date} เวลา ${time} น.`;
   }
 
-  newsList: News[] = [
-    {
-      title: 'มหาวิทยาลัยนครพนม เปิดรับข้อเสนอโครงการวิจัย ปี 2568',
-      summary:
-        'เปิดรับข้อเสนอโครงการวิจัยเพื่อขอรับทุนสนับสนุน ประจำปีงบประมาณ 2568',
-      imageUrl: 'assets/news1.jpg',
-      link: 'news/:id',
-    },
-    {
-      title: 'ประกาศผลการพิจารณาทุนวิจัย รอบที่ 2',
-      summary: 'ประกาศรายชื่อผู้ได้รับทุนวิจัย รอบที่ 2 ประจำปีงบประมาณ 2567',
-      imageUrl: 'assets/news2.jpg',
-      link: 'news/:id',
-    },
-    {
-      title: 'ขอเชิญเข้าร่วมอบรมการเขียนบทความวิจัย',
-      summary: 'อบรมการเขียนบทความวิจัยเพื่อตีพิมพ์ในวารสารระดับนานาชาติ',
-      imageUrl: 'assets/news.jpeg',
-      link: 'news/:id',
-    },
-  ];
+  // newsList: News[] = [
+  //   {
+  //     title: 'มหาวิทยาลัยนครพนม เปิดรับข้อเสนอโครงการวิจัย ปี 2568',
+  //     summary:
+  //       'เปิดรับข้อเสนอโครงการวิจัยเพื่อขอรับทุนสนับสนุน ประจำปีงบประมาณ 2568',
+  //     imageUrl: 'assets/news1.jpg',
+  //     link: 'news/:id',
+  //   },
+  //   {
+  //     title: 'ประกาศผลการพิจารณาทุนวิจัย รอบที่ 2',
+  //     summary: 'ประกาศรายชื่อผู้ได้รับทุนวิจัย รอบที่ 2 ประจำปีงบประมาณ 2567',
+  //     imageUrl: 'assets/news2.jpg',
+  //     link: 'news/:id',
+  //   },
+  //   {
+  //     title: 'ขอเชิญเข้าร่วมอบรมการเขียนบทความวิจัย',
+  //     summary: 'อบรมการเขียนบทความวิจัยเพื่อตีพิมพ์ในวารสารระดับนานาชาติ',
+  //     imageUrl: 'assets/news.jpeg',
+  //     link: 'news/:id',
+  //   },
+  // ];
 
   publications: DataPerformance = {
     research: [],
@@ -396,7 +399,8 @@ export class UserDashboardComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private researchService: ResearchService
+    private researchService: ResearchService,
+    private newsService: NewsService,
   ) {}
 
   filteredResearch: DataPerformanceItem[] = [];
@@ -406,6 +410,19 @@ export class UserDashboardComponent implements OnInit {
     this.loadData();
     this.filteredResearch = [...this.publications[this.selectedTab]];
     this.updatePagination();
+    this.loadNews();
+  }
+
+  loadNews() {
+    this.newsService.getNewsData().subscribe({
+      next: (res) => {
+        this.newsList = res.data.news;
+console.log('fghjk',this.newsList);
+
+      }, error: (err) => {
+        console.error(err)
+      }
+    })
   }
 
   onSearch() {
@@ -485,7 +502,6 @@ export class UserDashboardComponent implements OnInit {
 
         this.filteredResearch = [...this.publications[this.selectedTab]];
         this.updatePagination();
-        console.log('res me', res);
 
         this.loading = false;
       },

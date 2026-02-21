@@ -24,6 +24,8 @@ import {
 } from 'ng-apexcharts';
 import { ProfileService } from '../../services/profile.service';
 import { UserProfileInfo } from '../../models/profiledetai.model';
+import { NewsItem } from '../../models/news.model';
+import { NewsService } from '../../services/news.service';
 
 export type PieChartOptions = {
   series: ApexNonAxisChartSeries;
@@ -91,7 +93,12 @@ export class UserProfileComponent implements OnInit {
   filteredData: DataPerformanceItem[] = [];
   paginationData: DataPerformanceItem[] = [];
 
-  constructor(private router: Router, private authService: AuthService, private service: ProfileService) {
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private service: ProfileService,
+    
+  ) {
     this.pieChartOptions = {
       series: [44, 55, 13],
       chart: {
@@ -190,21 +197,19 @@ export class UserProfileComponent implements OnInit {
     this.service.getProfile().subscribe({
       next: (res) => {
         this.profileData = res.data.user;
-console.log(res);
-
-      }
-    })
+      },
+    });
   }
+
+  
 
   onSearch(): void {
     // const keyword = this.searchText.toLowerCase().trim();
-
     // this.filteredData = this.data[this.selectedTab].filter(
     //   (item) =>
     //     item.title.toLowerCase().includes(keyword) ||
     //     item.date.toLowerCase().includes(keyword)
     // );
-
     // this.currentPage = 1;
     // this.updatePagination();
   }
@@ -253,19 +258,15 @@ console.log(res);
     //     // this.data[this.selectedTab] = this.data[this.selectedTab].filter(
     //     //   (item) => item.id !== id
     //     );
-
     //     // 🔁 ลบจาก filteredData (กรณีมี search)
     //     this.filteredData = this.filteredData.filter((item) => item.id !== id);
-
     //     // ⚠️ ปรับ currentPage ถ้าลบจนหน้าว่าง
     //     const maxPage = Math.ceil(this.filteredData.length / this.pageSize);
     //     if (this.currentPage > maxPage && this.currentPage > 1) {
     //       this.currentPage--;
     //     }
-
     //     // 🔄 อัปเดต pagination
     //     this.updatePagination();
-
     //     // ✅ แจ้งผลลัพธ์
     //     Swal.fire({
     //       title: 'ลบสำเร็จ',

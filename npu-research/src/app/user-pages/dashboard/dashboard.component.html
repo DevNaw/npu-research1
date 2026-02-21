@@ -187,24 +187,24 @@
           >
             <!-- Image -->
             <img
-              [src]="news.imageUrl"
+              [src]="newsList[0]?.news_cover"
               class="h-44 w-full object-cover rounded-t-xl"
             />
 
             <!-- Content -->
             <div class="p-4 flex flex-col flex-1 text-[#394250]">
               <h2 class="text-xl font-bold line-clamp-2">
-                {{ news.title }}
+                {{ newsList[0]?.title }}
               </h2>
 
               <p class="text-xl line-clamp-3 mt-1 flex-1">
-                {{ news.summary }}
+                {{ newsList[0]?.published_date }}
               </p>
 
               <!-- Read more -->
               <div class="mt-3 text-right">
                 <a
-                  [href]="news.link"
+                  [href]="newsList"
                   class="hover:text-[#F9CB34] text-xl font-medium hover:underline inline-flex items-center gap-1 cursor-pointer"
                 >
                   อ่านเพิ่มเติม
