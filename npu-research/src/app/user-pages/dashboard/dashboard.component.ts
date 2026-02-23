@@ -40,22 +40,6 @@ export interface PieChartConfig {
   tooltip?: ApexTooltip;
 }
 
-interface News {
-  title: string;
-  summary: string;
-  imageUrl: string;
-  link: string;
-}
-
-interface Publication {
-  id: number;
-  title: string;
-  researchers: string;
-  journal: string;
-  publishDate: string;
-  year: number;
-}
-
 registerLocaleData(localeTh);
 
 @Component({
@@ -367,28 +351,6 @@ export class UserDashboardComponent implements OnInit {
     return `ข้อมูล ณ วันที่ ${date} เวลา ${time} น.`;
   }
 
-  // newsList: News[] = [
-  //   {
-  //     title: 'มหาวิทยาลัยนครพนม เปิดรับข้อเสนอโครงการวิจัย ปี 2568',
-  //     summary:
-  //       'เปิดรับข้อเสนอโครงการวิจัยเพื่อขอรับทุนสนับสนุน ประจำปีงบประมาณ 2568',
-  //     imageUrl: 'assets/news1.jpg',
-  //     link: 'news/:id',
-  //   },
-  //   {
-  //     title: 'ประกาศผลการพิจารณาทุนวิจัย รอบที่ 2',
-  //     summary: 'ประกาศรายชื่อผู้ได้รับทุนวิจัย รอบที่ 2 ประจำปีงบประมาณ 2567',
-  //     imageUrl: 'assets/news2.jpg',
-  //     link: 'news/:id',
-  //   },
-  //   {
-  //     title: 'ขอเชิญเข้าร่วมอบรมการเขียนบทความวิจัย',
-  //     summary: 'อบรมการเขียนบทความวิจัยเพื่อตีพิมพ์ในวารสารระดับนานาชาติ',
-  //     imageUrl: 'assets/news.jpeg',
-  //     link: 'news/:id',
-  //   },
-  // ];
-
   publications: DataPerformance = {
     research: [],
     article: [],
@@ -417,7 +379,6 @@ export class UserDashboardComponent implements OnInit {
     this.newsService.getNewsData().subscribe({
       next: (res) => {
         this.newsList = res.data.news;
-console.log('fghjk',this.newsList);
 
       }, error: (err) => {
         console.error(err)
@@ -530,5 +491,9 @@ console.log('fghjk',this.newsList);
     const year = d.getFullYear() + 543;
 
     return `${day} ${month} ${year}`;
+  }
+
+  goToNewsDetail(id: number): void {
+    this.router.navigate(['/news', id]);
   }
 }

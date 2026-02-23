@@ -15,7 +15,7 @@
         >
           <!-- Image -->
           <img
-            [src]="news.image"
+            [src]="newsList[0]?.news_cover"
             alt=""
             class="h-48 w-full object-cover rounded-t-xl"
           />
@@ -26,11 +26,11 @@
               {{ news.title }}
             </h3>
 
-            <p class="text-lg text-[#394250]">วันที่ {{ news.date }}</p>
+            <p class="text-lg text-[#394250]">วันที่ {{ newsList[0]?.published_date | date:'d MMMM yyyy' : "" : 'th-TH' }}</p>
 
-            <div class="flex justify-end">
+            <div class="flex justify-end" *ngIf="newsList.length">
               <a
-                [routerLink]="['/news', news.id]"
+                (click)="goToNewsDetail(newsList[0].news_id)"
                 class="inline-flex items-center gap-2 font-semibold text-lg hover:text-[#F9CB34] transition group"
               >
                 <span>ดูเพิ่มเติม</span>

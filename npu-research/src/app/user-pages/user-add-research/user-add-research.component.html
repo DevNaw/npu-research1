@@ -4,7 +4,7 @@
   <!-- Back -->
   <div class="flex justify-end md:mb-4 mx-auto md:mt-6">
     <button
-      (click)="goToResearchDetail('research', 2)"
+      (click)="goToResearchDetail()"
       class="flex items-center gap-2 font-medium group transition-colors cursor-pointer"
     >
       <span>ไปที่โครงการวิจัยของคุณ</span>
@@ -34,7 +34,7 @@
         ชื่องานวิจัย <span class="text-red-500">*</span>
       </label>
       <input
-        [(ngModel)]="researchData.title_th"
+        [(ngModel)]="projectData.title_th"
         type="text"
         class="md:col-span-3 w-full text-2xl font-medium border h-12 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400"
         placeholder="ระบุชื่องานวิจัย"
@@ -49,12 +49,12 @@
 
       <div class="md:col-span-3 relative font-medium">
         <button
-          (click)="toggle('major', $event)"
+          (click)="toggleDropdown('major', $event)"
           type="button"
           class="w-full border rounded-md px-3 py-2 flex justify-between items-center bg-white"
         >
           <span class="truncate text-2xl font-medium">
-            {{ selectedSub?.name_en || researchData.subject_area?.[0]?.name_en || 'เลือกสาขาวิชา' }}
+            {{ selectedSub?.name_en || projectData.subject_area?.[0]?.name_en || 'เลือกสาขาวิชา' }}
           </span>
           <i class="bi bi-chevron-down"></i>
         </button>
@@ -115,10 +115,10 @@
 
       <button
         type="button"
-        (click)="toggle('responsibility', $event)"
+        (click)="toggleDropdown('responsibility', $event)"
         class="w-full border rounded-md px-3 py-2 flex justify-between items-center font-medium"
       >
-        {{ researchData.responsibilities || "เลือก" }}
+        {{ projectData.responsibilities || "เลือก" }}
         <i class="bi bi-chevron-down"></i>
       </button>
 
@@ -183,9 +183,9 @@
           <tbody>
             <tr
               *ngFor="
-                let row of internalRows;
+                let row of internalRow;
                 let i = index;
-                trackBy: trackByIndex
+                trackBy: trackById
               "
               class="border-b-2 border-gray-300 bg-gray-200"
             >
@@ -226,7 +226,7 @@
               <td class="p-1">
                 <div class="font-medium">
                   <button
-                    (click)="toggle('internal-' + i, $event)"
+                    (click)="toggleDropdown('internal-' + i, $event)"
                     class="flex justify-between items-center bg-white w-full rounded-md p-2"
                   >
                     {{ row.responsibilities || "ประเภทความรับผิดชอบ" }}
@@ -240,7 +240,7 @@
                     <div
                       (click)="
                         !isFirstAuthorTaken(row) &&
-                          selectResponsibility(row, 'หัวหน้าโครงการ')
+                        selectRowResponsibility(row, 'หัวหน้าโครงการ')
                       "
                       [class.opacity-50]="isFirstAuthorTaken(row)"
                       [class.pointer-events-none]="isFirstAuthorTaken(row)"
@@ -250,14 +250,14 @@
                     </div>
 
                     <div
-                      (click)="selectResponsibility(row, 'ที่ปรึกษาโครงการ')"
+                      (click)="selectRowResponsibility(row, 'ที่ปรึกษาโครงการ')"
                       class="p-2"
                     >
                       ที่ปรึกษาโครงการ
                     </div>
 
                     <div
-                      (click)="selectResponsibility(row, 'ผู้ร่วมวิจัย')"
+                      (click)="selectRowResponsibility(row, 'ผู้ร่วมวิจัย')"
                       class="p-2"
                     >
                       ผู้ร่วมวิจัย
@@ -268,9 +268,9 @@
 
               <td class="text-center">
                 <i
-                  *ngIf="internalRows.length > 1"
+                  *ngIf="internalRow.length > 1"
                   class="bi bi-trash3 text-red-500 cursor-pointer hover:text-red-700"
-                  (click)="removeInternal(i)"
+                  (click)="removeInternalRow(i)"
                   title="ลบรายการ"
                 ></i>
               </td>
@@ -283,7 +283,7 @@
         <button
           type="button"
           class="md:mt-4 p-1 md:px-4 md:py-2 bg-[#FDE68A] text-[#1E293B] hover:bg-[#FACC15] rounded-md cursor-pointer"
-          (click)="addInternal()"
+          (click)="addInternalRow()"
         >
           เพิ่มรายการ
         </button>
@@ -321,9 +321,9 @@
           <tbody>
             <tr
               *ngFor="
-                let item of externalRows;
+                let item of externalRow;
                 let i = index;
-                trackBy: trackByIndex
+                trackBy: trackById
               "
               class="border-b-2 border-gray-300 bg-gray-200"
             >
@@ -340,7 +340,7 @@
               <td class="p-2">
                 <div class="">
                   <button
-                    (click)="toggle('external-' + i, $event)"
+                    (click)="toggleDropdown('external-' + i, $event)"
                     class="flex justify-between items-center bg-white h-12 w-full rounded-md font-medium p-"
                   >
                     {{ item.responsibilities || "ประเภทความรับผิดชอบ" }}
@@ -354,7 +354,7 @@
                     <div
                       (click)="
                         !isFirstAuthorTaken(item) &&
-                          selectResponsibility(item, 'หัวหน้าโครงการ')
+                        selectRowResponsibility(item, 'หัวหน้าโครงการ')
                       "
                       [class.opacity-50]="isFirstAuthorTaken(item)"
                       [class.pointer-events-none]="isFirstAuthorTaken(item)"
@@ -364,14 +364,14 @@
                     </div>
 
                     <div
-                      (click)="selectResponsibility(item, 'ที่ปรึกษาโครงการ')"
+                      (click)="selectRowResponsibility(item, 'ที่ปรึกษาโครงการ')"
                       class="p-2 hover:bg-gray-100 cursor-pointer"
                     >
                       ที่ปรึกษาโครงการ
                     </div>
 
                     <div
-                      (click)="selectResponsibility(item, 'ผู้ร่วมวิจัย')"
+                      (click)="selectRowResponsibility(item, 'ผู้ร่วมวิจัย')"
                       class="p-2 hover:bg-gray-100 cursor-pointer"
                     >
                       ผู้ร่วมวิจัย
@@ -391,9 +391,9 @@
 
               <td class="text-center p-2">
                 <i
-                  *ngIf="externalRows.length > 1"
+                  *ngIf="externalRow.length > 1"
                   class="bi bi-trash3 text-red-500 cursor-pointer hover:text-red-700"
-                  (click)="removeExternal(i)"
+                  (click)="removeExternalRow(i)"
                   title="ลบรายการ"
                 ></i>
               </td>
@@ -406,7 +406,7 @@
         <button
           type="button"
           class="md:mt-4 p-1 md:p-2 bg-[#FDE68A] text-[#1E293B] hover:bg-[#FACC15] rounded-md cursor-pointer"
-          (click)="addExternal()"
+          (click)="addExternalRow()"
         >
           เพิ่มรายการ
         </button>
@@ -422,11 +422,11 @@
 
         <button
           type="button"
-          (click)="toggle('funding', $event)"
+          (click)="toggleDropdown('funding', $event)"
           class="w-full h-12 border rounded-md px-3 flex justify-between items-center font-medium bg-white"
         >
           <span class="flex-1 truncate text-left">
-            {{ researchData.source_funds || "เลือกแหล่งทุน" }}
+            {{ projectData.source_funds || "เลือกแหล่งทุน" }}
           </span>
           <i class="bi bi-chevron-down shrink-0 ml-2"></i>
         </button>
@@ -450,53 +450,19 @@
         </div>
       </div>
 
-      <!-- <div *ngIf="researchData.source_funds" class="relative">
-        <label class="block font-bold text-2xl mb-2">
-          ชื่อแหล่งทุน <span class="text-red-500">*</span>
-        </label>
-
-        <button
-          type="button"
-          (click)="toggle('fundName', $event)"
-          class="w-full h-12 border rounded-md px-3 flex justify-between items-center font-medium bg-white"
-        >
-          <span class="flex-1 truncate text-left">
-            {{ fundName || "เลือกชื่อแหล่งทุน" }}
-          </span>
-          <i class="bi bi-chevron-down shrink-0 ml-2"></i>
-        </button>
-
-        <div
-          *ngIf="activeDropdown === 'fundName'"
-          class="absolute z-9999 mt-1 w-full bg-white border rounded-md shadow font-medium"
-        >
-          <div
-            *ngFor="
-              let name of researchData.name_funding === 'แหล่งทุนภายใน'
-                ? internalFunds
-                : externalFunds
-            "
-            class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
-            (click)="selectFundName(name)"
-          >
-            {{ name }}
-          </div>
-        </div>
-      </div> -->
-
       <!-- ชื่อแหล่งทุน -->
-      <div *ngIf="researchData.source_funds" class="relative">
+      <div *ngIf="projectData.source_funds" class="relative">
         <label class="block font-bold mb-2">
           ชื่อแหล่งทุน <span class="text-red-500">*</span>
         </label>
 
         <button
           type="button"
-          (click)="toggle('fundName', $event)"
+          (click)="toggleDropdown('fundName', $event)"
           class="w-full h-12 border rounded-md px-3 flex justify-between items-center bg-white font-medium"
         >
           <span class="truncate">
-            {{ researchData.name_funding || "เลือกชื่อแหล่งทุน" }}
+            {{ projectData.name_funding || "เลือกชื่อแหล่งทุน" }}
           </span>
           <i class="bi bi-chevron-down"></i>
         </button>
@@ -507,7 +473,7 @@
         >
           <div
             *ngFor="
-              let name of researchData.source_funds === 'แหล่งทุนภายใน'
+              let name of projectData.source_funds === 'แหล่งทุนภายใน'
                 ? internalFunds
                 : externalFunds
             "
@@ -525,7 +491,7 @@
           จำนวนงบประมาณ <span class="text-red-500">*</span>
         </label>
         <input
-        [(ngModel)]="researchData.budget_amount"
+        [(ngModel)]="projectData.budget_amount"
           type="text"
           class="w-full border text-2xl font-medium rounded-md h-12 px-4 py-2 focus:ring-2 focus:ring-blue-400"
           placeholder="ระบุจำนวนงบประมาณ"
@@ -538,7 +504,7 @@
           ปีที่ได้รับทุน <span class="text-red-500">*</span>
         </label>
         <input
-          [(ngModel)]="researchData.year_received_budget"
+          [(ngModel)]="projectData.year_received_budget"
           type="text"
           class="w-full border rounded-md text-2xl font-medium px-4 h-12 py-2 focus:ring-2 focus:ring-blue-400"
           placeholder="ระบุปีที่ได้รับทุน"
@@ -552,10 +518,10 @@
         </label>
 
         <button
-          (click)="toggle('status', $event)"
+          (click)="toggleDropdown('status', $event)"
           class="w-full border rounded-md px-3 py-2 flex justify-between items-center font-medium"
         >
-          {{ researchData.status || "สถานะ" }}
+          {{ projectData.status || "สถานะ" }}
           <i class="bi bi-chevron-down"></i>
         </button>
 
@@ -565,13 +531,13 @@
         >
           <div
             class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
-            (click)="selectStatus('เสร็จสิ้น')"
+            (click)="selectValue('status','เสร็จสิ้น')"
           >
             เสร็จสิ้น
           </div>
           <div
             class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
-            (click)="selectStatus('อยู่ระหว่างดำเนินการ')"
+            (click)="selectValue('status','อยู่ระหว่างดำเนินการ')"
           >
             อยู่ระหว่างดำเนินการ
           </div>
@@ -596,7 +562,7 @@
     <div class="grid grid-cols-1 md:grid-cols-1 gap-2 mb-2 md:mb-6">
       <label class="md:col-span-1 font-bold text-start"> พื้นที่วิจัย </label>
       <textarea
-        [(ngModel)]="researchData.research_area"
+        [(ngModel)]="projectData.research_area"
         name="attention"
         id="attention"
         placeholder="ระบุพื้นที่วิจัย"
@@ -610,7 +576,7 @@
         พื้นที่ใช้ประโยชน์
       </label>
       <textarea
-        [(ngModel)]="researchData.usable_area"
+        [(ngModel)]="projectData.usable_area"
         name="attention"
         id="attention"
         placeholder="ระบุพื้นที่ใช้ประโยชน์"
@@ -631,13 +597,13 @@
           type="file"
           accept="application/pdf"
           class="hidden"
-          (change)="onReportFileSelected($event)"
+          (change)="onFileSelected($event)"
         />
 
         <!-- ปุ่ม + ชื่อไฟล์ -->
         <div class="md:col-span-2 flex gap-6 items-center mt-2">
           <span class="text-gray-400 font-medium truncate">
-            {{ reportFileName || "ยังไม่ได้เลือกไฟล์" }}
+            {{ selectedFileName || "ยังไม่ได้เลือกไฟล์" }}
           </span>
           <button
             type="button"
@@ -661,13 +627,13 @@
           type="file"
           accept="application/pdf"
           class="hidden"
-          (change)="onFileSelected($event)"
+          (change)="onContractFileSelected($event)"
         />
 
         <!-- ปุ่ม + ชื่อไฟล์ -->
         <div class="md:col-span-2 flex gap-3 items-center mt-2">
           <span class="text-gray-400 font-medium truncate">
-            {{ selectedFileName || "ยังไม่ได้เลือกไฟล์" }}
+            {{ selectedContractFileName || "ยังไม่ได้เลือกไฟล์" }}
           </span>
           <button
             type="button"
@@ -684,7 +650,7 @@
     <div class="flex justify-center mt-10">
       <button
         type="submit"
-        (click)="submitResearch()"
+        (click)="submit()"
         class="flex items-center justify-center gap-3 w-72 py-3 bg-yellow-300 hover:bg-yellow-400 text-2xl rounded-lg shadow transition duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 cursor-pointer"
       >
         <i class="bi bi-floppy2 text-2xl"></i>

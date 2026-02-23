@@ -10,7 +10,6 @@ import { Observable } from 'rxjs/internal/Observable';
 import { map } from 'rxjs/operators';
 import { SubjectAreaResponse } from '../models/subject.model';
 import { ResearcherResponse } from '../models/researchers.model';
-import { ArticleApiResponse } from '../models/article-show.model';
 
 export type ResearchType = 'project' | 'article' | 'innovation';
 

@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
+import { ResearchListResponse } from '../models/profile-project.model';
+import { Observable } from 'rxjs';
 
 export interface UserProfile {
   data: any;
@@ -61,5 +63,11 @@ export class ProfileService {
 
   updateWork(data: any) {
     return this.http.patch(`${this.api}/user/infomation/work`, data);
+  }
+
+  getProjectList(): Observable<ResearchListResponse> {
+    return this.http.get<ResearchListResponse>(
+      `${this.api}/research/lists`
+    );
   }
 }

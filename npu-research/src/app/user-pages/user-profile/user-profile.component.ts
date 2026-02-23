@@ -24,8 +24,7 @@ import {
 } from 'ng-apexcharts';
 import { ProfileService } from '../../services/profile.service';
 import { UserProfileInfo } from '../../models/profiledetai.model';
-import { NewsItem } from '../../models/news.model';
-import { NewsService } from '../../services/news.service';
+import { ResearchItem } from '../../models/profile-project.model';
 
 export type PieChartOptions = {
   series: ApexNonAxisChartSeries;
@@ -50,6 +49,8 @@ export type BarChartOptions = {
   legend: ApexLegend;
 };
 
+type ResearchTab = 'project' | 'article' | 'innovation';
+
 @Component({
   selector: 'app-user-profile',
   standalone: false,
@@ -60,13 +61,14 @@ export class UserProfileComponent implements OnInit {
   @ViewChild('chart') chart!: ChartComponent;
 
   profileData?: UserProfileInfo;
+  researchList: ResearchItem[] = [];
 
   /* ===== Charts ===== */
   pieChartOptions!: Partial<PieChartOptions>;
   barChartOptions!: Partial<BarChartOptions>;
 
   /* ===== Table ===== */
-  selectedTab: keyof DataPerformance = 'research';
+  selectedTab: ResearchTab = 'project';
   pageSize = 10;
   currentPage = 1;
   searchText = '';
@@ -90,14 +92,13 @@ export class UserProfileComponent implements OnInit {
 
   totalItems: number = 0;
 
-  filteredData: DataPerformanceItem[] = [];
-  paginationData: DataPerformanceItem[] = [];
+  filteredData: ResearchItem[] = [];
+  paginationData: ResearchItem[] = [];
 
   constructor(
     private router: Router,
     private authService: AuthService,
-    private service: ProfileService,
-    
+    private service: ProfileService
   ) {
     this.pieChartOptions = {
       series: [44, 55, 13],
@@ -183,6 +184,7 @@ export class UserProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadData();
+    this.loadProject();
     // this.currentUserId = 1;
     // this.profileUserId = 1;
 
@@ -197,47 +199,63 @@ export class UserProfileComponent implements OnInit {
     this.service.getProfile().subscribe({
       next: (res) => {
         this.profileData = res.data.user;
+
+        this.changeTab('project');
+      },
+      error: (err) => {
+        console.error(err);
       },
     });
   }
 
-  
+  loadProject() {
+    this.service.getProjectList().subscribe({
+      next: (res) => {
+        this.researchList = res.data.researchs;
+        this.updateCharts();
+        
+      },
+      error: (err) => {
+        console.error(err);
+      },
+    });
+  }
 
   onSearch(): void {
-    // const keyword = this.searchText.toLowerCase().trim();
-    // this.filteredData = this.data[this.selectedTab].filter(
-    //   (item) =>
-    //     item.title.toLowerCase().includes(keyword) ||
-    //     item.date.toLowerCase().includes(keyword)
-    // );
-    // this.currentPage = 1;
-    // this.updatePagination();
+    const keyword = this.searchText.toLowerCase().trim();
+  
+    this.filteredData = this.filteredData.filter(item =>
+      item.title_th.toLowerCase().includes(keyword)
+    );
+  
+    this.currentPage = 1;
+    this.updatePagination();
   }
 
   editItem(id: number) {
     const isAdmin = this.authService.isAdmin();
-
-    let base = isAdmin ? '/admin' : '/user';
+  
+    const base = isAdmin ? '/admin' : '/user';
     let route = '';
-
+  
     switch (this.selectedTab) {
-      case 'research':
+      case 'project':
         route = `${base}/edit-research/${id}`;
         break;
-
+  
       case 'article':
-        route = `${base}/edit-aticle/${id}`;
+        route = `${base}/edit-article/${id}`;
         break;
-
+  
       case 'innovation':
         route = `${base}/edit-innovation/${id}`;
         break;
-
+  
       default:
         console.warn('Unknown tab:', this.selectedTab);
         return;
     }
-
+  
     this.router.navigateByUrl(route);
   }
 
@@ -377,11 +395,41 @@ export class UserProfileComponent implements OnInit {
     this.updatePagination();
   }
 
-  changeTab(tab: keyof DataPerformance): void {
+  changeTab(tab: ResearchTab): void {
     this.selectedTab = tab;
     this.searchText = '';
     this.currentPage = 1;
-    // this.filteredData = [...this.data[tab]];
+  
+    const mapType: any = {
+      project: 'PROJECT',
+      article: 'ARTICLE',
+      innovation: 'INNOVATION'
+    };
+  
+    this.filteredData = this.researchList.filter(
+      item => item.research_type === mapType[tab]
+    );
+  
     this.updatePagination();
+  }
+
+  updateCharts(): void {
+    const projectCount = this.researchList.filter(
+      item => item.research_type === 'PROJECT'
+    ).length;
+  
+    const articleCount = this.researchList.filter(
+      item => item.research_type === 'ARTICLE'
+    ).length;
+  
+    const innovationCount = this.researchList.filter(
+      item => item.research_type === 'INNOVATION'
+    ).length;
+  
+    // ✅ อัปเดต Pie
+    this.pieChartOptions = {
+      ...this.pieChartOptions,
+      series: [projectCount, articleCount, innovationCount]
+    };
   }
 }

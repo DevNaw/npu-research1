@@ -22,7 +22,7 @@ export interface NewsData {
 }
 
 export interface NewsItem {
-  new_id: number;
+  news_id: number;
   title: string;
   published_date: string;
   expires_date: string;

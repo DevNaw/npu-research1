@@ -1,6 +1,5 @@
 <div class="bg-gray-100 py-2 md:py-10 p-5 md:px-10 text-[#394250]">
   <div class="mx-auto">
-
     <!-- Breadcrumb -->
     <nav class="text-xl text-gray-500 mb-2 md:mb-6">
       <a class="hover:underline">หน้าหลัก</a>
@@ -11,78 +10,64 @@
     </nav>
 
     <div class="bg-white rounded-2xl shadow p-2 md:p-10">
-
       <!-- Header -->
       <div class="mb-6">
-        <span class="inline-block text-[#F9CB34] font-extrabold text-lg md:text-2xl mb-2">
+        <span
+          class="inline-block text-[#F9CB34] font-extrabold text-lg md:text-2xl mb-2"
+        >
           ข่าวประชาสัมพันธ์
         </span>
 
         <h1 class="text-xl md:text-3xl font-extrabold leading-snug mb-4">
-          มหาวิทยาลัยครพนบุรีแห่งผลงานวิจัยเสริมศักยภาพการพัฒนาท้องถิ่นอย่างยั่งยืน
+          {{ newsDetail?.title }}
         </h1>
 
         <!-- Meta -->
         <div class="flex flex-wrap items-center md:gap-6 text-xl text-gray-600">
           <span class="flex items-center">
             <i class="bi bi-calendar mr-2"></i>
-            ประกาศเมื่อ: 01 มกราคม 2569
+            ประกาศเมื่อ:
+            {{
+              newsDetail?.published_date | date : "dd MMMM YYYY" : "" : "th-TH"
+            }}
           </span>
 
           <span class="flex items-center">
             <i class="bi bi-calendar mr-2"></i>
-            สิ้นสุด: 31 มกราคม 2569
+            สิ้นสุด:
+            {{ newsDetail?.expires_date | date : "dd MMMM YYYY" : "" : "th-TH" }}
           </span>
         </div>
       </div>
 
       <!-- Cover Image -->
       <img
-        src="/assets/news11.png"
+        [src]="newsDetail?.news_cover"
         alt="new-detail"
         class="w-full rounded-xl mb-8"
       />
 
       <!-- Content -->
-      <article class="prose max-w-none prose-ul:list-disc prose-li:my-1 text-2xl">
+      <article
+        class="prose max-w-none prose-ul:list-disc prose-li:my-1 text-2xl"
+      >
         <p>
-          มหาวิทยาลัยครพนบุรีขอเชิญชวนบุคลากร นักวิจัย และผู้สนใจทั่วไป
-          เข้าร่วมงานวิจัยเพื่อพัฒนาท้องถิ่นอย่างยั่งยืน ซึ่งจะจัดขึ้นในวันที่
-          15-17 กุมภาพันธ์ 2569 ณ หอประชุมใหญ่ มหาวิทยาลัยครพนบุรี
+          {{ newsDetail?.description }}
         </p>
-
-        <p>
-          การจัดงานในครั้งนี้มีวัตถุประสงค์เพื่อส่งเสริมและสนับสนุนการวิจัยที่สามารถนำไปประยุกต์ใช้ในการพัฒนาชุมชนและท้องถิ่นอย่างยั่งยืน
-          โดยมุ่งเน้นการบูรณาการองค์ความรู้จากหลายสาขาวิชา
-          เพื่อแก้ไขปัญหาและพัฒนาคุณภาพชีวิตของประชาชนในพื้นที่
-        </p>
-
-        <p class="font-semibold">
-          หัวข้องานวิจัยที่เปิดรับสมัคร
-        </p>
-
-        <ul>
-          <li>การพัฒนาเศรษฐกิจชุมชน – ศึกษาแนวทางการสร้างรายได้และพัฒนาอาชีพในชุมชน</li>
-          <li>การจัดการทรัพยากรธรรมชาติและสิ่งแวดล้อม – วิจัยเพื่อการอนุรักษ์และใช้ประโยชน์อย่างยั่งยืน</li>
-          <li>การพัฒนาสุขภาพชุมชน – ส่งเสริมสุขภาพและป้องกันโรคในท้องถิ่น</li>
-          <li>เทคโนโลยีเพื่อชุมชน – การนำเทคโนโลยีมาใช้แก้ปัญหาในชีวิตประจำวัน</li>
-          <li>การศึกษาและพัฒนาท้องถิ่น – ยกระดับคุณภาพการศึกษาในชุมชน</li>
-        </ul>
       </article>
 
       <!-- Gallery -->
-      <div class="mt-4 md:mt-10">
+      <div class="mt-4 md:mt-10" *ngIf="newsDetail?.news_photos?.length">
         <h2 class="text-2xl font-bold mb-4">รูปภาพเพิ่มเติม</h2>
 
         <div class="grid grid-cols-2 md:grid-cols-3 gap-5">
-          <img src="/assets/n1.png" class="rounded-lg shadow hover:scale-105 transition" />
-          <img src="/assets/n2.png" class="rounded-lg shadow hover:scale-105 transition" />
-          <img src="/assets/n3.png" class="rounded-lg shadow hover:scale-105 transition" />
-          <img src="/assets/n4.png" class="rounded-lg shadow hover:scale-105 transition" />
-          <img src="/assets/n5.png" class="rounded-lg shadow hover:scale-105 transition" />
+          <img
+            *ngFor="let photo of newsDetail?.news_photos"
+            [src]="photo.img_url"
+            class="rounded-lg shadow hover:scale-105 transition"
+          />
         </div>
       </div>
-
     </div>
   </div>
 </div>

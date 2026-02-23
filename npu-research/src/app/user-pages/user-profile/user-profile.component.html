@@ -451,9 +451,9 @@
             <!-- งานวิจัย -->
             <div class="flex flex-wrap gap-2 items-center">
             <button
-              (click)="changeTab('research')"
+              (click)="changeTab('project')"
               [ngClass]="
-                selectedTab === 'research'
+                selectedTab === 'project'
                   ? 'bg-[#FDE68A] text-[#394250] shadow'
                   : 'text-[#394250] hover:bg-[#FDE68A]/70'
               "
@@ -534,17 +534,17 @@
                   <td class="px-4 py-3">
                     <div
                       class="font-medium text-indigo-600 hover:underline cursor-pointer truncate max-w-125 "
-                      title="{{ item.title }}"
-                      (click)="viewItem(item.id)"
+                      title="{{ item.title_th }}"
+                      (click)="viewItem(item.research_id)"
                     >
-                      {{ item.title }}
+                      {{ item.title_th }}
                     </div>
 
                     <div
                       class="text-lg text-gray-500 mt-1 flex items-center gap-1 font-medium"
                     >
                       <i class="bi bi-calendar-event"></i>
-                      วันที่สร้าง: {{ item.date }}
+                      วันที่สร้าง: {{ item.published_date | date: 'dd MMMM YYYY' : '' : 'TH-th' }}
                     </div>
                   </td>
 
@@ -552,7 +552,7 @@
                   <td class="text-center py-3">
                     <button
                       class="inline-flex items-center justify-center w-9 h-9 rounded-full bg-blue-50 hover:bg-blue-100 text-blue-600 transition mr-1 cursor-pointer"
-                      (click)="editItem(item.id)"
+                      (click)="editItem(item.research_id)"
                       title="แก้ไข"
                     >
                       <i class="bi bi-pencil-square"></i>
@@ -560,7 +560,7 @@
 
                     <button
                       class="inline-flex items-center justify-center w-9 h-9 rounded-full bg-red-50 hover:bg-red-100 text-red-600 transition cursor-pointer"
-                      (click)="deleteItem(item.id)"
+                      (click)="deleteItem(item.research_id)"
                       title="ลบ"
                     >
                       <i class="bi bi-trash3"></i>

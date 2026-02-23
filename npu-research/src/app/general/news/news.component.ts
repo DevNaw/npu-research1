@@ -1,4 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { NewsService } from '../../services/news.service';
+import { News, NewsItem } from '../../models/news.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-news',
@@ -6,37 +9,33 @@ import { Component } from '@angular/core';
   templateUrl: './news.component.html',
   styleUrl: './news.component.css'
 })
-export class NewsComponent {
+export class NewsComponent implements OnInit {
   currentPage = 1;
   pageSize = 8;
   
-  newsList = [
-    {
-      id: 1,
-      title: 'ประกาศผลการจัดสรรทุนสนับสนุนอาจารย์นักวิจัยต่างประเทศ',
-      date: '01/09/2568',
-      image: 'assets/news1.jpg'
-    },
-    {
-      id: 2,
-      title: 'Sample Document for Visa and Work Permit Extension',
-      date: '13/06/2568',
-      image: 'assets/news2.jpg'
-    },
-    {
-      id: 3,
-      title: 'ประกาศผลการจัดสรรทุนพัฒนานักวิจัยรุ่นใหม่ รอบ 2',
-      date: '10/06/2568',
-      image: 'assets/news.jpeg'
-    },
-    {
-      id: 4,
-      title: 'มช. เปิดรับข้อเสนอโครงการทุน Visiting Professor 2025',
-      date: '09/04/2568',
-      image: 'assets/news1.jpg'
-    },
-    // เพิ่มได้เรื่อย ๆ
-  ];
+  newsList: NewsItem[] = [];
+
+  constructor(
+    private service: NewsService,
+    private router: Router,
+  ) {}
+
+  ngOnInit() {
+    this.loadNewsList();
+  }
+
+  // =========== Load News List =================
+  loadNewsList(): void {
+    this.service.getNewsData().subscribe({
+      next: (res) => {
+        this.newsList = res.data.news
+      }
+    })
+  }
+
+  goToNewsDetail(id: number): void {
+    this.router.navigate(['/news', id]);
+  }
   
   get totalPages() {
     const pageCount = Math.ceil(this.newsList.length / this.pageSize);

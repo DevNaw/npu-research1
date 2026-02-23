@@ -14,5 +14,5 @@ import { ResearchService } from '../services/research.service';
   styleUrl: './test.component.css',
 })
 export class TestComponent {
- 
+  
 }

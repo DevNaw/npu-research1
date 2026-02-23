@@ -1,37 +1,35 @@
 import { Component, HostListener } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import Swal from 'sweetalert2';
-
-import { ResearchData } from '../../models/research.model';
-import { ResearchService } from '../../services/research.service';
-import { ArticleForm, Major, SubArea } from '../../models/subject.model';
+import { Major, SubArea } from '../../models/subject.model';
+import { ResearchProjectData } from '../../models/researchs-detai.model';
 import { Researcher } from '../../models/researchers.model';
 import {
   ExternalMemberRow,
   InternalMemberRow,
 } from '../../models/member.model';
-import { ProjectDetail } from '../../models/researchs-detai.model';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ResearchService } from '../../services/research.service';
+import Swal from 'sweetalert2';
 
 const FIRST_AUTHOR = 'หัวหน้าโครงการ';
 
-const DEFAULT_RESEARCH: ProjectDetail = {
+const DEFAULT_RESEARCH: ResearchProjectData = {
   id: 0,
   title_th: '',
   title_en: '',
   abstract: '',
+  year: '',
+  status: '',
   published_date: '',
-  call_other: '',
+  call_other: null,
+  image: '',
   source_funds: '',
   name_funding: '',
   budget_amount: '',
-  project_code: null,
-  img_url: null,
-  year_received_budget: 0,
+  year_received_budget: '',
   research_area: '',
   usable_area: '',
   start_date: '',
   end_date: '',
-  status: '',
   responsibilities: '',
   subject_area_id: 0,
   internal_members: [{ user_id: 0, role: '', no: '' }],
@@ -48,248 +46,202 @@ const DEFAULT_RESEARCH: ProjectDetail = {
 })
 export class UserAddResearchComponent {
   isEdit = false;
-  researchId?: number;
+  activeDropdown: string | null = null;
+  activeRowIndex: number | null = null;
+  activeMajor: Major | null = null;
+
+  major: Major[] = [];
+  selectedSub: SubArea | null = null;
+  selectedMajor: Major | null = null;
+  searchMajor = '';
+  searchSub = '';
 
   researchers: Researcher[] = [];
   filteredResearchers: Researcher[] = [];
+  searchResearcher = '';
+  selectedResearcher: string | null = null;
+  searchKeyword = '';
 
-  reportFileName = '';
-  selectedFileName = '';
-  selectedMajor: Major | null = null;
-  searchMajor = '';
-  selectedSub: SubArea | null = null;
-
-  activeDropdown: string | null = null;
-
-  selectedFile: File | null = null;
-  reportFile: File | null = null;
-
-  isResponsibilityOpen = false;
-  openInternalIndex: number | null = null;
-  openExternalIndex: number | null = null;
-  openStatus: number | null = null;
-
-  activeMajor: Major | null = null;
-  activeRowIndex: number | null = null;
-
-  research: ArticleForm = {
-    responsibility: '',
-    type: '',
-    database_types: '',
-    quality: '',
-    major_id: null,
-    sub_id: null,
-  };
-
-  researchData: ProjectDetail = { ...DEFAULT_RESEARCH };
-
-  internalRows: InternalMemberRow[] = [
-    {
-      id: 0,
-      researcher_id: null,
-      name: '',
-      responsibilities: '',
-    },
+  internalRow: InternalMemberRow[] = [
+    { id: 0, researcher_id: null, name: '', responsibilities: '' },
   ];
-
-  externalRows: ExternalMemberRow[] = [
-    {
-      name: '',
-      organization: '',
-      responsibilities: '',
-    },
+  externalRow: ExternalMemberRow[] = [
+    { name: '', organization: '', responsibilities: '' },
   ];
-  major: Major[] = [];
-
-  fundType: string = '';
-  fundName: string = '';
 
   internalFunds: string[] = [
     'งบประมาณมหาวิทยาลัย',
-    'กองทุนวิจัยมหาวิทยาลัย',
-    'คณะ/วิทยาลัย',
+    'งบประมาณคณะ',
+    'งบประมาณภาควิชา'
+  ];
+  
+  externalFunds: string[] = [
+    'สำนักงานวิจัยแห่งชาติ',
+    'สกสว.',
+    'หน่วยงานเอกชน'
   ];
 
-  externalFunds: string[] = [
-    'สำนักงานการวิจัยแห่งชาติ (วช.)',
-    'สกสว.',
-    'กระทรวงการอุดมศึกษา',
-    'หน่วยงานเอกชน',
-  ];
+  selectedFileName = '';
+  selectedFile: File | null = null;
+  selectedContractFile: File | null = null;
+  selectedContractFileName = '';
+
+  projectData: ResearchProjectData = { ...DEFAULT_RESEARCH };
+
+  researchId?: number;
+  reportFilename = '';
+  projectId: number | null = null;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private researchService: ResearchService
+    private service: ResearchService
   ) {}
 
-  ngOnInit() {
-    this.loadSubjectAreas();
-    this.loadResearcherData();
+  ngOnInit(): void {
+    this.loadSubjectArea();
+    this.loadResearchersData();
 
     this.route.paramMap.subscribe((params) => {
       const id = params.get('id');
 
       if (id) {
         this.isEdit = true;
-        this.researchId = +id;
-        this.loadResearchData(this.researchId);
+        this.projectData.id = +id;
+        this.loadProjectData(this.projectData.id);
       } else {
         this.isEdit = false;
       }
     });
   }
-  // =========================== Load Data ===========================
-  loadSubjectAreas(): void {
-    this.researchService.getSubjectArea().subscribe({
+
+  // =========== Load Data ==========
+  loadSubjectArea(): void {
+    this.service.getSubjectArea().subscribe({
       next: (res) => {
         this.major = res.data.subject_areas;
       },
       error: (err) => {
-        console.error('โหลด Subject Area ไม่สำเร็จ', err);
+        console.error('Failed to load Subject Area:', err);
       },
     });
   }
 
-  loadResearcherData() {
-    this.researchService.getResearchers().subscribe({
+  loadResearchersData(): void {
+    this.service.getResearchers().subscribe({
       next: (res) => {
         this.researchers = res.data.$researchers ?? [];
         this.filteredResearchers = this.researchers;
       },
-      error: (err) => console.error('Failed to load researchers:', err),
-    });
-  }
-
-  // loadResearchData(id: number): void {
-  //   this.researchService.getProjectById(id).subscribe({
-  //     next: (res) => {
-  //       const data = res.data.projectDetail;
-
-  //       this.researchData = {
-  //         ...this.researchData,
-  //         ...data,
-  //       };
-  //       console.log(data);
-        
-
-  //       this.reportFileName = data.full_report_file_name ?? '';
-  //       this.selectedFileName = data.contract_file_name ?? '';
-
-  //       if (data.internal_members?.length) {
-  //         this.internalRows = data.internal_members.map(
-  //           (m: any, index: number) => ({
-  //             id: index,
-  //             researcher_id: m.user_id,
-  //             name: m.full_name,
-  //             responsibilities: m.role,
-  //           })
-  //         );
-  //       }
-
-  //       if (data.external_members?.length) {
-  //         this.externalRows = data.external_members.map((m: any) => ({
-  //           name: m.full_name,
-  //           organization: m.organization,
-  //           responsibilities: m.role,
-  //         }));
-  //       }
-
-  //       if (this.researchData.subject_area_id) {
-  //         for (const m of this.major) {
-  //           const foundSub = m.children.find(
-  //             (s) => s.sub_id === this.researchData.subject_area_id
-  //           );
-  //           if (foundSub) {
-  //             this.selectedMajor = m;
-  //             this.selectedSub = foundSub;
-  //             break;
-  //           }
-  //         }
-  //       }
-  //     },
-  //     error: (err) => console.error('Failed to load research data:', err),
-  //   });
-  // }
-
-  loadResearchData(id: number): void {
-    this.researchService.getProjectById(id).subscribe({
-      next: ({ data }) => {
-        const project = data?.projectDetail;
-        if (!project) return;
-  
-        this.patchResearchData(project);
-        this.setFileNames(project);
-        this.mapInternalMembers(project.internal_members);
-        this.mapExternalMembers(project.external_members);
-        this.setSelectedSubjectArea(project.subject_area_id);
-      },
-      error: (error) => {
-        console.error('Failed to load research data:', error);
+      error: (err) => {
+        console.error('Failed to load researchers:', err);
       },
     });
   }
 
-  private patchResearchData(project: any): void {
-    this.researchData = {
-      ...this.researchData,
-      ...project,
-    };
+  loadProjectData(id: number): void {
+    this.service.getProjectById(id).subscribe({
+      next: (res) => {
+        const data = res.data.projectDetail;
+
+        this.projectData = {
+          ...this.projectData,
+          ...data,
+        };
+
+        this.selectedFileName = data.full_report?.file_name ?? '';
+        this.selectedContractFileName = data.contract_file?.file_name ?? '';
+
+        if (data.internal_members?.length) {
+          this.internalRow = data.internal_members.map(
+            (m: any, index: number) => ({
+              id: index,
+              researcher_id: m.user_id,
+              name: m.full_name ?? '',
+              responsibilities: m.role ?? '',
+            })
+          );
+        }
+
+        if (data.external_members?.length) {
+          this.externalRow = data.external_members.map(
+            (m: any, index: number) => ({
+              id: index + 1,
+              name: m.full_name ?? '',
+              organization: m.organization ?? '',
+              responsibilities: m.role ?? '',
+            })
+          );
+        }
+
+        if (this.projectData.subject_area_id) {
+          for (const major of this.major) {
+            const found = major.children.find(
+              (s) => s.sub_id === this.projectData.subject_area_id
+            );
+
+            if (found) {
+              this.selectedMajor = major;
+              this.selectedSub = found;
+
+              break;
+            }
+          }
+        }
+      },
+      error: (err) => {
+        console.error('Failed to load article:', err);
+      },
+    });
   }
 
-  private setFileNames(project: any): void {
-    this.reportFileName = project.full_report_file_name ?? '';
-    this.selectedFileName = project.contract_file_name ?? '';
-  }
-
-  private mapInternalMembers(members?: any[]): void {
-    if (!members?.length) {
-      this.internalRows = [];
-      return;
-    }
-  
-    this.internalRows = members.map((member, index) => ({
-      id: index,
-      researcher_id: member.user_id,
-      name: member.full_name,
-      responsibilities: member.role,
-    }));
-  }
-
-  private mapExternalMembers(members?: any[]): void {
-    if (!members?.length) {
-      this.externalRows = [];
-      return;
-    }
-  
-    this.externalRows = members.map(member => ({
-      name: member.full_name,
-      organization: member.organization,
-      responsibilities: member.role,
-    }));
-  }
-
-  private setSelectedSubjectArea(subjectAreaId?: number): void {
-    if (!subjectAreaId) return;
-  
-    for (const major of this.major) {
-      const sub = major.children?.find(
-        (child: any) => child.sub_id === subjectAreaId
-      );
-  
-      if (sub) {
-        this.selectedMajor = major;
-        this.selectedSub = sub;
-        break;
-      }
-    }
-  }
-
-
-  // =========================== Toggle Event Handlers ===========================
-  toggle(type: string, event: MouseEvent) {
+  toggleDropdown(type: string, event: Event): void {
     event.stopPropagation();
     this.activeDropdown = this.activeDropdown === type ? null : type;
+  }
+
+  @HostListener('document: click')
+  closeAll(): void {
+    this.activeDropdown = null;
+    this.activeMajor = null;
+    this.activeRowIndex = null;
+  }
+
+  selectValue<K extends keyof ResearchProjectData>(
+    field: K,
+    value: ResearchProjectData[K]
+  ): void {
+    if (
+      field === 'responsibilities' &&
+      value === FIRST_AUTHOR &&
+      this.isFirstAuthorTaken()
+    )
+      return;
+
+    this.projectData[field] = value;
+    this.activeDropdown = null;
+  }
+
+  selectSub(sub: SubArea): void {
+    this.selectedSub = sub;
+    this.projectData.subject_area_id = sub.sub_id;
+    this.activeDropdown = null;
+    this.activeMajor = null;
+  }
+
+  selectRowResponsibility(row: any, value: string) {
+    if (value === FIRST_AUTHOR && this.isFirstAuthorTaken(row)) {
+      return;
+    }
+
+    row.responsibilities = value;
+    this.activeDropdown = null;
+  }
+
+  selectResearcher(r: Researcher, row: InternalMemberRow): void {
+    row.name = r.full_name;
+    row.researcher_id = r.user_id;
+    this.activeRowIndex = null;
   }
 
   toggleMajor(major: Major, event: Event): void {
@@ -299,62 +251,6 @@ export class UserAddResearchComponent {
       this.activeMajor?.major_id === major.major_id ? null : major;
   }
 
-  @HostListener('document:click')
-  closeAllDropdowns() {
-    this.activeDropdown = null;
-    this.activeMajor = null;
-    this.activeRowIndex = null;
-  }
-
-  // =========================== Select Value ===========================
-  selectValue<K extends keyof ProjectDetail>(
-    field: K,
-    value: ProjectDetail[K]
-  ): void {
-    if (
-      field === 'responsibilities' &&
-      value === FIRST_AUTHOR &&
-      this.isFirstAuthorTaken()
-    ){return;}
-
-    this.researchData[field] = value;
-
-    if (field === 'source_funds') {
-      this.researchData.name_funding = '';
-    }
-      
-    this.activeDropdown = null;
-  }
-
-  selectSub(sub: SubArea) {
-    this.selectedSub = sub;
-    this.researchData.subject_area_id = sub.sub_id;
-    this.activeDropdown = null;
-    this.activeMajor = null;
-
-    this.research.major_id = sub.major_id;
-    this.research.sub_id = sub.sub_id;
-  }
-
-  selectResponsibility(row: any, value: string): void {
-    if (value === FIRST_AUTHOR && this.isFirstAuthorTaken(row)) {
-      return;
-    }
-
-    row.responsibilities = value;
-    this.activeDropdown = null;
-  }
-
-  trackByIndex(index: number) {
-    return index;
-  }
-
-  selectStatus(status: string) {
-    this.researchData.status = status;
-    this.activeDropdown = null;
-  }
-
-  // ============================ Filter ===========================
   filteredMajor(): Major[] {
     if (!this.searchMajor) return this.major;
 
@@ -362,40 +258,43 @@ export class UserAddResearchComponent {
     return this.major.filter((m) => m.name_en.toLowerCase().includes(keyword));
   }
 
-  isFirstAuthorTaken(currentRow?: any): boolean {
-    if (this.researchData.responsibilities === FIRST_AUTHOR) return true;
-    return [...this.internalRows, ...this.externalRows].some(
-      (row) => row !== currentRow && row.responsibilities === FIRST_AUTHOR
+  isFirstAuthorTaken(excludeRow?: any): boolean {
+    if (this.projectData.responsibilities === FIRST_AUTHOR) return true;
+
+    return [...this.internalRow, ...this.externalRow].some(
+      (row) => row !== excludeRow && row.responsibilities === FIRST_AUTHOR
     );
   }
 
-  // =========================== Add/Remove Member ===========================
-  addInternal(): void {
-    this.internalRows.push({
-      id: this.internalRows.length,
+  addInternalRow(): void {
+    this.internalRow.push({
+      id: this.internalRow.length,
       researcher_id: null,
       name: '',
       responsibilities: '',
     });
   }
 
-  removeInternal(index: number): void {
-    this.internalRows.splice(index, 1);
+  removeInternalRow(index: number): void {
+    this.internalRow.splice(index, 1);
   }
 
-  addExternal() {
-    this.externalRows.push({
+  addExternalRow(): void {
+    this.externalRow.push({
       name: '',
       organization: '',
       responsibilities: '',
     });
   }
 
-  removeExternal(index: number) {
-    this.externalRows.splice(index, 1);
+  removeExternalRow(index: number): void {
+    this.externalRow.splice(index, 1);
   }
 
-  // ====================== Researcher & Role Selection =======================
+  trackById(index: number) {
+    return index;
+  }
+
   onFocus(index: InternalMemberRow): void {
     this.activeRowIndex = index.id;
     this.filteredResearchers = this.researchers;
@@ -404,212 +303,146 @@ export class UserAddResearchComponent {
   onSearch(value: string): void {
     this.filteredResearchers = value
       ? this.researchers.filter((r) =>
-          r.full_name.toLowerCase().includes(value.toLowerCase())
+          r.full_name?.toLowerCase().includes(value.toLowerCase())
         )
       : this.researchers;
   }
 
-  selectResearcher(r: Researcher, row: InternalMemberRow): void {
-    row.name = r.full_name;
-    row.researcher_id = r.user_id;
-
-    this.activeRowIndex = null;
-  }
-
-  // ============= File =================
-  onFileSelected(event: Event) {
+  onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
 
     if (input.files && input.files.length > 0) {
-      this.selectedFile = input.files[0];
+      const file = input.files[0];
+
+      this.selectedFile = file;
       this.selectedFileName = this.selectedFile.name;
     }
   }
 
-  onReportFileSelected(event: Event) {
+  removeFile() {
+    this.selectedFile = null;
+    this.selectedFileName = '';
+    this.projectData.full_report = null;
+  }
+
+  onContractFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
 
     if (input.files && input.files.length > 0) {
-      this.reportFile = input.files[0];
-      this.reportFileName = this.reportFile.name;
+      const file = input.files[0];
+
+      this.selectedContractFile = file;
+      this.selectedContractFileName = this.selectedContractFile.name;
     }
   }
 
-  // ============== Submit Research ==============
-  submitResearch() {
-    const formData = this.prepareFormData();
+  removeContractFile() {
+    this.selectedContractFile = null;
+    this.selectedContractFileName = '';
+    this.projectData.contract_file = null;
+  }
+
+  submit() {
+    const formData = this.buildFormData();
 
     Swal.fire({
       title: 'กำลังบันทึก...',
       allowOutsideClick: false,
       didOpen: () => Swal.showLoading(),
     });
-    
+
     const request$ = this.isEdit
-      ? this.researchService.updateProject(this.researchData.id, formData)
-      : this.researchService.createProject(formData);
-      
+      ? this.service.updateProject(this.projectData.id, formData)
+      : this.service.createProject(formData);
+
     request$.subscribe({
-      next: () => this.handleSuccess(),
-      error: () => this.handleError(),
+      next: () => {
+        Swal.fire({
+          icon: 'success',
+          title: this.isEdit ? 'อัพเดทสำเร็จ' : 'บันทึกสำเร็จ',
+          showConfirmButton: false,
+          timer: 1000,
+        });
+        if (this.isEdit) {
+          setTimeout(() => {
+            this.router
+              .navigate(['/performance/research', this.projectData.id])
+              .then(() => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              });
+          }, 1000);
+        } else {
+          this.resetForm();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      },
+      error: (err) => {
+        console.error(err);
+        Swal.fire({
+          icon: 'error',
+          title: this.isEdit ? 'อัพเดทไม่สำเร็จ' : 'บันทึกไม่สำเร็จ',
+        });
+      },
     });
   }
 
-  // ============== FormData Preparation ==============
-  private prepareFormData(): FormData {
+  buildFormData(): FormData {
     const fd = new FormData();
-    const d = this.researchData;
+    const d = this.projectData;
 
-    Object.entries(d).forEach(([key, value]) => {
-      if (
-        value !== null &&
-        value !== undefined &&
-        value !== '' &&
-        !Array.isArray(value)
-      ) {
-        fd.append(key, value as any);
-      }
-    });
+    const required = (key: string, val: any) =>
+      fd.append(key, val !== null && val !== undefined ? String(val) : '');
 
-    this.appendMembers(fd);
+    required('title_th', d.title_th);
+    required('published_date', d.published_date);
+    required('source_funds', d.source_funds);
+    required('name_funding', d.name_funding);
+    required('budget_amount', d.budget_amount);
+    required('year_received_budget', d.year_received_budget);
+    required('research_area', d.research_area);
+    required('usable_area', d.usable_area);
+    required('responsibilities', d.responsibilities);
 
-    if (this.selectedFile instanceof File) {
-      fd.append('contract_file', this.selectedFile);
-    }
+    if (d.subject_area_id > 0)
+      fd.append('subject_area_id', String(d.subject_area_id));
+    if (this.selectedFile) fd.append('full_report', this.selectedFile);
+    if (this.selectedContractFile)
+      fd.append('contract_file', this.selectedContractFile);
 
-    if (this.reportFile instanceof File) {
-      fd.append('full_report', this.reportFile);
-    }
-
-    return fd;
-  }
-
-  // private prepareFormData(): FormData {
-  //   const fd = new FormData();
-  //   const d = this.researchData;
-  
-  //   Object.entries(d).forEach(([key, value]) => {
-  //     if (
-  //       key !== 'contract_file' &&
-  //       key !== 'full_report' &&
-  //       value !== null &&
-  //       value !== undefined &&
-  //       value !== '' &&
-  //       !Array.isArray(value)
-  //     ) {
-  //       fd.append(key, String(value));
-  //     }
-  //   });
-  
-  //   this.appendMembers(fd);
-  
-  //   if (this.selectedFile instanceof File) {
-  //     fd.append('contract_file', this.selectedFile);
-  //   }
-  
-  //   if (this.reportFile instanceof File) {
-  //     fd.append('full_report', this.reportFile);
-  //   }
-  //   if (d.subject_area_id > 0)
-  //     fd.append('subject_area_id', String(d.subject_area_id));
-  
-  //   return fd;
-  // }
-
-  private resetForm() {
-    this.researchData = { ...DEFAULT_RESEARCH };
-    this.internalRows = [
-      {
-        id: 0,
-        researcher_id: null,
-        name: '',
-        responsibilities: '',
-      },
-    ];
-    this.externalRows = [
-      {
-        name: '',
-        organization: '',
-        responsibilities: '',
-      },
-    ];
-    this.selectedFile = null;
-    this.reportFile = null;
-    this.selectedFileName = '';
-    this.reportFileName = '';
-  }
-
-  private appendMembers(fd: FormData): void {
-    this.internalRows
-      .filter(r => r.researcher_id)
+    this.internalRow
+      .filter((r) => r.researcher_id)
       .forEach((r, i) => {
         fd.append(`internal_members[${i}][user_id]`, String(r.researcher_id));
         fd.append(`internal_members[${i}][role]`, r.responsibilities ?? '');
         fd.append(`internal_members[${i}][no]`, String(i + 1));
       });
 
-    this.externalRows
-      .filter(r => r.name)
+      this.externalRow
+      .filter((r) => r.name)
       .forEach((r, i) => {
         fd.append(`external_members[${i}][full_name]`, r.name);
         fd.append(`external_members[${i}][role]`, r.responsibilities ?? '');
         fd.append(`external_members[${i}][organization]`, r.organization);
         fd.append(`external_members[${i}][no]`, String(i + 1));
       });
+
+      return fd;
   }
 
-  private handleSuccess(): void {
-    Swal.fire({
-      icon: 'success',
-      title: this.isEdit ? 'อัพเดทสำเร็จ' : 'บันทึกสำเร็จ',
-      timer: 1000,
-      showConfirmButton: false,
-    });
-
-    if (this.isEdit) {
-      this.router.navigate(['/performance/research', this.researchData.id]);
-    } else {
-      this.resetForm();
-    }
+  resetForm(): void {
+    this.projectData = { ...DEFAULT_RESEARCH };
+    this.internalRow = [{ id: 0, researcher_id: null, name: '', responsibilities: '' }];
+    this.externalRow = [{ name: '', organization: '', responsibilities: '', }];
+    this.selectedFile = null;
+    this.selectedFileName = '';
+    this.selectedContractFile = null;
+    this.selectedContractFileName = '',
+    this.selectedMajor = null;
+    this.selectedSub = null;
+    this.searchMajor = '';
   }
 
-  private handleError(): void {
-    Swal.fire({
-      icon: 'error',
-      title: this.isEdit ? 'อัพเดทไม่สำเร็จ' : 'บันทึกไม่สำเร็จ',
-    });
-  }
-
-  goToResearchDetail(type: string, id: number | string) {
-    const role = localStorage.getItem('role');
-
-    const base = role === 'admin' ? '/admin/performance' : '/user/performance';
-
-    this.router.navigate([base, type, id]);
-  }
-
-  // ===== dropdown control =====
-  toggleFunding(event: MouseEvent) {
-    event.stopPropagation();
-    this.activeDropdown = this.activeDropdown === 'funding' ? null : 'funding';
-  }
-
-  toggleNameFunding(event: MouseEvent) {
-    event.stopPropagation();
-    this.activeDropdown =
-      this.activeDropdown === 'fundName' ? null : 'fundName';
-  }
-
-  // ===== select funding =====
-  selectFunding(type: string) {
-    // this.researchData.funding = type;
-    this.fundName = ''; // reset ชื่อแหล่งทุน
-    this.activeDropdown = null;
-  }
-
-  // ===== select fund name =====
-  selectFundName(name: string) {
-    this.fundName = name;
-    this.activeDropdown = null;
+  goToResearchDetail() {
+    this.router.navigate(['/user/profile']);
   }
 }
