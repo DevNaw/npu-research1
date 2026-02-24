@@ -32,7 +32,7 @@ export interface GeneralInfo {
     line_work: string;
     academic_position: string;
     interest: string;
-    expertise: string | null;
+    expertises: string | null;
     work_start_date: string;
     year_of_service: number;
   }

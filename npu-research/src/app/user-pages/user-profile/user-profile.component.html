@@ -132,7 +132,7 @@
             </li>
             <li class="flex gap-2 flex-wrap wrap-break-word">
               <span class="text-gray-400 font-bold">• สังกัด :</span>
-              {{ profileData?.workInfo?.expertise }}
+              {{ profileData?.workInfo?.organization }}
             </li>
             <li class="flex gap-2 flex-wrap wrap-break-word">
               <span class="text-gray-400 font-bold">• ประเภท :</span>
@@ -154,7 +154,7 @@
               <span class="text-gray-400 font-bold"
                 >• สาขาวิชาที่เชี่ยวชาญ :</span
               >
-              {{ profileData?.workInfo?.organization }}
+              {{ profileData?.workInfo?.expertises }}
             </li>
             <li class="flex gap-2 flex-wrap wrap-break-word">
               <span class="text-gray-400 font-bold">• วันที่เริ่มงาน :</span>
@@ -196,7 +196,7 @@
             <!-- Edit Button -->
             <button
               class="bg-[#FDE68A] hover:bg-[#FACC15] hover:text-white rounded-xl w-10 h-10 flex items-center justify-center shadow cursor-pointer"
-              (click)="goToEditStudy()"
+              (click)="openEditModal(educationData)"
             >
               <i class="bi bi-pencil-square"></i>
             </button>
@@ -292,90 +292,6 @@
 
           <!-- ไม่มีข้อมูล -->
           <ng-template #noTraining>
-            <div class="text-red-500 text-center font-semibold py-4">
-              ไม่พบข้อมูล
-            </div>
-          </ng-template>
-        </div>
-      </div>
-
-      <!-- ข้อมูลที่อยู่ (ตามทะเบียนบ้าน) -->
-      <div class="bg-white rounded-xl shadow-md px-6 py-8 w-full max-w-full mb-2 md:mb-5">
-        <!-- Header -->
-        <div
-          class="flex items-center justify-between cursor-pointer"
-          (click)="isAddress = !isAddress"
-        >
-          <div class="flex items-center gap-3">
-            <div class="text-2xl">
-              <i class="bi bi-house-door-fill"></i>
-            </div>
-            <h2 class="text-2xl">
-              ข้อมูลที่อยู่ (ตามทะเบียนบ้าน)
-            </h2>
-          </div>
-          <div class="flex items-center gap-3">
-            <i
-              class="bi bi-chevron-down text-xl transition-transform duration-300"
-              [class.rotate-180]="isAddress"
-            ></i>
-          </div>
-        </div>
-
-        <hr class="my-4 text-gray-400" />
-
-        <div *ngIf="isAddress" class="transition-all duration-300">
-          <div class="flex justify-end">
-            <!-- Edit Button -->
-            <button
-              class="bg-[#FDE68A] hover:bg-[#FACC15] hover:text-white rounded-xl w-10 h-10 flex items-center justify-center shadow cursor-pointer"
-              (click)="goToEditAddress()"
-            >
-              <i class="bi bi-pencil-square"></i>
-            </button>
-          </div>
-          <!-- Content -->
-          <ul
-            *ngIf="address && hasAddressData(); else noAddress"
-            class="space-y-3 text-gray-600 font-medium"
-          >
-            <li class="flex gap-2 flex-wrap">
-              <span class="text-gray-400 font-bold">• บ้านเลขที่ :</span>
-              {{ address.houseNo || "-" }}
-            </li>
-
-            <li class="flex gap-2 flex-wrap">
-              <span class="text-gray-400 font-bold">• ซอย :</span>
-              {{ address.alley || "-" }}
-            </li>
-
-            <li class="flex gap-2 flex-wrap">
-              <span class="text-gray-400 font-bold">• ถนน :</span>
-              {{ address.road || "-" }}
-            </li>
-
-            <li class="flex gap-2 flex-wrap">
-              <span class="text-gray-400 font-bold">• ตำบล :</span>
-              {{ address.subDistrict || "-" }}
-            </li>
-
-            <li class="flex gap-2 flex-wrap">
-              <span class="text-gray-400 font-bold">• อำเภอ :</span>
-              {{ address.district || "-" }}
-            </li>
-
-            <li class="flex gap-2 flex-wrap">
-              <span class="text-gray-400 font-bold">• จังหวัด :</span>
-              {{ address.province || "-" }}
-            </li>
-
-            <li class="flex gap-2 flex-wrap">
-              <span class="text-gray-400 font-bold">• เบอร์โทร :</span>
-              {{ address.phone || "-" }}
-            </li>
-          </ul>
-          <!-- ไม่มีข้อมูล -->
-          <ng-template #noAddress>
             <div class="text-red-500 text-center font-semibold py-4">
               ไม่พบข้อมูล
             </div>
@@ -610,3 +526,237 @@
     </div>
   </div>
 </div>
+
+<!-- ====== Modal Edit ====== -->
+<div
+  *ngIf="isModalOpen"
+  class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center text-2xl text-[#394250]"
+>
+  <!-- Modal Box -->
+  <div class="bg-white w-full max-w-xl rounded-2xl shadow-xl p-6 relative">
+    <!-- Header -->
+    <div class="flex items-center justify-between border-b pb-3 mb-5">
+      <h2 class="font-bold">
+        {{ isEditMode ? "แก้ไขข้อมูลการศึกษา" : "เพิ่มข้อมูลการศึกษา" }}
+      </h2>
+      <button
+        (click)="closeModal()"
+        class="text-gray-400 hover:text-gray-600 transition cursor-pointer"
+      >
+        <i class="bi bi-x-lg text-lg"></i>
+      </button>
+    </div>
+
+    <!-- Content -->
+    <div class="space-y-4">
+      <!-- ====== Education Level ===== -->
+      <div class="relative">
+        <label class="mb-1 block">ระดับการศึกษา</label>
+        <button
+          (click)="toggle('education', $event)"
+          class="flex justify-between items-center w-full border rounded-lg px-3 py-2 hover:border-indigo-500 transition"
+        >
+          <span class="text-gray-700">
+            {{ educationData.highest_education || "เลือก" }}
+          </span>
+          <i class="bi bi-chevron-down text-sm"></i>
+        </button>
+
+        <div
+          *ngIf="isOpen('education')"
+          (click)="$event.stopPropagation()"
+          class="absolute z-50 w-full bg-white border rounded-lg shadow mt-1"
+        >
+          <input
+            [(ngModel)]="searchEducationLevel"
+            placeholder="ค้นหา..."
+            class="w-full px-3 py-2 border-b outline-none"
+          />
+          <ul class="max-h-44 overflow-y-auto">
+            <li
+              *ngFor="let e of filteredEducationLevel()"
+              (click)="selectEducationLevel(e)"
+              class="px-4 py-2 hover:bg-indigo-50 cursor-pointer"
+            >
+              {{ e }}
+            </li>
+            <li
+              *ngIf="filteredEducationLevel().length === 0"
+              class="px-4 py-2 text-gray-400 text-center"
+            >
+              ไม่พบข้อมูล
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ====== Major & Qualification ===== -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Major -->
+        <div class="relative">
+          <label class="mb-1 block">สาขา</label>
+          <button
+            (click)="toggle('majors', $event)"
+            class="flex justify-between items-center w-full border rounded-lg px-3 py-2"
+          >
+            {{ educationData.field_of_study || "เลือก" }}
+            <i class="bi bi-chevron-down text-sm"></i>
+          </button>
+
+          <div
+            *ngIf="isOpen('majors')"
+            (click)="$event.stopPropagation()"
+            class="absolute z-50 w-full bg-white border rounded-lg shadow mt-1"
+          >
+            <input
+              [(ngModel)]="searchMajors"
+              placeholder="ค้นหา..."
+              class="w-full px-3 py-2 border-b"
+            />
+            <ul class="max-h-44 overflow-y-auto">
+              <li
+                *ngFor="let m of filteredMajor()"
+                (click)="selectMajor(m)"
+                class="px-4 py-2 hover:bg-indigo-50 cursor-pointer"
+              >
+                {{ m }}
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Qualification -->
+        <div class="relative">
+          <label class="mb-1 block">คุณวุฒิ</label>
+          <button
+            (click)="toggle('qualifications', $event)"
+            class="flex justify-between items-center w-full border rounded-lg px-3 py-2"
+          >
+            {{ educationData.qualification || "เลือก" }}
+            <i class="bi bi-chevron-down text-sm"></i>
+          </button>
+
+          <div
+            *ngIf="isOpen('qualifications')"
+            (click)="$event.stopPropagation()"
+            class="absolute z-50 w-full bg-white border rounded-lg shadow mt-1"
+          >
+            <input
+              [(ngModel)]="searchQualifications"
+              placeholder="ค้นหา..."
+              class="w-full px-3 py-2 border-b"
+            />
+            <ul class="max-h-44 overflow-y-auto">
+              <li
+                *ngFor="let q of filteredQualification()"
+                (click)="selectQualification(q)"
+                class="px-4 py-2 hover:bg-indigo-50 cursor-pointer"
+              >
+                {{ q }}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== Institution & Country ===== -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Institution -->
+        <div class="relative">
+          <label class="mb-1 block">สถานที่ศึกษา</label>
+          <input
+            [(ngModel)]="educationData.institution"
+            type="text"
+            placeholder="ชื่อสถานที่ศึกษา"
+            class="w-full border rounded-lg px-3 py-2 text-2xl"
+          />
+        </div>
+
+        <div>
+          <label class="mb-1 block">เกรดเฉลี่ย</label>
+          <input
+            [(ngModel)]="educationData.gpa"
+            type="text"
+            placeholder="เกรดเฉลี่ย"
+            class="w-full border rounded-lg px-3 py-2 text-2xl"
+          />
+        </div>
+
+        <!-- Country -->
+        <!-- <div class="relative">
+          <label class="mb-1 block">ประเทศ</label>
+          <button
+            (click)="toggle('countries', $event)"
+            class="flex justify-between items-center w-full border rounded-lg px-3 py-2"
+          >
+            {{ selectedCountries || 'เลือก' }}
+            <i class="bi bi-chevron-down text-sm"></i>
+          </button>
+
+          <div
+            *ngIf="isOpen('countries')"
+            (click)="$event.stopPropagation()"
+            class="absolute z-50 w-full bg-white border rounded-lg shadow mt-1"
+          >
+            <input
+              [(ngModel)]="searchCountries"
+              placeholder="ค้นหา..."
+              class="w-full px-3 py-2 border-b"
+            />
+            <ul class="max-h-44 overflow-y-auto">
+              <li
+                *ngFor="let c of filteredCountries()"
+                (click)="selectCountrie(c)"
+                class="px-4 py-2 hover:bg-indigo-50 cursor-pointer"
+              >
+                {{ c.name }} ({{ c.code }})
+              </li>
+            </ul>
+          </div>
+        </div> -->
+      </div>
+
+      <!-- ===== GPA & Year ===== -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="mb-1 block">ปีที่เข้าศึกษา</label>
+          <input
+          [(ngModel)]="educationData.date_enrollment"
+          type="date"
+          placeholder="ปีที่เข้าศึกษา"
+          class="w-full border rounded-lg px-3 py-2 text-2xl"
+        />
+        </div>
+
+        <div>
+          <label class="mb-1 block">ปีที่สำเร็จการศึกษา</label>
+          <input
+          [(ngModel)]="educationData.date_graduation"
+          type="date"
+          placeholder="ปีที่สำเร็จการศึกษา"
+          class="w-full border rounded-lg px-3 py-2 text-2xl"
+        />
+        </div>
+       
+        
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="flex justify-center gap-3 mt-6 pt-4 border-t">
+      <button
+        (click)="save()"
+        class="px-5 py-2 rounded-lg bg-yellow-400 hover:bg-yellow-500 shadow cursor-pointer"
+      >
+        บันทึก
+      </button>
+      <button
+        (click)="closeModal()"
+        class="px-4 py-2 rounded-lg border text-gray-600 hover:bg-gray-100 cursor-pointer"
+      >
+        ยกเลิก
+      </button>
+    </div>
+  </div>
+</div>
+

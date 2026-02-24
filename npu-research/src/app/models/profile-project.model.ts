@@ -18,7 +18,7 @@ export interface ResearchListResponse {
     title_th: string;
     title_en: string | null;
     abstract: string | null;
-    year: number;
+    year: string;
     published_date: string;
     status: string | null;
     call_other: string | null;

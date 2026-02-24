@@ -1,6 +1,8 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { ProfileService } from '../../services/profile.service';
+import { GeneralInfo } from '../../models/edit-general.model';
 
 @Component({
   selector: 'app-user-edit-profile',
@@ -11,12 +13,96 @@ import Swal from 'sweetalert2';
 export class UserEditProfileComponent implements OnInit {
   openDropdown: string | null = null;
   userId!: string | null;
+  data: GeneralInfo = {
+    first_name: '',
+    last_name: '',
+    first_name_en: null,
+    last_name_en: null,
+    email: '',
+    phone: null,
+    id_card_number: '',
+    date_of_birth: '',
+    age: 0,
+    ethnicity: '',
+    nationality: '',
+    religion: ''
+  };
 
-  constructor(private router: Router, private route: ActivatedRoute) {}
+   /* ===== data ===== */
+   ethnicity = ['ไทย', 'จีน', 'ญี่ปุ่น', 'อเมริกัน'];
+   nationality = ['ไทย', 'ญี่ปุ่น', 'จีน', 'อังกฤษ'];
+   religion = ['พุทธ', 'คริสต์', 'อิสลาม', 'ฮินดู'];
+   majors = ['คอมพิวเตอร์', 'เทคโนโลยีสารสนเทศ', 'วิศวกรรม', 'ปัญญาประดิษฐ์'];
+ 
+   /* ===== selected ===== */
+   selectedTitle = '';
+   selectedEthnicity = '';
+   selectedNationality = '';
+   selectedReligion = '';
+   selectedMajors: string[] = [];
+ 
+   /* ===== search ===== */
+   searchTitle = '';
+   searchEthnicity = '';
+   searchNationality = '';
+   searchReligion = '';
+   searchMajor = '';
+ 
+
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private service: ProfileService,
+  ) {}
 
   ngOnInit(): void {
-    this.userId = this.route.snapshot.paramMap.get('id');
-    console.log('Editing profile ID:', this.userId);
+    this.loadData();
+  }
+
+  // =============== loadData ==================
+  loadData(){
+    this.service.getGeneralInfo().subscribe({
+      next: (res) => {
+        const info = res.data.general_info;
+
+      this.data = {
+        ...info,
+        date_of_birth: this.convertThaiDateToISO(info.date_of_birth)
+      };
+        
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    })
+  }
+
+  // ======= Update Profile ==========
+  updateProfile(): void {
+    this.service.updateGeneral(this.data).subscribe({
+      next: (res) => {
+        Swal.fire({
+          icon: 'success',
+          title: 'สำเร็จ',
+          text: 'อัปเดตข้อมูลเรียบร้อยแล้ว'
+        });
+
+        const role = localStorage.getItem('role');
+
+        setTimeout(() => {
+          this.router.navigateByUrl(
+            role === 'admin' ? '/admin/profile' : '/user/profile'
+          );
+        }, 1500);
+      },
+      error: (err) => {
+        Swal.fire({
+          icon: 'error',
+          title: 'ผิดพลาด',
+          text: 'ไม่สามารถอัปเดตข้อมูลได้'
+        });
+      }
+    });
   }
 
   toggle(name: string, event: MouseEvent) {
@@ -33,66 +119,7 @@ export class UserEditProfileComponent implements OnInit {
     this.openDropdown = null;
   }
 
-  /* ===== data ===== */
-  titles = [
-    'นาย',
-    'นาง',
-    'นางสาว',
-    'ว่าที่ร้อยตรี',
-    'ว่าที่ร้อยตรีหญิง',
-    'Mr.',
-    'Ms.',
-    'Mrs.',
-    'ผศ.',
-    'รศ.',
-    'ดร.',
-    'ผศ.ดร.',
-    'รศ.ดร.',
-    'ศ.ดร',
-    'ศาสตรจารย์พิเศษ',
-    'พล.อ.อ.',
-    'ว่าที่ร้อยโท',
-    'ว่าที่ร้อยเอก',
-    'ผศ.ว่าที่ ร.อ.ดร.',
-    'ผศ.ว่าที่ ร.ต.',
-    'รศ.พันเอก ดร.',
-    'รศ.พล.อ.ท.',
-    'พันเอก',
-    'พันโท',
-    'พันตรี',
-    'ร.อ.',
-    'พันจ่าเอก',
-    'พล.อ.ท.',
-    'นาวาอากาศเอก',
-    'เรืออากาศเอก',
-    'พ.อ.อ.',
-  ];
-  ethnicity = ['ไทย', 'จีน', 'ญี่ปุ่น', 'อเมริกัน'];
-  nationality = ['ไทย', 'ญี่ปุ่น', 'จีน', 'อังกฤษ'];
-  religion = ['พุทธ', 'คริสต์', 'อิสลาม', 'ฮินดู'];
-  majors = ['คอมพิวเตอร์', 'เทคโนโลยีสารสนเทศ', 'วิศวกรรม', 'ปัญญาประดิษฐ์'];
-
-  blood = ['A', 'B', 'AB', 'O'];
-
-  /* ===== selected ===== */
-  selectedTitle = '';
-  selectedEthnicity = '';
-  selectedNationality = '';
-  selectedReligion = '';
-  selectedMajors: string[] = [];
-
-  /* ===== search ===== */
-  searchTitle = '';
-  searchEthnicity = '';
-  searchNationality = '';
-  searchReligion = '';
-  searchMajor = '';
-
   /* ===== filter ===== */
-  filteredTitles() {
-    return this.titles.filter((t) => t.includes(this.searchTitle));
-  }
-
   filteredEthnicity() {
     return this.ethnicity.filter((e) => e.includes(this.searchEthnicity));
   }
@@ -155,59 +182,48 @@ export class UserEditProfileComponent implements OnInit {
       cancelButtonText: 'ยกเลิก',
       confirmButtonColor: '#22c55e',
       cancelButtonColor: '#ef4444',
-      customClass: {
-        title: 'swal-title-lg',
-        htmlContainer: 'swal-text-2xl',
-        confirmButton: 'swal-btn-3xl',
-        cancelButton: 'swal-btn-3xl',
-      }
     }).then((result) => {
+  
       if (!result.isConfirmed) return;
-
-      const payload = {
-        title: this.selectedTitle,
-        ethnicity: this.selectedEthnicity,
-        nationality: this.selectedNationality,
-        religion: this.selectedReligion,
-        majors: this.selectedMajors,
-      };
-
-      console.log('SAVE DATA :', payload);
-
+  
       // 🔄 Loading
       Swal.fire({
         title: 'กำลังบันทึกข้อมูล',
         allowOutsideClick: false,
-        didOpen: () => {
-          Swal.showLoading();
-        },
+        didOpen: () => Swal.showLoading(),
       });
-
-      // 🔥 จำลองเรียก API
-      setTimeout(() => {
-        Swal.fire({
-          icon: 'success',
-          title: 'บันทึกสำเร็จ',
-          text: 'ข้อมูลถูกบันทึกเรียบร้อยแล้ว',
-          showConfirmButton: false,
-          customClass: {
-            title: 'swal-title-lg',
-            htmlContainer: 'swal-text-2xl',
-            confirmButton: 'swal-btn-3xl',
-            cancelButton: 'swal-btn-3xl',
-          },
-          timer: 1500,
-        });
-
-        // 👉 redirect หลังบันทึก
-        const role = localStorage.getItem('role');
-
-        setTimeout(() => {
-          this.router.navigateByUrl(
-            role === 'admin' ? '/admin/profile' : '/user/profile'
-          );
-        }, 1500);
-      }, 1200);
+  
+      this.service.updateGeneral(this.data).subscribe({
+  
+        next: () => {
+          Swal.fire({
+            icon: 'success',
+            title: 'สำเร็จ',
+            text: 'อัปเดตข้อมูลเรียบร้อยแล้ว',
+            timer: 1500,
+            showConfirmButton: false
+          });
+  
+          const role = localStorage.getItem('role');
+  
+          setTimeout(() => {
+            this.router.navigateByUrl(
+              role === 'admin' ? '/admin/profile' : '/user/profile'
+            );
+          }, 1500);
+        },
+  
+        error: (err) => {
+          console.error(err);
+          Swal.fire({
+            icon: 'error',
+            title: 'เกิดข้อผิดพลาด',
+            text: 'ไม่สามารถบันทึกข้อมูลได้'
+          });
+        }
+  
+      });
+  
     });
   }
 
@@ -221,4 +237,32 @@ export class UserEditProfileComponent implements OnInit {
     'อังกฤษ',
     'ฝรั่งเศส',
   ];
+
+  private convertThaiDateToISO(thaiDate: string): string {
+    if (!thaiDate) return '';
+  
+    const months: any = {
+      'มกราคม': 0,
+      'กุมภาพันธ์': 1,
+      'มีนาคม': 2,
+      'เมษายน': 3,
+      'พฤษภาคม': 4,
+      'มิถุนายน': 5,
+      'กรกฎาคม': 6,
+      'สิงหาคม': 7,
+      'กันยายน': 8,
+      'ตุลาคม': 9,
+      'พฤศจิกายน': 10,
+      'ธันวาคม': 11
+    };
+  
+    const parts = thaiDate.split(' ');
+    const day = parseInt(parts[0], 10);
+    const month = months[parts[1]];
+    const year = parseInt(parts[2], 10) - 543; // แปลง พ.ศ. → ค.ศ.
+  
+    const date = new Date(year, month, day);
+  
+    return date.toISOString().split('T')[0]; // YYYY-MM-DD
+  }
 }

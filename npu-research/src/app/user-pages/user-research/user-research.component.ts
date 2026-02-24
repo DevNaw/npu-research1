@@ -4,19 +4,6 @@ import { AuthService } from '../../services/auth.service';
 import { ResearchService } from '../../services/research.service';
 import { Research } from '../../models/research.model';
 
-// export interface Research {
-//   id: number;
-//   type: 'article' | 'research' | 'innovation';
-//   subType?: string;
-//   faculty: string;
-//   agency: string;
-//   funding: 'internal' | 'external';
-//   year: number;
-//   date: Date;
-//   name: string;
-//   title: string;
-// }
-
 @Component({
   selector: 'app-user-research',
   standalone: false,
@@ -62,8 +49,6 @@ export class UserResearchComponent {
   ngOnInit() {
     this.loadAllResearch();
   }
-
-  
 
   faculties = [
     'คณะวิศวกรรมศาสตร์',
@@ -312,11 +297,10 @@ export class UserResearchComponent {
   }
 
   format(date: Date): string {
-    return date.toLocaleDateString('en-GB'); // dd/mm/yyyy
+    return date.toLocaleDateString('en-GB');
   }
 
   onPickerClose() {
-    // ถ้าเลือกวันเดียว ให้ endDate = startDate
     if (this.startDate && !this.endDate) {
       this.endDate = this.startDate;
     }
@@ -331,7 +315,6 @@ export class UserResearchComponent {
         items.faculty.toLowerCase().includes(keyword) ||
         items.funding.toLowerCase().includes(keyword) ||
         items.title.toLowerCase().includes(keyword)
-      // items.year.toLowerCase().includes(keyword)
     );
 
     this.currentPage = 1;
@@ -374,6 +357,8 @@ export class UserResearchComponent {
 
   loadAllResearch() {
     this.researchService.getResearch().subscribe(data => {
+
+      const combined = []
       this.researches = data;
       this.filteredResearchers = data;
   

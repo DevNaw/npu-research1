@@ -1,12 +1,8 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { AuthService } from '../../services/auth.service';
-import {
-  DataPerformance,
-  DataPerformanceItem,
-  Address,
-} from '../../models/data-performance.model';
+import { Address } from '../../models/data-performance.model';
 import {
   ChartComponent,
   ApexChart,
@@ -25,6 +21,8 @@ import {
 import { ProfileService } from '../../services/profile.service';
 import { UserProfileInfo } from '../../models/profiledetai.model';
 import { ResearchItem } from '../../models/profile-project.model';
+import { EducationService } from '../../services/education.service';
+import { EducationInfo } from '../../models/education.model';
 
 export type PieChartOptions = {
   series: ApexNonAxisChartSeries;
@@ -62,6 +60,7 @@ export class UserProfileComponent implements OnInit {
 
   profileData?: UserProfileInfo;
   researchList: ResearchItem[] = [];
+  originalData: ResearchItem[] = [];
 
   /* ===== Charts ===== */
   pieChartOptions!: Partial<PieChartOptions>;
@@ -87,6 +86,118 @@ export class UserProfileComponent implements OnInit {
   currentUserId!: number;
   profileUserId!: number;
 
+  selectedEducationLevel = '';
+  selectedMajors = '';
+  selectedQualifications = '';
+  selectedInstitutions = '';
+  selectedCountries = '';
+
+  searchEducationLevel = '';
+  searchMajors = '';
+  searchQualifications = '';
+  searchInstitutions = '';
+  searchCountries = '';
+
+  userId!: string | null;
+  isModalOpen = false;
+  isEditMode = false;
+  openDropdown: string | null = null;
+
+  educationData: EducationInfo = {
+    highest_education: '',
+    field_of_study: '',
+    qualification: '',
+    gpa: '',
+    institution: '',
+    date_enrollment: '',
+    date_graduation: '',
+  };
+
+  education: string[] = [
+    'ต่ำกว่าประถมศึกษา',
+    'ประถมศึกษา',
+    'มัธยมศึกษาตอนต้น',
+    'มัธยมศึกษาตอนปลาย',
+    'ประกาศนียบัตรวิชาชีพ (ปวช.)',
+    'ประกาศนียบัตรวิชาชีพชั้นสูง (ปวส.)',
+    'อนุปริญญา',
+    'ปริญญาตรี',
+    'ประกาศนียบัตรบัณฑิต',
+    'ประกาศนียบัตรบัณฑิตชั้นสูง',
+    'ปริญญาโท',
+    'ปริญญาเอก',
+    'หลังปริญญาเอก (Postdoctoral)',
+  ];
+
+  majors: string[] = [
+    'วิทยาการคอมพิวเตอร์',
+    'เทคโนโลยีสารสนเทศ',
+    'วิศวกรรมคอมพิวเตอร์',
+    'วิศวกรรมซอฟต์แวร์',
+    'ปัญญาประดิษฐ์และวิทยาการข้อมูล',
+    'ระบบสารสนเทศ',
+    'คณิตศาสตร์',
+    'สถิติ',
+    'ฟิสิกส์',
+    'เคมี',
+    'ชีววิทยา',
+    'เทคโนโลยีชีวภาพ',
+    'วิทยาศาสตร์สิ่งแวดล้อม',
+    'วิศวกรรมไฟฟ้า',
+    'วิศวกรรมเครื่องกล',
+    'วิศวกรรมโยธา',
+    'บริหารธุรกิจ',
+    'การจัดการ',
+    'เศรษฐศาสตร์',
+    'บัญชี',
+    'รัฐศาสตร์',
+    'นิติศาสตร์',
+    'ศึกษาศาสตร์',
+    'ครุศาสตร์',
+    'แพทยศาสตร์',
+    'พยาบาลศาสตร์',
+    'สาธารณสุขศาสตร์',
+    'เภสัชศาสตร์',
+    'สัตวแพทยศาสตร์',
+    'ศิลปศาสตร์',
+    'มนุษยศาสตร์',
+    'สังคมศาสตร์',
+  ];
+
+  qualifications: string[] = [
+    'วุฒิการศึกษาทั่วไป',
+    'วุฒิวิชาชีพ',
+    'วุฒิครู',
+    'วุฒิวิศวกร',
+    'วุฒิวิชาชีพเฉพาะทาง',
+    'วุฒิทางการแพทย์',
+    'วุฒิทางการพยาบาล',
+    'วุฒิทางกฎหมาย',
+    'วุฒิวิชาการ',
+    'วุฒิวิจัย',
+    'วุฒิผู้เชี่ยวชาญ',
+    'วุฒิหลังปริญญา',
+    'วุฒิบัตร (Certificate)',
+    'วุฒิบัตรวิชาชีพ (Professional Certificate)',
+  ];
+
+  institutions: string[] = [
+    'โรงเรียนประถมศึกษา',
+    'โรงเรียนมัธยมศึกษา',
+    'วิทยาลัยเทคนิค',
+    'วิทยาลัยอาชีวศึกษา',
+    'วิทยาลัยชุมชน',
+    'มหาวิทยาลัยของรัฐ',
+    'มหาวิทยาลัยเอกชน',
+    'สถาบันเทคโนโลยี',
+    'สถาบันการพลศึกษา',
+    'สถาบันราชภัฏ',
+    'สถาบันเทคโนโลยีพระจอมเกล้า',
+    'สถาบันการศึกษาในต่างประเทศ',
+    'สถาบันฝึกอบรมวิชาชีพ',
+    'สถาบันวิจัย',
+  ];
+
   // ตัวอย่างเงื่อนไข
   isOwner = this.currentUserId === this.profileUserId;
 
@@ -98,7 +209,8 @@ export class UserProfileComponent implements OnInit {
   constructor(
     private router: Router,
     private authService: AuthService,
-    private service: ProfileService
+    private service: ProfileService,
+    private serviceEducation: EducationService
   ) {
     this.pieChartOptions = {
       series: [44, 55, 13],
@@ -185,13 +297,7 @@ export class UserProfileComponent implements OnInit {
   ngOnInit(): void {
     this.loadData();
     this.loadProject();
-    // this.currentUserId = 1;
-    // this.profileUserId = 1;
-
-    // this.isOwner = this.currentUserId === this.profileUserId;
-
-    // this.filteredData = [...this.data[this.selectedTab]];
-    // this.updatePagination();
+    this.loadEducation();
   }
 
   // ============= Load Data ==============
@@ -199,7 +305,6 @@ export class UserProfileComponent implements OnInit {
     this.service.getProfile().subscribe({
       next: (res) => {
         this.profileData = res.data.user;
-
         this.changeTab('project');
       },
       error: (err) => {
@@ -213,7 +318,6 @@ export class UserProfileComponent implements OnInit {
       next: (res) => {
         this.researchList = res.data.researchs;
         this.updateCharts();
-        
       },
       error: (err) => {
         console.error(err);
@@ -223,39 +327,44 @@ export class UserProfileComponent implements OnInit {
 
   onSearch(): void {
     const keyword = this.searchText.toLowerCase().trim();
-  
-    this.filteredData = this.filteredData.filter(item =>
-      item.title_th.toLowerCase().includes(keyword)
-    );
-  
+
+    if (!keyword) {
+      // 🔥 ถ้า input ว่าง → แสดงข้อมูลทั้งหมด
+      this.filteredData = [...this.originalData];
+    } else {
+      this.filteredData = this.originalData.filter((item) =>
+        item.title_th?.toLowerCase().includes(keyword)
+      );
+    }
+
     this.currentPage = 1;
     this.updatePagination();
   }
 
   editItem(id: number) {
     const isAdmin = this.authService.isAdmin();
-  
+
     const base = isAdmin ? '/admin' : '/user';
     let route = '';
-  
+
     switch (this.selectedTab) {
       case 'project':
         route = `${base}/edit-research/${id}`;
         break;
-  
+
       case 'article':
         route = `${base}/edit-article/${id}`;
         break;
-  
+
       case 'innovation':
         route = `${base}/edit-innovation/${id}`;
         break;
-  
+
       default:
         console.warn('Unknown tab:', this.selectedTab);
         return;
     }
-  
+
     this.router.navigateByUrl(route);
   }
 
@@ -323,9 +432,9 @@ export class UserProfileComponent implements OnInit {
     const user = this.authService.getUserFromStorage();
 
     if (this.authService.isAdmin()) {
-      this.router.navigate(['/admin/edit-profile', user.id]);
+      this.router.navigate(['/admin/edit-profile']);
     } else {
-      this.router.navigate(['/user/edit-profile', user.id]);
+      this.router.navigate(['/user/edit-profile']);
     }
   }
 
@@ -334,9 +443,9 @@ export class UserProfileComponent implements OnInit {
     if (!user) return;
 
     if (this.authService.isAdmin()) {
-      this.router.navigate(['/admin/edit-work', user.id]);
+      this.router.navigate(['/admin/edit-work']);
     } else {
-      this.router.navigate(['/user/edit-work', user.id]);
+      this.router.navigate(['/user/edit-work']);
     }
   }
 
@@ -345,9 +454,9 @@ export class UserProfileComponent implements OnInit {
     if (!user) return;
 
     if (this.authService.isAdmin()) {
-      this.router.navigate(['/admin/edit-study', user.id]);
+      this.router.navigate(['/admin/edit-study']);
     } else {
-      this.router.navigate(['/user/edit-study', user.id]);
+      this.router.navigate(['/user/edit-study']);
     }
   }
 
@@ -356,9 +465,9 @@ export class UserProfileComponent implements OnInit {
     if (!user) return;
 
     if (this.authService.isAdmin()) {
-      this.router.navigate(['/admin/edit-traning', user.id]);
+      this.router.navigate(['/admin/edit-traning']);
     } else {
-      this.router.navigate(['/user/edit-traning', user.id]);
+      this.router.navigate(['/user/edit-traning']);
     }
   }
 
@@ -368,9 +477,9 @@ export class UserProfileComponent implements OnInit {
     if (!user) return;
 
     if (this.authService.isAdmin()) {
-      this.router.navigate(['/admin/edit-address', user.id]);
+      this.router.navigate(['/admin/edit-address']);
     } else {
-      this.router.navigate(['/user/edit-address', user.id]);
+      this.router.navigate(['/user/edit-address']);
     }
   }
 
@@ -391,7 +500,7 @@ export class UserProfileComponent implements OnInit {
   }
 
   onPageSizeChange() {
-    this.currentPage = 1; // reset กลับหน้าแรก
+    this.currentPage = 1;
     this.updatePagination();
   }
 
@@ -399,37 +508,249 @@ export class UserProfileComponent implements OnInit {
     this.selectedTab = tab;
     this.searchText = '';
     this.currentPage = 1;
-  
+
     const mapType: any = {
       project: 'PROJECT',
       article: 'ARTICLE',
-      innovation: 'INNOVATION'
+      innovation: 'INNOVATION',
     };
-  
-    this.filteredData = this.researchList.filter(
-      item => item.research_type === mapType[tab]
+
+    this.originalData = this.researchList.filter(
+      (item) => item.research_type === mapType[tab]
     );
-  
+
+    this.filteredData = [...this.originalData];
+
     this.updatePagination();
   }
 
   updateCharts(): void {
-    const projectCount = this.researchList.filter(
-      item => item.research_type === 'PROJECT'
-    ).length;
-  
-    const articleCount = this.researchList.filter(
-      item => item.research_type === 'ARTICLE'
-    ).length;
-  
-    const innovationCount = this.researchList.filter(
-      item => item.research_type === 'INNOVATION'
-    ).length;
-  
-    // ✅ อัปเดต Pie
+    if (!this.researchList || this.researchList.length === 0) return;
+
+    const yearMap: {
+      [year: string]: {
+        PROJECT: number;
+        ARTICLE: number;
+        INNOVATION: number;
+      };
+    } = {};
+
+    this.researchList.forEach((item) => {
+      // 👇 เปลี่ยน field ตามของจริง เช่น created_at
+      const year = new Date().getFullYear().toString();
+
+      if (!yearMap[year]) {
+        yearMap[year] = {
+          PROJECT: 0,
+          ARTICLE: 0,
+          INNOVATION: 0,
+        };
+      }
+
+      if (item.research_type === 'PROJECT') {
+        yearMap[year].PROJECT++;
+      }
+
+      if (item.research_type === 'ARTICLE') {
+        yearMap[year].ARTICLE++;
+      }
+
+      if (item.research_type === 'INNOVATION') {
+        yearMap[year].INNOVATION++;
+      }
+    });
+
+    // 🔥 เรียงปี
+    const years = Object.keys(yearMap).sort();
+
+    const projectData = years.map((y) => yearMap[y].PROJECT);
+    const articleData = years.map((y) => yearMap[y].ARTICLE);
+    const innovationData = years.map((y) => yearMap[y].INNOVATION);
+
+    // ===== UPDATE PIE =====
+    const projectTotal = projectData.reduce((a, b) => a + b, 0);
+    const articleTotal = articleData.reduce((a, b) => a + b, 0);
+    const innovationTotal = innovationData.reduce((a, b) => a + b, 0);
+
     this.pieChartOptions = {
       ...this.pieChartOptions,
-      series: [projectCount, articleCount, innovationCount]
+      series: [projectTotal, articleTotal, innovationTotal],
     };
+
+    // ===== UPDATE BAR =====
+    this.barChartOptions = {
+      ...this.barChartOptions,
+      series: [
+        {
+          name: 'โครงการวิจัย',
+          data: projectData,
+        },
+        {
+          name: 'บทความ',
+          data: articleData,
+        },
+        {
+          name: 'นวัตกรรม',
+          data: innovationData,
+        },
+      ],
+      xaxis: {
+        categories: years,
+      },
+    };
+  }
+
+  // Education
+  save() {
+    Swal.fire({
+      icon: 'question',
+      title: 'ยืนยันการบันทึกข้อมูล',
+      showCancelButton: true,
+      confirmButtonText: 'บันทึก',
+      cancelButtonText: 'ยกเลิก',
+    }).then((result) => {
+      if (!result.isConfirmed) return;
+
+      const payload = { ...this.educationData };
+
+      const request$ = this.service.updateEducation(payload);
+
+      request$.subscribe({
+        next: () => this.handleSaveSuccess(),
+        error: () => Swal.fire('ผิดพลาด', 'ไม่สามารถบันทึกข้อมูลได้', 'error'),
+      });
+    });
+  }
+
+  loadEducation() {
+    this.serviceEducation.getEducation().subscribe({
+      next: (res) => {
+        const data = res.data.education_info;
+        if (data.date_graduation) {
+          data.date_graduation = this.convertToISO(data.date_graduation);
+        }
+
+        if (data.date_enrollment) {
+          data.date_enrollment = this.convertToISO(data.date_enrollment);
+        }
+
+        this.educationData = data;
+      },
+      error: (err) => console.error(err),
+    });
+  }
+
+  openEditModal(data: EducationInfo) {
+    this.isEditMode = true;
+    this.educationData = { ...data };
+    this.isModalOpen = true;
+  }
+
+  filteredQualification() {
+    return this.qualifications.filter((q) =>
+      q.includes(this.searchQualifications)
+    );
+  }
+
+  @HostListener('document:click')
+  closeAll() {
+    this.openDropdown = null;
+  }
+
+  filteredEducationLevel() {
+    return this.education.filter((e) => e.includes(this.searchEducationLevel));
+  }
+
+  filteredMajor() {
+    return this.majors.filter((m) => m.includes(this.searchMajors));
+  }
+
+  toggle(el: string, event: MouseEvent) {
+    event.stopPropagation();
+    this.openDropdown = this.openDropdown === el ? null : el;
+  }
+
+  isOpen(e: string) {
+    return this.openDropdown === e;
+  }
+
+  private handleSaveSuccess() {
+    Swal.fire({
+      icon: 'success',
+      title: this.isEditMode ? 'แก้ไขสำเร็จ' : 'เพิ่มข้อมูลสำเร็จ',
+      timer: 1500,
+      showConfirmButton: false,
+    }).then(() => {
+      this.isModalOpen = false;
+      this.resetForm();
+      this.loadEducation();
+    });
+  }
+  resetForm() {
+    this.educationData = {
+      highest_education: '',
+      field_of_study: '',
+      qualification: '',
+      gpa: '',
+      institution: '',
+      date_enrollment: '',
+      date_graduation: '',
+    };
+
+    this.searchEducationLevel = '';
+    this.searchMajors = '';
+    this.searchQualifications = '';
+    this.searchInstitutions = '';
+    this.searchCountries = '';
+  }
+
+  closeModal() {
+    this.isModalOpen = false;
+    this.loadEducation();
+  }
+  selectEducationLevel(e: string) {
+    this.educationData.highest_education = e;
+    this.searchEducationLevel = '';
+    this.openDropdown = null;
+  }
+  selectMajor(m: string) {
+    this.educationData.field_of_study = m;
+    this.searchMajors = '';
+    this.openDropdown = null;
+  }
+  selectQualification(q: string) {
+    this.educationData.qualification = q;
+    this.searchQualifications = '';
+    this.openDropdown = null;
+  }
+  selectInstitution(i: string) {
+    this.educationData.institution = i;
+    this.searchInstitutions = '';
+    this.openDropdown = null;
+  }
+  private convertToISO(thaiDate: string): string {
+    if (!thaiDate) return '';
+
+    const months: any = {
+      มกราคม: '01',
+      กุมภาพันธ์: '02',
+      มีนาคม: '03',
+      เมษายน: '04',
+      พฤษภาคม: '05',
+      มิถุนายน: '06',
+      กรกฎาคม: '07',
+      สิงหาคม: '08',
+      กันยายน: '09',
+      ตุลาคม: '10',
+      พฤศจิกายน: '11',
+      ธันวาคม: '12',
+    };
+
+    const parts = thaiDate.split(' ');
+    const day = parts[0].padStart(2, '0');
+    const month = months[parts[1]];
+    const year = (parseInt(parts[2], 10) - 543).toString(); // แปลง พ.ศ. → ค.ศ.
+
+    return `${year}-${month}-${day}`;
   }
 }

@@ -11,9 +11,9 @@
     </div>
 
     <!-- ================= Section 1 ================= -->
-    <div class="grid grid-cols-12 gap-3 md:gap-6">
+    <div class="grid grid-cols-15 gap-3 md:gap-6">
       <!-- คำนำหน้า -->
-      <div class="col-span-12 md:col-span-2 relative">
+      <!-- <div class="col-span-12 md:col-span-2 relative">
         <label class="block">คำนำหน้า</label>
         <button
           (click)="toggle('titles', $event)"
@@ -49,16 +49,27 @@
             </li>
           </ul>
         </div>
+      </div> -->
+
+      <div class="col-span-12 md:col-span-5">
+        <label>เลขบัตรประจำตัวประชาชน</label>
+        <input
+        [(ngModel)]="data.id_card_number"
+        class="w-full border rounded px-3 py-2" />
       </div>
 
       <div class="col-span-12 md:col-span-5">
         <label>ชื่อ</label>
-        <input class="w-full border rounded px-3 py-2" />
+        <input
+        [(ngModel)]="data.first_name"
+        class="w-full border rounded px-3 py-2" />
       </div>
 
       <div class="col-span-12 md:col-span-5">
         <label>นามสกุล</label>
-        <input class="w-full border rounded px-3 py-2" />
+        <input
+        [(ngModel)]="data!.last_name"
+        class="w-full border rounded px-3 py-2" />
       </div>
     </div>
 
@@ -67,21 +78,21 @@
       <!-- คำนำหน้า -->
       <div class="col-span-12 md:col-span-4">
         <label>ชื่อภาษาอังกฤษ</label>
-        <input class="w-full border rounded px-3 py-2" />
+        <input [(ngModel)]="data.first_name_en" class="w-full border rounded px-3 py-2" />
       </div>
 
       <div class="col-span-12 md:col-span-4">
         <label>นามสกุลภาษาอังกฤษ</label>
-        <input class="w-full border rounded px-3 py-2" />
+        <input [(ngModel)]="data.last_name_en" class="w-full border rounded px-3 py-2" />
       </div>
       <div class="col-span-12 md:col-span-4">
         <label>วัน/เดือน/ปีเกิด</label>
-        <input type="date" class="w-full border text-2xl rounded px-3 py-2" />
+        <input [(ngModel)]="data.date_of_birth" type="date" class="w-full border text-2xl rounded px-3 py-2" />
       </div>
     </div>
 
     <!-- ================= Section 3 ================= -->
-    <div class="grid grid-cols-12 gap-3 md:gap-6">
+    <div class="grid grid-cols-9 gap-3 md:gap-6">
       <!-- เชื้อชาติ -->
       <div class="col-span-12 md:col-span-3 relative">
         <label>เชื้อชาติ</label>
@@ -89,7 +100,7 @@
           (click)="toggle('ethnicity', $event)"
           class="w-full border rounded px-3 py-2 flex justify-between"
         >
-          {{ selectedEthnicity || "เลือก" }}
+          {{ data.ethnicity || "เลือก" }}
           <i class="bi bi-chevron-down"></i>
         </button>
 
@@ -130,7 +141,7 @@
           (click)="toggle('nationality', $event)"
           class="w-full border rounded px-3 py-2 flex justify-between items-center"
         >
-          {{ selectedNationality || "เลือก" }}
+          {{ data.nationality || "เลือก" }}
           <i class="bi bi-chevron-down"></i>
         </button>
 
@@ -173,7 +184,7 @@
           (click)="toggle('religion', $event)"
           class="w-full border rounded px-3 py-2 flex justify-between"
         >
-          {{ selectedReligion || "เลือก" }}
+          {{ data.religion || "เลือก" }}
           <i class="bi bi-chevron-down"></i>
         </button>
 
@@ -204,14 +215,6 @@
           </ul>
         </div>
       </div>
-
-      <!-- กรุ๊ปเลือด -->
-      <div class="col-span-12 md:col-span-3">
-        <label>กรุ๊ปเลือด</label>
-        <select class="w-full border rounded px-3 py-2">
-          <option *ngFor="let b of blood">{{ b }}</option>
-        </select>
-      </div>
     </div>
 
     <!-- ================== Section 5 ================= -->
@@ -219,69 +222,12 @@
       <!-- คำนำหน้า -->
       <div class="col-span-12 md:col-span-4">
         <label>เบอร์โทรศัพท์มือถือ</label>
-        <input class="w-full border rounded px-3 py-2" />
+        <input [(ngModel)]="data.phone" class="w-full border rounded px-3 py-2" />
       </div>
 
       <div class="col-span-12 md:col-span-4">
         <label>อีเมล</label>
-        <input class="w-full border rounded px-3 py-2" />
-      </div>
-      <div class="col-span-12 md:col-span-4">
-        <label>ความสนใจ</label>
-        <textarea class="w-full border rounded px-3 py-2"></textarea>
-      </div>
-    </div>
-
-    <!-- ================= Section 5 ================= -->
-    <div class="relative max-w-xl">
-      <label>สาขาวิชาที่เชี่ยวชาญ</label>
-
-      <div
-        class="border rounded px-3 py-2 flex flex-wrap gap-2 cursor-pointer"
-        (click)="toggle('majors', $event)"
-      >
-        <span
-          *ngFor="let m of selectedMajors; let i = index"
-          class="bg-indigo-500 text-white px-3 py-1 rounded"
-        >
-          {{ m }}
-          <span
-            class="ml-2 cursor-pointer"
-            (click)="removeMajor(i); $event.stopPropagation()"
-            >✕</span
-          >
-        </span>
-
-        <span *ngIf="selectedMajors.length === 0" class="text-gray-400">
-          คลิกเพื่อเลือก
-        </span>
-      </div>
-
-      <div
-        *ngIf="isOpen('majors')"
-        class="absolute z-50 w-full bg-white border mt-2 shadow"
-        (click)="$event.stopPropagation()"
-      >
-        <input
-          [(ngModel)]="searchMajor"
-          placeholder="ค้นหา..."
-          class="w-full px-3 py-2 border-b"
-        />
-        <ul>
-          <li
-            *ngFor="let m of filteredMajors()"
-            (click)="selectMajor(m)"
-            class="px-4 py-2 hover:bg-indigo-50 cursor-pointer"
-          >
-            {{ m }}
-          </li>
-          <li
-            *ngIf="filteredMajors().length === 0"
-            class="px-4 py-2 text-gray-400"
-          >
-            ไม่พบข้อมูล
-          </li>
-        </ul>
+        <input [(ngModel)]="data.email" class="w-full border rounded px-3 py-2" />
       </div>
     </div>
 

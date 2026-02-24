@@ -586,9 +586,9 @@
               class="whitespace-nowrap text-white text-center bg-[#394250] border-b-2 border-gray-300 text-wrap"
             >
               <th class="p-1 md:p-2">#</th>
-              <th class="p-1 md:p-2">ระบุชื่อ(บุคลากรภายนอก)</th>
+              <th class="p-1 md:p-2">ระบุชื่อ</th>
               <th class="p-1 md:p-2">ประเภทความรับผิดชอบ</th>
-              <th class="p-1 md:p-2">หน่วยงาน(บุคลากรภายนอก)</th>
+              <th class="p-1 md:p-2">หน่วยงาน</th>
               <th class="p-1 md:p-2">Action</th>
             </tr>
           </thead>
@@ -616,7 +616,7 @@
                 <div class="">
                   <button
                     (click)="toggleDropdown('external-' + i, $event)"
-                    class="flex justify-between items-center bg-white h-12 w-full rounded-md font-medium p-"
+                    class="flex justify-between items-center bg-white h-12 w-full rounded-md font-medium p-2"
                   >
                     {{ item.responsibilities || "ประเภทความรับผิดชอบ" }}
                     <i class="bi bi-chevron-down"></i>

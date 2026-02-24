@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { ResearchListResponse } from '../models/profile-project.model';
 import { Observable } from 'rxjs';
+import { GeneralInfoResponse } from '../models/edit-general.model';
 
 export interface UserProfile {
   data: any;
@@ -53,8 +54,12 @@ export class ProfileService {
     );
   }
 
+  getGeneralInfo(): Observable<GeneralInfoResponse> {
+    return this.http.get<GeneralInfoResponse>(`${this.api}/user/infomation/general-for-update`);
+  }
+  
   updateGeneral(data: any) {
-    return this.http.patch(`${this.api}/user/infomation/general`, data);
+    return this.http.patch<any>(`${this.api}/user/infomation/general`, data);
   }
 
   updateEducation(data: any) {

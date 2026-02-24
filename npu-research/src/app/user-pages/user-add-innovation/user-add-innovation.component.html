@@ -333,9 +333,9 @@
               class="whitespace-nowrap text-white text-center bg-[#394250] border-b-2 border-gray-300 text-wrap"
             >
               <th class="p-1 md:p-2">#</th>
-              <th class="p-1 md:p-2">ระบุชื่อ(บุคลากรภายนอก)</th>
+              <th class="p-1 md:p-2">ระบุชื่อ</th>
               <th class="p-1 md:p-2">ประเภทความรับผิดชอบ</th>
-              <th class="p-1 md:p-2">หน่วยงาน(บุคลากรภายนอก)</th>
+              <th class="p-1 md:p-2">หน่วยงาน</th>
               <th class="p-1 md:p-2">Action</th>
             </tr>
           </thead>
@@ -363,7 +363,7 @@
                 <div class="">
                   <button
                     (click)="toggleDropdown('external-' + i, $event)"
-                    class="flex justify-between items-center bg-white h-12 w-full rounded-md font-medium p-"
+                    class="flex justify-between items-center bg-white h-12 w-full rounded-md font-medium p-2"
                   >
                     {{ item.responsibilities || "ประเภทความรับผิดชอบ" }}
                     <i class="bi bi-chevron-down"></i>
@@ -531,19 +531,18 @@
             placeholder="ระบุปีที่ได้รับทุน"
           />
         </div>
-      </div>
-
-      <!-- ปีที่ได้รับทุน -->
-      <div class="grid grid-cols-1 md:grid-cols-1 gap-2 mb-6 mt-6">
-        <label class="md:col-span-1 text-start">
-          ปี <span class="text-red-500">*</span>
-        </label>
-        <input
-          [(ngModel)]="innovationData.year"
-          type="text"
-          class="max-w-md h-12 text-2xl font-medium w-full border rounded-md px-4 py-2"
-          placeholder="ระบุปี"
-        />
+        <!-- ปีที่ได้รับทุน -->
+        <div class="grid grid-cols-1 md:grid-cols-1 gap-2 mb-6">
+          <label class="md:col-span-1 text-start">
+            ปี <span class="text-red-500">*</span>
+          </label>
+          <input
+            [(ngModel)]="innovationData.year"
+            type="text"
+            class="h-12 text-2xl font-medium w-full border rounded-md px-4 py-2"
+            placeholder="ระบุปี"
+          />
+        </div>
       </div>
 
       <!-- ความร่วมมือกับหน่วยงานอื่นๆ : -->

@@ -11,29 +11,33 @@
     </div>
 
     <div class="flex justify-end mb-2 md:mb-8">
-      <button (click)="openModal()" class="flex items-center gap-2 text-xl bg-yellow-300 text-black px-4 py-2 rounded-lg hover:bg-yellow-400 transition"><i class="bi bi-plus"></i>เพิ่มข้อมูลการศึกษา</button>
+      <button
+        (click)="openAddModal()"
+        class="flex items-center gap-2 text-xl bg-yellow-300 text-black px-4 py-2 rounded-lg hover:bg-yellow-400 transition"
+      >
+        <i class="bi bi-plus"></i>เพิ่มข้อมูลการศึกษา
+      </button>
     </div>
 
     <div class="w-full overflow-x-auto bg-white shadow-sm mb-4 md:mb-8">
       <table class="min-w-225 w-full border-collapse">
-    
         <!-- Table Header -->
         <thead>
           <tr class="bg-[#394250] text-white">
             <th class="p-1 md:p-2 text-center whitespace-nowrap font-semibold">
               ระดับ
             </th>
-            <th class="p-1 md:p-2 text-center font-semibold">
-              สาขา / คุณวุฒิ
-            </th>
+            <th class="p-1 md:p-2 text-center font-semibold">สาขา / คุณวุฒิ</th>
             <th class="p-1 md:p-2 text-center font-semibold">
               สถานศึกษา
-            </th>
+              <!-- </th>
             <th class="p-1 md:p-2 text-center font-semibold">
               ประเทศ
+            </th> -->
             </th>
+
             <th class="p-1 md:p-2 text-center whitespace-nowrap font-semibold">
-              GPAX
+              เกรดเฉลี่ย
             </th>
             <th class="p-1 md:p-2 text-center whitespace-nowrap font-semibold">
               ปีที่เข้า
@@ -46,53 +50,59 @@
             </th>
           </tr>
         </thead>
-    
+
         <!-- Table Body -->
         <tbody>
-          <tr class="border-b border-gray-300 bg-gray-200 hover:bg-gray-50 transition">
-    
+          <tr
+            class="border-b border-gray-300 bg-gray-200 hover:bg-gray-50 transition"
+          >
             <td class="p-1 md:p-2 max-w-88 wrap-break-word">
-              ปริญญาเอก
+              {{ educationData.highest_education }}
             </td>
-    
+
             <td class="p-1 md:p-2 max-w-60 wrap-break-word">
-              วิศวกรรมคอมพิวเตอร์
+              {{ educationData.qualification }} /
+              {{ educationData.field_of_study }}
             </td>
-    
+
             <td class="p-1 md:p-2 max-w-56 wrap-break-word">
-              มหาวิทยาลัยนครพนม
+              {{ educationData.institution }}
             </td>
-    
+            <!--     
             <td class="p-1 md:p-2 whitespace-nowrap">
               ไทยแลนด์
-            </td>
-    
+            </td> -->
+
             <td class="p-1 md:p-2 whitespace-nowrap">
-              4.00
+              {{ educationData.gpa }}
             </td>
-    
+
             <td class="p-1 md:p-2 whitespace-nowrap">
-              1/1/2020
+              {{
+                educationData.date_enrollment
+                  | date : "dd MMMM YYYY" : "" : "TH-th"
+              }}
             </td>
-    
+
             <td class="p-1 md:p-2 whitespace-nowrap">
-              1/1/2024
+              {{
+                educationData.date_graduation
+                  | date : "dd MMMM YYYY" : "" : "TH-th"
+              }}
             </td>
-    
+
             <!-- Actions -->
             <td class="p-1 md:p-2 text-center whitespace-nowrap">
               <button
-                (click)="openModalEdit()"
-                class="inline-flex items-center justify-center w-9 h-9 rounded-full
-                       text-sky-600 hover:bg-sky-100 hover:text-sky-700 transition cursor-pointer"
+                (click)="openEditModal(educationData)"
+                class="inline-flex items-center justify-center w-9 h-9 rounded-full text-sky-600 hover:bg-sky-100 hover:text-sky-700 transition cursor-pointer"
                 title="แก้ไข"
               >
                 <i class="bi bi-pencil-square"></i>
               </button>
-    
+
               <button
-                class="inline-flex items-center justify-center w-9 h-9 rounded-full
-                       text-red-500 hover:bg-red-100 hover:text-red-700 transition cursor-pointer"
+                class="inline-flex items-center justify-center w-9 h-9 rounded-full text-red-500 hover:bg-red-100 hover:text-red-700 transition cursor-pointer"
                 title="ลบ"
               >
                 <i class="bi bi-trash3"></i>
@@ -100,287 +110,36 @@
             </td>
           </tr>
         </tbody>
-    
       </table>
     </div>
-    
-  <!-- ปุ่ม -->
-  <div class="flex justify-center mt-6">
-    <button
-      type="submit"
-      (click)="save()"
-      class="px-6 py-2 bg-yellow-300 text-black hover:bg-yellow-400 rounded-md transition cursor-pointer"
-    >
-      บันทึกข้อมูล
-    </button>
-  </div>
+
+    <!-- ปุ่ม -->
+    <div class="flex justify-center mt-6">
+      <button
+        type="submit"
+        (click)="saveGotoProfile()"
+        class="px-6 py-2 bg-yellow-300 text-black hover:bg-yellow-400 rounded-md transition cursor-pointer"
+      >
+        บันทึกข้อมูล
+      </button>
+    </div>
   </div>
 </div>
 
-
-<!-- ======= Modal ========= -->
-<!-- Modal Backdrop -->
+<!-- ====== Modal Edit ====== -->
 <div
   *ngIf="isModalOpen"
   class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center text-2xl text-[#394250]"
 >
   <!-- Modal Box -->
-  <div
-    class="bg-white w-full max-w-xl rounded-2xl shadow-xl p-6 relative"
-  >
+  <div class="bg-white w-full max-w-xl rounded-2xl shadow-xl p-6 relative">
     <!-- Header -->
     <div class="flex items-center justify-between border-b pb-3 mb-5">
-      <h2 class="font-semibold">
-        เพิ่มข้อมูลการศึกษา
+      <h2 class="font-bold">
+        {{ isEditMode ? "แก้ไขข้อมูลการศึกษา" : "เพิ่มข้อมูลการศึกษา" }}
       </h2>
       <button
         (click)="closeModal()"
-        class="text-gray-400 hover:text-gray-600 transition"
-      >
-        <i class="bi bi-x-lg text-lg"></i>
-      </button>
-    </div>
-
-    <!-- Content -->
-    <div class="space-y-2 md:space-y-4">
-
-      <!-- ====== Education Level ===== -->
-      <div class="relative">
-        <label class="mb-1 block">ระดับการศึกษา</label>
-        <button
-          (click)="toggle('education', $event)"
-          class="flex justify-between items-center w-full border rounded-lg px-3 py-2 hover:border-indigo-500 transition"
-        >
-          <span class="text-gray-700">
-            {{ selectedEducationLevel || 'เลือก' }}
-          </span>
-          <i class="bi bi-chevron-down text-sm"></i>
-        </button>
-
-        <div
-          *ngIf="isOpen('education')"
-          class="absolute z-50 w-full bg-white border rounded-lg shadow mt-1 text-2xl"
-          (click)="$event.stopPropagation()"
-        >
-          <input
-            [(ngModel)]="searchEducationLevel"
-            placeholder="ค้นหา..."
-            class="w-full px-3 py-2 border-b outline-none"
-          />
-          <ul class="max-h-44 overflow-y-auto">
-            <li
-              *ngFor="let e of filteredEducationLevel()"
-              (click)="selectEducationLevel(e)"
-              class="px-4 py-2 hover:bg-indigo-50 cursor-pointer"
-            >
-              {{ e }}
-            </li>
-            <li
-              *ngIf="filteredEducationLevel().length === 0"
-              class="px-4 py-2 text-gray-400 text-center"
-            >
-              ไม่พบข้อมูล
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- ====== Major & Qualification ===== -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-2xl">
-
-        <!-- Major -->
-        <div class="relative">
-          <label class="mb-1 block">สาขา</label>
-          <button
-            (click)="toggle('majors', $event)"
-            class="flex justify-between items-center w-full border rounded-lg px-3 py-2"
-          >
-            {{ selectedMajors || 'เลือก' }}
-            <i class="bi bi-chevron-down text-sm"></i>
-          </button>
-
-          <div
-            *ngIf="isOpen('majors')"
-            (click)="$event.stopPropagation()"
-            class="absolute z-50 w-full bg-white border rounded-lg shadow mt-1"
-          >
-            <input
-              [(ngModel)]="searchMajors"
-              placeholder="ค้นหา..."
-              class="w-full px-3 py-2 border-b"
-            />
-            <ul class="max-h-44 overflow-y-auto">
-              <li
-                *ngFor="let m of filteredMajor()"
-                (click)="selectMajor(m)"
-                class="px-4 py-2 hover:bg-indigo-50 cursor-pointer"
-              >
-                {{ m }}
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- Qualification -->
-        <div class="relative">
-          <label class=" mb-1 block">คุณวุฒิ</label>
-          <button
-            (click)="toggle('qualifications', $event)"
-            class="flex justify-between items-center w-full border rounded-lg px-3 py-2"
-          >
-            {{ selectedQualifications || 'เลือก' }}
-            <i class="bi bi-chevron-down text-sm"></i>
-          </button>
-
-          <div
-            *ngIf="isOpen('qualifications')"
-            (click)="$event.stopPropagation()"
-            class="absolute z-50 w-full bg-white border rounded-lg shadow mt-1"
-          >
-            <input
-              [(ngModel)]="searchQualifications"
-              placeholder="ค้นหา..."
-              class="w-full px-3 py-2 border-b"
-            />
-            <ul class="max-h-44 overflow-y-auto">
-              <li
-                *ngFor="let q of filteredQualification()"
-                (click)="selectQualification(q)"
-                class="px-4 py-2 hover:bg-indigo-50 cursor-pointer"
-              >
-                {{ q }}
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <!-- ===== Institution & Country ===== -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-        <!-- Institution -->
-        <div class="relative">
-          <label class="mb-1 block">สถานที่ศึกษา</label>
-          <button
-            (click)="toggle('institutions', $event)"
-            class="flex justify-between items-center w-full border rounded-lg px-3 py-2"
-          >
-            {{ selectedInstitutions || 'เลือก' }}
-            <i class="bi bi-chevron-down"></i>
-          </button>
-
-          <div
-            *ngIf="isOpen('institutions')"
-            (click)="$event.stopPropagation()"
-            class="absolute z-50 w-full bg-white border rounded-lg shadow mt-1"
-          >
-            <input
-              [(ngModel)]="searchInstitutions"
-              placeholder="ค้นหา..."
-              class="w-full px-3 py-2 border-b"
-            />
-            <ul class="max-h-44 overflow-y-auto">
-              <li
-                *ngFor="let i of filteredInstitution()"
-                (click)="selectInstitution(i)"
-                class="px-4 py-2 hover:bg-indigo-50 cursor-pointer"
-              >
-                {{ i }}
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- Country -->
-        <div class="relative">
-          <label class=" mb-1 block">ประเทศ</label>
-          <button
-            (click)="toggle('countries', $event)"
-            class="flex justify-between items-center w-full border rounded-lg px-3 py-2"
-          >
-            {{ selectedCountries || 'เลือก' }}
-            <i class="bi bi-chevron-down text-sm"></i>
-          </button>
-
-          <div
-            *ngIf="isOpen('countries')"
-            (click)="$event.stopPropagation()"
-            class="absolute z-50 w-full bg-white border rounded-lg shadow mt-1"
-          >
-            <input
-              [(ngModel)]="searchCountries"
-              placeholder="ค้นหา..."
-              class="w-full px-3 py-2 border-b"
-            />
-            <ul class="max-h-44 overflow-y-auto">
-              <li
-                *ngFor="let c of filteredCountries()"
-                (click)="selectCountrie(c)"
-                class="px-4 py-2 hover:bg-indigo-50 cursor-pointer"
-              >
-              {{ c.name }} ({{ c.code }})
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <!-- ===== GPA & Year ===== -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <input
-          type="text"
-          placeholder="เกรดเฉลี่ย"
-          class="w-full border rounded-lg px-3 py-2 text-2xl"
-        />
-        <input
-          type="text"
-          placeholder="ปีที่เข้าศึกษา"
-          class="w-full border rounded-lg px-3 py-2 text-2xl"
-        />
-        <input
-          type="text"
-          placeholder="ปีที่สำเร็จการศึกษา"
-          class="w-full border rounded-lg px-3 py-2 text-2xl"
-        />
-      </div>
-    </div>
-
-    <!-- Footer -->
-    <div class="flex justify-center gap-3 mt-6 pt-4 border-t">
-      
-      <button
-      (click)="saveAdd()"
-        class="px-5 py-2 rounded-lg bg-yellow-400 hover:bg-yellow-500 shadow cursor-pointer"
-      >
-        บันทึก
-      </button>
-      <button
-        (click)="closeModal()"
-        class="px-4 py-2 rounded-lg border text-gray-600 hover:bg-gray-100 cursor-pointer"
-      >
-        ยกเลิก
-      </button>
-    </div>
-  </div>
-</div>
-
-
-<!-- ====== Modal Edit ====== -->
-<div
-  *ngIf="isModalOpenEdit"
-  class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center text-2xl text-[#394250]"
->
-  <!-- Modal Box -->
-  <div
-    class="bg-white w-full max-w-xl rounded-2xl shadow-xl p-6 relative"
-  >
-    <!-- Header -->
-    <div class="flex items-center justify-between border-b pb-3 mb-5">
-      <h2 class="font-bold ">
-        แก้ไขข้อมูลการศึกษา
-      </h2>
-      <button
-        (click)="closeModalEdit()"
         class="text-gray-400 hover:text-gray-600 transition cursor-pointer"
       >
         <i class="bi bi-x-lg text-lg"></i>
@@ -389,7 +148,6 @@
 
     <!-- Content -->
     <div class="space-y-4">
-
       <!-- ====== Education Level ===== -->
       <div class="relative">
         <label class="mb-1 block">ระดับการศึกษา</label>
@@ -398,7 +156,7 @@
           class="flex justify-between items-center w-full border rounded-lg px-3 py-2 hover:border-indigo-500 transition"
         >
           <span class="text-gray-700">
-            {{ selectedEducationLevel || 'เลือก' }}
+            {{ educationData.highest_education || "เลือก" }}
           </span>
           <i class="bi bi-chevron-down text-sm"></i>
         </button>
@@ -433,7 +191,6 @@
 
       <!-- ====== Major & Qualification ===== -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-
         <!-- Major -->
         <div class="relative">
           <label class="mb-1 block">สาขา</label>
@@ -441,7 +198,7 @@
             (click)="toggle('majors', $event)"
             class="flex justify-between items-center w-full border rounded-lg px-3 py-2"
           >
-            {{ selectedMajors || 'เลือก' }}
+            {{ educationData.field_of_study || "เลือก" }}
             <i class="bi bi-chevron-down text-sm"></i>
           </button>
 
@@ -474,7 +231,7 @@
             (click)="toggle('qualifications', $event)"
             class="flex justify-between items-center w-full border rounded-lg px-3 py-2"
           >
-            {{ selectedQualifications || 'เลือก' }}
+            {{ educationData.qualification || "เลือก" }}
             <i class="bi bi-chevron-down text-sm"></i>
           </button>
 
@@ -503,42 +260,29 @@
 
       <!-- ===== Institution & Country ===== -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-
         <!-- Institution -->
         <div class="relative">
           <label class="mb-1 block">สถานที่ศึกษา</label>
-          <button
-            (click)="toggle('institutions', $event)"
-            class="flex justify-between items-center w-full border rounded-lg px-3 py-2"
-          >
-            {{ selectedInstitutions || 'เลือก' }}
-            <i class="bi bi-chevron-down text-sm"></i>
-          </button>
+          <input
+            [(ngModel)]="educationData.institution"
+            type="text"
+            placeholder="ชื่อสถานที่ศึกษา"
+            class="w-full border rounded-lg px-3 py-2 text-2xl"
+          />
+        </div>
 
-          <div
-            *ngIf="isOpen('institutions')"
-            (click)="$event.stopPropagation()"
-            class="absolute z-50 w-full bg-white border rounded-lg shadow mt-1"
-          >
-            <input
-              [(ngModel)]="searchInstitutions"
-              placeholder="ค้นหา..."
-              class="w-full px-3 py-2 border-b"
-            />
-            <ul class="max-h-44 overflow-y-auto">
-              <li
-                *ngFor="let i of filteredInstitution()"
-                (click)="selectInstitution(i)"
-                class="px-4 py-2 hover:bg-indigo-50 cursor-pointer"
-              >
-                {{ i }}
-              </li>
-            </ul>
-          </div>
+        <div>
+          <label class="mb-1 block">เกรดเฉลี่ย</label>
+          <input
+            [(ngModel)]="educationData.gpa"
+            type="text"
+            placeholder="เกรดเฉลี่ย"
+            class="w-full border rounded-lg px-3 py-2 text-2xl"
+          />
         </div>
 
         <!-- Country -->
-        <div class="relative">
+        <!-- <div class="relative">
           <label class="mb-1 block">ประเทศ</label>
           <button
             (click)="toggle('countries', $event)"
@@ -568,44 +312,49 @@
               </li>
             </ul>
           </div>
-        </div>
+        </div> -->
       </div>
 
       <!-- ===== GPA & Year ===== -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <input
-          type="text"
-          placeholder="เกรดเฉลี่ย"
-          class="w-full border rounded-lg px-3 py-2 text-2xl"
-        />
-        <input
-          type="text"
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="mb-1 block">ปีที่เข้าศึกษา</label>
+          <input
+          [(ngModel)]="educationData.date_enrollment"
+          type="date"
           placeholder="ปีที่เข้าศึกษา"
           class="w-full border rounded-lg px-3 py-2 text-2xl"
         />
-        <input
-          type="text"
+        </div>
+
+        <div>
+          <label class="mb-1 block">ปีที่สำเร็จการศึกษา</label>
+          <input
+          [(ngModel)]="educationData.date_graduation"
+          type="date"
           placeholder="ปีที่สำเร็จการศึกษา"
           class="w-full border rounded-lg px-3 py-2 text-2xl"
         />
+        </div>
+       
+        
       </div>
     </div>
 
     <!-- Footer -->
     <div class="flex justify-center gap-3 mt-6 pt-4 border-t">
       <button
+        (click)="save()"
         class="px-5 py-2 rounded-lg bg-yellow-400 hover:bg-yellow-500 shadow cursor-pointer"
       >
         บันทึก
       </button>
       <button
-        (click)="closeModalEdit()"
+        (click)="closeModal()"
         class="px-4 py-2 rounded-lg border text-gray-600 hover:bg-gray-100 cursor-pointer"
       >
         ยกเลิก
       </button>
-      
     </div>
   </div>
 </div>
-

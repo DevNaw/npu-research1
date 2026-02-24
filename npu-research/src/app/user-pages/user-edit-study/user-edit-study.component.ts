@@ -1,18 +1,30 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { EducationService } from '../../services/education.service';
+import { EducationInfo } from '../../models/education.model';
 
 @Component({
   selector: 'app-user-edit-study',
   standalone: false,
   templateUrl: './user-edit-study.component.html',
-  styleUrl: './user-edit-study.component.css'
+  styleUrl: './user-edit-study.component.css',
 })
 export class UserEditStudyComponent implements OnInit {
   userId!: string | null;
   isModalOpen = false;
-  isModalOpenEdit = false;
+  isEditMode = false;
   openDropdown: string | null = null;
+
+  educationData: EducationInfo = {
+    highest_education: '',
+    field_of_study: '',
+    qualification: '',
+    gpa: '',
+    institution: '',
+    date_enrollment: '',
+    date_graduation: ''
+  };
 
   education: string[] = [
     'ต่ำกว่าประถมศึกษา',
@@ -224,19 +236,32 @@ export class UserEditStudyComponent implements OnInit {
   searchInstitutions = '';
   searchCountries = '';
 
-  editEducationId = '';
-  educationList = '';
-  gpa = '';
-  startYear = '';
-  endYear = '';
-
   constructor(
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private service: EducationService
   ) {}
 
   ngOnInit(): void {
-    this.userId = this.route.snapshot.paramMap.get('id');
+    this.loadEducation();
+  }
+
+  loadEducation() {
+    this.service.getEducation().subscribe({
+      next: (res) => {
+        const data = res.data.education_info;
+        if (data.date_graduation) {
+          data.date_graduation = this.convertToISO(data.date_graduation);
+        }
+  
+        if (data.date_enrollment) {
+          data.date_enrollment = this.convertToISO(data.date_enrollment);
+        }
+  
+        this.educationData = data;
+      },
+      error: (err) => console.error(err)
+    });
   }
 
   toggle(el: string, event: MouseEvent) {
@@ -281,246 +306,185 @@ export class UserEditStudyComponent implements OnInit {
     );
   }
 
-  selectEducationLevel(e: string) {
-    this.selectedEducationLevel = e;
-    this.searchEducationLevel = '';
-    this.openDropdown = null;
-  }
-
-  selectMajor(m: string) {
-    this.selectedMajors = m;
-    this.searchMajors = '';
-    this.openDropdown = null;
-  }
-
-  selectQualification(q: string) {
-    this.selectedQualifications = q;
-    this.searchQualifications = '';
-    this.openDropdown = null;
-  }
-
-  selectInstitution(i: string) {
-    this.selectedInstitutions = i;
-    this.searchInstitutions = '';
-    this.openDropdown = null;
-  }
-
-  selectCountrie(c: { code: string; name: string }) {
-    this.selectedCountries = c.name;
-    this.searchCountries = '';
-    this.openDropdown = null;
-  }
-
-  openModal() {
+  openEditModal(data: EducationInfo) {
+    this.isEditMode = true;
+    this.educationData = { ...data };
     this.isModalOpen = true;
   }
 
-  closeModal() {
-    this.isModalOpen = false;
+  openAddModal() {
+    this.isEditMode = false;
+  
+    this.educationData = {
+      highest_education: '',
+      field_of_study: '',
+      qualification: '',
+      gpa: '',
+      institution: '',
+      date_enrollment: '',
+      date_graduation: ''
+    };
+  
+    this.isModalOpen = true;
   }
 
+  // save() {
+  //   Swal.fire({
+  //     icon: 'question',
+  //     title: 'ยืนยันการบันทึกข้อมูล',
+  //     showCancelButton: true,
+  //     confirmButtonText: 'บันทึก',
+  //     cancelButtonText: 'ยกเลิก'
+  //   }).then(result => {
+  //     if (!result.isConfirmed) return;
+  
+  //     const payload = { ...this.educationData };
+  
+  //     this.service.updateEducation(payload).subscribe({
+  //       next: () => {
+  //         this.handleSaveSuccess();
+  //       },
+  //       error: () => {
+  //         Swal.fire('ผิดพลาด', 'ไม่สามารถบันทึกข้อมูลได้', 'error');
+  //       }
+  //     });
+  //   });
+  // }
   save() {
     Swal.fire({
       icon: 'question',
       title: 'ยืนยันการบันทึกข้อมูล',
-      text: 'คุณต้องการบันทึกข้อมูลการศึกษาทั้งหมดหรือไม่?',
       showCancelButton: true,
       confirmButtonText: 'บันทึก',
-      cancelButtonText: 'ยกเลิก',
-      confirmButtonColor: '#22c55e',
-      cancelButtonColor: '#9ca3af',
-      customClass: {
-        title: 'swal-title-lg',
-        htmlContainer: 'swal-text-2xl',
-        confirmButton: 'swal-btn-3xl',
-        cancelButton: 'swal-btn-3xl',
-      },
-      reverseButtons: true,
-    }).then((result) => {
+      cancelButtonText: 'ยกเลิก'
+    }).then(result => {
       if (!result.isConfirmed) return;
-
-      // ===== ตัวอย่างข้อมูลที่จะส่ง (ปรับตามจริง) =====
-      const payload = this.educationList;
-      // หรือ
-      // const payload = this.form.value;
-
-      console.log('SAVE EDUCATION LIST :', payload);
-
-      // ===== ถ้ามี API =====
-      // this.educationService.save(payload).subscribe({
-      //   next: () => this.afterSave(),
-      //   error: () => this.saveError()
-      // });
-
-      // ===== mock success =====
-      this.afterSave();
-    });
-  }
-
-  saveAdd() {
-    Swal.fire({
-      icon: 'question',
-      title: 'ยืนยันการบันทึกข้อมูล',
-      text: 'คุณต้องการบันทึกข้อมูลการศึกษานี้ใช่หรือไม่?',
-      showCancelButton: true,
-      confirmButtonText: 'บันทึก',
-      cancelButtonText: 'ยกเลิก',
-      confirmButtonColor: '#4f46e5', // indigo
-      cancelButtonColor: '#9ca3af',
-      reverseButtons: true,
-      customClass: {
-        title: 'swal-title-lg',
-        htmlContainer: 'swal-text-2xl',
-        confirmButton: 'swal-btn-3xl',
-        cancelButton: 'swal-btn-3xl',
-      }
-    }).then((result) => {
-      if (!result.isConfirmed) return;
-
-      // ===== payload =====
-      const payload = {
-        educationLevel: this.selectedEducationLevel,
-        major: this.selectedMajors,
-        qualification: this.selectedQualifications,
-        institution: this.selectedInstitutions,
-        country: this.selectedCountries,
-        gpa: this.gpa,
-        startYear: this.startYear,
-        endYear: this.endYear,
-      };
-
-      console.log('SAVE EDUCATION :', payload);
-
-      // ===== success =====
-      Swal.fire({
-        icon: 'success',
-        title: 'บันทึกสำเร็จ',
-        text: 'ข้อมูลการศึกษาถูกบันทึกเรียบร้อยแล้ว',
-        confirmButtonText: 'ตกลง',
-        confirmButtonColor: '#22c55e',
-        customClass: {
-          title: 'swal-title-lg',
-          htmlContainer: 'swal-text-2xl',
-          confirmButton: 'swal-btn-3xl',
-          cancelButton: 'swal-btn-3xl',
-        },
-        timer: 1500,
-        showConfirmButton: false,
-      }).then(() => {
-        // ปิด modal
-        this.closeModal();
-
-        // reset form (ถ้าต้องการ)
-        this.resetForm();
+  
+      const payload = { ...this.educationData };
+  
+      const request$ = this.service.updateEducation(payload);
+  
+      request$.subscribe({
+        next: () => this.handleSaveSuccess(),
+        error: () =>
+          Swal.fire('ผิดพลาด', 'ไม่สามารถบันทึกข้อมูลได้', 'error')
       });
     });
   }
 
-  saveEdit() {
-    Swal.fire({
-      title: 'ยืนยันการแก้ไขข้อมูล',
-      text: 'คุณต้องการบันทึกการแก้ไขข้อมูลการศึกษานี้หรือไม่?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'บันทึกการแก้ไข',
-      cancelButtonText: 'ยกเลิก',
-      confirmButtonColor: '#4f46e5',
-      cancelButtonColor: '#9ca3af',
-      reverseButtons: true,
-      customClass: {
-        title: 'swal-title-lg',
-        htmlContainer: 'swal-text-2xl',
-        confirmButton: 'swal-btn-3xl',
-        cancelButton: 'swal-btn-3xl',
-      }
-    }).then((result) => {
-      if (!result.isConfirmed) return;
-  
-      const payload = this.buildEditEducationPayload();
-      console.log('EDIT EDUCATION PAYLOAD:', payload);
-  
-      // 🔥 ตรงนี้ในอนาคต = call API
-      // this.educationService.update(payload).subscribe(() => { ... })
-  
-      this.handleEditSuccess();
-    });
-  }
-
-  private buildEditEducationPayload() {
-    return {
-      id: this.editEducationId,
-      educationLevel: this.selectedEducationLevel,
-      major: this.selectedMajors,
-      qualification: this.selectedQualifications,
-      institution: this.selectedInstitutions,
-      country: this.selectedCountries,
-      gpa: this.gpa,
-      startYear: this.startYear,
-      endYear: this.endYear,
-    };
-  }
-
-  private handleEditSuccess() {
+  private handleSaveSuccess() {
     Swal.fire({
       icon: 'success',
-      title: 'แก้ไขสำเร็จ',
-      text: 'ข้อมูลการศึกษาถูกแก้ไขเรียบร้อยแล้ว',
+      title: this.isEditMode ? 'แก้ไขสำเร็จ' : 'เพิ่มข้อมูลสำเร็จ',
       timer: 1500,
-      showConfirmButton: false,
-      customClass: {
-        title: 'swal-title-lg',
-        htmlContainer: 'swal-text-2xl',
-        confirmButton: 'swal-btn-3xl',
-        cancelButton: 'swal-btn-3xl',
-      }
+      showConfirmButton: false
     }).then(() => {
-      this.closeModalEdit();
+      this.isModalOpen = false;
       this.resetForm();
+      this.loadEducation();
     });
   }
-  
 
   resetForm() {
-    this.selectedEducationLevel = '';
-    this.selectedMajors = '';
-    this.selectedQualifications = '';
-    this.selectedInstitutions = '';
-    this.selectedCountries = '';
-    this.gpa = '';
-    this.startYear = '';
-    this.endYear = '';
-  }
-
-  openModalEdit() {
-    this.isModalOpenEdit = true;
-  }
-
-  closeModalEdit() {
-    this.isModalOpenEdit = false;
-  }
-
-  afterSave() {
-    Swal.fire({
-      icon: 'success',
-      title: 'บันทึกสำเร็จ',
-      text: 'ระบบได้บันทึกข้อมูลเรียบร้อยแล้ว',
-      timer: 1500,
-      showConfirmButton: false,
-      customClass: {
-        title: 'swal-title-lg',
-        htmlContainer: 'swal-text-2xl',
-        confirmButton: 'swal-btn-3xl',
-        cancelButton: 'swal-btn-3xl',
-      }
-    }).then(() => {
-      const role = localStorage.getItem('role');
+    this.educationData = {
+      highest_education: '',
+      field_of_study: '',
+      qualification: '',
+      gpa: '',
+      institution: '',
+      date_enrollment: '',
+      date_graduation: ''
+    };
   
-    setTimeout(() => {
-      this.router.navigateByUrl(
-        role === 'admin' ? '/admin/profile' : '/user/profile'
-      );
-    }, 1500);
-    });
+    this.searchEducationLevel = '';
+    this.searchMajors = '';
+    this.searchQualifications = '';
+    this.searchInstitutions = '';
+    this.searchCountries = '';
   }
 
+
+  closeModal() {
+    this.isModalOpen = false;
+    this.loadEducation();
+  }
+
+  selectEducationLevel(e: string) {
+    this.educationData.highest_education = e;
+    this.searchEducationLevel = '';
+    this.openDropdown = null;
+  }
+  
+  selectMajor(m: string) {
+    this.educationData.field_of_study = m;
+    this.searchMajors = '';
+    this.openDropdown = null;
+  }
+  
+  selectQualification(q: string) {
+    this.educationData.qualification = q;
+    this.searchQualifications = '';
+    this.openDropdown = null;
+  }
+  
+  selectInstitution(i: string) {
+    this.educationData.institution = i;
+    this.searchInstitutions = '';
+    this.openDropdown = null;
+  }
+  
+  selectCountrie(c: { code: string; name: string }) {
+    (this.educationData as any).country = c.name;
+    this.searchCountries = '';
+    this.openDropdown = null;
+  }
+
+  async saveGotoProfile() {
+    await Swal.fire({
+      title: 'กำลังบันทึกข้อมูล',
+      timer: 800,
+      allowOutsideClick: false,
+      didOpen: () => Swal.showLoading()
+    });
+  
+    await Swal.fire({
+      icon: 'success',
+      title: 'สำเร็จ',
+      text: 'อัปเดตข้อมูลเรียบร้อยแล้ว',
+      timer: 1500,
+      showConfirmButton: false
+    });
+  
+    const role = localStorage.getItem('role');
+  
+    this.router.navigateByUrl(
+      role === 'admin' ? '/admin/profile' : '/user/profile'
+    );
+  }
+
+  private convertToISO(thaiDate: string): string {
+    if (!thaiDate) return '';
+  
+    const months: any = {
+      'มกราคม': '01',
+      'กุมภาพันธ์': '02',
+      'มีนาคม': '03',
+      'เมษายน': '04',
+      'พฤษภาคม': '05',
+      'มิถุนายน': '06',
+      'กรกฎาคม': '07',
+      'สิงหาคม': '08',
+      'กันยายน': '09',
+      'ตุลาคม': '10',
+      'พฤศจิกายน': '11',
+      'ธันวาคม': '12',
+    };
+  
+    const parts = thaiDate.split(' ');
+    const day = parts[0].padStart(2, '0');
+    const month = months[parts[1]];
+    const year = (parseInt(parts[2], 10) - 543).toString(); // แปลง พ.ศ. → ค.ศ.
+  
+    return `${year}-${month}-${day}`;
+  }
 }
