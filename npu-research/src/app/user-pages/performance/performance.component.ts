@@ -8,7 +8,7 @@ import { Observable, of, switchMap } from 'rxjs';
 import { InnovationApi } from '../../models/innovation-detai.model';
 import Swal from 'sweetalert2';
 
-type WorkType = 'research' | 'article' | 'innovation';
+type WorkType = 'project' | 'article' | 'innovation';
 
 @Component({
   selector: 'app-performance',
@@ -49,8 +49,6 @@ export class PerformanceComponent {
           this.type = type;
           this.id = Number(id);
           
-          
-  
           return this.getRequestByType(type, this.id);
         })
       )
@@ -59,7 +57,6 @@ export class PerformanceComponent {
           if (!res) return;
 
           this.handleResponseByType(res);
-          
         },
         error: (err) => {
           console.error('Error loading data:', err);
@@ -102,7 +99,7 @@ export class PerformanceComponent {
     if (this.type === 'article') {
       request$ = this.service.updateArticle(this.id, formData);
     } 
-    else if (this.type === 'research') {
+    else if (this.type === 'project') {
       request$ = this.service.updateProject(this.id, formData);
     } 
     else if (this.type === 'innovation') {
@@ -158,7 +155,7 @@ export class PerformanceComponent {
     let route = '';
 
     switch (this.type) {
-      case 'research':
+      case 'project':
         route = `${base}/edit-research/${id}`;
         break;
 
@@ -183,7 +180,7 @@ export class PerformanceComponent {
       case 'article':
         return this.service.getArticleById(id);
   
-      case 'research':
+      case 'project':
         return this.service.getProjectById(id);
   
       case 'innovation':
@@ -201,7 +198,7 @@ export class PerformanceComponent {
         
         break;
   
-      case 'research':
+      case 'project':
         this.researchData = res.data.projectDetail;
         break;
   

@@ -58,8 +58,8 @@ export class UserDashboardComponent implements OnInit {
   selectedTab: keyof DataPerformance = 'research';
   reportType: 'research' | 'article' | 'innovation' | null = null;
 
-    loading = false;
-    error: string | null = null;
+  loading = false;
+  error: string | null = null;
 
   series: ApexNonAxisChartSeries = [
     2, 2, 1, 3, 4, 2, 1, 4, 2, 3, 3, 2, 2, 2, 4, 2, 3, 4, 2, 2, 3,
@@ -362,7 +362,7 @@ export class UserDashboardComponent implements OnInit {
   constructor(
     private router: Router,
     private researchService: ResearchService,
-    private newsService: NewsService,
+    private newsService: NewsService
   ) {}
 
   filteredResearch: DataPerformanceItem[] = [];
@@ -379,11 +379,11 @@ export class UserDashboardComponent implements OnInit {
     this.newsService.getNewsData().subscribe({
       next: (res) => {
         this.newsList = res.data.news;
-
-      }, error: (err) => {
-        console.error(err)
-      }
-    })
+      },
+      error: (err) => {
+        console.error(err);
+      },
+    });
   }
 
   onSearch() {

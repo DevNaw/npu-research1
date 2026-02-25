@@ -366,7 +366,7 @@ export class UserAddResearchComponent {
         if (this.isEdit) {
           setTimeout(() => {
             this.router
-              .navigate(['/performance/research', this.projectData.id])
+              .navigate(['/performance/project', this.projectData.id])
               .then(() => {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               });

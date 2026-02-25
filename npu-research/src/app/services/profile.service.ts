@@ -4,6 +4,7 @@ import { environment } from '../../environments/environment';
 import { ResearchListResponse } from '../models/profile-project.model';
 import { Observable } from 'rxjs';
 import { GeneralInfoResponse } from '../models/edit-general.model';
+import { UserProfileResponse } from '../models/profiledetai.model';
 
 export interface UserProfile {
   data: any;
@@ -32,7 +33,7 @@ export class ProfileService {
 
   // ✅ ดึงข้อมูลโปรไฟล์
   getProfile() {
-    return this.http.get<UserProfile>(this.baseUrl);
+    return this.http.get<UserProfileResponse>(this.baseUrl);
   }
 
   // ✅ อัปเดตข้อมูลโปรไฟล์

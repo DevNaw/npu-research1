@@ -2,7 +2,8 @@ import { Component, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { ResearchService } from '../../services/research.service';
-import { Research } from '../../models/research.model';
+import { Research, ResearchType } from '../../models/research.model';
+import { DataPerformance } from '../../models/dashboard.model';
 
 @Component({
   selector: 'app-user-research',
@@ -40,15 +41,14 @@ export class UserResearchComponent {
 
   researches: Research[] = [];
 
-  constructor(
-    private router: Router,
-    private authService: AuthService,
-    private researchService: ResearchService
-  ) {}
+  loading = false;
+    error: string | null = null;
 
-  ngOnInit() {
-    this.loadAllResearch();
-  }
+    publications: DataPerformance = {
+        research: [],
+        article: [],
+        innovation: [],
+      };
 
   faculties = [
     'คณะวิศวกรรมศาสตร์',
@@ -116,7 +116,7 @@ export class UserResearchComponent {
   };
 
   typeMap: any = {
-    โครงการวิจัย: 'research',
+    โครงการวิจัย: 'project',
     บทความ: 'article',
     วารสาร: 'research',
     นวัตกรรมสิ่งประดิษฐ์: 'innovation',
@@ -127,41 +127,14 @@ export class UserResearchComponent {
     external: 'external',
   };
 
-  search() {
-    this.isSearched = true;
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private researchService: ResearchService
+  ) {}
 
-    this.filteredResearchers = this.researches.filter((r) => {
-      const researchDate = new Date(r.date);
-
-      const inDateRange =
-        (!this.startDate || researchDate >= this.startDate) &&
-        (!this.endDate || researchDate <= this.endDate);
-
-      const fundingMatch =
-        (!this.fundingExternal && !this.fundingInternal) || // ไม่เลือกอะไร = ผ่าน
-        (this.fundingExternal && r.funding === 'external') ||
-        (this.fundingInternal && r.funding === 'internal');
-
-      // const typeMatch =
-      //   !this.selectedType || this.typeMap[this.selectedType]?.includes(r.type);
-      const typeMatch =
-        !this.selectedType || this.typeMap[this.selectedType] === r.type;
-
-      return (
-        typeMatch &&
-        (!this.selectedSubType || r.subType === this.selectedSubType) &&
-        (!this.selectedAgency || r.agency === this.selectedAgency) &&
-        fundingMatch &&
-        (!this.selectedYear || r.year === +this.selectedYear) &&
-        (!this.researchTitle ||
-          r.title.toLowerCase().includes(this.researchTitle.toLowerCase())) &&
-        inDateRange
-      );
-    });
-
-    this.currentPage = 1;
-    this.updatePagination();
-    this.prepareDonut();
+  ngOnInit() {
+    this.loadAllResearchPublic();
   }
 
   /** ===== DONUT CALCULATION (อิงข้อมูลตารางจริง) ===== */
@@ -211,10 +184,8 @@ export class UserResearchComponent {
     this.searchType = '';
     this.searchSubType = '';
 
-    // ปิด type
     this.openDropdown = null;
 
-    // ถ้ามีประเภทย่อย → เปิด subType
     if (this.subTypeMap[t] && this.subTypeMap[t].length > 0) {
       setTimeout(() => {
         this.openDropdown = 'subType';
@@ -275,7 +246,7 @@ export class UserResearchComponent {
     return this.selectedType;
   }
 
-  goToResearch(id: number, type: 'research' | 'article' | 'innovation') {
+  goToResearch(id: number, type: ResearchType) {
     let basePath = '/performance';
 
     if (this.authService.isLoggedIn()) {
@@ -314,7 +285,8 @@ export class UserResearchComponent {
         items.type.toLowerCase().includes(keyword) ||
         items.faculty.toLowerCase().includes(keyword) ||
         items.funding.toLowerCase().includes(keyword) ||
-        items.title.toLowerCase().includes(keyword)
+        items.title.toLowerCase().includes(keyword) ||
+        items.name.toLowerCase().includes(keyword)
     );
 
     this.currentPage = 1;
@@ -346,24 +318,105 @@ export class UserResearchComponent {
     return Array.from({ length: this.totalPages }, (_, i) => i + 1);
   }
 
-  // ดึงข้อมูล
-  getDataResearch() {
-    this.researchService.getResearch().subscribe({
+  loadAllResearchPublic() {
+    this.loading = true;
+    this.error = null;
+  
+    this.researchService.getPublicData().subscribe({
       next: (res) => {
-        console.log(res);
+  
+        // ✅ รวมทุกประเภทเป็น array เดียว
+        this.researches = [
+          ...res.research.map(r => ({ ...r, type: 'project' as const })),
+          ...res.article.map(r => ({ ...r, type: 'article' as const })),
+          ...res.innovation.map(r => ({ ...r, type: 'innovation' as const }))
+        ];
+  
+        // ✅ โหลดแล้วแสดงทั้งหมดทันที
+        this.filteredResearchers = [...this.researches];
+  
+        this.updatePagination();
+        this.prepareDonut();
+  
+        this.loading = false;
+      },
+      error: (err) => {
+        this.error = 'ไม่สามารถโหลดข้อมูลได้';
+        this.loading = false;
+        console.error(err);
       },
     });
   }
-
-  loadAllResearch() {
-    this.researchService.getResearch().subscribe(data => {
-
-      const combined = []
-      this.researches = data;
-      this.filteredResearchers = data;
   
+    formatThaiDate(date: Date): string {
+      const d = new Date(date);
+      const day = d.getDate();
+      const month = d.toLocaleDateString('th-TH', { month: 'long' });
+      const year = d.getFullYear() + 543;
+  
+      return `${day} ${month} ${year}`;
+    }
+
+    search() {
+      this.isSearched = true;
+      this.applyFilters();
+    }
+
+    applyFilters() {
+
+      const keyword = this.searchText?.toLowerCase().trim() || '';
+    
+      this.filteredResearchers = this.researches.filter((r) => {
+    
+        const researchDate = new Date(r.date);
+    
+        const matchType =
+          !this.selectedType ||
+          this.typeMap[this.selectedType] === r.type;
+    
+        const matchSubType =
+          !this.selectedSubType ||
+          r.subType === this.selectedSubType;
+    
+        const matchAgency =
+          !this.selectedAgency ||
+          r.agency === this.selectedAgency;
+    
+        const matchFaculty =
+          !this.selectedFaculty ||
+          r.faculty === this.selectedFaculty;
+    
+        const matchFunding =
+          (!this.fundingExternal && !this.fundingInternal) ||
+          (this.fundingExternal && r.funding === 'external') ||
+          (this.fundingInternal && r.funding === 'internal');
+    
+        const matchDate =
+          (!this.startDate || researchDate >= this.startDate) &&
+          (!this.endDate || researchDate <= this.endDate);
+    
+        const matchKeyword =
+          !keyword ||
+          r.title.toLowerCase().includes(keyword) ||
+          r.name.toLowerCase().includes(keyword);
+    
+        return (
+          matchType &&
+          matchSubType &&
+          matchAgency &&
+          matchFaculty &&
+          matchFunding &&
+          matchDate &&
+          matchKeyword
+        );
+      });
+    
+      this.currentPage = 1;
       this.updatePagination();
       this.prepareDonut();
-    });
-  }  
+    }
+
+    trackById(index: number, item: any): number {
+      return item.id;
+    }
 }

@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 import { InnovationForm, Major, SubArea } from '../../models/subject.model';
 import { ResearchService } from '../../services/research.service';
 import { Researcher } from '../../models/researchers.model';
-import { ResearchInnovation } from '../../models/innovation.model';
+import { ResearchInnovationDetail } from '../../models/innovation.model';
 import {
   ExternalMemberRow,
   InternalMemberRow,
@@ -12,8 +12,9 @@ import {
 
 const FIRST_AUTHOR = 'หัวหน้าโครงการ';
 
-export const DEFAULT_INNOVATION: ResearchInnovation = {
-  id: 0,
+export const DEFAULT_INNOVATION: ResearchInnovationDetail = {
+  research_id: 0,
+  research_type: 'INNOVATION',
   title_th: '',
   title_en: '',
   abstract: '',
@@ -22,6 +23,7 @@ export const DEFAULT_INNOVATION: ResearchInnovation = {
   image: null,
   call_other: null,
   img_url: null,
+  status: null,
   subject_area_id: 0,
   principle: '',
   source_funds: null,
@@ -60,52 +62,42 @@ export const DEFAULT_INNOVATION: ResearchInnovation = {
 })
 export class UserAddInnovationComponent {
   isEdit = false;
-
-  selectedMajor: Major | null = null;
-  searchMajor = '';
-  majors: Major[] = [];
-  selectedSub: SubArea | null = null;
-
-  fundType: string = '';
-  fundName: string = '';
-
   activeDropdown: string | null = null;
-  activeMajor: Major | null = null;
   activeRowIndex: number | null = null;
+  activeMajor: Major | null = null;
+
+  major: Major[] = [];
+  selectedMajor: Major | null = null;
+  selectedSub: SubArea | null = null;
+  searchMajor = '';
 
   researchers: Researcher[] = [];
   filteredResearchers: Researcher[] = [];
+  searchResearcher = '';
+  selectedResearcher: string | null = null;
+  searchKeyword = '';
 
-  internalFunds: string[] = [
-    'งบประมาณมหาวิทยาลัย',
-    'กองทุนวิจัยมหาวิทยาลัย',
-    'คณะ/วิทยาลัย',
-  ];
-
-  externalFunds: string[] = [
-    'สำนักงานการวิจัยแห่งชาติ (วช.)',
-    'สกสว.',
-    'กระทรวงการอุดมศึกษา',
-    'หน่วยงานเอกชน',
-  ];
-
-  // Data
-  innovationData: ResearchInnovation = { ...DEFAULT_INNOVATION };
-  internalRows: InternalMemberRow[] = [
+  internalRow: InternalMemberRow[] = [
     { id: 0, researcher_id: null, name: '', responsibilities: '' },
   ];
-  externalRows: ExternalMemberRow[] = [
+  externalRow: ExternalMemberRow[] = [
     { name: '', organization: '', responsibilities: '' },
   ];
 
-  selectedFile: File | null = null;
+  internalFunds: string[] = [
+    'งบประมาณมหาวิทยาลัย',
+    'งบประมาณคณะ',
+    'งบประมาณภาควิชา',
+  ];
+
+  externalFunds: string[] = ['สำนักงานวิจัยแห่งชาติ', 'สกสว.', 'หน่วยงานเอกชน'];
+
   selectedFileName = '';
+  selectedFile: File | null = null;
+  selectedImagesName = '';
+  selectedImagesFile: File[] = [];
 
-  reportFile: File | null = null;
-  reportFileName = '';
-
-  selectedImageFile: File[]  = [];
-  selectedImageFileName = '';
+  projectData: ResearchInnovationDetail = { ...DEFAULT_INNOVATION };
 
   constructor(
     private route: ActivatedRoute,
@@ -113,138 +105,137 @@ export class UserAddInnovationComponent {
     private service: ResearchService
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.loadSubjectArea();
-    this.loadResearcherData();
+    this.loadResearchersData();
 
     this.route.paramMap.subscribe((params) => {
       const id = params.get('id');
 
       if (id) {
         this.isEdit = true;
-        this.innovationData.id = +id;
-        this.loadInnovationData(this.innovationData.id);
+        this.projectData.research_id = +id;
+        this.loadProjectData(this.projectData.research_id);
       } else {
         this.isEdit = false;
       }
     });
   }
 
-  // ======================== Load Data ====================
-  loadSubjectArea() {
+  loadSubjectArea(): void {
     this.service.getSubjectArea().subscribe({
       next: (res) => {
-        this.majors = res.data.subject_areas;
+        this.major = res.data.subject_areas;
       },
       error: (err) => {
-        console.error('Not Found!', err);
+        console.error('Failed to load Subject Area: ', err);
       },
     });
   }
 
-  loadResearcherData() {
+  loadResearchersData(): void {
     this.service.getResearchers().subscribe({
       next: (res) => {
-        this.researchers = res.data.$researchers;
+        this.researchers = res.data.$researchers ?? [];
         this.filteredResearchers = this.researchers;
+      },
+      error: (err) => {
+        console.error('Failed to load Researchers: ', err);
       },
     });
   }
 
-  loadInnovationData(id: number): void {
+  loadProjectData(id: number): void {
     this.service.getInnovationById(id).subscribe({
       next: (res) => {
         const data = res.data.researchInnovation;
 
-        this.innovationData = {
-          ...this.innovationData,
+        this.projectData = {
+          ...this.projectData,
           ...data,
         };
-        console.log(data);
 
-        this.reportFileName = data.full_report_file_name;
-        this.selectedImageFile = data.innovation_images ?? '';
+        this.selectedFileName = data.full_report?.file_name ?? '';
+        this.selectedImagesName = data.innovation_images ?? [];
 
         if (data.internal_members?.length) {
-          this.internalRows = data.internal_members.map(
+          this.internalRow = data.internal_members.map(
             (m: any, index: number) => ({
-              in: index,
+              id: index,
               researcher_id: m.user_id,
               name: m.full_name,
-              responsibilities: m.role,
+              responsibilities: m.role ?? '',
             })
           );
         }
 
         if (data.external_members?.length) {
-          this.externalRows = data.external_members.map((m: any) => ({
-            name: m.full_name,
-            organization: m.organization,
-            responsibilities: m.role,
-          }));
+          this.externalRow = data.external_members.map(
+            (m: any, index: number) => ({
+              id: index + 1,
+              name: m.full_name ?? '',
+              organization: m.organization ?? '',
+              responsibilities: m.role ?? '',
+            })
+          );
         }
 
-        if (this.innovationData.subject_area_id) {
-          for (const m of this.majors) {
-            const foundSub = m.children.find(
-              (s) => s.sub_id === this.innovationData.subject_area_id
+        if (this.projectData.subject_area_id) {
+          for (const major of this.major) {
+            const found = major.children.find(
+              (s) => s.sub_id === this.projectData.subject_area_id
             );
-            if (foundSub) {
-              this.selectedMajor = m;
-              this.selectedSub = foundSub;
+
+            if (found) {
+              this.selectedMajor = major;
+              this.selectedSub = found;
+
               break;
             }
           }
         }
       },
-      error: (err) => console.error('Failed to load research data:', err),
+      error: (err) => {
+        console.error('Failed to load article:', err);
+      },
     });
   }
 
-  // ===================== Toggle Event ===========================
-  toggleDropdown(name: string, event: MouseEvent) {
+  toggleDropdown(type: string, event: Event): void {
     event.stopPropagation();
-    this.activeDropdown = this.activeDropdown === name ? null : name;
+    this.activeDropdown = this.activeDropdown === type ? null : type;
   }
 
-  @HostListener('document:click')
-  closeAll() {
+  @HostListener('document: click')
+  closeAll(): void {
     this.activeDropdown = null;
+    this.activeRowIndex = null;
+    this.activeMajor = null;
   }
 
-  // ====================== Select Value ==========================
-  selectValue<K extends keyof ResearchInnovation>(
+  selectValue<K extends keyof ResearchInnovationDetail>(
     field: K,
-    value: ResearchInnovation[K]
+    value: ResearchInnovationDetail[K]
   ): void {
     if (
       field === 'responsibilities' &&
       value === FIRST_AUTHOR &&
       this.isFirstAuthorTaken()
-    ) {
+    )
       return;
-    }
 
-    this.innovationData[field] = value;
-
-    if (field === 'source_funds') {
-      this.innovationData.name_funding = '';
-    }
-
+    this.projectData[field] = value;
     this.activeDropdown = null;
   }
 
-  selectSub(sub: SubArea) {
+  selectSub(sub: SubArea): void {
     this.selectedSub = sub;
-    this.innovationData.subject_area_id = sub.sub_id;
+    this.projectData.subject_area_id = sub.sub_id;
     this.activeDropdown = null;
     this.activeMajor = null;
-
-    // this.innovationData.major_id = sub.major_id;
-    // this.innovationData.sub_id = sub.sub_id;
   }
 
-  selectResponsibility(row: any, value: string): void {
+  selectRowResponsibility(row: any, value: string) {
     if (value === FIRST_AUTHOR && this.isFirstAuthorTaken(row)) {
       return;
     }
@@ -253,52 +244,63 @@ export class UserAddInnovationComponent {
     this.activeDropdown = null;
   }
 
-  trackByIndex(index: number) {
-    return index;
+  selectResearcher(r: Researcher, row: InternalMemberRow): void {
+    row.name = r.full_name;
+    row.researcher_id = r.user_id;
+    this.activeRowIndex = null;
   }
 
-  // ===================== Filter ===================
+  toggleMajor(major: Major, event: Event): void {
+    event.stopPropagation();
+
+    this.activeMajor =
+      this.activeMajor?.major_id === major.major_id ? null : major;
+  }
+
   filteredMajor(): Major[] {
-    if (!this.searchMajor) return this.majors;
+    if (!this.searchMajor) return this.major;
 
     const keyword = this.searchMajor.toLowerCase();
-    return this.majors.filter((m) => m.name_en.toLowerCase().includes(keyword));
+    return this.major.filter((m) => m.name_en.toLowerCase().includes(keyword));
   }
 
-  isFirstAuthorTaken(currentRow?: any): boolean {
-    if (this.innovationData.responsibilities === FIRST_AUTHOR) return true;
-    return [...this.internalRows, ...this.externalRows].some(
-      (row) => row !== currentRow && row.responsibilities === FIRST_AUTHOR
+  isFirstAuthorTaken(excludeRow?: any): boolean {
+    if (this.projectData.responsibilities === FIRST_AUTHOR) return true;
+
+    return [...this.internalRow, ...this.externalRow].some(
+      (row) => row !== excludeRow && row.responsibilities === FIRST_AUTHOR
     );
   }
 
-  // ================ Add / Remove Members =======================
-  addInternal(): void {
-    this.internalRows.push({
-      id: this.internalRows.length,
+  addInternalRow(): void {
+    this.internalRow.push({
+      id: this.internalRow.length,
       researcher_id: null,
       name: '',
       responsibilities: '',
     });
   }
 
-  removeInternal(index: number) {
-    this.internalRows.splice(index, 1);
+  removeInternalRow(index: number): void {
+    this.internalRow.splice(index, 1);
   }
 
-  addExternal() {
-    this.externalRows.push({
+  addExternalRow(): void {
+    this.externalRow.push({
       name: '',
       organization: '',
       responsibilities: '',
     });
   }
 
-  removeExternal(index: number) {
-    this.externalRows.splice(index, 1);
+  removeExternalRow(index: number): void {
+    this.externalRow.splice(index, 1);
   }
 
-  // =========== Researcher & Role ======================
+  trackById(index: number) {
+    return index;
+  }
+
   onFocus(index: InternalMemberRow): void {
     this.activeRowIndex = index.id;
     this.filteredResearchers = this.researchers;
@@ -307,59 +309,44 @@ export class UserAddInnovationComponent {
   onSearch(value: string): void {
     this.filteredResearchers = value
       ? this.researchers.filter((r) =>
-          r.full_name.toLowerCase().includes(value.toLowerCase())
+          r.full_name?.toLowerCase().includes(value.toLowerCase())
         )
       : this.researchers;
   }
 
-  selectResearcher(r: Researcher, row: InternalMemberRow): void {
-    row.name = r.full_name;
-    row.researcher_id = r.user_id;
-
-    this.activeRowIndex = null;
-  }
-
-  // ============== File ==============
-  // onFileSelected(event: Event) {
-  //   const input = event.target as HTMLInputElement;
-
-  //   if (input.files && input.files.length > 0) {
-  //     this.selectedImageFiles = Array.from(input.files);
-  //   }
-  // }
-  onFileSelected(event: Event) {
-    const input = event.target as HTMLInputElement;
-  
-    if (input.files && input.files.length > 0) {
-      this.selectedImageFile = Array.from(input.files);
-    } else {
-      this.selectedImageFile = [];
-    }
-  }
-
-  onReportFileSelected(event: Event) {
+  onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
 
     if (input.files && input.files.length > 0) {
-      this.reportFile = input.files[0];
-      this.reportFileName = this.reportFile.name;
+      const file = input.files[0];
+
+      this.selectedFile = file;
+      this.selectedFileName = this.selectedFile.name;
     }
   }
 
-  removeFile(): void {
+  removeFile() {
     this.selectedFile = null;
     this.selectedFileName = '';
-    this.innovationData.full_report = null;
+    this.projectData.full_report = null;
   }
 
-  removeFileImage(): void {
-    // this.selectedImageFile = null;
-    this.selectedImageFileName = '';
-    this.innovationData.innovation_images = null;
+  onImageFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+
+    if (input.files?.length) {
+      this.selectedImagesFile.push(...Array.from(input.files));
+    }
+    input.value = '';
   }
 
-  // ================  Submit ==================
-  submitInnovation(): void {
+  removeImageFile() {
+    this.selectedImagesFile = [];
+    this.selectedImagesName = '';
+    this.projectData.innovation_images = [];
+  }
+
+  submit() {
     const formData = this.buildFormData();
 
     Swal.fire({
@@ -369,159 +356,74 @@ export class UserAddInnovationComponent {
     });
 
     const request$ = this.isEdit
-      ? this.service.updateInnovation(this.innovationData.id, formData)
+      ? this.service.updateInnovation(this.projectData.research_id, formData)
       : this.service.createInnovation(formData);
 
     request$.subscribe({
-      next: () => this.handleSuccess(),
-      error: () => this.handleError(),
-    });
-  }
+      next: () => {
+        Swal.fire({
+          icon: 'success',
+          title: this.isEdit ? 'อัพเดทสำเร็จ' : 'บันทึกสำเร็จ',
+          showConfirmButton: false,
+          timer: 1000,
+        });
 
-  private prepareFormData(): FormData {
-    const fd = new FormData();
-    const d = this.innovationData;
-
-    Object.entries(d).forEach(([key, value]) => {
-      if (key === 'full_report' || key === 'innovation_images') {
-        return;
-      }
-
-      if (
-        value !== null &&
-        value !== undefined &&
-        value !== '' &&
-        !Array.isArray(value)
-      ) {
-        fd.append(key, value as any);
-      }
-    });
-
-    this.appendMembers(fd);
-
-    // ✅ ส่ง report เฉพาะเมื่อเลือกไฟล์
-    if (this.reportFile instanceof File) {
-      fd.append('full_report', this.reportFile);
-    }
-
-    // ✅ ส่ง image เฉพาะเมื่อเลือกไฟล์
-    if (this.selectedImageFile instanceof File) {
-      fd.append('innovation_images', this.selectedImageFile);
-    }
-
-    return fd;
-  }
-
-  private appendMembers(fd: FormData): void {
-    this.internalRows
-      .filter((r) => r.researcher_id)
-      .forEach((r, i) => {
-        fd.append(`internal_members[${i}][user_id]`, String(r.researcher_id));
-        fd.append(`internal_members[${i}][role]`, r.responsibilities ?? '');
-        fd.append(`internal_members[${i}][no]`, String(i + 1));
-      });
-
-    this.externalRows
-      .filter((r) => r.name)
-      .forEach((r, i) => {
-        fd.append(`external_members[${i}][full_name]`, r.name);
-        fd.append(`external_members[${i}][role]`, r.responsibilities ?? '');
-        fd.append(`external_members[${i}][organization]`, r.organization);
-        fd.append(`external_members[${i}][no]`, String(i + 1));
-      });
-  }
-
-  private handleSuccess(): void {
-    Swal.fire({
-      icon: 'success',
-      title: this.isEdit ? 'อัพเดทสำเร็จ' : 'บันทึกสำเร็จ',
-      timer: 1000,
-      showConfirmButton: false,
-    });
-
-    if (this.isEdit) {
-      this.router.navigate(['/performance/innovation', this.innovationData.id]);
-    } else {
-      this.resetForm();
-    }
-  }
-
-  private handleError(): void {
-    Swal.fire({
-      icon: 'error',
-      title: this.isEdit ? 'อัพเดทไม่สำเร็จ' : 'บันทึกไม่สำเร็จ',
-    });
-  }
-
-  selectMajor(m: Major) {
-    this.selectedMajor = m;
-    this.activeDropdown = null;
-    this.searchMajor = '';
-  }
-
-  private resetForm() {
-    this.innovationData = { ...DEFAULT_INNOVATION };
-    this.internalRows = [
-      {
-        id: 0,
-        researcher_id: null,
-        name: '',
-        responsibilities: '',
+        if (this.isEdit) {
+          setTimeout(() => {
+            this.router
+              .navigate([
+                '/performance/innovation',
+                this.projectData.research_id,
+              ])
+              .then(() => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              });
+          }, 1000);
+        } else {
+          this.resetForm();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
       },
-    ];
-    this.externalRows = [
-      {
-        name: '',
-        organization: '',
-        responsibilities: '',
+      error: (err) => {
+        console.error(err);
+        Swal.fire({
+          icon: 'error',
+          title: this.isEdit ? 'อัพเดทไม่สำเร็จ' : 'บันทึกไม่สำเร็จ',
+        });
       },
-    ];
-    this.selectedFile = null;
-    this.reportFile = null;
-    this.selectedFileName = '';
-    this.reportFileName = '';
+    });
   }
 
-  toggleMajor(major: Major, event: Event) {
-    event.stopPropagation();
-
-    if (this.activeMajor?.major_id === major.major_id) {
-      this.activeMajor = null;
-    } else {
-      this.activeMajor = major;
-    }
-  }
-
-  private buildFormData(): FormData {
+  buildFormData(): FormData {
     const fd = new FormData();
-    const d = this.innovationData;
+    const d = this.projectData;
 
-    const required = (key: string, val: any) => fd.append(key, val ?? '');
+    const required = (key: string, val: any) =>
+      fd.append(key, val !== undefined ? String(val) : '');
 
     required('title_th', d.title_th);
-    required('year', d.year);
-    required('year_received_budfet', d.year_received_budget);
-    required('call_other', d.call_other);
-    required('principle', d.principle);
+    required('published_date', d.published_date);
     required('source_funds', d.source_funds);
-    required('budget_amount', d.budget_amount);
+    required('principle', d.principle);
+    required('call_other', d.call_other)
     required('name_funding', d.name_funding);
+    required('budget_amount', d.budget_amount);
+    required('year_received_budget', d.year_received_budget);
+    required('responsibilities', d.responsibilities);
     required('patent_number', d.patent_number);
     required('application_number', d.application_number);
     required('examination_url', d.examination_url);
-    required('responsibilities', d.responsibilities);
 
     if (d.subject_area_id > 0)
       fd.append('subject_area_id', String(d.subject_area_id));
-
     if (this.selectedFile) fd.append('full_report', this.selectedFile);
-    if (this.selectedImageFile.length > 0) {
-      this.selectedImageFile.forEach(file => {
+    if (this.selectedImagesFile.length > 0) {
+      this.selectedImagesFile.forEach((file) => {
         fd.append('innovation_images[]', file);
       });
     }
 
-    this.internalRows
+    this.internalRow
       .filter((r) => r.researcher_id)
       .forEach((r, i) => {
         fd.append(`internal_members[${i}][user_id]`, String(r.researcher_id));
@@ -529,7 +431,7 @@ export class UserAddInnovationComponent {
         fd.append(`internal_members[${i}][no]`, String(i + 1));
       });
 
-      this.externalRows
+    this.externalRow
       .filter((r) => r.name)
       .forEach((r, i) => {
         fd.append(`external_members[${i}][full_name]`, r.name);
@@ -539,5 +441,28 @@ export class UserAddInnovationComponent {
       });
 
     return fd;
+  }
+
+  resetForm(): void {
+    this.projectData = { ...DEFAULT_INNOVATION };
+    this.internalRow = [
+      { id: 0, researcher_id: null, name: '', responsibilities: '' },
+    ];
+    this.externalRow = [{ name: '', organization: '', responsibilities: '' }];
+    this.selectedFile = null;
+    this.selectedFileName = '';
+    this.selectedImagesFile = [];
+    (this.selectedImagesName = ''), (this.selectedMajor = null);
+    this.selectedSub = null;
+    this.searchMajor = '';
+  }
+
+  goToResearchDetail() {
+    this.router.navigate(['/user/profile']);
+  }
+
+  get hasImages(): boolean {
+    return this.selectedImagesFile.length > 0 ||
+           this.projectData.innovation_images?.length > 0;
   }
 }

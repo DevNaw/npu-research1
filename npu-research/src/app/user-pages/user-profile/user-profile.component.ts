@@ -19,7 +19,7 @@ import {
   ApexTooltip,
 } from 'ng-apexcharts';
 import { ProfileService } from '../../services/profile.service';
-import { UserProfileInfo } from '../../models/profiledetai.model';
+import { BarSummary, DonutSummary, UserProfile } from '../../models/profiledetai.model';
 import { ResearchItem } from '../../models/profile-project.model';
 import { EducationService } from '../../services/education.service';
 import { EducationInfo } from '../../models/education.model';
@@ -49,6 +49,7 @@ export type BarChartOptions = {
 
 type ResearchTab = 'project' | 'article' | 'innovation';
 
+
 @Component({
   selector: 'app-user-profile',
   standalone: false,
@@ -58,7 +59,7 @@ type ResearchTab = 'project' | 'article' | 'innovation';
 export class UserProfileComponent implements OnInit {
   @ViewChild('chart') chart!: ChartComponent;
 
-  profileData?: UserProfileInfo;
+  profileData?: UserProfile;
   researchList: ResearchItem[] = [];
   originalData: ResearchItem[] = [];
 
@@ -72,7 +73,7 @@ export class UserProfileComponent implements OnInit {
   currentPage = 1;
   searchText = '';
 
-  trainings: any[] = []; // ถ้าไม่มีข้อมูล
+  trainings: any[] = [];
   address: Address = {};
   isEditModalOpen = false;
   editData: any = {};
@@ -89,7 +90,6 @@ export class UserProfileComponent implements OnInit {
   selectedEducationLevel = '';
   selectedMajors = '';
   selectedQualifications = '';
-  selectedInstitutions = '';
   selectedCountries = '';
 
   searchEducationLevel = '';
@@ -102,6 +102,10 @@ export class UserProfileComponent implements OnInit {
   isModalOpen = false;
   isEditMode = false;
   openDropdown: string | null = null;
+
+
+  barSummary: BarSummary[] = [];
+  researchData: any;
 
   educationData: EducationInfo = {
     highest_education: '',
@@ -179,23 +183,6 @@ export class UserProfileComponent implements OnInit {
     'วุฒิหลังปริญญา',
     'วุฒิบัตร (Certificate)',
     'วุฒิบัตรวิชาชีพ (Professional Certificate)',
-  ];
-
-  institutions: string[] = [
-    'โรงเรียนประถมศึกษา',
-    'โรงเรียนมัธยมศึกษา',
-    'วิทยาลัยเทคนิค',
-    'วิทยาลัยอาชีวศึกษา',
-    'วิทยาลัยชุมชน',
-    'มหาวิทยาลัยของรัฐ',
-    'มหาวิทยาลัยเอกชน',
-    'สถาบันเทคโนโลยี',
-    'สถาบันการพลศึกษา',
-    'สถาบันราชภัฏ',
-    'สถาบันเทคโนโลยีพระจอมเกล้า',
-    'สถาบันการศึกษาในต่างประเทศ',
-    'สถาบันฝึกอบรมวิชาชีพ',
-    'สถาบันวิจัย',
   ];
 
   // ตัวอย่างเงื่อนไข
@@ -296,40 +283,60 @@ export class UserProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadData();
-    this.loadProject();
     this.loadEducation();
   }
 
-  // ============= Load Data ==============
   loadData(): void {
     this.service.getProfile().subscribe({
       next: (res) => {
         this.profileData = res.data.user;
+        this.barSummary = res.data.bar;
+        this.researchData = res.data.researchs;
+        console.log(res);
+        
+        this.updateCharts();
         this.changeTab('project');
       },
-      error: (err) => {
-        console.error(err);
-      },
+      error: (err) => console.error(err),
     });
   }
 
-  loadProject() {
-    this.service.getProjectList().subscribe({
-      next: (res) => {
-        this.researchList = res.data.researchs;
-        this.updateCharts();
-      },
-      error: (err) => {
-        console.error(err);
-      },
-    });
+  updateCharts(): void {
+    if (!this.barSummary.length) return;
+  
+    const sorted = [...this.barSummary].sort((a, b) => a.year - b.year);
+  
+    const years = sorted.map(i => i.year.toString());
+    const projectData = sorted.map(i => i.project_count);
+    const articleData = sorted.map(i => i.article_count);
+    const innovationData = sorted.map(i => i.innovation_count);
+  
+    // ===== BAR =====
+    this.barChartOptions = {
+      ...this.barChartOptions,
+      series: [
+        { name: 'โครงการวิจัย', data: projectData },
+        { name: 'บทความ', data: articleData },
+        { name: 'นวัตกรรม', data: innovationData },
+      ],
+      xaxis: { categories: years },
+    };
+  
+    // ===== PIE (รวมทั้งหมดทุกปี) =====
+    this.pieChartOptions = {
+      ...this.pieChartOptions,
+      series: [
+        projectData.reduce((a, b) => a + b, 0),
+        articleData.reduce((a, b) => a + b, 0),
+        innovationData.reduce((a, b) => a + b, 0),
+      ],
+    };
   }
-
+  
   onSearch(): void {
     const keyword = this.searchText.toLowerCase().trim();
 
     if (!keyword) {
-      // 🔥 ถ้า input ว่าง → แสดงข้อมูลทั้งหมด
       this.filteredData = [...this.originalData];
     } else {
       this.filteredData = this.originalData.filter((item) =>
@@ -368,43 +375,7 @@ export class UserProfileComponent implements OnInit {
     this.router.navigateByUrl(route);
   }
 
-  deleteItem(id: number) {
-    // Swal.fire({
-    //   title: 'ยืนยันการลบ',
-    //   text: 'คุณแน่ใจหรือไม่ว่าต้องการลบข้อมูลนี้ ?',
-    //   icon: 'warning',
-    //   showCancelButton: true,
-    //   confirmButtonColor: '#ef4444',
-    //   cancelButtonColor: '#6b7280',
-    //   confirmButtonText: 'ลบข้อมูล',
-    //   cancelButtonText: 'ยกเลิก',
-    //   reverseButtons: true,
-    // }).then((result) => {
-    //   if (result.isConfirmed) {
-    //     // 🔥 ลบจาก data หลัก
-    //     // this.data[this.selectedTab] = this.data[this.selectedTab].filter(
-    //     //   (item) => item.id !== id
-    //     );
-    //     // 🔁 ลบจาก filteredData (กรณีมี search)
-    //     this.filteredData = this.filteredData.filter((item) => item.id !== id);
-    //     // ⚠️ ปรับ currentPage ถ้าลบจนหน้าว่าง
-    //     const maxPage = Math.ceil(this.filteredData.length / this.pageSize);
-    //     if (this.currentPage > maxPage && this.currentPage > 1) {
-    //       this.currentPage--;
-    //     }
-    //     // 🔄 อัปเดต pagination
-    //     this.updatePagination();
-    //     // ✅ แจ้งผลลัพธ์
-    //     Swal.fire({
-    //       title: 'ลบสำเร็จ',
-    //       text: 'ข้อมูลถูกลบเรียบร้อยแล้ว',
-    //       icon: 'success',
-    //       timer: 1500,
-    //       showConfirmButton: false,
-    //     });
-    //   }
-    // });
-  }
+  deleteItem(id: number) {}
 
   updatePagination(): void {
     const start = (this.currentPage - 1) * this.pageSize;
@@ -508,97 +479,84 @@ export class UserProfileComponent implements OnInit {
     this.selectedTab = tab;
     this.searchText = '';
     this.currentPage = 1;
-
-    const mapType: any = {
-      project: 'PROJECT',
-      article: 'ARTICLE',
-      innovation: 'INNOVATION',
-    };
-
-    this.originalData = this.researchList.filter(
-      (item) => item.research_type === mapType[tab]
-    );
-
+  
+    if (!this.researchData) return;
+  
+    if (tab === 'project') {
+      this.originalData = this.researchData.projects || [];
+    }
+  
+    if (tab === 'article') {
+      this.originalData = this.researchData.articles || [];
+    }
+  
+    if (tab === 'innovation') {
+      this.originalData = this.researchData.innovations || [];
+    }
+  
     this.filteredData = [...this.originalData];
-
-    this.updatePagination();
+    this.totalItems = this.filteredData.length;
+  
+    this.updatePagination(); // 🔥 สำคัญมาก
   }
 
-  updateCharts(): void {
-    if (!this.researchList || this.researchList.length === 0) return;
+ // กราฟ
+//  updateChartsFromBar(): void {
+//   if (!this.barSummary || this.barSummary.length === 0) return;
 
-    const yearMap: {
-      [year: string]: {
-        PROJECT: number;
-        ARTICLE: number;
-        INNOVATION: number;
-      };
-    } = {};
+//   // 🔥 เรียงปี
+//   const sorted = [...this.barSummary].sort((a, b) => a.year - b.year);
 
-    this.researchList.forEach((item) => {
-      // 👇 เปลี่ยน field ตามของจริง เช่น created_at
-      const year = new Date().getFullYear().toString();
+//   const years = sorted.map(item => item.year.toString());
+//   const projectData = sorted.map(item => item.project_count);
+//   const articleData = sorted.map(item => item.article_count);
+//   const innovationData = sorted.map(item => item.innovation_count);
 
-      if (!yearMap[year]) {
-        yearMap[year] = {
-          PROJECT: 0,
-          ARTICLE: 0,
-          INNOVATION: 0,
-        };
-      }
+//   // ===== UPDATE BAR =====
+//   this.barChartOptions = {
+//     ...this.barChartOptions,
+//     series: [
+//       {
+//         name: 'โครงการวิจัย',
+//         data: projectData,
+//       },
+//       {
+//         name: 'บทความ',
+//         data: articleData,
+//       },
+//       {
+//         name: 'นวัตกรรม',
+//         data: innovationData,
+//       },
+//     ],
+//     xaxis: {
+//       categories: years,
+//     },
+//   };
 
-      if (item.research_type === 'PROJECT') {
-        yearMap[year].PROJECT++;
-      }
+//   // ===== UPDATE PIE =====
+//   const projectTotal = projectData.reduce((a, b) => a + b, 0);
+//   const articleTotal = articleData.reduce((a, b) => a + b, 0);
+//   const innovationTotal = innovationData.reduce((a, b) => a + b, 0);
 
-      if (item.research_type === 'ARTICLE') {
-        yearMap[year].ARTICLE++;
-      }
+//   this.pieChartOptions = {
+//     ...this.pieChartOptions,
+//     series: [projectTotal, articleTotal, innovationTotal],
+//   };
+// }
 
-      if (item.research_type === 'INNOVATION') {
-        yearMap[year].INNOVATION++;
-      }
-    });
+// updatePieChart(): void {
+//   if (!this.donutSummary) return;
 
-    // 🔥 เรียงปี
-    const years = Object.keys(yearMap).sort();
-
-    const projectData = years.map((y) => yearMap[y].PROJECT);
-    const articleData = years.map((y) => yearMap[y].ARTICLE);
-    const innovationData = years.map((y) => yearMap[y].INNOVATION);
-
-    // ===== UPDATE PIE =====
-    const projectTotal = projectData.reduce((a, b) => a + b, 0);
-    const articleTotal = articleData.reduce((a, b) => a + b, 0);
-    const innovationTotal = innovationData.reduce((a, b) => a + b, 0);
-
-    this.pieChartOptions = {
-      ...this.pieChartOptions,
-      series: [projectTotal, articleTotal, innovationTotal],
-    };
-
-    // ===== UPDATE BAR =====
-    this.barChartOptions = {
-      ...this.barChartOptions,
-      series: [
-        {
-          name: 'โครงการวิจัย',
-          data: projectData,
-        },
-        {
-          name: 'บทความ',
-          data: articleData,
-        },
-        {
-          name: 'นวัตกรรม',
-          data: innovationData,
-        },
-      ],
-      xaxis: {
-        categories: years,
-      },
-    };
-  }
+//   this.pieChartOptions = {
+//     ...this.pieChartOptions,
+//     series: [
+//       this.donutSummary.projects_count,
+//       this.donutSummary.articles_count,
+//       this.donutSummary.innovations_count,
+//     ],
+//   };
+// }
 
   // Education
   save() {
@@ -612,7 +570,6 @@ export class UserProfileComponent implements OnInit {
       if (!result.isConfirmed) return;
 
       const payload = { ...this.educationData };
-
       const request$ = this.service.updateEducation(payload);
 
       request$.subscribe({
@@ -629,6 +586,8 @@ export class UserProfileComponent implements OnInit {
         if (data.date_graduation) {
           data.date_graduation = this.convertToISO(data.date_graduation);
         }
+        console.log(data);
+        
 
         if (data.date_enrollment) {
           data.date_enrollment = this.convertToISO(data.date_enrollment);
@@ -701,33 +660,31 @@ export class UserProfileComponent implements OnInit {
     this.searchMajors = '';
     this.searchQualifications = '';
     this.searchInstitutions = '';
-    this.searchCountries = '';
   }
 
   closeModal() {
     this.isModalOpen = false;
     this.loadEducation();
   }
+
   selectEducationLevel(e: string) {
     this.educationData.highest_education = e;
     this.searchEducationLevel = '';
     this.openDropdown = null;
   }
+
   selectMajor(m: string) {
     this.educationData.field_of_study = m;
     this.searchMajors = '';
     this.openDropdown = null;
   }
+
   selectQualification(q: string) {
     this.educationData.qualification = q;
     this.searchQualifications = '';
     this.openDropdown = null;
   }
-  selectInstitution(i: string) {
-    this.educationData.institution = i;
-    this.searchInstitutions = '';
-    this.openDropdown = null;
-  }
+
   private convertToISO(thaiDate: string): string {
     if (!thaiDate) return '';
 
@@ -753,4 +710,10 @@ export class UserProfileComponent implements OnInit {
 
     return `${year}-${month}-${day}`;
   }
+
+  tabs: { key: ResearchTab; label: string; icon: string }[] = [
+    { key: 'project', label: 'งานวิจัย', icon: 'bi-journal-text' },
+    { key: 'article', label: 'บทความวิชาการ', icon: 'bi-file-earmark-text' },
+    { key: 'innovation', label: 'นวัตกรรมสิ่งประดิษฐ์', icon: 'bi-award' },
+  ];
 }

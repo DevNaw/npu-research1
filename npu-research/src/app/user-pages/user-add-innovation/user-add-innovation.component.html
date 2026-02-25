@@ -38,7 +38,7 @@
         ชื่อนวัตกรรมสิ่งประดิษฐ์ <span class="text-red-500">*</span>
       </label>
       <input
-        [(ngModel)]="innovationData.title_th"
+        [(ngModel)]="projectData.title_th"
         type="text"
         class="md:col-span-3 text-2xl font-medium w-full h-12 border rounded-md px-4 py-2"
         placeholder="ระบุชื่อนวัตกรรมสิ่งประดิษฐ์"
@@ -60,7 +60,7 @@
           <span class="truncate text-2xl font-medium">
             {{
               selectedSub?.name_en ||
-                innovationData.subject_area?.[0]?.name_en ||
+                projectData.subject_area?.[0]?.name_en ||
                 "ระบุสาขาของนวัตกรรมสิ่งประดิษฐ์"
             }}
           </span>
@@ -119,7 +119,7 @@
     <div class="grid grid-cols-1 md:grid-cols-1 md:gap-2 mb-2 md:mb-6">
       <label class="md:col-span-1 text-start"> หลักการและเหตุผล </label>
       <textarea
-        [(ngModel)]="innovationData.principle"
+        [(ngModel)]="projectData.principle"
         name="attention"
         id="attention"
         placeholder="ระบุหลักการและเหตุผล"
@@ -138,7 +138,7 @@
         (click)="toggleDropdown('responsibility', $event)"
         class="w-full border rounded-md px-3 py-2 flex justify-between items-center font-medium"
       >
-        {{ innovationData.responsibilities || "ประเภทความรับผิดชอบ" }}
+        {{ projectData.responsibilities || "ประเภทความรับผิดชอบ" }}
         <i class="bi bi-chevron-down"></i>
       </button>
 
@@ -205,9 +205,9 @@
           <tbody>
             <tr
               *ngFor="
-                let row of internalRows;
+                let row of internalRow;
                 let i = index;
-                trackBy: trackByIndex
+                trackBy: trackById
               "
               class="border-b-2 border-gray-300 bg-gray-200"
             >
@@ -262,7 +262,7 @@
                     <div
                       (click)="
                         !isFirstAuthorTaken(row) &&
-                          selectResponsibility(row, 'หัวหน้าโครงการ')
+                        selectRowResponsibility(row, 'หัวหน้าโครงการ')
                       "
                       [class.opacity-50]="isFirstAuthorTaken(row)"
                       [class.pointer-events-none]="isFirstAuthorTaken(row)"
@@ -272,14 +272,14 @@
                     </div>
 
                     <div
-                      (click)="selectResponsibility(row, 'ที่ปรึกษาโครงการ')"
+                      (click)="selectRowResponsibility(row, 'ที่ปรึกษาโครงการ')"
                       class="p-2"
                     >
                       ที่ปรึกษาโครงการ
                     </div>
 
                     <div
-                      (click)="selectResponsibility(row, 'ผู้ร่วมวิจัย')"
+                      (click)="selectRowResponsibility(row, 'ผู้ร่วมวิจัย')"
                       class="p-2"
                     >
                       ผู้ร่วมวิจัย
@@ -290,9 +290,9 @@
 
               <td class="text-center">
                 <i
-                  *ngIf="internalRows.length > 1"
+                  *ngIf="internalRow.length > 1"
                   class="bi bi-trash3 text-red-500 cursor-pointer hover:text-red-700"
-                  (click)="removeInternal(i)"
+                  (click)="removeInternalRow(i)"
                   title="ลบรายการ"
                 ></i>
               </td>
@@ -305,7 +305,7 @@
         <button
           type="button"
           class="md:mt-4 p-1 md:px-4 md:py-2 bg-[#FDE68A] text-[#1E293B] hover:bg-[#FACC15] rounded-md cursor-pointer"
-          (click)="addInternal()"
+          (click)="addInternalRow()"
         >
           เพิ่มรายการ
         </button>
@@ -343,9 +343,9 @@
           <tbody>
             <tr
               *ngFor="
-                let item of externalRows;
+                let item of externalRow;
                 let i = index;
-                trackBy: trackByIndex
+                trackBy: trackById
               "
               class="border-b-2 border-gray-300 bg-gray-200"
             >
@@ -376,7 +376,7 @@
                     <div
                       (click)="
                         !isFirstAuthorTaken(item) &&
-                          selectResponsibility(item, 'หัวหน้าโครงการ')
+                        selectRowResponsibility(item, 'หัวหน้าโครงการ')
                       "
                       [class.opacity-50]="isFirstAuthorTaken(item)"
                       [class.pointer-events-none]="isFirstAuthorTaken(item)"
@@ -386,14 +386,14 @@
                     </div>
 
                     <div
-                      (click)="selectResponsibility(item, 'ที่ปรึกษาโครงการ')"
+                      (click)="selectRowResponsibility(item, 'ที่ปรึกษาโครงการ')"
                       class="p-2 hover:bg-gray-100 cursor-pointer"
                     >
                       ที่ปรึกษาโครงการ
                     </div>
 
                     <div
-                      (click)="selectResponsibility(item, 'ผู้ร่วมวิจัย')"
+                      (click)="selectRowResponsibility(item, 'ผู้ร่วมวิจัย')"
                       class="p-2 hover:bg-gray-100 cursor-pointer"
                     >
                       ผู้ร่วมวิจัย
@@ -413,9 +413,9 @@
 
               <td class="text-center p-2">
                 <i
-                  *ngIf="externalRows.length > 1"
+                  *ngIf="externalRow.length > 1"
                   class="bi bi-trash3 text-red-500 cursor-pointer hover:text-red-700"
-                  (click)="removeExternal(i)"
+                  (click)="removeExternalRow(i)"
                   title="ลบรายการ"
                 ></i>
               </td>
@@ -428,7 +428,7 @@
         <button
           type="button"
           class="md:mt-4 p-1 md:p-2 bg-[#FDE68A] text-[#1E293B] hover:bg-[#FACC15] rounded-md cursor-pointer"
-          (click)="addExternal()"
+          (click)="addExternalRow()"
         >
           เพิ่มรายการ
         </button>
@@ -448,7 +448,7 @@
             class="w-full h-12 border rounded-md px-3 flex justify-between items-center font-medium bg-white"
           >
             <span class="flex-1 truncate text-left">
-              {{ innovationData.source_funds || "เลือกแหล่งทุน" }}
+              {{ projectData.source_funds || "เลือกแหล่งทุน" }}
             </span>
             <i class="bi bi-chevron-down shrink-0 ml-2"></i>
           </button>
@@ -472,7 +472,7 @@
           </div>
         </div>
 
-        <div *ngIf="innovationData.source_funds" class="relative">
+        <div *ngIf="projectData.source_funds" class="relative">
           <label class="block font-bold text-2xl mb-2">
             ชื่อแหล่งทุน <span class="text-red-500">*</span>
           </label>
@@ -483,7 +483,7 @@
             class="w-full h-12 border rounded-md px-3 flex justify-between items-center font-medium bg-white"
           >
             <span class="flex-1 truncate text-left">
-              {{ innovationData.name_funding || "เลือกชื่อแหล่งทุน" }}
+              {{ projectData.name_funding || "เลือกชื่อแหล่งทุน" }}
             </span>
             <i class="bi bi-chevron-down shrink-0 ml-2"></i>
           </button>
@@ -494,7 +494,7 @@
           >
             <div
               *ngFor="
-                let name of innovationData.source_funds === 'แหล่งทุนภายใน'
+                let name of projectData.source_funds === 'แหล่งทุนภายใน'
                   ? internalFunds
                   : externalFunds
               "
@@ -512,7 +512,7 @@
             จำนวนงบประมาณ <span class="text-red-500">*</span>
           </label>
           <input
-            [(ngModel)]="innovationData.budget_amount"
+            [(ngModel)]="projectData.budget_amount"
             type="text"
             class="w-full border text-2xl font-medium rounded-md h-12 px-4 py-2 focus:ring-2 focus:ring-blue-400"
             placeholder="ระบุจำนวนงบประมาณ"
@@ -525,7 +525,7 @@
             ปีที่ได้รับทุน <span class="text-red-500">*</span>
           </label>
           <input
-            [(ngModel)]="innovationData.year_received_budget"
+            [(ngModel)]="projectData.year_received_budget"
             type="text"
             class="w-full border rounded-md text-2xl font-medium px-4 h-12 py-2 focus:ring-2 focus:ring-blue-400"
             placeholder="ระบุปีที่ได้รับทุน"
@@ -537,7 +537,7 @@
             ปี <span class="text-red-500">*</span>
           </label>
           <input
-            [(ngModel)]="innovationData.year"
+            [(ngModel)]="projectData.year"
             type="text"
             class="h-12 text-2xl font-medium w-full border rounded-md px-4 py-2"
             placeholder="ระบุปี"
@@ -551,7 +551,7 @@
           ความร่วมมือกับหน่วยงานอื่นๆ
         </label>
         <textarea
-          [(ngModel)]="innovationData.call_other"
+          [(ngModel)]="projectData.call_other"
           name="attention"
           id="attention"
           placeholder="ระบุความร่วมมือกับหน่วยงานอื่นๆ"
@@ -566,7 +566,7 @@
             เลขที่สิทธิบัตร : <span class="text-red-500">*</span>
           </label>
           <input
-            [(ngModel)]="innovationData.patent_number"
+            [(ngModel)]="projectData.patent_number"
             type="text"
             class="md:col-span-2 h-12 w-full text-2xl font-medium border rounded-md px-4 py-2"
             placeholder="ระบุเลขที่สิทธิบัตร"
@@ -579,7 +579,7 @@
             เลขที่คำขอสิทธิบัตร : <span class="text-red-500">*</span>
           </label>
           <input
-            [(ngModel)]="innovationData.application_number"
+            [(ngModel)]="projectData.application_number"
             type="text"
             class="md:col-span-2 h-12 w-full text-2xl font-medium border rounded-md px-4 py-2"
             placeholder="ระบุเลขที่คำขอสิทธิบัตร"
@@ -593,7 +593,7 @@
           เว็บไซต์ตรวจสิทธิบัตร : <span class="text-red-500">*</span>
         </label>
         <input
-          [(ngModel)]="innovationData.examination_url"
+          [(ngModel)]="projectData.examination_url"
           type="text"
           class="md:col-span-2 w-full border text-2xl font-medium rounded-md px-4 py-2"
           placeholder="ระบุเว็บไซต์ตรวจสิทธิบัตร"
@@ -613,21 +613,21 @@
             type="file"
             accept="application/pdf"
             class="hidden"
-            (change)="onReportFileSelected($event)"
+            (change)="onFileSelected($event)"
           />
 
           <!-- ปุ่ม + ชื่อไฟล์ -->
           <div class="md:col-span-2 flex gap-3 items-center mt-3">
             <span class="text-gray-400 font-medium truncate">
               {{
-                reportFileName ||
-                  innovationData.full_report?.file_name ||
+                selectedFileName ||
+                  projectData.full_report?.file_name ||
                   "ยังไม่ได้เลือกไฟล์"
               }}
             </span>
 
             <button
-              *ngIf="selectedFile || innovationData.full_report?.file_name"
+              *ngIf="selectedFile || projectData.full_report?.file_name"
               type="button"
               class="text-red-500 hover:text-red-700 text-lg"
               (click)="removeFile()"
@@ -657,23 +657,32 @@
             type="file"
             accept="application/image/*"
             class="hidden"
-            (change)="onFileSelected($event)"
+            (change)="onImageFileSelected($event)"
           />
 
-          <!-- ปุ่ม + ชื่อไฟล์ -->
+          <!-- ไฟล์รูป -->
           <div class="md:col-span-2 flex gap-3 items-center mt-3">
-            <span class="text-gray-400 font-medium truncate">
+            <!-- <span class="text-gray-400 font-medium truncate">
               {{
-                selectedImageFileName || innovationData.innovation_images?.[0]?.file_name  ||
+                selectedImagesName || projectData.innovation_images[0]?.file_name  ||
                   "ยังไม่ได้เลือกไฟล์"
               }}
+            </span> -->
+            <span class="text-gray-400 font-medium truncate">
+              <ng-container *ngIf="selectedImagesFile.length > 0; else existingImage">
+                {{ selectedImagesFile[0].name }}
+              </ng-container>
+            
+              <ng-template #existingImage>
+                {{ projectData.innovation_images[0]?.file_name || 'ยังไม่ได้เลือกไฟล์' }}
+              </ng-template>
             </span>
 
             <button
-              *ngIf="selectedImageFile || innovationData.innovation_images?.[0]?.file_name"
+            *ngIf="hasImages"
               type="button"
               class="text-red-500 hover:text-red-700 text-lg"
-              (click)="removeFileImage()"
+              (click)="removeImageFile()"
             >
               ✕
             </button>
@@ -692,7 +701,7 @@
       <!-- ปุ่ม -->
       <div class="flex justify-center mt-10">
         <button
-          (click)="submitInnovation()"
+          (click)="submit()"
           type="submit"
           class="flex items-center justify-center gap-3 w-72 py-3 bg-[#FDE68A] hover:bg-[#FACC15] text-[#394250] text-2xl rounded-lg shadow transition duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 cursor-pointer"
         >

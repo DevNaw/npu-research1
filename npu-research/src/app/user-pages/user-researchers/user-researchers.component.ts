@@ -2,6 +2,7 @@ import { Component, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApexChart, ApexLegend } from 'ng-apexcharts';
 import { AuthService } from '../../services/auth.service';
+import { ResearchService } from '../../services/research.service';
 
 interface Researcher {
   faculty: string;
@@ -37,7 +38,9 @@ export class UserResearchersComponent {
   pageSize = 10;
   currentPage = 1;
 
-  constructor(private router: Router, private authService: AuthService) {}
+  // Real
+  loading = false;
+  error: string | null = null;
 
   /** ===== DATA (ตัวอย่าง) ===== */
   publications: Researcher[] = [
@@ -124,6 +127,27 @@ export class UserResearchersComponent {
   };
 
   filteredResearchers: Researcher[] = [];
+
+  constructor(
+    private router: Router, 
+    private authService: AuthService,
+    private service: ResearchService,
+  ) {}
+
+  ngOnInit() {
+    this.loadResearch();
+  }
+
+  loadResearch() {
+    this.loading = true;
+    this.error = null;
+
+    this.service.getPublicData().subscribe({
+      next: (res) => {
+        
+      }
+    })
+  }
   /** ===== SEARCH ===== */
   search() {
     this.isSearched = true;

@@ -45,7 +45,7 @@ export class ResearchService {
             id: r.research_id,
             type:
               r.research_type === 'PROJECT'
-                ? 'research'
+                ? 'project'
                 : r.research_type === 'ARTICLE'
                 ? 'article'
                 : 'innovation',
@@ -109,7 +109,7 @@ export class ResearchService {
               id: r.research_id,
               type:
                 r.research_type === 'PROJECT'
-                  ? 'research'
+                  ? 'project'
                   : r.research_type === 'ARTICLE'
                   ? 'article'
                   : 'innovation',

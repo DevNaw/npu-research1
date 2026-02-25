@@ -56,7 +56,7 @@ export interface ResearchResponse {
 export interface Research {
   id: number;
   name: string;
-  type: string;
+  type: ResearchType;
   subType: string;
   faculty: string;
   agency: string;
@@ -152,3 +152,5 @@ export interface InnovationOwner {
   created_at: string;
   updated_at: string;
 }
+
+export type ResearchType = 'project' | 'article' | 'innovation';

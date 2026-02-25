@@ -605,6 +605,16 @@
           <span class="text-gray-400 font-medium truncate">
             {{ selectedFileName || "ยังไม่ได้เลือกไฟล์" }}
           </span>
+
+          <button
+          *ngIf="selectedFile || projectData.full_report"
+          type="button"
+          class="text-red-500 hover:text-red-700 text-lg"
+          (click)="removeFile()"
+        >
+          ✕
+        </button>
+
           <button
             type="button"
             class="px-4 py-1 bg-[#FDE68A] text-[#1E293B] hover:bg-[#FACC15] rounded-md cursor-pointer"
@@ -635,6 +645,16 @@
           <span class="text-gray-400 font-medium truncate">
             {{ selectedContractFileName || "ยังไม่ได้เลือกไฟล์" }}
           </span>
+
+          <button
+          *ngIf="selectedContractFile || projectData.contract_file"
+          type="button"
+          class="text-red-500 hover:text-red-700 text-lg"
+          (click)="removeContractFile()"
+        >
+          ✕
+        </button>
+
           <button
             type="button"
             class="px-4 py-1 bg-[#FDE68A] text-[#1E293B] cursor-pointer hover:bg-[#FACC15] rounded-md"
