@@ -111,7 +111,7 @@
                       <th class="p-1 md:p-2 text-left">ประเภทความรับผิดชอบ</th>
                     </tr>
                   </thead>
-                  <tbody class="divide-y">
+                  <tbody class="divide-y" *ngIf="(researchData?.internal_members?.length ?? 0) > 0; else noData">
                     <tr *ngFor="let internal of researchData?.internal_members; let i = index" class="bg-gray-200 border-b border-gray-300">
                       <td class="p-1 md:p-2">{{ i + 1 }}</td>
                       <td
@@ -127,6 +127,14 @@
                       <td class="p-1 md:p-2">{{ internal?.role }}</td>
                     </tr>
                   </tbody>
+
+                  <ng-template #noData>
+                    <tr>
+                      <td colspan="3" class="text-center py-4 text-gray-500">
+                        ไม่พบข้อมูล
+                      </td>
+                    </tr>
+                  </ng-template>
                 </table>
               </div>
             </div>
@@ -146,7 +154,7 @@
                       <th class="p-1 md:p-2 text-left">หน่วยงาน</th>
                     </tr>
                   </thead>
-                  <tbody class="divide-y">
+                  <tbody class="divide-y" *ngIf="(researchData?.external_members?.length ?? 0) > 0; else noDataExternal">
                     <tr *ngFor="let external of researchData?.external_members; let i = index;" class="bg-gray-200 border-b border-gray-300">
                       <td class="p-1 md:p-2">{{ i + 1}}</td>
                       <td class="p-1 md:p-2">{{ external?.full_name }}</td>
@@ -155,6 +163,14 @@
                     </tr>
                   </tbody>
                 </table>
+
+                <ng-template #noDataExternal>
+                  <tr>
+                    <td colspan="3" class="text-center py-4 text-gray-500">
+                      ไม่พบข้อมูล
+                    </td>
+                  </tr>
+                </ng-template>
               </div>
             </div>
 
@@ -393,7 +409,7 @@
                       <th class="px-4 py-2 text-left">ประเภทความรับผิดชอบ</th>
                     </tr>
                   </thead>
-                  <tbody class="divide-y">
+                  <tbody class="divide-y" *ngIf="(articleData?.internal_members?.length ?? 0) > 0; else noData">
                     <tr
                       *ngFor="let member of articleData?.internal_members; let i = index;"
                       class="bg-gray-200 border-b border-gray-300"
@@ -412,6 +428,14 @@
                       <td class="px-4 py-3">{{ member?.role }}</td>
                     </tr>
                   </tbody>
+
+                  <ng-template #noData>
+                    <tr>
+                      <td colspan="3" class="text-center py-4 text-gray-500">
+                        ไม่พบข้อมูล
+                      </td>
+                    </tr>
+                  </ng-template>
                 </table>
               </div>
             </div>
@@ -431,7 +455,7 @@
                       <th class="px-4 py-2 text-left">หน่วยงาน</th>
                     </tr>
                   </thead>
-                  <tbody class="divide-y">
+                  <tbody class="divide-y" *ngIf="(articleData?.external_members?.length ?? 0) > 0; else noDataExternal">
                     <tr
                       *ngFor="let external of articleData?.external_members; let i = index;"
                       class="bg-gray-200 border-b border-gray-300"
@@ -443,6 +467,14 @@
                     </tr>
                   </tbody>
                 </table>
+
+                <ng-template #noDataExternal>
+                  <tr>
+                    <td colspan="3" class="text-center py-4 text-gray-500">
+                      ไม่พบข้อมูล
+                    </td>
+                  </tr>
+                </ng-template>
               </div>
             </div>
 

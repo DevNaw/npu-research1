@@ -14,13 +14,13 @@ export interface WorkInfoResponse {
   
   export interface WorkInfo {
     position: string;
-    organization: Organization;
+    organization: OrganizationOption;
     type: string;
     line_work: string;
     academic_position: string;
     interest: string;
     expertise: Expertise[];
-    work_start_date: string;
+    work_start_date: any;
     year_of_service: number;
   }
   
@@ -32,7 +32,7 @@ export interface WorkInfoResponse {
   }
   
   export interface OrganizationOption {
-    organization_id: number;
+    id: number;
     faculty: string;
   }
   

@@ -24,7 +24,7 @@ export class PerformanceComponent {
   selectedFile: File | null = null;
   previewImage: string | null = null;
 
-  data: any; // mock data (แทน API)
+  data: any;
   articleData: ResearchArticle | null = null;
   researchData: ProjectDetailApi | null = null;
   innovationData: InnovationApi| null = null;

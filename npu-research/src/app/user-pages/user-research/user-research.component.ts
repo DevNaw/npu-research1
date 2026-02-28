@@ -4,6 +4,13 @@ import { AuthService } from '../../services/auth.service';
 import { ResearchService } from '../../services/research.service';
 import { Research, ResearchType } from '../../models/research.model';
 import { DataPerformance } from '../../models/dashboard.model';
+import { SearchService } from '../../services/search.service';
+import {
+  MajorSubjectArea,
+  Organization,
+  SubSubjectArea,
+} from '../../models/search-get.model';
+import { ResearchItem, SearchResearchRequest } from '../../models/search.model';
 
 @Component({
   selector: 'app-user-research',
@@ -18,7 +25,6 @@ export class UserResearchComponent {
   selectedType: string | null = null;
   selectedSubType: string | null = null;
 
-  selectedFaculty = '';
   selectedFunding = '';
   selectedYear = '';
   researchTitle = '';
@@ -30,8 +36,9 @@ export class UserResearchComponent {
   searchType = '';
   facultySearch: string = '';
 
-  searchAgency = '';
-  selectedAgency: string | null = null;
+  searchAgency: string = '';
+  selectedAgency: Organization | null = null;
+  subjectAre: MajorSubjectArea | null = null;
 
   startDate?: Date;
   endDate?: Date;
@@ -42,13 +49,13 @@ export class UserResearchComponent {
   researches: Research[] = [];
 
   loading = false;
-    error: string | null = null;
+  error: string | null = null;
 
-    publications: DataPerformance = {
-        research: [],
-        article: [],
-        innovation: [],
-      };
+  publications: DataPerformance = {
+    research: [],
+    article: [],
+    innovation: [],
+  };
 
   faculties = [
     'คณะวิศวกรรมศาสตร์',
@@ -95,8 +102,8 @@ export class UserResearchComponent {
   };
 
   /** ===== FILTERED (ตาราง + กราฟใช้ชุดนี้) ===== */
-  filteredResearchers: Research[] = [];
-  paginationData: Research[] = [];
+  filteredResearchers: ResearchItem[] = [];
+paginationData: ResearchItem[] = [];
 
   pageSize = 10;
   currentPage = 1;
@@ -127,14 +134,39 @@ export class UserResearchComponent {
     external: 'external',
   };
 
+  searchMajor: string = '';
+  activeMajor: MajorSubjectArea | null = null;
+  selectedSub: SubSubjectArea | null = null;
+  selectedFaculty: string = '';
+  activeDropdown: string | null = null;
+  filteredMajors: MajorSubjectArea[] = [];
+
+  subOrgan: MajorSubjectArea[] = [];
+  organizations: Organization[] = [];
+
+  searchResults: ResearchItem[] = [];
+  allTableData: ResearchItem[] = [];
+
   constructor(
     private router: Router,
     private authService: AuthService,
-    private researchService: ResearchService
+    private researchService: ResearchService,
+    private service: SearchService
   ) {}
 
   ngOnInit() {
-    this.loadAllResearchPublic();
+    this.loadSubOrgan();
+  }
+
+  // ======= Load SubArea Organization && Load Researchs =======
+  loadSubOrgan(): void {
+    this.service.getData().subscribe({
+      next: (res) => {
+        this.subOrgan = res.data.subject_areas;
+        this.organizations = res.data.organizations;
+        console.log(res);
+      },
+    });
   }
 
   /** ===== DONUT CALCULATION (อิงข้อมูลตารางจริง) ===== */
@@ -160,6 +192,7 @@ export class UserResearchComponent {
 
   toggleDropdown(name: string, event: MouseEvent) {
     event.stopPropagation();
+    this.activeDropdown = this.activeDropdown === name ? null : name;
     this.openDropdown = this.openDropdown === name ? null : name;
   }
 
@@ -199,18 +232,25 @@ export class UserResearchComponent {
     this.openDropdown = null;
   }
 
-  selectAgency(a: string) {
-    this.selectedAgency = a;
+  selectAgency(agency: Organization) {
+    this.selectedAgency = agency;
     this.searchAgency = '';
-    this.openDropdown = null;
+    this.activeDropdown = null;
   }
 
-  filteredAgency(): string[] {
-    if (!this.searchAgency) return this.agency;
+  filteredAgency(): Organization[] {
+    if (!this.searchAgency) return this.organizations;
 
-    return this.agency.filter((a) =>
-      a.toLowerCase().includes(this.searchAgency.toLowerCase())
+    return this.organizations.filter((o) =>
+      o.faculty.toLowerCase().includes(this.searchAgency.toLowerCase())
     );
+  }
+
+  filteredMajor(): MajorSubjectArea[] {
+    if (!this.searchMajor) return this.subOrgan;
+
+    const keyword = this.searchMajor.toLowerCase();
+    return this.subOrgan.filter((m) => m.name_en.toLowerCase().includes(keyword));
   }
 
   filteredFaculties(): string[] {
@@ -246,16 +286,25 @@ export class UserResearchComponent {
     return this.selectedType;
   }
 
-  goToResearch(id: number, type: ResearchType) {
-    let basePath = '/performance';
+  goToResearch(id: number, type: 'ARTICLE' | 'PROJECT' | 'INNOVATION') {
 
+    const routeMap: any = {
+      PROJECT: 'project',
+      ARTICLE: 'article',
+      INNOVATION: 'innovation'
+    };
+  
+    const mappedType = routeMap[type];
+  
+    let basePath = '/performance';
+  
     if (this.authService.isLoggedIn()) {
       basePath = this.authService.isAdmin()
         ? '/admin/performance'
-        : 'user/performance';
+        : '/user/performance';
     }
-
-    this.router.navigate([basePath, type, id]);
+  
+    this.router.navigate([basePath, mappedType, id]);
   }
 
   get displayRange(): string {
@@ -278,17 +327,23 @@ export class UserResearchComponent {
   }
 
   onSearch(): void {
-    const keyword = this.searchText.toLowerCase().trim();
-
-    this.filteredResearchers = this.researches.filter(
-      (items) =>
-        items.type.toLowerCase().includes(keyword) ||
-        items.faculty.toLowerCase().includes(keyword) ||
-        items.funding.toLowerCase().includes(keyword) ||
-        items.title.toLowerCase().includes(keyword) ||
-        items.name.toLowerCase().includes(keyword)
+    const keyword = this.searchText.trim();
+  
+    // ✅ ถ้าลบหมดแล้ว → reload จาก backend
+    if (!keyword) {
+      this.search();
+      return;
+    }
+  
+    const lowerKeyword = keyword.toLowerCase();
+  
+    this.filteredResearchers = this.allTableData.filter((item) =>
+      item.title_th?.toLowerCase().includes(lowerKeyword) ||
+      item.title_en?.toLowerCase().includes(lowerKeyword) ||
+      item.own?.name?.toLowerCase().includes(lowerKeyword) ||
+      item.type.toLowerCase().includes(lowerKeyword)
     );
-
+  
     this.currentPage = 1;
     this.updatePagination();
   }
@@ -318,105 +373,149 @@ export class UserResearchComponent {
     return Array.from({ length: this.totalPages }, (_, i) => i + 1);
   }
 
-  loadAllResearchPublic() {
+  // loadAllResearchPublic() {
+  //   this.loading = true;
+  //   this.error = null;
+
+  //   this.researchService.getPublicData().subscribe({
+  //     next: (res) => {
+  //       this.researches = [
+  //         ...res.research.map((r) => ({ ...r, type: 'project' as const })),
+  //         ...res.article.map((r) => ({ ...r, type: 'article' as const })),
+  //         ...res.innovation.map((r) => ({ ...r, type: 'innovation' as const })),
+  //       ];
+
+  //       this.filteredResearchers = [...this.researches];
+
+  //       this.updatePagination();
+  //       this.prepareDonut();
+
+  //       this.loading = false;
+  //     },
+  //     error: (err) => {
+  //       this.error = 'ไม่สามารถโหลดข้อมูลได้';
+  //       this.loading = false;
+  //       console.error(err);
+  //     },
+  //   });
+  // }
+
+  formatThaiDate(date: Date): string {
+    const d = new Date(date);
+    const day = d.getDate();
+    const month = d.toLocaleDateString('th-TH', { month: 'long' });
+    const year = d.getFullYear() + 543;
+
+    return `${day} ${month} ${year}`;
+  }
+
+  search() {
+    const payload: SearchResearchRequest = {};
+  
+    if (this.researchItems?.trim()) {
+      payload.keyword = this.researchItems.trim();
+    }
+  
+    if (this.selectedType) {
+      payload.type = this.mapTypeToApi(this.selectedType);
+    }
+  
+    if (this.selectedAgency?.id) {
+      payload.organization_id = this.selectedAgency.id;
+    }
+  
+    if (this.selectedSub?.sub_id) {
+      payload.subject_area_id = this.selectedSub.sub_id;
+    }
+  
+    if (this.startDate) {
+      payload.year = this.startDate.getFullYear();
+    }
+
+    if (this.startDate) {
+      payload.start_date = this.formatDateForApi(this.startDate);
+    }
+  
+    if (this.endDate) {
+      payload.end_date = this.formatDateForApi(this.endDate);
+    }
+  
     this.loading = true;
-    this.error = null;
   
-    this.researchService.getPublicData().subscribe({
+    this.service.searchData(payload).subscribe({
       next: (res) => {
-  
-        // ✅ รวมทุกประเภทเป็น array เดียว
-        this.researches = [
-          ...res.research.map(r => ({ ...r, type: 'project' as const })),
-          ...res.article.map(r => ({ ...r, type: 'article' as const })),
-          ...res.innovation.map(r => ({ ...r, type: 'innovation' as const }))
-        ];
-  
-        // ✅ โหลดแล้วแสดงทั้งหมดทันที
-        this.filteredResearchers = [...this.researches];
-  
+        this.isSearched = true;
+    
+        const data = res.data;   // 👈 สำคัญมาก
+    
+        this.searchResults = data.result;
+    
+        this.filteredResearchers = data.result;
+    
+        // ✅ donut
+        this.donutSeries = data.graph.map(g => g.count);
+        this.donutLabels = data.graph.map(g => g.subject_area_name);
+    
+        this.totalResearchers = data.total;
+    
+        this.currentPage = 1;
         this.updatePagination();
-        this.prepareDonut();
-  
-        this.loading = false;
-      },
-      error: (err) => {
-        this.error = 'ไม่สามารถโหลดข้อมูลได้';
-        this.loading = false;
-        console.error(err);
-      },
+      }
     });
   }
+
+  formatDateForApi(date: Date): string {
+    const yyyy = date.getFullYear();
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const dd = String(date.getDate()).padStart(2, '0');
   
-    formatThaiDate(date: Date): string {
-      const d = new Date(date);
-      const day = d.getDate();
-      const month = d.toLocaleDateString('th-TH', { month: 'long' });
-      const year = d.getFullYear() + 543;
+    return `${yyyy}-${mm}-${dd}`;  // 2025-02-01
+  }
+
+  mapTypeToApi(type: string): 'ARTICLE' | 'PROJECT' | 'INNOVATION' {
+    const map: any = {
+      'บทความ': 'ARTICLE',
+      'โครงการวิจัย': 'PROJECT',
+      'นวัตกรรมสิ่งประดิษฐ์': 'INNOVATION'
+    };
   
-      return `${day} ${month} ${year}`;
-    }
+    return map[type];
+  }
 
-    search() {
-      this.isSearched = true;
-      this.applyFilters();
-    }
+  trackById(index: number, item: any): number {
+    return item.id;
+  }
 
-    applyFilters() {
+  // SUB
+  selectSub(sub: SubSubjectArea): void {
+    this.selectedSub = sub;
+    this.selectedFaculty = sub.name_en;
+    this.activeDropdown = null;
+    this.activeMajor = null;
+  }
 
-      const keyword = this.searchText?.toLowerCase().trim() || '';
-    
-      this.filteredResearchers = this.researches.filter((r) => {
-    
-        const researchDate = new Date(r.date);
-    
-        const matchType =
-          !this.selectedType ||
-          this.typeMap[this.selectedType] === r.type;
-    
-        const matchSubType =
-          !this.selectedSubType ||
-          r.subType === this.selectedSubType;
-    
-        const matchAgency =
-          !this.selectedAgency ||
-          r.agency === this.selectedAgency;
-    
-        const matchFaculty =
-          !this.selectedFaculty ||
-          r.faculty === this.selectedFaculty;
-    
-        const matchFunding =
-          (!this.fundingExternal && !this.fundingInternal) ||
-          (this.fundingExternal && r.funding === 'external') ||
-          (this.fundingInternal && r.funding === 'internal');
-    
-        const matchDate =
-          (!this.startDate || researchDate >= this.startDate) &&
-          (!this.endDate || researchDate <= this.endDate);
-    
-        const matchKeyword =
-          !keyword ||
-          r.title.toLowerCase().includes(keyword) ||
-          r.name.toLowerCase().includes(keyword);
-    
-        return (
-          matchType &&
-          matchSubType &&
-          matchAgency &&
-          matchFaculty &&
-          matchFunding &&
-          matchDate &&
-          matchKeyword
-        );
-      });
-    
-      this.currentPage = 1;
-      this.updatePagination();
-      this.prepareDonut();
-    }
+  toggleMajor(major: MajorSubjectArea, event: Event): void {
+    event.stopPropagation();
+  
+    this.activeMajor =
+      this.activeMajor?.major_id === major.major_id ? null : major;
+  }
 
-    trackById(index: number, item: any): number {
-      return item.id;
-    }
+  onSearchMajor(): void {
+    const keyword = this.searchMajor.toLowerCase();
+  
+    this.filteredMajors = this.subOrgan.filter((m) =>
+      m.name_en.toLowerCase().includes(keyword)
+    );
+  }
+
+  getTypeLabel(type: 'ARTICLE' | 'PROJECT' | 'INNOVATION'): string {
+    const map = {
+      PROJECT: 'โครงการวิจัย',
+      ARTICLE: 'บทความ / วารสาร',
+      INNOVATION: 'นวัตกรรม'
+    };
+  
+    return map[type] ?? '-';
+  }
 }

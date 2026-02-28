@@ -35,6 +35,7 @@ export class EditWorkComponent {
     work_start_date: '',
     year_of_service: 0,
   };
+
   expertiseOptions: ExpertiseOption[] = [];
 
   typeOptions: string[] = ['พนักงาน', 'ลูกจ้าง', 'อาจารย์พิเศษ'];
@@ -48,37 +49,105 @@ export class EditWorkComponent {
   loadWork() {
     this.service.getWorkInfo().subscribe((res) => {
       const data = res?.data?.work_info;
-
-      if (!data) {
-        console.error('No work_info from API');
-        return;
-      }
-
-      if (data.work_start_date) {
-        const converted = this.convertThaiDateToISO(data.work_start_date);
-        data.work_start_date = converted || '';
-      }
-
-      if (!data.organization) {
-        data.organization = { id: 0, faculty: '' };
-      }
-
-      this.workInfo = data;
-
+  
+      if (!data) return;
+  
       this.expertiseOptions = res.data.expertises || [];
       this.organizationOptions = res.data.organizations || [];
-
-      this.selectOrganization =
-        this.organizationOptions.find(
-          (o) => o.organization_id === data.organization?.id
-        ) || null;
-
+  
+      // ✅ map organization จาก id จริง
+      if (data.organization?.id) {
+        const found = this.organizationOptions.find(
+          (o) => o.id === data.organization.id
+        );
+  
+        if (found) {
+          data.organization = found;  // 👈 สำคัญมาก
+        }
+      }
+  
+      this.workInfo = data;
+      console.log(this.workInfo);
+      
+  
+      if (this.workInfo?.work_start_date) {
+        this.workInfo.work_start_date =
+          this.workInfo.work_start_date.slice(0, 10);
+      }
+  
       this.selectedMajors = (data.expertise || []).map((e: any) => ({
         expertise_id: e.id,
         name_th: e.name_th,
         name_en: e.name_en,
       }));
     });
+  }
+
+  // loadWork() {
+  //   this.service.getWorkInfo().subscribe((res) => {
+  //     const data = res?.data?.work_info;
+  //     console.log('dfa', data);
+
+  //     if (!data) {
+  //       console.error('No work_info from API');
+  //       return;
+  //     }
+
+  //     if (!data.organization) {
+  //       data.organization = { organization_id: 0, faculty: '' };
+  //     }
+  //     this.workInfo = data;
+
+  //     if (this.workInfo?.work_start_date) {
+  //       this.workInfo.work_start_date =
+  //         this.workInfo.work_start_date.slice(0, 10);
+  //     }
+
+  //     this.expertiseOptions = res.data.expertises || [];
+  //     this.organizationOptions = res.data.organizations || [];
+
+  //     this.selectOrganization =
+  //       this.organizationOptions.find(
+  //         (o) => o.organization_id === data.organization?.organization_id
+  //       ) || null;
+
+  //     this.selectedMajors = (data.expertise || []).map((e: any) => ({
+  //       expertise_id: e.id,
+  //       name_th: e.name_th,
+  //       name_en: e.name_en,
+  //     }));
+  //   });
+  // }
+
+  convertThaiDateToISO(thaiDate: string): string {
+    if (!thaiDate) return '';
+
+    const thaiMonths: { [key: string]: string } = {
+      มกราคม: '01',
+      กุมภาพันธ์: '02',
+      มีนาคม: '03',
+      เมษายน: '04',
+      พฤษภาคม: '05',
+      มิถุนายน: '06',
+      กรกฎาคม: '07',
+      สิงหาคม: '08',
+      กันยายน: '09',
+      ตุลาคม: '10',
+      พฤศจิกายน: '11',
+      ธันวาคม: '12',
+    };
+
+    const parts = thaiDate.trim().split(' ');
+    if (parts.length === 3) {
+      const day = parts[0].padStart(2, '0'); // เติม 0 ข้างหน้าถ้าเป็นเลขหลักเดียว
+      const month = thaiMonths[parts[1]];
+      const year = (parseInt(parts[2], 10) - 543).toString(); // แปลง พ.ศ. เป็น ค.ศ.
+
+      if (day && month && year) {
+        return `${day}-${month}-${year}`;
+      }
+    }
+    return ''; // คืนค่าว่างถ้าฟอร์แมตไม่ถูกต้อง
   }
 
   saveWork() {
@@ -106,7 +175,19 @@ export class EditWorkComponent {
         didOpen: () => Swal.showLoading(),
       });
 
-      this.service.updateWork(this.workInfo).subscribe({
+      const payload = {
+        position: this.workInfo.position,
+        type: this.workInfo.type,
+        line_work: this.workInfo.line_work,
+        academic_position: this.workInfo.academic_position,
+        interest: this.workInfo.interest,
+        work_start_date: this.workInfo.work_start_date,
+        year_of_service: Number(this.workInfo.year_of_service),
+        organization_id: this.workInfo.organization?.id ?? 0,
+        expertise: this.selectedMajors.map((m) => m.expertise_id),
+      };
+
+      this.service.updateWork(payload).subscribe({
         next: () => {
           Swal.fire({
             icon: 'success',
@@ -202,34 +283,6 @@ export class EditWorkComponent {
     );
   }
 
-  private convertThaiDateToISO(thaiDate: string): string {
-    if (!thaiDate) return '';
-
-    const months: any = {
-      มกราคม: 0,
-      กุมภาพันธ์: 1,
-      มีนาคม: 2,
-      เมษายน: 3,
-      พฤษภาคม: 4,
-      มิถุนายน: 5,
-      กรกฎาคม: 6,
-      สิงหาคม: 7,
-      กันยายน: 8,
-      ตุลาคม: 9,
-      พฤศจิกายน: 10,
-      ธันวาคม: 11,
-    };
-
-    const parts = thaiDate.split(' ');
-    const day = parseInt(parts[0], 10);
-    const month = months[parts[1]];
-    const year = parseInt(parts[2], 10) - 543; // แปลง พ.ศ. → ค.ศ.
-
-    const date = new Date(year, month, day);
-
-    return date.toISOString().split('T')[0]; // YYYY-MM-DD
-  }
-
   filteredOrganizations(): OrganizationOption[] {
     if (!this.searchOrganization.trim()) {
       return this.organizationOptions;
@@ -243,7 +296,7 @@ export class EditWorkComponent {
   selectOrganizationOption(org: OrganizationOption) {
     this.selectOrganization = org;
     this.workInfo.organization = {
-      id: org.organization_id,
+      id: org.id,
       faculty: org.faculty,
     };
 

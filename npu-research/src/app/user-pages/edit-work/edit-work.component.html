@@ -32,7 +32,7 @@
           class="min-h-10.5 border rounded-md px-3 py-2 flex justify-between items-center text-2xl cursor-pointer font-medium"
         >
           <span>
-            {{ selectOrganization?.faculty || "คลิกเพื่อเลือก" }}
+            {{ workInfo.organization.faculty || "คลิกเพื่อเลือก" }}
           </span>
           <i class="bi bi-caret-down-fill text-gray-400"></i>
         </div>
@@ -206,14 +206,29 @@
       </div>
 
       <!-- วันที่เริ่มงาน -->
-      <div>
-        <label class="block text-gray-700 font-bold mb-1">วันที่เริ่มงาน</label>
-        <input
-          type="date"
-          [(ngModel)]="workInfo!.work_start_date"
-          name="startDate"
-          class="w-full rounded-lg text-2xl border-gray-300 focus:ring-indigo-500 focus:border-indigo-500"
-        />
+      <div class="grid grid-cols-2 gap-5">
+        <div>
+          <label class="block text-gray-700 font-bold mb-1"
+            >วันที่เริ่มงาน</label
+          >
+          <input
+            type="date"
+            [(ngModel)]="workInfo.work_start_date"
+            name="startDate"
+            class="w-full rounded-lg text-2xl border-gray-300 focus:ring-indigo-500 focus:border-indigo-500"
+          />
+        </div>
+        <!-- อายุงาน -->
+        <div>
+          <label class="block text-gray-700 font-bold mb-1">อายุงาน</label>
+          <input
+            type="number"
+            [(ngModel)]="workInfo.year_of_service"
+            name="year"
+            class="w-50 rounded-lg text-2xl border-gray-300 focus:ring-indigo-500 focus:border-indigo-500"
+          />
+          <label class="ml-3">ปี</label>
+        </div>
       </div>
 
       <!-- Buttons -->

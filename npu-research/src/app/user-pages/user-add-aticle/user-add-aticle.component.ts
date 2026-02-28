@@ -451,6 +451,7 @@ export class UserAddAticleComponent {
   // ----- Submit -------------------------------------------------------
   submitArticle() {
     const formData = this.buildFormData();
+    
 
     Swal.fire({
       title: 'กำลังบันทึก...',
