@@ -130,8 +130,10 @@
           class="col-span-12 md:col-span-4 flex items-center gap-3 border border-gray-200 rounded-full px-5 h-12 cursor-pointer hover:border-yellow-400 transition"
         >
           <input
-            type="checkbox"
-            [(ngModel)]="fundingExternal"
+          type="radio"
+          name="funding"
+          value="แหล่งทุนภายนอก"
+          [(ngModel)]="selectedFunding"
             class="w-4 h-4 text-yellow-500 border-gray-300 rounded focus:ring-2 focus:ring-yellow-400"
           />
           <span class="font-medium text-gray-700"> แหล่งเงินทุนภายนอก </span>
@@ -142,8 +144,10 @@
           class="col-span-12 md:col-span-4 flex items-center gap-3 border border-gray-200 rounded-full px-5 h-12 cursor-pointer hover:border-yellow-400 transition"
         >
           <input
-            type="checkbox"
-            [(ngModel)]="fundingInternal"
+          type="radio"
+          name="funding"
+          value="แหล่งทุนภายใน"
+          [(ngModel)]="selectedFunding"
             class="w-4 h-4 text-yellow-500 border-gray-300 rounded focus:ring-2 focus:ring-yellow-400"
           />
           <span class="font-medium text-gray-700"> แหล่งเงินทุนภายใน </span>
@@ -173,8 +177,8 @@
             [rangePicker]="picker"
             class="hidden-datepicker"
           >
-            <input matStartDate [(ngModel)]="startDate" />
-            <input matEndDate [(ngModel)]="endDate" />
+            <input matStartDate [(ngModel)]="date_from" />
+            <input matEndDate [(ngModel)]="date_to" />
           </mat-date-range-input>
         </div>
       </div>
@@ -284,7 +288,7 @@
       ></apx-chart>
 
       <ng-template #noData>
-        <div class="text-center text-red-500 py-16">ไม่พบข้อมูล</div>
+        <div class="text-center text-white py-16">ไม่พบข้อมูล</div>
       </ng-template>
     </div>
 
@@ -302,11 +306,15 @@
       <!-- List -->
       <div class="space-y-2 text-[#394250] px-8 max-h-60 overflow-y-auto">
         <p
-          *ngFor="let l of donutLabels; let i = index"
+          *ngFor="let l of donutLabels; let i = index;"
           class="flex justify-between border-b last:border-b-0 pb-1"
         >
           <span class="font-medium">{{ l }}</span>
           <span class="font-medium">{{ donutSeries[i] }} งาน</span>
+        </p>
+
+        <p *ngIf="donutLabels.length === 0" class="text-center text-gray-500">
+          ไม่พบข้อมูล
         </p>
       </div>
 
@@ -387,19 +395,6 @@
               </td>
               <td class="p-1 md:p-2">{{ r.own?.name }}</td>
               <td class="p-1 md:p-2 text-center">
-                <!-- <i
-                  
-                  class="bi bi-arrow-right-square text-blue-500 hover:text-blue-700 cursor-pointer"
-                > </i> -->
-                <!-- {{
-                  r.type === "project"
-                    ? "โครงการวิจัย"
-                    : r.type === "article"
-                    ? "บทความ / วารสาร"
-                    : r.type === "innovation"
-                    ? "นวัตกรรม"
-                    : ""
-                }} -->
                 {{ getTypeLabel(r.type) }}
               </td>
             </tr>

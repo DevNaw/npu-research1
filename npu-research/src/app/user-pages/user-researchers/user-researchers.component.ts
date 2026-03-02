@@ -3,13 +3,9 @@ import { Router } from '@angular/router';
 import { ApexChart, ApexLegend } from 'ng-apexcharts';
 import { AuthService } from '../../services/auth.service';
 import { ResearchService } from '../../services/research.service';
-
-interface Researcher {
-  faculty: string;
-  name: string;
-  major: string;
-  position: string;
-}
+import { SearchService } from '../../services/search.service';
+import { Researcher } from '../../models/search-researchers.model';
+import { Expertise, Organization } from '../../models/get-researcher.model';
 
 @Component({
   selector: 'app-user-researchers',
@@ -18,12 +14,9 @@ interface Researcher {
   styleUrl: './user-researchers.component.css',
 })
 export class UserResearchersComponent {
-  openDropdown: string | null = null;
   isSearched = false;
-  selectedFaculty = '';
   selectedCareer: string = '';
   researcherName: string = '';
-  searchFaculitie = '';
 
   searchMajor = '';
   selectedMajor = '';
@@ -41,73 +34,6 @@ export class UserResearchersComponent {
   // Real
   loading = false;
   error: string | null = null;
-
-  /** ===== DATA (ตัวอย่าง) ===== */
-  publications: Researcher[] = [
-    {
-      faculty: 'คณะวิศวกรรมศาสตร์',
-      name: 'นาย ก',
-      major: 'วิทยาการคอมพิวเตอร์',
-      position: 'อาจารย์',
-    },
-    {
-      faculty: 'คณะวิศวกรรมศาสตร์',
-      name: 'นาย ข',
-      major: 'ระบบสารสนเทศเพื่อการจัดการ',
-      position: 'เจ้าหน้าที่',
-    },
-    {
-      faculty: 'คณะวิศวกรรมศาสตร์',
-      name: 'นาย ค',
-      major: 'เทคโนโลยีสารสนเทศ',
-      position: 'อาจารย์',
-    },
-    {
-      faculty: 'วิทยาศาสตร์',
-      name: 'นาง ง',
-      major: 'ปัญญาประดิษฐ์และวิทยาการข้อมูล',
-      position: 'อาจารย์',
-    },
-    {
-      faculty: 'วิทยาศาสตร์',
-      name: 'นาย จ',
-      major: 'วิศวกรรมซอฟต์แวร์',
-      position: 'เจ้าหน้าที่',
-    },
-    {
-      faculty: 'วิทยาศาสตร์',
-      name: 'นาย จ',
-      major: 'วิศวกรรมซอฟต์แวร์',
-      position: 'เจ้าหน้าที่',
-    },
-    {
-      faculty: 'วิทยาศาสตร์',
-      name: 'นาย จ',
-      major: 'วิศวกรรมซอฟต์แวร์',
-      position: 'เจ้าหน้าที่',
-    },
-  ];
-
-  faculties = [
-    'ทั้งหมด',
-    'คณะวิศวกรรมศาสตร์',
-    'คณะวิทยาศาสตร์',
-    'คณะครุศาสตร์',
-    'คณะบริหารธุรกิจ',
-    'คณะเทคโนโลยีสารสนเทศ',
-    'คณะเทคโนโลยีสารสนเทศ',
-    'คณะเทคโนโลยีสารสนเทศ',
-    'คณะเทคโนโลยีสารสนเทศ',
-  ];
-
-  major = [
-    'ทั้งหมด',
-    'วิทยาการคอมพิวเตอร์',
-    'เทคโนโลยีสารสนเทศ',
-    'วิศวกรรมซอฟต์แวร์',
-    'ระบบสารสนเทศเพื่อการจัดการ',
-    'ปัญญาประดิษฐ์และวิทยาการข้อมูล',
-  ];
 
   /** ===== DONUT CHART ===== */
   donutLabels: string[] = [];
@@ -128,10 +54,21 @@ export class UserResearchersComponent {
 
   filteredResearchers: Researcher[] = [];
 
+  // Real
+  researchers: Researcher[] = [];
+  organizations: Organization[] = [];
+  expertises: Expertise[] = [];
+  searchFaculitie: string = '';
+  selectedFaculty: string | null = null;
+  selectedFacultyId: number | null = null;
+  selectedMajorId: number | null = null;
+  activeDropdown: string | null = null;
+
   constructor(
-    private router: Router, 
+    private router: Router,
     private authService: AuthService,
     private service: ResearchService,
+    private searchService: SearchService
   ) {}
 
   ngOnInit() {
@@ -142,122 +79,143 @@ export class UserResearchersComponent {
     this.loading = true;
     this.error = null;
 
-    this.service.getPublicData().subscribe({
+    this.searchService.getResearchers().subscribe({
       next: (res) => {
-        
-      }
-    })
+        this.organizations = res.data.organizations;
+        this.expertises = res.data.expertises;
+
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('โหลดข้อมูลล้มเหลว', err);
+        this.loading = false;
+      },
+    });
   }
   /** ===== SEARCH ===== */
   search() {
     this.isSearched = true;
-
-    this.filteredData = this.publications.filter((r) => {
-      const matchFaculty =
-        !this.selectedFaculty ||
-        this.selectedFaculty === 'ทั้งหมด' ||
-        r.faculty === this.selectedFaculty;
-
-      const matchMajor =
-        !this.selectedMajor ||
-        this.selectedMajor === 'ทั้งหมด' ||
-        r.major === this.selectedMajor;
-
-      const matchName =
-        !this.researcherName ||
-        r.name.toLowerCase().includes(this.researcherName.toLowerCase());
-
-      return matchFaculty && matchMajor && matchName;
+    this.loading = true;
+  
+    const payload: any = {};
+  
+    if (this.selectedFacultyId) {
+      payload.org_id = this.selectedFacultyId;
+    }
+  
+    if (this.selectedMajorId) {
+      payload.expertise_id = this.selectedMajorId;
+    }
+  
+    if (this.researcherName?.trim()) {
+      payload.q = this.researcherName.trim();
+    }
+  
+    this.searchService.searchResearchers(payload).subscribe({
+      next: (res) => {
+        this.filteredData = res.data.result;
+        this.filteredResearchers = res.data.result;
+        console.log('sund', payload);
+  
+        this.currentPage = 1;
+        this.updatePagination();
+        this.prepareDonutChart();
+  
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('ค้นหาล้มเหลว', err);
+        console.log('error body:', err.error); // 👈 ดู backend ส่งอะไรกลับมา
+        this.loading = false;
+      },
     });
-
-    this.currentPage = 1;
-    this.updatePagination();
-
-    this.prepareDonutChart(); // ⭐ ต้องอยู่หลัง filter
   }
 
   /** ===== DONUT CALCULATION (อิงข้อมูลตารางจริง) ===== */
   hasDonutData = false;
 
   prepareDonutChart() {
-    const data = this.filteredData; // ⭐ สำคัญมาก
-
-    if (!data || data.length === 0) {
-      this.hasDonutData = false;
-      this.donutSeries = [];
-      this.donutLabels = [];
-      this.totalResearchers = 0;
-      return;
-    }
-
-    const majorMap: Record<string, number> = {};
-
-    data.forEach((r) => {
-      const major = r.major || 'ไม่ระบุสาขา';
-      majorMap[major] = (majorMap[major] || 0) + 1;
+    const map: Record<string, number> = {};
+  
+    this.filteredData.forEach(r => {
+      const list = r.expertises
+        ? r.expertises.split(',')
+        : ['ไม่ระบุ'];
+  
+      list.forEach(exp => {
+        const key = exp.trim();
+        map[key] = (map[key] || 0) + 1;
+      });
     });
-
-    this.donutLabels = Object.keys(majorMap);
-    this.donutSeries = Object.values(majorMap);
-    this.totalResearchers = data.length;
+  
+    this.donutLabels = Object.keys(map);
+    this.donutSeries = Object.values(map);
+    this.totalResearchers = this.filteredData.length;
     this.hasDonutData = true;
   }
 
   toggleDropdown(name: string, event: MouseEvent) {
     event.stopPropagation();
-    this.openDropdown = this.openDropdown === name ? null : name;
+    this.activeDropdown = this.activeDropdown === name ? null : name;
   }
-
-  isOpen(name: string): boolean {
-    return this.openDropdown === name;
-  }
-
   @HostListener('document:click')
   closeAll() {
-    this.openDropdown = null;
+    this.activeDropdown = null;
   }
 
-  selectFaculities(f: string) {
-    this.selectedFaculty = f;
-    this.openDropdown = null;
+  selectFaculities(org: Organization) {
+    this.selectedFaculty = org.faculty;
+    this.selectedFacultyId = org.id;
     this.searchFaculitie = '';
+
+    this.activeDropdown = null;
   }
 
-  filteredFaculties(): string[] {
-    if (!this.searchFaculitie) return this.faculties;
+  filteredFaculties(): Organization[] {
+    if (!this.searchFaculitie) return this.organizations;
 
-    return this.faculties.filter((f) =>
-      f.toLowerCase().includes(this.searchFaculitie.toLowerCase())
+    return this.organizations.filter((org) =>
+      org.faculty.toLowerCase().includes(this.searchFaculitie.toLowerCase())
     );
   }
 
-  selectMajor(m: string) {
-    this.selectedMajor = m;
-    this.openDropdown = null;
+  selectMajor(exper: Expertise) {
+    this.selectedMajor = exper.name_th;
+    this.selectedMajorId = exper.expertise_id;
+    this.activeDropdown = null;
     this.searchMajor = '';
   }
 
-  filteredMajor(): string[] {
-    if (!this.searchMajor) return this.major;
+  filteredMajor(): Expertise[] {
+    if (!this.searchMajor) return this.expertises;
 
-    return this.major.filter((m) =>
-      m.toLowerCase().includes(this.searchMajor.toLowerCase())
+    return this.expertises.filter((exper) =>
+      exper.name_th.toLowerCase().includes(this.searchMajor.toLowerCase())
     );
   }
 
   onSearch(): void {
     const keyword = this.searchText.toLowerCase().trim();
 
-    this.filteredData = this.publications.filter(
-      (item) =>
-        item.faculty.toLowerCase().includes(keyword) ||
-        item.major.toLowerCase().includes(keyword) ||
-        item.name.toLowerCase().includes(keyword) ||
-        item.position.toLowerCase().includes(keyword)
-    );
-
+    if(this.selectedFacultyId || this.selectedMajorId || this.researcherName) {
+      this.search();
+      return;
+    }
+  
+    if (!keyword) {
+      this.filteredData = [...this.filteredResearchers];
+    } else {
+      this.filteredData = this.filteredResearchers.filter(item =>
+        (item.organization ?? '').toLowerCase().includes(keyword) ||
+        (item.expertises ?? '').toLowerCase().includes(keyword) ||
+        (item.name ?? '').toLowerCase().includes(keyword) ||
+        (item.position ?? '').toLowerCase().includes(keyword)
+      );
+    }
+  
     this.currentPage = 1;
     this.updatePagination();
+    this.prepareDonutChart();
   }
 
   updatePagination(): void {
@@ -267,20 +225,15 @@ export class UserResearchersComponent {
     this.paginationData = this.filteredData.slice(start, end);
   }
 
-  goToProfile() {
+  goToUserProfile(userId: number) {
     if (!this.authService.isLoggedIn()) {
-      this.router.navigateByUrl('/login');
+      this.router.navigate(['/login']);
       return;
     }
-    const user = this.authService.getUserFromStorage();
-    const base = this.authService.isAdmin() ? '/admin' : '/user';
-
-    // ถ้ามี id
-    if (user?.id) {
-      this.router.navigateByUrl(`${base}/profile/${user.id}`);
-    } else {
-      this.router.navigateByUrl(`${base}/profile`);
-    }
+  
+    const base = this.authService.isAdmin() ? 'admin' : 'user';
+  
+    this.router.navigate([`/${base}/profile-public`, userId]);
   }
 
   changePage(page: number) {
@@ -292,11 +245,13 @@ export class UserResearchersComponent {
   }
 
   get totalPages(): number {
-    return Math.ceil(this.filteredResearchers.length / this.pageSize);
+    return Math.ceil(this.filteredData.length / this.pageSize);
   }
+  
   get totalItems(): number {
-    return this.filteredResearchers.length;
+    return this.filteredData.length;
   }
+
   get pages(): number[] {
     return Array.from({ length: this.totalPages }, (_, i) => i + 1);
   }

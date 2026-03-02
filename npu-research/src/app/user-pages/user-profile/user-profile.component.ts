@@ -1,5 +1,5 @@
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { AuthService } from '../../services/auth.service';
 import { Address } from '../../models/data-performance.model';
@@ -197,7 +197,8 @@ export class UserProfileComponent implements OnInit {
     private router: Router,
     private authService: AuthService,
     private service: ProfileService,
-    private serviceEducation: EducationService
+    private serviceEducation: EducationService,
+    private route: ActivatedRoute,
   ) {
     this.pieChartOptions = {
       series: [44, 55, 13],
@@ -500,63 +501,6 @@ export class UserProfileComponent implements OnInit {
     this.updatePagination(); // 🔥 สำคัญมาก
   }
 
- // กราฟ
-//  updateChartsFromBar(): void {
-//   if (!this.barSummary || this.barSummary.length === 0) return;
-
-//   // 🔥 เรียงปี
-//   const sorted = [...this.barSummary].sort((a, b) => a.year - b.year);
-
-//   const years = sorted.map(item => item.year.toString());
-//   const projectData = sorted.map(item => item.project_count);
-//   const articleData = sorted.map(item => item.article_count);
-//   const innovationData = sorted.map(item => item.innovation_count);
-
-//   // ===== UPDATE BAR =====
-//   this.barChartOptions = {
-//     ...this.barChartOptions,
-//     series: [
-//       {
-//         name: 'โครงการวิจัย',
-//         data: projectData,
-//       },
-//       {
-//         name: 'บทความ',
-//         data: articleData,
-//       },
-//       {
-//         name: 'นวัตกรรม',
-//         data: innovationData,
-//       },
-//     ],
-//     xaxis: {
-//       categories: years,
-//     },
-//   };
-
-//   // ===== UPDATE PIE =====
-//   const projectTotal = projectData.reduce((a, b) => a + b, 0);
-//   const articleTotal = articleData.reduce((a, b) => a + b, 0);
-//   const innovationTotal = innovationData.reduce((a, b) => a + b, 0);
-
-//   this.pieChartOptions = {
-//     ...this.pieChartOptions,
-//     series: [projectTotal, articleTotal, innovationTotal],
-//   };
-// }
-
-// updatePieChart(): void {
-//   if (!this.donutSummary) return;
-
-//   this.pieChartOptions = {
-//     ...this.pieChartOptions,
-//     series: [
-//       this.donutSummary.projects_count,
-//       this.donutSummary.articles_count,
-//       this.donutSummary.innovations_count,
-//     ],
-//   };
-// }
 
   // Education
   save() {

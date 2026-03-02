@@ -191,21 +191,73 @@ export class PerformanceComponent {
     }
   }
 
+  // private handleResponseByType(res: any) {
+  //   switch (this.type) {
+  //     case 'article':
+  //       this.articleData = res.data.researchArticle;
+        
+  //       break;
+  
+  //     case 'project':
+  //       this.researchData = res.data.projectDetail;
+        
+  //       break;
+  
+  //     case 'innovation':
+  //       this.innovationData = res.data.researchInnovation;
+  //       break;
+  //   }
+  // }
   private handleResponseByType(res: any) {
     switch (this.type) {
+  
       case 'article':
         this.articleData = res.data.researchArticle;
+        console.log(this.articleData);
         
+  
+        if (this.articleData?.internal_members?.length) {
+          this.articleData.internal_members =
+            this.sortFirstAuthorFirst(this.articleData.internal_members);
+        }
         break;
   
       case 'project':
         this.researchData = res.data.projectDetail;
+        console.log(this.researchData);
+        
+  
+        if (this.researchData?.internal_members?.length) {
+          this.researchData.internal_members =
+            this.sortFirstAuthorFirst(this.researchData.internal_members);
+        }
         break;
   
       case 'innovation':
         this.innovationData = res.data.researchInnovation;
+  
+        if (this.innovationData?.internal_members?.length) {
+          this.innovationData.internal_members =
+            this.sortFirstAuthorFirst(this.innovationData.internal_members);
+        }
         break;
     }
+  }
+
+  private sortFirstAuthorFirst(members: any[]) {
+    return members.sort((a, b) => {
+      const isAFirst = a.role?.includes('First Author');
+      const isBFirst = b.role?.includes('First Author');
+  
+      if (isAFirst && !isBFirst) return -1;
+      if (!isAFirst && isBFirst) return 1;
+      return 0;
+    });
+  }
+
+  onImageError(event: Event) {
+    const img = event.target as HTMLImageElement;
+    img.src = '/assets/default_image.png';
   }
   
 }

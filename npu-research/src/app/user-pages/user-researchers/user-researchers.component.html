@@ -39,7 +39,7 @@
 
           <!-- Dropdown panel -->
           <div
-            *ngIf="isOpen('faculties')"
+            *ngIf="activeDropdown ==='faculties'"
             class="absolute z-50 w-full bg-white border rounded-md mt-1 shadow"
             (click)="$event.stopPropagation()"
           >
@@ -55,7 +55,7 @@
                 (click)="selectFaculities(f)"
                 class="px-4 py-2 hover:bg-yellow-50 cursor-pointer"
               >
-                {{ f }}
+                {{ f.faculty }}
               </li>
 
               <li
@@ -79,14 +79,14 @@
             class="w-full h-11 border border-gray-300 rounded-full px-6 flex justify-between items-center bg-white"
           >
             <span class="truncate">
-              {{ selectedMajor || "เลือกสาขาวิชา" }}
+              {{ selectedMajor || "เลือกสาขาวิชาที่เชี่ยวชาญ" }}
             </span>
             <i class="bi bi-chevron-down"></i>
           </button>
 
           <!-- Dropdown panel -->
           <div
-            *ngIf="isOpen('major')"
+            *ngIf="activeDropdown === 'major'"
             class="absolute z-50 w-full bg-white border rounded-md mt-1 shadow"
             (click)="$event.stopPropagation()"
           >
@@ -102,7 +102,7 @@
                 (click)="selectMajor(m)"
                 class="px-4 py-2 hover:bg-yellow-50 cursor-pointer"
               >
-                {{ m }}
+                {{ m.name_th }}
               </li>
 
               <li
@@ -124,6 +124,7 @@
           <!-- Input -->
           <input
             [(ngModel)]="researcherName"
+            (keyup.enter)="search()"
             type="text"
             placeholder="พิมพ์คำค้นหา ชื่อนักวิจัย"
             class="flex-1 px-6 border-none md:px-8 text-xl md:text-2xl outline-none"
@@ -169,8 +170,9 @@
           </h2>
         </div>
 
-        <ng-container *ngIf="hasDonutData; else noData">
+        <ng-container>
           <apx-chart
+            *ngIf="donutSeries.length > 0; else noData"
             [series]="donutSeries"
             [labels]="donutLabels"
             [chart]="donutChart"
@@ -179,7 +181,7 @@
         </ng-container>
 
         <ng-template #noData>
-          <div class="text-center text-red-500 py-16">ไม่พบข้อมูล</div>
+          <div class="text-center text-white py-16">ไม่พบข้อมูล</div>
         </ng-template>
       </div>
 
@@ -193,13 +195,17 @@
           </h2>
         </div>
 
-        <div class="space-y-1 ">
+        <div class="space-y-1 max-h-60 overflow-y-auto">
           <p
             *ngFor="let l of donutLabels; let i = index"
             class="flex justify-between md:px-8"
           >
             <span class="font-medium">{{ l }}</span
             ><span class="font-medium">{{ donutSeries[i] }} คน</span>
+          </p>
+
+          <p *ngIf="donutLabels.length === 0" class="text-center text-gray-500">
+            ไม่พบข้อมูล
           </p>
         </div>
 
@@ -243,10 +249,9 @@
               <th class="p-1 md:p-2 text-center">#</th>
               <th class="p-1 md:p-2 text-center">img</th>
               <th class="p-1 md:p-2 text-left">ชื่อ - นามสกุล</th>
-              <th class="p-1 md:p-2 text-center">สาขาวิชา</th>
+              <th class="p-1 md:p-2 text-center">สาขาวิชาที่เชี่ยวชาญ</th>
               <th class="p-1 md:p-2 text-center">หน่วยงาน</th>
               <th class="p-1 md:p-2 text-center">ตำแหน่ง</th>
-              <th class="p-1 md:p-2 text-center">Action</th>
             </tr>
           </thead>
 
@@ -255,30 +260,24 @@
               *ngFor="let r of paginationData; let i = index"
               class="hover:bg-gray-50 bg-gray-200 border-b border-gray-300"
             >
-              <td class="p-1 md:p-2 text-center">{{ i + 1 }}</td>
+              <td class="p-1 md:p-2 text-center">{{ (currentPage - 1) * pageSize + i + 1 }}</td>
 
               <td class="p-1 md:p-2 text-center">
                 <div
-                  class="mx-auto w-16 h-16 rounded-full border border-amber-400 flex items-center justify-center"
+                  class="mx-auto w-16 h-16 rounded-full flex items-center justify-center"
                 >
                   <img
-                    src="/assets/logoNPU.png"
+                    [src]="r.avatar ?? '/assets/default_profile.png'"
                     alt="logo"
-                    class="w-12 h-12 object-contain"
+                    class="w-12 h-12 rounded-full object-contain"
                   />
                 </div>
               </td>
 
-              <td class="p-1 md:p-2">{{ r.name }}</td>
-              <td class="p-1 md:p-2 text-center">{{ r.major }}</td>
-              <td class="p-1 md:p-2 text-center">{{ r.faculty }}</td>
+              <td (click)="goToUserProfile(r.id)" class="p-1 md:p-2 cursor-pointer text-blue-700 hover:underline">{{ r.name }}</td>
+              <td class="p-1 md:p-2 text-center">{{ r.expertises || '-' }}</td>
+              <td class="p-1 md:p-2 text-center">{{ r.organization || '-' }}</td>
               <td class="p-1 md:p-2 text-center">{{ r.position }}</td>
-              <td class="p-1 md:p-2 text-center">
-                <i
-                  (click)="goToProfile()"
-                  class="bi bi-person text-lg cursor-pointer text-blue-500 hover:text-blue-300"
-                ></i>
-              </td>
             </tr>
 
             <tr *ngIf="paginationData.length === 0">

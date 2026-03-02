@@ -5,6 +5,7 @@ import { ResearchListResponse } from '../models/profile-project.model';
 import { Observable } from 'rxjs';
 import { GeneralInfoResponse } from '../models/edit-general.model';
 import { UserProfileResponse } from '../models/profiledetai.model';
+import { ResearchProfileResponse } from '../models/get-profile-by-id.model';
 
 export interface UserProfile {
   data: any;
@@ -34,6 +35,12 @@ export class ProfileService {
   // ✅ ดึงข้อมูลโปรไฟล์
   getProfile() {
     return this.http.get<UserProfileResponse>(this.baseUrl);
+  }
+
+  getProfileById(id: number) {
+    return this.http.get<ResearchProfileResponse>(
+      `${this.baseUrl}/by-id/${id}`
+    );
   }
 
   // ✅ อัปเดตข้อมูลโปรไฟล์

@@ -41,10 +41,11 @@ export interface Owner {
 
 export interface SearchResearchRequest {
   keyword?: string;
-  organization_id?: number;
+  org_id?: number;
+  funding?: string;
   subject_area_id?: number;
   type?: 'ARTICLE' | 'PROJECT' | 'INNOVATION';
   year?: number;
-  start_date?: string; // 👈 เพิ่ม
-  end_date?: string;
+  date_from?: string; // 👈 เพิ่ม
+  date_to?: string;
 }

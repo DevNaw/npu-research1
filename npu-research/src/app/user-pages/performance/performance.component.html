@@ -13,7 +13,7 @@
         <div>
         <p class="text-xl md:text-2xl opacity-80">โครงการวิจัย</p>
         <h1 class="text-2xl md:text-3xl mt-1">
-          {{ researchData?.title_th }}
+          {{ researchData?.title_th  }}
         </h1></div>
 
         <div class="mt-4 text-center flex justify-end">
@@ -31,23 +31,24 @@
         <!-- Left: Cover Image -->
         <div class="md:col-span-1">
           <div
-            class="bg-gray-200 rounded-xl shadow-inner flex items-center justify-center h-80 overflow-hidden cursor-pointer relative"
+            class="bg-gray-200 rounded-xl shadow-inner flex items-center justify-center h-90 overflow-hidden cursor-pointer relative"
             (click)="fileInput.click()"
           >
             <!-- ถ้ามีรูป -->
-            <ng-container
-              *ngIf="previewImage || researchData?.img_url; else noImage"
-            >
+            <ng-container *ngIf="previewImage || researchData?.img_url; else noImage">
               <img
                 [src]="previewImage || researchData?.img_url"
+                (error)="onImageError($event)"
                 class="w-full h-full object-cover rounded-xl"
               />
             </ng-container>
-
-            <!-- ถ้าไม่มีรูป -->
+            
             <ng-template #noImage>
               <div class="text-center text-gray-500">
-                <i class="bi bi-image text-7xl mx-auto mb-2"></i>
+                <img
+                  src="/assets/default_img.png"
+                  class="w-full h-80 mx-auto opacity-70"
+                />
                 <p class="text-xl">คลิกเพื่อเลือกรูป</p>
               </div>
             </ng-template>
@@ -111,6 +112,7 @@
                       <th class="p-1 md:p-2 text-left">ประเภทความรับผิดชอบ</th>
                     </tr>
                   </thead>
+                   
                   <tbody class="divide-y" *ngIf="(researchData?.internal_members?.length ?? 0) > 0; else noData">
                     <tr *ngFor="let internal of researchData?.internal_members; let i = index" class="bg-gray-200 border-b border-gray-300">
                       <td class="p-1 md:p-2">{{ i + 1 }}</td>
@@ -303,7 +305,7 @@
           <!-- Left: Cover Image -->
           <div class="md:col-span-1">
             <div
-              class="bg-gray-200 rounded-xl shadow-inner flex items-center justify-center h-80 overflow-hidden cursor-pointer relative"
+              class="rounded-xl flex items-center justify-center h-90 w-full bg-white overflow-hidden cursor-pointer relative"
               (click)="fileInput.click()"
             >
               <!-- ถ้ามีรูป -->
@@ -312,14 +314,18 @@
               >
                 <img
                   [src]="previewImage || articleData?.img_url"
-                  class="w-full h-full object-cover rounded-xl"
+                  (error)="onImageError($event)"
+                  class="w-full h-80 mb-3 object-cover rounded-xl"
                 />
               </ng-container>
 
               <!-- ถ้าไม่มีรูป -->
               <ng-template #noImage>
                 <div class="text-center text-gray-500">
-                  <i class="bi bi-image text-7xl mx-auto mb-2"></i>
+                  <img
+                  src="/assets/default_img.png"
+                  class="w-full h-80 mx-auto opacity-70"
+                />
                   <p class="text-xl">คลิกเพื่อเลือกรูป</p>
                 </div>
               </ng-template>
@@ -567,7 +573,7 @@
           <!-- Left: Cover Image -->
           <div class="md:col-span-1">
             <div
-              class="bg-gray-200 rounded-xl shadow-inner flex items-center justify-center h-80 overflow-hidden cursor-pointer relative"
+              class="bg-gray-200 rounded-xl shadow-inner flex items-center justify-center h-90 overflow-hidden cursor-pointer relative"
               (click)="fileInput.click()"
             >
               <!-- ถ้ามีรูป -->
@@ -576,6 +582,7 @@
               >
                 <img
                   [src]="previewImage || innovationData?.img_url"
+                  (error)="onImageError($event)"
                   class="w-full h-full object-cover rounded-xl"
                 />
               </ng-container>
@@ -583,7 +590,10 @@
               <!-- ถ้าไม่มีรูป -->
               <ng-template #noImage>
                 <div class="text-center text-gray-500">
-                  <i class="bi bi-image text-7xl mx-auto mb-2"></i>
+                  <img
+                  src="/assets/default_img.png"
+                  class="w-full h-80 mx-auto mb-3 opacity-70"
+                />
                   <p class="text-xl">คลิกเพื่อเลือกรูป</p>
                 </div>
               </ng-template>

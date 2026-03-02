@@ -43,6 +43,7 @@ import { ReportComponent } from './general/report/report.component';
 import { EditWorkComponent } from './user-pages/edit-work/edit-work.component';
 import { PerformanceByDepartmentComponent } from './general/performance-by-department/performance-by-department.component';
 import { PerformanceDetailByDepartmentComponent } from './general/performance-detail-by-department/performance-detail-by-department.component';
+import { DashboardComponent } from './admin-pages/dashboard/dashboard.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -66,6 +67,7 @@ const routes: Routes = [
       { path: 'research/:id', component: ResearchComponent },
       { path: 'report-researcher', component: ReportResearcherTypeComponent },
       { path: 'profile/:id', component: UserProfileComponent },
+      { path: 'profile-public/:id', component: DashboardComponent },
       { path: 'performance-by-departmaent/:type', component: PerformanceByDepartmentComponent },
       { path: 'performance-detail-by-departmaent/:type/:id', component: PerformanceDetailByDepartmentComponent },
       {
@@ -105,6 +107,7 @@ const routes: Routes = [
       { path: 'researchers', component: UserResearchersComponent },
       { path: 'profile', component: UserProfileComponent },
       { path: 'profile/:id', component: UserProfileComponent },
+      { path: 'profile-public/:id', component: DashboardComponent },
       { path: 'edit-addres', component: UserEditAddressComponent },
       { path: 'edit-profile', component: UserEditProfileComponent },
       { path: 'edit-study', component: UserEditStudyComponent },
@@ -133,6 +136,7 @@ const routes: Routes = [
       { path: 'news/edit/:id', component: NewsEditComponent },
       { path: 'profile', component: UserProfileComponent },
       { path: 'profile/:id', component: UserProfileComponent },
+      { path: 'profile-public/:id', component: DashboardComponent },
       { path: 'edit-profile', component: UserEditProfileComponent },
       { path: 'edit-address', component: UserEditAddressComponent },
       { path: 'edit-study', component: UserEditStudyComponent },

@@ -1,1 +1,697 @@
-<p>dashboard works!</p>
+<div class="contain-content bg-gray-100 p-5 md:p-6 min-h-screen text-2xl font-bold text-[#394250]">
+    <!-- Heaer -->
+    <div class="flex items-center mx-auto md:px-10">
+      <div
+        class="border-2 border-yellow-500 rounded-full items-center flex justify-center mr-4"
+      >
+        <img src="/assets/logoNPU.png" class="w-20 h-20 md:w-30 md:h-30" />
+      </div>
+      <div>
+        <h1 class="text-4xl md:text-5xl leading-none">{{ profileDataById?.user?.full_name }}</h1>
+        <h2 class="text-2xl italic leading-none">{{ profileDataById?.user?.full_name}}</h2>
+      </div>
+    </div>
+  
+    <!-- Main Layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 md:gap-6 md:px-8 mx-auto mt-3 md:mt-6 text-[#394250]">
+      <!-- Left -->
+      <div class="lg:col-span-4 space-y-5">
+        <!-- ประวัติส่วนตัว -->
+        <div class="bg-white rounded-xl shadow-md px-6 py-8 w-full max-w-full mb-2 md:mb-5">
+          <!-- Header (Clickable) -->
+          <div
+            class="flex items-center justify-between cursor-pointer"
+            (click)="isPersonalOpen = !isPersonalOpen"
+          >
+            <div class="flex items-center gap-3">
+              <div class="text-2xl">
+                <i class="bi bi-person"></i>
+              </div>
+              <h2>
+                ข้อมูลประวัติทั่วไป
+              </h2>
+            </div>
+  
+            <div class="flex items-center gap-3">
+              <!-- Arrow -->
+              <i
+                class="bi bi-chevron-down text-xl transition-transform duration-300"
+                [class.rotate-180]="isPersonalOpen"
+              ></i>
+            </div>
+          </div>
+  
+          <!-- Divider -->
+          <hr class="my-4 text-gray-400" />
+  
+          <!-- Dropdown Content -->
+          <div *ngIf="isPersonalOpen" class="transition-all duration-300">
+            <ul class="space-y-3 text-gray-600 font-medium" *ngIf="profileDataById?.user?.generalInfo as info; else noData">
+              <li class="flex gap-2 flex-wrap">
+                <span class="text-gray-400 font-bold"> • วันเดือนปีเกิด : </span>
+                {{ profileDataById?.user?.generalInfo?.date_of_birth || '---' }}
+              </li>
+  
+              <li class="flex gap-2 flex-wrap">
+                <span class="text-gray-400 font-bold"> • อายุ : </span>
+                {{ profileDataById?.user?.generalInfo?.age || '---' }}
+              </li>
+  
+              <li class="flex gap-2 flex-wrap">
+                <span class="text-gray-400 font-bold"> • เชื้อชาติ : </span>
+                {{ profileDataById?.user?.generalInfo?.ethnicity || '---' }}
+              </li>
+  
+              <li class="flex gap-2 flex-wrap">
+                <span class="text-gray-400 font-bold"> • สัญชาติ : </span>
+                {{ profileDataById?.user?.generalInfo?.nationality || '---' }}
+              </li>
+  
+              <li class="flex gap-2 flex-wrap">
+                <span class="text-gray-400 font-bold"> • ศาสนา : </span>
+                {{ profileDataById?.user?.generalInfo?.religion || '---' }}
+              </li>
+            </ul>
+            <!-- ไม่มีข้อมูล -->
+            <ng-template #noData>
+              <div class="text-red-500 text-center font-semibold py-4">
+                ไม่พบข้อมูล
+              </div>
+            </ng-template>
+          </div>
+        </div>
+  
+        <!-- ข้อมูลการทำงาน -->
+        <div class="bg-white rounded-xl shadow-md px-6 py-8 w-full max-w-full mb-2 md:mb-5">
+          <!-- Header -->
+          <div
+            class="flex items-center justify-between cursor-pointer"
+            (click)="isWorkOpen = !isWorkOpen"
+          >
+            <div class="flex items-center gap-3">
+              <div class="text-2xl">
+                <i class="bi bi-briefcase-fill"></i>
+              </div>
+              <h2 class="text-2xl">ข้อมูลการทำงาน</h2>
+            </div>
+  
+            <div class="flex items-center gap-3">
+              <!-- Arrow -->
+              <i
+                class="bi bi-chevron-down text-xl transition-transform duration-300"
+                [class.rotate-180]="isWorkOpen"
+              ></i>
+            </div>
+          </div>
+  
+          <hr class="my-4 text-gray-400" />
+  
+          <div *ngIf="isWorkOpen" class="transition-all duration-300">
+            
+            <!-- Content -->
+            <ul class="space-y-3 text-gray-600 font-medium" *ngIf="profileDataById?.user?.workInfo as info; else noDataWorkInfo">
+              <li class="flex gap-2 flex-wrap wrap-break-word">
+                <span class="text-gray-400 font-bold">• ตำแหน่ง :</span>
+                {{ profileDataById?.user?.workInfo?.position }}
+              </li>
+              <li class="flex gap-2 flex-wrap wrap-break-word">
+                <span class="text-gray-400 font-bold">• สังกัด :</span>
+                {{ profileDataById?.user?.workInfo?.organization }}
+              </li>
+              <li class="flex gap-2 flex-wrap wrap-break-word">
+                <span class="text-gray-400 font-bold">• ประเภท :</span>
+                {{ profileDataById?.user?.workInfo?.type }}
+              </li>
+              <li class="flex gap-2 flex-wrap wrap-break-word">
+                <span class="text-gray-400 font-bold">• สายงาน :</span>
+                {{ profileDataById?.user?.workInfo?.line_work }}
+              </li>
+              <li class="flex gap-2 flex-wrap wrap-break-word">
+                <span class="text-gray-400 font-bold">• ตำแหน่งทางวิชาการ :</span>
+                {{ profileDataById?.user?.workInfo?.academic_position }}
+              </li>
+              <li class="flex gap-2 flex-wrap wrap-break-word">
+                <span class="text-gray-400 font-bold">• ความความสนใจ :</span>
+                {{ profileDataById?.user?.workInfo?.interest }}
+              </li>
+              <li class="flex gap-2 flex-wrap wrap-break-word">
+                <span class="text-gray-400 font-bold"
+                  >• สาขาวิชาที่เชี่ยวชาญ :</span
+                >
+                {{ profileDataById?.user?.workInfo?.expertises }}
+              </li>
+              <li class="flex gap-2 flex-wrap wrap-break-word">
+                <span class="text-gray-400 font-bold">• วันที่เริ่มงาน :</span>
+                {{ profileDataById?.user?.workInfo?.work_start_date }}
+              </li>
+              <li class="flex gap-2 flex-wrap wrap-break-word">
+                <span class="text-gray-400 font-bold">• อายุงาน :</span>
+                {{ profileDataById?.user?.workInfo?.year_of_service }} ปี
+              </li>
+            </ul>
+
+            <!-- ไม่มีข้อมูล -->
+            <ng-template #noDataWorkInfo>
+              <div class="text-red-500 text-center font-semibold py-4">
+                ไม่พบข้อมูล
+              </div>
+            </ng-template>
+          </div>
+        </div>
+  
+        <!-- ข้อมูลการศึกษา -->
+        <div class="bg-white rounded-xl shadow-md px-6 py-8 w-full max-w-full mb-2 md:mb-5">
+          <!-- Header -->
+          <div
+            class="flex items-center justify-between cursor-pointer"
+            (click)="isEducation = !isEducation"
+          >
+            <div class="flex items-center gap-3">
+              <div class="text-2xl">
+                <i class="bi bi-mortarboard"></i>
+              </div>
+              <h2 class="text-2xl">ข้อมูลการศึกษา</h2>
+            </div>
+            <div class="flex items-center gap-3">
+              <i
+                class="bi bi-chevron-down text-xl transition-transform duration-300"
+                [class.rotate-180]="isEducation"
+              ></i>
+            </div>
+          </div>
+  
+          <hr class="my-4 text-gray-400" />
+  
+          <div *ngIf="isEducation" class="transition-all duration-300">
+            
+            <!-- Content -->
+            <ul class="space-y-3 text-gray-600 font-medium" *ngIf="profileDataById?.user?.workInfo as info; else noDataEducationalInfo">
+              <li class="flex gap-2 flex-wrap wrap-break-word">
+                <span class="text-gray-400 font-bold">• การศึกษาสูงสุด :</span>
+                {{profileDataById?.user?.educationalInfo?.highest_education}}
+              </li>
+              <li class="flex gap-2 flex-wrap wrap-break-word">
+                <span class="text-gray-400 font-bold">• สาขาวิชา :</span>
+                {{ profileDataById?.user?.educationalInfo?.field_of_study }}
+              </li>
+              <li class="flex gap-2 flex-wrap wrap-break-word">
+                <span class="text-gray-400 font-bold">• คุณวุฒิ :</span>
+                {{ profileDataById?.user?.educationalInfo?.qualification }}
+              </li>
+              <li class="flex gap-2 flex-wrap wrap-break-word">
+                <span class="text-gray-400 font-bold">• GPA :</span>
+                {{ profileDataById?.user?.educationalInfo?.gpa }}
+              </li>
+              <li class="flex gap-2 flex-wrap wrap-break-word">
+                <span class="text-gray-400 font-bold">• สถานศึกษา :</span>
+                {{ profileDataById?.user?.educationalInfo?.institution }}
+              </li>
+              <li class="flex gap-2 flex-wrap wrap-break-word">
+                <span class="text-gray-400 font-bold"
+                  >• วันที่/เดือน/ปี ที่เข้าศึกษา :</span
+                >
+                {{ profileDataById?.user?.educationalInfo?.date_enrollment }}
+              </li>
+              <li class="flex gap-2 flex-wrap wrap-break-word">
+                <span class="text-gray-400 font-bold"
+                  >• วันที่/เดือน/ปี ที่สำเร็จการศึกษา :</span
+                >
+                {{ profileDataById?.user?.educationalInfo?.date_graduation}}
+              </li>
+            </ul>
+
+            <!-- ไม่มีข้อมูล -->
+            <ng-template #noDataEducationalInfo>
+              <div class="text-red-500 text-center font-semibold py-4">
+                ไม่พบข้อมูล
+              </div>
+            </ng-template>
+          </div>
+        </div>
+  
+        <!-- ข้อมูลการฝึกอบรม -->
+        <div class="bg-white rounded-xl shadow-md px-6 py-8 w-full max-w-full mb-2 md:mb-5">
+          <!-- Header -->
+          <div
+            class="flex items-center justify-between cursor-pointer"
+            (click)="isTraining = !isTraining"
+          >
+            <div class="flex items-center gap-3">
+              <div class="text-2xl">
+                <i class="bi bi-backpack4-fill"></i>
+              </div>
+              <h2 class="text-2xl">ข้อมูลการฝึกอบรม</h2>
+            </div>
+  
+            <div class="flex items-center gap-3">
+              <!-- Arrow -->
+              <i
+                class="bi bi-chevron-down text-xl transition-transform duration-300"
+                [class.rotate-180]="isTraining"
+              ></i>
+            </div>
+          </div>
+  
+          <hr class="my-4 text-gray-400" />
+  
+          <div *ngIf="isTraining" class="transtion-all duration-300">
+            <div class="flex justify-end">
+              <!-- Edit Button -->
+              <button
+                class="bg-[#FDE68A] hover:bg-[#FACC15] hover:text-white rounded-xl w-10 h-10 flex items-center justify-center shadow cursor-pointer"
+                (click)="goToEditTraning()"
+              >
+                <i class="bi bi-pencil-square"></i>
+              </button>
+            </div>
+            <!-- Content -->
+            <ul
+              *ngIf="trainings.length > 0; else noTraining"
+              class="space-y-3 text-gray-600 font-medium"
+            >
+              <li
+                *ngFor="let item of trainings"
+                class="flex gap-2 flex-wrap wrap-break-word"
+              >
+                <span class="text-gray-400 font-bold">
+                  • {{ item.title }} :
+                </span>
+                {{ item.value }}
+              </li>
+            </ul>
+  
+            <!-- ไม่มีข้อมูล -->
+            <ng-template #noTraining>
+              <div class="text-red-500 text-center font-semibold py-4">
+                ไม่พบข้อมูล
+              </div>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+  
+      <!-- ข้อมูลผลงาน -->
+      <div class="lg:col-span-8">
+        <div class="bg-white rounded-2xl shadow-lg">
+          <!-- Header -->
+          <div
+            class="flex items-center gap-3 md:mb-6 bg-[#394250] text-white p-3 rounded-t-2xl"
+          >
+            <i class="bi bi-pie-chart-fill text-3xl"></i>
+            <h2 class="font-semibold">ข้อมูลผลงาน</h2>
+          </div>
+  
+          <div class="p-2 md:p-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-2 md:gap-6">
+              <!-- PIE CARD -->
+              <div
+                class="bg-white rounded-xl shadow-md p-4 hover:shadow-lg transition border border-gray-300"
+              >
+                <div class="flex items-center justify-between md:mb-4">
+                  <h3 class="text-2xl">
+                    สัดส่วนข้อมูล
+                  </h3>
+                  <i class="bi bi-pie-chart-fill text-indigo-500 text-xl"></i>
+                </div>
+  
+                <!-- Chart Center -->
+                <div class="flex justify-center items-center">
+                  <apx-chart class="text-white"
+                    [series]="pieChartOptions.series!"
+                    [chart]="pieChartOptions.chart!"
+                    [labels]="pieChartOptions.labels!"
+                    [legend]="pieChartOptions.legend!"
+                    [dataLabels]="pieChartOptions.dataLabels!"
+                    [responsive]="pieChartOptions.responsive!"
+                  ></apx-chart>
+                </div>
+              </div>
+  
+              <!-- BAR CARD -->
+              <div
+                class="bg-white rounded-xl shadow-md p-4 hover:shadow-lg transition border border-gray-300"
+              >
+                <div class="flex items-center justify-between md:mb-4">
+                  <h3 class="text-2xl">
+                    สถิติรายปี
+                  </h3>
+                  <i class="bi bi-bar-chart-fill text-emerald-500 text-xl"></i>
+                </div>
+  
+                <apx-chart
+                  [series]="barChartOptions.series!"
+                  [chart]="barChartOptions.chart!"
+                  [plotOptions]="barChartOptions.plotOptions!"
+                  [dataLabels]="barChartOptions.dataLabels!"
+                  [xaxis]="barChartOptions.xaxis!"
+                  [yaxis]="barChartOptions.yaxis!"
+                  [legend]="barChartOptions.legend!"
+                  [fill]="barChartOptions.fill!"
+                  [stroke]="barChartOptions.stroke!"
+                  [tooltip]="barChartOptions.tooltip!"
+                ></apx-chart>
+              </div>
+            </div>
+  
+            <div class="flex flex-wrap gap-2 mt-4 mb-4 md:mt-8 items-center">
+  
+              <!-- Tabs -->
+              <div class="flex flex-wrap gap-2 items-center">
+                <button
+                  *ngFor="let tab of tabs"
+                  (click)="changeTab(tab.key)"
+                  [ngClass]="
+                    selectedTab === tab.key
+                      ? 'bg-[#FDE68A] text-[#394250] shadow'
+                      : 'text-[#394250] hover:bg-[#FDE68A]/70'
+                  "
+                  class="flex items-center gap-2 px-2 py-1 md:px-5 md:py-2.5 rounded-xl transition-all duration-200 cursor-pointer"
+                >
+                  <i class="bi {{ tab.icon }} text-lg"></i>
+                  <span>{{ tab.label }}</span>
+                </button>
+              </div>
+            
+              <!-- Search -->
+              <div class="flex items-center w-full md:w-auto mt-2 md:mt-0 justify-end md:ml-auto">
+                <span>Search:</span>
+                <input
+                  type="text"
+                  [(ngModel)]="searchText"
+                  (input)="onSearch()"
+                  class="border rounded px-2 py-1 ml-2 text-xl font-medium"
+                  placeholder="ค้นหา..."
+                />
+              </div>
+            
+            </div>
+  
+            <!-- Table -->
+            <div class="overflow-x-auto bg-white shadow-md">
+              <table class="w-full text-gray-700">
+                <!-- Header -->
+                <thead class="bg-linear-to-r bg-[#394250] text-white">
+                  <tr>
+                    <th class="px-4 py-3 w-16 text-center font-semibold">#</th>
+                    <th class="px-4 py-3 text-left font-semibold">ชื่อผลงาน</th>
+                    <th class="px-4 py-3 w-28 text-center font-semibold">
+                      Action
+                    </th>
+                  </tr>
+                </thead>
+  
+                <!-- Body -->
+                <tbody>
+                  <!-- มีข้อมูล -->
+                  <tr
+                    *ngFor="let item of paginationData; let i = index"
+                    class="border-b border-gray-300 hover:bg-indigo-50 transition"
+                    
+                  >
+                    <!-- Index -->
+                    <td class="text-center py-4 font-medium">
+                      {{ (currentPage - 1) * pageSize + i + 1 }}
+                    </td>
+  
+                    <!-- Title -->
+                    <td class="px-4 py-3">
+                      <div
+                        class="font-medium text-indigo-600 hover:underline cursor-pointer truncate max-w-125 "
+                        title="{{ item.title_th }}"
+                        (click)="viewItem(item.research_id)"
+                      >
+                        {{ item.title_th }}
+                      </div>
+  
+                      <div
+                        class="text-lg text-gray-500 mt-1 flex items-center gap-1 font-medium"
+                      >
+                        <i class="bi bi-calendar-event"></i>
+                        วันที่สร้าง: {{ item.published_date | date: 'dd MMMM YYYY' : '' : 'TH-th' }}
+                      </div>
+                    </td>
+  
+                    <!-- Actions -->
+                    <td class="text-center py-3">
+                      <button
+                        class="inline-flex items-center justify-center w-9 h-9 rounded-full bg-blue-50 hover:bg-blue-100 text-blue-600 transition mr-1 cursor-pointer"
+                        (click)="editItem(item.research_id)"
+                        title="แก้ไข"
+                      >
+                        <i class="bi bi-pencil-square"></i>
+                      </button>
+  
+                      <button
+                        class="inline-flex items-center justify-center w-9 h-9 rounded-full bg-red-50 hover:bg-red-100 text-red-600 transition cursor-pointer"
+                        (click)="deleteItem(item.research_id)"
+                        title="ลบ"
+                      >
+                        <i class="bi bi-trash3"></i>
+                      </button>
+                    </td>
+                  </tr>
+  
+                  <!-- No Data -->
+                  <tr *ngIf="paginationData.length === 0">
+                    <td colspan="3" class="text-center py-12 text-red-500">
+                      <i class="bi bi-folder-x text-4xl block mb-3"></i>
+                      ไม่พบข้อมูล
+                    </td>
+                  </tr>
+                </tbody>
+  
+                <!-- No Data -->
+                <ng-template #noData>
+                  <tbody>
+                    <tr>
+                      <td colspan="3" class="text-center py-12 text-red-500">
+                        <i class="bi bi-folder-x text-4xl block mb-3"></i>
+                        ไม่พบข้อมูล
+                      </td>
+                    </tr>
+                  </tbody>
+                </ng-template>
+              </table>
+            </div>
+  
+            <!-- Pagination -->
+            <div
+              class="flex items-center justify-between mt-4 text-lg text-gray-600"
+            >
+              <div>Showing 1 to 1 of 1 entries</div>
+  
+              <div class="flex items-center gap-2 text-lg">
+                <button class="border px-3 rounded cursor-pointer">‹</button>
+                <button class="border bg-[#FDE68A] px-3 rounded">
+                  1
+                </button>
+                <button class="border px-3 rounded cursor-pointer">›</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- ====== Modal Edit ====== -->
+  <div
+    *ngIf="isModalOpen"
+    class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center text-2xl text-[#394250]"
+  >
+    <!-- Modal Box -->
+    <div class="bg-white w-full max-w-xl rounded-2xl shadow-xl p-6 relative">
+      <!-- Header -->
+      <div class="flex items-center justify-between border-b pb-3 mb-5">
+        <h2 class="font-bold">
+          {{ isEditMode ? "แก้ไขข้อมูลการศึกษา" : "เพิ่มข้อมูลการศึกษา" }}
+        </h2>
+        <button
+          (click)="closeModal()"
+          class="text-gray-400 hover:text-gray-600 transition cursor-pointer"
+        >
+          <i class="bi bi-x-lg text-lg"></i>
+        </button>
+      </div>
+  
+      <!-- Content -->
+      <div class="space-y-4">
+        <!-- ====== Education Level ===== -->
+        <div class="relative">
+          <label class="mb-1 block">ระดับการศึกษา</label>
+          <button
+            (click)="toggle('education', $event)"
+            class="flex justify-between items-center w-full border rounded-lg px-3 py-2 hover:border-indigo-500 transition"
+          >
+            <span class="text-gray-700">
+              {{ educationData.highest_education || "เลือก" }}
+            </span>
+            <i class="bi bi-chevron-down text-sm"></i>
+          </button>
+  
+          <div
+            *ngIf="isOpen('education')"
+            (click)="$event.stopPropagation()"
+            class="absolute z-50 w-full bg-white border rounded-lg shadow mt-1"
+          >
+            <input
+              [(ngModel)]="searchEducationLevel"
+              placeholder="ค้นหา..."
+              class="w-full px-3 py-2 border-b outline-none"
+            />
+            <ul class="max-h-44 overflow-y-auto">
+              <!-- <li
+                *ngFor="let e of filteredEducationLevel()"
+                (click)="selectEducationLevel(e)"
+                class="px-4 py-2 hover:bg-indigo-50 cursor-pointer"
+              >
+                {{ e }}
+              </li> -->
+              <!-- <li
+                *ngIf="filteredEducationLevel().length === 0"
+                class="px-4 py-2 text-gray-400 text-center"
+              >
+                ไม่พบข้อมูล
+              </li> -->
+            </ul>
+          </div>
+        </div>
+  
+        <!-- ====== Major & Qualification ===== -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Major -->
+          <div class="relative">
+            <label class="mb-1 block">สาขา</label>
+            <button
+              (click)="toggle('majors', $event)"
+              class="flex justify-between items-center w-full border rounded-lg px-3 py-2"
+            >
+              {{ educationData.field_of_study || "เลือก" }}
+              <i class="bi bi-chevron-down text-sm"></i>
+            </button>
+  
+            <div
+              *ngIf="isOpen('majors')"
+              (click)="$event.stopPropagation()"
+              class="absolute z-50 w-full bg-white border rounded-lg shadow mt-1"
+            >
+              <input
+                [(ngModel)]="searchMajors"
+                placeholder="ค้นหา..."
+                class="w-full px-3 py-2 border-b"
+              />
+              <ul class="max-h-44 overflow-y-auto">
+                <!-- <li
+                  *ngFor="let m of filteredMajor()"
+                  (click)="selectMajor(m)"
+                  class="px-4 py-2 hover:bg-indigo-50 cursor-pointer"
+                >
+                  {{ m }}
+                </li> -->
+              </ul>
+            </div>
+          </div>
+  
+          <!-- Qualification -->
+          <div class="relative">
+            <label class="mb-1 block">คุณวุฒิ</label>
+            <button
+              (click)="toggle('qualifications', $event)"
+              class="flex justify-between items-center w-full border rounded-lg px-3 py-2"
+            >
+              {{ educationData.qualification || "เลือก" }}
+              <i class="bi bi-chevron-down text-sm"></i>
+            </button>
+  
+            <div
+              *ngIf="isOpen('qualifications')"
+              (click)="$event.stopPropagation()"
+              class="absolute z-50 w-full bg-white border rounded-lg shadow mt-1"
+            >
+              <input
+                [(ngModel)]="searchQualifications"
+                placeholder="ค้นหา..."
+                class="w-full px-3 py-2 border-b"
+              />
+              <ul class="max-h-44 overflow-y-auto">
+                <!-- <li
+                  *ngFor="let q of filteredQualification()"
+                  (click)="selectQualification(q)"
+                  class="px-4 py-2 hover:bg-indigo-50 cursor-pointer"
+                >
+                  {{ q }}
+                </li> -->
+              </ul>
+            </div>
+          </div>
+        </div>
+  
+        <!-- ===== Institution & Country ===== -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Institution -->
+          <div class="relative">
+            <label class="mb-1 block">สถานที่ศึกษา</label>
+            <input
+              [(ngModel)]="educationData.institution"
+              type="text"
+              placeholder="ชื่อสถานที่ศึกษา"
+              class="w-full border rounded-lg px-3 py-2 text-2xl"
+            />
+          </div>
+  
+          <div>
+            <label class="mb-1 block">เกรดเฉลี่ย</label>
+            <input
+              [(ngModel)]="educationData.gpa"
+              type="text"
+              placeholder="เกรดเฉลี่ย"
+              class="w-full border rounded-lg px-3 py-2 text-2xl"
+            />
+          </div>
+        </div>
+  
+        <!-- ===== GPA & Year ===== -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="mb-1 block">ปีที่เข้าศึกษา</label>
+            <input
+            [(ngModel)]="educationData.date_enrollment"
+            type="date"
+            placeholder="ปีที่เข้าศึกษา"
+            class="w-full border rounded-lg px-3 py-2 text-2xl"
+          />
+          </div>
+  
+          <div>
+            <label class="mb-1 block">ปีที่สำเร็จการศึกษา</label>
+            <input
+            [(ngModel)]="educationData.date_graduation"
+            type="date"
+            placeholder="ปีที่สำเร็จการศึกษา"
+            class="w-full border rounded-lg px-3 py-2 text-2xl"
+          />
+          </div>
+         
+          
+        </div>
+      </div>
+  
+      <!-- Footer -->
+      <div class="flex justify-center gap-3 mt-6 pt-4 border-t">
+        <button
+          (click)="save()"
+          class="px-5 py-2 rounded-lg bg-yellow-400 hover:bg-yellow-500 shadow cursor-pointer"
+        >
+          บันทึก
+        </button>
+        <button
+          (click)="closeModal()"
+          class="px-4 py-2 rounded-lg border text-gray-600 hover:bg-gray-100 cursor-pointer"
+        >
+          ยกเลิก
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  
