@@ -75,7 +75,10 @@ export interface InnovationDetailResponse {
   }
   
   export interface InnovationImageApi {
-    image_id?: number;
-    image_url?: string;
+    file_id?: number;
+    doc_type?: string;
+    file_name?: string;
+    size_file?: string;
+    get_url?: string;
   }
   

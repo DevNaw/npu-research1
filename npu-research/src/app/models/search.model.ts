@@ -40,7 +40,7 @@ export interface Owner {
 }
 
 export interface SearchResearchRequest {
-  keyword?: string;
+  q?: string;
   org_id?: number;
   funding?: string;
   subject_area_id?: number;

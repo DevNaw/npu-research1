@@ -46,7 +46,7 @@ export class DashboardComponent {
   trainings: any[] = [];
   selectedTab: ResearchTab = 'project';
   searchText = '';
-  paginationData: any[] = [];
+  paginationData: ResearchItem[] = [];
   currentPage = 1;
   pageSize = 10;
   isModalOpen = false;
@@ -186,6 +186,8 @@ export class DashboardComponent {
         this.profileDataById = res.data;
         this.barSummary = res.data.bar;
         this.researchData = res.data.researchs;
+
+        this.changeTab('project');
         this.updateCharts();
         console.log(this.profileDataById);
         
@@ -229,7 +231,9 @@ export class DashboardComponent {
 
   onSearch() {}
   
-  viewItem(id: number) {}
+  viewItem(id: number) {
+    this.router.navigate(['/performance-public', this.selectedTab, id]);
+  }
 
   editItem(id: number) {}
 

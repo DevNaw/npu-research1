@@ -2,6 +2,8 @@ import { Component, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import Swal from 'sweetalert2';
+import { ProfileService } from '../../../services/profile.service';
+import { UserProfile } from '../../../models/profiledetai.model';
 
 type MenuType = 'report' | 'manual' | 'save' | 'funding' | 'news';
 type MobileSubMenu = 'funding' | 'news' | 'save' | 'report' | null;
@@ -14,13 +16,10 @@ type MobileSubMenu = 'funding' | 'news' | 'save' | 'report' | null;
 })
 export class NavbarComponent {
   isMobileMenuOpen = false;
-  // openMobileReport = false;
-  // openMobileSave = false;
-  // openMobileNews = false;
-  // openMobileFunding = false;
   openReport = false;
 
   openMobileSubMenu: MobileSubMenu = null;
+  profileData?: UserProfile;
 
   openMenu: MenuType | null = null;
   closeTimeout: any = null;
@@ -41,16 +40,28 @@ export class NavbarComponent {
     },
   };
 
-  constructor(public auth: AuthService, private router: Router) {}
+  constructor(
+    public auth: AuthService,
+    private router: Router,
+    private service: ProfileService
+  ) {}
 
   ngOnInit() {
     this.isTouchDevice =
       'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+      this.loadData();
   }
 
-  // toggleMobileMenu() {
-  //   this.isMobileMenuOpen = !this.isMobileMenuOpen;
-  // }
+  loadData() {
+    this.service.getProfile().subscribe({
+      next: (res) => {
+        this.profileData = res.data.user;
+      },
+      error: (err) => console.error(err),
+    });
+  }
+
   toggleMobileMenu(event?: Event) {
     event?.stopPropagation();
     this.isMobileMenuOpen = !this.isMobileMenuOpen;

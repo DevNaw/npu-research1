@@ -340,10 +340,24 @@ export class UserAddInnovationComponent {
     input.value = '';
   }
 
-  removeImageFile() {
-    this.selectedImagesFile = [];
-    this.selectedImagesName = '';
-    this.projectData.innovation_images = [];
+  // removeImageFile() {
+  //   this.selectedImagesFile = [];
+  //   this.selectedImagesName = '';
+  //   this.projectData.innovation_images = [];
+  // }
+
+  removeImageFile(index: number) {
+    this.selectedImagesFile.splice(index, 1);
+  }
+
+  onFilesSelected(event: any) {
+    const files: FileList = event.target.files;
+  
+    if (!files) return;
+  
+    for (let i = 0; i < files.length; i++) {
+      this.selectedImagesFile.push(files[i]);
+    }
   }
 
   submit() {

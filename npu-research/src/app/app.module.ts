@@ -55,6 +55,7 @@ import { PerformanceDetailByDepartmentComponent } from './general/performance-de
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { AuthInterceptor } from './services/auth.interceptor';
 import { RouterModule } from '@angular/router';
+import { PerformancePublicComponent } from './user-pages/performance-public/performance-public.component';
 
 @NgModule({
   declarations: [
@@ -101,6 +102,7 @@ import { RouterModule } from '@angular/router';
     EditWorkComponent,
     PerformanceByDepartmentComponent,
     PerformanceDetailByDepartmentComponent,
+    PerformancePublicComponent,
   ],
   imports: [
     BrowserModule,

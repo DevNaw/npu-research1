@@ -212,3 +212,7 @@ body {
   border-radius: 8px !important;
 }
 
+svg {
+  /* height: 400px; */
+  /* width: 100% !important; */
+}

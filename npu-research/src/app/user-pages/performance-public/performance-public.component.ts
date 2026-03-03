@@ -1,23 +1,23 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { ActivatedRoute } from '@angular/router';
 import { ResearchService } from '../../services/research.service';
 import { ResearchArticle } from '../../models/article-show.model';
-import { AuthService } from '../../services/auth.service';
 import { ProjectDetailApi } from '../../models/research-detai.model';
 import { of, switchMap } from 'rxjs';
 import { InnovationApi } from '../../models/innovation-detai.model';
 import Swal from 'sweetalert2';
-import { HttpClient } from '@angular/common/http';
+import { FileService } from '../../services/file.service';
 
 type WorkType = 'project' | 'article' | 'innovation';
 
 @Component({
-  selector: 'app-performance',
+  selector: 'app-performance-public',
   standalone: false,
-  templateUrl: './performance.component.html',
-  styleUrl: './performance.component.css',
+  templateUrl: './performance-public.component.html',
+  styleUrl: './performance-public.component.css',
 })
-export class PerformanceComponent {
+export class PerformancePublicComponent {
   type!: WorkType;
   id!: number;
   selectedImage: string | null = null;
@@ -35,10 +35,9 @@ export class PerformanceComponent {
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
     private service: ResearchService,
-    private authService: AuthService,
-    private http: HttpClient
+    private http: HttpClient,
+    private fileService: FileService
   ) {}
 
   ngOnInit(): void {
@@ -147,35 +146,6 @@ export class PerformanceComponent {
     }
   }
 
-  editItem(id: number | undefined) {
-    if (!id) return;
-
-    const isAdmin = this.authService.isAdmin();
-    const base = isAdmin ? '/admin' : '/user';
-
-    let route = '';
-
-    switch (this.type) {
-      case 'project':
-        route = `${base}/edit-research/${id}`;
-        break;
-
-      case 'article':
-        route = `${base}/edit-aticle/${id}`;
-        break;
-
-      case 'innovation':
-        route = `${base}/edit-innovation/${id}`;
-        break;
-
-      default:
-        console.warn('Unknown type:', this.type);
-        return;
-    }
-
-    this.router.navigateByUrl(route);
-  }
-
   private getRequestByType(type: WorkType, id: number) {
     switch (type) {
       case 'article':
@@ -247,7 +217,7 @@ export class PerformanceComponent {
     img.src = '/assets/default_image.png';
   }
 
-  openPDF() {
+  openPdf() {
     const map: any = {
       project: this.researchData?.full_report?.get_url,
       article: this.articleData?.article_file?.get_url,

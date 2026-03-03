@@ -425,7 +425,7 @@
           >
             <i class="bi bi-person text-xl"></i>
             <span class="ml-1 hidden lg:inline text-xl">
-              นายทดสอบ เริ่มเลย
+              {{ profileData?.full_name }}
             </span>
           </a>
 
@@ -690,7 +690,7 @@
             class="hover:bg-gray-50 px-3 py-2 rounded-md flex items-center justify-center"
           >
             <i class="bi bi-person text-lg"></i>
-            <span class="ml-1 hidden lg:inline text-xl">นายAdmin เริ่มเลย</span>
+            <span class="ml-1 hidden lg:inline text-xl">{{ profileData?.full_name }}</span>
           </a>
 
           <a

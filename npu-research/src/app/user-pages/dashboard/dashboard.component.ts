@@ -1,44 +1,49 @@
-import { Component, OnInit } from '@angular/core';
-import {
-  ApexChart,
-  ApexDataLabels,
-  ApexLegend,
-  ApexNonAxisChartSeries,
-  ApexPlotOptions,
-  ApexResponsive,
-  ApexTooltip,
-} from 'ng-apexcharts';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import Swal from 'sweetalert2';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { Router } from '@angular/router';
 import {
-  DataPerformance,
   DataPerformanceItem,
 } from '../../models/dashboard.model';
 import { registerLocaleData } from '@angular/common';
 import localeTh from '@angular/common/locales/th';
-import { ResearchService } from '../../services/research.service';
-import { Research, ResearchPublicResponse } from '../../models/research.model';
-import { NewsService } from '../../services/news.service';
 import { NewsItem } from '../../models/news.model';
+import { DashboardService } from '../../services/dashboard.service';
+import {
+  DashboardData,
+  DashboardResponse,
+  ResearchItem,
+  ResearchSection,
+  ResearchType,
+} from '../../models/dashboard-main.model';
+import {
+  ApexAxisChartSeries,
+  ApexChart,
+  ApexDataLabels,
+  ApexPlotOptions,
+  ApexYAxis,
+  ApexStroke,
+  ApexGrid,
+  ApexAnnotations,
+  ApexFill,
+  ChartComponent,
+} from 'ng-apexcharts';
 
-export type ReportType = 'research' | 'article' | 'innovation';
-
-export interface PieChartConfig {
-  type: ReportType;
-  title: string;
-  subtitle: string;
-  series: ApexNonAxisChartSeries;
-  labels: string[];
+export type ChartOptions = {
+  series: ApexAxisChartSeries;
   chart: ApexChart;
-  legend: ApexLegend;
-  plotOptions: ApexPlotOptions;
   dataLabels: ApexDataLabels;
-  responsive: ApexResponsive[];
-  colors: string[];
-  tooltip?: ApexTooltip;
-}
+  plotOptions: ApexPlotOptions;
+  yaxis: ApexYAxis;
+  xaxis: any; //ApexXAxis;
+  annotations: ApexAnnotations;
+  fill: ApexFill;
+  stroke: ApexStroke;
+  grid: ApexGrid;
+};
+
+export type ReportType = 'project' | 'article' | 'innovation';
 
 registerLocaleData(localeTh);
 
@@ -49,353 +54,196 @@ registerLocaleData(localeTh);
   styleUrl: './dashboard.component.css',
 })
 export class UserDashboardComponent implements OnInit {
+  @ViewChild('chart') chart: ChartComponent | undefined;
+
+  charts: {
+    type: ReportType;
+    title: string;
+    subtitle: string;
+    options: ChartOptions;
+  }[] = [];
+
   today: Date = new Date();
   newsList: NewsItem[] = [];
 
   pageSize = 10;
   currentPage = 1;
   searchText = '';
-  selectedTab: keyof DataPerformance = 'research';
-  reportType: 'research' | 'article' | 'innovation' | null = null;
+  selectedTab: ResearchType = 'PROJECT';
+  reportType: ReportType = 'project';
 
   loading = false;
   error: string | null = null;
 
-  series: ApexNonAxisChartSeries = [
-    2, 2, 1, 3, 4, 2, 1, 4, 2, 3, 3, 2, 2, 2, 4, 2, 3, 4, 2, 2, 3,
-  ];
-
-  colors: string[] = [
-    '#4C78A8', // น้ำเงิน
-    '#72B7B2', // เขียวอมฟ้า
-    '#F58518', // ส้ม
-    '#E45756', // แดงหม่น
-    '#54A24B', // เขียว
-    '#B279A2', // ม่วงหม่น
-    '#9C755F', // น้ำตาล
-    '#BAB0AC', // เทา
-    '#A0CBE8', // ฟ้าอ่อน
-    '#FF9DA6', // ชมพูอ่อน
-
-    '#1F77B4', // น้ำเงินเข้ม
-    '#AEC7E8', // ฟ้าเทา
-    '#2CA02C', // เขียวเข้ม
-    '#98DF8A', // เขียวอ่อน
-    '#FFBB78', // ส้มอ่อน
-    '#C49C94', // น้ำตาลอ่อน
-    '#9467BD', // ม่วง
-    '#C5B0D5', // ม่วงอ่อน
-    '#7F7F7F', // เทาเข้ม
-    '#BCBD22', // เขียวเหลือง
-    '#17BECF', // ฟ้าอมเขียว
-    '#FF7F0E', // ส้มเข้ม
-    '#FFBBE6', // ชมพูอ่อนมาก
-  ];
-
-  sweet() {
-    Swal.fire({
-      icon: 'success',
-      title: 'Your work has been saved',
-      showConfirmButton: false,
-      timer: 1500,
-    });
-  }
-
-  downloadPDF() {
-    const element = document.getElementById('chart-pdf');
-    if (!element) return;
-
-    html2canvas(element, {
-      scale: 2, // ⬅ เพิ่มความคม
-      useCORS: true,
-      backgroundColor: '#ffffff',
-    }).then((canvas) => {
-      const imgData = canvas.toDataURL('image/png');
-
-      const pdf = new jsPDF({
-        orientation: 'landscape',
-        unit: 'mm',
-        format: 'a4',
-      });
-
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-
-      pdf.addImage(imgData, 'PNG', 10, 10, pdfWidth - 20, pdfHeight);
-
-      pdf.save('research-chart.pdf');
-    });
-  }
-
-  charts: PieChartConfig[] = [
-    {
-      type: 'research',
-      title: 'กราฟสรุปจำนวนโครงการวิจัย จำแนกตามหน่วยงาน',
-      subtitle: this.getLastUpdatedText(),
-      series: this.series,
-      labels: [
-        'คณะเกษตรและเทคโนโลยี',
-        'คณะครุศาสตร์',
-        'คณะเทคโนโลยีอุตสาหกรรม',
-        'คณะวิทยาการจัดการและเทคโนโลยีสารสนเทศ',
-        'คณะวิทยาศาสตร์',
-        'คณะวิศวกรรมศาสตร์',
-        'คณะศิลปกรรมศาสตร์และวิทยาศาสตร์',
-        'โรงเรียนสาธิตแห่งมหาวิทยาลัยนครพนม พนมพิทยพัฒน์',
-        'วิทยาลัยการท่องเที่ยวและอุตสาหกรรมบริการ',
-        'วิทยาลัยการบิน การศึกษา และวิจัยนานาชาติ',
-        'วิทยาลัยเทคโนโลยีอุตสาหกรรมศรีสงคราม',
-        'วิทยาลัยธาตุพนม',
-        'วิทยาลัยนาหว้า',
-        'วิทยาลัยพยาบาลบรมราชชนนีนครพนม',
-        'ศูนย์การศึกษามหาวิทยาลัยนครพนม ณ กรุงเทพมหานคร',
-        'สถาบันวิจัยและพัฒนา',
-        'สำนักงานอธิการบดี',
-        'สำนักงานอธิการบดี-กองกลาง',
-        'สำนักงานอธิการบดี-กองบริหารวิชาการ',
-        'สำนักงานอธิการบดี-กองพัฒนานักศึกษา',
-        'สำนักวิทยบริการ',
-      ],
-      chart: {
-        type: 'donut',
-        height: 540,
-        width: '100%',
-        animations: {
-          enabled: true,
-        },
-      },
-      legend: {
-        position: 'right',
-        fontFamily: 'TH K2D July8',
-        formatter: (seriesName: string) => {
-          return `<span style="font-size:20px; color:#394250;">${seriesName}</span>`;
-        },
-      },
-      plotOptions: {
-        pie: {
-          donut: {
-            size: '15%',
-          },
-          dataLabels: {
-            offset: 10, // ⬅ ดัน label ออกนอกวง
-            minAngleToShowLabel: 2,
-          },
-        },
-      },
-      dataLabels: {
-        enabled: true,
-      },
-      responsive: [
-        {
-          breakpoint: 768,
-          options: {
-            legend: {
-              position: 'bottom',
-            },
-          },
-        },
-      ],
-      colors: this.colors,
-    },
-    {
-      type: 'article',
-      title: 'กราฟสรุปจำนวนบทความ จำแนกตามหน่วยงาน',
-      subtitle: this.getLastUpdatedText(),
-      series: [
-        2, 4, 3, 2, 3, 2, 2, 4, 2, 3, 3, 4, 3, 2, 2, 2, 4, 5, 5, 4, 5, 2, 3, 2,
-      ],
-      labels: [
-        'คณะเกษตรและเทคโนโลยี',
-        'คณะครุศาสตร์',
-        'คณะเทคโนโลยีอุตสาหกรรม',
-        'คณะวิทยาการจัดการและเทคโนโลยีสารสนเทศ',
-        'คณะวิทยาศาสตร์',
-        'คณะวิศวกรรมศาสตร์',
-        'คณะศิลปกรรมศาสตร์และวิทยาศาสตร์',
-        'งานวิชาศึกษาทั่วไป',
-        'โรงเรียนสาธิตแห่งมหาวิทยาลัยนครพนม พนมพิทยพัฒน์',
-        'วิทยาลัยการท่องเที่ยวและอุตสาหกรรมบริการ',
-        'วิทยาลัยการบิน การศึกษา และวิจัยนานาชาติ',
-        'วิทยาลัยเทคโนโลยีอุตสาหกรรมศรีสงคราม',
-        'วิทยาลัยธาตุพนม',
-        'วิทยาลัยนาหว้า',
-        'วิทยาลัยพยาบาลบรมราชชนนีนครพนม',
-        'ศูนย์การศึกษามหาวิทยาลัยนครพนม ณ กรุงเทพมหานคร',
-        'สถาบันภาษา',
-        'สถาบันวิจัยและพัฒนา',
-        'สำนักงานอธิการบดี',
-        'สำนักงานอธิการบดี-กองกลาง',
-        'สำนักงานอธิการบดี-กองบริหารทรัพยากรบุคคล',
-        'สำนักงานอธิการบดี-กองบริหารวิชาการ',
-        'สำนักงานอธิการบดี-กองพัฒนานักศึกษา',
-        'สำนักวิทยบริการ',
-      ],
-      chart: {
-        type: 'donut',
-        height: 540,
-        width: '100%',
-        animations: {
-          enabled: true,
-        },
-      },
-      legend: {
-        position: 'right',
-        fontFamily: 'TH K2D July8',
-        formatter: (seriesName: string) => {
-          return `<span style="font-size:20px; color:#394250;">${seriesName}</span>`;
-        },
-      },
-      plotOptions: {
-        pie: {
-          donut: {
-            size: '15%',
-          },
-          dataLabels: {
-            offset: 12, // ⬅ ดัน label ออกนอกวง
-            minAngleToShowLabel: 2,
-          },
-        },
-      },
-      dataLabels: {
-        enabled: true,
-      },
-      responsive: [
-        {
-          breakpoint: 768,
-          options: {
-            legend: {
-              position: 'bottom',
-            },
-          },
-        },
-      ],
-      colors: this.colors,
-    },
-    {
-      type: 'innovation',
-      title: 'กราฟสรุปจำนวนนวัตกรรมสิ่งประดิษฐ์ จำแนกตามหน่วยงาน',
-      subtitle: this.getLastUpdatedText(),
-      series: [3, 5, 1, 2, 3, 1, 2, 4, 5, 3, 3, 2, 2],
-      labels: [
-        'คณะเกษตรและเทคโนโลยี',
-        'คณะครุศาสตร์',
-        'คณะเทคโนโลยีอุตสาหกรรม',
-        'คณะวิทยาการจัดการและเทคโนโลยีสารสนเทศ',
-        'คณะวิทยาศาสตร์',
-        'คณะวิศวกรรมศาสตร์',
-        'คณะศิลปกรรมศาสตร์และวิทยาศาสตร์',
-        'โรงเรียนสาธิตแห่งมหาวิทยาลัยนครพนม พนมพิทยพัฒน์',
-        'วิทยาลัยเทคโนโลยีอุตสาหกรรมศรีสงคราม',
-        'วิทยาลัยธาตุพนม',
-        'วิทยาลัยนาหว้า',
-        'วิทยาลัยพยาบาลบรมราชชนนีนครพนม',
-        'สำนักงานอธิการบดี-กองกลาง',
-      ],
-      chart: {
-        type: 'donut',
-        height: 540,
-        width: '100%',
-        animations: {
-          enabled: true,
-        },
-      },
-      legend: {
-        position: 'right',
-        fontFamily: 'TH K2D July8',
-        formatter: (seriesName: string) => {
-          return `<span style="font-size:20px; color:#394250;">${seriesName}</span>`;
-        },
-      },
-      plotOptions: {
-        pie: {
-          donut: {
-            size: '15%',
-          },
-          dataLabels: {
-            offset: 12, // ⬅ ดัน label ออกนอกวง
-            minAngleToShowLabel: 2,
-          },
-        },
-      },
-      dataLabels: {
-        enabled: true,
-      },
-      responsive: [
-        {
-          breakpoint: 768,
-          options: {
-            legend: {
-              position: 'bottom',
-            },
-          },
-        },
-      ],
-      colors: this.colors,
-    },
-  ];
-
-  getLastUpdatedText(): string {
-    const now = new Date();
-
-    const date = now.toLocaleDateString('th-TH', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-    });
-
-    const time = now.toLocaleTimeString('th-TH', {
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-
-    return `ข้อมูล ณ วันที่ ${date} เวลา ${time} น.`;
-  }
-
-  publications: DataPerformance = {
-    research: [],
-    article: [],
-    innovation: [],
+  publications: ResearchSection = {
+    projects: [],
+    articles: [],
+    innovations: [],
   };
 
   researches: DataPerformanceItem[] = [];
+  dashboardData!: DashboardData;
 
-  constructor(
-    private router: Router,
-    private researchService: ResearchService,
-    private newsService: NewsService
-  ) {}
+  filteredResearch: ResearchItem[] = [];
+  paginatedPublications: ResearchItem[] = [];
 
-  filteredResearch: DataPerformanceItem[] = [];
-  paginatedPublications: DataPerformanceItem[] = [];
+  constructor(private router: Router, private service: DashboardService) {}
 
   ngOnInit(): void {
-    this.loadData();
-    this.filteredResearch = [...this.publications[this.selectedTab]];
+    this.loadDashboardData();
+    // this.filteredResearch = [...this.publications[this.selectedTab]];
     this.updatePagination();
-    this.loadNews();
   }
 
-  loadNews() {
-    this.newsService.getNewsData().subscribe({
-      next: (res) => {
-        this.newsList = res.data.news;
+  loadDashboardData(): void {
+    this.service.getDashboardData().subscribe({
+      next: (res: DashboardResponse) => {
+        if (res?.result === 1 && res?.data) {
+          this.dashboardData = res.data;
+          this.newsList = res.data.news;
+
+          this.publications = res.data.researchs;
+
+          const key = this.mapResearchTypeToKey(this.selectedTab);
+          this.filteredResearch = [...this.publications[key]];
+
+          this.updatePagination();
+          this.initCharts();
+        }
       },
       error: (err) => {
-        console.error(err);
+        console.error('Dashboard Load Error:', err);
       },
     });
+  }
+
+  initCharts(): void {
+    const graph = this.dashboardData.statistic_graph;
+
+    this.charts = [
+      {
+        type: 'project',
+        title: 'โครงการวิจัย',
+        subtitle: 'สถิติตามปีงบประมาณ',
+        options: this.createBarChart(graph.graph_project),
+      },
+      {
+        type: 'article',
+        title: 'บทความวิจัย',
+        subtitle: 'สถิติตามปีงบประมาณ',
+        options: this.createBarChart(graph.graph_article),
+      },
+      {
+        type: 'innovation',
+        title: 'ผลงานนวัตกรรม',
+        subtitle: 'สถิติตามปีงบประมาณ',
+        options: this.createBarChart(graph.graph_innovation),
+      },
+    ];
+  }
+
+  private createBarChart(
+    data: { label: string; count: number }[]
+  ): ChartOptions {
+    return {
+      series: [
+        {
+          name: 'จำนวนผลงาน',
+          data: data.map((item) => item.count),
+        },
+      ],
+      annotations: {
+        points: [
+          {
+            x: 'Bananas',
+            seriesIndex: 0,
+            label: {
+              borderColor: '#775DD0',
+              offsetY: 0,
+              style: {
+                color: '#fff',
+                background: '#775DD0',
+              },
+              text: 'Bananas are good',
+            },
+          },
+        ],
+      },
+      chart: {
+        type: 'bar',
+        height: 500,
+      },
+      plotOptions: {
+        bar: {
+          columnWidth: '50%',
+          borderRadius: 6,
+          borderRadiusApplication: 'around',
+          backgroundBarColors: ['#f2f2f2'],
+          backgroundBarOpacity: 1,
+          backgroundBarRadius: 6,
+        } as any,
+      },
+      dataLabels: {
+        enabled: false,
+      },
+      xaxis: {
+        labels: {
+          rotate: -45,
+          style: {
+            fontSize: '12px',
+          },
+        },
+        categories: data.map((item) => item.label),
+        tickPlacement: 'on',
+      },
+      yaxis: {
+        title: {
+          text: 'จำนวน',
+        },
+      },
+      stroke: {
+        width: 2,
+      },
+
+      fill: {
+        type: 'gradient',
+        gradient: {
+          shade: 'light',
+          type: 'horizontal',
+          shadeIntensity: 0.25,
+          gradientToColors: undefined,
+          inverseColors: true,
+          opacityFrom: 0.85,
+          opacityTo: 0.85,
+          stops: [50, 0, 100],
+        },
+      },
+
+      grid: {
+        row: {
+          colors: ['#fff', '#f2f2f2'],
+        },
+        padding: {
+          bottom: 50,
+        },
+      },
+    };
   }
 
   onSearch() {
     const keyword = this.searchText.toLowerCase().trim();
-
-    this.filteredResearch = this.publications[this.selectedTab].filter(
-      (p) =>
-        p.title.toLowerCase().includes(keyword) ||
-        p.researchers.toLowerCase().includes(keyword) ||
-        p.year.toString().includes(keyword)
+  
+    const key = this.mapResearchTypeToKey(this.selectedTab);
+  
+    this.filteredResearch = this.publications[key].filter((p) =>
+      p.title_th.toLowerCase().includes(keyword) ||
+      (p.title_en?.toLowerCase().includes(keyword) ?? false) ||
+      p.year.toString().includes(keyword) ||
+      p.own.some(owner =>
+        owner.full_name.toLowerCase().includes(keyword)
+      )
     );
-
+  
     this.currentPage = 1;
     this.updatePagination();
   }
@@ -434,54 +282,31 @@ export class UserDashboardComponent implements OnInit {
     this.router.navigateByUrl('/manual');
   }
 
+  // viewItem(id: number) {
+  //   this.router.navigate(['/performance', this.selectedTab, id]);
+  // }
+
   viewItem(id: number) {
-    this.router.navigate(['/performance', this.selectedTab, id]);
+    this.router.navigate([
+      '/performance-public',
+      this.selectedTab.toLowerCase(),
+      id,
+    ]);
   }
 
-  changeTab(tab: keyof DataPerformance): void {
+  changeTab(tab: ResearchType): void {
     this.selectedTab = tab;
     this.searchText = '';
     this.currentPage = 1;
-
-    this.filteredResearch = [...this.publications[tab]];
+  
+    const key = this.mapResearchTypeToKey(tab);
+    this.filteredResearch = [...this.publications[key]];
+  
     this.updatePagination();
   }
 
   SeeMoreDetails(type: ReportType) {
     this.router.navigate(['/performance-by-departmaent', type]);
-  }
-
-  loadData() {
-    this.loading = true;
-    this.error = null;
-
-    this.researchService.getPublicData().subscribe({
-      next: (res) => {
-        this.publications.research = this.mapToDashboard(res.research);
-        this.publications.article = this.mapToDashboard(res.article);
-        this.publications.innovation = this.mapToDashboard(res.innovation);
-
-        this.filteredResearch = [...this.publications[this.selectedTab]];
-        this.updatePagination();
-
-        this.loading = false;
-      },
-      error: (err) => {
-        this.error = 'ไม่สามารถโหลดข้อมูลได้';
-        this.loading = false;
-        console.error(err);
-      },
-    });
-  }
-
-  private mapToDashboard(data: Research[]): DataPerformanceItem[] {
-    return data.map((r) => ({
-      id: r.id,
-      title: r.title,
-      researchers: r.name,
-      date: this.formatThaiDate(r.date),
-      year: r.year,
-    }));
   }
 
   formatThaiDate(date: Date): string {
@@ -495,5 +320,68 @@ export class UserDashboardComponent implements OnInit {
 
   goToNewsDetail(id: number): void {
     this.router.navigate(['/news', id]);
+  }
+
+  sweet() {
+    Swal.fire({
+      icon: 'success',
+      title: 'Your work has been saved',
+      showConfirmButton: false,
+      timer: 1500,
+    });
+  }
+
+  downloadPDF() {
+    const element = document.getElementById('chart-pdf');
+    if (!element) return;
+
+    html2canvas(element, {
+      scale: 2, // ⬅ เพิ่มความคม
+      useCORS: true,
+      backgroundColor: '#ffffff',
+    }).then((canvas) => {
+      const imgData = canvas.toDataURL('image/png');
+
+      const pdf = new jsPDF({
+        orientation: 'landscape',
+        unit: 'mm',
+        format: 'a4',
+      });
+
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+      pdf.addImage(imgData, 'PNG', 10, 10, pdfWidth - 20, pdfHeight);
+
+      pdf.save('research-chart.pdf');
+    });
+  }
+
+  getLastUpdatedText(): string {
+    const now = new Date();
+
+    const date = now.toLocaleDateString('th-TH', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    });
+
+    const time = now.toLocaleTimeString('th-TH', {
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+
+    return `ข้อมูล ณ วันที่ ${date} เวลา ${time} น.`;
+  }
+
+  private mapResearchTypeToKey(type: ResearchType): keyof ResearchSection {
+    switch (type) {
+      case 'PROJECT':
+        return 'projects';
+      case 'ARTICLE':
+        return 'articles';
+      case 'INNOVATION':
+        return 'innovations';
+    }
   }
 }

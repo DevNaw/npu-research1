@@ -389,7 +389,7 @@ export class UserResearchComponent {
     const payload: SearchResearchRequest = {};
 
     if (this.researchItems?.trim()) {
-      payload.keyword = this.researchItems.trim();
+      payload.q = this.researchItems.trim();
     }
 
     if (this.selectedType) {

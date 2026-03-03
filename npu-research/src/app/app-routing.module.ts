@@ -44,6 +44,7 @@ import { EditWorkComponent } from './user-pages/edit-work/edit-work.component';
 import { PerformanceByDepartmentComponent } from './general/performance-by-department/performance-by-department.component';
 import { PerformanceDetailByDepartmentComponent } from './general/performance-detail-by-department/performance-detail-by-department.component';
 import { DashboardComponent } from './admin-pages/dashboard/dashboard.component';
+import { PerformancePublicComponent } from './user-pages/performance-public/performance-public.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -85,6 +86,7 @@ const routes: Routes = [
       { path: 'report-research', component: ReportResearcherResearchComponent },
       { path: 'manual', component: ManualComponent },
       { path: 'performance/:type/:id', component: PerformanceComponent },
+      { path: 'performance-public/:type/:id', component: PerformancePublicComponent },
     ],
   },
   /* ================= USER ================= */
@@ -113,6 +115,7 @@ const routes: Routes = [
       { path: 'edit-study', component: UserEditStudyComponent },
       { path: 'edit-traning', component: UserEditTraningComponent },
       { path: 'performance/:type/:id', component: PerformanceComponent },
+      { path: 'performance-public/:type/:id', component: PerformancePublicComponent },
       { path: 'edit-work', component: EditWorkComponent },
       { path: 'performance-by-departmaent/:type', component: PerformanceByDepartmentComponent },
       { path: 'performance-by-departmaent/:type/:id', component: PerformanceDetailByDepartmentComponent },
@@ -157,6 +160,7 @@ const routes: Routes = [
         component: UserAddInnovationComponent,
       },
       { path: 'performance/:type/:id', component: PerformanceComponent },
+      { path: 'performance-public/:type/:id', component: PerformancePublicComponent },
       { path: 'report', component: ReportComponent },
       { path: 'edit-work', component: EditWorkComponent },
       { path: 'performance-by-departmaent/:type', component: PerformanceByDepartmentComponent },

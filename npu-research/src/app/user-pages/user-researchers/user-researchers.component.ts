@@ -232,8 +232,7 @@ export class UserResearchersComponent {
     }
   
     const base = this.authService.isAdmin() ? 'admin' : 'user';
-  
-    this.router.navigate([`/${base}/profile-public`, userId]);
+    this.router.navigate(['/', base, 'profile-public', userId]);
   }
 
   changePage(page: number) {

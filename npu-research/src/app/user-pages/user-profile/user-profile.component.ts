@@ -19,7 +19,7 @@ import {
   ApexTooltip,
 } from 'ng-apexcharts';
 import { ProfileService } from '../../services/profile.service';
-import { BarSummary, DonutSummary, UserProfile } from '../../models/profiledetai.model';
+import { BarSummary, UserProfile } from '../../models/profiledetai.model';
 import { ResearchItem } from '../../models/profile-project.model';
 import { EducationService } from '../../services/education.service';
 import { EducationInfo } from '../../models/education.model';
