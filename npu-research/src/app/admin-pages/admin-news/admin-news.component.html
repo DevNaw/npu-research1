@@ -55,17 +55,17 @@
           </td>
           <td class="p-2">{{ news.title }}</td>
           <td class="text-center p-2">
-            {{ news.date | date : "dd/MM/yyyy" : ""  }}
+            {{ news.published_date | date : "dd/MM/yyyy" : ""  }}
           </td>
           <td class="text-center p-2">
-            {{ news.dateend | date : "dd/MM/yyyy" : "" }}
+            {{ news.expires_date| date : "dd/MM/yyyy" : "" }}
           </td>
           <td class="text-center p-2">
             <div class="flex justify-center items-center gap-2 flex-wrap">
               <button
                 class="inline-flex items-center justify-center w-9 h-9 rounded-full bg-blue-50 hover:bg-blue-100 text-blue-600 transition cursor-pointer text-xl"
                 title="แก้ไข"
-                (click)="editNews(news)"
+                (click)="editNews(news.news_id)"
               >
                 <i class="bi bi-pencil-square"></i>
               </button>
@@ -73,7 +73,7 @@
               <button
                 class="inline-flex items-center justify-center w-9 h-9 rounded-full bg-red-50 hover:bg-red-100 text-red-600 transition cursor-pointer text-xl"
                 title="ลบ"
-                (click)="delectNews(i)"
+                (click)="deleteNews(news.news_id)"
               >
                 <i class="bi bi-trash3"></i>
               </button>

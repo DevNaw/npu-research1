@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { Editor, Toolbar } from 'ngx-editor';
+import { AdminNewsService } from '../../services/admin-news.service';
+import { NewsDetail, NewsPhoto } from '../../models/admin-news.model';
 
 @Component({
   selector: 'app-news-edit',
@@ -11,50 +13,53 @@ import { Editor, Toolbar } from 'ngx-editor';
   styleUrl: './news-edit.component.css'
 })
 export class NewsEditComponent implements OnInit, OnDestroy  {
+  newsData!: NewsDetail;
   newsForm!: FormGroup;
-  isEdit: boolean = false;
-  newsId! : number;
-  
+
+  isEdit = false;
+  newsId!: number;
+
   coverPreview: string | null = null;
   galleryPreview: string[] = [];
 
-  html = '';
   editor!: Editor;
+
   toolbar: Toolbar = [
     ['bold', 'italic', 'underline', 'strike'],
     ['code', 'blockquote'],
     ['ordered_list', 'bullet_list'],
-    [{ heading: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'] }],
+    [{ heading: ['h1','h2','h3','h4','h5','h6'] }],
     ['link', 'image'],
     ['text_color', 'background_color'],
-    ['align_left', 'align_center', 'align_right', 'align_justify'],
+    ['align_left','align_center','align_right','align_justify'],
   ];
 
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private service: AdminNewsService,
   ) {}
 
   ngOnInit(): void {
     this.editor = new Editor();
-
+  
     this.newsForm = this.fb.group({
       title: [''],
       description: [''],
       content: [''],
       sourceUrl: [''],
-      publishedAt: ['']
+      publishedAt: [''],
+      expiresAt: ['']
     });
-
-    this.route.paramMap.subscribe(params => {
-      const id = params.get('id');
-      if (id) {
-        this.isEdit = true;
-        this.newsId = +id;
-        this.loadNews();
-      }
-    });
+  
+    const id = this.route.snapshot.paramMap.get('id');
+  
+    if (id) {
+      this.isEdit = true;
+      this.newsId = +id;
+      this.loadNews();
+    }
   }
 
   ngOnDestroy(): void {
@@ -62,28 +67,30 @@ export class NewsEditComponent implements OnInit, OnDestroy  {
   }
 
   loadNews() {
-    // mock data
-    this.newsForm.patchValue({
-      title: 'ข่าวตัวอย่าง',
-      description: 'คำอธิบายข่าว',
-      content: 'เนื้อหาข่าว',
-      sourceUrl: 'https://example.com',
-      publishedAt: '2026-01-01'
+    this.service.getnewsById(this.newsId).subscribe({
+      next: (res) => {
+        const news = res.data.news;
+  
+        console.log(news); // ข้อมูลที่คุณแปะมา
+  
+        // ✅ patch ค่าเข้า form
+        this.newsForm.patchValue({
+          title: news.title,
+          description: news.description,
+          publishedAt: news.published_date,
+          expiresAt: news.expires_date
+        });
+  
+        // ✅ แสดงรูปปก
+        this.coverPreview = news.news_cover;
+  
+        // ✅ แสดง gallery
+        this.galleryPreview = news.news_photos?.map(p => p.img_url) || [];
+      }
     });
   }
 
-  // loadNews() {
-  //   this.newsService.getById(this.newsId).subscribe(res => {
-  //     this.newsForm.patchValue({
-  //       title: res.title,
-  //       description: res.description,
-  //       content: res.content, // 👈 HTML จะเข้า editor อัตโนมัติ
-  //       sourceUrl: res.sourceUrl,
-  //       publishedAt: res.publishedAt
-  //     });
-  //   });
-  // }
-  
+
   onCoverChange(event: Event) {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
@@ -109,49 +116,36 @@ export class NewsEditComponent implements OnInit, OnDestroy  {
 
   submit() {
     if (this.newsForm.invalid) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'ข้อมูลไม่ครบ',
-        text: 'กรุณากรอกข้อมูลให้ครบถ้วน',
-        confirmButtonText: 'ตกลง',
-      });
       return;
     }
   
-    const actionText = this.isEdit ? 'แก้ไขข่าว' : 'เพิ่มข่าว';
+    const formValue = this.newsForm.value;
   
-    Swal.fire({
-      title: `ยืนยันการ${actionText}`,
-      text: 'คุณต้องการบันทึกข้อมูลนี้ใช่หรือไม่?',
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonText: 'บันทึก',
-      cancelButtonText: 'ยกเลิก',
-      confirmButtonColor: '#4f46e5', // indigo-600
-      cancelButtonColor: '#9ca3af',  // gray-400
-    }).then((result) => {
-      if (result.isConfirmed) {
+    const payload = {
+      title: formValue.title,
+      description: formValue.description,
+      published_date: formValue.publishedAt,
+      expires_date: formValue.expiresAt,
+    };
   
-        if (this.isEdit) {
-          // 🔧 TODO: call update API
-          console.log('แก้ไขข่าว ID:', this.newsId, this.newsForm.value);
-        } else {
-          // 🔧 TODO: call create API
-          console.log('เพิ่มข่าวใหม่:', this.newsForm.value);
-        }
-  
-        Swal.fire({
-          icon: 'success',
-          title: 'บันทึกสำเร็จ',
-          text: 'ข้อมูลข่าวถูกบันทึกเรียบร้อยแล้ว',
-          timer: 1500,
-          showConfirmButton: false,
-        }).then(() => {
-          this.router.navigate(['/admin-news']);
-        });
-      }
-    });
+    if (this.isEdit) {
+      this.service.updateNews(this.newsId, payload).subscribe({
+        next: () => {
+          this.router.navigate(['/admin/news']);
+        },
+        error: (err) => console.error(err)
+      });
+    } else {
+      this.service.createNews(payload).subscribe({
+        next: () => {
+          this.router.navigate(['/admin/news']);
+        },
+        error: (err) => console.error(err)
+      });
+    }
   }
-  
-  
+
+  goBack() {
+    this.router.navigate(['/admin/news']);
+  }
 }

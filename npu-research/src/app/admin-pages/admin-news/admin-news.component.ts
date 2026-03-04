@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
-import { News } from '../../models/news.model';
+import { NewsItem } from '../../models/admin-news.model';
+import { AdminNewsService } from '../../services/admin-news.service';
 
 @Component({
   selector: 'app-admin-news',
@@ -10,40 +11,33 @@ import { News } from '../../models/news.model';
   styleUrl: './admin-news.component.css',
 })
 export class AdminNewsComponent {
-  news: News[] = [
-    {
-      id: 1,
-      title: 'มหาวิทยาลัยนครพนมเผยผลงานวิจัย เสริมศักยภาพการพัฒนาท้องถิ่นอย่างยั่งยืน',
-      date: '2026-01-01',
-      dateend: '2026-01-31',
-    },
-    {
-      id: 2,
-      title: 'งานวิจัย มนพ. ขับเคลื่อนองค์ความรู้สู่การใช้ประโยชน์เชิงพื้นที่',
-      date: '2026-02-01',
-      dateend: '2026-02-28',
-    },
-    {
-      id: 2,
-      title: 'งานวิจัย มนพ. พลังเล็ก ๆ ที่สร้างการเปลี่ยนแปลงใหญ่ให้สังคม',
-      date: '2026-02-01',
-      dateend: '2026-02-28',
-    },
-  ];
-
-  filteredNews = [...this.news];
+  news: NewsItem[] = [];
+  filteredNews: NewsItem[] = [];
 
   pageSize = 10;
   currentPage = 1;
   searchText: string = '';
   showModal = false;
   modalMode: 'add' | 'edit' = 'add';
-  editIndex: number | null = null;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private service: AdminNewsService) {}
 
-  editNews(news: News) {
-    this.router.navigate(['/admin/news/edit', news.id]);
+  ngOnInit() {
+    this.loadNews();
+  }
+
+  loadNews() {
+    this.service.getNews().subscribe({
+      next: (res) => {
+        this.news = res.data.news;
+        this.filteredNews = [...this.news];
+      },
+      error: (err) => console.error(err),
+    });
+  }
+
+  editNews(id: number) {
+    this.router.navigate(['/admin/news/edit', id]);
   }
 
   onSearch() {
@@ -72,31 +66,33 @@ export class AdminNewsComponent {
   }
 
   createNews() {
-    this.router.navigate(['/admin-news/create']);
+    this.router.navigate(['/admin/news/create']);
   }
 
-  delectNews(index: number) {
+  deleteNews(id: number) {
     Swal.fire({
       title: 'ยืนยันการลบ?',
       text: 'ข้อมูลนี้จะไม่สามารถกู้คืนได้',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#dc2626',
-      cancelButtonColor: '#6b7280',
       confirmButtonText: 'ลบ',
       cancelButtonText: 'ยกเลิก',
     }).then((result) => {
       if (result.isConfirmed) {
-        this.news.splice(index, 1);
-        this.onSearch();
-
-        Swal.fire({
-          icon: 'success',
-          title: 'ลบเรียบร้อย',
-          text: 'ข้อมูลถูกลบแล้ว',
-          timer: 1500,
-          showConfirmButton: false,
+  
+        this.service.deleteNews(id).subscribe({
+          next: () => {
+            this.loadNews();
+            Swal.fire({
+              icon: 'success',
+              title: 'ลบเรียบร้อย',
+              timer: 1500,
+              showConfirmButton: false,
+            });
+          },
+          error: (err) => console.error(err),
         });
+  
       }
     });
   }

@@ -24,7 +24,7 @@ export class EditWorkComponent {
 
   openDropdown: string | null = null;
 
-  workInfo: WorkInfo = {
+  workInfo: any = {
     position: '',
     organization: { id: 0, faculty: '' },
     type: '',
@@ -144,7 +144,9 @@ export class EditWorkComponent {
         type: this.workInfo.type,
         line_work: this.workInfo.line_work,
         academic_position: this.workInfo.academic_position,
-        interest: this.workInfo.interest,
+        ...(this.workInfo.interest && {
+          interest: this.workInfo.interest,
+        }),
         work_start_date: this.workInfo.work_start_date,
         year_of_service: Number(this.workInfo.year_of_service),
         organization_id: this.workInfo.organization?.id ?? 0,
