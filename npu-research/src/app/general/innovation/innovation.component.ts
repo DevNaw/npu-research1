@@ -83,7 +83,6 @@ export class InnovationComponent implements OnInit {
           researchers: this.mapInnovation(i.own),
           imgUrl: i.img_url,
         }));
-console.log(res);
 
         this.filteredInnovations = [...this.innovations];
         this.updatePagination();

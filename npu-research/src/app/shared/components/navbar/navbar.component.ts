@@ -49,16 +49,26 @@ export class NavbarComponent {
   ngOnInit() {
     this.isTouchDevice =
       'ontouchstart' in window || navigator.maxTouchPoints > 0;
-
+  
+    if (this.isLoggedIn) {
       this.loadData();
+    }
   }
+
 
   loadData() {
     this.service.getProfile().subscribe({
       next: (res) => {
         this.profileData = res.data.user;
       },
-      error: (err) => console.error(err),
+      error: (err) => {
+        console.error(err);
+  
+        // ถ้า token หมดอายุ
+        if (err.status === 401) {
+          this.logout();
+        }
+      },
     });
   }
 
@@ -101,7 +111,7 @@ export class NavbarComponent {
   get isLoggedIn() {
     return this.auth.isLoggedIn();
   }
-
+  
   get role(): 'use' | 'adm' | null {
     return this.auth.getRole();
   }

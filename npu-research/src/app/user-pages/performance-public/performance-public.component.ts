@@ -2,10 +2,19 @@ import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { ResearchService } from '../../services/research.service';
-import { ResearchArticle } from '../../models/article-show.model';
-import { ProjectDetailApi } from '../../models/research-detai.model';
+import {
+  ResearchArticle,
+  ResearchOwner,
+} from '../../models/article-show.model';
+import {
+  ProjectDetailApi,
+  ResearchOwnerProject,
+} from '../../models/research-detai.model';
 import { of, switchMap } from 'rxjs';
-import { InnovationApi } from '../../models/innovation-detai.model';
+import {
+  InnovationApi,
+  ResearchOwnerInnovation,
+} from '../../models/innovation-detai.model';
 import Swal from 'sweetalert2';
 import { FileService } from '../../services/file.service';
 
@@ -29,6 +38,10 @@ export class PerformancePublicComponent {
   articleData: ResearchArticle | null = null;
   researchData: ProjectDetailApi | null = null;
   innovationData: InnovationApi | null = null;
+
+  ownerArticle: ResearchOwner | null = null;
+  ownerProject: ResearchOwnerProject | null = null;
+  ownerInnovation: ResearchOwnerInnovation | null = null;
   img: any;
 
   galleryImages: string[] = [];
@@ -36,8 +49,7 @@ export class PerformancePublicComponent {
   constructor(
     private route: ActivatedRoute,
     private service: ResearchService,
-    private http: HttpClient,
-    private fileService: FileService
+    private http: HttpClient
   ) {}
 
   ngOnInit(): void {
@@ -149,13 +161,13 @@ export class PerformancePublicComponent {
   private getRequestByType(type: WorkType, id: number) {
     switch (type) {
       case 'article':
-        return this.service.getArticleById(id);
+        return this.service.getArticles(id);
 
       case 'project':
-        return this.service.getProjectById(id);
+        return this.service.getProjects(id);
 
       case 'innovation':
-        return this.service.getInnovationById(id);
+        return this.service.getInnovations(id);
 
       default:
         return of(null);
@@ -166,6 +178,7 @@ export class PerformancePublicComponent {
     switch (this.type) {
       case 'article':
         this.articleData = res.data.researchArticle;
+        this.ownerArticle = res.data.owner;
 
         if (this.articleData?.internal_members?.length) {
           this.articleData.internal_members = this.sortFirstAuthorFirst(
@@ -176,6 +189,7 @@ export class PerformancePublicComponent {
 
       case 'project':
         this.researchData = res.data.projectDetail;
+        this.ownerProject = res.data.owner;
 
         if (this.researchData?.internal_members?.length) {
           this.researchData.internal_members = this.sortFirstAuthorFirst(
@@ -186,6 +200,7 @@ export class PerformancePublicComponent {
 
       case 'innovation':
         this.innovationData = res.data.researchInnovation;
+        this.ownerInnovation = res.data.owner;
 
         if (this.innovationData?.internal_members?.length) {
           this.innovationData.internal_members = this.sortFirstAuthorFirst(

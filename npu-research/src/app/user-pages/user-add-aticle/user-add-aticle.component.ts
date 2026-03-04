@@ -253,15 +253,14 @@ export class UserAddAticleComponent {
       next: (res) => {
         const data = res.data.researchArticle;
 
-        // this.articleData = data;
         this.articleData = {
           ...this.articleData,
-          ...data
+          ...data,
         };
 
         this.selectedFileName = data.articleFile?.file_name ?? '';
         this.selectedCountries = this.articleData.country;
-        
+
         if (data.internal_members?.length) {
           this.internalRow = data.internal_members.map(
             (m: any, index: number) => ({
@@ -432,10 +431,10 @@ export class UserAddAticleComponent {
   // -----File -------------------------------------------------------
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
-    
+
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
-      
+
       this.selectedFile = file;
       this.selectedFileName = this.selectedFile.name;
     }
@@ -446,12 +445,10 @@ export class UserAddAticleComponent {
     this.selectedFileName = '';
     this.articleData.article_file = null;
   }
-  
 
   // ----- Submit -------------------------------------------------------
   submitArticle() {
     const formData = this.buildFormData();
-    
 
     Swal.fire({
       title: 'กำลังบันทึก...',
@@ -498,10 +495,8 @@ export class UserAddAticleComponent {
     const fd = new FormData();
     const d = this.articleData;
 
-    // Always sent — backend requires these regardless of article type
     const required = (key: string, val: any) => fd.append(key, val ?? '');
 
-    // Only sent when non-empty — prevents backend type errors on null/''
     const optional = (key: string, val: any) => {
       if (val !== null && val !== undefined && val !== '') {
         fd.append(key, val);
@@ -517,8 +512,6 @@ export class UserAddAticleComponent {
     required('volume_no', d.volume_no);
     required('doi', d.doi);
     required('is_cooperation', d.is_cooperation);
-
-    // Conditional on article_type — omit entirely when empty
     optional('db_type', d.db_type);
     optional('country', d.country);
     optional('responsibilities', d.responsibilities);

@@ -1,8 +1,7 @@
 import { Component, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { ResearchService } from '../../services/research.service';
-import { Research, ResearchType } from '../../models/research.model';
+import { Research } from '../../models/research.model';
 import { DataPerformance } from '../../models/dashboard.model';
 import { SearchService } from '../../services/search.service';
 import {
@@ -25,7 +24,6 @@ export class UserResearchComponent {
   selectedType: string | null = null;
   selectedSubType: string | null = null;
 
-  // selectedFunding = '';
   selectedYear = '';
   researchTitle = '';
   searchSubType = '';
@@ -151,7 +149,6 @@ export class UserResearchComponent {
   constructor(
     private router: Router,
     private authService: AuthService,
-    private researchService: ResearchService,
     private service: SearchService
   ) {}
 
@@ -330,8 +327,6 @@ export class UserResearchComponent {
 
   onSearch(): void {
     const keyword = this.searchText.trim();
-
-    // ✅ ถ้าลบหมดแล้ว → reload จาก backend
     if (!keyword) {
       this.search();
       return;
@@ -427,16 +422,12 @@ export class UserResearchComponent {
       next: (res) => {
         this.isSearched = true;
 
-        const data = res.data; // 👈 สำคัญมาก
+        const data = res.data;
 
         this.searchResults = data.result;
-
         this.filteredResearchers = data.result;
-
-        // ✅ donut
         this.donutSeries = data.graph.map((g) => g.count);
         this.donutLabels = data.graph.map((g) => g.subject_area_name);
-
         this.totalResearchers = data.total;
 
         this.currentPage = 1;
@@ -450,7 +441,7 @@ export class UserResearchComponent {
     const mm = String(date.getMonth() + 1).padStart(2, '0');
     const dd = String(date.getDate()).padStart(2, '0');
 
-    return `${yyyy}-${mm}-${dd}`; // 2025-02-01
+    return `${yyyy}-${mm}-${dd}`;
   }
 
   mapTypeToApi(type: string): 'ARTICLE' | 'PROJECT' | 'INNOVATION' {

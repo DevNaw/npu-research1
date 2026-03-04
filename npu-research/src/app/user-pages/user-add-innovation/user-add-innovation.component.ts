@@ -339,22 +339,16 @@ export class UserAddInnovationComponent {
     }
     input.value = '';
   }
-
-  // removeImageFile() {
-  //   this.selectedImagesFile = [];
-  //   this.selectedImagesName = '';
-  //   this.projectData.innovation_images = [];
-  // }
-
+  
   removeImageFile(index: number) {
     this.selectedImagesFile.splice(index, 1);
   }
 
   onFilesSelected(event: any) {
     const files: FileList = event.target.files;
-  
+
     if (!files) return;
-  
+
     for (let i = 0; i < files.length; i++) {
       this.selectedImagesFile.push(files[i]);
     }
@@ -419,7 +413,7 @@ export class UserAddInnovationComponent {
     required('published_date', d.published_date);
     required('source_funds', d.source_funds);
     required('principle', d.principle);
-    required('call_other', d.call_other)
+    required('call_other', d.call_other);
     required('name_funding', d.name_funding);
     required('budget_amount', d.budget_amount);
     required('year_received_budget', d.year_received_budget);
@@ -476,7 +470,9 @@ export class UserAddInnovationComponent {
   }
 
   get hasImages(): boolean {
-    return this.selectedImagesFile.length > 0 ||
-           this.projectData.innovation_images?.length > 0;
+    return (
+      this.selectedImagesFile.length > 0 ||
+      this.projectData.innovation_images?.length > 0
+    );
   }
 }

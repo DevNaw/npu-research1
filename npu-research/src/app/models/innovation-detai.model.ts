@@ -3,6 +3,7 @@ export interface InnovationDetailResponse {
     message: string;
     data: {
       researchInnovation: InnovationApi;
+      owner: ResearchOwnerInnovation[];
     };
   }
   
@@ -80,5 +81,13 @@ export interface InnovationDetailResponse {
     file_name?: string;
     size_file?: string;
     get_url?: string;
+  }
+
+  export interface ResearchOwnerInnovation {
+    user_id: number;
+    full_name: string;
+    organization: string;
+    email: string;
+    phone: string;
   }
   

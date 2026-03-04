@@ -1,6 +1,8 @@
 import { Component, HostListener } from '@angular/core';
 import * as XLSX from 'xlsx';
 import Swal from 'sweetalert2';
+import { AdminExpertiseService } from '../../services/admin-expertise.service';
+import { Expertise } from '../../models/admin-expertise.model';
 
 type MajorStatus = 'พร้อมใช้งาน' | 'ไม่พร้อมใช้งาน';
 
@@ -19,219 +21,190 @@ export interface Majors {
 export class SpecializationComponent {
   pageSize = 10;
   currentPage = 1;
-  searchText: string = '';
+  searchText = '';
   today = new Date();
 
   showModal = false;
   modalMode: 'add' | 'edit' = 'add';
-  editIndex: number | null = null;
-
   isStatusOpen = false;
 
-  majors: Majors[] = [
-    {
-      name: 'เทคโนโลยีดิจิทัล ปัญญาประดิษฐ์ และข้อมูล',
-      description:
-        'การพัฒนาระบบดิจิทัล ปัญญาประดิษฐ์ และการวิเคราะห์ข้อมูล เพื่อสนับสนุนเศรษฐกิจและสังคมดิจิทัล',
-      status: 'พร้อมใช้งาน',
-    },
-    {
-      name: 'เกษตรศาสตร์ อาหาร และเทคโนโลยีชีวภาพ',
-      description:
-        'การวิจัยด้านการเกษตรและอาหาร เพื่อเพิ่มมูลค่าและความมั่นคงทางอาหาร',
-      status: 'ไม่พร้อมใช้งาน',
-    },
-  ];
+  expertises: Expertise[] = [];
+  filteredExpertises: Expertise[] = [];
 
-  filteredExternalFunding = [...this.majors];
+  selectedExpertise: Expertise | null = null;
+
+  constructor(private service: AdminExpertiseService) {}
+
+  ngOnInit(): void {
+    this.loadExpertise();
+  }
+
+  loadExpertise() {
+    this.service.getExpertise().subscribe({
+      next: (res) => {
+        this.expertises = res.data.expertises || [];
+        this.filteredExpertises = [...this.expertises];
+      },
+      error: () => {
+        Swal.fire('โหลดข้อมูลไม่สำเร็จ', '', 'error');
+      },
+    });
+  }
 
   onSearch() {
     const keyword = this.searchText.toLowerCase().trim();
 
-    this.filteredExternalFunding = this.majors.filter((p) =>
-      p.name.toLowerCase().includes(keyword)
+    this.filteredExpertises = this.expertises.filter(
+      (e) =>
+        e.name_th.toLowerCase().includes(keyword) ||
+        e.name_en.toLowerCase().includes(keyword)
     );
+
+    this.currentPage = 1;
   }
 
   get totalPages(): number {
-    return Math.ceil(this.majors.length / this.pageSize);
+    return Math.ceil(this.filteredExpertises.length / this.pageSize) || 1;
   }
 
-  get paginatedExternalFunding() {
-    const startIndex = (this.currentPage - 1) * this.pageSize;
-    return this.majors.slice(startIndex, startIndex + this.pageSize);
+  get paginatedExpertises(): Expertise[] {
+    const start = (this.currentPage - 1) * this.pageSize;
+    return this.filteredExpertises.slice(start, start + this.pageSize);
   }
 
   changePage(page: number) {
     if (page < 1 || page > this.totalPages) return;
     this.currentPage = page;
-    // window.scrollTo({ top: 0, behavior: 'smooth' });
   }
-
-  exportExcel() {
-    const data = this.filteredExternalFunding.map((m, index) => ({
-      ลำดับ: index + 1,
-      หน่วยงาน: m.name,
-      สายวิชาการ: m.description,
-    }));
-
-    // เพิ่มแถวรวมท้ายตาราง
-    data.push({
-      ลำดับ: 1,
-      หน่วยงาน: 'รวมทั้งหมด',
-      สายวิชาการ: '',
-    });
-
-    const worksheet = XLSX.utils.json_to_sheet(data);
-    const workbook: XLSX.WorkBook = {
-      Sheets: { รายงานนักวิจัย: worksheet },
-      SheetNames: ['รายงานนักวิจัย'],
-    };
-
-    XLSX.writeFile(workbook, 'รายงานข้อมูลนักวิจัย.xlsx');
-  }
-
-  printPage() {
-    window.print();
-  }
-
-  newMajors: Majors = {
-    name: '',
-    description: '',
-    status: 'พร้อมใช้งาน',
-  };
 
   openAddModal() {
     this.modalMode = 'add';
-    this.newMajors = { name: '', description: '', status: 'พร้อมใช้งาน' };
+    this.selectedExpertise = {
+      expertise_id: 0,
+      name_th: '',
+      name_en: '',
+      is_active: 1,
+    };
     this.showModal = true;
   }
 
-  openEditModal(item: any, index: number) {
+  openEditModal(item: Expertise) {
     this.modalMode = 'edit';
-    this.editIndex = index;
-    this.newMajors = { ...item };
+    this.selectedExpertise = { ...item };
     this.showModal = true;
-  }
-
-  updateFunding() {
-    if (this.editIndex === null) return;
-
-    this.majors[this.editIndex] = { ...this.newMajors };
-    this.onSearch();
-    this.closeModal();
-
-    Swal.fire({
-          icon: 'success',
-          title: 'อัปเดตสำเร็จ',
-          text: 'แก้ไขข้อมูลแหล่งทุนเรียบร้อยแล้ว',
-          showConfirmButton: false,
-          timer: 1000,
-          timerProgressBar: true,
-          customClass: {
-            title: 'swal-title-lg',
-            htmlContainer: 'swal-text-2xl'
-          }
-        });
   }
 
   closeModal() {
     this.showModal = false;
     this.isStatusOpen = false;
-    this.resetForm();
+    this.selectedExpertise = null;
   }
 
-  saveFunding() {
-    if (!this.newMajors.name || !this.newMajors.description) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'ข้อมูลไม่ครบ',
-        text: 'กรุณากรอกข้อมูลให้ครบถ้วน',
-        confirmButtonText: 'ตกลง',
-        customClass: {
-          title: 'swal-title-lg',
-          htmlContainer: 'swal-text-2xl',
-          confirmButton: 'swal-btn-3xl',
-        }
-      });
-      return;
-    }
+  saveExpertise() {
+    if (!this.selectedExpertise) return;
 
-    this.majors.push({ ...this.newMajors });
-    this.onSearch(); // refresh ตาราง
-    this.closeModal();
-
-    Swal.fire({
-      icon: 'success',
-      title: 'บันทึกสำเร็จ',
-      text: 'เพิ่มข้อมูลสาขาเรียบร้อยแล้ว',
-      timer: 1500,
-      showConfirmButton: false,
-      customClass: {
-        title: 'swal-title-lg',
-        htmlContainer: 'swal-text-2xl',
-        confirmButton: 'swal-btn-3xl',
-      }
-    });
-  }
-
-  resetForm() {
-    this.newMajors = {
-      name: '',
-      description: '',
-      status: 'พร้อมใช้งาน',
-    };
-  }
-
-  deleteFunding(index: number) {
-    Swal.fire({
-      title: 'ยืนยันการลบ?',
-      text: 'ข้อมูลนี้จะไม่สามารถกู้คืนได้',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#dc2626',
-      cancelButtonColor: '#6b7280',
-      confirmButtonText: 'ลบ',
-      cancelButtonText: 'ยกเลิก',
-      customClass: {
-        title: 'swal-title-lg',
-        htmlContainer: 'swal-text-2xl',
-        confirmButton: 'swal-btn-3xl',
-        cancelButton: 'swal-btn-3xl',
-      }
-    }).then((result) => {
-      if (result.isConfirmed) {
-        // ลบข้อมูล
-        this.majors.splice(index, 1);
-
-        // refresh ตาราง / search
-        this.onSearch();
-
+    this.service.createExpertise(this.selectedExpertise).subscribe({
+      next: () => {
+        this.loadExpertise();
+        this.resetForm();
+        this.closeModal();
         Swal.fire({
           icon: 'success',
-          title: 'ลบเรียบร้อย',
-          text: 'ข้อมูลถูกลบแล้ว',
-          timer: 1500,
-          showConfirmButton: false,
-          customClass: {
-            title: 'swal-title-lg',
-            htmlContainer: 'swal-text-2xl',
-            confirmButton: 'swal-btn-3xl',
-          }
+            title: 'บันทึกสำเร็จ',
+            showConfirmButton: false,
+            timer: 1000,
+            timerProgressBar: true
         });
-      }
+      },
+      error: () => Swal.fire('เกิดข้อผิดพลาด', '', 'error'),
     });
+  }
+
+  updateExpertise() {
+    if (!this.selectedExpertise) return;
+
+    this.service
+      .updateExpertise(
+        this.selectedExpertise.expertise_id,
+        this.selectedExpertise
+      )
+      .subscribe({
+        next: () => {
+          this.loadExpertise();
+          this.closeModal();
+      
+          Swal.fire({
+            icon: 'success',
+            title: 'อัปเดตสำเร็จ',
+            showConfirmButton: false,
+            timer: 1000,
+            timerProgressBar: true
+          });
+        },
+        error: () =>
+          Swal.fire({
+            icon: 'error',
+            title: 'เกิดข้อผิดพลาด'
+          }),
+      });
+  }
+
+  deleteExpertise(id: number) {
+    Swal.fire({
+      title: 'ยืนยันการลบ?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'ลบ',
+      cancelButtonText: 'ยกเลิก',
+    }).then((result) => {
+      if (!result.isConfirmed) return;
+
+      this.service.deleteExpertise(id).subscribe({
+        next: () => {
+          this.loadExpertise();
+      
+          Swal.fire({
+            icon: 'success',
+            title: 'ลบสำเร็จ',
+            showConfirmButton: false,
+            timer: 1500,
+            timerProgressBar: true,
+          });
+        },
+        error: () =>
+          Swal.fire({
+            icon: 'error',
+            title: 'เกิดข้อผิดพลาด',
+          }),
+      });
+    });
+  }
+
+  selectStatus(value: 0 | 1) {
+    if (!this.selectedExpertise) return;
+    this.selectedExpertise.is_active = value;
+    this.isStatusOpen = false;
   }
 
   @HostListener('document:click')
-  onDocumentClick() {
-    if (this.isStatusOpen){
-      this.isStatusOpen = false;
-    }
+  closeStatusDropdown() {
+    this.isStatusOpen = false;
   }
 
-  selectStatus(value: MajorStatus) {
-    this.newMajors.status = value;
-    this.isStatusOpen = false;
+  printPage() {
+    Swal.fire('ยังไม่ได้เปิดใช้งาน Print', '', 'info');
+  }
+
+  exportExcel() {
+    Swal.fire('ยังไม่ได้เปิดใช้งาน Export', '', 'info');
+  }
+
+  resetForm() {
+    this.selectedExpertise = {
+      expertise_id: 0,
+      name_th: '',
+      name_en: '',
+      is_active: 1,
+    };
   }
 }

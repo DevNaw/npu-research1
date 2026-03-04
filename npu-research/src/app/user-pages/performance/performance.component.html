@@ -688,7 +688,7 @@
             <!-- Gelleries Images -->
             <div class="md:col-span-1 mt-5">
               <label class="font-bold text-gray-600">Gallery</label>
-            
+
               <div class="grid grid-cols-3 gap-2 mt-5">
                 <img
                   *ngFor="let img of galleryImages"
@@ -888,17 +888,49 @@
       <div class="grid gap-4 p-10">
         <div>
           <p>เจ้าของผลงาน</p>
-          <p class="font-semibold text-gray-800">ดร.ศรราม พิทักกรุง</p>
+          <p *ngIf="type === 'article'" class="font-semibold text-gray-800">
+            {{ ownerArticle?.full_name }}
+          </p>
+          <p *ngIf="type === 'project'" class="font-semibold text-gray-800">
+            {{ ownerProject?.full_name }}
+          </p>
+          <p *ngIf="type === 'innovation'" class="font-semibold text-gray-800">
+            {{ ownerInnovation?.full_name }}
+          </p>
         </div>
 
         <div>
           <p>หน่วยงาน</p>
-          <p class="font-semibold text-gray-800">คณะวิศวกรรมศาสตร์</p>
+          <p *ngIf="type === 'article'" class="font-semibold text-gray-800">
+            {{ ownerArticle?.organization }}
+          </p>
+          <p *ngIf="type === 'project'" class="font-semibold text-gray-800">
+            {{ ownerProject?.organization }}
+          </p>
+          <p *ngIf="type === 'innovation'" class="font-semibold text-gray-800">
+            {{ ownerInnovation?.organization }}
+          </p>
         </div>
 
         <div class="space-y-1 text-gray-700">
-          <p>Email: sonlam&#64;gmail.com</p>
-          <p>โทรศัพท์: 0-4430-5131</p>
+          <p *ngIf="type === 'article'">
+            {{ ownerArticle?.email || "ไม่ระบุ" }}
+          </p>
+          <p *ngIf="type === 'project'">
+            {{ ownerProject?.email || "ไม่ระบุ" }}
+          </p>
+          <p *ngIf="type === 'innovation'">
+            {{ ownerInnovation?.email || "ไม่ระบุ" }}
+          </p>
+          <p *ngIf="type === 'article'">
+            โทรศัพท์: {{ ownerArticle?.phone || "ไม่ระบุ" }}
+          </p>
+          <p *ngIf="type === 'project'">
+            โทรศัพท์: {{ ownerProject?.phone || "ไม่ระบุ" }}
+          </p>
+          <p *ngIf="type === 'innovation'">
+            โทรศัพท์: {{ ownerInnovation?.phone || "ไม่ระบุ" }}
+          </p>
         </div>
       </div>
 

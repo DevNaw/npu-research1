@@ -49,7 +49,6 @@ export type BarChartOptions = {
 
 type ResearchTab = 'project' | 'article' | 'innovation';
 
-
 @Component({
   selector: 'app-user-profile',
   standalone: false,
@@ -102,7 +101,6 @@ export class UserProfileComponent implements OnInit {
   isModalOpen = false;
   isEditMode = false;
   openDropdown: string | null = null;
-
 
   barSummary: BarSummary[] = [];
   researchData: any;
@@ -198,7 +196,7 @@ export class UserProfileComponent implements OnInit {
     private authService: AuthService,
     private service: ProfileService,
     private serviceEducation: EducationService,
-    private route: ActivatedRoute,
+    private route: ActivatedRoute
   ) {
     this.pieChartOptions = {
       series: [44, 55, 13],
@@ -293,8 +291,7 @@ export class UserProfileComponent implements OnInit {
         this.profileData = res.data.user;
         this.barSummary = res.data.bar;
         this.researchData = res.data.researchs;
-        console.log(res);
-        
+
         this.updateCharts();
         this.changeTab('project');
       },
@@ -304,14 +301,14 @@ export class UserProfileComponent implements OnInit {
 
   updateCharts(): void {
     if (!this.barSummary.length) return;
-  
+
     const sorted = [...this.barSummary].sort((a, b) => a.year - b.year);
-  
-    const years = sorted.map(i => i.year.toString());
-    const projectData = sorted.map(i => i.project_count);
-    const articleData = sorted.map(i => i.article_count);
-    const innovationData = sorted.map(i => i.innovation_count);
-  
+
+    const years = sorted.map((i) => i.year.toString());
+    const projectData = sorted.map((i) => i.project_count);
+    const articleData = sorted.map((i) => i.article_count);
+    const innovationData = sorted.map((i) => i.innovation_count);
+
     // ===== BAR =====
     this.barChartOptions = {
       ...this.barChartOptions,
@@ -322,7 +319,7 @@ export class UserProfileComponent implements OnInit {
       ],
       xaxis: { categories: years },
     };
-  
+
     // ===== PIE (รวมทั้งหมดทุกปี) =====
     this.pieChartOptions = {
       ...this.pieChartOptions,
@@ -333,7 +330,7 @@ export class UserProfileComponent implements OnInit {
       ],
     };
   }
-  
+
   onSearch(): void {
     const keyword = this.searchText.toLowerCase().trim();
 
@@ -480,27 +477,26 @@ export class UserProfileComponent implements OnInit {
     this.selectedTab = tab;
     this.searchText = '';
     this.currentPage = 1;
-  
+
     if (!this.researchData) return;
-  
+
     if (tab === 'project') {
       this.originalData = this.researchData.projects || [];
     }
-  
+
     if (tab === 'article') {
       this.originalData = this.researchData.articles || [];
     }
-  
+
     if (tab === 'innovation') {
       this.originalData = this.researchData.innovations || [];
     }
-  
+
     this.filteredData = [...this.originalData];
     this.totalItems = this.filteredData.length;
-  
-    this.updatePagination(); // 🔥 สำคัญมาก
-  }
 
+    this.updatePagination();
+  }
 
   // Education
   save() {
@@ -517,8 +513,11 @@ export class UserProfileComponent implements OnInit {
       const request$ = this.service.updateEducation(payload);
 
       request$.subscribe({
-        next: () => this.handleSaveSuccess(),
-        error: () => Swal.fire('ผิดพลาด', 'ไม่สามารถบันทึกข้อมูลได้', 'error'),
+        next: () => {
+          this.handleSaveSuccess();
+        },
+        error: () =>
+          Swal.fire('ผิดพลาด', 'ไม่สามารถบันทึกข้อมูลได้', 'error'),
       });
     });
   }
@@ -530,8 +529,6 @@ export class UserProfileComponent implements OnInit {
         if (data.date_graduation) {
           data.date_graduation = this.convertToISO(data.date_graduation);
         }
-        console.log(data);
-        
 
         if (data.date_enrollment) {
           data.date_enrollment = this.convertToISO(data.date_enrollment);
@@ -585,8 +582,9 @@ export class UserProfileComponent implements OnInit {
       showConfirmButton: false,
     }).then(() => {
       this.isModalOpen = false;
+      // this.loadEducation();
+      window.location.reload();
       this.resetForm();
-      this.loadEducation();
     });
   }
   resetForm() {

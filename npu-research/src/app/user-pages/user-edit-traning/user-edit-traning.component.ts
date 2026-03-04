@@ -7,10 +7,10 @@ import { AuthService } from '../../services/auth.service';
   selector: 'app-user-edit-traning',
   standalone: false,
   templateUrl: './user-edit-traning.component.html',
-  styleUrl: './user-edit-traning.component.css'
+  styleUrl: './user-edit-traning.component.css',
 })
 export class UserEditTraningComponent implements OnInit {
- userId!: string | null;
+  userId!: string | null;
   isModalAdd = false;
   isModalEdit = false;
 
@@ -18,11 +18,7 @@ export class UserEditTraningComponent implements OnInit {
   searchLocation = '';
   selectedLocation: string | null = null;
 
-  constructor(
-    private router: Router,
-    private route: ActivatedRoute,
-    private authService: AuthService
-  ) {}
+  constructor(private router: Router, private route: ActivatedRoute) {}
 
   location: string[] = [
     'กรุงเทพมหานคร',
@@ -100,7 +96,7 @@ export class UserEditTraningComponent implements OnInit {
   ngOnInit(): void {
     this.userId = this.route.snapshot.paramMap.get('id');
   }
-  
+
   // ===== Modal Control =====
   openModalAdd() {
     this.isModalAdd = true;
@@ -158,7 +154,7 @@ export class UserEditTraningComponent implements OnInit {
         htmlContainer: 'swal-text-2xl',
         confirmButton: 'swal-btn-3xl',
         cancelButton: 'swal-btn-3xl',
-      }
+      },
     });
     this.closeModalAdd();
   }
@@ -174,7 +170,7 @@ export class UserEditTraningComponent implements OnInit {
         htmlContainer: 'swal-text-2xl',
         confirmButton: 'swal-btn-3xl',
         cancelButton: 'swal-btn-3xl',
-      }
+      },
     });
     this.closeModalEdit();
   }
@@ -192,7 +188,7 @@ export class UserEditTraningComponent implements OnInit {
         htmlContainer: 'swal-text-2xl',
         confirmButton: 'swal-btn-3xl',
         cancelButton: 'swal-btn-3xl',
-      }
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         Swal.fire({
@@ -205,7 +201,7 @@ export class UserEditTraningComponent implements OnInit {
             htmlContainer: 'swal-text-2xl',
             confirmButton: 'swal-btn-3xl',
             cancelButton: 'swal-btn-3xl',
-          }
+          },
         });
       }
     });
@@ -222,16 +218,15 @@ export class UserEditTraningComponent implements OnInit {
         htmlContainer: 'swal-text-2xl',
         confirmButton: 'swal-btn-3xl',
         cancelButton: 'swal-btn-3xl',
-      }
+      },
     });
-  
+
     const role = localStorage.getItem('role');
-  
+
     setTimeout(() => {
       this.router.navigateByUrl(
         role === 'admin' ? '/admin/profile' : '/user/profile'
       );
     }, 1500);
   }
-  
 }

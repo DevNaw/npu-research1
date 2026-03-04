@@ -3,6 +3,7 @@ export interface ProjectDetailResponse {
     message: string;
     data: {
       projectDetail: ProjectDetailApi;
+      owner: ResearchOwnerProject[];
     };
   }
   
@@ -57,5 +58,13 @@ export interface ProjectDetailResponse {
     file_name: string | null;
     size_file: string;
     get_url: string | null;
+  }
+
+  export interface ResearchOwnerProject {
+    user_id: number;
+    full_name: string;
+    organization: string;
+    email: string;
+    phone: string;
   }
   

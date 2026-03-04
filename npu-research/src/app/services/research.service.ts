@@ -153,6 +153,10 @@ export class ResearchService {
     );
   }
 
+  getArticles(id: number): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/research/${id}/article`);
+  }
+
   updateArticle(id: number, data: any) {
     return this.http.post(`${this.baseUrl}/research/${id}/update-article`, data);
   }
@@ -172,6 +176,10 @@ export class ResearchService {
     return this.http.post(`${this.baseUrl}/research/${id}/update-project`, data);
   }
 
+  getProjects(id: number): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/research/${id}/project`);
+  }
+
   // ==================== Innovation =====================
   createInnovation(data: any) {
     return this.http.post(`${this.baseUrl}/research/add-innovation`, data);
@@ -183,5 +191,9 @@ export class ResearchService {
 
   getInnovationById(id: number): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/research/${id}/innovation-for-update`);
+  }
+
+  getInnovations(id: number): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/research/${id}/innovation`);
   }
 }

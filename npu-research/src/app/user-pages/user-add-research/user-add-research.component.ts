@@ -72,14 +72,10 @@ export class UserAddResearchComponent {
   internalFunds: string[] = [
     'งบประมาณมหาวิทยาลัย',
     'งบประมาณคณะ',
-    'งบประมาณภาควิชา'
+    'งบประมาณภาควิชา',
   ];
-  
-  externalFunds: string[] = [
-    'สำนักงานวิจัยแห่งชาติ',
-    'สกสว.',
-    'หน่วยงานเอกชน'
-  ];
+
+  externalFunds: string[] = ['สำนักงานวิจัยแห่งชาติ', 'สกสว.', 'หน่วยงานเอกชน'];
 
   selectedFileName = '';
   selectedFile: File | null = null;
@@ -417,7 +413,7 @@ export class UserAddResearchComponent {
         fd.append(`internal_members[${i}][no]`, String(i + 1));
       });
 
-      this.externalRow
+    this.externalRow
       .filter((r) => r.name)
       .forEach((r, i) => {
         fd.append(`external_members[${i}][full_name]`, r.name);
@@ -426,18 +422,19 @@ export class UserAddResearchComponent {
         fd.append(`external_members[${i}][no]`, String(i + 1));
       });
 
-      return fd;
+    return fd;
   }
 
   resetForm(): void {
     this.projectData = { ...DEFAULT_RESEARCH };
-    this.internalRow = [{ id: 0, researcher_id: null, name: '', responsibilities: '' }];
-    this.externalRow = [{ name: '', organization: '', responsibilities: '', }];
+    this.internalRow = [
+      { id: 0, researcher_id: null, name: '', responsibilities: '' },
+    ];
+    this.externalRow = [{ name: '', organization: '', responsibilities: '' }];
     this.selectedFile = null;
     this.selectedFileName = '';
     this.selectedContractFile = null;
-    this.selectedContractFileName = '',
-    this.selectedMajor = null;
+    (this.selectedContractFileName = ''), (this.selectedMajor = null);
     this.selectedSub = null;
     this.searchMajor = '';
   }

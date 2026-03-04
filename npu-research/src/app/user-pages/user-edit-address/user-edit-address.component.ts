@@ -17,14 +17,12 @@ export class UserEditAddressComponent implements OnInit {
 
   searchAddress = '';
   searchCurrentAddress = '';
-
   selectedAddress = '';
   selectedCurrentAddress = '';
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -51,11 +49,6 @@ export class UserEditAddressComponent implements OnInit {
   isOpen(type: DropdownKey): boolean {
     return this.openDropdown === type;
   }
-
-  // @HostListener('document:click')
-  // closeAll() {
-  //   this.openDropdown = null;
-  // }
   
   closeDropdown() {
     this.openDropdown = null;
@@ -97,7 +90,7 @@ export class UserEditAddressComponent implements OnInit {
           htmlContainer: 'swal-text-2xl',
           confirmButton: 'swal-btn-3xl',
           cancelButton: 'swal-btn-3xl',
-        }
+        },
       });
       return;
     }
@@ -119,7 +112,7 @@ export class UserEditAddressComponent implements OnInit {
         htmlContainer: 'swal-text-2xl',
         confirmButton: 'swal-btn-3xl',
         cancelButton: 'swal-btn-3xl',
-      }
+      },
     }).then((result) => {
       const role = localStorage.getItem('role');
 

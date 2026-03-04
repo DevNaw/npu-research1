@@ -25,34 +25,33 @@ export class UserEditProfileComponent implements OnInit {
     age: 0,
     ethnicity: '',
     nationality: '',
-    religion: ''
+    religion: '',
   };
 
-   /* ===== data ===== */
-   ethnicity = ['ไทย', 'จีน', 'ญี่ปุ่น', 'อเมริกัน'];
-   nationality = ['ไทย', 'ญี่ปุ่น', 'จีน', 'อังกฤษ'];
-   religion = ['พุทธ', 'คริสต์', 'อิสลาม', 'ฮินดู'];
-   majors = ['คอมพิวเตอร์', 'เทคโนโลยีสารสนเทศ', 'วิศวกรรม', 'ปัญญาประดิษฐ์'];
- 
-   /* ===== selected ===== */
-   selectedTitle = '';
-   selectedEthnicity = '';
-   selectedNationality = '';
-   selectedReligion = '';
-   selectedMajors: string[] = [];
- 
-   /* ===== search ===== */
-   searchTitle = '';
-   searchEthnicity = '';
-   searchNationality = '';
-   searchReligion = '';
-   searchMajor = '';
- 
+  /* ===== data ===== */
+  ethnicity = ['ไทย', 'จีน', 'ญี่ปุ่น', 'อเมริกัน'];
+  nationality = ['ไทย', 'ญี่ปุ่น', 'จีน', 'อังกฤษ'];
+  religion = ['พุทธ', 'คริสต์', 'อิสลาม', 'ฮินดู'];
+  majors = ['คอมพิวเตอร์', 'เทคโนโลยีสารสนเทศ', 'วิศวกรรม', 'ปัญญาประดิษฐ์'];
+
+  /* ===== selected ===== */
+  selectedTitle = '';
+  selectedEthnicity = '';
+  selectedNationality = '';
+  selectedReligion = '';
+  selectedMajors: string[] = [];
+
+  /* ===== search ===== */
+  searchTitle = '';
+  searchEthnicity = '';
+  searchNationality = '';
+  searchReligion = '';
+  searchMajor = '';
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private service: ProfileService,
+    private service: ProfileService
   ) {}
 
   ngOnInit(): void {
@@ -60,21 +59,20 @@ export class UserEditProfileComponent implements OnInit {
   }
 
   // =============== loadData ==================
-  loadData(){
+  loadData() {
     this.service.getGeneralInfo().subscribe({
       next: (res) => {
         const info = res.data.general_info;
 
-      this.data = {
-        ...info,
-        date_of_birth: this.convertThaiDateToISO(info.date_of_birth)
-      };
-        
+        this.data = {
+          ...info,
+          date_of_birth: this.convertThaiDateToISO(info.date_of_birth),
+        };
       },
       error: (err) => {
         console.error(err);
-      }
-    })
+      },
+    });
   }
 
   // ======= Update Profile ==========
@@ -84,7 +82,7 @@ export class UserEditProfileComponent implements OnInit {
         Swal.fire({
           icon: 'success',
           title: 'สำเร็จ',
-          text: 'อัปเดตข้อมูลเรียบร้อยแล้ว'
+          text: 'อัปเดตข้อมูลเรียบร้อยแล้ว',
         });
 
         const role = localStorage.getItem('role');
@@ -99,9 +97,9 @@ export class UserEditProfileComponent implements OnInit {
         Swal.fire({
           icon: 'error',
           title: 'ผิดพลาด',
-          text: 'ไม่สามารถอัปเดตข้อมูลได้'
+          text: 'ไม่สามารถอัปเดตข้อมูลได้',
         });
-      }
+      },
     });
   }
 
@@ -183,86 +181,70 @@ export class UserEditProfileComponent implements OnInit {
       confirmButtonColor: '#22c55e',
       cancelButtonColor: '#ef4444',
     }).then((result) => {
-  
       if (!result.isConfirmed) return;
-  
-      // 🔄 Loading
+
       Swal.fire({
         title: 'กำลังบันทึกข้อมูล',
         allowOutsideClick: false,
         didOpen: () => Swal.showLoading(),
       });
-  
+
       this.service.updateGeneral(this.data).subscribe({
-  
         next: () => {
           Swal.fire({
             icon: 'success',
             title: 'สำเร็จ',
             text: 'อัปเดตข้อมูลเรียบร้อยแล้ว',
             timer: 1500,
-            showConfirmButton: false
+            showConfirmButton: false,
           });
-  
+
           const role = localStorage.getItem('role');
-  
+
           setTimeout(() => {
             this.router.navigateByUrl(
               role === 'admin' ? '/admin/profile' : '/user/profile'
             );
           }, 1500);
         },
-  
+
         error: (err) => {
           console.error(err);
           Swal.fire({
             icon: 'error',
             title: 'เกิดข้อผิดพลาด',
-            text: 'ไม่สามารถบันทึกข้อมูลได้'
+            text: 'ไม่สามารถบันทึกข้อมูลได้',
           });
-        }
-  
+        },
       });
-  
     });
   }
 
-  // ===== Nationality =====
-  nationalityList: string[] = [
-    'ไทย',
-    'จีน',
-    'ญี่ปุ่น',
-    'เกาหลี',
-    'อเมริกัน',
-    'อังกฤษ',
-    'ฝรั่งเศส',
-  ];
-
   private convertThaiDateToISO(thaiDate: string): string {
     if (!thaiDate) return '';
-  
+
     const months: any = {
-      'มกราคม': 0,
-      'กุมภาพันธ์': 1,
-      'มีนาคม': 2,
-      'เมษายน': 3,
-      'พฤษภาคม': 4,
-      'มิถุนายน': 5,
-      'กรกฎาคม': 6,
-      'สิงหาคม': 7,
-      'กันยายน': 8,
-      'ตุลาคม': 9,
-      'พฤศจิกายน': 10,
-      'ธันวาคม': 11
+      มกราคม: 0,
+      กุมภาพันธ์: 1,
+      มีนาคม: 2,
+      เมษายน: 3,
+      พฤษภาคม: 4,
+      มิถุนายน: 5,
+      กรกฎาคม: 6,
+      สิงหาคม: 7,
+      กันยายน: 8,
+      ตุลาคม: 9,
+      พฤศจิกายน: 10,
+      ธันวาคม: 11,
     };
-  
+
     const parts = thaiDate.split(' ');
     const day = parseInt(parts[0], 10);
     const month = months[parts[1]];
     const year = parseInt(parts[2], 10) - 543; // แปลง พ.ศ. → ค.ศ.
-  
+
     const date = new Date(year, month, day);
-  
+
     return date.toISOString().split('T')[0]; // YYYY-MM-DD
   }
 }

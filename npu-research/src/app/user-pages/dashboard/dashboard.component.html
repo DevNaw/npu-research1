@@ -26,9 +26,12 @@
           <p class="text-2xl font-black">โครงการวิจัย</p>
         </div>
 
-        <div class="ml-auto flex items-center gap-6 justify-end">
+        <div class="ml-auto flex items-center gap-6 justify-between">
+          <div>
+            <p class="text-xl font-semibold ml-3">จำนวนทั้งหมด</p>
+          </div>
           <h2 class="text-4xl font-black">
-            {{ dashboardData.statistic_research.total_project }}
+            {{ dashboardData?.statistic_research?.total_project }}
           </h2>
         </div>
         <!-- <div class="ml-auto flex items-center gap-6 justify-between">
@@ -45,17 +48,14 @@
           <p class="text-2xl font-black">บทความ</p>
         </div>
 
-        <div class="ml-auto flex items-center gap-6 justify-end">
+        <div class="ml-auto flex items-center gap-6 justify-between">
+          <div>
+            <p class="text-xl font-semibold ml-3">จำนวนทั้งหมด</p>
+          </div>
           <h2 class="text-4xl font-black">
-            {{ dashboardData.statistic_research.total_article }}
+            {{ dashboardData?.statistic_research?.total_article }}
           </h2>
         </div>
-        <!-- <div class="ml-auto flex items-center gap-6 justify-between">
-          <h2 class="text-4xl font-black">860</h2>
-          <div>
-            <p class="text-xl font-semibold">ชาย 501 | หญิง 600</p>
-          </div>
-        </div> -->
       </div>
 
       <div class="items-center p-6 bg-white rounded-xl shadow">
@@ -64,17 +64,14 @@
           <h2 class="text-2xl font-black">นวัตกรรม</h2>
         </div>
 
-        <div class="ml-auto flex items-center gap-6 justify-end">
+        <div class="ml-auto flex items-center gap-6 justify-between">
+          <div>
+            <p class="text-xl font-semibold ml-3">จำนวนทั้งหมด</p>
+          </div>
           <h2 class="text-4xl font-black">
-            {{ dashboardData.statistic_research.total_innovation }}
+            {{ dashboardData?.statistic_research?.total_innovation }}
           </h2>
         </div>
-        <!-- <div class="ml-auto flex items-center gap-6 justify-between">
-          <h2 class="text-4xl font-black">210</h2>
-          <div>
-            <p class="text-xl font-semibold">ชาย 501 | หญิง 600</p>
-          </div>
-        </div> -->
       </div>
 
       <div class="items-center p-6 bg-white rounded-xl shadow">
@@ -83,17 +80,14 @@
           <p class="text-2xl font-black">จำนวนนักวิจัย</p>
         </div>
 
-        <div class="ml-auto flex items-center gap-6 justify-end">
+        <div class="ml-auto flex items-center gap-6 justify-between">
+          <div>
+            <p class="text-xl font-semibold ml-3">จำนวนทั้งหมด</p>
+          </div>
           <h2 class="text-4xl font-black">
-            {{ dashboardData.statistic_research.total_users }}
+            {{ dashboardData?.statistic_research?.total_users }}
           </h2>
         </div>
-        <!-- <div class="ml-auto flex items-center gap-6 justify-between">
-          <h2 class="text-4xl font-black">340</h2>
-          <div>
-            <p class="text-xl font-semibold">ชาย 501 | หญิง 600</p>
-          </div>
-        </div> -->
       </div>
     </div>
 

@@ -3,9 +3,7 @@ import Swal from 'sweetalert2';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { Router } from '@angular/router';
-import {
-  DataPerformanceItem,
-} from '../../models/dashboard.model';
+import { DataPerformanceItem } from '../../models/dashboard.model';
 import { registerLocaleData } from '@angular/common';
 import localeTh from '@angular/common/locales/th';
 import { NewsItem } from '../../models/news.model';
@@ -82,7 +80,7 @@ export class UserDashboardComponent implements OnInit {
   };
 
   researches: DataPerformanceItem[] = [];
-  dashboardData!: DashboardData;
+  dashboardData: DashboardData | null = null;
 
   filteredResearch: ResearchItem[] = [];
   paginatedPublications: ResearchItem[] = [];
@@ -91,7 +89,6 @@ export class UserDashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadDashboardData();
-    // this.filteredResearch = [...this.publications[this.selectedTab]];
     this.updatePagination();
   }
 
@@ -118,26 +115,26 @@ export class UserDashboardComponent implements OnInit {
   }
 
   initCharts(): void {
-    const graph = this.dashboardData.statistic_graph;
+    const graph = this.dashboardData?.statistic_graph;
 
     this.charts = [
       {
         type: 'project',
         title: 'โครงการวิจัย',
         subtitle: 'สถิติตามปีงบประมาณ',
-        options: this.createBarChart(graph.graph_project),
+        options: this.createBarChart(graph?.graph_project ?? []),
       },
       {
         type: 'article',
         title: 'บทความวิจัย',
         subtitle: 'สถิติตามปีงบประมาณ',
-        options: this.createBarChart(graph.graph_article),
+        options: this.createBarChart(graph?.graph_article ?? []),
       },
       {
         type: 'innovation',
         title: 'ผลงานนวัตกรรม',
         subtitle: 'สถิติตามปีงบประมาณ',
-        options: this.createBarChart(graph.graph_innovation),
+        options: this.createBarChart(graph?.graph_innovation ?? []),
       },
     ];
   }
@@ -153,25 +150,20 @@ export class UserDashboardComponent implements OnInit {
         },
       ],
       annotations: {
-        points: [
-          {
-            x: 'Bananas',
-            seriesIndex: 0,
-            label: {
-              borderColor: '#775DD0',
-              offsetY: 0,
-              style: {
-                color: '#fff',
-                background: '#775DD0',
-              },
-              text: 'Bananas are good',
-            },
-          },
-        ],
+        points: [],
       },
       chart: {
         type: 'bar',
         height: 500,
+        animations: {
+          enabled: false
+        },
+        zoom: {
+          enabled: false
+        },
+        toolbar: {
+          show: true
+        },
       },
       plotOptions: {
         bar: {
@@ -202,7 +194,7 @@ export class UserDashboardComponent implements OnInit {
         },
       },
       stroke: {
-        width: 2,
+        width: 1,
       },
 
       fill: {
@@ -232,18 +224,17 @@ export class UserDashboardComponent implements OnInit {
 
   onSearch() {
     const keyword = this.searchText.toLowerCase().trim();
-  
+
     const key = this.mapResearchTypeToKey(this.selectedTab);
-  
-    this.filteredResearch = this.publications[key].filter((p) =>
-      p.title_th.toLowerCase().includes(keyword) ||
-      (p.title_en?.toLowerCase().includes(keyword) ?? false) ||
-      p.year.toString().includes(keyword) ||
-      p.own.some(owner =>
-        owner.full_name.toLowerCase().includes(keyword)
-      )
+
+    this.filteredResearch = this.publications[key].filter(
+      (p) =>
+        p.title_th.toLowerCase().includes(keyword) ||
+        (p.title_en?.toLowerCase().includes(keyword) ?? false) ||
+        p.year.toString().includes(keyword) ||
+        p.own.some((owner) => owner.full_name.toLowerCase().includes(keyword))
     );
-  
+
     this.currentPage = 1;
     this.updatePagination();
   }
@@ -282,10 +273,6 @@ export class UserDashboardComponent implements OnInit {
     this.router.navigateByUrl('/manual');
   }
 
-  // viewItem(id: number) {
-  //   this.router.navigate(['/performance', this.selectedTab, id]);
-  // }
-
   viewItem(id: number) {
     this.router.navigate([
       '/performance-public',
@@ -298,10 +285,10 @@ export class UserDashboardComponent implements OnInit {
     this.selectedTab = tab;
     this.searchText = '';
     this.currentPage = 1;
-  
+
     const key = this.mapResearchTypeToKey(tab);
     this.filteredResearch = [...this.publications[key]];
-  
+
     this.updatePagination();
   }
 

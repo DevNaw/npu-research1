@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ResearchService } from '../../services/research.service';
-import { ResearchArticle } from '../../models/article-show.model';
+import { ResearchArticle, ResearchOwner } from '../../models/article-show.model';
 import { AuthService } from '../../services/auth.service';
-import { ProjectDetailApi } from '../../models/research-detai.model';
+import { ProjectDetailApi, ResearchOwnerProject } from '../../models/research-detai.model';
 import { of, switchMap } from 'rxjs';
-import { InnovationApi } from '../../models/innovation-detai.model';
+import { InnovationApi, ResearchOwnerInnovation } from '../../models/innovation-detai.model';
 import Swal from 'sweetalert2';
 import { HttpClient } from '@angular/common/http';
 
@@ -29,6 +29,10 @@ export class PerformanceComponent {
   articleData: ResearchArticle | null = null;
   researchData: ProjectDetailApi | null = null;
   innovationData: InnovationApi | null = null;
+
+  ownerArticle: ResearchOwner | null = null;
+    ownerProject: ResearchOwnerProject | null = null;
+    ownerInnovation: ResearchOwnerInnovation | null = null;
   img: any;
 
   galleryImages: string[] = [];
@@ -179,13 +183,13 @@ export class PerformanceComponent {
   private getRequestByType(type: WorkType, id: number) {
     switch (type) {
       case 'article':
-        return this.service.getArticleById(id);
+        return this.service.getArticles(id);
 
       case 'project':
-        return this.service.getProjectById(id);
+        return this.service.getProjects(id);
 
       case 'innovation':
-        return this.service.getInnovationById(id);
+        return this.service.getInnovations(id);
 
       default:
         return of(null);
@@ -196,6 +200,7 @@ export class PerformanceComponent {
     switch (this.type) {
       case 'article':
         this.articleData = res.data.researchArticle;
+        this.ownerArticle = res.data.owner;
 
         if (this.articleData?.internal_members?.length) {
           this.articleData.internal_members = this.sortFirstAuthorFirst(
@@ -206,6 +211,7 @@ export class PerformanceComponent {
 
       case 'project':
         this.researchData = res.data.projectDetail;
+        this.ownerProject = res.data.owner;
 
         if (this.researchData?.internal_members?.length) {
           this.researchData.internal_members = this.sortFirstAuthorFirst(
@@ -216,6 +222,7 @@ export class PerformanceComponent {
 
       case 'innovation':
         this.innovationData = res.data.researchInnovation;
+        this.ownerInnovation = res.data.owner;
 
         if (this.innovationData?.internal_members?.length) {
           this.innovationData.internal_members = this.sortFirstAuthorFirst(

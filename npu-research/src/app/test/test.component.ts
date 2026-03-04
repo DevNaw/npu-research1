@@ -1,30 +1,8 @@
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
-
-import {
-  ApexAxisChartSeries,
-  ApexChart,
-  ChartComponent,
-  ApexDataLabels,
-  ApexPlotOptions,
-  ApexYAxis,
-  ApexAnnotations,
-  ApexFill,
-  ApexStroke,
-  ApexGrid
-} from "ng-apexcharts";
-
-export type ChartOptions = {
-  series: ApexAxisChartSeries;
-  chart: ApexChart;
-  dataLabels: ApexDataLabels;
-  plotOptions: ApexPlotOptions;
-  yaxis: ApexYAxis;
-  xaxis: any; //ApexXAxis;
-  annotations: ApexAnnotations;
-  fill: ApexFill;
-  stroke: ApexStroke;
-  grid: ApexGrid;
-};
+import { environment } from '../../environments/environment';
+import { ResearchArticle } from '../models/article-show.model';
+import { Owner } from '../models/search.model';
+import { ResearchService } from '../services/research.service';
 
 @Component({
   selector: 'app-test',
@@ -33,95 +11,26 @@ export type ChartOptions = {
   styleUrl: './test.component.css',
 })
 export class TestComponent {
-  @ViewChild("chart") chart!: ChartComponent;
-  public chartOptions: ChartOptions;
+id: number = 25;
+  article: ResearchArticle | null = null;
+  owner: Owner | null = null;
 
-  constructor() {
-    this.chartOptions = {
-      series: [
-        {
-          name: "Servings",
-          data: [44, 55, 41, 67, 22, 43, 21, 33, 45, 31, 87, 65, 35]
-        }
-      ],
-      annotations: {
-        points: [
-          {
-            x: "Bananasddd",
-            seriesIndex: 0,
-            label: {
-              borderColor: "#775DD0",
-              offsetY: 0,
-              style: {
-                color: "#fff",
-                background: "#775DD0"
-              },
-              text: "Bananas are good"
-            }
-          }
-        ]
-      },
-      chart: {
-        height: 350,
-        type: "bar"
-      },
-      plotOptions: {
-        bar: {
-          columnWidth: "50%",
-          // endingShape: "rounded"
-        }
-      },
-      dataLabels: {
-        enabled: false
-      },
-      stroke: {
-        width: 2
-      },
+  constructor(private service: ResearchService) {}
 
-      grid: {
-        row: {
-          colors: ["#fff", "#f2f2f2"]
-        }
+  ngOnInit(): void {
+    this.loadArticle();
+  }
+
+  loadArticle(): void {
+    this.service.getArticles(this.id).subscribe({
+      next: (res) => {
+        this.article = res.data.researchArticle;
+        this.owner = res.data.owner;
+
+        console.log(this.owner);
+        
       },
-      xaxis: {
-        labels: {
-          rotate: -45
-        },
-        categories: [
-          "Apples",
-          "Oranges",
-          "Strawberries",
-          "Pineapples",
-          "Mangoes",
-          "Bananas",
-          "Blackberries",
-          "Pears",
-          "Watermelons",
-          "Cherries",
-          "Pomegranates",
-          "Tangerines",
-          "Papayas"
-        ],
-        tickPlacement: "on"
-      },
-      yaxis: {
-        title: {
-          text: "Servings"
-        }
-      },
-      fill: {
-        type: "gradient",
-        gradient: {
-          shade: "light",
-          type: "horizontal",
-          shadeIntensity: 0.25,
-          gradientToColors: undefined,
-          inverseColors: true,
-          opacityFrom: 0.85,
-          opacityTo: 0.85,
-          stops: [50, 0, 100]
-        }
-      }
-    };
+      error: (err) => console.error(err),
+    });
   }
 }

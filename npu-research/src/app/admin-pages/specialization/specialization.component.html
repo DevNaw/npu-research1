@@ -61,18 +61,18 @@
       <table class="min-w-225 w-full table-auto">
 
         <colgroup>
-          <col class="w-[5%]" />   <!-- # -->
-          <col class="w-[35%]" />  <!-- ชื่อสาขา -->
-          <col class="w-[35%]" />  <!-- คำอธิบาย -->
-          <col class="w-[15%]" />  <!-- สถานะ -->
-          <col class="w-[10%]" />  <!-- Action -->
+          <col class="w-[10%]" />
+          <col class="w-[30%]" />
+          <col class="w-[30%]" />
+          <col class="w-[20%]" />
+          <col class="w-[10%]" />
         </colgroup>
         
         <thead>
           <tr class="bg-[#394250] text-white border-b">
             <th class="p-1 md:p-3 text-center">#</th>
             <th class="p-1 md:p-3">ชื่อสาขาวิชาที่เชี่ยวชาญ</th>
-            <th class="p-1 md:p-3 text-center">คำอธิบาย</th>
+            <th class="p-1 md:p-3">ชื่อสาขาวิชาที่เชี่ยวชาญอังกฤษ</th>
             <th class="p-1 md:p-3 w-35 text-center">สถานะใช้งาน</th>
             <th class="p-1 md:p-3 w-27 text-center">Action</th>
           </tr>
@@ -80,7 +80,7 @@
 
         <tbody>
           <tr
-            *ngFor="let field of filteredExternalFunding; let i = index"
+            *ngFor="let field of paginatedExpertises; let i = index"
             class="border-b border-gray-300 bg-gray-200 hover:bg-gray-50"
           >
             <td class="p-1 md:p-3 text-center">
@@ -88,15 +88,15 @@
             </td>
 
             <td class="p-1 md:p-3 md:pl-6 font-medium">
-              {{ field.name }}
+              {{ field.name_th }}
+            </td>
+            <td class="p-1 md:p-3 md:pl-6 font-medium">
+              {{ field.name_en }}
             </td>
 
-            <td class="p-1 md:p-3 text-left">
-              {{ field.description }}
-            </td>
             <td class="p-1 md:p-3 text-center">
               <i
-                *ngIf="field.status === 'พร้อมใช้งาน'; else notReady"
+                *ngIf="field.is_active === 1; else notReady"
                 class="bi bi-check-circle-fill text-green-600 text-lg"
               ></i>
 
@@ -107,18 +107,18 @@
 
             <td class="p-1 md:p-3 text-center">
               <i
-                (click)="openEditModal(field, i)"
+                (click)="openEditModal(field)"
                 class="bi bi-pencil-square text-blue-500 hover:text-blue-700 mr-3 cursor-pointer text-xl"
               ></i>
               <i
-                (click)="deleteFunding(i)"
+                (click)="deleteExpertise(field.expertise_id)"
                 class="bi bi-trash3 text-red-500 cursor-pointer hover:text-red-700 text-xl"
               ></i>
             </td>
           </tr>
 
           <!-- ไม่พบข้อมูล -->
-          <tr *ngIf="filteredExternalFunding.length === 0">
+          <tr *ngIf="filteredExpertises.length === 0">
             <td colspan="5" class="text-center p-4 text-gray-500">
               ไม่พบข้อมูล
             </td>
@@ -136,8 +136,8 @@
       </p>
 
       <p class="text-lg text-gray-500">
-        แสดง {{ paginatedExternalFunding.length }} รายการ จาก
-        {{ majors.length }} รายการ
+        แสดง {{ paginatedExpertises.length }} รายการ จาก
+        {{ filteredExpertises.length }} รายการ
       </p>
 
       <div class="flex justify-end md:mt-3 space-x-1">
@@ -179,7 +179,7 @@
   (click)="closeModal()"
 >
   <div
-    class="bg-white rounded-xl w-full max-w-lg p-2 md:p-6 max-h-[90vh] overflow-y-auto"
+    class="bg-white rounded-xl w-full max-w-lg p-2 md:p-6 max-h-[90vh] h-120 overflow-y-auto"
     (click)="$event.stopPropagation()"
   >
     <!-- Title -->
@@ -194,7 +194,7 @@
       <label class="block mb-1 font-bold">ชื่อสาขาวิชาที่เชี่ยวชาญ</label>
       <input
         type="text"
-        [(ngModel)]="newMajors.name"
+        [(ngModel)]="selectedExpertise!.name_th"
         class="w-full border rounded-md px-3 py-2 focus:ring focus:ring-blue-200 text-2xl"
         placeholder="กรอกชื่อสาขาวิชาที่เชี่ยวชาญ"
       />
@@ -202,13 +202,13 @@
 
     <!-- รายละเอียด -->
     <div class="mb-2 md:mb-4">
-      <label class="block mb-1 font-bold">รายละเอียด</label>
-      <textarea
-        [(ngModel)]="newMajors.description"
-        rows="3"
-        class="w-full border rounded-md px-3 py-2 focus:ring focus:ring-blue-200"
-        placeholder="กรอกรายละเอียด"
-      ></textarea>
+      <label class="block mb-1 font-bold">ชื่อสาขาวิชาที่เชี่ยวชาญอังกฤษ</label>
+      <input
+        type="text"
+        [(ngModel)]="selectedExpertise!.name_en"
+        class="w-full border rounded-md px-3 py-2 focus:ring focus:ring-blue-200 text-2xl"
+        placeholder="กรอกชื่อสาขาวิชาที่เชี่ยวชาญ"
+      />
     </div>
 
     <!-- สถานะ -->
@@ -219,7 +219,13 @@
         class="w-full border rounded-md px-3 py-2 flex justify-between items-center"
         (click)="isStatusOpen = !isStatusOpen"
       >
-        {{ newMajors.status || "เลือกสถานะ" }}
+      {{
+        selectedExpertise?.is_active === 1
+          ? 'พร้อมใช้งาน'
+          : selectedExpertise?.is_active === 0
+            ? 'ไม่พร้อมใช้งาน'
+            : 'เลือกสถานะ'
+      }}
         <i class="bi bi-chevron-down"></i>
       </button>
 
@@ -228,13 +234,13 @@
         class="absolute z-50 mt-1 w-full bg-white border rounded-md shadow"
       >
         <div
-          (click)="selectStatus('พร้อมใช้งาน')"
+          (click)="selectStatus(1)"
           class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
         >
           พร้อมใช้งาน
         </div>
         <div
-          (click)="selectStatus('ไม่พร้อมใช้งาน')"
+          (click)="selectStatus(0)"
           class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
         >
           ไม่พร้อมใช้งาน
@@ -245,7 +251,7 @@
     <!-- Buttons -->
     <div class="flex flex-col sm:flex-row justify-center gap-2">
       <button
-        (click)="modalMode === 'add' ? saveFunding() : updateFunding()"
+        (click)="modalMode === 'add' ? saveExpertise() : updateExpertise()"
         class="w-full sm:w-auto px-4 py-2 rounded-md bg-[#F9CB34] hover:bg-[#fde07f] cursor-pointer"
       >
         {{ modalMode === "add" ? "บันทึก" : "อัปเดต" }}
