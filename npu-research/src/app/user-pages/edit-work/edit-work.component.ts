@@ -83,42 +83,6 @@ export class EditWorkComponent {
     });
   }
 
-  // loadWork() {
-  //   this.service.getWorkInfo().subscribe((res) => {
-  //     const data = res?.data?.work_info;
-  //     console.log('dfa', data);
-
-  //     if (!data) {
-  //       console.error('No work_info from API');
-  //       return;
-  //     }
-
-  //     if (!data.organization) {
-  //       data.organization = { organization_id: 0, faculty: '' };
-  //     }
-  //     this.workInfo = data;
-
-  //     if (this.workInfo?.work_start_date) {
-  //       this.workInfo.work_start_date =
-  //         this.workInfo.work_start_date.slice(0, 10);
-  //     }
-
-  //     this.expertiseOptions = res.data.expertises || [];
-  //     this.organizationOptions = res.data.organizations || [];
-
-  //     this.selectOrganization =
-  //       this.organizationOptions.find(
-  //         (o) => o.organization_id === data.organization?.organization_id
-  //       ) || null;
-
-  //     this.selectedMajors = (data.expertise || []).map((e: any) => ({
-  //       expertise_id: e.id,
-  //       name_th: e.name_th,
-  //       name_en: e.name_en,
-  //     }));
-  //   });
-  // }
-
   convertThaiDateToISO(thaiDate: string): string {
     if (!thaiDate) return '';
 

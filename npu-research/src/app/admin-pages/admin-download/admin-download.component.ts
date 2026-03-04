@@ -1,10 +1,7 @@
 import { Component } from '@angular/core';
 import Swal from 'sweetalert2';
-
-export interface Documents {
-  name: string;
-  fileUrl: string;
-}
+import { DocumentItem } from '../../models/admin-document.model';
+import { AdminDocService } from '../../services/admin-doc.service';
 
 @Component({
   selector: 'app-admin-download',
@@ -18,46 +15,50 @@ export class AdminDownloadComponent {
   searchText: string = '';
   showModal = false;
   modalMode: 'add' | 'edit' = 'add';
-  editIndex: number | null = null;
 
-  documents: Documents[] = [
-    {
-      name: 'แบบฟอร์มขอรับทุนวิจัย',
-      fileUrl: 'https://www.example.com/files/research-grant-form.pdf',
-    },
-    {
-      name: 'คู่มือการใช้งานระบบงานวิจัย',
-      fileUrl: 'https://www.example.com/files/research-system-manual.pdf',
-    },
-    {
-      name: 'ประกาศหลักเกณฑ์การพิจารณาทุน',
-      fileUrl: 'https://www.example.com/files/grant-criteria.pdf',
-    },
-  ];
+  documents: DocumentItem[] = [];
+  filteredDocument: DocumentItem[] = [];
+  selectedFile: File | null = null;
+  newDocument: DocumentItem = {
+    docId: 0,
+    doc_name: '',
+    file_url: '',
+    download_count: 0,
+  };
 
-  filteredDocument = [...this.documents];
+  constructor(private service: AdminDocService) {}
 
-  newDocument: Documents = {
-    name: '',
-    fileUrl: ''
+  ngOnInit() {
+    this.loadDocuments();
+  }
+
+  loadDocuments() {
+    this.service.getDocuments().subscribe({
+      next: (res) => {
+        this.documents = res.data.documents;
+        this.filteredDocument = [...this.documents];
+      },
+      error: (err) => console.error(err),
+    });
   }
 
   onSearch() {
     const keyword = this.searchText.toLowerCase().trim();
 
     this.filteredDocument = this.documents.filter((d) =>
-    d.name.toLowerCase().includes(keyword)
-  );
+      d.doc_name.toLowerCase().includes(keyword)
+    );
+    this.currentPage = 1;
   }
 
   get totalPages(): number {
-    return Math.ceil(this.documents.length / this.pageSize);
+    return Math.ceil(this.filteredDocument.length / this.pageSize);
   }
 
   get paginatedDocument() {
     const startIndex = (this.currentPage - 1) * this.pageSize;
 
-    return this.documents.slice(startIndex, startIndex + this.pageSize);
+    return this.filteredDocument.slice(startIndex, startIndex + this.pageSize);
   }
 
   changePage(page: number) {
@@ -67,23 +68,60 @@ export class AdminDownloadComponent {
 
   openAddModal() {
     this.modalMode = 'add';
-    this.newDocument = { name: '', fileUrl: ''}
+    this.selectedFile = null;
+    this.newDocument = {
+      docId: 0,
+      doc_name: '',
+      file_url: '',
+      download_count: 0,
+    };
     this.showModal = true;
   }
 
-  openEditModal(items: any, index: number){
+  get currentFileName(): string {
+    if (!this.newDocument.file_url) return '';
+    return this.newDocument.file_url.split('/').pop() || '';
+  }
+
+  openEditModal(items: DocumentItem) {
     this.modalMode = 'edit';
-    this.editIndex = index;
+    this.selectedFile = null;
     this.newDocument = { ...items };
     this.showModal = true;
   }
 
   updateDocument() {
-    if (this.editIndex === null) return;
-
-    this.documents[this.editIndex] = { ...this.newDocument };
-    this.onSearch();
-    this.closeModal();
+    if (!this.newDocument.doc_name) {
+      Swal.fire('กรุณากรอกชื่อเอกสาร', '', 'warning');
+      return;
+    }
+  
+    const formData = new FormData();
+    formData.append('doc_name', this.newDocument.doc_name);
+  
+    if (this.selectedFile) {
+      formData.append('file_doc', this.selectedFile);
+    }
+  
+    this.service
+      .updateDocument(this.newDocument.docId, formData)
+      .subscribe({
+        next: () => {
+          this.loadDocuments();
+          this.closeModal();
+          Swal.fire({
+            icon: 'success',
+            title: 'แก้ไขสำเร็จ',
+            showConfirmButton: false,
+            timer: 1000,
+          });
+        },
+        error: () =>
+          Swal.fire({
+            icon: 'error',
+            title: 'แก้ไขไม่สำเร็จ',
+          }),
+      });
   }
 
   closeModal() {
@@ -91,63 +129,83 @@ export class AdminDownloadComponent {
     this.resetForm();
   }
 
-saveDocument() {
-    if (!this.newDocument.name || !this.newDocument.fileUrl) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'ข้อมูลไม่ครบ',
-        text: 'กรุณากรอกข้อมูลให้ครบถ้วน',
-        confirmButtonText: 'ตกลง',
-      });
+  saveDocument() {
+    if (!this.newDocument.doc_name) {
+      Swal.fire('กรุณากรอกชื่อเอกสาร', '', 'warning');
       return;
     }
-
-    this.documents.push({ ...this.newDocument });
-    this.onSearch(); // refresh ตาราง
-    this.closeModal();
-
-    Swal.fire({
-      icon: 'success',
-      title: 'บันทึกสำเร็จ',
-      text: 'เพิ่มข้อมูลสาขาเรียบร้อยแล้ว',
-      timer: 1500,
-      showConfirmButton: false,
+  
+    if (this.modalMode === 'add' && !this.selectedFile) {
+      Swal.fire('กรุณาเลือกไฟล์เอกสาร', '', 'warning');
+      return;
+    }
+  
+    const formData = new FormData();
+    formData.append('doc_name', this.newDocument.doc_name);
+  
+    if (this.selectedFile) {
+      formData.append('file_doc', this.selectedFile);
+    }
+  
+    this.service.createDocument(formData).subscribe({
+      next: () => {
+        this.loadDocuments();
+        this.closeModal();
+        Swal.fire({
+          icon: 'success',
+          title: 'บันทึกสำเร็จ',
+          showConfirmButton: false,
+          timer: 1000,
+        });
+      },
+      error: () => {
+        Swal.fire('เกิดข้อผิดพลาด', '', 'error');
+      },
     });
   }
 
   resetForm() {
     this.newDocument = {
-      name: '',
-      fileUrl: ''
+      docId: 0,
+      doc_name: '',
+      file_url: '',
+      download_count: 0,
     };
   }
 
-  deleteDocument(index: number) {
+  deleteDocument(id: number) {
     Swal.fire({
       title: 'ยืนยันการลบ?',
-      text: 'ข้อมูลนี้จะไม่สามารถกู้คืนได้',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#dc2626',
-      cancelButtonColor: '#6b7280',
       confirmButtonText: 'ลบ',
       cancelButtonText: 'ยกเลิก',
     }).then((result) => {
-      if (result.isConfirmed) {
-        // ลบข้อมูล
-        this.documents.splice(index, 1);
-
-        // refresh ตาราง / search
-        this.onSearch();
-
-        Swal.fire({
-          icon: 'success',
-          title: 'ลบเรียบร้อย',
-          text: 'ข้อมูลถูกลบแล้ว',
-          timer: 1500,
-          showConfirmButton: false,
-        });
-      }
+      if (!result.isConfirmed) return;
+      this.service.deleteDocument(id).subscribe({
+        next: () => {
+          this.loadDocuments();
+          Swal.fire({
+            icon: 'success',
+            title: 'ลบสำเร็จ',
+            showConfirmButton: false,
+            timer: 1000,
+            timerProgressBar: true,
+          });
+        },
+        error: () =>
+          Swal.fire({
+            icon: 'error',
+            title: 'ลบไม่สำเร็จ',
+          }),
+      });
     });
+  }
+
+  onFileChange(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+    }
   }
 }

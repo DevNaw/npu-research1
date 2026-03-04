@@ -143,7 +143,14 @@ export class ExternalFundingComponent {
     });
   }
 
-  resetForm() {}
+  resetForm() {
+    this.selectedFunding = {
+      id: 0,
+      funding_name: '',
+      description: '',
+      is_active: 1,
+    };
+  }
 
   delectFunding(id: number) {
     Swal.fire({
