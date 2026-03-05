@@ -299,8 +299,8 @@ export class UserResearchComponent {
 
     if (this.authService.isLoggedIn()) {
       basePath = this.authService.isAdmin()
-        ? '/admin/performance'
-        : '/user/performance';
+        ? '/admin/performance-by-departmaent'
+        : '/user/performance-by-departmaent';
     }
 
     this.router.navigate([basePath, mappedType, id]);

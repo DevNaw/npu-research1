@@ -1,9 +1,15 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MajorData } from '../../models/major.model';
+import { ResearchService } from '../../services/research.service';
+import { ResearchArticle, ResearchOwner } from '../../models/article-show.model';
+import { AuthService } from '../../services/auth.service';
+import { ProjectDetailApi, ResearchOwnerProject } from '../../models/research-detai.model';
+import { of, switchMap } from 'rxjs';
+import { InnovationApi, ResearchOwnerInnovation } from '../../models/innovation-detai.model';
+import Swal from 'sweetalert2';
+import { HttpClient } from '@angular/common/http';
 
-type ReportType = 'research' | 'article' | 'innovation';
-
+type WorkType = 'project' | 'article' | 'innovation';
 @Component({
   selector: 'app-performance-detail-by-department',
   standalone: false,
@@ -11,187 +17,260 @@ type ReportType = 'research' | 'article' | 'innovation';
   styleUrl: './performance-detail-by-department.component.css',
 })
 export class PerformanceDetailByDepartmentComponent {
-  reportType!: ReportType;
-  departmentId!: number;
-  department?: any;
+  type!: WorkType;
+  id!: number;
+  selectedImage: string | null = null;
 
-  pageSize = 10;
-  currentPage = 1;
+  selectedFile: File | null = null;
+  previewImage: string | null = null;
 
-  departments = [
-    { id: 1, major: 'คณะวิศวกรรมศาสตร์' },
-    { id: 2, major: 'คณะวิทยาศาสตร์' },
-    { id: 3, major: 'คณะครุศาสตร์' },
-    { id: 4, major: 'คณะเทคโนโลยีอุตสาหกรรม' },
-    { id: 5, major: 'คณะวิทยาการจัดการและเทคโนโลยีสารสนเทศ' },
-  ];
+  data: any;
+  articleData: ResearchArticle | null = null;
+  researchData: ProjectDetailApi | null = null;
+  innovationData: InnovationApi | null = null;
 
-  allMajors: MajorData[] = [
-    // ================= คณะวิศวกรรมศาสตร์ =================
-    {
-      id: 1,
-      departmentId: 1,
-      branch_name: 'วิศวกรรมคอมพิวเตอร์',
-      research: 3,
-      article: 5,
-      innovation: 2,
-    },
-    {
-      id: 2,
-      departmentId: 1,
-      branch_name: 'วิศวกรรมไฟฟ้า',
-      research: 4,
-      article: 3,
-      innovation: 1,
-    },
-    {
-      id: 3,
-      departmentId: 1,
-      branch_name: 'วิศวกรรมโยธา',
-      research: 2,
-      article: 4,
-      innovation: 2,
-    },
+  ownerArticle: ResearchOwner | null = null;
+    ownerProject: ResearchOwnerProject | null = null;
+    ownerInnovation: ResearchOwnerInnovation | null = null;
+  img: any;
 
-    // ================= คณะวิทยาศาสตร์ =================
-    {
-      id: 4,
-      departmentId: 2,
-      branch_name: 'คณิตศาสตร์',
-      research: 5,
-      article: 3,
-      innovation: 1,
-    },
-    {
-      id: 5,
-      departmentId: 2,
-      branch_name: 'ฟิสิกส์',
-      research: 4,
-      article: 2,
-      innovation: 2,
-    },
-    {
-      id: 6,
-      departmentId: 2,
-      branch_name: 'เคมี',
-      research: 3,
-      article: 4,
-      innovation: 1,
-    },
+  galleryImages: string[] = [];
 
-    // ================= คณะครุศาสตร์ =================
-    {
-      id: 7,
-      departmentId: 3,
-      branch_name: 'การประถมศึกษา',
-      research: 6,
-      article: 3,
-      innovation: 2,
-    },
-    {
-      id: 8,
-      departmentId: 3,
-      branch_name: 'ภาษาไทย',
-      research: 2,
-      article: 2,
-      innovation: 0,
-    },
-    {
-      id: 9,
-      departmentId: 3,
-      branch_name: 'ภาษาอังกฤษ',
-      research: 3,
-      article: 2,
-      innovation: 1,
-    },
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private service: ResearchService,
+    private authService: AuthService,
+    private http: HttpClient
+  ) {}
 
-    // ================= คณะเทคโนโลยีอุตสาหกรรม =================
-    {
-      id: 10,
-      departmentId: 4,
-      branch_name: 'เทคโนโลยีอุตสาหกรรม',
-      research: 4,
-      article: 4,
-      innovation: 3,
-    },
-    {
-      id: 11,
-      departmentId: 4,
-      branch_name: 'เทคโนโลยีการผลิต',
-      research: 3,
-      article: 6,
-      innovation: 2,
-    },
+  ngOnInit(): void {
+    this.route.paramMap
+      .pipe(
+        switchMap((params) => {
+          const type = params.get('type') as WorkType;
+          const id = params.get('id');
 
-    // ================= คณะวิทยาการจัดการและเทคโนโลยีสารสนเทศ =================
-    {
-      id: 12,
-      departmentId: 5,
-      branch_name: 'วิทยาการคอมพิวเตอร์',
-      research: 5,
-      article: 8,
-      innovation: 4,
-    },
-    {
-      id: 13,
-      departmentId: 5,
-      branch_name: 'ระบบสารสนเทศ',
-      research: 4,
-      article: 6,
-      innovation: 3,
-    },
-  ];
+          if (!id || !type) return of(null);
 
-  constructor(private route: ActivatedRoute, private router: Router) {}
+          this.type = type;
+          this.id = Number(id);
 
-  ngOnInit() {
-    const type = this.route.snapshot.paramMap.get('type');
-    this.departmentId = Number(this.route.snapshot.paramMap.get('id'));
+          return this.getRequestByType(type, this.id);
+        })
+      )
+      .subscribe({
+        next: (res) => {
+          if (!res) return;
 
-    if (type === 'research' || type === 'article' || type === 'innovation') {
-      this.reportType = type;
+          this.handleResponseByType(res);
+        },
+        error: (err) => {
+          console.error('Error loading data:', err);
+        },
+      });
+  }
+
+  openImage(img: string) {
+    this.selectedImage = img;
+  }
+
+  closeImage() {
+    this.selectedImage = null;
+  }
+
+  uploadImage(): void {
+    if (!this.selectedFile) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'กรุณาเลือกไฟล์ก่อนอัปโหลด',
+        confirmButtonText: 'ตกลง',
+      });
+      return;
     }
 
-    this.department = this.departments.find((d) => d.id === this.departmentId);
+    if (!this.id || !this.type) return;
 
-    this.filteredMajors = this.allMajors.filter(
-      (m) => m.departmentId === this.departmentId
-    );
+    const formData = new FormData();
+    formData.append('image', this.selectedFile);
+
+    Swal.fire({
+      title: 'กำลังอัปโหลด...',
+      allowOutsideClick: false,
+      didOpen: () => Swal.showLoading(),
+    });
+
+    let request$;
+
+    if (this.type === 'article') {
+      request$ = this.service.updateArticle(this.id, formData);
+    } else if (this.type === 'project') {
+      request$ = this.service.updateProject(this.id, formData);
+    } else if (this.type === 'innovation') {
+      request$ = this.service.updateInnovation(this.id, formData);
+    }
+
+    request$?.subscribe({
+      next: (res: any) => {
+        this.img = res;
+
+        Swal.fire({
+          icon: 'success',
+          title: 'อัปโหลดสำเร็จ',
+          showConfirmButton: false,
+          timer: 1200,
+        }).then(() => {
+          window.location.reload();
+        });
+      },
+      error: (err) => {
+        console.error('Upload error:', err);
+
+        Swal.fire({
+          icon: 'error',
+          title: 'อัปโหลดไม่สำเร็จ',
+          text: 'กรุณาลองใหม่อีกครั้ง',
+        });
+      },
+    });
   }
 
-  filteredMajors: MajorData[] = [];
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
 
-  get totalPages(): number {
-    return Math.ceil(this.filteredMajors.length / this.pageSize);
+    if (file) {
+      this.selectedFile = file;
+
+      // แสดง preview
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.previewImage = reader.result as string;
+      };
+      reader.readAsDataURL(file);
+    }
   }
 
-  get pages(): number[] {
-    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  editItem(id: number | undefined) {
+    if (!id) return;
+
+    const isAdmin = this.authService.isAdmin();
+    const base = isAdmin ? '/admin' : '/user';
+
+    let route = '';
+
+    switch (this.type) {
+      case 'project':
+        route = `${base}/edit-research/${id}`;
+        break;
+
+      case 'article':
+        route = `${base}/edit-aticle/${id}`;
+        break;
+
+      case 'innovation':
+        route = `${base}/edit-innovation/${id}`;
+        break;
+
+      default:
+        console.warn('Unknown type:', this.type);
+        return;
+    }
+
+    this.router.navigateByUrl(route);
   }
 
-  get totalAll(): number {
-    return this.filteredMajors.reduce((sum, m) => {
-      return (
-        sum +
-        (this.reportType === 'research'
-          ? m.research
-          : this.reportType === 'article'
-          ? m.article
-          : m.innovation)
-      );
-    }, 0);
+  private getRequestByType(type: WorkType, id: number) {
+    switch (type) {
+      case 'article':
+        return this.service.getArticles(id);
+
+      case 'project':
+        return this.service.getProjects(id);
+
+      case 'innovation':
+        return this.service.getInnovations(id);
+
+      default:
+        return of(null);
+    }
   }
 
-  get paginatedMajors() {
-    const start = (this.currentPage - 1) * this.pageSize;
-    return this.filteredMajors.slice(start, start + this.pageSize);
+  private handleResponseByType(res: any) {
+    switch (this.type) {
+      case 'article':
+        this.articleData = res.data.researchArticle;
+        this.ownerArticle = res.data.owner;
+
+        if (this.articleData?.internal_members?.length) {
+          this.articleData.internal_members = this.sortFirstAuthorFirst(
+            this.articleData.internal_members
+          );
+        }
+        break;
+
+      case 'project':
+        this.researchData = res.data.projectDetail; console.log(this.researchData);
+        
+        this.ownerProject = res.data.owner;
+
+        if (this.researchData?.internal_members?.length) {
+          this.researchData.internal_members = this.sortFirstAuthorFirst(
+            this.researchData.internal_members
+          );
+        }
+        break;
+
+      case 'innovation':
+        this.innovationData = res.data.researchInnovation;
+        this.ownerInnovation = res.data.owner;
+
+        if (this.innovationData?.internal_members?.length) {
+          this.innovationData.internal_members = this.sortFirstAuthorFirst(
+            this.innovationData.internal_members
+          );
+        }
+
+        this.galleryImages =
+          this.innovationData?.innovation_images?.map(
+            (img: any) => img.get_url
+          ) || [];
+        break;
+    }
   }
 
-  changePage(page: number) {
-    if (page < 1 || page > this.totalPages) return;
+  private sortFirstAuthorFirst(members: any[]) {
+    return members.sort((a, b) => {
+      const isAFirst = a.role?.includes('First Author');
+      const isBFirst = b.role?.includes('First Author');
 
-    if (page === this.currentPage) return;
+      if (isAFirst && !isBFirst) return -1;
+      if (!isAFirst && isBFirst) return 1;
+      return 0;
+    });
+  }
 
-    this.currentPage = page;
+  onImageError(event: Event) {
+    const img = event.target as HTMLImageElement;
+    img.src = '/assets/default_image.png';
+  }
+
+  openPDF() {
+    const map: any = {
+      project: this.researchData?.full_report?.get_url,
+      article: this.articleData?.article_file?.get_url,
+      innovation: this.innovationData?.full_report?.get_url,
+    };
+
+    const getUrl = map[this.type];
+
+    if (!getUrl) return;
+
+    this.http.post<any>(getUrl, {}).subscribe({
+      next: (res) => {
+        const signedUrl = res?.data?.url;
+        if (signedUrl) window.open(signedUrl, '_blank');
+      },
+      error: (err) => console.error(err),
+    });
   }
 }
