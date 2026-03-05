@@ -15,6 +15,15 @@ export class AdminDocService {
     return this.http.get<DocumentResponse>(`${this.baseUrl}/m/doc/list`);
   }
 
+  // Public
+  getDocumentsPublic() {
+    return this.http.get<DocumentResponse>(`${this.baseUrl}/public/document/list`);
+  }
+
+  downloadDocument(id: number) {
+    return this.http.patch(`${this.baseUrl}/public/document/${id}/count`, {});
+  }
+
   createDocument(data: FormData) {
     return this.http.post(`${this.baseUrl}/m/doc/create`, data);
   }

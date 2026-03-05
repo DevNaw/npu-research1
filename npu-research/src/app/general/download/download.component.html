@@ -26,7 +26,7 @@
 
           <tbody>
             <tr
-              *ngFor="let doc of documents; let i = index"
+              *ngFor="let doc of paginatedDocument; let i = index"
               class="border-b border-gray-300 bg-gray-200 hover:bg-gray-50 transition"
             >
               <!-- Index -->
@@ -37,17 +37,17 @@
               <!-- Document -->
               <td class="p-1 md:p-2">
                 <a
-                  [href]="doc.fileUrl"
+                  (click)="downloadFile(doc.docId, doc.file_url)"
                   target="_blank"
-                  class="text-indigo-600 hover:underline font-medium"
+                  class="text-indigo-600 hover:underline font-medium cursor-pointer"
                 >
-                  {{ doc.title }}
+                  {{ doc.doc_name }}
                 </a>
               </td>
 
               <!-- Download Count -->
               <td class="p-1 md:p-2 text-center text-gray-700">
-                {{ doc.downloads | number }}
+                {{ doc.download_count | number }}
               </td>
             </tr>
           </tbody>

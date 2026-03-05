@@ -1,3 +1,4 @@
+
 <div
   class="contain-content bg-gray-100 p-5 md:px-10 text-2xl font-bold text-[#394250]"
 >
@@ -35,11 +36,18 @@
         ชื่อบทความ/วารสาร <span class="text-red-500">*</span>
       </label>
       <input
-        [(ngModel)]="articleData.title_th"
         type="text"
+        name="title_th"
+        required
+        #title="ngModel"
+        [(ngModel)]="articleData.title_th"
+        [class.border-red-500]="title.invalid && title.touched"
         class="md:col-span-3 text-2xl font-medium w-full h-12 border rounded-md px-4 py-2"
         placeholder="ระบุบทความ/วารสาร"
       />
+      <div *ngIf="title.invalid && title.touched" class="text-red-500 text-sm">
+        กรุณากรอกชื่อบทความ
+      </div>
     </div>
 
     <!-- ประเภท -->
@@ -50,6 +58,12 @@
 
       <div class="relative md:col-span-3">
         <button
+        type="button"
+        [ngClass]="
+        !articleData.article_type  && submitted
+          ? 'border-red-500'
+          : 'border-gray-300'
+      "
           (click)="toggleDropdown('type', $event)"
           class="w-full border rounded-md px-3 py-2 flex justify-between items-center bg-white"
         >
@@ -77,6 +91,13 @@
             Conference
           </div>
         </div>
+
+        <p
+      *ngIf="!articleData.article_type  && submitted"
+      class="text-red-500 text-sm mt-1"
+    >
+      กรุณาเลือกประเภท
+    </p>
       </div>
     </div>
 
@@ -91,6 +112,7 @@
 
       <div class="relative md:col-span-3">
         <button
+        type="button"
           (click)="toggleDropdown('database_types', $event)"
           class="w-full border rounded-md px-3 py-2 flex justify-between items-center bg-white"
         >
@@ -128,6 +150,7 @@
     >
       <label class="mb-1 block">ประเทศ</label>
       <button
+      type="button"
         (click)="toggleDropdown('countries', $event)"
         class="flex justify-between items-center w-full border rounded-lg px-3 py-2 font-medium"
       >
@@ -174,11 +197,19 @@
         ชื่อวารสาร <span class="text-red-500">*</span>
       </label>
       <input
+        name="journal_name"
+        required
+        #journalName="ngModel"
         [(ngModel)]="articleData.journal_name"
         type="text"
+        [class.border-red-500]="journalName.invalid && journalName.touched"
         class="md:col-span-3 text-2xl font-medium w-full h-12 border rounded-md px-4 py-2"
         placeholder="ระบุบชื่อวารสาร"
       />
+
+      <div *ngIf="journalName.invalid && journalName.touched" class="text-red-500 text-sm">
+        กรุณากรอกชื่อบทความ
+      </div>
     </div>
 
     <!-- ชื่อการประชุมวิชาการ -->
@@ -190,11 +221,19 @@
         ชื่อการประชุมวิชาการ <span class="text-red-500">*</span>
       </label>
       <input
+        name="conference_name"
+        required
+        #conferenceName="ngModel"
         [(ngModel)]="articleData.journal_name"
         type="text"
+        [class.border-red-500]="conferenceName.invalid && conferenceName.touched"
         class="md:col-span-3 text-2xl font-medium w-full h-12 border rounded-md px-4 py-2"
         placeholder="ระบุบชื่อการประชุมวิชาการ"
       />
+
+      <div *ngIf="conferenceName.invalid && conferenceName.touched" class="text-red-500 text-sm">
+        กรุณากรอกชื่อการประชุมวิชาการ
+      </div>
     </div>
 
     <!-- สถานที่นำเสนอ : -->
@@ -207,12 +246,20 @@
       </label>
 
       <textarea
+        name="pre_location"
+        required
+        #preLocation="ngModel"
+        [class.border-red-500]="preLocation.invalid && preLocation.touched"
         [(ngModel)]="articleData.pre_location"
         name="attention"
         id="attention"
         placeholder="สถานที่นำเสนอ"
         class="md:col-span-3 w-full border text-2xl font-medium rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400"
       ></textarea>
+
+      <div *ngIf="preLocation.invalid && preLocation.touched" class="text-red-500 text-sm">
+        กรุณากรอกสถานที่นำเสนอ
+      </div>
     </div>
 
     <!-- ฉบับที่/เล่มที่ -->
@@ -222,11 +269,19 @@
           ฉบับที่/เล่มที่ <span class="text-red-500">*</span>
         </label>
         <input
+          name="volume"
+          required
+          #volume="ngModel"
+          [class.border-red-500]="volume.invalid && volume.touched"
           [(ngModel)]="articleData.volume"
           type="text"
           class="md:col-span-2 text-2xl font-medium w-full h-12 border rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400"
           placeholder="ฉบับที่/เล่มที่"
         />
+
+        <div *ngIf="volume.invalid && volume.touched" class="text-red-500 text-sm">
+          กรุณากรอกฉบับที่/เล่มที่
+        </div>
       </div>
 
       <!-- หน้าที่ตีพิมพ์ -->
@@ -235,11 +290,19 @@
           หน้าที่ตีพิมพ์ <span class="text-red-500">*</span>
         </label>
         <input
+          name="pages"
+          required
+          #pages="ngModel"
+          [class.border-red-500]="pages.invalid && pages.touched"
           [(ngModel)]="articleData.pages"
           type="text"
           class="md:col-span-2 text-2xl font-medium w-full h-12 border rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400"
           placeholder="ระบุหน้าที่ตีพิมพ์"
         />
+
+        <div *ngIf="pages.invalid && pages.touched" class="text-red-500 text-sm">
+          กรุณากรอกหน้าที่ตีพิมพ์
+        </div>
       </div>
 
       <!-- ปีที่ตีพิมพ์ -->
@@ -248,11 +311,19 @@
           ปีที่ตีพิมพ์ <span class="text-red-500">*</span>
         </label>
         <input
+          name="year_published"
+          required
+          #yearPublished="ngModel"
+          [class.border-red-500]="yearPublished.invalid && yearPublished.touched"
           [(ngModel)]="articleData.year_published"
           type="text"
           class="md:col-span-2 w-full h-12 border text-2xl font-medium rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400"
           placeholder="ระบุปีบทความวิชาการ"
         />
+
+        <div *ngIf="yearPublished.invalid && yearPublished.touched" class="text-red-500 text-sm">
+          กรุณากรอกปีที่ตีพิมพ์
+        </div>
       </div>
     </div>
 
@@ -404,10 +475,10 @@
         >
           <div
             *ngFor="let q of ['.20', '.40', '.60', '.80', '1.00']"
-            (click)="selectValue('volume_no', q + 'หมายถึง')"
+            (click)="selectValue('volume_no', q)"
             class="px-3 py-2 cursor-pointer hover:bg-gray-100"
           >
-            {{ q }} หมายถึง
+            {{ q }}
           </div>
         </div>
       </div>
@@ -469,7 +540,7 @@
                   class="absolute z-50 bg-white border rounded-md p-3 shadow max-h-60 overflow-y-auto font-medium text-2xl"
                 >
                   <li
-                    *ngFor="let r of filteredResearchers"
+                    *ngFor="let r of getAvailableResearchers(row)"
                     (click)="selectResearcher(r, row)"
                     class="hover:bg-indigo-50 cursor-pointer"
                   >
@@ -704,12 +775,13 @@
     <!-- ความร่วมมือกับหน่วยงานอื่นๆ : -->
     <div class="grid grid-cols-1 md:grid-cols-1 md:gap-2 mb-2 md:mb-6">
       <label class="md:col-span-1 text-start">
-        ความร่วมมือระหว่างหน่วยงานภายในและภายนอก
+        ความร่วมมือระหว่างหน่วยงานภายในและภายนอก <span class="text-red-500">*</span>
       </label>
 
       <div class="flex gap-10 mt-2">
         <label class="flex items-center gap-4">
           <input
+            required
             type="radio"
             name="collaboration"
             value="yes"
@@ -720,6 +792,7 @@
 
         <label class="flex items-center gap-4">
           <input
+            required
             type="radio"
             name="collaboration"
             value="no"
@@ -736,11 +809,19 @@
         เว็บไซต์อ้างอิง/เผยแพร่ (doi.org) : <span class="text-red-500">*</span>
       </label>
       <input
+        name="doi"
+        required
+        #doi="ngModel"
+        [class.border-red-500]="doi.invalid && doi.touched"
         [(ngModel)]="articleData.doi"
         type="text"
         class="md:col-span-3 w-full border rounded-md text-2xl font-medium px-4 py-2 focus:ring-2 focus:ring-blue-400"
         placeholder="ระบุเว็บไซต์อ้างอิง/เผยแพร่ เช่น https://doi.org/..."
       />
+
+      <div *ngIf="doi.invalid && doi.touched" class="text-red-500 text-sm">
+        กรุณากรอกเว็บไซต์อ้างอิง/เผยแพร่
+      </div>
     </div>
 
     <!-- ไฟล์บทความ PDF -->
@@ -788,8 +869,8 @@
     <!-- ปุ่ม -->
     <div class="flex justify-center mt-10">
       <button
-        (click)="submitArticle()"
-        type="submit"
+      (click)="submitArticle()"
+        type="button"
         class="flex items-center justify-center gap-3 w-72 py-3 bg-yellow-300 hover:bg-yellow-400 rounded-lg shadow transition duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 cursor-pointer"
       >
         <i

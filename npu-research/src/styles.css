@@ -3,53 +3,53 @@
 
 /* Regular */
 @font-face {
-  font-family: 'TH K2D July8';
-  src: url('/assets/fonts/TH K2D July8.ttf') format('truetype');
+  font-family: 'THK2D';
+  src: url('/assets/fonts/th-k2d-july8.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
 }
 
 /* Bold */
 @font-face {
-  font-family: 'TH K2D July8';
-  src: url('/assets/fonts/TH K2D July8 Bold.ttf') format('truetype');
+  font-family: 'THK2D';
+  src: url('/assets/fonts/th-k2d-july8-bold.ttf') format('truetype');
   font-weight: 700;
   font-style: normal;
 }
 
 /* Italic */
 @font-face {
-  font-family: 'TH K2D July8';
-  src: url('/assets/fonts/TH K2D July8 Italic.ttf') format('truetype');
+  font-family: 'THK2D';
+  src: url('/assets/fonts/th-k2d-july8-italic.ttf') format('truetype');
   font-weight: 400;
   font-style: italic;
 }
 
 /* Bold Italic */
 @font-face {
-  font-family: 'TH K2D July8';
-  src: url('/assets/fonts/TH K2D July8 Bold Italic.ttf') format('truetype');
+  font-family: 'THK2D';
+  src: url('/assets/fonts/th-k2d-july8-bold-italic.ttf') format('truetype');
   font-weight: 700;
   font-style: italic;
 }
 
 @font-face {
-  font-family: 'TH K2D July8';
-  src: url('/assets/fonts/TH K2D July8 ExtraBold.ttf') format('truetype');
+  font-family: 'THK2D';
+  src: url('/assets/fonts/th-k2d-july8-extrabold.ttf') format('truetype');
   font-weight: 800;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'TH K2D July8';
-  src: url('/assets/fonts/TH K2D July8 Black.ttf') format('truetype');
+  font-family: 'THK2D';
+  src: url('/assets/fonts/th-k2d-july8-black.ttf') format('truetype');
   font-weight: 900;
   font-style: normal;
 }
 
 
 body {
-  font-family: 'TH K2D July8', sans-serif;
+  font-family: 'THK2D', sans-serif;
 }
 
   /* ซ่อน header ตอนปกติ */
@@ -210,9 +210,4 @@ body {
   font-size: 25px !important;
   padding: 10px 30px !important;
   border-radius: 8px !important;
-}
-
-svg {
-  /* height: 400px; */
-  /* width: 100% !important; */
 }

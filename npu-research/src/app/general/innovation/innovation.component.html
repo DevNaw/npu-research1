@@ -48,16 +48,16 @@
             <!-- Title -->
             <td class="p-1 md:p-2">
               <div
-                title="{{ innovation.title }}"
-                (click)="viewDetails(innovation.id)"
+                title="{{ innovation.title_th }}"
+                (click)="viewDetails(innovation.research_id)"
                 class="leading-relaxed wrap-break-word whitespace-normal font-medium text-indigo-600 hover:underline cursor-pointer truncate max-w-125"
               >
-                {{ innovation.title }}
+                {{ innovation.title_th }}
               </div>
 
               <div class="text-lg hidden md:inline text-[#394250] mt-1  items-center gap-1">
                 <i class="bi bi-calendar-event"></i>
-                วันที่สร้าง: {{ innovation.date }}
+                วันที่สร้าง: {{ innovation.published_date | date: 'dd MMMM YYYY' : '' : 'TH-th' }}
               </div>
             </td>
 
@@ -65,7 +65,7 @@
             <td class="p-1 md:p-2">
               <div class="flex items-center gap-4 flex-wrap justify-start">
                 <div class="leading-relaxed wrap-break-word whitespace-normal text-[#394250]">
-                  General Agricultural and Biological Sciences
+                  {{innovation?.subjectAreas?.[0]?.name_en}}
                 </div>
               </div>
             </td>
@@ -76,7 +76,7 @@
                 <i class="bi bi-person-circle md:text-3xl"></i>
 
                 <div class="leading-relaxed wrap-break-word whitespace-normal text-[#394250]">
-                  {{ innovation.researchers }}
+                  {{ mapInnovation(innovation.own) }}
                 </div>
               </div>
             </td>

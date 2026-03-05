@@ -34,11 +34,19 @@
         ชื่องานวิจัย <span class="text-red-500">*</span>
       </label>
       <input
+        name="title_th"
+        required
+        #title="ngModel"
+        [class.border-red-500]="title.invalid && title.touched"
         [(ngModel)]="projectData.title_th"
         type="text"
         class="md:col-span-3 w-full text-2xl font-medium border h-12 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400"
         placeholder="ระบุชื่องานวิจัย"
       />
+
+      <div *ngIf="title.invalid && title.touched" class="text-red-500 text-sm">
+        กรุณากรอกชื่อโครงการวิจัย
+      </div>
     </div>
 
     <!-- สาขาของงานวิจัย -->
@@ -182,11 +190,7 @@
 
           <tbody>
             <tr
-              *ngFor="
-                let row of internalRow;
-                let i = index;
-                trackBy: trackById
-              "
+              *ngFor="let row of internalRow; let i = index; trackBy: trackById"
               class="border-b-2 border-gray-300 bg-gray-200"
             >
               <td class="p-2 text-center">{{ i + 1 }}</td>
@@ -207,7 +211,7 @@
                   class="absolute z-50 bg-white border rounded-md p-3 shadow max-h-60 overflow-y-auto font-medium text-2xl"
                 >
                   <li
-                    *ngFor="let r of filteredResearchers"
+                    *ngFor="let r of getAvailableResearchers(row)"
                     (click)="selectResearcher(r, row)"
                     class="hover:bg-indigo-50 cursor-pointer"
                   >
@@ -240,7 +244,7 @@
                     <div
                       (click)="
                         !isFirstAuthorTaken(row) &&
-                        selectRowResponsibility(row, 'หัวหน้าโครงการ')
+                          selectRowResponsibility(row, 'หัวหน้าโครงการ')
                       "
                       [class.opacity-50]="isFirstAuthorTaken(row)"
                       [class.pointer-events-none]="isFirstAuthorTaken(row)"
@@ -354,7 +358,7 @@
                     <div
                       (click)="
                         !isFirstAuthorTaken(item) &&
-                        selectRowResponsibility(item, 'หัวหน้าโครงการ')
+                          selectRowResponsibility(item, 'หัวหน้าโครงการ')
                       "
                       [class.opacity-50]="isFirstAuthorTaken(item)"
                       [class.pointer-events-none]="isFirstAuthorTaken(item)"
@@ -364,7 +368,9 @@
                     </div>
 
                     <div
-                      (click)="selectRowResponsibility(item, 'ที่ปรึกษาโครงการ')"
+                      (click)="
+                        selectRowResponsibility(item, 'ที่ปรึกษาโครงการ')
+                      "
                       class="p-2 hover:bg-gray-100 cursor-pointer"
                     >
                       ที่ปรึกษาโครงการ
@@ -491,11 +497,22 @@
           จำนวนงบประมาณ <span class="text-red-500">*</span>
         </label>
         <input
-        [(ngModel)]="projectData.budget_amount"
+          name="budget_amount"
+          required
+          #budgetAmount="ngModel"
+          [class.border-red-500]="budgetAmount.invalid && budgetAmount.touched"
+          [(ngModel)]="projectData.budget_amount"
           type="text"
           class="w-full border text-2xl font-medium rounded-md h-12 px-4 py-2 focus:ring-2 focus:ring-blue-400"
           placeholder="ระบุจำนวนงบประมาณ"
         />
+
+        <div
+          *ngIf="budgetAmount.invalid && budgetAmount.touched"
+          class="text-red-500 text-sm"
+        >
+          กรุณากรอกจำนวนงบประมาณ
+        </div>
       </div>
 
       <!-- ปีที่ได้รับทุน -->
@@ -504,11 +521,24 @@
           ปีที่ได้รับทุน <span class="text-red-500">*</span>
         </label>
         <input
+          name="year_received_budget"
+          required
+          #yearReceivedBudget="ngModel"
+          [class.border-red-500]="
+            yearReceivedBudget.invalid && yearReceivedBudget.touched
+          "
           [(ngModel)]="projectData.year_received_budget"
           type="text"
           class="w-full border rounded-md text-2xl font-medium px-4 h-12 py-2 focus:ring-2 focus:ring-blue-400"
           placeholder="ระบุปีที่ได้รับทุน"
         />
+
+        <div
+          *ngIf="yearReceivedBudget.invalid && yearReceivedBudget.touched"
+          class="text-red-500 text-sm"
+        >
+          กรุณากรอกปีที่ได้รับทุน
+        </div>
       </div>
 
       <!-- สถานะดำเนินการ -->
@@ -531,13 +561,13 @@
         >
           <div
             class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
-            (click)="selectValue('status','เสร็จสิ้น')"
+            (click)="selectValue('status', 'เสร็จสิ้น')"
           >
             เสร็จสิ้น
           </div>
           <div
             class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
-            (click)="selectValue('status','อยู่ระหว่างดำเนินการ')"
+            (click)="selectValue('status', 'อยู่ระหว่างดำเนินการ')"
           >
             อยู่ระหว่างดำเนินการ
           </div>
@@ -546,20 +576,38 @@
     </div>
 
     <!-- ความร่วมมือกับหน่วยงานอื่นๆ : -->
-    <!-- <div class="grid grid-cols-1 md:grid-cols-1 gap-2 mt-2 mb-2 md:mb-6 md:mt-8">
-      <label class="md:col-span-1 font-bold text-start">
-        ความร่วมมือกับหน่วยงานอื่นๆ
+    <!-- <div class="grid grid-cols-1 md:grid-cols-1 md:gap-2 mb-2 md:mb-6">
+      <label class="md:col-span-1 text-start">
+        ความร่วมมือระหว่างหน่วยงานภายในและภายนอก
       </label>
-      <textarea
-        name="attention"
-        id="attention"
-        placeholder="ระบุความร่วมมือกับหน่วยงานอื่นๆ"
-        class="md:col-span-3 w-full border text-2xl font-medium rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400"
-      ></textarea>
+
+      <div class="flex gap-10 mt-2">
+        <label class="flex items-center gap-4">
+          <input
+            type="radio"
+            name="collaboration"
+            value="yes"
+            [(ngModel)]="projectData.is_cooperation"
+          />
+          มี
+        </label>
+
+        <label class="flex items-center gap-4">
+          <input
+            type="radio"
+            name="collaboration"
+            value="no"
+            [(ngModel)]="projectData.is_cooperation"
+          />
+          ไม่มี
+        </label>
+      </div>
     </div> -->
 
     <!-- พื้นที่วิจัย -->
-    <div class="grid grid-cols-1 md:grid-cols-1 gap-2 mb-2 mt-2 md:mb-6 md:mt-4">
+    <div
+      class="grid grid-cols-1 md:grid-cols-1 gap-2 mb-2 mt-2 md:mb-6 md:mt-4"
+    >
       <label class="md:col-span-1 font-bold text-start"> พื้นที่วิจัย </label>
       <textarea
         [(ngModel)]="projectData.research_area"
@@ -607,13 +655,13 @@
           </span>
 
           <button
-          *ngIf="selectedFile || projectData.full_report"
-          type="button"
-          class="text-red-500 hover:text-red-700 text-lg"
-          (click)="removeFile()"
-        >
-          ✕
-        </button>
+            *ngIf="selectedFile || projectData.full_report"
+            type="button"
+            class="text-red-500 hover:text-red-700 text-lg"
+            (click)="removeFile()"
+          >
+            ✕
+          </button>
 
           <button
             type="button"
@@ -647,13 +695,13 @@
           </span>
 
           <button
-          *ngIf="selectedContractFile || projectData.contract_file"
-          type="button"
-          class="text-red-500 hover:text-red-700 text-lg"
-          (click)="removeContractFile()"
-        >
-          ✕
-        </button>
+            *ngIf="selectedContractFile || projectData.contract_file"
+            type="button"
+            class="text-red-500 hover:text-red-700 text-lg"
+            (click)="removeContractFile()"
+          >
+            ✕
+          </button>
 
           <button
             type="button"

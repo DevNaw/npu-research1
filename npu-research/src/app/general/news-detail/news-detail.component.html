@@ -50,10 +50,8 @@
       <!-- Content -->
       <article
         class="prose max-w-none prose-ul:list-disc prose-li:my-1 text-2xl"
+        [innerHTML]="newsDetail?.description"
       >
-        <p>
-          {{ newsDetail?.description }}
-        </p>
       </article>
 
       <!-- Gallery -->

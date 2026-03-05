@@ -245,6 +245,15 @@ export class UserAddInnovationComponent {
   }
 
   selectResearcher(r: Researcher, row: InternalMemberRow): void {
+    if (this.isResearcherAlreadySelected(r.user_id, row)) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'เลือกซ้ำไม่ได้',
+        text: 'ผู้ร่วมโครงการคนนี้ถูกเลือกแล้ว Optionแล้ว',
+        confirmButtonColor: '#3085d6',
+      });
+      return;
+    }
     row.name = r.full_name;
     row.researcher_id = r.user_id;
     this.activeRowIndex = null;
@@ -339,7 +348,7 @@ export class UserAddInnovationComponent {
     }
     input.value = '';
   }
-  
+
   removeImageFile(index: number) {
     this.selectedImagesFile.splice(index, 1);
   }
@@ -355,6 +364,9 @@ export class UserAddInnovationComponent {
   }
 
   submit() {
+    if (!this.validateForm()) {
+      return;
+    }
     const formData = this.buildFormData();
 
     Swal.fire({
@@ -474,5 +486,75 @@ export class UserAddInnovationComponent {
       this.selectedImagesFile.length > 0 ||
       this.projectData.innovation_images?.length > 0
     );
+  }
+
+  isResearcherAlreadySelected(
+    userId: number,
+    currentRow: InternalMemberRow
+  ): boolean {
+    return this.internalRow.some(
+      (row) => row !== currentRow && row.researcher_id === userId
+    );
+  }
+
+  getAvailableResearchers(row: InternalMemberRow): Researcher[] {
+    return this.filteredResearchers.filter(
+      (res) =>
+        !this.internalRow.some(
+          (r) => r !== row && r.researcher_id === res.user_id
+        )
+    );
+  }
+
+  validateForm(): boolean {
+    const d = this.projectData;
+
+    if (
+      !d.title_th ||
+      !d.published_date ||
+      !d.source_funds ||
+      !d.subject_area_id ||
+      !d.name_funding ||
+      !d.budget_amount ||
+      !d.year_received_budget ||
+      !d.patent_number ||
+      !d.application_number ||
+      !d.examination_url
+    ) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'กรอกข้อมูลไม่ครบ',
+        text: 'กรุณากรอกข้อมูลบทความให้ครบถ้วน',
+      });
+      return false;
+    }
+
+    const invalidInternal = this.internalRow.some(
+      (r) => r.researcher_id && !r.responsibilities
+    );
+
+    if (invalidInternal) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'ข้อมูลผู้ร่วมโครงการไม่ครบ',
+        text: 'กรุณาเลือกประเภทความรับผิดชอบให้ครบ',
+      });
+      return false;
+    }
+
+    const invalidExternal = this.externalRow.some(
+      (r) => (r.name && !r.responsibilities) || (r.responsibilities && !r.name)
+    );
+
+    if (invalidExternal) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'ข้อมูลผู้ร่วมภายนอกไม่ครบ',
+        text: 'กรุณากรอกชื่อและประเภทความรับผิดชอบให้ครบ',
+      });
+      return false;
+    }
+
+    return true;
   }
 }

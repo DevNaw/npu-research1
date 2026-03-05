@@ -50,16 +50,16 @@
             <!-- Title -->
             <td class="p-1 md:p-2">
               <div
-                title="{{ publication.title }}"
-                (click)="viewAticleDetails(publication.id)"
+                title="{{ publication.title_th }}"
+                (click)="viewAticleDetails(publication.research_id)"
                 class="leading-relaxed wrap-break-word whitespace-normal text-indigo-600 hover:underline cursor-pointer"
               >
-                {{ publication.title }}
+                {{ publication.title_th }}
               </div>
 
               <div class="text-lg hidden md:inline text-gray-500 mt-1  items-center gap-1">
                 <i class="bi bi-calendar-event"></i>
-                วันที่สร้าง: {{ publication.date }}
+                วันที่สร้าง: {{ publication.published_date | date: 'dd MMMM YYYY' : '' : 'TH-th' }}
               </div>
             </td>
 
@@ -67,7 +67,7 @@
             <td class="p-1 md:p-2">
               <div class="flex items-center gap-4 flex-wrap">
                 <div class="leading-relaxed wrap-break-word whitespace-normal">
-                  General Agricultural and Biological Sciences
+                  {{ publication?.subjectAreas?.[0]?.name_en }}
                 </div>
               </div>
             </td>
@@ -77,7 +77,7 @@
               <div class="flex items-center gap-4 flex-wrap">
                 <i class="bi bi-person-circle text-3xl"></i>
                 <div class="leading-relaxed wrap-break-word whitespace-normal">
-                  {{ publication.researchers }}
+                  {{ mapOwners(publication.own) }}
                 </div>
               </div>
             </td>

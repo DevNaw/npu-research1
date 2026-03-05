@@ -210,7 +210,8 @@ export class PerformanceComponent {
         break;
 
       case 'project':
-        this.researchData = res.data.projectDetail;
+        this.researchData = res.data.projectDetail; console.log(this.researchData);
+        
         this.ownerProject = res.data.owner;
 
         if (this.researchData?.internal_members?.length) {

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Data } from '../../models/data-performance.model';
 import { ResearchService } from '../../services/research.service';
+import { Project } from '../../models/project-public.model';
 
 @Component({
   selector: 'app-research',
@@ -14,31 +14,44 @@ export class ResearchComponent implements OnInit {
   currentPage = 1;
   searchText = '';
 
-  research: Data[] = [];
+  research: Project[] = [];
+  filteredReseacrchs: Project[] = [];
+  paginatedReseacrchs: Project[] = [];
 
   constructor(
     private router: Router,
     private researchService: ResearchService
   ) {}
 
-  filteredReseacrchs: Data[] = [];
-  paginatedReseacrchs: Data[] = [];
+  
 
   ngOnInit(): void {
     this.getDataResearch();
-    this.filteredReseacrchs = [...this.research];
-    this.updatePagination();
+  }
+
+  getDataResearch() {
+    this.researchService.getDataResearchPublic().subscribe({
+      next: (res) => {
+        this.research = res.data.projects;
+        this.filteredReseacrchs = [...this.research];
+        this.updatePagination();
+      },
+      error: (err) => {
+        console.error('โหลดข้อมูลล้มเหลว', err);
+      },
+    });
   }
 
   // ===== SEARCH =====
   onSearch(): void {
     const keyword = this.searchText.toLowerCase().trim();
 
-    this.filteredReseacrchs = this.research.filter(
-      (r) =>
-        r.title.toLowerCase().includes(keyword) ||
-        r.researchers.toLowerCase().includes(keyword)
-    );
+    this.filteredReseacrchs = this.research.filter((r) => {
+      const title = r.title_th?.toLowerCase() || '';
+      const researchers = this.mapResearchers(r.own).toLowerCase();
+
+      return title.includes(keyword) || researchers.includes(keyword);
+    });
 
     this.currentPage = 1;
     this.updatePagination();
@@ -67,34 +80,19 @@ export class ResearchComponent implements OnInit {
   }
 
   viewDetails(id: number): void {
-    this.router.navigate(['/performance/research', id]);
+    console.log('id', id);
+    
+    if (!id) {
+      console.error('Project ID undefined');
+      return;
+    }
+    this.router.navigate(['/performance-public/project', id]);
   }
 
   get pages(): number[] {
     return Array.from({ length: this.totalPages }, (_, i) => i + 1);
   }
 
-  getDataResearch() {
-    this.researchService.getDataResearchPublic().subscribe({
-      next: (res) => {
-        const projects = res.data.projects;
-
-        this.research = projects.map((p: any) => ({
-          id: p.research_id,
-          title: p.title_th || p.title_en,
-          date: this.formatThaiDate(p.published_date),
-          researchers: this.mapResearchers(p.own),
-          imgUrl: p.img_url,
-        }));
-        
-        this.filteredReseacrchs = [...this.research];
-        this.updatePagination();
-      },
-      error: (err) => {
-        console.error('โหลดข้อมูลล้มเหลว', err);
-      },
-    });
-  }
   mapResearchers(owners: any[]): string {
     if (!owners || owners.length === 0) return '-';
 

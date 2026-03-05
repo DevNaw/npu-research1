@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Data } from '../../models/data-performance.model';
 import { Router } from '@angular/router';
 import { ResearchService } from '../../services/research.service';
+import { Innovation } from '../../models/innovation-public.model';
 
 @Component({
   selector: 'app-innovation',
@@ -14,9 +14,9 @@ export class InnovationComponent implements OnInit {
   currentPage = 1;
   searchText = '';
 
-  innovations: Data[] = [];
-  filteredInnovations: Data[] = [];
-  paginatedInnovations: Data[] = [];
+  innovations: Innovation[] = [];
+  filteredInnovations: Innovation[] = [];
+  paginatedInnovations: Innovation[] = [];
 
   constructor(
     private router: Router,
@@ -25,18 +25,30 @@ export class InnovationComponent implements OnInit {
 
   ngOnInit(): void {
     this.getDataInnovation();
-    this.filteredInnovations = [...this.innovations];
-    this.updatePagination();
+  }
+
+  getDataInnovation() {
+    this.researchService.getDataInnovationPublic().subscribe({
+      next: (res) => {
+        this.innovations = res.data.innovations;
+        this.filteredInnovations = [...this.innovations];
+        this.updatePagination();
+      },
+      error: (err) => {
+        console.error('โหลดข้อมูลล้มเหลว', err);
+      },
+    });
   }
 
   onSearch(): void {
     const keyword = this.searchText.toLowerCase().trim();
 
-    this.filteredInnovations = this.innovations.filter(
-      (i) =>
-        i.title.toLowerCase().includes(keyword) ||
-        i.researchers.toLowerCase().includes(keyword)
-    );
+    this.filteredInnovations = this.innovations.filter((i) => {
+      const title = i.title_th?.toLowerCase() || '';
+      const researchers = this.mapInnovation(i.own).toLowerCase();
+
+      return title.includes(keyword) || researchers.includes(keyword);
+    });
 
     this.currentPage = 1;
     this.updatePagination();
@@ -60,37 +72,15 @@ export class InnovationComponent implements OnInit {
   }
 
   get totalPages(): number {
-    return Math.ceil(this.innovations.length / this.pageSize);
-  }
-
-  viewDetails(id: number): void {
-    this.router.navigate(['/performance/innovation', id]);
+    return Math.ceil(this.filteredInnovations.length / this.pageSize);
   }
 
   get pages(): number[] {
     return Array.from({ length: this.totalPages }, (_, i) => i + 1);
   }
 
-  getDataInnovation() {
-    this.researchService.getDataInnovationPublic().subscribe({
-      next: (res) => {
-        const innovation = res.data.innovations;
-
-        this.innovations = innovation.map((i: any) => ({
-          id: i.innovation_id,
-          title: i.title_th,
-          date: this.formatThaiDate(i.published_date),
-          researchers: this.mapInnovation(i.own),
-          imgUrl: i.img_url,
-        }));
-
-        this.filteredInnovations = [...this.innovations];
-        this.updatePagination();
-      },
-      error: (err) => {
-        console.error('โหลดข้อมูลล้มเหลว', err);
-      },
-    });
+  viewDetails(id: number): void {
+    this.router.navigate(['/performance-public/innovation', id]);
   }
 
   mapInnovation(owners: any[]): string {
@@ -101,13 +91,13 @@ export class InnovationComponent implements OnInit {
 
   formatThaiDate(dateString: string): string {
     if (!dateString) return '-';
-  
+
     const d = new Date(dateString);
-  
+
     const day = d.getDate();
     const month = d.toLocaleDateString('th-TH', { month: 'long' });
     const year = d.getFullYear() + 543;
-  
+
     return `${day} ${month} ${year}`;
   }
 }

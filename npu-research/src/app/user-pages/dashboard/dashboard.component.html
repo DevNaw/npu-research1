@@ -7,7 +7,7 @@
       <div class="flex items-end justify-center gap-3 md:justify-start">
         <h1 class="text-2xl md:text-3xl font-bold">ยินดีต้อนรับเข้าสู่</h1>
 
-        <h1 class="text-2xl md:text-4xl font-extrabold">ระบบฐานข้อมูลวิจัย</h1>
+        <h1 class="text-2xl md:text-4xl font-bold">ระบบฐานข้อมูลวิจัย</h1>
       </div>
 
       <!-- Date -->
@@ -18,24 +18,25 @@
     </div>
 
     <!-- ===== Summary Cards ===== -->
-    <!-- bg-linear-to-r from-amber-200 to-yellow-300 -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-      <div class="items-center p-6 bg-linear-to-r from-[#BCDBFE] to-[#91C7FF] rounded-xl shadow">
+      <div
+        class="items-center p-6 bg-linear-to-r from-[#BCDBFE] to-[#91C7FF] rounded-xl shadow"
+      >
         <div class="flex justify-between">
           <i class="bi bi-flask text-6xl"></i>
-          <p class="text-2xl font-black">โครงการวิจัย</p>
+          <p class="text-2xl font-bold">โครงการวิจัย</p>
         </div>
 
         <div class="ml-auto flex items-center gap-6 justify-between">
           <div>
             <p class="text-xl font-semibold ml-3">จำนวนทั้งหมด</p>
           </div>
-          <h2 class="text-4xl font-black">
+          <h2 class="text-5xl font-bold">
             {{ dashboardData?.statistic_research?.total_project }}
           </h2>
         </div>
         <!-- <div class="ml-auto flex items-center gap-6 justify-between">
-          <h2 class="text-4xl font-black">{{ dashboardData.statistic_research.total_project }}</h2>
+          <h2 class="text-4xl font-bold">{{ dashboardData.statistic_research.total_project }}</h2>
           <div>
             <p class="text-xl font-semibold">ชาย 501 | หญิง 600</p>
           </div>
@@ -45,14 +46,14 @@
       <div class="items-center p-6 bg-white rounded-xl shadow">
         <div class="flex justify-between">
           <i class="bi bi-file-earmark-text text-6xl"></i>
-          <p class="text-2xl font-black">บทความ</p>
+          <p class="text-2xl font-bold">บทความ</p>
         </div>
 
         <div class="ml-auto flex items-center gap-6 justify-between">
           <div>
             <p class="text-xl font-semibold ml-3">จำนวนทั้งหมด</p>
           </div>
-          <h2 class="text-4xl font-black">
+          <h2 class="text-5xl font-bold">
             {{ dashboardData?.statistic_research?.total_article }}
           </h2>
         </div>
@@ -61,14 +62,14 @@
       <div class="items-center p-6 bg-white rounded-xl shadow">
         <div class="flex justify-between">
           <i class="bi bi-award text-6xl"></i>
-          <h2 class="text-2xl font-black">นวัตกรรม</h2>
+          <h2 class="text-2xl font-bold">นวัตกรรม</h2>
         </div>
 
         <div class="ml-auto flex items-center gap-6 justify-between">
           <div>
             <p class="text-xl font-semibold ml-3">จำนวนทั้งหมด</p>
           </div>
-          <h2 class="text-4xl font-black">
+          <h2 class="text-5xl font-bold">
             {{ dashboardData?.statistic_research?.total_innovation }}
           </h2>
         </div>
@@ -77,14 +78,14 @@
       <div class="items-center p-6 bg-white rounded-xl shadow">
         <div class="flex justify-between">
           <i class="bi bi-people text-6xl"></i>
-          <p class="text-2xl font-black">จำนวนนักวิจัย</p>
+          <p class="text-2xl font-bold">จำนวนนักวิจัย</p>
         </div>
 
         <div class="ml-auto flex items-center gap-6 justify-between">
           <div>
             <p class="text-xl font-semibold ml-3">จำนวนทั้งหมด</p>
           </div>
-          <h2 class="text-4xl font-black">
+          <h2 class="text-5xl font-bold">
             {{ dashboardData?.statistic_research?.total_users }}
           </h2>
         </div>
@@ -143,18 +144,18 @@
         </div>
 
         <!-- Chart Body -->
-        <div class="p-4 md:p-6">
+        <div class="p-4 md:p-5">
           <apx-chart
-          [series]="c.options.series"
-          [chart]="c.options.chart"
-          [dataLabels]="c.options.dataLabels"
-          [plotOptions]="c.options.plotOptions"
-          [yaxis]="c.options.yaxis"
-          [xaxis]="c.options.xaxis"
-          [stroke]="c.options.stroke"
-          [grid]="c.options.grid"
-          [fill]="c.options.fill"
-          [annotations]="c.options.annotations"
+            [series]="c.options.series"
+            [chart]="c.options.chart"
+            [dataLabels]="c.options.dataLabels"
+            [plotOptions]="c.options.plotOptions"
+            [yaxis]="c.options.yaxis"
+            [xaxis]="c.options.xaxis"
+            [stroke]="c.options.stroke"
+            [grid]="c.options.grid"
+            [fill]="c.options.fill"
+            [annotations]="c.options.annotations"
           >
           </apx-chart>
         </div>
@@ -312,7 +313,10 @@
                     class="text-lg hidden md:inline text-gray-500 mt-1 items-center gap-1"
                   >
                     <i class="bi bi-calendar-event"></i>
-                    วันที่สร้าง: {{ p.published_date | date: 'dd MMMM YYYY' : '' : 'TH-th' }}
+                    วันที่สร้าง:
+                    {{
+                      p.published_date | date : "dd MMMM YYYY" : "" : "TH-th"
+                    }}
                   </div>
                 </td>
                 <td class="p-2">{{ p.own[0]?.full_name }}</td>

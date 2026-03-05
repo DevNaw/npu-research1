@@ -10,6 +10,9 @@ import { Observable } from 'rxjs/internal/Observable';
 import { map } from 'rxjs/operators';
 import { SubjectAreaResponse } from '../models/subject.model';
 import { ResearcherResponse } from '../models/researchers.model';
+import { InnovationResponse } from '../models/innovation-public.model';
+import { ProjectResponse } from '../models/project-public.model';
+import { ArticleResponse } from '../models/article-public.model';
 
 export type ResearchType = 'project' | 'article' | 'innovation';
 
@@ -81,20 +84,20 @@ export class ResearchService {
   }
 
   // Public
-  getDataResearchPublic() {
-    return this.http.get<ResearchPublicResponse>(
+  getDataResearchPublic(): Observable<ProjectResponse> {
+    return this.http.get<ProjectResponse>(
       `${this.baseUrl}/public/research/project-lists`
     );
   }
 
-  getDataArticlePublic() {
-    return this.http.get<ResearchPublicResponse>(
+  getDataArticlePublic(): Observable<ArticleResponse> {
+    return this.http.get<ArticleResponse>(
       `${this.baseUrl}/public/research/article-lists`
     );
   }
 
   getDataInnovationPublic() {
-    return this.http.get<ResearchPublicResponse>(
+    return this.http.get<InnovationResponse>(
       `${this.baseUrl}/public/research/innovation-lists`
     );
   }
@@ -156,6 +159,10 @@ export class ResearchService {
   getArticles(id: number): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/research/${id}/article`);
   }
+  // Public
+  getArticlesPublic(id: number): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/public/research/${id}/article`);
+  }
 
   updateArticle(id: number, data: any) {
     return this.http.post(`${this.baseUrl}/research/${id}/update-article`, data);
@@ -180,6 +187,11 @@ export class ResearchService {
     return this.http.get<any>(`${this.baseUrl}/research/${id}/project`);
   }
 
+  // Public
+  getProjectsPublic(id: number): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/public/research/${id}/project`);
+  }
+
   // ==================== Innovation =====================
   createInnovation(data: any) {
     return this.http.post(`${this.baseUrl}/research/add-innovation`, data);
@@ -195,5 +207,10 @@ export class ResearchService {
 
   getInnovations(id: number): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/research/${id}/innovation`);
+  }
+
+  // Public
+  getInnovationsPublic(id: number): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/public/research/${id}/innovation`);
   }
 }

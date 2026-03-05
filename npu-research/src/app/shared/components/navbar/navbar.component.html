@@ -17,7 +17,7 @@
               ระบบฐานข้อมูลวิจัย
               <span class="block md:inline"> มหาวิทยาลัยนครพนม </span>
             </h1>
-            <p class="text-lg leading-none sm:text-xl italic text-gray-400">
+            <p class="text-lg leading-none sm:text-xl text-gray-600">
               Research Database System
             </p>
           </div>
@@ -60,7 +60,7 @@
             routerLink="/dashboard"
             class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-1"
           >
-            <i class="bi bi-house text-lg"></i>
+            <i class="bi bi-house-fill text-lg"></i>
             <span class="hidden md:inline text-xl font-bold">หน้าหลัก</span>
           </a>
 
@@ -76,7 +76,7 @@
             routerLink="/aticle"
             class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-1"
           >
-            <i class="bi bi-book text-lg"></i>
+            <i class="bi bi-book-half text-lg"></i>
             <span class="hidden md:inline font-bold text-xl"
               >บทความ/วารสาร</span
             >
@@ -96,7 +96,7 @@
             routerLink="/news"
             class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-1"
           >
-            <i class="bi bi-rss text-lg"></i>
+            <i class="bi bi-newspaper text-lg"></i>
             <span class="hidden md:inline font-bold text-xl"
               >ข่าวประชาสัมพันธ์</span
             >
@@ -106,7 +106,7 @@
             routerLink="/download"
             class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-1"
           >
-            <i class="bi bi-cloud-arrow-down text-lg"></i>
+            <i class="bi bi-cloud-arrow-down-fill text-lg"></i>
             <span class="hidden md:inline font-bold text-xl"
               >เอกสารดาว์โหลด</span
             >
@@ -123,7 +123,7 @@
               (click)="onToggle('report', $event)"
               class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-1"
             >
-              <i class="bi bi-graph-up text-lg"></i>
+              <i class="bi bi-clipboard2-data-fill text-lg"></i>
               <span class="hidden md:inline font-bold text-xl">
                 สถิติ/รายงาน
               </span>
@@ -182,7 +182,7 @@
               (click)="onToggle('manual', $event)"
               class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-1"
             >
-              <i class="bi bi-file-earmark-text text-lg"></i>
+              <i class="bi bi-file-earmark-text-fill text-lg"></i>
               <span class="hidden md:inline font-bold text-xl"
                 >คู่มือการใช้งาน</span
               >
@@ -235,7 +235,7 @@
           (click)="closeAllMobileMenus()"
           class="flex justify-center p-2 hover:bg-yellow-300 rounded relative group"
         >
-          <i class="bi bi-house text-xl"></i>
+          <i class="bi bi-house-fill text-xl"></i>
 
           <span
             class="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-2xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
@@ -262,7 +262,7 @@
           (click)="closeAllMobileMenus()"
           class="flex justify-center p-2 hover:bg-yellow-300 rounded relative group"
         >
-          <i class="bi bi-book text-xl"></i>
+          <i class="bi bi-book-half text-xl"></i>
           <span
             class="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-2xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
           >
@@ -288,7 +288,7 @@
           (click)="closeAllMobileMenus()"
           class="flex justify-center p-2 hover:bg-yellow-300 rounded relative group"
         >
-          <i class="bi bi-rss text-xl"></i>
+          <i class="bi bi-newspaper text-xl"></i>
           <span
             class="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-2xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
           >
@@ -301,7 +301,7 @@
           (click)="closeAllMobileMenus()"
           class="flex justify-center p-2 hover:bg-yellow-300 rounded relative group"
         >
-          <i class="bi bi-cloud-arrow-down text-xl"></i>
+          <i class="bi bi-cloud-arrow-down-fill text-xl"></i>
           <span
             class="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-2xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
           >
@@ -314,7 +314,7 @@
             (click)="toggleMobileSubMenu('report', $event)"
             class="flex justify-center p-2 hover:bg-yellow-300 rounded relative"
           >
-            <i class="bi bi-graph-up text-xl"></i
+            <i class="bi bi-clipboard2-data-fill text-xl"></i
             ><span
               class="hidden md:block absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity"
             >
@@ -364,7 +364,7 @@
             (click)="goToManual(); closeAllMobileMenus()"
             class="flex justify-center p-2 hover:bg-yellow-300 rounded relqtive"
           >
-            <i class="bi bi-file-earmark-text text-xl"></i>
+            <i class="bi bi-file-earmark-text-fill text-xl"></i>
             <span
               class="hidden md:block absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity"
             >
@@ -411,7 +411,7 @@
               <span class="block sm:inline">ระบบฐานข้อมูลวิจัย</span>
               <span class="block sm:inline">มหาวิทยาลัยนครพนม</span>
             </h1>
-            <p class="text-lg sm:text-xl leading-none italic text-gray-400">
+            <p class="text-lg sm:text-xl leading-none text-gray-600">
               Research Database System
             </p>
           </div>
@@ -423,7 +423,7 @@
             routerLink="/user/profile"
             class="hover:bg-gray-50 px-3 py-2 rounded-md flex items-center justify-center"
           >
-            <i class="bi bi-person text-xl"></i>
+            <i class="bi bi-person-fill text-xl"></i>
             <span class="ml-1 hidden lg:inline text-xl">
               {{ profileData?.full_name }}
             </span>
@@ -464,7 +464,7 @@
             routerLink="/user/dashboard"
             class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-1"
           >
-            <i class="bi bi-house text-lg"></i>
+            <i class="bi bi-house-fill text-lg"></i>
             <span class="hidden md:inline font-bold text-xl">หน้าหลัก</span>
           </a>
 
@@ -472,7 +472,7 @@
             routerLink="/user/profile"
             class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-1"
           >
-            <i class="bi bi-person text-lg"></i>
+            <i class="bi bi-person-fill text-lg"></i>
             <span class="hidden md:inline font-bold text-xl">โปรไฟล์</span>
           </a>
 
@@ -486,7 +486,7 @@
               (click)="onToggle('save', $event)"
               class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-1"
             >
-              <i class="bi bi-floppy text-lg"></i>
+              <i class="bi bi-floppy-fill text-lg"></i>
               <span class="hidden md:inline font-bold text-xl"
                 >บันทึกผลงาน</span
               >
@@ -534,7 +534,7 @@
             routerLink="/user/researchers"
             class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-1"
           >
-            <i class="bi bi-people text-lg"></i>
+            <i class="bi bi-people-fill text-lg"></i>
             <span class="hidden md:inline font-bold text-xl"
               >ค้นหาข้อมูลนักวิจัย</span
             >
@@ -553,7 +553,7 @@
           (click)="closeAllMobileMenus()"
           class="flex justify-center p-2 hover:bg-yellow-300 rounded relative group"
         >
-          <i class="bi bi-house text-xl"></i>
+          <i class="bi bi-house-fill text-xl"></i>
 
           <span
             class="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-2xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
@@ -567,7 +567,7 @@
           (click)="closeAllMobileMenus()"
           class="flex justify-center p-2 hover:bg-yellow-300 rounded relative group"
         >
-          <i class="bi bi-person text-xl"></i>
+          <i class="bi bi-person-fill text-xl"></i>
           <span
             class="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-2xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
           >
@@ -581,7 +581,7 @@
           (click)="toggleMobileSubMenu('save', $event)"
             class="flex justify-center p-2 hover:bg-yellow-300 rounded relative"
           >
-            <i class="bi bi-floppy text-xl"></i>
+            <i class="bi bi-floppy-fill text-xl"></i>
             <span
               class="hidden mb:block absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-xs text-white bg-[#394250] rounded opacity-0 group-hover:opacity-100 transition-opacity"
             >
@@ -632,7 +632,7 @@
           (click)="closeAllMobileMenus()"
           class="flex justify-center p-2 hover:bg-yellow-300 rounded relative group"
         >
-          <i class="bi bi-people text-xl"></i>
+          <i class="bi bi-people-fill text-xl"></i>
           <span
             class="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-2xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
           >
@@ -678,7 +678,7 @@
               <span class="block sm:inline">ระบบฐานข้อมูลวิจัย</span>
               <span class="block sm:inline">มหาวิทยาลัยนครพนม</span>
             </h1>
-            <p class="text-lg sm:text-xl leading-none italic text-gray-400">
+            <p class="text-lg sm:text-xl leading-none text-gray-600">
               Research Database System
             </p>
           </div>
@@ -689,7 +689,7 @@
             routerLink="/admin/profile"
             class="hover:bg-gray-50 px-3 py-2 rounded-md flex items-center justify-center"
           >
-            <i class="bi bi-person text-lg"></i>
+            <i class="bi bi-person-fill text-lg"></i>
             <span class="ml-1 hidden lg:inline text-xl">{{ profileData?.full_name }}</span>
           </a>
 
@@ -727,7 +727,7 @@
             routerLink="/admin/dashboard"
             class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-1"
           >
-            <i class="bi bi-house text-lg"></i>
+            <i class="bi bi-house-fill text-lg"></i>
             <span class="hidden md:inline font-bold text-xl">หน้าหลัก</span>
           </a>
 
@@ -735,7 +735,7 @@
             routerLink="/admin/profile"
             class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-1"
           >
-            <i class="bi bi-person text-lg"></i>
+            <i class="bi bi-person-fill text-lg"></i>
             <span class="hidden md:inline font-bold text-xl">โปรไฟล์</span>
           </a>
 
@@ -749,7 +749,7 @@
               (click)="onToggle('funding', $event)"
               class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-1"
             >
-              <i class="bi bi-floppy text-lg"></i>
+              <i class="bi bi-gear-fill text-lg"></i>
               <span class="hidden md:inline font-bold text-xl"
                 >ข้อมูลพื้นฐาน</span
               >
@@ -786,7 +786,7 @@
               (click)="onToggle('news', $event)"
               class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-1"
             >
-              <i class="bi bi-floppy text-lg"></i>
+              <i class="bi bi-newspaper text-lg"></i>
               <span class="hidden md:inline font-bold text-xl"
                 >จัดการข่าว/ประกาศ</span
               >
@@ -823,7 +823,7 @@
               (click)="onToggle('save', $event)"
               class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-1"
             >
-              <i class="bi bi-floppy text-lg"></i>
+              <i class="bi bi-floppy-fill text-lg"></i>
               <span class="hidden md:inline font-bold text-xl"
                 >บันทึกผลงาน</span
               >
@@ -871,7 +871,7 @@
             routerLink="/admin/search-research"
             class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-1"
           >
-            <i class="bi bi-people text-lg"></i>
+            <i class="bi bi-people-fill text-lg"></i>
             <span class="hidden md:inline font-bold text-xl"
               >ค้นหาข้อมูลนักวิจัย</span
             >
@@ -880,7 +880,7 @@
             routerLink="/admin/report"
             class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-1"
           >
-            <i class="bi bi-file-earmark-text text-lg"></i>
+            <i class="bi bi-file-earmark-text-fill text-lg"></i>
             <span class="hidden md:inline font-bold text-xl">รายงาน</span>
           </a>
         </div>
@@ -897,7 +897,7 @@
           (click)="closeAllMobileMenus()"
           class="flex justify-center p-2 hover:bg-yellow-300 rounded relative group"
         >
-          <i class="bi bi-house text-xl"></i>
+          <i class="bi bi-house-fill text-xl"></i>
           <span
             class="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-2xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
           >
@@ -910,7 +910,7 @@
           (click)="closeAllMobileMenus()"
           class="flex justify-center p-2 hover:bg-yellow-300 rounded relative group"
         >
-          <i class="bi bi-person text-xl"></i>
+          <i class="bi bi-person-fill text-xl"></i>
           <span
             class="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-2xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
           >
@@ -923,7 +923,7 @@
             (click)="toggleMobileSubMenu('funding', $event)"
             class="flex justify-center p-2 hover:bg-yellow-300 rounded relative"
           >
-            <i class="bi bi-gear text-xl"></i>
+            <i class="bi bi-gear-fill text-xl"></i>
             <span
               class="hidden md:block absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity"
             >
@@ -987,7 +987,7 @@
             (click)="toggleMobileSubMenu('save', $event)"
             class="flex justify-center p-2 hover:bg-yellow-300 rounded relative"
           >
-            <i class="bi bi-floppy text-xl"></i>
+            <i class="bi bi-floppy-fill text-xl"></i>
             <span
               class="hidden md:block absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity"
             >
@@ -1038,7 +1038,7 @@
           (click)="closeAllMobileMenus()"
           class="flex justify-center p-2 hover:bg-yellow-300 rounded relative group"
         >
-          <i class="bi bi-people text-xl"></i>
+          <i class="bi bi-people-fill text-xl"></i>
           <span
             class="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-2xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
           >
@@ -1051,7 +1051,7 @@
           (click)="closeAllMobileMenus()"
           class="flex justify-center p-2 hover:bg-yellow-300 rounded relative group"
         >
-          <i class="bi bi-file-earmark-text text-xl"></i>
+          <i class="bi bi-file-earmark-text-fill text-xl"></i>
           <span
             class="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-2xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
           >

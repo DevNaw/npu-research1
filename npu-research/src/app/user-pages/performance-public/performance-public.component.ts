@@ -161,13 +161,13 @@ export class PerformancePublicComponent {
   private getRequestByType(type: WorkType, id: number) {
     switch (type) {
       case 'article':
-        return this.service.getArticles(id);
+        return this.service.getArticlesPublic(id);
 
       case 'project':
-        return this.service.getProjects(id);
+        return this.service.getProjectsPublic(id);
 
       case 'innovation':
-        return this.service.getInnovations(id);
+        return this.service.getInnovationsPublic(id);
 
       default:
         return of(null);
