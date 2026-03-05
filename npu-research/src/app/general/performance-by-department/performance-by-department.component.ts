@@ -3,7 +3,7 @@ import { DepartmentData } from '../../models/department.model';
 import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 
-type ReportType = 'research' | 'article' | 'innovation';
+type ReportType = 'project' | 'article' | 'innovation';
 
 
 @Component({
@@ -49,7 +49,7 @@ documents: DepartmentData[] = [
 filteredDocuments: DepartmentData[] = [];
 
 titles: Record<ReportType, { main: string; sub: string }> = {
-  research: {
+  project: {
     main: 'รายงานจำนวนโครงการวิจัย',
     sub: 'จำแนกตามหน่วยงาน',
   },
@@ -74,11 +74,11 @@ ngOnInit(){
 }
 
 isReportType(value: string | null): value is ReportType {
-  return value === 'research' || value === 'article' || value === 'innovation';
+  return value === 'project' || value === 'article' || value === 'innovation';
 }
 
 viewResearchReport() {
-  this.reportType = 'research';
+  this.reportType = 'project';
 }
 
 viewArticleReport() {

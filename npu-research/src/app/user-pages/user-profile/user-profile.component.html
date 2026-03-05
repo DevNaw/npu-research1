@@ -4,7 +4,7 @@
     <div
       class="border-2 border-yellow-500 rounded-full items-center flex justify-center mr-4"
     >
-      <img src="/assets/logoNPU.png" class="w-20 h-20 md:w-30 md:h-30" />
+      <img src="/assets/default_profile.png" class="w-20 h-20 md:w-30 md:h-30 rounded-full" />
     </div>
     <div>
       <h1 class="text-4xl md:text-5xl leading-none">{{ profileData?.full_name }}</h1>
@@ -471,7 +471,7 @@
 
                     <button
                       class="inline-flex items-center justify-center w-9 h-9 rounded-full bg-red-50 hover:bg-red-100 text-red-600 transition cursor-pointer"
-                      (click)="deleteItem(item.research_id)"
+                      (click)="deleteProject(item.research_id)"
                       title="ลบ"
                     >
                       <i class="bi bi-trash3"></i>

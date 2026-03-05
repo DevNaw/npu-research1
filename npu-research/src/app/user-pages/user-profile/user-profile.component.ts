@@ -196,7 +196,6 @@ export class UserProfileComponent implements OnInit {
     private authService: AuthService,
     private service: ProfileService,
     private serviceEducation: EducationService,
-    private route: ActivatedRoute
   ) {
     this.pieChartOptions = {
       series: [44, 55, 13],
@@ -372,8 +371,6 @@ export class UserProfileComponent implements OnInit {
 
     this.router.navigateByUrl(route);
   }
-
-  deleteItem(id: number) {}
 
   updatePagination(): void {
     const start = (this.currentPage - 1) * this.pageSize;
@@ -658,4 +655,30 @@ export class UserProfileComponent implements OnInit {
     { key: 'article', label: 'บทความวิชาการ', icon: 'bi-file-earmark-text' },
     { key: 'innovation', label: 'นวัตกรรมสิ่งประดิษฐ์', icon: 'bi-award' },
   ];
+
+  deleteProject(id: number) {
+    Swal.fire({
+      title: 'ต้องการลบข้อมูลใช่ไหม?',
+      text: 'ข้อมูลจะไม่สามารถกู้้ต้องได้',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'ใช่',
+      cancelButtonText: 'ไม่',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.service.deleteProject(id).subscribe({
+          next: () => {
+            this.loadData();
+            Swal.fire({
+              icon: 'success',
+              title: 'ลบข้อมูลสำเร็จ',
+              timer: 1500,
+              showConfirmButton: false,
+            });
+          },
+          error: (err) => console.error(err),
+        });
+      }
+    });
+  }
 }

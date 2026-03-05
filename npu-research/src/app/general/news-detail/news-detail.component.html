@@ -49,10 +49,9 @@
 
       <!-- Content -->
       <article
-        class="prose max-w-none prose-ul:list-disc prose-li:my-1 text-2xl"
-        [innerHTML]="newsDetail?.description"
-      >
-      </article>
+  class="max-w-none text-xl leading-relaxed wrap-break-word"
+  [innerHTML]="safeDescription">
+</article>
 
       <!-- Gallery -->
       <div class="mt-4 md:mt-10" *ngIf="newsDetail?.news_photos?.length">

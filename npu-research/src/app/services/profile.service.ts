@@ -83,4 +83,9 @@ export class ProfileService {
       `${this.api}/research/lists`
     );
   }
+
+  // Delete Project
+  deleteProject(id: number) {
+    return this.http.delete(`${this.api}/research/${id}/delete`);
+  }
 }

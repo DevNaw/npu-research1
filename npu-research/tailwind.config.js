@@ -4,7 +4,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        th: ['"TH K2D July8"', "sans-serif"],
+        th: ['"THK2D"', "sans-serif"],
       },
     },
   },

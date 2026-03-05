@@ -511,7 +511,6 @@ export class UserAddInnovationComponent {
 
     if (
       !d.title_th ||
-      !d.published_date ||
       !d.source_funds ||
       !d.subject_area_id ||
       !d.name_funding ||

@@ -181,24 +181,24 @@
         <!-- News Cards -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div
-            *ngFor="let news of newsList"
+            *ngFor="let news of newsList; let i = index"
             class="bg-white rounded-xl shadow hover:shadow-lg transition duration-300 hover:scale-105 flex flex-col"
           >
             <!-- Image -->
             <img
-              [src]="newsList[0]?.news_cover"
+              [src]="newsList[i]?.news_cover"
               class="h-44 w-full object-cover rounded-t-xl"
             />
 
             <!-- Content -->
             <div class="p-4 flex flex-col flex-1 text-[#394250]">
               <h2 class="text-xl font-bold line-clamp-2">
-                {{ newsList[0]?.title }}
+                {{ newsList[i]?.title }}
               </h2>
 
               <p class="text-xl line-clamp-3 mt-1 flex-1">
                 {{
-                  newsList[0]?.published_date
+                  newsList[i]?.published_date
                     | date : "dd MMMM YYYY" : "" : "th-TH"
                 }}
               </p>
@@ -206,7 +206,7 @@
               <!-- Read more -->
               <div class="mt-3 text-right" *ngIf="newsList.length">
                 <a
-                  (click)="goToNewsDetail(newsList[0].news_id)"
+                  (click)="goToNewsDetail(newsList[i].news_id)"
                   class="hover:text-[#F9CB34] text-xl font-medium hover:underline inline-flex items-center gap-1 cursor-pointer"
                 >
                   อ่านเพิ่มเติม

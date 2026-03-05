@@ -1,0 +1,14 @@
+article {
+  white-space: normal;
+  word-break: normal;
+  overflow-wrap: break-word;
+  line-height: 1.8;
+}
+
+article span {
+  display: inline;
+}
+
+article p {
+  display: inline;
+}
