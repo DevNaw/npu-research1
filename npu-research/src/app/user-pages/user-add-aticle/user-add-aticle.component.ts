@@ -5,6 +5,7 @@ import { ResearchService } from '../../services/research.service';
 import { Major, SubArea } from '../../models/subject.model';
 import { Researcher } from '../../models/researchers.model';
 import { Article } from '../../models/aticle.model';
+import { MainComponent } from '../../shared/layouts/main/main.component';
 
 interface InternalMemberRow {
   id: number;
@@ -213,6 +214,7 @@ export class UserAddAticleComponent {
   ) {}
 
   ngOnInit() {
+    MainComponent.showLoading();
     this.loadSubjectAreas();
     this.loadResearchersData();
 
@@ -226,6 +228,7 @@ export class UserAddAticleComponent {
       } else {
         this.isEdit = false;
       }
+      MainComponent.hideLoading();
     });
   }
 

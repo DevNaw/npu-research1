@@ -16,7 +16,7 @@ import {
   ResearchOwnerInnovation,
 } from '../../models/innovation-detai.model';
 import Swal from 'sweetalert2';
-import { FileService } from '../../services/file.service';
+import { MainComponent } from '../../shared/layouts/main/main.component';
 
 type WorkType = 'project' | 'article' | 'innovation';
 
@@ -53,6 +53,7 @@ export class PerformancePublicComponent {
   ) {}
 
   ngOnInit(): void {
+    MainComponent.showLoading();
     this.route.paramMap
       .pipe(
         switchMap((params) => {
@@ -72,6 +73,7 @@ export class PerformancePublicComponent {
           if (!res) return;
 
           this.handleResponseByType(res);
+          MainComponent.hideLoading();
         },
         error: (err) => {
           console.error('Error loading data:', err);

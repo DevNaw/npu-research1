@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { EducationService } from '../../services/education.service';
 import { EducationInfo } from '../../models/education.model';
+import { MainComponent } from '../../shared/layouts/main/main.component';
 
 @Component({
   selector: 'app-user-edit-study',
@@ -243,7 +244,11 @@ export class UserEditStudyComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadEducation();
+    MainComponent.showLoading();
+    Promise.all([
+      this.loadEducation(),
+      new Promise((resolve) => setTimeout(resolve, 1000)),
+    ]).then(() => MainComponent.hideLoading());
   }
 
   loadEducation() {

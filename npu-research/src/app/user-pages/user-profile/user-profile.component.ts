@@ -23,6 +23,7 @@ import { BarSummary, UserProfile } from '../../models/profiledetai.model';
 import { ResearchItem } from '../../models/profile-project.model';
 import { EducationService } from '../../services/education.service';
 import { EducationInfo } from '../../models/education.model';
+import { MainComponent } from '../../shared/layouts/main/main.component';
 
 export type PieChartOptions = {
   series: ApexNonAxisChartSeries;
@@ -280,8 +281,13 @@ export class UserProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadData();
-    this.loadEducation();
+    MainComponent.showLoading();
+    Promise.all([
+      this.loadData(),
+      this.loadEducation(),
+      new Promise((resolve) => setTimeout(resolve, 1000)),
+    ]).then(() => MainComponent.hideLoading());
+   
   }
 
   loadData(): void {

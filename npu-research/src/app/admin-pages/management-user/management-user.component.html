@@ -1,0 +1,176 @@
+<div
+  class="contain-content bg-gray-100 p-5 md:px-10 text-2xl font-bold text-[#394250]"
+>
+  <div class="mx-auto md:p-6 mb-1">
+    <h1 class="text-3xl">การจัดการผู้ใช้งานทั่วไป</h1>
+  </div>
+
+  <div class="mx-auto p-2 mb:p-6 md:mb-10 bg-white rounded-xl">
+    <div class="flex justify-end items-center mb-4 mt-2">
+      <div class="flex items-center">
+        <label class="mr-2">Search:</label>
+        <input
+          type="text"
+          [(ngModel)]="searchText"
+          (input)="onSearch()"
+          placeholder="ค้นหา"
+          class="border rounded px-2 py-1 ml-auto text-xl font-medium"
+        />
+      </div>
+    </div>
+    <div class="w-full overflow-x-auto mt-4">
+      <table class="w-full min-w-225 table-fixed">
+        <colgroup>
+          <col class="w-[5%]" />
+          <col class="w-[50%]" />
+          <col class="w-[30%]" />
+          <col class="w-[15%]" />
+        </colgroup>
+
+        <thead class="bg-[#394250] text-white border-b">
+          <tr>
+            <th class="p-2">#</th>
+            <th class="p-2 text-start">ชื่อ - นามสกุล</th>
+            <th class="p-2">บทบาท</th>
+            <th class="p-2">Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr
+            *ngFor="let news of paginatedNews; let i = index"
+            class="border-b border-gray-300 bg-gray-200 hover:bg-gray-50 transition font-medium"
+          >
+            <td class="text-center p-2">
+              {{ (currentPage - 1) * pageSize + i + 1 }}
+            </td>
+            <td class="p-2">{{ news.title }}</td>
+            <td class="text-center p-2">
+              {{ news.published_date | date : "dd/MM/yyyy" : "" }}
+            </td>
+            <td class="text-center p-2">
+              <div class="flex justify-center items-center gap-2 flex-wrap">
+                <button
+                  class="inline-flex items-center justify-center w-9 h-9 rounded-full bg-blue-50 hover:bg-blue-100 text-blue-600 transition cursor-pointer text-xl"
+                  title="แก้ไข"
+                  (click)="openModal()"
+                >
+                  <i class="bi bi-pencil-square"></i>
+                </button>
+
+                <button
+                  class="inline-flex items-center justify-center w-9 h-9 rounded-full bg-red-50 hover:bg-red-100 text-red-600 transition cursor-pointer text-xl"
+                  title="ลบ"
+                  (click)="deleteNews(news.news_id)"
+                >
+                  <i class="bi bi-trash3"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+
+          <tr *ngIf="paginatedNews.length === 0">
+            <td colspan="5" class="text-center text-gray-500 p-4">
+              ไม่พบข้อมูล
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="flex justify-end mt-3 space-x-1">
+      <button
+        (click)="changePage(currentPage - 1)"
+        [disabled]="currentPage === 1"
+        class="px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
+      >
+        ‹
+      </button>
+
+      <button
+        *ngFor="let page of pages"
+        (click)="changePage(page)"
+        class="px-3 py-1 rounded border text-sm transition"
+        [ngClass]="{
+          'bg-[#FACC15] text-[#394250] border-[#FACC15]': currentPage === page,
+          'hover:bg-gray-100': currentPage !== page
+        }"
+      >
+        {{ page }}
+      </button>
+
+      <button
+        (click)="changePage(currentPage + 1)"
+        [disabled]="currentPage === totalPages"
+        class="px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
+      >
+        ›
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Edit Password -->
+<div
+  *ngIf="isModalOpen"
+  class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center text-2xl text-[#394250]"
+>
+  <div class="bg-white w-full max-w-xl rounded-2xl shadow-xl p-6 relative">
+
+    <!-- Header -->
+    <div class="flex items-center justify-between border-b pb-3 mb-5">
+      <h2 class="font-bold">แก้ไขรหัสผ่าน</h2>
+
+      <button
+        (click)="closeModal()"
+        class="text-gray-400 hover:text-gray-600 transition cursor-pointer"
+      >
+        <i class="bi bi-x-lg text-lg"></i>
+      </button>
+    </div>
+
+    <!-- Content -->
+    <div class="space-y-4">
+
+      <!-- Password -->
+      <div>
+        <label class="mb-1 block">รหัสผ่านใหม่</label>
+        <input
+          [(ngModel)]="passwordData.new_password"
+          type="password"
+          placeholder="กรอกรหัสผ่านใหม่"
+          class="w-full border rounded-lg px-3 py-2 text-xl"
+        />
+      </div>
+
+      <!-- Confirm Password -->
+      <div>
+        <label class="mb-1 block">ยืนยันรหัสผ่าน</label>
+        <input
+          [(ngModel)]="passwordData.confirm_password"
+          type="password"
+          placeholder="ยืนยันรหัสผ่าน"
+          class="w-full border rounded-lg px-3 py-2 text-xl"
+        />
+      </div>
+
+      <!-- Footer -->
+      <div class="flex justify-center gap-3 pt-4 border-t mt-4">
+        <button
+          (click)="save()"
+          class="px-5 py-2 rounded-lg bg-yellow-400 hover:bg-yellow-500 shadow cursor-pointer"
+        >
+          บันทึก
+        </button>
+
+        <button
+          (click)="closeModal()"
+          class="px-4 py-2 rounded-lg border text-gray-600 hover:bg-gray-100 cursor-pointer"
+        >
+          ยกเลิก
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>

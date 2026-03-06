@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NewsService } from '../../services/news.service';
 import { News, NewsItem } from '../../models/news.model';
 import { Router } from '@angular/router';
+import { MainComponent } from '../../shared/layouts/main/main.component';
 
 @Component({
   selector: 'app-news',
@@ -21,7 +22,11 @@ export class NewsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.loadNewsList();
+    MainComponent.showLoading();
+    Promise.all([
+      this.loadNewsList(),
+      new Promise((resolve) => setTimeout(resolve, 1000)),
+    ]).then(() => MainComponent.hideLoading());
   }
 
   // =========== Load News List =================

@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 import { Editor, Toolbar } from 'ngx-editor';
 import { AdminNewsService } from '../../services/admin-news.service';
 import { NewsDetail, NewsPhoto } from '../../models/admin-news.model';
+import { MainComponent } from '../../shared/layouts/main/main.component';
 
 @Component({
   selector: 'app-news-edit',
@@ -44,6 +45,7 @@ export class NewsEditComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    MainComponent.showLoading();
     this.editor = new Editor();
 
     this.newsForm = this.fb.group({
@@ -62,6 +64,7 @@ export class NewsEditComponent implements OnInit, OnDestroy {
       this.newsId = +id;
       this.loadNews();
     }
+    MainComponent.hideLoading();
   }
 
   ngOnDestroy(): void {

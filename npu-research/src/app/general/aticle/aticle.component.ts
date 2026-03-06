@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ResearchService } from '../../services/research.service';
 import { Article } from '../../models/article-public.model';
+import { MainComponent } from '../../shared/layouts/main/main.component';
 
 @Component({
   selector: 'app-aticle',
@@ -24,7 +25,11 @@ export class AticleComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.getDatArticle();
+    MainComponent.showLoading();
+    Promise.all([
+      this.getDatArticle(),
+      new Promise((resolve) => setTimeout(resolve, 1000)),
+    ]).then(() => MainComponent.hideLoading());
   }
 
   getDatArticle() {

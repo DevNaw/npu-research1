@@ -2,6 +2,7 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { AuthService } from '../../services/auth.service';
+import { MainComponent } from '../../shared/layouts/main/main.component';
 
 type DropdownKey = 'address' | 'current_address';
 
@@ -26,7 +27,9 @@ export class UserEditAddressComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    MainComponent.showLoading();
     this.userId = this.route.snapshot.paramMap.get('id');
+    MainComponent.hideLoading();
   }
 
   addresses: string[] = [

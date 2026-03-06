@@ -94,7 +94,6 @@
 
     <!-- ===== Charts ===== -->
     <div class="bg-[#F9CB34] p-2 md:p-6 sm:p-8 rounded-2xl shadow-lg space-y-5">
-      <!-- Dashboard Title -->
       <div
         class="flex items-center gap-4 text-2xl mb-2 md:text-3xl sm:text-4xl font-bold"
       >
@@ -173,12 +172,9 @@
         <div class="mt-4 flex justify-end">
           <button
             (click)="goToAllNews()"
-            class="flex items-center gap-2 px-5 py-2 rounded-full border border-gray-300 
-                   text-white text-lg font-medium
-                   hover:bg-[#F9CB34] hover:text-gray-700 hover:border-[#F9CB34]
-                   transition-all duration-300 cursor-pointer"
+            class="flex items-center gap-2 px-5 py-2 rounded-full border border-gray-300 text-white text-lg font-medium hover:bg-[#F9CB34] hover:text-gray-700 hover:border-[#F9CB34] transition-all duration-300 cursor-pointer"
           >
-          ดูข่าวทั้งหมด
+            ดูข่าวทั้งหมด
             <i class="bi bi-arrow-right-circle-fill text-xl"></i>
           </button>
         </div>
@@ -191,40 +187,35 @@
             *ngFor="let news of newsList"
             class="bg-white rounded-xl shadow hover:shadow-lg transition duration-300 hover:scale-105 flex flex-col overflow-hidden"
           >
-            
             <!-- Image -->
             <div class="aspect-video w-full overflow-hidden">
-              <img
-                [src]="news.news_cover"
-                class="w-full h-full object-cover"
-              />
+              <img [src]="news.news_cover" class="w-full h-full object-cover" />
             </div>
-        
+
             <!-- Content -->
             <div class="p-4 flex flex-col flex-1 text-[#394250]">
               <h2 class="text-xl font-bold line-clamp-2">
                 {{ news.title }}
               </h2>
-        
+
               <p class="text-lg text-gray-500 mt-1 flex-1">
-                <i class="bi bi-calendar mr-2"></i>{{ news.published_date | date : "dd MMMM YYYY" : "" : "th-TH" }}
+                <i class="bi bi-calendar mr-2"></i
+                >{{
+                  news.published_date | date : "dd MMMM YYYY" : "" : "th-TH"
+                }}
               </p>
-        
+
               <!-- Read more -->
               <div class="mt-4 flex justify-end">
                 <button
                   (click)="goToNewsDetail(news.news_id)"
-                  class="flex items-center gap-2 px-5 py-2 rounded-full border border-gray-300 
-                         text-gray-700 text-lg font-medium
-                         hover:bg-[#F9CB34] hover:text-white hover:border-[#F9CB34]
-                         transition-all duration-300 cursor-pointer"
+                  class="flex items-center gap-2 px-5 py-2 rounded-full border border-gray-300 text-gray-700 text-lg font-medium hover:bg-[#F9CB34] hover:text-white hover:border-[#F9CB34] transition-all duration-300 cursor-pointer"
                 >
                   อ่านเพิ่มเติม
                   <i class="bi bi-arrow-right-circle-fill text-xl"></i>
                 </button>
               </div>
             </div>
-        
           </div>
         </div>
       </div>
@@ -310,7 +301,9 @@
                 *ngFor="let p of paginatedPublications; let i = index"
                 class="border-b border-gray-300 hover:bg-gray-50"
               >
-                <td class="p-2 text-center">{{ i + 1 }}</td>
+                <td class="p-2 text-center">
+                  {{ (currentPage - 1) * pageSize + i + 1 }}
+                </td>
                 <td class="p-2">
                   <div
                     class="text-indigo-600 hover:underline cursor-pointer truncate max-w-125 text-wrap"
@@ -347,7 +340,6 @@
 
         <!-- Pagination -->
         <div class="flex justify-end mt-3 space-x-1">
-          <!-- Prev -->
           <button
             (click)="changePage(currentPage - 1)"
             [disabled]="currentPage === 1"
@@ -356,11 +348,10 @@
             ‹
           </button>
 
-          <!-- Pages -->
           <button
             *ngFor="let page of pages"
             (click)="changePage(page)"
-            class="px-2 md:px-3 py-1 rounded border text-2sm transition"
+            class="px-2 md:px-3 py-1 rounded border text-2sm transition cursor-pointer"
             [ngClass]="{
               'bg-[#FACC15] text-[#1E293B] border-[#FACC15]':
                 currentPage === page,
@@ -370,7 +361,6 @@
             {{ page }}
           </button>
 
-          <!-- Next -->
           <button
             (click)="changePage(currentPage + 1)"
             [disabled]="currentPage === totalPages"

@@ -10,6 +10,7 @@ import {
   SubSubjectArea,
 } from '../../models/search-get.model';
 import { ResearchItem, SearchResearchRequest } from '../../models/search.model';
+import { MainComponent } from '../../shared/layouts/main/main.component';
 
 @Component({
   selector: 'app-user-research',
@@ -153,7 +154,11 @@ export class UserResearchComponent {
   ) {}
 
   ngOnInit() {
-    this.loadSubOrgan();
+    MainComponent.showLoading();
+    Promise.all([
+      this.loadSubOrgan(),
+      new Promise((resolve) => setTimeout(resolve, 1000)),
+    ]).then(() => MainComponent.hideLoading());
   }
 
   // ======= Load SubArea Organization && Load Researchs =======
@@ -416,7 +421,6 @@ export class UserResearchComponent {
     }
 
     this.loading = true;
-    console.log('sund', payload);
 
     this.service.searchData(payload).subscribe({
       next: (res) => {

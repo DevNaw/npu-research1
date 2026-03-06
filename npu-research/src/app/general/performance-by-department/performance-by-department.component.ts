@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DepartmentData } from '../../models/department.model';
 import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
+import { MainComponent } from '../../shared/layouts/main/main.component';
 
 type ReportType = 'project' | 'article' | 'innovation';
 
@@ -67,10 +68,12 @@ titles: Record<ReportType, { main: string; sub: string }> = {
 constructor(private router: Router, private route: ActivatedRoute) {}
 
 ngOnInit(){
+  MainComponent.showLoading();
   const type = this.route.snapshot.paramMap.get('type');
     this.reportType = this.isReportType(type) ? type : null;
 
     this.filteredDocuments = [...this.documents];
+    MainComponent.hideLoading();
 }
 
 isReportType(value: string | null): value is ReportType {

@@ -1,6 +1,5 @@
-import { Component } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
-import { filter } from 'rxjs/operators';
+import { Component, ChangeDetectorRef } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-main',
@@ -9,5 +8,20 @@ import { filter } from 'rxjs/operators';
   styleUrl: './main.component.css'
 })
 export class MainComponent {
-  
+  isLoading = true;
+
+  static instance: MainComponent;
+
+  constructor(private router: Router, private cdr: ChangeDetectorRef) {
+    MainComponent.instance = this;
+  }
+
+  static showLoading() {
+    MainComponent.instance.isLoading = true;
+    MainComponent.instance.cdr.detectChanges();
+  }
+
+  static hideLoading() {
+    MainComponent.instance.isLoading = false;
+  }
 }

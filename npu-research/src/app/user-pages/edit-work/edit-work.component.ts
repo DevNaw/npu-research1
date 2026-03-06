@@ -4,9 +4,9 @@ import Swal from 'sweetalert2';
 import {
   ExpertiseOption,
   OrganizationOption,
-  WorkInfo,
 } from '../../models/work.model';
 import { WorkService } from '../../services/work.service';
+import { MainComponent } from '../../shared/layouts/main/main.component';
 
 @Component({
   selector: 'app-edit-work',
@@ -43,7 +43,13 @@ export class EditWorkComponent {
   constructor(private router: Router, private service: WorkService) {}
 
   ngOnInit() {
-    this.loadWork();
+    MainComponent.showLoading();
+    Promise.all([
+      this.loadWork(),
+      new Promise(resolve => setTimeout(resolve, 1000))
+    ]).then(() => {
+      MainComponent.hideLoading();
+    });
   }
 
   loadWork() {

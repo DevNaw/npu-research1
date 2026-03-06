@@ -1,19 +1,21 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
-import { NewsItem } from '../../models/admin-news.model';
+import { NewsItem } from '../../models/news.model';
 import { AdminNewsService } from '../../services/admin-news.service';
 import { MainComponent } from '../../shared/layouts/main/main.component';
 
 @Component({
-  selector: 'app-admin-news',
+  selector: 'app-management-user',
   standalone: false,
-  templateUrl: './admin-news.component.html',
-  styleUrl: './admin-news.component.css',
+  templateUrl: './management-user.component.html',
+  styleUrl: './management-user.component.css'
 })
-export class AdminNewsComponent {
+export class ManagementUserComponent {
   news: NewsItem[] = [];
   filteredNews: NewsItem[] = [];
+  isModalOpen = false;
+  passwordData: any = {};
 
   pageSize = 10;
   currentPage = 1;
@@ -101,4 +103,18 @@ export class AdminNewsComponent {
       }
     });
   }
+
+  openModal() {
+    this.isModalOpen = true;
+    this.passwordData = {
+      password: '',
+      confirm_password: '',
+    };
+  }
+
+  closeModal() {
+    this.isModalOpen = false;
+  }
+
+  save() {}
 }

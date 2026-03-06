@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import Swal from 'sweetalert2';
 import { DocumentItem } from '../../models/admin-document.model';
 import { AdminDocService } from '../../services/admin-doc.service';
+import { MainComponent } from '../../shared/layouts/main/main.component';
 
 @Component({
   selector: 'app-admin-download',
@@ -29,7 +30,11 @@ export class AdminDownloadComponent {
   constructor(private service: AdminDocService) {}
 
   ngOnInit() {
-    this.loadDocuments();
+    MainComponent.showLoading();
+    Promise.all([
+      this.loadDocuments(),
+      new Promise((resolve) => setTimeout(resolve, 1000)),
+    ]).then(() => MainComponent.hideLoading());
   }
 
   loadDocuments() {

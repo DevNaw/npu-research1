@@ -11,6 +11,7 @@ import {
 } from '../../models/member.model';
 import { Funding } from '../../models/funding.model';
 import { FundingService } from '../../services/funding.service';
+import { MainComponent } from '../../shared/layouts/main/main.component';
 
 const FIRST_AUTHOR = 'หัวหน้าโครงการ';
 
@@ -110,6 +111,7 @@ export class UserAddInnovationComponent {
   ) {}
 
   ngOnInit(): void {
+    MainComponent.showLoading();
     this.loadSubjectArea();
     this.loadResearchersData();
     this.loadFundings();
@@ -124,6 +126,7 @@ export class UserAddInnovationComponent {
       } else {
         this.isEdit = false;
       }
+      MainComponent.hideLoading();
     });
   }
 

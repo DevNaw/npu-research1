@@ -3,6 +3,7 @@ import * as XLSX from 'xlsx';
 import Swal from 'sweetalert2';
 import { AdminExpertiseService } from '../../services/admin-expertise.service';
 import { Expertise } from '../../models/admin-expertise.model';
+import { MainComponent } from '../../shared/layouts/main/main.component';
 
 type MajorStatus = 'พร้อมใช้งาน' | 'ไม่พร้อมใช้งาน';
 
@@ -36,7 +37,11 @@ export class SpecializationComponent {
   constructor(private service: AdminExpertiseService) {}
 
   ngOnInit(): void {
-    this.loadExpertise();
+    MainComponent.showLoading();
+    Promise.all([
+      this.loadExpertise(),
+      new Promise((resolve) => setTimeout(resolve, 1000)),
+    ]).then(() => MainComponent.hideLoading());
   }
 
   loadExpertise() {

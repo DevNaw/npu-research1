@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { ProfileService } from '../../services/profile.service';
 import { GeneralInfo } from '../../models/edit-general.model';
+import { MainComponent } from '../../shared/layouts/main/main.component';
 
 @Component({
   selector: 'app-user-edit-profile',
@@ -55,7 +56,11 @@ export class UserEditProfileComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadData();
+    MainComponent.showLoading();
+    Promise.all([
+      this.loadData(),
+      new Promise((resolve) => setTimeout(resolve, 1000)),
+    ]).then(() => MainComponent.hideLoading());
   }
 
   // =============== loadData ==================

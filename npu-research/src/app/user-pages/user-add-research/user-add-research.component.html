@@ -664,7 +664,7 @@
           </span>
 
           <button
-            *ngIf="selectedFile || projectData.full_report"
+            *ngIf="selectedFile || projectData.full_report?.file_name"
             type="button"
             class="text-red-500 hover:text-red-700 text-lg"
             (click)="removeFile()"
@@ -704,7 +704,7 @@
           </span>
 
           <button
-            *ngIf="selectedContractFile || projectData.contract_file"
+            *ngIf="selectedContractFile || projectData.contract_file?.file_name"
             type="button"
             class="text-red-500 hover:text-red-700 text-lg"
             (click)="removeContractFile()"

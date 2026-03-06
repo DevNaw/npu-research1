@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ResearchService } from '../../services/research.service';
 import { Project } from '../../models/project-public.model';
+import { MainComponent } from '../../shared/layouts/main/main.component';
 
 @Component({
   selector: 'app-research',
@@ -23,10 +24,12 @@ export class ResearchComponent implements OnInit {
     private researchService: ResearchService
   ) {}
 
-  
-
   ngOnInit(): void {
-    this.getDataResearch();
+    MainComponent.showLoading();
+    Promise.all([
+      this.getDataResearch(),
+      new Promise((resolve) => setTimeout(resolve, 1000)),
+    ]).then(() => MainComponent.hideLoading());
   }
 
   getDataResearch() {

@@ -3,6 +3,7 @@ import * as XLSX from 'xlsx';
 import Swal from 'sweetalert2';
 import { Funding } from '../../models/admin-funding.model';
 import { AdminFundingService } from '../../services/admin-funding.service';
+import { MainComponent } from '../../shared/layouts/main/main.component';
 
 @Component({
   selector: 'app-external-funding',
@@ -27,7 +28,11 @@ export class ExternalFundingComponent {
   constructor(private service: AdminFundingService) {}
 
   ngOnInit(): void {
-    this.loadFunding();
+    MainComponent.showLoading();
+    Promise.all([
+      this.loadFunding(),
+      new Promise((resolve) => setTimeout(resolve, 1000)),
+    ]).then(() => MainComponent.hideLoading());
   }
 
   loadFunding() {

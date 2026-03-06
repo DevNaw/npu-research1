@@ -27,6 +27,7 @@ import {
   ApexFill,
   ChartComponent,
 } from 'ng-apexcharts';
+import { MainComponent } from '../../shared/layouts/main/main.component';
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -88,11 +89,20 @@ export class UserDashboardComponent implements OnInit {
   constructor(private router: Router, private service: DashboardService) {}
 
   ngOnInit(): void {
-    this.loadDashboardData();
+    MainComponent.showLoading();
+
+    Promise.all([
+      this.loadDashboardData(),
+      new Promise(resolve => setTimeout(resolve, 1000))
+    ]).then(() => {
+      MainComponent.hideLoading();
+    });
+    
     this.updatePagination();
   }
 
   loadDashboardData(): void {
+    this.loading = true;
     this.service.getDashboardData().subscribe({
       next: (res: DashboardResponse) => {
         if (res?.result === 1 && res?.data) {
@@ -106,10 +116,12 @@ export class UserDashboardComponent implements OnInit {
 
           this.updatePagination();
           this.initCharts();
+          this.loading = false;
         }
       },
       error: (err) => {
         console.error('Dashboard Load Error:', err);
+        this.loading = false;
       },
     });
   }
@@ -157,13 +169,13 @@ export class UserDashboardComponent implements OnInit {
         height: 500,
         stacked: false,
         animations: {
-          enabled: false
+          enabled: false,
         },
         zoom: {
-          enabled: false
+          enabled: false,
         },
         toolbar: {
-          show: true
+          show: true,
         },
       },
       plotOptions: {
@@ -179,44 +191,46 @@ export class UserDashboardComponent implements OnInit {
         enabled: false,
       },
       xaxis: {
+        categories: data.map((item) => item.label),
+        tickPlacement: 'on',
+        axisBorder: {
+          show: true,
+          color: '#000',
+          height: 1,
+        },
         labels: {
           rotate: -45,
           style: {
             fontSize: '12px',
           },
         },
-        categories: data.map((item) => item.label),
-        tickPlacement: 'on',
-        axisBorder: {
-          show: true,
-          color: '#000',
-          height: 1
-        },
         axisTicks: {
           show: true,
-          color: '#000'
-        }
+          color: '#000',
+        },
       },
       yaxis: {
         title: {
           text: 'จำนวน',
         },
         min: 0,
-        tickAmount: 5,
+        max: Math.max(...data.map((item) => item.count)),
+        tickAmount: 4,
         axisBorder: {
           show: true,
-          color: '#000'
+          color: '#000',
         },
         axisTicks: {
           show: true,
-          color: '#000'
-        }
+          color: '#000',
+        },
       },
       stroke: {
-        width: 2,
+        width: 1,
       },
 
       fill: {
+        opacity: 1,
         type: 'gradient',
         gradient: {
           shade: 'light',
@@ -229,10 +243,9 @@ export class UserDashboardComponent implements OnInit {
           stops: [50, 0, 100],
         },
       },
-
       grid: {
         show: true,
-        borderColor: '#cccccc',
+        borderColor: '#bdbdbd',
         strokeDashArray: 0,
         position: 'back',
         xaxis: {
@@ -246,11 +259,11 @@ export class UserDashboardComponent implements OnInit {
           }
         },
         row: {
-          colors: ['transparent'],
+          colors: ['#f3f3f3', 'transparent'],
           opacity: 0.5
         },
         column: {
-          colors: ['transparent'],
+          colors: ['#f3f3f3', 'transparent'],
           opacity: 0.5
         }
       }

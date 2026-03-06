@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ResearchService } from '../../services/research.service';
 import { Innovation } from '../../models/innovation-public.model';
+import { MainComponent } from '../../shared/layouts/main/main.component';
 
 @Component({
   selector: 'app-innovation',
@@ -24,7 +25,11 @@ export class InnovationComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.getDataInnovation();
+    MainComponent.showLoading();
+    Promise.all([
+      this.getDataInnovation(),
+      new Promise((resolve) => setTimeout(resolve, 1000)),
+    ]).then(() => MainComponent.hideLoading());
   }
 
   getDataInnovation() {

@@ -11,6 +11,7 @@ import { ResearchService } from '../../services/research.service';
 import Swal from 'sweetalert2';
 import { Funding } from '../../models/funding.model';
 import { FundingService } from '../../services/funding.service';
+import { MainComponent } from '../../shared/layouts/main/main.component';
 
 const FIRST_AUTHOR = 'หัวหน้าโครงการ';
 
@@ -100,6 +101,7 @@ export class UserAddResearchComponent {
   ) {}
 
   ngOnInit(): void {
+    MainComponent.showLoading();
     this.loadSubjectArea();
     this.loadResearchersData();
     this.loadFundings();
@@ -114,6 +116,7 @@ export class UserAddResearchComponent {
       } else {
         this.isEdit = false;
       }
+      MainComponent.hideLoading();
     });
   }
 
@@ -348,6 +351,12 @@ export class UserAddResearchComponent {
     this.selectedFile = null;
     this.selectedFileName = '';
     this.projectData.full_report = null;
+  }
+
+  removeFileI() {
+    this.selectedContractFile = null;
+    this.selectedContractFileName = '';
+    this.projectData.contract_file = null;
   }
 
   onContractFileSelected(event: Event): void {

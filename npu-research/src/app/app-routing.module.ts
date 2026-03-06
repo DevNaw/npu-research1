@@ -43,6 +43,8 @@ import { PerformanceByDepartmentComponent } from './general/performance-by-depar
 import { PerformanceDetailByDepartmentComponent } from './general/performance-detail-by-department/performance-detail-by-department.component';
 import { DashboardComponent } from './admin-pages/dashboard/dashboard.component';
 import { PerformancePublicComponent } from './user-pages/performance-public/performance-public.component';
+import { ManagementAdminComponent } from './admin-pages/management-admin/management-admin.component';
+import { ManagementUserComponent } from './admin-pages/management-user/management-user.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -168,6 +170,8 @@ const routes: Routes = [
       { path: 'edit-work', component: EditWorkComponent },
       { path: 'performance-by-departmaent/:type', component: PerformanceByDepartmentComponent },
       { path: 'performance-by-departmaent/:type/:id', component: PerformanceDetailByDepartmentComponent },
+      { path: 'management-user', component: ManagementUserComponent },
+      { path: 'management-admin', component: ManagementAdminComponent },
     ],
   },
 ];

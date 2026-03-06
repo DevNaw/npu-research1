@@ -5,6 +5,7 @@ import { AuthService } from '../../services/auth.service';
 import { SearchService } from '../../services/search.service';
 import { Researcher } from '../../models/search-researchers.model';
 import { Expertise, Organization } from '../../models/get-researcher.model';
+import { MainComponent } from '../../shared/layouts/main/main.component';
 
 
 @Component({
@@ -66,7 +67,11 @@ export class AdminSearchResearcherComponent {
     ) {}
   
     ngOnInit() {
-      this.loadResearch();
+      MainComponent.showLoading();
+      Promise.all([
+        this.loadResearch(),
+        new Promise((resolve) => setTimeout(resolve, 1000)),
+      ]).then(() => MainComponent.hideLoading());
     }
   
     loadResearch() {

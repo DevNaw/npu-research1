@@ -10,6 +10,7 @@ import {
   SubSubjectArea,
 } from '../../models/search-get.model';
 import { ResearchItem, SearchResearchRequest } from '../../models/search.model';
+import { MainComponent } from '../../shared/layouts/main/main.component';
 
 @Component({
   selector: 'app-admin-search-paper',
@@ -153,7 +154,11 @@ export class AdminSearchPaperComponent {
   ) {}
 
   ngOnInit() {
-    this.loadSubOrgan();
+    MainComponent.showLoading();
+    Promise.all([
+      this.loadSubOrgan(),
+      new Promise((resolve) => setTimeout(resolve, 1000)),
+    ]).then(() => MainComponent.hideLoading());
   }
 
   // ======= Load SubArea Organization && Load Researchs =======

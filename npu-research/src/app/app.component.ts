@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { LoadingService } from './services/loading.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -10,8 +12,10 @@ import { filter } from 'rxjs/operators';
 })
 export class AppComponent {
   title = 'npu-research';
-
-  constructor(private router: Router) {
+  loading$!: Observable<boolean>;
+  
+  constructor(private router: Router, private loadingService: LoadingService) {
+    this.loading$ = this.loadingService.loading$;
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe(() => {

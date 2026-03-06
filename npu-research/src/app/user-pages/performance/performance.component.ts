@@ -8,6 +8,7 @@ import { of, switchMap } from 'rxjs';
 import { InnovationApi, ResearchOwnerInnovation } from '../../models/innovation-detai.model';
 import Swal from 'sweetalert2';
 import { HttpClient } from '@angular/common/http';
+import { MainComponent } from '../../shared/layouts/main/main.component';
 
 type WorkType = 'project' | 'article' | 'innovation';
 
@@ -46,6 +47,7 @@ export class PerformanceComponent {
   ) {}
 
   ngOnInit(): void {
+    MainComponent.showLoading();
     this.route.paramMap
       .pipe(
         switchMap((params) => {
@@ -65,6 +67,7 @@ export class PerformanceComponent {
           if (!res) return;
 
           this.handleResponseByType(res);
+          MainComponent.hideLoading();
         },
         error: (err) => {
           console.error('Error loading data:', err);

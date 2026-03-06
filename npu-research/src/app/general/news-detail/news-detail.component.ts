@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { NewsService } from '../../services/news.service';
 import { News } from '../../models/news-detail.model';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { MainComponent } from '../../shared/layouts/main/main.component';
 
 @Component({
   selector: 'app-news-detail',
@@ -22,8 +23,10 @@ export class NewsDetailComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    MainComponent.showLoading();
     this.newsId = Number(this.route.snapshot.paramMap.get('id'));
     this.loadNewsDetail(this.newsId);
+    MainComponent.hideLoading();
   }
 
   loadNewsDetail(id: number) {

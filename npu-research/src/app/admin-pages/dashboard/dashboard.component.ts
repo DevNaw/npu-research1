@@ -3,6 +3,7 @@ import { BarSummary, ResearchItem, ResearchProfileData } from '../../models/get-
 import { ProfileService } from '../../services/profile.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApexNonAxisChartSeries, ApexChart, ApexResponsive, ApexLegend, ApexDataLabels, ApexPlotOptions, ApexAxisChartSeries, ApexYAxis, ApexXAxis, ApexFill, ApexTooltip, ApexStroke } from 'ng-apexcharts';
+import { MainComponent } from '../../shared/layouts/main/main.component';
 
 export type PieChartOptions = {
   series: ApexNonAxisChartSeries;
@@ -171,12 +172,14 @@ export class DashboardComponent {
   }
 
   ngOnInit() {
+    MainComponent.showLoading();
     this.route.paramMap.subscribe((params) => {
       const id = params.get('id');
 
       if (id) {
         this.loadDataById(+id);
       }
+      MainComponent.hideLoading();
     });
   }
 
