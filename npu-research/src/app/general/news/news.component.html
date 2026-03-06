@@ -10,12 +10,12 @@
       <!-- NEWS GRID -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <div
-          *ngFor="let news of paginatedNews"
+          *ngFor="let news of newsList;"
           class="bg-white rounded-xl shadow hover:shadow-lg transition duration-300 hover:scale-105"
         >
           <!-- Image -->
           <img
-            [src]="newsList[0]?.news_cover"
+            [src]="news?.news_cover"
             alt=""
             class="h-48 w-full object-cover rounded-t-xl"
           />
@@ -26,20 +26,24 @@
               {{ news.title }}
             </h3>
 
-            <p class="text-lg text-[#394250]">วันที่ {{ newsList[0]?.published_date | date:'d MMMM yyyy' : "" : 'th-TH' }}</p>
+            <p class="text-lg text-[#394250]">
+              วันที่
+              {{
+                news?.published_date
+                  | date : "d MMMM yyyy" : "" : "th-TH"
+              }}
+            </p>
 
             <div class="flex justify-end" *ngIf="newsList.length">
-              <a
-                (click)="goToNewsDetail(newsList[0].news_id)"
-                class="inline-flex items-center gap-2 font-semibold text-lg hover:text-[#F9CB34] transition group cursor-pointer"
-              >
-                <span>ดูเพิ่มเติม</span>
-                <span
-                  class="transition-transform duration-200 group-hover:translate-x-1"
+              <div class="mt-4 flex justify-end">
+                <button
+                  (click)="goToNewsDetail(news.news_id)"
+                  class="flex items-center gap-2 px-5 py-2 rounded-full border border-gray-300 text-gray-700 text-lg font-medium hover:bg-[#F9CB34] hover:text-white hover:border-[#F9CB34] transition-all duration-300 cursor-pointer"
                 >
-                  →
-                </span>
-              </a>
+                  อ่านเพิ่มเติม
+                  <i class="bi bi-arrow-right-circle-fill text-xl"></i>
+                </button>
+              </div>
             </div>
           </div>
         </div>

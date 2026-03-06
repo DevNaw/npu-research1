@@ -1,8 +1,24 @@
-import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
-import { environment } from '../../environments/environment';
-import { ResearchArticle } from '../models/article-show.model';
-import { Owner } from '../models/search.model';
-import { ResearchService } from '../services/research.service';
+import { Component, ViewChild } from "@angular/core";
+import {
+  ApexAxisChartSeries,
+  ApexChart,
+  ChartComponent,
+  ApexDataLabels,
+  ApexXAxis,
+  ApexPlotOptions,
+  ApexGrid
+} from "ng-apexcharts";
+
+export type ChartOptions = {
+  series: ApexAxisChartSeries;
+  chart: ApexChart;
+  dataLabels: ApexDataLabels;
+  plotOptions: ApexPlotOptions;
+  xaxis: ApexXAxis;
+  annotations: any; //ApexAnnotations;
+  grid: ApexGrid;
+  yaxis: any; // ApexYAxis;
+};
 
 @Component({
   selector: 'app-test',
@@ -11,26 +27,78 @@ import { ResearchService } from '../services/research.service';
   styleUrl: './test.component.css',
 })
 export class TestComponent {
-id: number = 25;
-  article: ResearchArticle | null = null;
-  owner: Owner | null = null;
+  @ViewChild("chart") chart!: ChartComponent;
+  public chartOptions: ChartOptions;
 
-  constructor(private service: ResearchService) {}
-
-  ngOnInit(): void {
-    this.loadArticle();
-  }
-
-  loadArticle(): void {
-    this.service.getArticles(this.id).subscribe({
-      next: (res) => {
-        this.article = res.data.researchArticle;
-        this.owner = res.data.owner;
-
-        console.log(this.owner);
-        
+  constructor() {
+    this.chartOptions = {
+      series: [
+        {
+          name: "reversed",
+          data: [400, 430, 448, 470, 540, 580, 690]
+        }
+      ],
+      chart: {
+        type: "bar",
+        height: 350
       },
-      error: (err) => console.error(err),
-    });
+      annotations: {
+        xaxis: [
+          {
+            x: 500,
+            borderColor: "#00E396",
+            label: {
+              borderColor: "#00E396",
+              style: {
+                color: "#fff",
+                background: "#00E396"
+              },
+              text: "X annotation"
+            }
+          }
+        ],
+        yaxis: [
+          {
+            y: "July",
+            y2: "September",
+            label: {
+              text: "Y annotation"
+            }
+          }
+        ]
+      },
+      plotOptions: {
+        bar: {
+          horizontal: true
+        }
+      },
+      dataLabels: {
+        enabled: false
+      },
+      xaxis: {
+        categories: [
+          "June",
+          "July",
+          "August",
+          "September",
+          "October",
+          "November",
+          "December"
+        ]
+      },
+      grid: {
+        xaxis: {
+          lines: {
+            show: true
+          }
+        }
+      },
+      yaxis: {
+        reversed: true,
+        axisTicks: {
+          show: true
+        }
+      }
+    };
   }
 }

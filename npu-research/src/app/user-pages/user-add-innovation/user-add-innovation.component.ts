@@ -9,6 +9,8 @@ import {
   ExternalMemberRow,
   InternalMemberRow,
 } from '../../models/member.model';
+import { Funding } from '../../models/funding.model';
+import { FundingService } from '../../services/funding.service';
 
 const FIRST_AUTHOR = 'หัวหน้าโครงการ';
 
@@ -96,18 +98,21 @@ export class UserAddInnovationComponent {
   selectedFile: File | null = null;
   selectedImagesName = '';
   selectedImagesFile: File[] = [];
+  fundings: Funding[] = [];
 
   projectData: ResearchInnovationDetail = { ...DEFAULT_INNOVATION };
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private service: ResearchService
+    private service: ResearchService,
+    private fundingService: FundingService
   ) {}
 
   ngOnInit(): void {
     this.loadSubjectArea();
     this.loadResearchersData();
+    this.loadFundings();
 
     this.route.paramMap.subscribe((params) => {
       const id = params.get('id');
@@ -129,6 +134,17 @@ export class UserAddInnovationComponent {
       },
       error: (err) => {
         console.error('Failed to load Subject Area: ', err);
+      },
+    });
+  }
+
+  loadFundings(): void {
+    this.fundingService.getFundings().subscribe({
+      next: (res) => {
+        this.fundings = res.data.fundings;
+      },
+      error: (err) => {
+        console.error('Failed to load fundings:', err);
       },
     });
   }
@@ -367,6 +383,7 @@ export class UserAddInnovationComponent {
     if (!this.validateForm()) {
       return;
     }
+    
     const formData = this.buildFormData();
 
     Swal.fire({
@@ -380,7 +397,7 @@ export class UserAddInnovationComponent {
       : this.service.createInnovation(formData);
 
     request$.subscribe({
-      next: () => {
+      next: (res: any) => {
         Swal.fire({
           icon: 'success',
           title: this.isEdit ? 'อัพเดทสำเร็จ' : 'บันทึกสำเร็จ',
@@ -400,6 +417,7 @@ export class UserAddInnovationComponent {
               });
           }, 1000);
         } else {
+          this.router.navigate(['/performance/innovation', res.data.research_id]);
           this.resetForm();
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -507,12 +525,12 @@ export class UserAddInnovationComponent {
   }
 
   validateForm(): boolean {
-    const d = this.projectData;
+    const d = this.projectData
 
     if (
       !d.title_th ||
       !d.source_funds ||
-      !d.subject_area_id ||
+      !d.subject_area ||
       !d.name_funding ||
       !d.budget_amount ||
       !d.year_received_budget ||

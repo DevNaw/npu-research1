@@ -687,8 +687,6 @@
 
             <!-- Gelleries Images -->
             <div class="md:col-span-1 mt-5">
-              <label class="font-bold text-gray-600">Gallery</label>
-
               <div class="grid grid-cols-3 gap-2 mt-5">
                 <img
                   *ngFor="let img of galleryImages"
@@ -841,7 +839,7 @@
                 <p class="font-semibold text-[#767676] md:mb-1">
                   ความร่วมมือกับหน่วยงานอื่นๆ
                 </p>
-                <p class="text-gray-800">{{ innovationData?.call_other }}</p>
+                <p class="text-gray-800">{{ innovationData?.call_other || '-' }}</p>
               </div>
 
               <div>

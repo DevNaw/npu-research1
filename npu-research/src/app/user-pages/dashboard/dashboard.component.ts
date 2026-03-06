@@ -155,6 +155,7 @@ export class UserDashboardComponent implements OnInit {
       chart: {
         type: 'bar',
         height: 500,
+        stacked: false,
         animations: {
           enabled: false
         },
@@ -170,7 +171,6 @@ export class UserDashboardComponent implements OnInit {
           columnWidth: '50%',
           borderRadius: 6,
           borderRadiusApplication: 'around',
-          backgroundBarColors: ['#f2f2f2'],
           backgroundBarOpacity: 1,
           backgroundBarRadius: 6,
         } as any,
@@ -187,14 +187,33 @@ export class UserDashboardComponent implements OnInit {
         },
         categories: data.map((item) => item.label),
         tickPlacement: 'on',
+        axisBorder: {
+          show: true,
+          color: '#000',
+          height: 1
+        },
+        axisTicks: {
+          show: true,
+          color: '#000'
+        }
       },
       yaxis: {
         title: {
           text: 'จำนวน',
         },
+        min: 0,
+        tickAmount: 5,
+        axisBorder: {
+          show: true,
+          color: '#000'
+        },
+        axisTicks: {
+          show: true,
+          color: '#000'
+        }
       },
       stroke: {
-        width: 1,
+        width: 2,
       },
 
       fill: {
@@ -212,13 +231,29 @@ export class UserDashboardComponent implements OnInit {
       },
 
       grid: {
+        show: true,
+        borderColor: '#cccccc',
+        strokeDashArray: 0,
+        position: 'back',
+        xaxis: {
+          lines: {
+            show: true
+          }
+        },
+        yaxis: {
+          lines: {
+            show: true
+          }
+        },
         row: {
-          colors: ['#fff', '#f2f2f2'],
+          colors: ['transparent'],
+          opacity: 0.5
         },
-        padding: {
-          bottom: 50,
-        },
-      },
+        column: {
+          colors: ['transparent'],
+          opacity: 0.5
+        }
+      }
     };
   }
 
@@ -307,6 +342,10 @@ export class UserDashboardComponent implements OnInit {
 
   goToNewsDetail(id: number): void {
     this.router.navigate(['/news', id]);
+  }
+
+  goToAllNews() {
+    this.router.navigate(['/news']);
   }
 
   sweet() {

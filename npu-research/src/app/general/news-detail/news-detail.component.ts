@@ -41,20 +41,27 @@ export class NewsDetailComponent implements OnInit {
     });
   }
 
+  // ====== clean html ========
   cleanHtml(html: string): string {
     if (!html) return '';
 
-    // ลบ background-color จาก Facebook
-    html = html.replace(/background-color:[^;"]+/g, '');
+    html = html
+      .replace(/background-color:[^;"]+;?/gi, '')
+      .replace(/font-family:[^;"]+;?/gi, '');
+    html = html.replace(
+      /<img([^>]*)>/gi,
+      '<img$1 class="max-w-full h-auto rounded-lg my-2 inline-block">'
+    );
 
-    // ทำให้รูป responsive
-    html = html.replace(/<img/g, '<img style="max-width:100%;height:auto;"');
+    html = html.replace(
+      /<a /gi,
+      '<a target="_blank" rel="noopener noreferrer" class="text-blue-600 underline break-all" '
+    );
 
-    // ให้ link เปิด tab ใหม่
-    html = html.replace(/<a /g, '<a target="_blank" rel="noopener" ');
-
-    // ลบ <p> ที่มีแค่อิโมจิ
-    html = html.replace(/<p>\s*([\u{1F300}-\u{1FAFF}])\s*<\/p>/gu, '$1');
+    html = html.replace(
+      /(^|[\s>])(https?:\/\/[^\s<]+)/gi,
+      '$1<a href="$2" target="_blank" rel="noopener noreferrer" class="text-blue-600 underline break-all">$2</a>'
+    );
 
     return html;
   }

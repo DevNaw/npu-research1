@@ -9,6 +9,8 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { ResearchService } from '../../services/research.service';
 import Swal from 'sweetalert2';
+import { Funding } from '../../models/funding.model';
+import { FundingService } from '../../services/funding.service';
 
 const FIRST_AUTHOR = 'หัวหน้าโครงการ';
 
@@ -88,15 +90,19 @@ export class UserAddResearchComponent {
   reportFilename = '';
   projectId: number | null = null;
 
+  fundings: Funding[] = [];
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private service: ResearchService
+    private service: ResearchService,
+    private fundingService: FundingService
   ) {}
 
   ngOnInit(): void {
     this.loadSubjectArea();
     this.loadResearchersData();
+    this.loadFundings();
 
     this.route.paramMap.subscribe((params) => {
       const id = params.get('id');
@@ -119,6 +125,17 @@ export class UserAddResearchComponent {
       },
       error: (err) => {
         console.error('Failed to load Subject Area:', err);
+      },
+    });
+  }
+
+  loadFundings(): void {
+    this.fundingService.getFundings().subscribe({
+      next: (res) => {
+        this.fundings = res.data.fundings;
+      },
+      error: (err) => {
+        console.error('Failed to load fundings:', err);
       },
     });
   }
@@ -362,7 +379,6 @@ export class UserAddResearchComponent {
       allowOutsideClick: false,
       didOpen: () => Swal.showLoading(),
     });
-    console.log('formData', formData);
     
 
     const request$ = this.isEdit

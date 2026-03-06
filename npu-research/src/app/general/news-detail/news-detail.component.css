@@ -1,14 +1,17 @@
-article {
-  white-space: normal;
-  word-break: normal;
-  overflow-wrap: break-word;
-  line-height: 1.8;
+:host ::ng-deep article img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
 }
 
-article span {
+:host ::ng-deep article a {
+  color: #2563eb;
+  text-decoration: underline;
+}
+.prose p {
   display: inline;
 }
 
-article p {
-  display: inline;
+.prose br {
+  display: block;
 }

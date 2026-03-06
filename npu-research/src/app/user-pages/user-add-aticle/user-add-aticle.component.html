@@ -154,7 +154,6 @@
         (click)="toggleDropdown('countries', $event)"
         class="flex justify-between items-center w-full border rounded-lg px-3 py-2 font-medium"
       >
-        <!-- {{ selectedCountries || articleData.country || "เลือกประเทศ" }} -->
         {{ selectedCountries || "เลือกประเทศ" }}
         <i class="bi bi-chevron-down text-sm"></i>
       </button>
@@ -474,7 +473,7 @@
           class="absolute z-50 mt-1 w-full bg-white border rounded-md shadow font-medium"
         >
           <div
-            *ngFor="let q of ['.20', '.40', '.60', '.80', '1.00']"
+            *ngFor="let q of ['0.20', '0.40', '0.60', '0.80', '1.00']"
             (click)="selectValue('volume_no', q)"
             class="px-3 py-2 cursor-pointer hover:bg-gray-100"
           >

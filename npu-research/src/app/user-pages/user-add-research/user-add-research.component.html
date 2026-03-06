@@ -457,11 +457,24 @@
       </div>
 
       <!-- ชื่อแหล่งทุน -->
-      <div *ngIf="projectData.source_funds" class="relative">
+      <div *ngIf="projectData.source_funds === 'แหล่งทุนภายใน'">
         <label class="block font-bold mb-2">
           ชื่อแหล่งทุน <span class="text-red-500">*</span>
         </label>
+      
+        <input
+          type="text"
+          [(ngModel)]="projectData.name_funding"
+          placeholder="กรอกชื่อแหล่งทุน"
+          class="w-full h-12 border rounded-md px-3 text-2xl font-medium"
+        />
+      </div>
 
+      <div *ngIf="projectData.source_funds === 'แหล่งทุนภายนอก'" class="relative">
+        <label class="block font-bold mb-2">
+          ชื่อแหล่งทุน <span class="text-red-500">*</span>
+        </label>
+      
         <button
           type="button"
           (click)="toggleDropdown('fundName', $event)"
@@ -472,21 +485,17 @@
           </span>
           <i class="bi bi-chevron-down"></i>
         </button>
-
+      
         <div
           *ngIf="activeDropdown === 'fundName'"
-          class="absolute left-0 top-full mt-1 w-full bg-white border rounded-md shadow z-50 font-medium"
+          class="absolute left-0 top-full mt-1 w-full bg-white border rounded-md shadow z-50"
         >
           <div
-            *ngFor="
-              let name of projectData.source_funds === 'แหล่งทุนภายใน'
-                ? internalFunds
-                : externalFunds
-            "
+            *ngFor="let fund of fundings"
             class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
-            (click)="selectValue('name_funding', name)"
+            (click)="selectValue('name_funding', fund.funding_name)"
           >
-            {{ name }}
+            {{ fund.funding_name }}
           </div>
         </div>
       </div>

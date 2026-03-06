@@ -1,7 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { NavbarComponent } from './shared/components/navbar/navbar.component';
-import { FooterComponent } from './shared/components/footer/footer.component';
 import { MainComponent } from './shared/layouts/main/main.component';
 import { LoginComponent } from './user-pages/login/login.component';
 import { RegisterComponent } from './user-pages/register/register.component';
@@ -51,6 +49,11 @@ const routes: Routes = [
   { path: 'register', component: RegisterComponent },
 
   /* ================= PUBLIC (ไม่ต้อง login) ================= */
+  {
+    path: '',
+    redirectTo: 'dashboard',
+    pathMatch: 'full'
+  },
   {
     path: '',
     component: MainComponent,

@@ -479,36 +479,46 @@
           </div>
         </div>
 
-        <div *ngIf="projectData.source_funds" class="relative">
-          <label class="block font-bold text-2xl mb-2">
+        <!-- ชื่อแหล่งทุน -->
+         <div *ngIf="projectData.source_funds === 'แหล่งทุนภายใน'">
+          <label class="block font-bold mb-2">
+            ชื่อแหล่งทุน <span class="text-red-500">*</span>
+          </label>
+
+          <input
+            type="text"
+            [(ngModel)]="projectData.name_funding"
+            placeholder="กรอกชื่อแหล่งทุน"
+            class="w-full h-12 border rounded-md px-3 text-2xl font-medium"
+          />
+         </div>
+
+         <div *ngIf="projectData.source_funds === 'แหล่งทุนภายนอก'" class="relative">
+          <label class="block font-bold mb-2">
             ชื่อแหล่งทุน <span class="text-red-500">*</span>
           </label>
 
           <button
             type="button"
             (click)="toggleDropdown('fundName', $event)"
-            class="w-full h-12 border rounded-md px-3 flex justify-between items-center font-medium bg-white"
+            class="w-full h-12 border rounded-md px-3 flex justify-between items-center bg-white font-medium"
           >
-            <span class="flex-1 truncate text-left">
+            <span class="truncate">
               {{ projectData.name_funding || "เลือกชื่อแหล่งทุน" }}
             </span>
-            <i class="bi bi-chevron-down shrink-0 ml-2"></i>
+            <i class="bi bi-chevron-down"></i>
           </button>
 
           <div
             *ngIf="activeDropdown === 'fundName'"
-            class="absolute z-9999 mt-1 w-full bg-white border rounded-md shadow font-medium"
+            class="absolute left-0 top-full mt-1 w-full bg-white border rounded-md shadow z-50"
           >
             <div
-              *ngFor="
-                let name of projectData.source_funds === 'แหล่งทุนภายใน'
-                  ? internalFunds
-                  : externalFunds
-              "
-              class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
-              (click)="selectValue('name_funding', name)"
+              *ngFor="let fund of fundings"
+              class="px-3 py-2 hover:bg-gray-100 cursor-pointer font-medium"
+              (click)="selectValue('name_funding', fund.funding_name)"
             >
-              {{ name }}
+              {{ fund.funding_name }}
             </div>
           </div>
         </div>

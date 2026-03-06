@@ -35,7 +35,9 @@
           <span class="flex items-center">
             <i class="bi bi-calendar mr-2"></i>
             สิ้นสุด:
-            {{ newsDetail?.expires_date | date : "dd MMMM YYYY" : "" : "th-TH" }}
+            {{
+              newsDetail?.expires_date | date : "dd MMMM YYYY" : "" : "th-TH"
+            }}
           </span>
         </div>
       </div>
@@ -49,9 +51,9 @@
 
       <!-- Content -->
       <article
-  class="max-w-none text-xl leading-relaxed wrap-break-word"
-  [innerHTML]="safeDescription">
-</article>
+        class="prose max-w-none text-2xl leading-relaxed whitespace-pre-line wrap-break-word"
+        [innerHTML]="safeDescription"
+      ></article>
 
       <!-- Gallery -->
       <div class="mt-4 md:mt-10" *ngIf="newsDetail?.news_photos?.length">
