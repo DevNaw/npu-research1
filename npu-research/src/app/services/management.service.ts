@@ -22,7 +22,7 @@ export class ManagementService {
   }
 
   updateAdmin(id: number, data: any) {
-    return this.http.patch(`${this.baseUrl}/admin/user/update/${id}`, data);
+    return this.http.put(`${this.baseUrl}/admin/user/update/${id}`, data);
   }
 
   deleteAdmin(id: number) {
@@ -35,7 +35,7 @@ getUsers(): Observable<UsersResponse> {
   }
 
   updatePassword(id: number, data: any) {
-    return this.http.patch(`${this.baseUrl}m/user-system/${id}/reset-password`, data);
+    return this.http.patch(`${this.baseUrl}/m/user-system/${id}/reset-password`, data);
   }
 
   deleteUser(id: number) {

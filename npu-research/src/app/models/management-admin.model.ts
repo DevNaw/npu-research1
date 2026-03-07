@@ -15,3 +15,18 @@ export interface AdminResponse {
     email: string;
     role: string;
   }
+
+  export interface AdminDataPayload {
+    id: number;
+    first_name: string;
+    last_name: string;
+    email: string;
+    password: string;
+  }
+
+  export interface Update {
+    id: number;
+    first_name: string;
+    last_name: string;
+    email: string;
+  }

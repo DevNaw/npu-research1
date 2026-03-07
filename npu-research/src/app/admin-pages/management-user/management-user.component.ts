@@ -4,6 +4,8 @@ import Swal from 'sweetalert2';
 import { NewsItem } from '../../models/news.model';
 import { AdminNewsService } from '../../services/admin-news.service';
 import { MainComponent } from '../../shared/layouts/main/main.component';
+import { User } from '../../models/management-user.model';
+import { ManagementService } from '../../services/management.service';
 
 @Component({
   selector: 'app-management-user',
@@ -12,54 +14,55 @@ import { MainComponent } from '../../shared/layouts/main/main.component';
   styleUrl: './management-user.component.css'
 })
 export class ManagementUserComponent {
-  news: NewsItem[] = [];
-  filteredNews: NewsItem[] = [];
+  
   isModalOpen = false;
   passwordData: any = {};
+
+  users: User[] = [];
+  filteredUsers: User[] = [];
 
   pageSize = 10;
   currentPage = 1;
   searchText: string = '';
-  showModal = false;
-  modalMode: 'add' | 'edit' = 'add';
 
-  constructor(private router: Router, private service: AdminNewsService) {}
+  constructor(private router: Router, private managementService: ManagementService) {}
 
   ngOnInit() {
     MainComponent.showLoading();
     Promise.all([
-      this.loadNews(),
+      this.loadUsers(),
       new Promise((resolve) => setTimeout(resolve, 1000)),
     ]).then(() => MainComponent.hideLoading());
   }
 
-  loadNews() {
-    this.service.getNews().subscribe({
+  loadUsers() {
+    this.managementService.getUsers().subscribe({
       next: (res) => {
-        this.news = res.data.news;
-        this.filteredNews = [...this.news];
+        this.users = res.data.users;
+        this.filteredUsers = [...this.users];
       },
       error: (err) => console.error(err),
     });
   }
+
 
   editNews(id: number) {
     this.router.navigate(['/admin/news/edit', id]);
   }
 
   onSearch() {
-    this.filteredNews = this.news.filter(n =>
-      n.title.toLowerCase().includes(this.searchText.toLowerCase())
+    this.filteredUsers = this.users.filter(n =>
+      n.first_name.toLowerCase().includes(this.searchText.toLowerCase())
     );
   }
 
-  get paginatedNews() {
+  get paginatedUsers() {
     const start = (this.currentPage - 1) * this.pageSize;
-    return this.filteredNews.slice(start, start + this.pageSize);
+    return this.filteredUsers.slice(start, start + this.pageSize);
   }
 
   get totalPages() {
-    return Math.ceil(this.filteredNews.length / this.pageSize);
+    return Math.ceil(this.filteredUsers.length / this.pageSize);
   }
 
   changePage(page: number) {
@@ -76,7 +79,7 @@ export class ManagementUserComponent {
     this.router.navigate(['/admin/news/create']);
   }
 
-  deleteNews(id: number) {
+  deleteUser(id: number) {
     Swal.fire({
       title: 'ยืนยันการลบ?',
       text: 'ข้อมูลนี้จะไม่สามารถกู้คืนได้',
@@ -87,9 +90,9 @@ export class ManagementUserComponent {
     }).then((result) => {
       if (result.isConfirmed) {
   
-        this.service.deleteNews(id).subscribe({
+        this.managementService.deleteUser(id).subscribe({
           next: () => {
-            this.loadNews();
+            this.loadUsers();
             Swal.fire({
               icon: 'success',
               title: 'ลบเรียบร้อย',
@@ -104,10 +107,12 @@ export class ManagementUserComponent {
     });
   }
 
-  openModal() {
+  openModal(id: number) {
     this.isModalOpen = true;
+  
     this.passwordData = {
-      password: '',
+      id,
+      new_password: '',
       confirm_password: '',
     };
   }
@@ -116,5 +121,39 @@ export class ManagementUserComponent {
     this.isModalOpen = false;
   }
 
-  save() {}
+  save() {
+    if (!this.passwordData.new_password) {
+      Swal.fire({
+        icon: 'error',
+        title: 'ผิดพลาด',
+        text: 'รหัสผ่านไม่ตรงกัน',
+      });
+      return;
+    }
+  
+    this.managementService
+      .updatePassword(this.passwordData.id, this.passwordData)
+      .subscribe({
+        next: () => {
+          Swal.fire({
+            icon: 'success',
+            title: 'สำเร็จ',
+            text: 'เปลี่ยนรหัสผ่านสำเร็จ',
+            timer: 1500,
+            showConfirmButton: false,
+          });
+  
+          this.closeModal();
+        },
+        error: (err) => {
+          console.error(err);
+  
+          Swal.fire({
+            icon: 'error',
+            title: 'เกิดข้อผิดพลาด',
+            text: 'ไม่สามารถเปลี่ยนรหัสผ่านได้',
+          });
+        },
+      });
+  }
 }

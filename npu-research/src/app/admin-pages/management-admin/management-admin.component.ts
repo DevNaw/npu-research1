@@ -1,120 +1,210 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
-import { NewsItem } from '../../models/news.model';
 import { AdminNewsService } from '../../services/admin-news.service';
 import { MainComponent } from '../../shared/layouts/main/main.component';
+import { ManagementService } from '../../services/management.service';
+import { Admin, AdminDataPayload, Update } from '../../models/management-admin.model';
 
 @Component({
   selector: 'app-management-admin',
   standalone: false,
   templateUrl: './management-admin.component.html',
-  styleUrl: './management-admin.component.css'
+  styleUrl: './management-admin.component.css',
 })
 export class ManagementAdminComponent {
-  news: NewsItem[] = [];
-    filteredNews: NewsItem[] = [];
-    isModalOpen = false;
-    passwordData: any = {};
-  
-    pageSize = 10;
-    currentPage = 1;
-    searchText: string = '';
-    showModal = false;
-    modalMode: 'add' | 'edit' = 'add';
-  
-    constructor(private router: Router, private service: AdminNewsService) {}
-  
-    ngOnInit() {
-      MainComponent.showLoading();
-      Promise.all([
-        this.loadNews(),
-        new Promise((resolve) => setTimeout(resolve, 1000)),
-      ]).then(() => MainComponent.hideLoading());
+ 
+  isModalOpen = false;
+  passwordData: any = {};
+  admins: Admin[] = [];
+  filteredAdmins: Admin[] = [];
+
+  adminsData:  AdminDataPayload | null = null;
+  updateAdmin: Update | null = null;
+
+  pageSize = 10;
+  currentPage = 1;
+  searchText: string = '';
+  showModal = false;
+  showModalEdit = false;
+  modalMode: 'add' | 'edit' = 'add';
+
+  constructor(private router: Router, private service: AdminNewsService, private managementService: ManagementService) {}
+
+  ngOnInit() {
+    MainComponent.showLoading();
+    Promise.all([
+      this.loadAdmins(),
+      new Promise((resolve) => setTimeout(resolve, 1000)),
+    ]).then(() => MainComponent.hideLoading());
+  }
+
+  loadAdmins() {
+    this.managementService.getAdmins().subscribe({
+      next: (res) => {
+        this.admins = res.data.admins;
+        this.filteredAdmins = [...this.admins];
+      },
+      error: (err) => console.error(err),
+    });
+  }
+
+
+  editNews(id: number) {
+    this.router.navigate(['/admin/news/edit', id]);
+  }
+
+  onSearch() {
+    this.filteredAdmins = this.admins.filter((n) =>
+      n.first_name.toLowerCase().includes(this.searchText.toLowerCase())
+    );
+  }
+
+  get paginatedAdmins() {
+    const start = (this.currentPage - 1) * this.pageSize;
+    return this.filteredAdmins.slice(start, start + this.pageSize);
+  }
+
+  get totalPages() {
+    return Math.ceil(this.filteredAdmins.length / this.pageSize);
+  }
+
+  changePage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
     }
-  
-    loadNews() {
-      this.service.getNews().subscribe({
-        next: (res) => {
-          this.news = res.data.news;
-          this.filteredNews = [...this.news];
-        },
-        error: (err) => console.error(err),
-      });
-    }
-  
-    editNews(id: number) {
-      this.router.navigate(['/admin/news/edit', id]);
-    }
-  
-    onSearch() {
-      this.filteredNews = this.news.filter(n =>
-        n.title.toLowerCase().includes(this.searchText.toLowerCase())
-      );
-    }
-  
-    get paginatedNews() {
-      const start = (this.currentPage - 1) * this.pageSize;
-      return this.filteredNews.slice(start, start + this.pageSize);
-    }
-  
-    get totalPages() {
-      return Math.ceil(this.filteredNews.length / this.pageSize);
-    }
-  
-    changePage(page: number) {
-      if (page >= 1 && page <= this.totalPages) {
-        this.currentPage = page;
+  }
+
+  get pages(): number[] {
+    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  }
+
+  createNews() {
+    this.router.navigate(['/admin/news/create']);
+  }
+
+  deleteAdmin(id: number) {
+    Swal.fire({
+      title: 'ยืนยันการลบ?',
+      text: 'ข้อมูลนี้จะไม่สามารถกู้คืนได้',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'ลบ',
+      cancelButtonText: 'ยกเลิก',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.managementService.deleteAdmin(id).subscribe({
+          next: () => {
+            this.loadAdmins();
+            Swal.fire({
+              icon: 'success',
+              title: 'ลบเรียบร้อย',
+              timer: 1500,
+              showConfirmButton: false,
+            });
+          },
+          error: (err) => console.error(err),
+        });
       }
-    }
+    });
+  }
+
+  openAddModal() {
+    this.modalMode = 'add';
+    this.showModal = true;
   
-    get pages(): number[] {
-      return Array.from({ length: this.totalPages }, (_, i) => i + 1);
-    }
+    this.adminsData = {
+      id: 0,
+      first_name: '',
+      last_name: '',
+      email: '',
+      password: ''
+    };
+  }
+
+  openEditModal(admin: Admin) {
+    this.showModalEdit = true;
   
-    createNews() {
-      this.router.navigate(['/admin/news/create']);
-    }
-  
-    deleteNews(id: number) {
-      Swal.fire({
-        title: 'ยืนยันการลบ?',
-        text: 'ข้อมูลนี้จะไม่สามารถกู้คืนได้',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'ลบ',
-        cancelButtonText: 'ยกเลิก',
-      }).then((result) => {
-        if (result.isConfirmed) {
-    
-          this.service.deleteNews(id).subscribe({
-            next: () => {
-              this.loadNews();
-              Swal.fire({
-                icon: 'success',
-                title: 'ลบเรียบร้อย',
-                timer: 1500,
-                showConfirmButton: false,
-              });
-            },
-            error: (err) => console.error(err),
-          });
-    
-        }
-      });
-    }
-  
-    openModal() {
-      this.isModalOpen = true;
-      this.passwordData = {
-        password: '',
-        confirm_password: '',
-      };
-    }
-  
-    closeModal() {
-      this.isModalOpen = false;
-    }
-  
-    save() {}
+    this.updateAdmin = {
+      id: admin.id,
+      first_name: admin.first_name,
+      last_name: admin.last_name,
+      email: admin.email,
+    };
+  }
+
+  closeModal() {
+    this.showModal = false;
+    this.showModalEdit = false;
+    this.resetForm();
+  }
+
+  saveExpertise() {
+    if (!this.adminsData) return;
+
+    this.managementService.createAdmin(this.adminsData).subscribe({
+      next: () => {
+        this.loadAdmins();
+        this.resetForm();
+        this.closeModal();
+        Swal.fire({
+          icon: 'success',
+            title: 'บันทึกสำเร็จ',
+            showConfirmButton: false,
+            timer: 1000,
+            timerProgressBar: true
+        });
+      },
+      error: () => Swal.fire('เกิดข้อผิดพลาด', '', 'error'),
+    });
+  }
+
+  updateExpertise() {
+    if (!this.updateAdmin) return;
+
+    Swal.fire({
+      title: 'กำลังดำเนินการ...',
+      text: 'กรุณารอสักครู่',
+      timer: 1000,
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
+
+    this.managementService.updateAdmin(this.updateAdmin.id, this.updateAdmin).subscribe({
+      next: () => {
+        this.loadAdmins();
+        this.closeModal();
+        Swal.fire({
+          icon: 'success',
+          title: 'แก้ไขสำเร็จ',
+          showConfirmButton: false,
+          timer: 1000,
+          timerProgressBar: true,
+        });
+      },
+      error: () =>
+        Swal.fire({
+          icon: 'error',
+          title: 'แก้ไขไม่สำเร็จ',
+        }),
+    });
+  }
+
+  resetForm() {
+    this.adminsData = {
+      id: 0,
+      first_name: '',
+      last_name: '',
+      email: '',
+      password: ''
+    };
+    this.updateAdmin = {
+      id: 0,
+      first_name: '',
+      last_name: '',
+      email: '',
+    };
+  }
 }
