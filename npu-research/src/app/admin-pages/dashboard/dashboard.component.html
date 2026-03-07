@@ -4,7 +4,7 @@
       <div
         class="border-2 border-yellow-500 rounded-full items-center flex justify-center mr-4"
       >
-        <img src="/assets/logoNPU.png" class="w-20 h-20 md:w-30 md:h-30" />
+        <img [src]="profileDataById?.user?.avatar_url || '/assets/default_profile.png'" class="w-20 h-20 md:w-30 md:h-30 rounded-full" />
       </div>
       <div>
         <h1 class="text-4xl md:text-5xl leading-none">{{ profileDataById?.user?.full_name }}</h1>
