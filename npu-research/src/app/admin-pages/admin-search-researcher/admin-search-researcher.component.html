@@ -307,7 +307,7 @@
       <button
         *ngFor="let page of pages"
         (click)="changePage(page)"
-        class="px-2 md:px-3 py-1 rounded border text-sm min-w-8 transition"
+        class="px-2 md:px-3 py-1 rounded border text-sm min-w-8 transition cursor-pointer"
         [ngClass]="{
           'bg-[#FACC15] text-[#1E293B] font-semibold':
             currentPage === page,

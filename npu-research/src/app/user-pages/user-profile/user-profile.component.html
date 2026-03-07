@@ -1,4 +1,4 @@
-<div class="contain-content bg-gray-100 p-5 md:p-6 min-h-screen text-2xl font-bold text-[#394250]">
+<div class="contain-content bg-gray-100 p-5 md:p-6 min-h-screen text-xl font-medium text-[#394250]">
   <!-- Heaer -->
   <div class="flex items-center mx-auto md:px-10">
 
@@ -33,11 +33,11 @@
     </div>
   
     <div class="ml-4">
-      <h1 class="text-4xl md:text-5xl leading-none">
+      <h1 class="text-2xl md:text-3xl leading-none">
         {{ profileData?.full_name }}
       </h1>
   
-      <h2 class="text-2xl italic leading-none">
+      <h2 class="text-xl italic">
         {{ profileData?.full_name }}
       </h2>
     </div>
@@ -47,7 +47,7 @@
    <!-- ปุ่มบันทึก -->
    <div class="mt-4" *ngIf="selectedFile">
     <button
-      class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg shadow"
+      class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg shadow font-light text-sm cursor-pointer"
       (click)="saveAvatar()"
     >
       <i class="bi bi-check-circle mr-2"></i>
@@ -55,7 +55,7 @@
     </button>
   
     <button
-      class="ml-2 bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded-lg shadow"
+      class="ml-2 bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded-lg shadow font-light text-sm cursor-pointer"
       (click)="cancelAvatar()"
     >
       ยกเลิก
@@ -64,11 +64,8 @@
 
   <!-- Main Layout -->
   <div class="grid grid-cols-1 lg:grid-cols-12 md:gap-6 md:px-8 mx-auto mt-3 md:mt-6 text-[#394250]">
-    <!-- Left -->
     <div class="lg:col-span-4 space-y-5">
-      <!-- ประวัติส่วนตัว -->
       <div class="bg-white rounded-xl shadow-md px-6 py-8 w-full max-w-full mb-2 md:mb-5">
-        <!-- Header (Clickable) -->
         <div
           class="flex items-center justify-between cursor-pointer"
           (click)="isPersonalOpen = !isPersonalOpen"
@@ -107,39 +104,39 @@
 
           <ul *ngIf="profileData?.generalInfo as info; else noData" class="space-y-3 text-gray-600 font-medium">
             <li *ngIf="isOwner" class="flex gap-2 flex-wrap">
-              <span class="text-gray-400 font-bold"> • เลขบัตรประชาชน : </span>
+              <span class="text-gray-400 text-xl"> • เลขบัตรประชาชน : </span>
               {{ profileData?.generalInfo?.id_card_number }}
             </li>
             
 
             <li class="flex gap-2 flex-wrap">
-              <span class="text-gray-400 font-bold"> • วันเดือนปีเกิด : </span>
+              <span class="text-gray-400 text-xl"> • วันเดือนปีเกิด : </span>
               {{ profileData?.generalInfo?.date_of_birth }}
             </li>
 
             <li class="flex gap-2 flex-wrap">
-              <span class="text-gray-400 font-bold"> • อายุ : </span>
+              <span class="text-gray-400 text-xl"> • อายุ : </span>
               {{ profileData?.generalInfo?.age }}
             </li>
 
             <li class="flex gap-2 flex-wrap">
-              <span class="text-gray-400 font-bold"> • เชื้อชาติ : </span>
+              <span class="text-gray-400 text-xl"> • เชื้อชาติ : </span>
               {{ profileData?.generalInfo?.ethnicity }}
             </li>
 
             <li class="flex gap-2 flex-wrap">
-              <span class="text-gray-400 font-bold"> • สัญชาติ : </span>
+              <span class="text-gray-400 text-xl"> • สัญชาติ : </span>
               {{ profileData?.generalInfo?.nationality }}
             </li>
 
             <li class="flex gap-2 flex-wrap">
-              <span class="text-gray-400 font-bold"> • ศาสนา : </span>
+              <span class="text-gray-400 text-xl"> • ศาสนา : </span>
               {{ profileData?.generalInfo?.religion }}
             </li>
           </ul>
 
           <ng-template #noData>
-            <div class="text-red-500 text-center font-semibold py-4">
+            <div class="text-red-500 text-center font-regular py-4">
               ไม่พบข้อมูล
             </div>
           </ng-template>
@@ -157,7 +154,7 @@
             <div class="text-2xl">
               <i class="bi bi-briefcase-fill"></i>
             </div>
-            <h2 class="text-2xl">ข้อมูลการทำงาน</h2>
+            <h2>ข้อมูลการทำงาน</h2>
           </div>
 
           <div class="flex items-center gap-3">
@@ -183,47 +180,47 @@
           <!-- Content -->
           <ul *ngIf="profileData?.workInfo as info; else noDataWorkInfo" class="space-y-3 text-gray-600 font-medium">
             <li class="flex gap-2 flex-wrap wrap-break-word">
-              <span class="text-gray-400 font-bold">• ตำแหน่ง :</span>
+              <span class="text-gray-400 text-xl">• ตำแหน่ง :</span>
               {{ profileData?.workInfo?.position }}
             </li>
             <li class="flex gap-2 flex-wrap wrap-break-word">
-              <span class="text-gray-400 font-bold">• สังกัด :</span>
+              <span class="text-gray-400 text-xl">• สังกัด :</span>
               {{ profileData?.workInfo?.organization }}
             </li>
             <li class="flex gap-2 flex-wrap wrap-break-word">
-              <span class="text-gray-400 font-bold">• ประเภท :</span>
+              <span class="text-gray-400 text-xl">• ประเภท :</span>
               {{ profileData?.workInfo?.type }}
             </li>
             <li class="flex gap-2 flex-wrap wrap-break-word">
-              <span class="text-gray-400 font-bold">• สายงาน :</span>
+              <span class="text-gray-400 text-xl">• สายงาน :</span>
               {{ profileData?.workInfo?.line_work }}
             </li>
             <li class="flex gap-2 flex-wrap wrap-break-word">
-              <span class="text-gray-400 font-bold">• ตำแหน่งทางวิชาการ :</span>
+              <span class="text-gray-400 text-xl">• ตำแหน่งทางวิชาการ :</span>
               {{ profileData?.workInfo?.academic_position }}
             </li>
             <li class="flex gap-2 flex-wrap wrap-break-word">
-              <span class="text-gray-400 font-bold">• ความความสนใจ :</span>
+              <span class="text-gray-400 text-xl">• ความความสนใจ :</span>
               {{ profileData?.workInfo?.interest }}
             </li>
             <li class="flex gap-2 flex-wrap wrap-break-word">
-              <span class="text-gray-400 font-bold"
+              <span class="text-gray-400 text-xl"
                 >• สาขาวิชาที่เชี่ยวชาญ :</span
               >
               {{ profileData?.workInfo?.expertises }}
             </li>
             <li class="flex gap-2 flex-wrap wrap-break-word">
-              <span class="text-gray-400 font-bold">• วันที่เริ่มงาน :</span>
+              <span class="text-gray-400 text-xl">• วันที่เริ่มงาน :</span>
               {{ profileData?.workInfo?.work_start_date }}
             </li>
             <li class="flex gap-2 flex-wrap wrap-break-word">
-              <span class="text-gray-400 font-bold">• อายุงาน :</span>
+              <span class="text-gray-400 text-xl">• อายุงาน :</span>
               {{ profileData?.workInfo?.year_of_service }} ปี
             </li>
           </ul>
 
           <ng-template #noDataWorkInfo>
-            <div class="text-red-500 text-center font-semibold py-4">
+            <div class="text-red-500 text-center font-regular py-4">
               ไม่พบข้อมูล
             </div>
           </ng-template>
@@ -241,7 +238,7 @@
             <div class="text-2xl">
               <i class="bi bi-mortarboard"></i>
             </div>
-            <h2 class="text-2xl">ข้อมูลการศึกษา</h2>
+            <h2>ข้อมูลการศึกษา</h2>
           </div>
           <div class="flex items-center gap-3">
             <i
@@ -264,35 +261,35 @@
             </button>
           </div>
           <!-- Content -->
-          <ul *ngIf="profileData?.educationalInfo as info; else noDataEducationalInfo" class="space-y-3 text-gray-600 font-medium">
+          <ul *ngIf="profileData?.educationalInfo as info; else noDataEducationalInfo" class="space-y-3 text-gray-600">
             <li class="flex gap-2 flex-wrap wrap-break-word">
-              <span class="text-gray-400 font-bold">• การศึกษาสูงสุด :</span>
+              <span class="text-gray-400 text-xl">• การศึกษาสูงสุด :</span>
               {{profileData?.educationalInfo?.highest_education}}
             </li>
             <li class="flex gap-2 flex-wrap wrap-break-word">
-              <span class="text-gray-400 font-bold">• สาขาวิชา :</span>
+              <span class="text-gray-400 text-xl">• สาขาวิชา :</span>
               {{ profileData?.educationalInfo?.field_of_study }}
             </li>
             <li class="flex gap-2 flex-wrap wrap-break-word">
-              <span class="text-gray-400 font-bold">• คุณวุฒิ :</span>
+              <span class="text-gray-400 text-xl">• คุณวุฒิ :</span>
               {{ profileData?.educationalInfo?.qualification }}
             </li>
             <li class="flex gap-2 flex-wrap wrap-break-word">
-              <span class="text-gray-400 font-bold">• GPA :</span>
+              <span class="text-gray-400 text-xl">• GPA :</span>
               {{ profileData?.educationalInfo?.gpa }}
             </li>
             <li class="flex gap-2 flex-wrap wrap-break-word">
-              <span class="text-gray-400 font-bold">• สถานศึกษา :</span>
+              <span class="text-gray-400 text-xl">• สถานศึกษา :</span>
               {{ profileData?.educationalInfo?.institution }}
             </li>
             <li class="flex gap-2 flex-wrap wrap-break-word">
-              <span class="text-gray-400 font-bold"
+              <span class="text-gray-400 text-xl"
                 >• วันที่/เดือน/ปี ที่เข้าศึกษา :</span
               >
               {{ profileData?.educationalInfo?.date_enrollment }}
             </li>
             <li class="flex gap-2 flex-wrap wrap-break-word">
-              <span class="text-gray-400 font-bold"
+              <span class="text-gray-400 text-xl"
                 >• วันที่/เดือน/ปี ที่สำเร็จการศึกษา :</span
               >
               {{ profileData?.educationalInfo?.date_graduation}}
@@ -300,7 +297,7 @@
           </ul>
 
           <ng-template #noDataEducationalInfo>
-            <div class="text-red-500 text-center font-semibold py-4">
+            <div class="text-red-500 text-center font-regular py-4">
               ไม่พบข้อมูล
             </div>
           </ng-template>
@@ -371,7 +368,7 @@
           class="flex items-center gap-3 md:mb-6 bg-[#394250] text-white p-3 rounded-t-2xl"
         >
           <i class="bi bi-pie-chart-fill text-3xl"></i>
-          <h2 class="font-semibold">ข้อมูลผลงาน</h2>
+          <h2>ข้อมูลผลงาน</h2>
         </div>
 
         <div class="p-2 md:p-6">
@@ -452,7 +449,7 @@
                 type="text"
                 [(ngModel)]="searchText"
                 (input)="onSearch()"
-                class="border rounded px-2 py-1 ml-2 text-xl font-medium"
+                class="border rounded px-2 py-1 ml-2 text-lg font-light"
                 placeholder="ค้นหา..."
               />
             </div>
@@ -460,14 +457,14 @@
           </div>
 
           <!-- Table -->
-          <div class="overflow-x-auto bg-white shadow-md">
+          <div class="overflow-x-auto bg-white shadow-md font-regular text-lg">
             <table class="w-full text-gray-700">
               <!-- Header -->
               <thead class="bg-linear-to-r bg-[#394250] text-white">
                 <tr>
-                  <th class="px-4 py-3 w-16 text-center font-semibold">#</th>
-                  <th class="px-4 py-3 text-left font-semibold">ชื่อผลงาน</th>
-                  <th class="px-4 py-3 w-28 text-center font-semibold">
+                  <th class="px-4 py-3 w-16 text-center">#</th>
+                  <th class="px-4 py-3 text-left">ชื่อผลงาน</th>
+                  <th class="px-4 py-3 w-28 text-center">
                     Action
                   </th>
                 </tr>
@@ -482,14 +479,14 @@
                   
                 >
                   <!-- Index -->
-                  <td class="text-center py-4 font-medium">
+                  <td class="text-center py-4">
                     {{ (currentPage - 1) * pageSize + i + 1 }}
                   </td>
 
                   <!-- Title -->
                   <td class="px-4 py-3">
                     <div
-                      class="font-medium text-indigo-600 hover:underline cursor-pointer truncate max-w-125 "
+                      class="text-indigo-600 hover:underline cursor-pointer truncate max-w-125 "
                       title="{{ item.title_th }}"
                       (click)="viewItem(item.research_id)"
                     >
@@ -497,7 +494,7 @@
                     </div>
 
                     <div
-                      class="text-lg text-gray-500 mt-1 flex items-center gap-1 font-medium"
+                      class="text-sm text-gray-500 mt-1 flex items-center gap-1"
                     >
                       <i class="bi bi-calendar-event"></i>
                       วันที่สร้าง: {{ item.published_date | date: 'dd MMMM YYYY' : '' : 'TH-th' }}
@@ -537,11 +534,11 @@
 
           <!-- Pagination -->
           <div
-            class="flex items-center justify-between mt-4 text-lg text-gray-600"
+            class="flex items-center justify-between mt-4 text-sm font-light text-gray-600"
           >
             <div>Showing 1 to 1 of 1 entries</div>
 
-            <div class="flex items-center gap-2 text-lg">
+            <div class="flex items-center gap-2 text-sm">
               <button class="border px-3 rounded cursor-pointer">‹</button>
               <button class="border bg-[#FDE68A] px-3 rounded">
                 1
@@ -564,7 +561,7 @@
   <div class="bg-white w-full max-w-xl rounded-2xl shadow-xl p-6 relative">
     <!-- Header -->
     <div class="flex items-center justify-between border-b pb-3 mb-5">
-      <h2 class="font-bold">
+      <h2 class="font-medium">
         {{ isEditMode ? "แก้ไขข้อมูลการศึกษา" : "เพิ่มข้อมูลการศึกษา" }}
       </h2>
       <button
@@ -576,7 +573,7 @@
     </div>
 
     <!-- Content -->
-    <div class="space-y-4">
+    <div class="space-y-4 text-lg">
       <!-- ====== Education Level ===== -->
       <div class="relative">
         <label class="mb-1 block">ระดับการศึกษา</label>
@@ -696,7 +693,7 @@
             [(ngModel)]="educationData.institution"
             type="text"
             placeholder="ชื่อสถานที่ศึกษา"
-            class="w-full border rounded-lg px-3 py-2 text-2xl"
+            class="w-full border rounded-lg px-3 py-2"
           />
         </div>
 
@@ -706,7 +703,7 @@
             [(ngModel)]="educationData.gpa"
             type="text"
             placeholder="เกรดเฉลี่ย"
-            class="w-full border rounded-lg px-3 py-2 text-2xl"
+            class="w-full border rounded-lg px-3 py-2"
           />
         </div>
       </div>
@@ -719,7 +716,7 @@
           [(ngModel)]="educationData.date_enrollment"
           type="date"
           placeholder="ปีที่เข้าศึกษา"
-          class="w-full border rounded-lg px-3 py-2 text-2xl"
+          class="w-full border rounded-lg px-3 py-2"
         />
         </div>
 
@@ -729,7 +726,7 @@
           [(ngModel)]="educationData.date_graduation"
           type="date"
           placeholder="ปีที่สำเร็จการศึกษา"
-          class="w-full border rounded-lg px-3 py-2 text-2xl"
+          class="w-full border rounded-lg px-3 py-2"
         />
         </div>
        
@@ -738,7 +735,7 @@
     </div>
 
     <!-- Footer -->
-    <div class="flex justify-center gap-3 mt-6 pt-4 border-t">
+    <div class="flex justify-center gap-3 mt-6 pt-4 border-t font-light text-lg">
       <button
         (click)="save()"
         class="px-5 py-2 rounded-lg bg-yellow-400 hover:bg-yellow-500 shadow cursor-pointer"

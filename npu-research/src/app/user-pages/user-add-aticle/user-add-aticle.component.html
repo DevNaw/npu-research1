@@ -1,11 +1,11 @@
 
 <div
-  class="contain-content bg-gray-100 p-5 md:px-10 text-2xl font-bold text-[#394250]"
+  class="contain-content bg-gray-100 p-5 md:px-10 text-2xl font-medium text-[#394250]"
 >
   <!-- Back -->
   <div class="flex justify-end md:mb-4 mx-auto md:mt-6">
     <button
-      class="flex items-center gap-2 text-gray-600 font-medium group transition-colors cursor-pointer"
+      class="flex items-center gap-2 text-gray-600 text-lg group transition-colors cursor-pointer"
     >
       <span>ไปที่บทความ/วารสารของคุณ</span>
 
@@ -42,7 +42,7 @@
         #title="ngModel"
         [(ngModel)]="articleData.title_th"
         [class.border-red-500]="title.invalid && title.touched"
-        class="md:col-span-3 text-2xl font-medium w-full h-12 border rounded-md px-4 py-2"
+        class="md:col-span-3 text-lg font-light w-full h-12 border rounded-md px-4 py-2"
         placeholder="ระบุบทความ/วารสาร"
       />
       <div *ngIf="title.invalid && title.touched" class="text-red-500 text-sm">
@@ -63,7 +63,7 @@
         #title_en="ngModel"
         [(ngModel)]="articleData.title_en"
         [class.border-red-500]="title_en.invalid && title_en.touched"
-        class="md:col-span-3 text-2xl font-medium w-full h-12 border rounded-md px-4 py-2"
+        class="md:col-span-3 text-lg font-light w-full h-12 border rounded-md px-4 py-2"
         placeholder="ระบุบทความ/วารสาร ภาษาอังกฤษ"
       />
       <div *ngIf="title_en.invalid && title_en.touched" class="text-red-500 text-sm">
@@ -84,7 +84,7 @@
         #abstract="ngModel"
         [(ngModel)]="articleData.abstract"
         [class.border-red-500]="abstract.invalid && abstract.touched"
-        class="md:col-span-3 text-2xl font-medium w-full h-12 border rounded-md px-4 py-2"
+        class="md:col-span-3 text-lg font-light w-full h-12 border rounded-md px-4 py-2"
         placeholder="ระบุ abstract"
       />
       <div *ngIf="abstract.invalid && abstract.touched" class="text-red-500 text-sm">
@@ -94,7 +94,7 @@
 
     <!-- ประเภท -->
     <div class="grid grid-cols-1 md:grid-cols-1 md:gap-2 mb-2 md:mb-6">
-      <label class="font-bold text-start">
+      <label class="text-start">
         ประเภท <span class="text-red-500">*</span>
       </label>
 
@@ -109,7 +109,7 @@
           (click)="toggleDropdown('type', $event)"
           class="w-full border rounded-md px-3 py-2 flex justify-between items-center bg-white"
         >
-          <span class="truncate font-medium">{{
+          <span class="truncate text-lg font-light">{{
             articleData.article_type || "เลือกประเภท"
           }}</span>
           <i class="bi bi-chevron-down"></i>
@@ -118,7 +118,7 @@
         <div
           *ngIf="activeDropdown === 'type'"
           (click)="$event.stopPropagation()"
-          class="absolute z-50 mt-1 w-full bg-white border rounded-md shadow font-medium"
+          class="absolute z-50 mt-1 w-full bg-white border rounded-md shadow text-lg font-light"
         >
           <div
             (click)="selectValue('article_type', 'Journal')"
@@ -148,7 +148,7 @@
       *ngIf="articleData.article_type === 'Journal'"
       class="grid grid-cols-1 md:grid-cols-1 md:gap-2 mb:-2 md:mb-6"
     >
-      <label class="font-bold text-start">
+      <label class="text-start">
         ประเภทฐานข้อมูล <span class="text-red-500">*</span>
       </label>
 
@@ -158,7 +158,7 @@
           (click)="toggleDropdown('database_types', $event)"
           class="w-full border rounded-md px-3 py-2 flex justify-between items-center bg-white"
         >
-          <span class="truncate font-medium">{{
+          <span class="truncate text-lg font-light">{{
             articleData.db_type || "เลือกประเภท"
           }}</span>
           <i class="bi bi-chevron-down"></i>
@@ -167,7 +167,7 @@
         <div
           *ngIf="activeDropdown === 'database_types'"
           (click)="$event.stopPropagation()"
-          class="absolute z-50 mt-1 w-full bg-white border rounded-md shadow font-medium"
+          class="absolute z-50 mt-1 w-full bg-white border rounded-md shadow text-lg font-light"
         >
           <div
             (click)="selectValue('db_type', 'Scopus')"
@@ -194,7 +194,7 @@
       <button
       type="button"
         (click)="toggleDropdown('countries', $event)"
-        class="flex justify-between items-center w-full border rounded-lg px-3 py-2 font-medium"
+        class="flex justify-between items-center w-full border rounded-lg px-3 py-2 text-lg font-light"
       >
         {{ selectedCountries || "เลือกประเทศ" }}
         <i class="bi bi-chevron-down text-sm"></i>
@@ -203,7 +203,7 @@
       <div
         *ngIf="activeDropdown === 'countries'"
         (click)="$event.stopPropagation()"
-        class="absolute z-50 w-full bg-white border rounded-lg shadow mt-1 font-medium"
+        class="absolute z-50 w-full bg-white border rounded-lg shadow mt-1 text-lg font-light"
       >
         <input
           [(ngModel)]="searchCountries"
@@ -244,7 +244,7 @@
         [(ngModel)]="articleData.journal_name"
         type="text"
         [class.border-red-500]="journalName.invalid && journalName.touched"
-        class="md:col-span-3 text-2xl font-medium w-full h-12 border rounded-md px-4 py-2"
+        class="md:col-span-3 text-lg font-light w-full h-12 border rounded-md px-4 py-2"
         placeholder="ระบุบชื่อวารสาร"
       />
 
@@ -268,7 +268,7 @@
         [(ngModel)]="articleData.journal_name"
         type="text"
         [class.border-red-500]="conferenceName.invalid && conferenceName.touched"
-        class="md:col-span-3 text-2xl font-medium w-full h-12 border rounded-md px-4 py-2"
+        class="md:col-span-3 text-lg font-light w-full h-12 border rounded-md px-4 py-2"
         placeholder="ระบุบชื่อการประชุมวิชาการ"
       />
 
@@ -295,7 +295,7 @@
         name="attention"
         id="attention"
         placeholder="สถานที่นำเสนอ"
-        class="md:col-span-3 w-full border text-2xl font-medium rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400"
+        class="md:col-span-3 w-full border text-lg font-light rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400"
       ></textarea>
 
       <div *ngIf="preLocation.invalid && preLocation.touched" class="text-red-500 text-sm">
@@ -316,7 +316,7 @@
           [class.border-red-500]="volume.invalid && volume.touched"
           [(ngModel)]="articleData.volume"
           type="text"
-          class="md:col-span-2 text-2xl font-medium w-full h-12 border rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400"
+          class="md:col-span-2 text-lg font-light w-full h-12 border rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400"
           placeholder="ฉบับที่/เล่มที่"
         />
 
@@ -337,7 +337,7 @@
           [class.border-red-500]="pages.invalid && pages.touched"
           [(ngModel)]="articleData.pages"
           type="text"
-          class="md:col-span-2 text-2xl font-medium w-full h-12 border rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400"
+          class="md:col-span-2 text-lg font-light w-full h-12 border rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400"
           placeholder="ระบุหน้าที่ตีพิมพ์"
         />
 
@@ -358,7 +358,7 @@
           [class.border-red-500]="yearPublished.invalid && yearPublished.touched"
           [(ngModel)]="articleData.year_published"
           type="text"
-          class="md:col-span-2 w-full h-12 border text-2xl font-medium rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400"
+          class="md:col-span-2 w-full h-12 border text-lg font-light rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400"
           placeholder="ระบุปีบทความวิชาการ"
         />
 
@@ -380,7 +380,7 @@
           (click)="toggleDropdown('major', $event)"
           class="w-full border rounded-lg px-4 py-2 flex justify-between items-center bg-white shadow-sm transition"
         >
-          <span class="truncate font-medium">
+          <span class="truncate text-lg font-light">
             {{ selectedSub?.name_en
               || articleData.subject_area?.[0]?.name_en
               || 'ระบุสาขาของบทความ' }}
@@ -391,7 +391,7 @@
         <!-- Dropdown -->
         <div
           *ngIf="activeDropdown === 'major'"
-          class="absolute z-50 mt-2 w-full bg-white border rounded-xl shadow-lg font-medium"
+          class="absolute z-50 mt-2 w-full bg-white border rounded-xl shadow-lg text-lg font-light"
           (click)="$event.stopPropagation()"
         >
           <ul class="relative max-h-72 overflow-y-auto">
@@ -449,7 +449,7 @@
 
         <button
           (click)="toggleDropdown('responsibility', $event)"
-          class="w-full border rounded-md px-3 py-2 flex justify-between items-center font-medium"
+          class="w-full border rounded-md px-3 py-2 flex justify-between items-center text-lg font-light"
         >
           {{
             articleData.responsibilities ||
@@ -461,7 +461,7 @@
 
         <div
           *ngIf="activeDropdown === 'responsibility'"
-          class="absolute z-50 mt-1 w-full bg-white border rounded-md shadow font-medium"
+          class="absolute z-50 mt-1 w-full bg-white border rounded-md shadow text-lg font-light"
         >
           <div
             (click)="
@@ -504,7 +504,7 @@
 
         <button
           (click)="toggleDropdown('quality', $event)"
-          class="w-full border rounded-md px-3 py-2 flex justify-between items-center font-medium"
+          class="w-full border rounded-md px-3 py-2 flex justify-between items-center text-lg font-light"
         >
           {{ articleData.volume_no || "ระดับคุณภาพ" }}
           <i class="bi bi-chevron-down"></i>
@@ -512,7 +512,7 @@
 
         <div
           *ngIf="activeDropdown === 'quality'"
-          class="absolute z-50 mt-1 w-full bg-white border rounded-md shadow font-medium"
+          class="absolute z-50 mt-1 w-full bg-white border rounded-md shadow text-lg font-light"
         >
           <div
             *ngFor="let q of ['0.20', '0.40', '0.60', '0.80', '1.00']"
@@ -527,7 +527,7 @@
 
     <!-- ผู้ร่วมโครงการ -->
     <div class="w-full md:mb-3">
-      <label class="text-2xl font-bold text-start md:col-span-1 md: pt-2"
+      <label class="text-start md:col-span-1 md: pt-2"
         >ผู้ร่วมโครงการอื่นๆ (ถ้ามี)</label
       >
 
@@ -536,7 +536,7 @@
         class="md:col-span-3 md:px-4 sm:px-8 overflow-x-auto overflow-y-visible"
       >
         <label
-          class="flex items-center gap-2 font-bold text-2xl md:mt-4 md:mb-3"
+          class="flex items-center gap-2 md:mt-4 md:mb-3"
           >ระบุผู้ร่วมโครงการภายใน</label
         >
         <table class="w-full table-fixed min-w-150">
@@ -549,7 +549,7 @@
 
           <thead>
             <tr
-              class="whitespace-nowrap text-white text-center bg-[#394250] border-b-2 border-gray-300"
+              class="whitespace-nowrap text-white text-center bg-[#394250] border-b-2 border-gray-300 text-lg font-light"
             >
               <th class="p-1 md:p-2">#</th>
               <th class="p-1 md:p-2">ระบุชื่อ</th>
@@ -563,7 +563,7 @@
               *ngFor="let row of internalRow; let i = index; trackBy: trackById"
               class="border-b-2 border-gray-300 bg-gray-200"
             >
-              <td class="p-2 text-center">{{ i + 1 }}</td>
+              <td class="p-2 text-center text-lg">{{ i + 1 }}</td>
               <td>
                 <input
                   type="text"
@@ -571,14 +571,14 @@
                   (focus)="onFocus(row)"
                   (click)="$event.stopPropagation()"
                   (ngModelChange)="onSearch($event)"
-                  class="w-full border text-2xl font-medium border-gray-300 h-12 rounded-md p-1 md:p-2 bg-white"
+                  class="w-full border text-lg font-light border-gray-300 h-12 rounded-md p-1 md:p-2 bg-white"
                   placeholder="ระบุชื่อผู้ร่วมโครงการ"
                 />
 
                 <ul
                   *ngIf="activeRowIndex === row.id"
                   (click)="$event.stopPropagation()"
-                  class="absolute z-50 bg-white border rounded-md p-3 shadow max-h-60 overflow-y-auto font-medium text-2xl"
+                  class="absolute z-50 bg-white border rounded-md p-3 shadow max-h-60 overflow-y-auto text-lg font-light"
                 >
                   <li
                     *ngFor="let r of getAvailableResearchers(row)"
@@ -598,10 +598,10 @@
               </td>
 
               <td class="p-1">
-                <div class="font-medium">
+                <div>
                   <button
                     (click)="toggleDropdown('internal-' + i, $event)"
-                    class="flex justify-between items-center bg-white w-full rounded-md p-2"
+                    class="flex justify-between items-center bg-white w-full rounded-md p-2 text-lg font-light"
                   >
                     {{ row.responsibilities || "ประเภทความรับผิดชอบ" }}
                     <i class="bi bi-chevron-down"></i>
@@ -609,7 +609,7 @@
 
                   <div
                     *ngIf="activeDropdown === 'internal-' + i"
-                    class="absolute z-50 bg-white border rounded-md shadow font-medium left-1/2 -translate-x-[50%] w-80 max-w-[90vw] md:w-120 mt-1 md:translate-x-[-35%]"
+                    class="absolute z-50 bg-white border rounded-md shadow text-lg font-light left-1/2 -translate-x-[50%] w-80 max-w-[90vw] md:w-120 mt-1 md:translate-x-[-35%]"
                   >
                     <div
                       (click)="
@@ -669,7 +669,7 @@
       <div class="flex justify-start mt-2">
         <button
           type="button"
-          class="md:mt-4 p-1 md:px-4 md:py-2 bg-[#FDE68A] text-[#1E293B] hover:bg-[#FACC15] rounded-md cursor-pointer"
+          class="md:mt-4 p-1 md:px-4 md:py-2 bg-[#FDE68A] text-lg font-light text-[#1E293B] hover:bg-[#FACC15] rounded-md cursor-pointer"
           (click)="addInternalRow()"
         >
           เพิ่มรายการ
@@ -681,7 +681,7 @@
         class="md:col-span-3 md:px-4 sm:px-8 overflow-x-auto overflow-y-visible"
       >
         <label
-          class="flex items-center gap-2 font-bold text-2xl md:mt-4 md:mb-3"
+          class="flex items-center gap-2 md:mt-4 md:mb-3"
           >ระบุผู้ร่วมโครงการภายนอก</label
         >
         <table class="w-full table-fixed min-w-150">
@@ -695,7 +695,7 @@
 
           <thead>
             <tr
-              class="whitespace-nowrap text-white text-center bg-[#394250] border-b-2 border-gray-300 text-wrap"
+              class="whitespace-nowrap text-white text-center bg-[#394250] border-b-2 border-gray-300 text-wrap text-lg font-light"
             >
               <th class="p-1 md:p-2">#</th>
               <th class="p-1 md:p-2">ระบุชื่อ</th>
@@ -714,12 +714,12 @@
               "
               class="border-b-2 border-gray-300 bg-gray-200"
             >
-              <td class="p-2 text-center">{{ i + 1 }}</td>
+              <td class="p-2 text-center text-lg">{{ i + 1 }}</td>
               <td class="p-2">
                 <input
                   type="text"
                   [(ngModel)]="item.name"
-                  class="w-full border h-12 text-2xl font-medium border-gray-300 bg-white rounded-md p-2"
+                  class="w-full border h-12 text-lg font-light border-gray-300 bg-white rounded-md p-2"
                   placeholder="ระบุชื่อผู้ร่วมโครงการ"
                 />
               </td>
@@ -728,7 +728,7 @@
                 <div class="">
                   <button
                     (click)="toggleDropdown('external-' + i, $event)"
-                    class="flex justify-between items-center bg-white h-12 w-full rounded-md font-medium p-2"
+                    class="flex justify-between items-center bg-white h-12 w-full rounded-md text-lg font-light p-2"
                   >
                     {{ item.responsibilities || "ประเภทความรับผิดชอบ" }}
                     <i class="bi bi-chevron-down"></i>
@@ -736,7 +736,7 @@
 
                   <div
                     *ngIf="activeDropdown === 'external-' + i"
-                    class="absolute z-50 bg-white border rounded-md shadow font-medium left-1/2 -translate-x-[50%] w-80 max-w-[90vw] mt-1 md:w-150"
+                    class="absolute z-50 bg-white border rounded-md shadow text-lg font-light left-1/2 -translate-x-[50%] w-80 max-w-[90vw] mt-1 md:w-150"
                   >
                     <div
                       (click)="
@@ -783,7 +783,7 @@
               <td class="p-2">
                 <input
                   type="text"
-                  class="w-full border h-12 border-gray-300 bg-white rounded-md px-3 py-2 font-medium text-2xl"
+                  class="w-full border h-12 border-gray-300 bg-white rounded-md px-3 py-2 text-lg font-light"
                   placeholder="ระบุหน่วยงาน"
                   [(ngModel)]="item.organization"
                 />
@@ -805,7 +805,7 @@
       <div class="flex justify-start mt-2">
         <button
           type="button"
-          class="md:mt-4 p-1 md:p-2 bg-[#FDE68A] text-[#1E293B] hover:bg-[#FACC15] rounded-md cursor-pointer"
+          class="md:mt-4 p-1 md:p-2 bg-[#FDE68A] text-lg font-light text-[#1E293B] hover:bg-[#FACC15] rounded-md cursor-pointer"
           (click)="addExternalRow()"
         >
           เพิ่มรายการ
@@ -819,7 +819,7 @@
         ความร่วมมือระหว่างหน่วยงานภายในและภายนอก <span class="text-red-500">*</span>
       </label>
 
-      <div class="flex gap-10 mt-2">
+      <div class="flex gap-10 mt-2 text-lg font-light">
         <label class="flex items-center gap-4">
           <input
             required
@@ -856,7 +856,7 @@
         [class.border-red-500]="doi.invalid && doi.touched"
         [(ngModel)]="articleData.doi"
         type="text"
-        class="md:col-span-3 w-full border rounded-md text-2xl font-medium px-4 py-2 focus:ring-2 focus:ring-blue-400"
+        class="md:col-span-3 w-full border rounded-md text-lg font-light px-4 py-2 focus:ring-2 focus:ring-blue-400"
         placeholder="ระบุเว็บไซต์อ้างอิง/เผยแพร่ เช่น https://doi.org/..."
       />
 
@@ -880,7 +880,7 @@
 
       <!-- ปุ่ม + ชื่อไฟล์ -->
       <div class="md:col-span-1 flex gap-3 items-center mt-2">
-        <span class="text-gray-400 font-medium truncate">
+        <span class="text-gray-400 text-lg font-light truncate">
           {{
             selectedFileName ||
               articleData.article_file?.file_name ||
@@ -899,7 +899,7 @@
 
         <button
           type="button"
-          class="md:px-4 md:py-2 p-2 bg-[#FDE68A] text-[#1E293B] hover:bg-[#FACC15] rounded-md cursor-pointer"
+          class="md:px-4 md:py-2 p-2 bg-[#FDE68A] text-[#1E293B] hover:bg-[#FACC15] rounded-md cursor-pointer text-lg font-light"
           (click)="fileInput.click()"
         >
           เลือกไฟล์
@@ -912,7 +912,7 @@
       <button
       (click)="submitArticle()"
         type="button"
-        class="flex items-center justify-center gap-3 w-72 py-3 bg-yellow-300 hover:bg-yellow-400 rounded-lg shadow transition duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 cursor-pointer"
+        class="flex items-center justify-center gap-3 w-72 text-xl py-3 bg-yellow-300 hover:bg-yellow-400 rounded-lg shadow transition duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 cursor-pointer"
       >
         <i
           class="bi"
