@@ -141,6 +141,15 @@ export class ManagementAdminComponent {
 
   saveExpertise() {
     if (!this.adminsData) return;
+    Swal.fire({
+      title: 'กำลังดำเนินการ...',
+      text: 'กรุณารอสักครู่',
+      timer: 1000,
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
 
     this.managementService.createAdmin(this.adminsData).subscribe({
       next: () => {
