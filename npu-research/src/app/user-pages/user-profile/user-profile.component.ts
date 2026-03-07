@@ -106,6 +106,9 @@ export class UserProfileComponent implements OnInit {
   barSummary: BarSummary[] = [];
   researchData: any;
 
+  previewUrl: string | ArrayBuffer | null = null;
+  selectedFile: File | null = null;
+
   educationData: EducationInfo = {
     highest_education: '',
     field_of_study: '',
@@ -196,7 +199,7 @@ export class UserProfileComponent implements OnInit {
     private router: Router,
     private authService: AuthService,
     private service: ProfileService,
-    private serviceEducation: EducationService,
+    private serviceEducation: EducationService
   ) {
     this.pieChartOptions = {
       series: [44, 55, 13],
@@ -287,7 +290,6 @@ export class UserProfileComponent implements OnInit {
       this.loadEducation(),
       new Promise((resolve) => setTimeout(resolve, 1000)),
     ]).then(() => MainComponent.hideLoading());
-   
   }
 
   loadData(): void {
@@ -519,8 +521,7 @@ export class UserProfileComponent implements OnInit {
         next: () => {
           this.handleSaveSuccess();
         },
-        error: () =>
-          Swal.fire('ผิดพลาด', 'ไม่สามารถบันทึกข้อมูลได้', 'error'),
+        error: () => Swal.fire('ผิดพลาด', 'ไม่สามารถบันทึกข้อมูลได้', 'error'),
       });
     });
   }
@@ -686,5 +687,46 @@ export class UserProfileComponent implements OnInit {
         });
       }
     });
+  }
+
+  saveAvatar() {
+    if (!this.selectedFile) return;
+
+    this.service.updateAvatar(this.selectedFile).subscribe({
+      next: (res) => {
+        Swal.fire({
+          icon: 'success',
+          title: 'อัปโหลดสำเร็จ',
+          showConfirmButton: false,
+          timer: 1200,
+        }).then(() => {
+          window.location.reload();
+        });
+        this.profileData!.avatar_url = res.avatar_url;
+        this.previewUrl = null;
+        this.selectedFile = null;
+      },
+    });
+  }
+
+  cancelAvatar() {
+    this.previewUrl = null;
+    this.selectedFile = null;
+  }
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+
+    if (!file) return;
+
+    this.selectedFile = file;
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      this.previewUrl = reader.result;
+    };
+
+    reader.readAsDataURL(file);
   }
 }

@@ -1,64 +1,143 @@
 import { Component } from '@angular/core';
+import { DashboardData, Statistic, TopResearcher } from '../../models/report.model';
+import { ReportService } from '../../services/report.service';
+import { MainComponent } from '../../shared/layouts/main/main.component';
+import {
+  ApexChart,
+  ApexLegend,
+  ApexNonAxisChartSeries,
+  ApexResponsive,
+  ApexDataLabels
+} from "ng-apexcharts";
+
+export type PieChartOptions = {
+  series: ApexNonAxisChartSeries;
+  chart: ApexChart;
+  labels: string[];
+  legend: ApexLegend;
+  dataLabels: ApexDataLabels;
+  responsive: ApexResponsive[];
+};
 
 @Component({
   selector: 'app-report',
   standalone: false,
   templateUrl: './report.component.html',
-  styleUrl: './report.component.css'
+  styleUrl: './report.component.css',
 })
 export class ReportComponent {
-  topResearchers = [
-    {
-      name: 'Dr. James Mitchell',
-      field: 'Artificial Intelligence & ML',
-      publications: 42,
-      projects: 8,
-      citations: 1247,
-      avatar: 'https://i.pravatar.cc/100?img=1',
-    },
-    {
-      name: 'Dr. Sarah Chen',
-      field: 'Biotechnology & Genomics',
-      publications: 38,
-      projects: 6,
-      citations: 1089,
-      avatar: 'https://i.pravatar.cc/100?img=2',
-    },
-    {
-      name: 'Dr. Marcus Rodriguez',
-      field: 'Quantum Computing',
-      publications: 35,
-      projects: 5,
-      citations: 976,
-      avatar: 'https://i.pravatar.cc/100?img=3',
-    },
-  ];
+  data!: DashboardData;
+  statistic: Statistic | undefined;
+  topResearcher: TopResearcher[] = [];
+  hasDonutData = false;
+  donutSeries: number[] = [];
+  donutLabels: string[] = [];
+  stat:any = {}
 
-  projects = [
-    { title: 'Neural Network Optimization', progress: 78, color: 'bg-blue-500' },
-    { title: 'CRISPR Gene Editing Study', progress: 65, color: 'bg-purple-500' },
-    { title: 'Quantum Algorithm Development', progress: 42, color: 'bg-green-500' },
-    { title: 'Climate Change Modeling', progress: 89, color: 'bg-orange-500' },
-  ];
+  donutChart: ApexChart = {
+    type: 'donut',
+    height: 320,
+  };
+  donutLegend: ApexLegend = {
+    position: 'bottom',
+    labels: {
+      colors: '#ffffff'
+    }
+  };
 
-  innovations = [
-    {
-      title: 'Advanced Neural Architecture',
-      desc: 'Deep learning framework achieving 95% accuracy',
-      date: 'Jan 2024',
-      bg: 'bg-blue-50',
+  pieChartOptions: Partial<PieChartOptions> = {
+    series: [],
+    chart: {
+      type: 'pie',
+      height: 320,
+      foreColor: '#ffffff'
     },
-    {
-      title: 'Gene Therapy Breakthrough',
-      desc: 'Novel CRISPR technique',
-      date: 'Dec 2023',
-      bg: 'bg-purple-50',
+    labels: [],
+    legend: {
+      position: 'right',
     },
-    {
-      title: 'Quantum Error Correction',
-      desc: 'Improved quantum stability',
-      date: 'Nov 2023',
-      bg: 'bg-green-50',
+    dataLabels: {
+      enabled: true,
+      style: {
+        fontSize: '12px',
+        fontWeight: 600,
+        colors: ['#ffffff']
+      }
     },
-  ];
+    responsive: [
+      {
+        breakpoint: 768,
+        options: {
+          chart: {
+            height: 280
+          },
+          legend: {
+            position: 'bottom',
+            labels: {
+              colors: ['#ffffff']
+            }
+          }
+        }
+      }
+    ]
+  };
+
+  constructor(private service: ReportService) {}
+
+  ngOnInit(): void {
+    MainComponent.showLoading();
+    Promise.all([
+      this.loadDashboard(),
+      new Promise((resolve) => setTimeout(resolve, 1000)),
+    ]).then(() => MainComponent.hideLoading());
+  }
+
+  loadDashboard() {
+    this.service.getData().subscribe((res) => {
+      this.data = res.data;
+      this.statistic = this.data.statistic;
+      this.topResearcher = this.data.top_researcher;
+      this.stat = res.data.statistic
+
+      this.prepareDonutChart();
+      this.preparePieChart();
+    });
+  }
+
+  prepareDonutChart() {
+    if (!this.data?.graph_research) return;
+
+    const filtered = this.data.graph_research.filter((i) => i.count > 0);
+
+    this.donutSeries = filtered.map((i) => i.count);
+    this.donutLabels = filtered.map((i) => i.label);
+    this.hasDonutData = this.donutSeries.length > 0;
+  }
+
+  preparePieChart() {
+
+    if (!this.data?.graph_subject_area) return;
+  
+    const filtered = this.data.graph_subject_area
+      .filter(i => i.count > 0)
+      .sort((a, b) => b.count - a.count);
+  
+    const top = filtered.slice(0, 10);
+    const others = filtered.slice(10);
+    const otherCount = others.reduce((sum, i) => sum + i.count, 0);
+    const labels = top.map(i => i.subject_area_name);
+    const series = top.map(i => i.count);
+  
+    if (otherCount > 0) {
+      labels.push('Other');
+      series.push(otherCount);
+    }
+  
+    this.pieChartOptions = {
+      ...this.pieChartOptions,
+      labels: labels,
+      series: series
+    };
+  
+  }
 }

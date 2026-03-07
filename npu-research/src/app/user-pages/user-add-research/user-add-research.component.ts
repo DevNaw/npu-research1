@@ -434,6 +434,8 @@ export class UserAddResearchComponent {
       fd.append(key, val !== null && val !== undefined ? String(val) : '');
 
     required('title_th', d.title_th);
+    required('title_en', d.title_en);
+    required('abstract', d.abstract);
     required('published_date', d.published_date);
     required('source_funds', d.source_funds);
     required('name_funding', d.name_funding);
@@ -509,6 +511,8 @@ export class UserAddResearchComponent {
   
     if (
       !d.title_th ||
+      !d.title_en ||
+      !d.abstract ||
       !d.source_funds ||
       !d.name_funding ||
       !d.budget_amount ||

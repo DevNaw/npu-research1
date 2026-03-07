@@ -521,6 +521,8 @@ export class UserAddAticleComponent {
     };
 
     required('title_th', d.title_th);
+    required('title_en', d.title_en);
+    required('abstract', d.abstract);
     required('article_type', d.article_type);
     required('journal_name', d.journal_name);
     required('pages', d.pages);
@@ -596,6 +598,8 @@ export class UserAddAticleComponent {
     // ตรวจ field หลัก
     if (
       !d.title_th ||
+      !d.title_en ||
+      !d.abstract ||
       !d.article_type ||
       !d.journal_name ||
       !d.pages ||
@@ -603,7 +607,7 @@ export class UserAddAticleComponent {
       !d.volume ||
       !d.volume_no ||
       !d.doi ||
-      !d.subject_area_id
+      !d.subject_area
     ) {
       Swal.fire({
         icon: 'warning',

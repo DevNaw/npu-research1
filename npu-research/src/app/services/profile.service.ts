@@ -54,8 +54,8 @@ export class ProfileService {
   // ✅ อัปเดตรูปโปรไฟล์
   updateAvatar(file: File) {
     const formData = new FormData();
-    formData.append('avatar', file);
-
+    formData.append('avatar_img', file);
+  
     return this.http.post<{ message: string; avatar_url: string }>(
       `${this.baseUrl}/avatar`,
       formData

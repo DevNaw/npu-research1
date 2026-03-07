@@ -1,0 +1,12 @@
+::ng-deep .apexcharts-legend-text {
+    color: #ffffff !important;
+    display: inline !important;
+  }
+  
+  ::ng-deep .apexcharts-legend {
+    color: #000 !important;
+  }
+  
+  ::ng-deep .apexcharts-data-label {
+    fill: #ffffff !important;
+  }

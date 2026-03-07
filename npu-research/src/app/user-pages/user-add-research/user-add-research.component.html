@@ -49,6 +49,51 @@
       </div>
     </div>
 
+    <div class="grid grid-cols-1 md:grid-cols-1 md:gap-2 mb-2 md:mb-6 md:mt-6">
+      <label class="md:col-span-1 font-bold text-2xl text-start">
+        ชื่องานวิจัยภาษาอังกฤษ <span class="text-red-500">*</span>
+      </label>
+      <input
+        name="title_en"
+        required
+        #title_en="ngModel"
+        [class.border-red-500]="title_en.invalid && title_en.touched"
+        [(ngModel)]="projectData.title_en"
+        type="text"
+        class="md:col-span-3 w-full text-2xl font-medium border h-12 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400"
+        placeholder="ระบุชื่องานวิจัย"
+      />
+
+      <div
+        *ngIf="title_en.invalid && title_en.touched"
+        class="text-red-500 text-sm"
+      >
+        กรุณากรอกชื่อโครงการวิจัยภาษาอังกฤษ
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-1 md:gap-2 mb-2 md:mb-6 md:mt-6">
+      <label class="md:col-span-1 font-bold text-2xl text-start">
+        Abstract <span class="text-red-500">*</span>
+      </label>
+      <textarea
+        name="abstract"
+        required
+        #abstract="ngModel"
+        [class.border-red-500]="abstract.invalid && abstract.touched"
+        [(ngModel)]="projectData.abstract"
+        class="md:col-span-3 w-full text-2xl font-medium border h-12 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400"
+        placeholder="ระบุ abstract"
+      ></textarea>
+
+      <div
+        *ngIf="abstract.invalid && abstract.touched"
+        class="text-red-500 text-sm"
+      >
+        กรุณากรอกข้อมูล
+      </div>
+    </div>
+
     <!-- สาขาของงานวิจัย -->
     <div class="grid grid-cols-1 md:grid-cols-1 md:gap-2 mb-2 md:mb-6">
       <label class="font-bold text-start text-2xl">
@@ -461,7 +506,7 @@
         <label class="block font-bold mb-2">
           ชื่อแหล่งทุน <span class="text-red-500">*</span>
         </label>
-      
+
         <input
           type="text"
           [(ngModel)]="projectData.name_funding"
@@ -470,11 +515,14 @@
         />
       </div>
 
-      <div *ngIf="projectData.source_funds === 'แหล่งทุนภายนอก'" class="relative">
+      <div
+        *ngIf="projectData.source_funds === 'แหล่งทุนภายนอก'"
+        class="relative"
+      >
         <label class="block font-bold mb-2">
           ชื่อแหล่งทุน <span class="text-red-500">*</span>
         </label>
-      
+
         <button
           type="button"
           (click)="toggleDropdown('fundName', $event)"
@@ -485,7 +533,7 @@
           </span>
           <i class="bi bi-chevron-down"></i>
         </button>
-      
+
         <div
           *ngIf="activeDropdown === 'fundName'"
           class="absolute left-0 top-full mt-1 w-full bg-white border rounded-md shadow z-50"

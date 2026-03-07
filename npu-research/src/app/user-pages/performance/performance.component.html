@@ -17,11 +17,15 @@
           <h1 class="text-2xl md:text-3xl mt-1">
             {{ researchData?.title_th }}
           </h1>
+
+          <h1 class="text-2xl md:text-3xl mt-1">
+            {{ researchData?.title_en || '-' }}
+          </h1>
         </div>
 
         <div class="mt-4 text-center flex justify-end">
           <button
-            class="bg-blue-600 text-white p-3 rounded-lg shadow hover:bg-blue-700 text-xl"
+            class="bg-blue-600 text-white p-3 rounded-lg shadow hover:bg-blue-700 text-xl h-15 cursor-pointer"
             (click)="editItem(researchData?.research_id)"
           >
             แก้ไขข้อมูล <i class="bi bi-pencil"></i>
@@ -103,8 +107,8 @@
               </div>
 
               <div>
-                <p class="text-[#767676]">สาขาของงานวิจัยย่อย</p>
-                <p class="font-bold">การเปลี่ยนแปลงสภาพภูมิอากาศ</p>
+                <p class="text-[#767676]">Abstract</p>
+                <p class="font-bold">{{ researchData?.abstract || '-' }}</p>
               </div>
             </div>
 
@@ -269,14 +273,14 @@
 
               <div>
                 <p class="font-semibold text-[#767676] md:mb-1">พื้นที่วิจัย</p>
-                <p class="text-gray-800">{{ researchData?.research_area }}</p>
+                <p class="text-gray-800">{{ researchData?.research_area || '-' }}</p>
               </div>
 
               <div>
                 <p class="font-semibold text-[#767676] md:mb-1">
                   พื้นที่ใช้ประโยชน์
                 </p>
-                <p class="text-gray-800">{{ researchData?.research_area }}</p>
+                <p class="text-gray-800">{{ researchData?.research_area || '-' }}</p>
               </div>
 
               <div>
@@ -323,11 +327,14 @@
             <h1 class="text-2xl md:text-3xl mt-1">
               {{ articleData?.title_th }}
             </h1>
+            <h1 class="text-2xl md:text-3xl mt-1">
+              {{ articleData?.title_en || '-' }}
+            </h1>
           </div>
 
           <div class="mt-4 text-center flex justify-end">
             <button
-              class="bg-blue-600 text-white p-3 rounded-lg shadow hover:bg-blue-700 text-xl"
+              class="bg-blue-600 text-white p-3 rounded-lg shadow hover:bg-blue-700 text-xl h-15 cursor-pointer"
               (click)="editItem(articleData?.research_id)"
             >
               แก้ไขข้อมูล <i class="bi bi-pencil"></i>
@@ -404,6 +411,13 @@
               <p class="text-[#767676]">สาขาของบทความ</p>
               <p class="font-bold">
                 {{ articleData?.subject_area?.[0]?.name_en }}
+              </p>
+            </div>
+
+            <div>
+              <p class="text-[#767676]">Abstract</p>
+              <p class="font-bold">
+                {{ articleData?.abstract || '-' }}
               </p>
             </div>
 
@@ -612,11 +626,14 @@
             <h1 class="text-2xl md:text-3xl mt-1">
               {{ innovationData?.title_th }}
             </h1>
+            <h1 class="text-2xl md:text-3xl mt-1">
+              {{ innovationData?.title_en || '-' }}
+            </h1>
           </div>
 
           <div class="mt-4 text-center flex justify-end">
             <button
-              class="bg-blue-600 text-white p-3 rounded-lg shadow hover:bg-blue-700 text-xl"
+              class="bg-blue-600 text-white p-3 rounded-lg shadow hover:bg-blue-700 text-xl h-15 cursor-pointer"
               (click)="editItem(innovationData?.research_id)"
             >
               แก้ไขข้อมูล <i class="bi bi-pencil"></i>

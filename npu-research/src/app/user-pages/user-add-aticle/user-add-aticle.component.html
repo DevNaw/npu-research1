@@ -50,6 +50,48 @@
       </div>
     </div>
 
+    <div
+      class="grid grid-cols-1 md:grid-cols-1 md:gap-2 mb-2 mt-2 md:mb-6 md:mt-5"
+    >
+      <label class="md:col-span-1 text-start">
+        ชื่อบทความ/วารสาร ภาษาอังกฤษ <span class="text-red-500">*</span>
+      </label>
+      <input
+        type="text"
+        name="title_en"
+        required
+        #title_en="ngModel"
+        [(ngModel)]="articleData.title_en"
+        [class.border-red-500]="title_en.invalid && title_en.touched"
+        class="md:col-span-3 text-2xl font-medium w-full h-12 border rounded-md px-4 py-2"
+        placeholder="ระบุบทความ/วารสาร ภาษาอังกฤษ"
+      />
+      <div *ngIf="title_en.invalid && title_en.touched" class="text-red-500 text-sm">
+        กรุณากรอกชื่อบทความภาษาอังกฤษ
+      </div>
+    </div>
+
+    <div
+      class="grid grid-cols-1 md:grid-cols-1 md:gap-2 mb-2 mt-2 md:mb-6 md:mt-5"
+    >
+      <label class="md:col-span-1 text-start">
+        Abstract <span class="text-red-500">*</span>
+      </label>
+      <input
+        type="text"
+        name="abstract"
+        required
+        #abstract="ngModel"
+        [(ngModel)]="articleData.abstract"
+        [class.border-red-500]="abstract.invalid && abstract.touched"
+        class="md:col-span-3 text-2xl font-medium w-full h-12 border rounded-md px-4 py-2"
+        placeholder="ระบุ abstract"
+      />
+      <div *ngIf="abstract.invalid && abstract.touched" class="text-red-500 text-sm">
+        กรุณากรอกข้อมูล
+      </div>
+    </div>
+
     <!-- ประเภท -->
     <div class="grid grid-cols-1 md:grid-cols-1 md:gap-2 mb-2 md:mb-6">
       <label class="font-bold text-start">

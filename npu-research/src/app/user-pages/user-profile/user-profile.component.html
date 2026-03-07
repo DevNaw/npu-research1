@@ -1,15 +1,65 @@
 <div class="contain-content bg-gray-100 p-5 md:p-6 min-h-screen text-2xl font-bold text-[#394250]">
   <!-- Heaer -->
   <div class="flex items-center mx-auto md:px-10">
-    <div
-      class="border-2 border-yellow-500 rounded-full items-center flex justify-center mr-4"
+
+    <div class="relative">
+
+      <!-- Avatar -->
+      <div class="border-2 border-yellow-500 rounded-full flex items-center justify-center">
+        <img
+          [src]="previewUrl || profileData?.avatar_url || '/assets/default_profile.png'"
+          class="w-20 h-20 md:w-30 md:h-30 rounded-full object-cover"
+        />
+      </div>
+    
+      <!-- ปุ่มเลือกรูป -->
+      <button
+        class="absolute bottom-0 right-0 bg-[#FDE68A] hover:bg-[#FACC15] hover:text-white 
+        rounded-xl w-8 h-8 md:w-10 md:h-10 flex items-center justify-center shadow cursor-pointer"
+        (click)="fileInput.click()"
+      >
+        <i class="bi bi-pencil-square"></i>
+      </button>
+    
+      <!-- input file -->
+      <input
+        type="file"
+        #fileInput
+        hidden
+        accept="image/*"
+        (change)="onFileSelected($event)"
+      />
+    
+    </div>
+  
+    <div class="ml-4">
+      <h1 class="text-4xl md:text-5xl leading-none">
+        {{ profileData?.full_name }}
+      </h1>
+  
+      <h2 class="text-2xl italic leading-none">
+        {{ profileData?.full_name }}
+      </h2>
+    </div>
+  
+  </div>
+
+   <!-- ปุ่มบันทึก -->
+   <div class="mt-4" *ngIf="selectedFile">
+    <button
+      class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg shadow"
+      (click)="saveAvatar()"
     >
-      <img src="/assets/default_profile.png" class="w-20 h-20 md:w-30 md:h-30 rounded-full" />
-    </div>
-    <div>
-      <h1 class="text-4xl md:text-5xl leading-none">{{ profileData?.full_name }}</h1>
-      <h2 class="text-2xl italic leading-none">{{ profileData?.full_name}}</h2>
-    </div>
+      <i class="bi bi-check-circle mr-2"></i>
+      บันทึกรูป
+    </button>
+  
+    <button
+      class="ml-2 bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded-lg shadow"
+      (click)="cancelAvatar()"
+    >
+      ยกเลิก
+    </button>
   </div>
 
   <!-- Main Layout -->
@@ -258,8 +308,7 @@
       </div>
 
       <!-- ข้อมูลการฝึกอบรม -->
-      <div class="bg-white rounded-xl shadow-md px-6 py-8 w-full max-w-full mb-2 md:mb-5">
-        <!-- Header -->
+      <!-- <div class="bg-white rounded-xl shadow-md px-6 py-8 w-full max-w-full mb-2 md:mb-5">
         <div
           class="flex items-center justify-between cursor-pointer"
           (click)="isTraining = !isTraining"
@@ -272,7 +321,6 @@
           </div>
 
           <div class="flex items-center gap-3">
-            <!-- Arrow -->
             <i
               class="bi bi-chevron-down text-xl transition-transform duration-300"
               [class.rotate-180]="isTraining"
@@ -284,7 +332,6 @@
 
         <div *ngIf="isTraining" class="transtion-all duration-300">
           <div class="flex justify-end">
-            <!-- Edit Button -->
             <button
               class="bg-[#FDE68A] hover:bg-[#FACC15] hover:text-white rounded-xl w-10 h-10 flex items-center justify-center shadow cursor-pointer"
               (click)="goToEditTraning()"
@@ -292,7 +339,6 @@
               <i class="bi bi-pencil-square"></i>
             </button>
           </div>
-          <!-- Content -->
           <ul
             *ngIf="trainings.length > 0; else noTraining"
             class="space-y-3 text-gray-600 font-medium"
@@ -308,14 +354,13 @@
             </li>
           </ul>
 
-          <!-- ไม่มีข้อมูล -->
           <ng-template #noTraining>
             <div class="text-red-500 text-center font-semibold py-4">
               ไม่พบข้อมูล
             </div>
           </ng-template>
         </div>
-      </div>
+      </div> -->
     </div>
 
     <!-- ข้อมูลผลงาน -->

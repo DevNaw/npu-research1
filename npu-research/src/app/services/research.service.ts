@@ -213,4 +213,8 @@ export class ResearchService {
   getInnovationsPublic(id: number): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/public/research/${id}/innovation`);
   }
+
+  deleteImage(id: number) {
+    return this.http.delete(`${this.baseUrl}/innovation/${id}/image`);
+  }
 }

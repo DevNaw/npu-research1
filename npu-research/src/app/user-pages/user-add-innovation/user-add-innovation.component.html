@@ -52,6 +52,27 @@
       </div>
     </div>
 
+    <div
+      class="grid grid-cols-1 md:grid-cols-1 md:gap-2 mb-2 mt-4 md:mb-6"
+    >
+      <label class="md:col-span-1 text-start">
+        ชื่อนวัตกรรมสิ่งประดิษฐ์ภาษาอังกฤษ <span class="text-red-500">*</span>
+      </label>
+      <input
+        name="title_en"
+        required
+        #title_en="ngModel"
+        [class.border-red-500]="title_en.invalid && title_en.touched"
+        [(ngModel)]="projectData.title_en"
+        type="text"
+        class="md:col-span-3 text-2xl font-medium w-full h-12 border rounded-md px-4 py-2"
+        placeholder="ระบุชื่อนวัตกรรมสิ่งประดิษฐ์ภาษาอังกฤษ"
+      />
+      <div *ngIf="title_en.invalid && title_en.touched" class="text-red-500 text-sm">
+        กรุณากรอกชื่อนวัตกรรมสิ่งประดิษฐ์ภาษาอังกฤษ
+      </div>
+    </div>
+
     <!-- สาขาของนวัตกรรมสิ่งประดิษฐ์ -->
     <div class="grid grid-cols-1 md:grid-cols-1 md:gap-2 mb-2 md:mb-6">
       <label class="text-start">
@@ -211,11 +232,7 @@
 
           <tbody>
             <tr
-              *ngFor="
-                let row of internalRow;
-                let i = index;
-                trackBy: trackById
-              "
+              *ngFor="let row of internalRow; let i = index; trackBy: trackById"
               class="border-b-2 border-gray-300 bg-gray-200"
             >
               <td class="p-2 text-center">{{ i + 1 }}</td>
@@ -269,7 +286,7 @@
                     <div
                       (click)="
                         !isFirstAuthorTaken(row) &&
-                        selectRowResponsibility(row, 'หัวหน้าโครงการ')
+                          selectRowResponsibility(row, 'หัวหน้าโครงการ')
                       "
                       [class.opacity-50]="isFirstAuthorTaken(row)"
                       [class.pointer-events-none]="isFirstAuthorTaken(row)"
@@ -383,7 +400,7 @@
                     <div
                       (click)="
                         !isFirstAuthorTaken(item) &&
-                        selectRowResponsibility(item, 'หัวหน้าโครงการ')
+                          selectRowResponsibility(item, 'หัวหน้าโครงการ')
                       "
                       [class.opacity-50]="isFirstAuthorTaken(item)"
                       [class.pointer-events-none]="isFirstAuthorTaken(item)"
@@ -393,7 +410,9 @@
                     </div>
 
                     <div
-                      (click)="selectRowResponsibility(item, 'ที่ปรึกษาโครงการ')"
+                      (click)="
+                        selectRowResponsibility(item, 'ที่ปรึกษาโครงการ')
+                      "
                       class="p-2 hover:bg-gray-100 cursor-pointer"
                     >
                       ที่ปรึกษาโครงการ
@@ -480,7 +499,7 @@
         </div>
 
         <!-- ชื่อแหล่งทุน -->
-         <div *ngIf="projectData.source_funds === 'แหล่งทุนภายใน'">
+        <div *ngIf="projectData.source_funds === 'แหล่งทุนภายใน'">
           <label class="block font-bold mb-2">
             ชื่อแหล่งทุน <span class="text-red-500">*</span>
           </label>
@@ -491,9 +510,12 @@
             placeholder="กรอกชื่อแหล่งทุน"
             class="w-full h-12 border rounded-md px-3 text-2xl font-medium"
           />
-         </div>
+        </div>
 
-         <div *ngIf="projectData.source_funds === 'แหล่งทุนภายนอก'" class="relative">
+        <div
+          *ngIf="projectData.source_funds === 'แหล่งทุนภายนอก'"
+          class="relative"
+        >
           <label class="block font-bold mb-2">
             ชื่อแหล่งทุน <span class="text-red-500">*</span>
           </label>
@@ -532,7 +554,9 @@
             name="budget_amount"
             required
             #budgetAmount="ngModel"
-            [class.border-red-500]="budgetAmount.invalid && budgetAmount.touched"
+            [class.border-red-500]="
+              budgetAmount.invalid && budgetAmount.touched
+            "
             [(ngModel)]="projectData.budget_amount"
             type="text"
             class="w-full border text-2xl font-medium rounded-md h-12 px-4 py-2 focus:ring-2 focus:ring-blue-400"
@@ -543,8 +567,8 @@
             *ngIf="budgetAmount.invalid && budgetAmount.touched"
             class="text-red-500 text-sm"
           >
-          กรุณากรอกจำนวนงบประมาณ
-            </div>
+            กรุณากรอกจำนวนงบประมาณ
+          </div>
         </div>
 
         <!-- ปีที่ได้รับทุน -->
@@ -569,8 +593,8 @@
             *ngIf="yearReceivedBudget.invalid && yearReceivedBudget.touched"
             class="text-red-500 text-sm"
           >
-          กรุณากรอกปีที่ได้รับทุน
-            </div>
+            กรุณากรอกปีที่ได้รับทุน
+          </div>
         </div>
         <!-- ปีที่ได้รับทุน -->
         <!-- <div class="grid grid-cols-1 md:grid-cols-1 gap-2 mb-6">
@@ -610,14 +634,19 @@
             name="patent_number"
             required
             #patentNumber="ngModel"
-            [class.border-red-500]="patentNumber.invalid && patentNumber.touched"
+            [class.border-red-500]="
+              patentNumber.invalid && patentNumber.touched
+            "
             [(ngModel)]="projectData.patent_number"
             type="text"
             class="md:col-span-2 h-12 w-full text-2xl font-medium border rounded-md px-4 py-2"
             placeholder="ระบุเลขที่สิทธิบัตร"
           />
 
-          <div *ngIf="patentNumber.invalid && patentNumber.touched" class="text-red-500 text-sm">
+          <div
+            *ngIf="patentNumber.invalid && patentNumber.touched"
+            class="text-red-500 text-sm"
+          >
             กรุณากรอกเลขที่สิทธิบัตร
           </div>
         </div>
@@ -631,7 +660,9 @@
             name="application_number"
             required
             #applicationNumber="ngModel"
-            [class.border-red-500]="applicationNumber.invalid && applicationNumber.touched"
+            [class.border-red-500]="
+              applicationNumber.invalid && applicationNumber.touched
+            "
             [(ngModel)]="projectData.application_number"
             type="text"
             class="md:col-span-2 h-12 w-full text-2xl font-medium border rounded-md px-4 py-2"
@@ -656,7 +687,9 @@
           name="examination_url"
           required
           #examinationUrl="ngModel"
-          [class.border-red-500]="examinationUrl.invalid && examinationUrl.touched"
+          [class.border-red-500]="
+            examinationUrl.invalid && examinationUrl.touched
+          "
           [(ngModel)]="projectData.examination_url"
           type="text"
           class="md:col-span-2 w-full border text-2xl font-medium rounded-md px-4 py-2"
@@ -664,11 +697,11 @@
         />
 
         <div
-            *ngIf="examinationUrl.invalid && examinationUrl.touched"
-            class="text-red-500 text-sm"
-          >
-            กรุณากรอกเว็บไซต์ตรวจสิทธิบัตร
-          </div>
+          *ngIf="examinationUrl.invalid && examinationUrl.touched"
+          class="text-red-500 text-sm"
+        >
+          กรุณากรอกเว็บไซต์ตรวจสิทธิบัตร
+        </div>
       </div>
 
       <!-- ไฟล์รายงานฉบับสมบูรณ์ -->
@@ -717,54 +750,64 @@
         </div>
 
         <!-- ไฟล์รูปนวัตกรรมสิ่งประดิษฐ์ -->
-        <!-- <div>
-          <label class="md:col-span-1 text-start">
+        <div class="flex flex-col gap-2 mt-2">
+          <label class="text-start">
             ไฟล์รูปนวัตกรรมสิ่งประดิษฐ์ :
           </label>
-
-          <input
-            #fileInput
-            type="file"
-            accept="application/image/*"
-            class="hidden"
-            multiple
-            (change)="onImageFileSelected($event)"
-          />
-
-          <div class="md:col-span-2 flex gap-3 items-center mt-3">
-            <span class="text-gray-400 font-medium truncate">
-              <ng-container *ngIf="selectedImagesFile.length > 0; else existingImage">
-                {{ selectedImagesFile[0].name }}
-              </ng-container>
-            
-              <ng-template #existingImage>
-                {{ projectData.innovation_images[0]?.file_name || 'ยังไม่ได้เลือกไฟล์' }}
-              </ng-template>
+        
+          <!-- รูปจาก DB -->
+          <div
+            *ngFor="let img of projectData.innovation_images"
+            class="flex items-center gap-3"
+          >
+            <img
+              [src]="img.get_url"
+              class="w-16 h-16 object-cover rounded border"
+            />
+        
+            <span class="text-gray-700 flex-1 truncate">
+              {{ img.file_name }}
             </span>
-
-            <button
-            *ngIf="hasImages"
-              type="button"
-              class="text-red-500 hover:text-red-700 text-lg"
-              (click)="removeImageFile()"
-            >
-              ✕
-            </button>
-
+        
             <button
               type="button"
-              class="px-4 py-1 bg-[#FDE68A] text-[#394250] hover:bg-[#FACC15] rounded-md cursor-pointer"
-              (click)="fileInput.click()"
+              class="text-red-500 hover:text-red-700 cursor-pointer"
+              (click)="deleteImage(img.file_id)"
             >
-              เลือกไฟล์
+              <i class="bi bi-trash"></i>
             </button>
           </div>
-        </div> -->
-
-        <div>
-          <label class="md:col-span-1 text-start">
-            ไฟล์รูปนวัตกรรมสิ่งประดิษฐ์ :
-          </label>
+        
+          <!-- รูปใหม่ -->
+          <div
+            *ngFor="let file of selectedImagesFile; let i = index"
+            class="flex items-center gap-3"
+          >
+            <img
+              [src]="imagePreviews[i]"
+              class="w-16 h-16 object-cover rounded border"
+            />
+        
+            <span class="text-gray-600 flex-1 truncate">
+              {{ file.name }}
+            </span>
+        
+            <button
+              type="button"
+              class="text-red-500 hover:text-red-700 cursor-pointer"
+              (click)="removeImageFile(i)"
+            >
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+        
+          <!-- ไม่มีรูป -->
+          <div
+            *ngIf="!(projectData.innovation_images.length) && !selectedImagesFile.length"
+            class="text-gray-400"
+          >
+            ยังไม่ได้เลือกรูป
+          </div>
         
           <!-- input file -->
           <input
@@ -776,46 +819,10 @@
             (change)="onImageFileSelected($event)"
           />
         
-          <!-- แสดงไฟล์ที่เลือก -->
-          <div class="flex flex-wrap gap-2 mt-2">
-        
-            <ng-container *ngIf="selectedImagesFile.length > 0; else existingImage">
-        
-              <div
-                *ngFor="let file of selectedImagesFile; let i = index"
-                class="flex items-center gap-2 bg-gray-100 px-3 py-1 rounded-md"
-              >
-                <span class="text-gray-600 text-sm truncate max-w-37.5">
-                  {{ file.name }}
-                </span>
-        
-                <button
-                  type="button"
-                  class="text-red-500 hover:text-red-700 text-sm"
-                  (click)="removeImageFile(i)"
-                >
-                  ✕
-                </button>
-              </div>
-        
-            </ng-container>
-        
-            <ng-template #existingImage>
-              <span class="text-gray-400">
-                {{
-                  projectData.innovation_images.length
-                    ? projectData.innovation_images.length + ' รูป'
-                    : 'ยังไม่ได้เลือกไฟล์'
-                }}
-              </span>
-            </ng-template>
-        
-          </div>
-        
-          <!-- ปุ่มเลือกไฟล์ (อยู่นอก loop) -->
+          <!-- ปุ่มเลือกไฟล์ -->
           <button
             type="button"
-            class="mt-3 px-4 py-1 bg-[#FDE68A] text-[#394250] hover:bg-[#FACC15] rounded-md cursor-pointer"
+            class="w-fit px-4 py-1 bg-[#FDE68A] text-[#394250] hover:bg-[#FACC15] rounded-md cursor-pointer"
             (click)="fileInput.click()"
           >
             เลือกไฟล์

@@ -100,6 +100,7 @@ export class UserAddInnovationComponent {
   selectedImagesName = '';
   selectedImagesFile: File[] = [];
   fundings: Funding[] = [];
+  imagePreviews: string[] = [];
 
   projectData: ResearchInnovationDetail = { ...DEFAULT_INNOVATION };
 
@@ -112,21 +113,22 @@ export class UserAddInnovationComponent {
 
   ngOnInit(): void {
     MainComponent.showLoading();
+  
     this.loadSubjectArea();
     this.loadResearchersData();
     this.loadFundings();
-
+  
     this.route.paramMap.subscribe((params) => {
       const id = params.get('id');
-
+  
       if (id) {
         this.isEdit = true;
         this.projectData.research_id = +id;
         this.loadProjectData(this.projectData.research_id);
       } else {
         this.isEdit = false;
+        MainComponent.hideLoading(); // ใส่เฉพาะกรณี create
       }
-      MainComponent.hideLoading();
     });
   }
 
@@ -168,54 +170,20 @@ export class UserAddInnovationComponent {
     this.service.getInnovationById(id).subscribe({
       next: (res) => {
         const data = res.data.researchInnovation;
-
+  
         this.projectData = {
           ...this.projectData,
           ...data,
         };
-
+  
         this.selectedFileName = data.full_report?.file_name ?? '';
         this.selectedImagesName = data.innovation_images ?? [];
-
-        if (data.internal_members?.length) {
-          this.internalRow = data.internal_members.map(
-            (m: any, index: number) => ({
-              id: index,
-              researcher_id: m.user_id,
-              name: m.full_name,
-              responsibilities: m.role ?? '',
-            })
-          );
-        }
-
-        if (data.external_members?.length) {
-          this.externalRow = data.external_members.map(
-            (m: any, index: number) => ({
-              id: index + 1,
-              name: m.full_name ?? '',
-              organization: m.organization ?? '',
-              responsibilities: m.role ?? '',
-            })
-          );
-        }
-
-        if (this.projectData.subject_area_id) {
-          for (const major of this.major) {
-            const found = major.children.find(
-              (s) => s.sub_id === this.projectData.subject_area_id
-            );
-
-            if (found) {
-              this.selectedMajor = major;
-              this.selectedSub = found;
-
-              break;
-            }
-          }
-        }
+  
+        MainComponent.hideLoading(); // ย้ายมาที่นี่
       },
       error: (err) => {
         console.error('Failed to load article:', err);
+        MainComponent.hideLoading();
       },
     });
   }
@@ -361,10 +329,16 @@ export class UserAddInnovationComponent {
 
   onImageFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
-
+  
     if (input.files?.length) {
-      this.selectedImagesFile.push(...Array.from(input.files));
+      const files = Array.from(input.files);
+  
+      files.forEach((file) => {
+        this.selectedImagesFile.push(file);
+        this.imagePreviews.push(URL.createObjectURL(file));
+      });
     }
+  
     input.value = '';
   }
 
@@ -532,6 +506,7 @@ export class UserAddInnovationComponent {
 
     if (
       !d.title_th ||
+      !d.title_en ||
       !d.source_funds ||
       !d.subject_area ||
       !d.name_funding ||
@@ -576,5 +551,57 @@ export class UserAddInnovationComponent {
     }
 
     return true;
+  }
+
+  removeImage(index: number) {
+    this.projectData.innovation_images.splice(index, 1);
+  }
+  
+  createImagePreview(file: File) {
+    return URL.createObjectURL(file);
+  }
+
+  deleteImage(id: number) {
+
+    Swal.fire({
+      title: 'ยืนยันการลบ?',
+      text: 'คุณต้องการลบรูปนี้ใช่หรือไม่',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'ลบ',
+      cancelButtonText: 'ยกเลิก',
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#6b7280',
+    }).then((result) => {
+  
+      if (result.isConfirmed) {
+  
+        this.service.deleteImage(id).subscribe({
+          next: () => {
+  
+            Swal.fire({
+              icon: 'success',
+              title: 'ลบข้อมูลสำเร็จ',
+              showConfirmButton: false,
+              timer: 1000,
+            });
+  
+            this.loadProjectData(this.projectData.research_id);
+  
+          },
+          error: (err) => {
+            console.error(err);
+  
+            Swal.fire({
+              icon: 'error',
+              title: 'ลบข้อมูลไม่สำเร็จ',
+            });
+          },
+        });
+  
+      }
+  
+    });
+  
   }
 }
