@@ -5,7 +5,7 @@
     <div class="relative">
 
       <!-- Avatar -->
-      <div class="border-2 border-yellow-500 rounded-full flex items-center justify-center">
+      <div class="border-2 border-[#118CD9] rounded-full flex items-center justify-center">
         <img
           [src]="previewUrl || profileData?.avatar_url || '/assets/default_profile.png'"
           class="w-20 h-20 md:w-30 md:h-30 rounded-full object-cover"
@@ -14,7 +14,7 @@
     
       <!-- ปุ่มเลือกรูป -->
       <button
-        class="absolute bottom-0 right-0 bg-[#FDE68A] hover:bg-[#FACC15] hover:text-white 
+        class="absolute bottom-0 right-0 bg-[#118CD9] hover:bg-[#4c7b98] text-white 
         rounded-xl w-8 h-8 md:w-10 md:h-10 flex items-center justify-center shadow cursor-pointer"
         (click)="fileInput.click()"
       >
@@ -47,7 +47,7 @@
    <!-- ปุ่มบันทึก -->
    <div class="mt-4" *ngIf="selectedFile">
     <button
-      class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg shadow font-light text-sm cursor-pointer"
+      class="bg-[#118CD9] hover:bg-[#4c7b98] text-white px-4 py-2 rounded-lg shadow font-light text-sm cursor-pointer"
       (click)="saveAvatar()"
     >
       <i class="bi bi-check-circle mr-2"></i>
