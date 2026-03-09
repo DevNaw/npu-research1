@@ -1,5 +1,5 @@
 <div
-  class="contain-content bg-gray-100 p-5 md:px-10 text-2xl font-bold text-[#394250]"
+  class="contain-content bg-gray-100 p-5 md:px-10 text-2xl font-medium text-[#394250]"
 >
   <div class="mx-auto md:p-6 mb-1">
     <h1 class="text-3xl">การจัดการผู้ใช้งานทั่วไป</h1>
@@ -8,17 +8,17 @@
   <div class="mx-auto p-2 mb:p-6 md:mb-10 bg-white rounded-xl">
     <div class="flex justify-end items-center mb-4 mt-2">
       <div class="flex items-center">
-        <label class="mr-2">Search:</label>
+        <label class="text-xl mr-2">Search:</label>
         <input
           type="text"
           [(ngModel)]="searchText"
           (input)="onSearch()"
           placeholder="ค้นหา"
-          class="border rounded px-2 py-1 ml-auto text-xl font-medium"
+          class="border rounded px-2 py-1 ml-auto text-lg font-light"
         />
       </div>
     </div>
-    <div class="w-full overflow-x-auto mt-4">
+    <div class="w-full overflow-x-auto mt-4 font-light text-lg">
       <table class="w-full min-w-225 table-fixed">
         <colgroup>
           <col class="w-[5%]" />
@@ -39,7 +39,7 @@
         <tbody>
           <tr
             *ngFor="let users of paginatedUsers; let i = index"
-            class="border-b border-gray-300 bg-gray-200 hover:bg-gray-50 transition font-medium"
+            class="border-b border-gray-300 bg-gray-200 hover:bg-gray-50 transition"
           >
             <td class="text-center p-2">
               {{ (currentPage - 1) * pageSize + i + 1 }}
@@ -79,7 +79,7 @@
       </table>
     </div>
 
-    <div class="flex justify-end mt-3 space-x-1">
+    <div class="flex justify-end mt-3 space-x-1 font-light text-sm">
       <button
         (click)="changePage(currentPage - 1)"
         [disabled]="currentPage === 1"
@@ -114,13 +114,13 @@
 <!-- Modal Edit Password -->
 <div
   *ngIf="isModalOpen"
-  class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center text-2xl text-[#394250]"
+  class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center text-2xl text-[#394250] font-medium"
 >
   <div class="bg-white w-full max-w-xl rounded-2xl shadow-xl p-6 relative">
 
     <!-- Header -->
     <div class="flex items-center justify-between border-b pb-3 mb-5">
-      <h2 class="font-bold">แก้ไขรหัสผ่าน</h2>
+      <h2 class="">แก้ไขรหัสผ่าน</h2>
 
       <button
         (click)="closeModal()"
@@ -140,7 +140,7 @@
           [(ngModel)]="passwordData.new_password"
           type="text"
           placeholder="กรอกรหัสผ่านใหม่"
-          class="w-full border rounded-lg px-3 py-2 text-xl"
+          class="w-full border rounded-lg px-3 py-2 text-xl font-light"
         />
       </div>
 
@@ -151,12 +151,12 @@
           [(ngModel)]="passwordData.confirm_password"
           type="text"
           placeholder="ยืนยันรหัสผ่าน"
-          class="w-full border rounded-lg px-3 py-2 text-xl"
+          class="w-full border rounded-lg px-3 py-2 text-xl font-light"
         />
       </div>
 
       <!-- Footer -->
-      <div class="flex justify-center gap-3 pt-4 border-t mt-4">
+      <div class="flex justify-center gap-3 pt-4 border-t mt-4 font-medium text-xl">
         <button
           (click)="save()"
           class="px-5 py-2 rounded-lg bg-yellow-400 hover:bg-yellow-500 shadow cursor-pointer"

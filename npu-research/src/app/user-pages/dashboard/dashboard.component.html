@@ -5,9 +5,9 @@
       class="flex flex-wrap items-center gap-2 md:gap-6 mb-6 md:mb-8 text-center md:text-left"
     >
       <div class="flex items-end justify-center gap-3 md:justify-start">
-        <h1 class="text-2xl md:text-3xl">ยินดีต้อนรับเข้าสู่</h1>
+        <h1 class="text-xl md:text-3xl">ยินดีต้อนรับเข้าสู่</h1>
 
-        <h1 class="text-2xl md:text-4xl">ระบบฐานข้อมูลวิจัย</h1>
+        <h1 class="text-xl md:text-4xl text-[#16498C]">ระบบฐานข้อมูลวิจัย</h1>
       </div>
 
       <!-- Date -->
@@ -18,20 +18,22 @@
     </div>
 
     <!-- ===== Summary Cards ===== -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+    <div
+      class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-6 md:px-10"
+    >
       <div
-        class="items-center p-6 bg-linear-to-r from-[#BCDBFE] to-[#91C7FF] rounded-xl shadow"
+        class="items-center p-6 bg-linear-to-r from-[#16498C] to-[#061426] rounded-xl shadow"
       >
         <div class="flex justify-between">
-          <i class="bi bi-flask text-6xl"></i>
-          <p class="text-2xl">โครงการวิจัย</p>
+          <i class="bi bi-flask text-6xl text-white"></i>
+          <p class="text-3xl text-white">โครงการวิจัย</p>
         </div>
 
-        <div class="ml-auto flex items-center gap-6 justify-between">
+        <div class="ml-auto flex items-center gap-6 mt-8 justify-between">
           <div>
-            <p class="text-xl font-regular ml-3">จำนวนทั้งหมด</p>
+            <p class="text-xl font-regular ml-3 text-white">จำนวนทั้งหมด</p>
           </div>
-          <h2 class="text-5xl">
+          <h2 class="text-5xl text-white">
             {{ dashboardData?.statistic_research?.total_project }}
           </h2>
         </div>
@@ -46,10 +48,10 @@
       <div class="items-center p-6 bg-white rounded-xl shadow">
         <div class="flex justify-between">
           <i class="bi bi-file-earmark-text text-6xl"></i>
-          <p class="text-2xl">บทความ</p>
+          <p class="text-3xl">บทความวิชาการ</p>
         </div>
 
-        <div class="ml-auto flex items-center gap-6 justify-between">
+        <div class="ml-auto flex items-center gap-6 mt-8 justify-between">
           <div>
             <p class="text-xl font-regular ml-3">จำนวนทั้งหมด</p>
           </div>
@@ -62,10 +64,10 @@
       <div class="items-center p-6 bg-white rounded-xl shadow">
         <div class="flex justify-between">
           <i class="bi bi-award text-6xl"></i>
-          <h2 class="text-2xl">นวัตกรรม</h2>
+          <h2 class="text-3xl">นวัตกรรมสิ่งประดิษฐ์</h2>
         </div>
 
-        <div class="ml-auto flex items-center gap-6 justify-between">
+        <div class="ml-auto flex items-center gap-6 mt-8 justify-between">
           <div>
             <p class="text-xl font-regular ml-3">จำนวนทั้งหมด</p>
           </div>
@@ -78,10 +80,10 @@
       <div class="items-center p-6 bg-white rounded-xl shadow">
         <div class="flex justify-between">
           <i class="bi bi-people text-6xl"></i>
-          <p class="text-2xl">จำนวนนักวิจัย</p>
+          <p class="text-3xl">จำนวนนักวิจัย</p>
         </div>
 
-        <div class="ml-auto flex items-center gap-6 justify-between">
+        <div class="ml-auto flex items-center gap-6 mt-8 justify-between">
           <div>
             <p class="text-xl font-regular ml-3">จำนวนทั้งหมด</p>
           </div>
@@ -93,33 +95,30 @@
     </div>
 
     <!-- ===== Charts ===== -->
-    <div class="bg-[#F9CB34] p-2 md:p-6 sm:p-8 rounded-2xl shadow-lg space-y-5">
+    <div class="bg-white p-2 md:p-6 sm:p-8 rounded-2xl shadow-lg space-y-5">
       <div
-        class="flex items-center gap-4 text-2xl mb-2 md:text-3xl sm:text-4xl"
+        class="flex items-center gap-4 text-2xl mb-2 md:text-3xl sm:text-4xl text-[#16498C]"
       >
         <i class="bi bi-pie-chart-fill"></i>
         <h1>ภาพรวมฐานข้อมูลงานวิจัย</h1>
       </div>
 
       <!-- Charts -->
-      <div
-        *ngFor="let c of charts"
-        class="bg-white rounded-2xl shadow-md overflow-hidden"
-      >
+      <div *ngFor="let c of charts" class="bg-white shadow-md overflow-hidden">
         <!-- Chart Header -->
         <div
-          class="bg-[#394250] p-1 md:px-6 sm:px-8 md:py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+          class="bg-[#EBEFF2] p-1 md:px-6 sm:px-8 md:py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
         >
           <!-- Title + Subtitle -->
           <div>
             <h2
-              class="text-xl flex justify-center md:justify-start sm:text-2xl text-white"
+              class="text-xl flex justify-center md:justify-start sm:text-2xl text-[#394250]"
             >
               {{ c.title }}
             </h2>
 
             <p
-              class="text-lg text-gray-300 flex justify-center md:justify-start"
+              class="text-lg text-[#394250] flex justify-center md:justify-start"
             >
               {{ c.subtitle }}
             </p>
@@ -129,50 +128,84 @@
           <button
             (click)="SeeMoreDetails(c.type)"
             type="button"
-            class="flex items-center justify-center gap-2 bg-yellow-400 hover:bg-yellow-500 text-[#394250] hover:text-white px-4 py-2 rounded-xl shadow cursor-pointer transition sm:self-auto self-center focus:outline-none focus:ring-2 focus:ring-yellow-300"
+            class="flex items-center justify-center gap-2 bg-[#118CD9] hover:bg-[#4c7b98] text-[#ffffff] hover:text-white px-4 py-2 shadow cursor-pointer transition sm:self-auto self-center focus:outline-none focus:ring-2 focus:ring-yellow-300"
           >
             <i
               class="bi bi-file-earmark-bar-graph-fill text-xl sm:text-2xl"
             ></i>
-            <span
-              class="inline md:hidden lg:inline text-sm font-regular"
-            >
+            <span class="inline md:hidden lg:inline text-sm font-regular">
               ดูรายละเอียดเพิ่มเติม
             </span>
           </button>
         </div>
 
-        <!-- Chart Body -->
-        <div class="p-4 md:p-5">
-          <apx-chart
-            [series]="c.options.series"
-            [chart]="c.options.chart"
-            [dataLabels]="c.options.dataLabels"
-            [plotOptions]="c.options.plotOptions"
-            [yaxis]="c.options.yaxis"
-            [xaxis]="c.options.xaxis"
-            [stroke]="c.options.stroke"
-            [grid]="c.options.grid"
-            [fill]="c.options.fill"
-            [annotations]="c.options.annotations"
+        <div class="grid grid-cols-1 md:grid-cols-1 w-full  lg:grid-cols-[60%_40%] gap-6">
+          <!-- Chart Body -->
+          <div class="p-4 md:p-5 w-full h-full overflow-x-auto">
+            <div class="min-w-200">
+              <apx-chart
+                [series]="c.options.series"
+                [chart]="c.options.chart"
+                [dataLabels]="c.options.dataLabels"
+                [plotOptions]="c.options.plotOptions"
+                [yaxis]="c.options.yaxis"
+                [xaxis]="c.options.xaxis"
+                [stroke]="c.options.stroke"
+                [grid]="c.options.grid"
+                [fill]="c.options.fill"
+                [annotations]="c.options.annotations"
+              >
+              </apx-chart>
+            </div>
+          </div>
+
+          <div
+            class="bg-white shadow p-6 flex flex-col justify-between h-140 w-full md:col-span-1"
           >
-          </apx-chart>
+            <div class="flex items-center gap-2 mb-4">
+              <i class="bi bi-pie-chart-fill text-xl"></i>
+              <h2 class="text-xl md:text-2xl">สัดส่วนผลงานตามหน่วยงาน</h2>
+            </div>
+
+            <!-- Scroll container -->
+            <div class="space-y-1 overflow-y-auto h-90">
+              <p
+                *ngFor="
+                  let item of c.type == 'project'
+                    ? dashboardData?.statistic_graph?.graph_project
+                    : c.type == 'article'
+                    ? dashboardData?.statistic_graph?.graph_article
+                    : dashboardData?.statistic_graph?.graph_innovation
+                "
+                class="flex justify-between md:px-8"
+              >
+                <span class="font-light text-lg">{{ item.label_full }}</span>
+                <span class="font-light text-lg">{{ item.count }} ผลงาน</span>
+              </p>
+            </div>
+
+            <div class="pt-4 border-t mt-2">
+              <p class="text-3xl text-center text-[#394250]">
+                รวมทั้งหมด {{ getTotalCount(c.type) }} ผลงาน
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- ===== News Section ===== -->
-    <div class="bg-[#394250] p-10 sm:px-8 rounded-2xl shadow-lg space-y-15">
+    <div
+      class="bg-[#ffffff] p-2 md:p-10 sm:px-8 rounded-2xl shadow-lg space-y-15"
+    >
       <!-- Header -->
       <div class="flex items-center justify-between mb-4">
-        <h1 class="text-2xl md:text-3xl text-white">
-          ข่าวประชาสัมพันธ์
-        </h1>
+        <h1 class="text-xl md:text-3xl text-[#394250]">ข่าวประชาสัมพันธ์</h1>
 
         <div class="mt-4 flex justify-end">
           <button
             (click)="goToAllNews()"
-            class="flex items-center gap-2 px-5 py-2 rounded-full border border-gray-300 text-white text-sm font-regular hover:bg-[#F9CB34] hover:text-gray-700 hover:border-[#F9CB34] transition-all duration-300 cursor-pointer"
+            class="flex items-center gap-2 px-5 py-2 rounded-full border border-gray-300 text-sm font-regular bg-[#118CD9] hover:bg-[#4c7b98] text-[#ffffff] hover:text-white transition-all duration-300 cursor-pointer"
           >
             ดูข่าวทั้งหมด
             <i class="bi bi-arrow-right-circle-fill text-xl"></i>
@@ -180,12 +213,14 @@
         </div>
       </div>
 
+      <hr class="border-3 text-[#118CD9]" />
+
       <div>
         <!-- News Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
           <div
             *ngFor="let news of newsList"
-            class="bg-white rounded-xl shadow hover:shadow-lg transition duration-300 hover:scale-105 flex flex-col overflow-hidden"
+            class="bg-[#EBEFF2] border border-gray-300 shadow-md hover:shadow-lg transition duration-300 hover:scale-105 flex flex-col overflow-hidden"
           >
             <!-- Image -->
             <div class="aspect-video w-full overflow-hidden">
@@ -209,7 +244,7 @@
               <div class="mt-4 flex justify-end">
                 <button
                   (click)="goToNewsDetail(news.news_id)"
-                  class="flex items-center gap-2 px-5 py-2 rounded-full border border-gray-300 text-gray-700 text-sm font-regular hover:bg-[#F9CB34] hover:text-white hover:border-[#F9CB34] transition-all duration-300 cursor-pointer"
+                  class="flex items-center gap-2 px-5 py-2 rounded-full border border-gray-300 text-sm font-regular bg-[#118CD9] hover:bg-[#4c7b98] text-[#ffffff] hover:text-white transition-all duration-300 cursor-pointer"
                 >
                   อ่านเพิ่มเติม
                   <i class="bi bi-arrow-right-circle-fill text-xl"></i>
@@ -221,23 +256,23 @@
       </div>
 
       <!-- ===== Publications Table ===== -->
-      <div
-        class="bg-white rounded-xl p-2 md:p-6 shadow text-[#394250]"
-      >
+      <div class="bg-white rounded-xl p-2 md:p-6 shadow text-[#394250]">
         <div class="flex items-center justify-between mb-2 md:mb-4">
           <h1 class="text-2xl md:text-3xl">ผลงานที่ตีพิมพ์</h1>
         </div>
 
+        <hr class="border-3 text-[#118CD9]" />
+
         <div
-          class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4 md:flex md:justify-between"
+          class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4 md:flex md:justify-between mt-6"
         >
           <div class="flex items-center md:space-x-4 mb-2 md:mb-4">
             <button
               (click)="changeTab('PROJECT')"
               [ngClass]="
                 selectedTab === 'PROJECT'
-                  ? 'bg-[#FDE68A] text-[#394250]'
-                  : 'text-[#394250] hover:bg-[#FDE68A]'
+                  ? 'bg-[#118CD9] text-[#ffffff]'
+                  : 'text-[#394250] hover:bg-[#4c7b98] hover:text-white'
               "
               class="px-2 md:px-4 py-2 rounded-lg cursor-pointer text-lg whitespace-nowrap"
             >
@@ -247,8 +282,8 @@
               (click)="changeTab('ARTICLE')"
               [ngClass]="
                 selectedTab === 'ARTICLE'
-                  ? 'bg-[#FDE68A] text-[#394250]'
-                  : 'text-[#394250] hover:bg-[#FDE68A]'
+                  ? 'bg-[#118CD9] text-[#ffffff]'
+                  : 'text-[#394250] hover:bg-[#4c7b98] hover:text-white'
               "
               class="px-2 md:px-4 py-2 rounded-lg cursor-pointer text-lg"
             >
@@ -258,8 +293,8 @@
               (click)="changeTab('INNOVATION')"
               [ngClass]="
                 selectedTab === 'INNOVATION'
-                  ? 'bg-[#FDE68A] text-[#394250]'
-                  : 'text-[#394250] hover:bg-[#FDE68A]'
+                  ? 'bg-[#118CD9] text-[#ffffff]'
+                  : 'text-[#394250] hover:bg-[#4c7b98] hover:text-white'
               "
               class="px-2 md:px-4 py-2 rounded-lg cursor-pointer text-lg whitespace-nowrap"
             >
@@ -306,7 +341,7 @@
                 </td>
                 <td class="p-2">
                   <div
-                    class="text-indigo-600 hover:underline cursor-pointer truncate max-w-125 text-wrap text-lg"
+                    class="text-[#16498C] hover:underline cursor-pointer truncate max-w-125 text-wrap text-lg"
                     title="{{ p.title_th }}"
                     (click)="viewItem(p.research_id)"
                   >
@@ -353,7 +388,7 @@
             (click)="changePage(page)"
             class="px-2 md:px-3 py-1 rounded border text-sm transition cursor-pointer"
             [ngClass]="{
-              'bg-[#FACC15] text-[#1E293B] border-[#FACC15]':
+              'bg-[#118CD9] text-[#ffffff] border-[#118CD9]':
                 currentPage === page,
               'hover:bg-gray-100': currentPage !== page
             }"
@@ -376,7 +411,7 @@
   <!-- ===== Quick Access Cards ===== -->
   <div class="mx-auto p-5 md:p-10">
     <div
-      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 mx-auto"
+      class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 md:gap-6 mx-auto"
     >
       <!-- Card 1 -->
       <div
@@ -385,10 +420,10 @@
       >
         <!-- Icon Circle -->
         <div
-          class="w-16 h-16 rounded-full bg-amber-100 flex items-center justify-center mb-3 transition-all duration-300 group-hover:bg-[#F9CB34]"
+          class="w-16 h-16 border-[#118CD9] border rounded-full bg-[#EBEFF2] flex items-center justify-center mb-3 transition-all duration-300 group-hover:bg-[#118CD9]"
         >
           <i
-            class="bi bi-book text-3xl text-amber-500 transition-all duration-300 group-hover:text-white group-hover:scale-110"
+            class="text-[#118CD9] bi bi-book text-3xl transition-all duration-300 group-hover:text-white group-hover:scale-110"
           ></i>
         </div>
 
@@ -402,10 +437,10 @@
         class="group bg-white rounded-2xl h-44 flex flex-col items-center justify-center shadow hover:shadow-xl transition-all duration-300 cursor-pointer hover:-translate-y-1"
       >
         <div
-          class="w-16 h-16 rounded-full bg-amber-100 flex items-center justify-center mb-3 transition-all duration-300 group-hover:bg-[#F9CB34]"
+          class="w-16 h-16 border-[#118CD9] border rounded-full bg-[#EBEFF2] flex items-center justify-center mb-3 transition-all duration-300 group-hover:bg-[#118CD9]"
         >
           <i
-            class="bi bi-graph-up text-3xl text-amber-500 transition-all duration-300 group-hover:text-white group-hover:scale-110"
+            class="bi bi-graph-up text-3xl text-[#118CD9] transition-all duration-300 group-hover:text-white group-hover:scale-110"
           ></i>
         </div>
 
@@ -419,16 +454,14 @@
         class="group bg-white rounded-2xl h-44 flex flex-col items-center justify-center shadow hover:shadow-xl transition-all duration-300 cursor-pointer hover:-translate-y-1"
       >
         <div
-          class="w-16 h-16 rounded-full bg-amber-100 flex items-center justify-center mb-3 transition-all duration-300 group-hover:bg-[#F9CB34]"
+          class="w-16 h-16 border-[#118CD9] border rounded-full bg-[#EBEFF2] flex items-center justify-center mb-3 transition-all duration-300 group-hover:bg-[#118CD9]"
         >
           <i
-            class="bi bi-stars text-3xl text-amber-500 transition-all duration-300 group-hover:text-white group-hover:scale-110"
+            class="bi bi-stars text-3xl text-[#118CD9] transition-all duration-300 group-hover:text-white group-hover:scale-110"
           ></i>
         </div>
 
-        <h2 class="text-2xl text-[#394250]">
-          นวัตกรรมสิ่งประดิษฐ์
-        </h2>
+        <h2 class="text-2xl text-[#394250]">นวัตกรรมสิ่งประดิษฐ์</h2>
         <p class="text-lg text-gray-500 mt-1">Innovations</p>
       </div>
 
@@ -438,10 +471,10 @@
         class="group bg-white rounded-2xl h-44 flex flex-col items-center justify-center shadow hover:shadow-xl transition-all duration-300 cursor-pointer hover:-translate-y-1"
       >
         <div
-          class="w-16 h-16 rounded-full bg-amber-100 flex items-center justify-center mb-3 transition-all duration-300 group-hover:bg-[#F9CB34]"
+          class="w-16 h-16 border-[#118CD9] border rounded-full bg-[#EBEFF2] flex items-center justify-center mb-3 transition-all duration-300 group-hover:bg-[#118CD9]"
         >
           <i
-            class="bi bi-person-lines-fill text-3xl text-amber-500 transition-all duration-300 group-hover:text-white group-hover:scale-110"
+            class="bi bi-person-lines-fill text-3xl text-[#118CD9] transition-all duration-300 group-hover:text-white group-hover:scale-110"
           ></i>
         </div>
 

@@ -120,6 +120,7 @@ export class UserResearchComponent {
 
   donutLegend = {
     position: 'bottom' as const,
+    show: false,
   };
 
   typeMap: any = {

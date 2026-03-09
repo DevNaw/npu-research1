@@ -1,8 +1,8 @@
-<div class="p-6 space-y-6 bg-gray-50 min-h-screen text-2xl">
+<div class="p-6 space-y-6 bg-gray-50 min-h-screen text-2xl font-medium">
   <!-- ===== Stat Cards ===== -->
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
     <div class="bg-white rounded-xl p-5 shadow items-center">
-      <p class="text-gray-400">Active Researchers</p>
+      <p class="text-gray-400">นักวิจัยทั้งหมด</p>
       <h3 class="text-2xl font-bold flex justify-end mr-6">
         {{ statistic?.total_researcher }}
       </h3>
@@ -11,7 +11,7 @@
     </div>
 
     <div class="bg-white rounded-xl p-5 shadow items-center">
-      <p class="text-gray-400">Research Projects</p>
+      <p class="text-gray-400">โครงการวิจัยทั้งหมด</p>
       <h3 class="text-2xl font-bold flex justify-end mr-6">
         {{ statistic?.total_project }}
       </h3>
@@ -20,7 +20,7 @@
     </div>
 
     <div class="bg-white rounded-xl p-5 shadow items-center">
-      <p class="text-gray-400">Published Articles</p>
+      <p class="text-gray-400">บทความ/วารสารทั้งหมด</p>
       <h3 class="text-3xl font-bold flex justify-end mr-6">
         {{ statistic?.total_article }}
       </h3>
@@ -29,7 +29,7 @@
     </div>
 
     <div class="bg-white rounded-xl p-5 shadow items-center">
-      <p class="text-gray-400">Innovations</p>
+      <p class="text-gray-400">นวัตกรรมทั้งหมด</p>
       <h3 class="text-3xl font-bold flex justify-end mr-6">
         {{ statistic?.total_innovation }}
       </h3>
@@ -41,7 +41,7 @@
   <!-- ===== Charts ===== -->
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
     <div class="bg-white rounded-xl p-6 shadow">
-      <h3 class="font-semibold mb-4">Publications Over Time</h3>
+      <h3 class=" mb-4">ผลงานวิชาการแบ่งตามหน่วยงาน</h3>
       <ng-container>
         <apx-chart class="text-white"
           *ngIf="donutSeries.length > 0; else noData"
@@ -58,7 +58,7 @@
     </div>
 
     <div class="bg-white rounded-xl p-6 shadow">
-      <h3 class="font-semibold mb-4">Research Areas Distribution</h3>
+      <h3 class=" mb-4">ผลงานวิชาการแบ่งตามสาขาวิชา</h3>
       <apx-chart
         class="text-white"
         [series]="pieChartOptions.series!"
@@ -75,30 +75,30 @@
   <div class="bg-white rounded-xl shadow p-6">
     <div class="flex justify-between mb-4">
       <h3 class="font-semibold">Top Researchers</h3>
-      <a class="text-indigo-600 text-sm cursor-pointer">View All</a>
+      <!-- <a class="text-indigo-600 text-sm cursor-pointer">View All</a> -->
     </div>
 
-    <div *ngFor="let r of topResearcher" class="flex items-center justify-between py-3 border-b last:border-0">
+    <div *ngFor="let r of topResearcher" class="flex items-center justify-between py-3 border-b last:border-0 font-light">
       <div class="flex items-center gap-3">
         <img [src]="r.avatar_url || '/assets/default_profile.png'" class="w-10 h-10 rounded-full" />
         <div>
-          <p class="font-medium text-2xl">{{ r.full_name }}</p>
-          <p class="text-xl text-gray-400">{{ r.organization }}</p>
+          <p class="text-xl">{{ r.full_name }}</p>
+          <p class="text-lg text-gray-400">{{ r.organization }}</p>
         </div>
       </div>
 
       <div class="flex gap-6 text-sm">
         <div class="text-center">
-          <p class="font-semibold text-2xl">{{ r.project_count }}</p>
-          <p class="text-gray-400 text-xl">Projects</p>
+          <p class="text-xl">{{ r.project_count }}</p>
+          <p class="text-gray-400 text-lg">Projects</p>
         </div>
         <div class="text-center">
-          <p class="font-semibold text-2xl">{{ r.article_count }}</p>
-          <p class="text-gray-400 text-xl">Articles</p>
+          <p class="text-xl">{{ r.article_count }}</p>
+          <p class="text-gray-400 text-lg">Articles</p>
         </div>
         <div class="text-center">
-          <p class="font-semibold text-2xl">{{ r.innovation_count }}</p>
-          <p class="text-gray-400 text-xl">Innovations</p>
+          <p class="text-xl">{{ r.innovation_count }}</p>
+          <p class="text-gray-400 text-lg">Innovations</p>
         </div>
       </div>
     </div>

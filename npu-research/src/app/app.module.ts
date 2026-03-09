@@ -58,6 +58,7 @@ import { PerformancePublicComponent } from './user-pages/performance-public/perf
 import { LoadingComponent } from './shared/loading/loading.component';
 import { ManagementUserComponent } from './admin-pages/management-user/management-user.component';
 import { ManagementAdminComponent } from './admin-pages/management-admin/management-admin.component';
+import { A11yModule } from "@angular/cdk/a11y";
 
 @NgModule({
   declarations: [
@@ -123,8 +124,9 @@ import { ManagementAdminComponent } from './admin-pages/management-admin/managem
     NgxEditorModule,
     HttpClientModule,
     RouterModule,
-    RouterModule.forRoot([])
-  ],
+    RouterModule.forRoot([]),
+    A11yModule
+],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,

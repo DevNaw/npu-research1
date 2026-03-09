@@ -45,6 +45,7 @@ export class AdminSearchResearcherComponent {
   
     donutLegend: ApexLegend = {
       position: 'bottom',
+      show: false,
       labels: {
         colors: '#fffff',
       },

@@ -31,6 +31,7 @@ export interface DashboardResponse {
   export interface GraphItem {
     organization_id: number;
     label: string;
+    label_full: string;
     count: number;
     percent: number;
   }

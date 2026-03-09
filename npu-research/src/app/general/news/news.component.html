@@ -1,11 +1,11 @@
 <div
-  class="contain-content bg-gray-100 p-5 md:px-10 text-xl md:text-2xl text-[#394250] font-bold"
+  class="contain-content bg-gray-100 p-5 md:px-10 text-xl md:text-2xl text-[#394250] font-medium"
 >
   <div class="mx-auto md:py-6">
     <h1 class="text-3xl md:ml-5 mb-2">ข่าวประชาสัมพันธ์</h1>
   </div>
 
-  <div class="mb-10 mx-auto p-2 md:px-2 md:py-8 bg-white rounded-xl">
+  <div class="mb-10 mx-auto p-2 md:px-2 md:py-8 bg-white rounded-xl font-regular text-lg">
     <div class="mx-auto md:px-6">
       <!-- NEWS GRID -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -26,7 +26,7 @@
               {{ news.title }}
             </h3>
 
-            <p class="text-lg text-[#394250]">
+            <p class="text-sm text-[#394250] font-light">
               วันที่
               {{
                 news?.published_date
@@ -38,7 +38,7 @@
               <div class="mt-4 flex justify-end">
                 <button
                   (click)="goToNewsDetail(news.news_id)"
-                  class="flex items-center gap-2 px-5 py-2 rounded-full border border-gray-300 text-gray-700 text-lg font-medium hover:bg-[#F9CB34] hover:text-white hover:border-[#F9CB34] transition-all duration-300 cursor-pointer"
+                  class="flex items-center gap-2 px-5 py-2 rounded-full border border-gray-300 text-gray-700 text-sm font-regular hover:bg-[#F9CB34] hover:text-white hover:border-[#F9CB34] transition-all duration-300 cursor-pointer"
                 >
                   อ่านเพิ่มเติม
                   <i class="bi bi-arrow-right-circle-fill text-xl"></i>

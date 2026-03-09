@@ -107,7 +107,8 @@ export class UserDashboardComponent implements OnInit {
       next: (res: DashboardResponse) => {
         if (res?.result === 1 && res?.data) {
           this.dashboardData = res.data;
-          this.newsList = res.data.news;
+          this.newsList = res.data.news; console.log(this.dashboardData);
+          
 
           this.publications = res.data.researchs;
 
@@ -132,20 +133,20 @@ export class UserDashboardComponent implements OnInit {
     this.charts = [
       {
         type: 'project',
-        title: 'โครงการวิจัย',
-        subtitle: 'สถิติตามปีงบประมาณ',
+        title: 'กราฟสรุปจำนวนโครงการวิจัย',
+        subtitle: 'จำแนกตามหน่วยงาน',
         options: this.createBarChart(graph?.graph_project ?? []),
       },
       {
         type: 'article',
-        title: 'บทความวิจัย',
-        subtitle: 'สถิติตามปีงบประมาณ',
+        title: 'กราฟสรุปจำนวนบทความวิชาการ',
+        subtitle: 'จำแนกตามหน่วยงาน',
         options: this.createBarChart(graph?.graph_article ?? []),
       },
       {
         type: 'innovation',
-        title: 'ผลงานนวัตกรรม',
-        subtitle: 'สถิติตามปีงบประมาณ',
+        title: 'กราฟสรุปจำนวนนวัตกรรมสิ่งประดิษฐ์',
+        subtitle: 'จำแนกตามหน่วยงาน',
         options: this.createBarChart(graph?.graph_innovation ?? []),
       },
     ];
@@ -422,5 +423,16 @@ export class UserDashboardComponent implements OnInit {
       case 'INNOVATION':
         return 'innovations';
     }
+  }
+
+  getTotalCount(type: string): number {
+    const data =
+      type === 'project'
+        ? this.dashboardData?.statistic_graph?.graph_project
+        : type === 'article'
+        ? this.dashboardData?.statistic_graph?.graph_article
+        : this.dashboardData?.statistic_graph?.graph_innovation;
+  
+    return data?.reduce((sum, item) => sum + (item.count || 0), 0) || 0;
   }
 }

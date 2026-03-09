@@ -120,6 +120,7 @@ export class AdminSearchPaperComponent {
 
   donutLegend = {
     position: 'bottom' as const,
+    show: false
   };
 
   typeMap: any = {
@@ -188,7 +189,7 @@ export class AdminSearchPaperComponent {
     this.donutLabels = Object.keys(map).map(
       (type) => typeLabelMap[type] || type
     );
-
+  
     this.donutSeries = Object.values(map);
     this.totalResearchers = this.filteredResearchers.length;
   }
@@ -206,6 +207,7 @@ export class AdminSearchPaperComponent {
   @HostListener('document:click')
   closeAll() {
     this.openDropdown = null;
+    this.activeDropdown = null;
   }
 
   selectFaculities(f: string) {

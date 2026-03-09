@@ -1,4 +1,4 @@
-<div class="mx-auto bg-gray-100 p-5 md:p-10 text-2xl font-bold text-[#394250]">
+<div class="mx-auto bg-gray-100 p-5 md:p-10 text-2xl font-medium text-[#394250]">
   <!-- Header -->
   <div class="bg-white rounded-lg">
     <div
@@ -27,7 +27,7 @@
             type="text"
             formControlName="title"
             placeholder="หัวข้อข่าว"
-            class="w-full border rounded-md px-3 text-2xl font-medium py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+            class="w-full border rounded-md px-3 text-xl font-light py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
         </div>
 
@@ -41,7 +41,7 @@
               <input
                 type="date"
                 formControlName="publishedAt"
-                class="w-full text-2xl font-medium border rounded-md px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+                class="w-full text-xl font-light border rounded-md px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
               />
             </div>
           </div>
@@ -53,7 +53,7 @@
             <input
               type="date"
               formControlName="expiresAt"
-              class="w-full border text-2xl font-medium rounded-md px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+              class="w-full border text-xl font-light rounded-md px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
           </div>
         </div>
@@ -64,7 +64,7 @@
             รายละเอียดข่าว <span class="text-red-500">*</span>
           </label>
 
-          <div class="NgxEditor__Wrapper">
+          <div class="NgxEditor__Wrapper text-xl font-light">
             <ngx-editor-menu [editor]="editor" [toolbar]="toolbar">
             </ngx-editor-menu>
             <ngx-editor
@@ -87,7 +87,7 @@
             [ngClass]="{ 'h-52': !coverPreview }"
           >
             <!-- กรณีไม่มีรูป -->
-            <div *ngIf="!coverPreview" class="text-center">
+            <div *ngIf="!coverPreview" class="text-center text-xl font-light">
               <i class="bi bi-image text-5xl text-gray-400"></i>
               <p class="mt-2 text-gray-600">คลิกเพื่อเลือกรูปภาพ</p>
               <p class="text-xl text-gray-500">
@@ -113,7 +113,7 @@
 
         <!-- แกลลอรี่ -->
         <div>
-          <label class="block mb-2">
+          <label class="block mb-2 text-xl font-light">
             แกลลอรี่ <span class="text-red-500">*</span>
           </label>
 
@@ -125,7 +125,7 @@
             }"
           >
             <!-- กรณีไม่มีรูป -->
-            <div *ngIf="galleryPreview.length === 0" class="text-center">
+            <div *ngIf="galleryPreview.length === 0" class="text-center text-xl font-light">
               <i class="bi bi-images text-5xl text-gray-400"></i>
               <p class="mt-2 text-gray-600">คลิกเพื่อเลือกรูปภาพ</p>
             </div>
@@ -153,11 +153,11 @@
         </div>
 
         <!-- ปุ่มล่าง -->
-        <div class="flex justify-end gap-3 pt-4">
+        <div class="flex justify-end gap-3 pt-4 text-xl font-medium">
           <button
             type="button"
             (click)="goBack()"
-            class="px-2 md:px-4 py-2 rounded-md bg-gray-300 hover:bg-gray-400 text-gray-800 flex items-center gap-2"
+            class="px-2 md:px-4 py-2 rounded-md bg-gray-300 hover:bg-gray-400 text-gray-800 flex items-center gap-2 cursor-pointer"
           >
             <i class="bi bi-x-circle"></i>
             ยกเลิก
@@ -165,7 +165,7 @@
 
           <button
             type="submit"
-            class="px-2 md:px-4 py-2 rounded-md bg-yellow-400 hover:bg-yellow-500 text-black font-medium flex items-center gap-2 shadow"
+            class="px-2 md:px-4 py-2 rounded-md bg-yellow-400 hover:bg-yellow-500 text-black flex items-center gap-2 shadow"
           >
             <i class="bi bi-floppy"></i>
             บันทึก

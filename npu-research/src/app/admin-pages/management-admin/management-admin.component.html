@@ -1,5 +1,5 @@
 <div
-  class="contain-content bg-gray-100 p-5 md:px-10 text-2xl font-bold text-[#394250]"
+  class="contain-content bg-gray-100 p-5 md:px-10 text-2xl font-medium text-[#394250]"
 >
   <div class="mx-auto md:p-6 mb-1">
     <h1 class="text-3xl">การจัดการผู้ใช้งานแอดมิน</h1>
@@ -9,22 +9,24 @@
     <div class="flex justify-between items-center mb-4 mt-2">
       <button
             (click)="openAddModal()"
-            class="flex items-center gap-2 bg-yellow-300 hover:bg-yellow-400 px-4 py-2 rounded-md text-lg cursor-pointer font-bold"
+            class="flex items-center gap-2 bg-yellow-300 hover:bg-yellow-400 px-4 py-2 rounded-md text-lg cursor-pointer"
           >
             <i class="bi bi-plus-circle"></i> เพิ่มแอดมิน
           </button>
+
       <div class="flex items-center">
-        <label class="mr-2">Search:</label>
+        <label class="text-xl mr-2">Search:</label>
         <input
           type="text"
           [(ngModel)]="searchText"
           (input)="onSearch()"
           placeholder="ค้นหา"
-          class="border rounded px-2 py-1 ml-auto text-xl font-medium"
+          class="border rounded px-2 py-1 ml-auto text-lg font-light"
         />
       </div>
     </div>
-    <div class="w-full overflow-x-auto mt-4">
+
+    <div class="w-full overflow-x-auto mt-4 font-light text-lg">
       <table class="w-full min-w-225 table-fixed">
         <colgroup>
           <col class="w-[5%]" />
@@ -45,7 +47,7 @@
         <tbody>
           <tr
             *ngFor="let user of paginatedAdmins; let i = index"
-            class="border-b border-gray-300 bg-gray-200 hover:bg-gray-50 transition font-medium"
+            class="border-b border-gray-300 bg-gray-200 hover:bg-gray-50 transition"
           >
             <td class="text-center p-2">
               {{ (currentPage - 1) * pageSize + i + 1 }}
@@ -85,7 +87,7 @@
       </table>
     </div>
 
-    <div class="flex justify-end mt-3 space-x-1">
+    <div class="flex justify-end mt-3 space-x-1 font-light text-sm">
       <button
         (click)="changePage(currentPage - 1)"
         [disabled]="currentPage === 1"
@@ -97,7 +99,7 @@
       <button
         *ngFor="let page of pages"
         (click)="changePage(page)"
-        class="px-3 py-1 rounded border text-sm transition"
+        class="px-3 py-1 rounded border text-sm transition cursor-pointer"
         [ngClass]="{
           'bg-[#FACC15] text-[#394250] border-[#FACC15]': currentPage === page,
           'hover:bg-gray-100': currentPage !== page
@@ -120,7 +122,7 @@
 <!-- Modal Edit Password -->
 <div
   *ngIf="showModal"
-  class="fixed inset-0 z-50 text-2xl flex items-center justify-center bg-black/50 px-4 text-[#394250]"
+  class="fixed inset-0 z-50 text-2xl flex items-center justify-center bg-black/50 px-4 text-[#394250] font-medium"
   (click)="closeModal()"
 >
   <div
@@ -128,56 +130,56 @@
     (click)="$event.stopPropagation()"
   >
     <!-- Title -->
-    <h2 class="font-semibold mb-2 md:mb-4 text-center text-3xl md:text-left">
+    <h2 class="mb-2 md:mb-4 text-center text-3xl md:text-left">
         เพิ่มแอดมิน
     </h2>
 
     <!-- ชื่อ -->
     <div class="mb-2 md:mb-4">
-      <label class="block mb-1 font-bold">ชื่อ</label>
+      <label class="block mb-1">ชื่อ</label>
       <input
         type="text"
         [(ngModel)]="adminsData!.first_name"
-        class="w-full border rounded-md px-3 py-2 focus:ring focus:ring-blue-200 text-2xl"
+        class="w-full border rounded-md px-3 py-2 focus:ring focus:ring-blue-200 text-xl font-light"
         placeholder="กรอกชื่อ"
       />
     </div>
 
     <!-- นามสกุล -->
     <div class="mb-2 md:mb-4">
-      <label class="block mb-1 font-bold">นามสกุล</label>
+      <label class="block mb-1">นามสกุล</label>
       <input
         type="text"
         [(ngModel)]="adminsData!.last_name"
-        class="w-full border rounded-md px-3 py-2 focus:ring focus:ring-blue-200 text-2xl"
+        class="w-full border rounded-md px-3 py-2 focus:ring focus:ring-blue-200 text-xl font-light"
         placeholder="กรอกนามสกุล"
       />
     </div>
 
     <!-- อีเมล -->
     <div class="mb-2 md:mb-4">
-      <label class="block mb-1 font-bold">อีเมล</label>
+      <label class="block mb-1">อีเมล</label>
       <input
         type="text"
         [(ngModel)]="adminsData!.email"
-        class="w-full border rounded-md px-3 py-2 focus:ring focus:ring-blue-200 text-2xl"
+        class="w-full border rounded-md px-3 py-2 focus:ring focus:ring-blue-200 text-xl font-light"
         placeholder="กรอกอีเมล"
       />
     </div>
 
     <!-- รหัสผ่าน -->
     <div class="mb-2 md:mb-4">
-      <label class="block mb-1 font-bold">รหัสผ่าน</label>
+      <label class="block mb-1">รหัสผ่าน</label>
       <input
         type="text"
         [(ngModel)]="adminsData!.password"
-        class="w-full border rounded-md px-3 py-2 focus:ring focus:ring-blue-200 text-2xl"
+        class="w-full border rounded-md px-3 py-2 focus:ring focus:ring-blue-200 text-xl font-light"
         placeholder="กรอกรหัสผ่าน"
       />
     </div>
 
     <!-- Buttons -->
-    <div class="flex flex-col sm:flex-row justify-center gap-2">
+    <div class="flex flex-col sm:flex-row justify-center gap-2 font-medium text-xl">
       <button
         (click)="saveExpertise()"
         class="w-full sm:w-auto px-4 py-2 rounded-md bg-[#F9CB34] hover:bg-[#fde07f] cursor-pointer"
@@ -196,7 +198,7 @@
 
 <div
   *ngIf="showModalEdit"
-  class="fixed inset-0 z-50 text-2xl flex items-center justify-center bg-black/50 px-4 text-[#394250]"
+  class="fixed inset-0 z-50 font-medium text-2xl flex items-center justify-center bg-black/50 px-4 text-[#394250]"
   (click)="closeModal()"
 >
   <div
@@ -204,45 +206,45 @@
     (click)="$event.stopPropagation()"
   >
     <!-- Title -->
-    <h2 class="font-semibold mb-2 md:mb-4 text-center text-3xl md:text-left">
+    <h2 class="mb-2 md:mb-4 text-center text-3xl md:text-left">
       แก้ไขข้อมูลแอดมิน
     </h2>
 
     <!-- ชื่อ -->
     <div class="mb-2 md:mb-4">
-      <label class="block mb-1 font-bold">ชื่อ</label>
+      <label class="block mb-1">ชื่อ</label>
       <input
         type="text"
         [(ngModel)]="updateAdmin!.first_name"
-        class="w-full border rounded-md px-3 py-2 focus:ring focus:ring-blue-200 text-2xl"
+        class="w-full border rounded-md px-3 py-2 focus:ring focus:ring-blue-200 text-xl font-light"
         placeholder="กรอกชื่อ"
       />
     </div>
 
     <!-- นามสกุล -->
     <div class="mb-2 md:mb-4">
-      <label class="block mb-1 font-bold">นามสกุล</label>
+      <label class="block mb-1">นามสกุล</label>
       <input
         type="text"
         [(ngModel)]="updateAdmin!.last_name"
-        class="w-full border rounded-md px-3 py-2 focus:ring focus:ring-blue-200 text-2xl"
+        class="w-full border rounded-md px-3 py-2 focus:ring focus:ring-blue-200 text-xl font-light"
         placeholder="กรอกนามสกุล"
       />
     </div>
 
     <!-- อีเมล -->
     <div class="mb-2 md:mb-4">
-      <label class="block mb-1 font-bold">อีเมล</label>
+      <label class="block mb-1">อีเมล</label>
       <input
         type="text"
         [(ngModel)]="updateAdmin!.email"
-        class="w-full border rounded-md px-3 py-2 focus:ring focus:ring-blue-200 text-2xl"
+        class="w-full border rounded-md px-3 py-2 focus:ring focus:ring-blue-200 text-xl font-light"
         placeholder="กรอกอีเมล"
       />
     </div>
 
     <!-- Buttons -->
-    <div class="flex flex-col sm:flex-row justify-center gap-2">
+    <div class="flex flex-col sm:flex-row justify-center gap-2 font-medium text-xl">
       <button
         (click)="updateExpertise()"
         class="w-full sm:w-auto px-4 py-2 rounded-md bg-[#F9CB34] hover:bg-[#fde07f] cursor-pointer"

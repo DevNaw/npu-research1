@@ -1,10 +1,10 @@
-<div class="contain-content bg-gray-100 p-5 md:px-10 text-xl md:text-2xl text-[#394250] font-bold">
+<div class="contain-content bg-gray-100 p-5 md:px-10 text-xl md:text-2xl text-[#394250] font-medium">
   <div class="mx-auto md:py-6">
     <!-- Title -->
     <h1 class="text-3xl md:ml-5 mb-2">เอกสารดาวน์โหลด</h1>
   </div>
 
-  <div class="mb-10 mx-auto p-2 md:px-6 md:py-6 bg-white rounded-xl">
+  <div class="mb-10 mx-auto p-2 md:px-6 md:py-6 bg-white rounded-xl font-light text-lg">
     <div class="mx-auto">
       <!-- Table -->
       <div class="overflow-x-auto bg-white shadow">
@@ -16,9 +16,9 @@
           </colgroup>
           <thead class="bg-[#394250] text-white">
             <tr>
-              <th class="p-1 md:p-2 text-center font-bold">#</th>
-              <th class="p-1 md:p-2 text-start font-bold">เอกสาร</th>
-              <th class="p-1 md:p-2 text-center font-bold">
+              <th class="p-1 md:p-2 text-center">#</th>
+              <th class="p-1 md:p-2 text-start">เอกสาร</th>
+              <th class="p-1 md:p-2 text-center">
                 จำนวนครั้งดาวน์โหลด
               </th>
             </tr>
@@ -30,7 +30,7 @@
               class="border-b border-gray-300 bg-gray-200 hover:bg-gray-50 transition"
             >
               <!-- Index -->
-              <td class="text-center text-gray-700 font-medium">
+              <td class="text-center text-gray-700">
                 {{ i + 1 }}
               </td>
 
@@ -39,7 +39,7 @@
                 <a
                   (click)="downloadFile(doc.docId, doc.file_url)"
                   target="_blank"
-                  class="text-indigo-600 hover:underline font-medium cursor-pointer"
+                  class="text-indigo-600 hover:underline cursor-pointer font-regular"
                 >
                   {{ doc.doc_name }}
                 </a>

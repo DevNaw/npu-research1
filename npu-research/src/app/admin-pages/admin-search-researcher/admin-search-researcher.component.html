@@ -1,4 +1,4 @@
-<div class="bg-gray-100 min-h-screen p-5 md:px-10 text-2xl font-bold text-[#394250]">
+<div class="bg-gray-100 min-h-screen p-5 md:px-10 text-2xl font-medium text-[#394250]">
   <!-- ===== SEARCH ===== -->
   <div class="mx-auto md:p-6">
     <!-- Title -->
@@ -19,13 +19,13 @@
       <div class="grid grid-cols-12 gap-1 items-center">
         <!-- Label -->
         <label
-          class="col-span-12 text-3xl md:text-4xl md:col-span-2"
+          class="col-span-12 text-xl md:text-2xl md:col-span-2"
         >
           ตัวกรอง
         </label>
 
         <!-- Dropdown -->
-        <div class="col-span-12 md:col-span-10 relative font-medium">
+        <div class="col-span-12 md:col-span-10 relative font-light text-xl">
           <button
             type="button"
             (click)="toggleDropdown('faculties', $event)"
@@ -70,7 +70,7 @@
       </div>
 
       <!-- สายงาน -->
-      <div class="grid grid-cols-1 md:grid-cols-1 gap-2 items-center mt-5 font-medium">
+      <div class="grid grid-cols-1 md:grid-cols-1 gap-2 items-center mt-5 font-light text-xl">
         <!-- Major Dropdown -->
         <div class="md:col-span-3 relative">
           <button
@@ -127,7 +127,7 @@
             (keyup.enter)="search()"
             type="text"
             placeholder="พิมพ์คำค้นหา ชื่อนักวิจัย"
-            class="flex-1 px-6 border-none md:px-8 text-xl md:text-2xl outline-none"
+            class="flex-1 px-6 border-none md:px-8 text-lg md:text-xl outline-none"
           />
       
           <!-- Button -->
@@ -143,7 +143,7 @@
             "
           >
             <!-- text: โชว์เฉพาะจอใหญ่ -->
-            <span class="hidden md:inline text-2xl mr-4">ค้นหา</span>
+            <span class="hidden md:inline text-xl mr-4">ค้นหา</span>
       
             <!-- icon -->
             <span
@@ -165,7 +165,7 @@
       <div class="bg-[#394250] text-white rounded-xl shadow p-6">
         <div class="flex items-center gap-2 mb-4">
           <i class="bi bi-pie-chart-fill text-xl"></i>
-          <h2 class="text-2xl md:text-3xl">
+          <h2 class="text-xl md:text-2xl">
             สัดส่วนนักวิจัย จำแนกตามสาขาวิชา
           </h2>
         </div>
@@ -190,18 +190,18 @@
       >
         <div class="flex items-center gap-2 mb-4">
           <i class="bi bi-pie-chart-fill text-xl"></i>
-          <h2 class="text-2xl md:text-3xl">
+          <h2 class="text-xl md:text-2xl">
             สัดส่วนนักวิจัย จำแนกตามสาขาวิชา
           </h2>
         </div>
 
-        <div class="space-y-1 max-h-60 overflow-y-auto">
+        <div class="space-y-1 max-h-60 overflow-y-auto font-light text-xl">
           <p
             *ngFor="let l of donutLabels; let i = index"
             class="flex justify-between md:px-8"
           >
-            <span class="font-medium">{{ l }}</span
-            ><span class="font-medium">{{ donutSeries[i] }} คน</span>
+            <span>{{ l }}</span
+            ><span>{{ donutSeries[i] }} คน</span>
           </p>
 
           <p *ngIf="donutLabels.length === 0" class="text-center text-gray-500">
@@ -210,7 +210,7 @@
         </div>
 
         <div class="pt-4 border-t mt-2">
-          <p class="text-4xl text-center text-gray-500">
+          <p class="text-3xl text-center text-gray-500">
             รวมทั้งหมด {{ totalResearchers }} คน
           </p>
         </div>
@@ -226,22 +226,22 @@
     <div
       class="flex flex-col md:flex-row md:justify-between md:items-center gap-2 md:gap-4 mb-2 md:mb-4"
     >
-      <h2 class="text-3xl font-bold">รายชื่อนักวิจัย</h2>
+      <h2 class="text-3xl">รายชื่อนักวิจัย</h2>
 
-      <div class="flex items-center justify-end">
-        <span class="text-2xl font-bold mr-2">Search:</span>
+      <div class="flex items-center justify-end font-light">
+        <span class="text-xl mr-2">Search:</span>
         <input
           type="text"
           [(ngModel)]="searchText"
           (input)="onSearch()"
-          class="border h-10 rounded text-2xl bg-white px-3 py-2 md:w-64"
+          class="border h-10 rounded text-lg bg-white px-3 py-2 md:w-64"
           placeholder="ค้นหา..."
         />
       </div>
     </div>
 
     <!-- Card -->
-    <div class="bg-white rounded-xl shadow p-4 md:p-8">
+    <div class="bg-white rounded-xl shadow p-4 md:p-8 font-light text-lg">
       <div class="overflow-x-auto">
         <table class="w-full min-w-225 border-gray-300">
           <thead class="bg-[#394250] text-white border-b-2 border-gray-300">
@@ -291,7 +291,7 @@
       </div>
 
       <div
-    class="flex flex-col md:flex-row md:justify-end md:items-center mt-4 gap-2"
+    class="flex flex-col md:flex-row md:justify-end md:items-center mt-4 gap-2 font-light"
   >
     <div class="flex items-center justify-end space-x-1">
       <!-- Prev -->
@@ -309,7 +309,7 @@
         (click)="changePage(page)"
         class="px-2 md:px-3 py-1 rounded border text-sm min-w-8 transition cursor-pointer"
         [ngClass]="{
-          'bg-[#FACC15] text-[#1E293B] font-semibold':
+          'bg-[#FACC15] text-[#1E293B] font-medium':
             currentPage === page,
           'hover:bg-gray-100': currentPage !== page
         }"
