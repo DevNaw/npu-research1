@@ -1,11 +1,11 @@
-<div class="bg-gray-100 min-h-screen p-5 md:p-10 text-2xl">
+<div class="bg-gray-100 min-h-screen p-5 md:p-10 text-2xl font-medium">
   <div class="mx-auto bg-white rounded-2xl shadow-lg p-4 md:p-8 space-y-8">
     <!-- Header -->
     <div class="flex items-center gap-3">
       <div class="text-black text-3xl">
         <i class="bi bi-briefcase-fill"></i>
       </div>
-      <h1 class="text-3xl font-bold text-gray-800">แก้ไขข้อมูลการทำงาน</h1>
+      <h1 class="text-3xl text-[#394250]">แก้ไขข้อมูลการทำงาน</h1>
     </div>
 
     <hr />
@@ -14,22 +14,22 @@
     <form class="space-y-3 md:space-y-6">
       <!-- ตำแหน่ง -->
       <div>
-        <label class="block text-gray-700 font-bold mb-1">ตำแหน่ง</label>
+        <label class="block text-gray-700 mb-1">ตำแหน่ง</label>
         <input
           type="text"
           [(ngModel)]="workInfo.position"
           name="position"
-          class="w-full rounded-lg text-2xl border-gray-300 focus:ring-indigo-500 focus:border-indigo-500"
+          class="w-full rounded-lg font-light text-lg border-gray-300 focus:ring-indigo-500 focus:border-indigo-500"
         />
       </div>
 
       <!-- สังกัด -->
       <div class="relative">
-        <label class="block text-gray-700 font-bold mb-1">สังกัด</label>
+        <label class="block text-gray-700 mb-1">สังกัด</label>
 
         <div
           (click)="toggle('organization', $event)"
-          class="min-h-10.5 border rounded-md px-3 py-2 flex justify-between items-center text-2xl cursor-pointer font-medium"
+          class="min-h-10.5 border rounded-md px-3 py-2 flex justify-between items-center font-light text-lg cursor-pointer"
         >
           <span>
             {{ workInfo?.organization?.faculty || "คลิกเพื่อเลือก" }}
@@ -40,16 +40,16 @@
         <div
           *ngIf="isOpen('organization')"
           (click)="$event.stopPropagation()"
-          class="absolute z-50 w-full bg-white border rounded-md mt-1 shadow"
+          class="absolute z-50 w-full bg-white border rounded-md mt-1 shadow font-light text-lg"
         >
           <input
             [(ngModel)]="searchOrganization"
             name="searchOrganization"
             placeholder="ค้นหา..."
-            class="w-full px-3 py-2 border-b text-2xl font-medium outline-none"
+            class="w-full px-3 py-2 border-b font-light text-lg outline-none"
           />
 
-          <ul class="max-h-48 overflow-y-auto text-2xl font-medium">
+          <ul class="max-h-48 overflow-y-auto font-light text-lg">
             <li
               *ngFor="let o of filteredOrganizations()"
               (click)="selectOrganizationOption(o)"
@@ -70,14 +70,14 @@
 
       <!-- ประเภท -->
       <div>
-        <label class="block text-gray-700 font-bold mb-1">ประเภท</label>
+        <label class="block text-gray-700 mb-1">ประเภท</label>
 
         <div class="relative md:col-span-3">
           <button
             (click)="toggle('type', $event)"
-            class="w-full border rounded-md px-3 py-2 flex justify-between items-center bg-white"
+            class="w-full border rounded-md px-3 py-2 flex justify-between items-center bg-white font-light text-lg"
           >
-            <span class="truncate font-medium">{{
+            <span class="truncate">{{
               workInfo!.type || "เลือกประเภท"
             }}</span>
             <i class="bi bi-chevron-down"></i>
@@ -86,7 +86,7 @@
           <div
             *ngIf="openDropdown === 'type'"
             (click)="$event.stopPropagation()"
-            class="absolute z-50 mt-1 w-full bg-white border rounded-md shadow font-medium"
+            class="absolute z-50 mt-1 w-full bg-white border rounded-md shadow font-light text-lg"
           >
             <div
               *ngFor="let t of typeOptions"
@@ -101,36 +101,36 @@
 
       <!-- สายงาน -->
       <div>
-        <label class="block text-gray-700 font-bold mb-1">สายงาน</label>
+        <label class="block text-gray-700 mb-1">สายงาน</label>
         <input
           type="text"
           [(ngModel)]="workInfo!.line_work"
           name="line"
-          class="w-full rounded-lg text-2xl border-gray-300 focus:ring-indigo-500 focus:border-indigo-500"
+          class="w-full rounded-lg font-light text-lg border-gray-300 focus:ring-indigo-500 focus:border-indigo-500"
         />
       </div>
 
       <!-- ตำแหน่งทางวิชาการ -->
       <div>
-        <label class="block text-gray-700 font-bold mb-1">
+        <label class="block text-gray-700 mb-1">
           ตำแหน่งทางวิชาการ
         </label>
         <input
           type="text"
           [(ngModel)]="workInfo!.academic_position"
           name="academicPosition"
-          class="w-full rounded-lg text-2xl border-gray-300 focus:ring-indigo-500 focus:border-indigo-500"
+          class="w-full rounded-lg font-light text-lg border-gray-300 focus:ring-indigo-500 focus:border-indigo-500"
         />
       </div>
 
       <!-- ความสนใจ -->
       <div>
-        <label class="block text-gray-700 font-bold mb-1">ความสนใจ</label>
+        <label class="block text-gray-700 mb-1">ความสนใจ</label>
         <textarea
           rows="3"
           [(ngModel)]="workInfo!.interest"
           name="interests"
-          class="w-full rounded-lg border-gray-300 focus:ring-indigo-500 focus:border-indigo-500"
+          class="w-full rounded-lg border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 font-light text-lg"
         ></textarea>
       </div>
 
@@ -139,18 +139,18 @@
         <div class="flex items-center">
           <label class="block text-2xl mb-1"> สาขาวิชาที่เชี่ยวชาญ </label>
 
-          <p class="text-xl text-red-600 mb-1 ml-3">
+          <p class="text-sm text-red-600 mb-1 ml-3">
             * เลือกได้มากกว่า 1 รายการ
           </p>
         </div>
 
         <div
-          class="min-h-10.5 border rounded-md px-3 py-2 flex flex-wrap gap-2 text-2xl cursor-pointer font-medium"
+          class="min-h-10.5 border rounded-md px-3 py-2 flex flex-wrap gap-2 cursor-pointer font-light text-lg"
           (click)="toggle('majors', $event)"
         >
           <span
             *ngFor="let m of selectedMajors; let i = index"
-            class="bg-indigo-500 text-white px-3 py-1 rounded-full flex items-center"
+            class="bg-[#118CD9] text-white px-3 py-1 rounded-full flex items-center font-light text-lg"
           >
             {{ m.name_th }}
             <span
@@ -162,10 +162,10 @@
           </span>
 
           <div
-            class="flex items-center justify-between w-full"
+            class="flex items-center justify-between w-full font-light text-lg"
             *ngIf="selectedMajors.length === 0"
           >
-            <span class="text-gray-400 font-medium"> คลิกเพื่อเลือก </span>
+            <span class="text-gray-400"> คลิกเพื่อเลือก </span>
 
             <i
               class="bi bi-caret-down-fill text-gray-400 transition-transform duration-300"
@@ -175,7 +175,7 @@
 
         <div
           *ngIf="isOpen('majors')"
-          class="absolute z-50 w-full bg-white border rounded-md mt-1 shadow"
+          class="absolute z-50 w-full bg-white border rounded-md mt-1 shadow font-light text-lg"
           (click)="$event.stopPropagation()"
         >
           <input
@@ -183,10 +183,10 @@
             [(ngModel)]="searchMajor"
             name="searchMajor"
             placeholder="ค้นหา..."
-            class="w-full px-3 py-2 border-b text-2xl font-medium outline-none"
+            class="w-full px-3 py-2 border-b font-light text-lg outline-none"
           />
 
-          <ul class="max-h-48 overflow-y-auto text-2xl font-medium">
+          <ul class="max-h-48 overflow-y-auto font-light text-lg">
             <li
               *ngFor="let m of filteredMajors()"
               (click)="selectMajor(m)"
@@ -208,24 +208,24 @@
       <!-- วันที่เริ่มงาน -->
       <div class="grid grid-cols-2 gap-5">
         <div>
-          <label class="block text-gray-700 font-bold mb-1"
+          <label class="block text-gray-700 mb-1"
             >วันที่เริ่มงาน</label
           >
           <input
             type="date"
             [(ngModel)]="workInfo.work_start_date"
             name="startDate"
-            class="w-full rounded-lg text-2xl border-gray-300 focus:ring-indigo-500 focus:border-indigo-500"
+            class="w-full rounded-lg font-light text-lg border-gray-300 focus:ring-indigo-500 focus:border-indigo-500"
           />
         </div>
         <!-- อายุงาน -->
         <div>
-          <label class="block text-gray-700 font-bold mb-1">อายุงาน</label>
+          <label class="block text-gray-700 mb-1">อายุงาน</label>
           <input
             type="number"
             [(ngModel)]="workInfo.year_of_service"
             name="year"
-            class="w-20 md:w-50 rounded-lg text-2xl border-gray-300 focus:ring-indigo-500 focus:border-indigo-500"
+            class="w-20 md:w-50 rounded-lg font-light text-lg border-gray-300 focus:ring-indigo-500 focus:border-indigo-500"
           />
           <label class="ml-3">ปี</label>
         </div>
@@ -234,19 +234,19 @@
       <!-- Buttons -->
       <div class="flex justify-center gap-4 pt-4">
         <button
+          type="submit"
+          class="px-6 py-2 rounded-xl bg-[#118CD9] text-white hover:bg-[#4c7b98] shadow cursor-pointer"
+          (click)="saveWork()"
+        >
+          บันทึกข้อมูล
+        </button>
+
+        <button
           type="button"
           class="px-6 py-2 rounded-xl bg-gray-200 hover:bg-gray-300 cursor-pointer"
           (click)="goBack()"
         >
           ยกเลิก
-        </button>
-
-        <button
-          type="submit"
-          class="px-6 py-2 rounded-xl bg-yellow-300 text-black hover:bg-yellow-400 shadow cursor-pointer"
-          (click)="saveWork()"
-        >
-          บันทึกข้อมูล
         </button>
       </div>
     </form>

@@ -185,7 +185,7 @@
             </div>
 
             <div class="pt-4 border-t mt-2">
-              <p class="text-3xl text-center text-[#394250]">
+              <p class="text-2xl text-center text-[#394250]">
                 รวมทั้งหมด {{ getTotalCount(c.type) }} ผลงาน
               </p>
             </div>
@@ -263,52 +263,53 @@
 
         <hr class="border-3 text-[#118CD9]" />
 
-        <div
-          class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4 md:flex md:justify-between mt-6"
-        >
-          <div class="flex items-center md:space-x-4 mb-2 md:mb-4">
+        <div class="flex flex-wrap items-center gap-2 md:gap-4 mt-6 mb-4">
+          <div class="flex flex-wrap gap-2 md:gap-3">
             <button
               (click)="changeTab('PROJECT')"
               [ngClass]="
                 selectedTab === 'PROJECT'
-                  ? 'bg-[#118CD9] text-[#ffffff]'
+                  ? 'bg-[#118CD9] text-white'
                   : 'text-[#394250] hover:bg-[#4c7b98] hover:text-white'
               "
-              class="px-2 md:px-4 py-2 rounded-lg cursor-pointer text-lg whitespace-nowrap"
+              class="px-2 md:px-4 py-2 rounded-lg cursor-pointer text-sm md:text-lg whitespace-nowrap"
             >
               โครงการวิจัย
             </button>
+        
             <button
               (click)="changeTab('ARTICLE')"
               [ngClass]="
                 selectedTab === 'ARTICLE'
-                  ? 'bg-[#118CD9] text-[#ffffff]'
+                  ? 'bg-[#118CD9] text-white'
                   : 'text-[#394250] hover:bg-[#4c7b98] hover:text-white'
               "
-              class="px-2 md:px-4 py-2 rounded-lg cursor-pointer text-lg"
+              class="px-2 md:px-4 py-2 rounded-lg cursor-pointer text-sm md:text-lg"
             >
               บทความ
             </button>
+        
             <button
               (click)="changeTab('INNOVATION')"
               [ngClass]="
                 selectedTab === 'INNOVATION'
-                  ? 'bg-[#118CD9] text-[#ffffff]'
+                  ? 'bg-[#118CD9] text-white'
                   : 'text-[#394250] hover:bg-[#4c7b98] hover:text-white'
               "
-              class="px-2 md:px-4 py-2 rounded-lg cursor-pointer text-lg whitespace-nowrap"
+              class="px-2 md:px-4 py-2 rounded-lg cursor-pointer text-sm md:text-lg whitespace-nowrap"
             >
               นวัตกรรมสิ่งประดิษฐ์
             </button>
           </div>
-
-          <div class="text-lg mb-4 flex justify-end items-center gap-2">
-            Search:
+        
+          <!-- Search -->
+          <div class="ml-auto flex items-center gap-2 text-sm md:text-lg">
+            <span>Search:</span>
             <input
               type="text"
               [(ngModel)]="searchText"
               (input)="onSearch()"
-              class="border border-gray-300 rounded px-2 py-1 text-sm md:text-lg w-20 lg:w-40 font-light"
+              class="border border-gray-300 rounded px-2 py-1 w-28 md:w-40 font-light"
               placeholder="ค้นหา..."
             />
           </div>

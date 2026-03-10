@@ -136,8 +136,8 @@
             class="
               flex items-center justify-center
               h-14 md:h-full
-              bg-yellow-400 hover:bg-yellow-300
-              text-gray-800 font-semibold
+              bg-[#118CD9] hover:bg-[#16498C]
+              text-white font-semibold
               px-4 md:px-10
               rounded-full transition cursor-pointer
             "
@@ -147,7 +147,7 @@
       
             <!-- icon -->
             <span
-              class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-white"
+              class="w-10 h-10 rounded-full bg-[#0F4C82] flex items-center justify-center text-white"
             >
               <i class="bi bi-arrow-right"></i>
             </span>
@@ -220,16 +220,16 @@
 </div>
 
 <!-- ===== TABLE ===== -->
-<div *ngIf="isSearched" class="bg-[#F9CB34] md:py-6 md:px-10 text-2xl">
+<div *ngIf="isSearched" class="bg-[#7693A6] md:py-6 md:px-10 text-2xl">
   <div class="mx-auto p-6 md:px-6">
     <!-- Header -->
     <div
       class="flex flex-col md:flex-row md:justify-between md:items-center gap-2 md:gap-4 mb-2 md:mb-4"
     >
-      <h2 class="text-3xl">รายชื่อนักวิจัย</h2>
+      <h2 class="text-3xl text-white">รายชื่อนักวิจัย</h2>
 
-      <div class="flex items-center justify-end font-light">
-        <span class="text-xl mr-2">Search:</span>
+      <div class="flex items-center justify-end font-light text-white">
+        <span class="text-xl mr-2 text-white">Search:</span>
         <input
           type="text"
           [(ngModel)]="searchText"
@@ -274,7 +274,7 @@
                 </div>
               </td>
 
-              <td (click)="goToUserProfile(r.id)" class="p-1 md:p-2 cursor-pointer text-blue-700 hover:underline">{{ r.name }}</td>
+              <td (click)="goToUserProfile(r.id)" class="p-1 md:p-2 cursor-pointer text-[#0F4C82] hover:underline">{{ r.name }}</td>
               <td class="p-1 md:p-2 text-center">{{ r.expertises || '-' }}</td>
               <td class="p-1 md:p-2 text-center">{{ r.organization || '-' }}</td>
               <td class="p-1 md:p-2 text-center">{{ r.position }}</td>
@@ -293,7 +293,7 @@
       <div
     class="flex flex-col md:flex-row md:justify-end md:items-center mt-4 gap-2 font-light"
   >
-    <div class="flex items-center justify-end space-x-1">
+    <div class="flex items-center justify-end space-x-1 font-light">
       <!-- Prev -->
       <button
         (click)="changePage(currentPage - 1)"
@@ -309,7 +309,7 @@
         (click)="changePage(page)"
         class="px-2 md:px-3 py-1 rounded border text-sm min-w-8 transition cursor-pointer"
         [ngClass]="{
-          'bg-[#FACC15] text-[#1E293B] font-medium':
+          'bg-[#118CD9] text-white font-medium':
             currentPage === page,
           'hover:bg-gray-100': currentPage !== page
         }"

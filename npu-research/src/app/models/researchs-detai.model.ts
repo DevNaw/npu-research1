@@ -38,6 +38,8 @@ export interface ResearchProjectData {
   title_th: string;
   title_en: string;
   abstract: string;
+  abstract_en: string;
+  keywords: string[];
   status: string;
   year: string;
   published_date: string;
@@ -58,4 +60,9 @@ export interface ResearchProjectData {
   external_members: ExternalMember[];
   full_report: ResearchFileResponse | null;
   contract_file: ResearchContractFile | null;
+}
+
+export interface ResearchKeyword {
+  id: number;
+  keyword: string;
 }

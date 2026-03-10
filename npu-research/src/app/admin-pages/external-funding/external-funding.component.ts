@@ -1,5 +1,6 @@
 import { Component, HostListener } from '@angular/core';
 import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 import Swal from 'sweetalert2';
 import { Funding } from '../../models/admin-funding.model';
 import { AdminFundingService } from '../../services/admin-funding.service';
@@ -72,11 +73,136 @@ export class ExternalFundingComponent {
   }
 
   exportExcel() {
-    Swal.fire('ไม่ได้เปิดใช้งาน', '', 'info');
+
+    if (!this.filteredFundings || this.filteredFundings.length === 0) {
+      Swal.fire('ไม่มีข้อมูลให้ Export', '', 'warning');
+      return;
+    }
+  
+    const data = this.filteredFundings.map((e, index) => ({
+      'ลำดับ': index + 1,
+      'ชื่อแหล่งทุน': e.funding_name || '-',
+      'คำอธิบาย': e.description || '-',
+      'สถานะใช้งาน': e.is_active === 1 ? 'พร้อมใช้งาน' : 'ไม่พร้อมใช้งาน'
+    }));
+  
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
+  
+    // ⭐ คำนวณความกว้าง column อัตโนมัติ
+    const colWidths = Object.keys(data[0]).map(key => ({
+      wch: Math.max(
+        key.length,
+        ...data.map(row => ((row as any)[key] ? (row as any)[key].toString().length : 0))
+      ) + 5
+    }));
+  
+    worksheet['!cols'] = colWidths;
+  
+    const workbook: XLSX.WorkBook = {
+      Sheets: { 'Funding': worksheet },
+      SheetNames: ['Funding']
+    };
+  
+    const excelBuffer: any = XLSX.write(workbook, {
+      bookType: 'xlsx',
+      type: 'array'
+    });
+  
+    const blob: Blob = new Blob([excelBuffer], {
+      type: 'application/octet-stream'
+    });
+  
+    saveAs(blob, 'external_funding.xlsx');
   }
 
   printPage() {
-    Swal.fire('ไม่ได้เปิดใช้งาน', '', 'info');
+
+    const table = document.getElementById('fundingTable');
+  
+    if (!table) {
+      Swal.fire('ไม่พบตาราง', '', 'warning');
+      return;
+    }
+  
+    const tableClone = table.cloneNode(true) as HTMLElement;
+  
+    const rows = tableClone.querySelectorAll('tr');
+  
+    rows.forEach((row, index) => {
+  
+      const cells = row.querySelectorAll('th, td');
+  
+      // ลบ column Action
+      if (cells[4]) {
+        cells[4].remove();
+      }
+  
+      // แปลง icon สถานะเป็นข้อความ
+      if (index > 0 && cells[3]) {
+  
+        const icon = cells[3].querySelector('i');
+  
+        if (icon?.classList.contains('bi-check-circle-fill')) {
+          cells[3].innerHTML = '✔ พร้อมใช้งาน';
+        } else {
+          cells[3].innerHTML = '✘ ไม่พร้อมใช้งาน';
+        }
+  
+      }
+  
+    });
+  
+    const printWindow = window.open('', '', 'width=900,height=700');
+  
+    printWindow?.document.write(`
+      <html>
+        <head>
+          <title>รายการแหล่งทุน</title>
+          <style>
+            body{
+              font-family: Arial;
+              padding:20px;
+            }
+  
+            h2{
+              text-align:center;
+              margin-bottom:20px;
+            }
+  
+            table{
+              width:100%;
+              border-collapse: collapse;
+            }
+  
+            th, td{
+              border:1px solid #ccc;
+              padding:8px;
+              text-align:center;
+            }
+  
+            th{
+              background:#394250;
+              color:white;
+            }
+          </style>
+        </head>
+        <body>
+  
+          <h2>รายการแหล่งทุน</h2>
+  
+          ${tableClone.outerHTML}
+  
+        </body>
+      </html>
+    `);
+  
+    printWindow?.document.close();
+  
+    setTimeout(() => {
+      printWindow?.print();
+      printWindow?.close();
+    }, 500);
+  
   }
 
   openAddModal() {

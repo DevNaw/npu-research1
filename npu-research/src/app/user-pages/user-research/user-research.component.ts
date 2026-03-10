@@ -207,6 +207,7 @@ export class UserResearchComponent {
   @HostListener('document:click')
   closeAll() {
     this.openDropdown = null;
+    this.activeDropdown = null;
   }
 
   selectFaculities(f: string) {

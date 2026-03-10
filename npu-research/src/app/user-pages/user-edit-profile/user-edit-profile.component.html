@@ -1,9 +1,9 @@
-<div class="bg-gray-100 min-h-screen p-5 md:p-10 text-2xl">
+<div class="bg-gray-100 min-h-screen p-5 md:p-10 text-2xl font-medium">
   <div class="mx-auto bg-white rounded-2xl shadow p-4 md:p-8 space-y-10">
     <!-- Header -->
     <div>
-      <h1 class="text-3xl text-gray-800">แก้ไขข้อมูลนักวิจัย</h1>
-      <div class="flex items-center gap-2 mt-1 md:mt-3 text-indigo-600">
+      <h1 class="text-3xl text-[#394250]">แก้ไขข้อมูลนักวิจัย</h1>
+      <div class="flex items-center gap-2 mt-1 md:mt-3 text-[#0F4C82]">
         <i class="bi bi-pencil-square"></i>
         <span>ข้อมูลประวัติทั่วไป</span>
       </div>
@@ -55,21 +55,21 @@
         <label>เลขบัตรประจำตัวประชาชน</label>
         <input
         [(ngModel)]="data.id_card_number"
-        class="w-full border rounded px-3 py-2" />
+        class="w-full border rounded px-3 py-2 font-light text-lg" />
       </div>
 
       <div class="col-span-12 md:col-span-5">
         <label>ชื่อ</label>
         <input
         [(ngModel)]="data.first_name"
-        class="w-full border rounded px-3 py-2" />
+        class="w-full border rounded px-3 py-2 font-light text-lg" />
       </div>
 
       <div class="col-span-12 md:col-span-5">
         <label>นามสกุล</label>
         <input
         [(ngModel)]="data!.last_name"
-        class="w-full border rounded px-3 py-2" />
+        class="w-full border rounded px-3 py-2 font-light text-lg" />
       </div>
     </div>
 
@@ -78,16 +78,16 @@
       <!-- คำนำหน้า -->
       <div class="col-span-12 md:col-span-4">
         <label>ชื่อภาษาอังกฤษ</label>
-        <input [(ngModel)]="data.first_name_en" class="w-full border rounded px-3 py-2" />
+        <input [(ngModel)]="data.first_name_en" class="w-full border rounded px-3 py-2 font-light text-lg" />
       </div>
 
       <div class="col-span-12 md:col-span-4">
         <label>นามสกุลภาษาอังกฤษ</label>
-        <input [(ngModel)]="data.last_name_en" class="w-full border rounded px-3 py-2" />
+        <input [(ngModel)]="data.last_name_en" class="w-full border rounded px-3 py-2 font-light text-lg" />
       </div>
       <div class="col-span-12 md:col-span-4">
         <label>วัน/เดือน/ปีเกิด</label>
-        <input [(ngModel)]="data.date_of_birth" type="date" class="w-full border text-2xl rounded px-3 py-2" />
+        <input [(ngModel)]="data.date_of_birth" type="date" class="w-full border text-lg rounded px-3 py-2 font-light" />
       </div>
     </div>
 
@@ -98,7 +98,7 @@
         <label>เชื้อชาติ</label>
         <button
           (click)="toggle('ethnicity', $event)"
-          class="w-full border rounded px-3 py-2 flex justify-between"
+          class="w-full border rounded px-3 py-2 flex justify-between font-light text-lg"
         >
           {{ data.ethnicity || "เลือก" }}
           <i class="bi bi-chevron-down"></i>
@@ -106,7 +106,7 @@
 
         <div
           *ngIf="isOpen('ethnicity')"
-          class="absolute z-50 w-full bg-white border mt-1 shadow"
+          class="absolute z-50 w-full bg-white border mt-1 shadow font-light text-lg"
           (click)="$event.stopPropagation()"
         >
           <input
@@ -139,7 +139,7 @@
         <button
           type="button"
           (click)="toggle('nationality', $event)"
-          class="w-full border rounded px-3 py-2 flex justify-between items-center"
+          class="w-full border rounded px-3 py-2 flex justify-between items-center font-light text-lg"
         >
           {{ data.nationality || "เลือก" }}
           <i class="bi bi-chevron-down"></i>
@@ -148,7 +148,7 @@
         <!-- Dropdown -->
         <div
           *ngIf="isOpen('nationality')"
-          class="absolute z-50 w-full bg-white border mt-1 shadow rounded"
+          class="absolute z-50 w-full bg-white border mt-1 shadow rounded font-light text-lg"
           (click)="$event.stopPropagation()"
         >
           <input
@@ -182,7 +182,7 @@
         <label>ศาสนา</label>
         <button
           (click)="toggle('religion', $event)"
-          class="w-full border rounded px-3 py-2 flex justify-between"
+          class="w-full border rounded px-3 py-2 flex justify-between font-light text-lg"
         >
           {{ data.religion || "เลือก" }}
           <i class="bi bi-chevron-down"></i>
@@ -190,7 +190,7 @@
 
         <div
           *ngIf="isOpen('religion')"
-          class="absolute z-50 w-full bg-white border mt-1 shadow"
+          class="absolute z-50 w-full bg-white border mt-1 shadow font-light text-lg"
           (click)="$event.stopPropagation()"
         >
           <input
@@ -222,12 +222,12 @@
       <!-- คำนำหน้า -->
       <div class="col-span-12 md:col-span-4">
         <label>เบอร์โทรศัพท์มือถือ</label>
-        <input [(ngModel)]="data.phone" class="w-full border rounded px-3 py-2" />
+        <input [(ngModel)]="data.phone" class="w-full border rounded px-3 py-2 font-light text-lg" />
       </div>
 
       <div class="col-span-12 md:col-span-4">
         <label>อีเมล</label>
-        <input [(ngModel)]="data.email" class="w-full border rounded px-3 py-2" />
+        <input [(ngModel)]="data.email" class="w-full border rounded px-3 py-2 font-light text-lg" />
       </div>
     </div>
 
@@ -235,8 +235,9 @@
     <div class="flex justify-center mt-6">
       <button
         (click)="save()"
-        class="px-6 py-2 bg-yellow-300 rounded hover:bg-yellow-400 cursor-pointer"
+        class="px-6 py-2 bg-[#118CD9] text-white rounded hover:bg-[#4c7b98] cursor-pointer"
       >
+        <i class="bi bi-floppy2"></i>
         บันทึกข้อมูล
       </button>
     </div>

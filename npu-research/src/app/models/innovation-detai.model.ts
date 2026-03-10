@@ -14,7 +14,8 @@ export interface InnovationDetailResponse {
     title_th: string;
     title_en: string | null;
     abstract: string | null;
-  
+    abstract_en: string | null;
+    keywords: keyword[];
     year: number;
     published_date: string;
   
@@ -91,3 +92,7 @@ export interface InnovationDetailResponse {
     phone: string;
   }
   
+  export interface keyword {
+    id: number;
+    keyword: string;
+  }

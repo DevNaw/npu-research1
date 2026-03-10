@@ -20,6 +20,8 @@ const DEFAULT_RESEARCH: ResearchProjectData = {
   title_th: '',
   title_en: '',
   abstract: '',
+  abstract_en: '',
+  keywords: [],
   year: '',
   status: '',
   published_date: '',
@@ -64,6 +66,8 @@ export class UserAddResearchComponent {
   searchResearcher = '';
   selectedResearcher: string | null = null;
   searchKeyword = '';
+
+  keywordInput: string = '';
 
   internalRow: InternalMemberRow[] = [
     { id: 0, researcher_id: null, name: '', responsibilities: '' },
@@ -163,6 +167,7 @@ export class UserAddResearchComponent {
         this.projectData = {
           ...this.projectData,
           ...data,
+          keywords: data.keywords?.map((k: any) => k.keyword) ?? []
         };
 
         this.selectedFileName = data.full_report?.file_name ?? '';
@@ -433,16 +438,28 @@ export class UserAddResearchComponent {
     const required = (key: string, val: any) =>
       fd.append(key, val !== null && val !== undefined ? String(val) : '');
 
+    const optional = (key: string, val: any) => {
+      if (val !== null && val !== undefined && val !== '') {
+        fd.append(key, val);
+      }
+    };
+
     required('title_th', d.title_th);
     required('title_en', d.title_en);
     required('abstract', d.abstract);
+    required('abstract_en', d.abstract_en);
+    
+    d.keywords.forEach((k, i) => {
+      fd.append(`keywords[${i}]`, k);
+    });
+
     required('published_date', d.published_date);
     required('source_funds', d.source_funds);
     required('name_funding', d.name_funding);
     required('budget_amount', d.budget_amount);
     required('year_received_budget', d.year_received_budget);
-    required('research_area', d.research_area);
-    required('usable_area', d.usable_area);
+    optional('research_area', d.research_area);
+    optional('usable_area', d.usable_area);
     required('responsibilities', d.responsibilities);
     required('status', d.status);
 
@@ -513,11 +530,11 @@ export class UserAddResearchComponent {
       !d.title_th ||
       !d.title_en ||
       !d.abstract ||
+      !d.abstract_en ||
       !d.source_funds ||
       !d.name_funding ||
       !d.budget_amount ||
-      !d.year_received_budget ||
-      !d.subject_area_id
+      !d.year_received_budget
     ) {
       Swal.fire({
         icon: 'warning',
@@ -556,5 +573,28 @@ export class UserAddResearchComponent {
     }
   
     return true;
+  }
+
+  addKeyword(event: KeyboardEvent) {
+
+    if (event.key === 'Enter') {
+  
+      event.preventDefault();
+  
+      const value = this.keywordInput.trim();
+  
+      if (!value) return;
+  
+      if (!this.projectData.keywords.includes(value)) {
+        this.projectData.keywords.push(value);
+      }
+  
+      this.keywordInput = '';
+      
+    }
+  }
+
+  removeKeyword(index: number) {
+    this.projectData.keywords.splice(index, 1);
   }
 }

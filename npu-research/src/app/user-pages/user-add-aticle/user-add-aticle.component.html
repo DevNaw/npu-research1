@@ -10,7 +10,7 @@
       <span>ไปที่บทความ/วารสารของคุณ</span>
 
       <i
-        class="bi bi-arrow-right-circle-fill text-xl transition-all group-hover:translate-x-1 group-hover:text-yellow-500"
+        class="bi bi-arrow-right-circle-fill text-xl transition-all group-hover:translate-x-1 group-hover:text-[#118CD9]"
       ></i>
     </button>
   </div>
@@ -19,7 +19,7 @@
     class="mt-2 mb-5 p-2 md:mt-5 md:mb-10 mx-auto md:px-20 md:py-10 bg-white rounded-xl shadow-md"
   >
     <div
-      class="p-4 mx-auto md:px-6 md:py-5 md:mb-6 flex items-center gap-4 rounded-xl bg-linear-to-r from-[#9DE1EF] to-[#D3DFEB] shadow"
+      class="p-4 mx-auto md:px-6 md:py-5 md:mb-6 flex items-center gap-4 rounded-xl bg-linear-to-r from-[#16498C] to-[#118CD9] text-white shadow"
     >
       <i class="bi bi-cloud-arrow-up-fill text-3xl"></i>
       <h2 class="text-2xl md:text-3xl">
@@ -75,7 +75,7 @@
       class="grid grid-cols-1 md:grid-cols-1 md:gap-2 mb-2 mt-2 md:mb-6 md:mt-5"
     >
       <label class="md:col-span-1 text-start">
-        Abstract <span class="text-red-500">*</span>
+        บทคัดย่อ <span class="text-red-500">*</span>
       </label>
       <input
         type="text"
@@ -85,10 +85,65 @@
         [(ngModel)]="articleData.abstract"
         [class.border-red-500]="abstract.invalid && abstract.touched"
         class="md:col-span-3 text-lg font-light w-full h-12 border rounded-md px-4 py-2"
-        placeholder="ระบุ abstract"
+        placeholder="ระบุบทคัดย่อ"
       />
       <div *ngIf="abstract.invalid && abstract.touched" class="text-red-500 text-sm">
         กรุณากรอกข้อมูล
+      </div>
+    </div>
+
+    <div
+      class="grid grid-cols-1 md:grid-cols-1 md:gap-2 mb-2 mt-2 md:mb-6 md:mt-5"
+    >
+      <label class="md:col-span-1 text-start">
+        Abstract <span class="text-red-500">*</span>
+      </label>
+      <input
+        type="text"
+        name="abstract_en"
+        required
+        #abstract_en="ngModel"
+        [(ngModel)]="articleData.abstract_en"
+        [class.border-red-500]="abstract_en.invalid && abstract_en.touched"
+        class="md:col-span-3 text-lg font-light w-full h-12 border rounded-md px-4 py-2"
+        placeholder="ระบุ abstract"
+      />
+      <div *ngIf="abstract_en.invalid && abstract_en.touched" class="text-red-500 text-sm">
+        กรุณากรอกข้อมูล
+      </div>
+    </div>
+
+    <!-- Keyword -->
+    <div class="grid grid-cols-1 md:gap-2 mb-2 md:mb-6 md:mt-6">
+      <label class="text-start">
+        Keyword <span class="text-red-500">*</span>
+      </label>
+
+      <div
+        class="flex flex-wrap items-center gap-2 border rounded-md px-2 h-12"
+      >
+        <span
+          *ngFor="let keyword of articleData.keywords; let i = index"
+          class="flex text-lg font-light items-center gap-2 px-2 py-1 text-white rounded-full bg-linear-to-r from-purple-500 to-indigo-500"
+        >
+          {{ keyword }}
+
+          <button
+            type="button"
+            (click)="removeKeyword(i)"
+            class="text-white hover:text-gray-200 cursor-pointer"
+          >
+            ✕
+          </button>
+        </span>
+
+        <input
+          [(ngModel)]="keywordInput"
+          (keydown)="addKeyword($event)"
+          type="text"
+          class="flex-1 outline-none border-none focus:ring-0 focus:outline-none min-w-30 text-lg font-light"
+          placeholder="ระบุคีย์เวิร์ด"
+        />
       </div>
     </div>
 
@@ -98,7 +153,7 @@
         ประเภท <span class="text-red-500">*</span>
       </label>
 
-      <div class="relative md:col-span-3">
+      <div class="relative md:col-span-3 border rounded-md">
         <button
         type="button"
         [ngClass]="
@@ -669,7 +724,7 @@
       <div class="flex justify-start mt-2">
         <button
           type="button"
-          class="md:mt-4 p-1 md:px-4 md:py-2 bg-[#FDE68A] text-lg font-light text-[#1E293B] hover:bg-[#FACC15] rounded-md cursor-pointer"
+          class="md:mt-4 p-1 md:px-4 md:py-2 bg-[#118CD9] hover:bg-[#4c7b98] text-white text-lg font-light rounded-md cursor-pointer"
           (click)="addInternalRow()"
         >
           เพิ่มรายการ
@@ -805,7 +860,7 @@
       <div class="flex justify-start mt-2">
         <button
           type="button"
-          class="md:mt-4 p-1 md:p-2 bg-[#FDE68A] text-lg font-light text-[#1E293B] hover:bg-[#FACC15] rounded-md cursor-pointer"
+          class="md:mt-4 p-1 md:p-2 bg-[#118CD9] hover:bg-[#4c7b98] text-white text-lg font-light rounded-md cursor-pointer"
           (click)="addExternalRow()"
         >
           เพิ่มรายการ
@@ -899,7 +954,7 @@
 
         <button
           type="button"
-          class="md:px-4 md:py-2 p-2 bg-[#FDE68A] text-[#1E293B] hover:bg-[#FACC15] rounded-md cursor-pointer text-lg font-light"
+          class="md:px-4 md:py-2 p-2 bg-[#118CD9] hover:bg-[#4c7b98] text-white rounded-md cursor-pointer text-lg font-light"
           (click)="fileInput.click()"
         >
           เลือกไฟล์
@@ -912,7 +967,7 @@
       <button
       (click)="submitArticle()"
         type="button"
-        class="flex items-center justify-center gap-3 w-72 text-xl py-3 bg-yellow-300 hover:bg-yellow-400 rounded-lg shadow transition duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 cursor-pointer"
+        class="flex items-center justify-center gap-3 w-72 text-xl py-3 bg-[#118CD9] hover:bg-[#4c7b98] text-white rounded-lg shadow transition duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 cursor-pointer"
       >
         <i
           class="bi"

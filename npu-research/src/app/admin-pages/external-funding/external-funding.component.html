@@ -25,7 +25,7 @@
 
         <button
           (click)="openAddModal()"
-          class="flex items-center gap-2 bg-yellow-300 hover:bg-yellow-400 px-4 py-2 rounded-md cursor-pointer"
+          class="flex items-center gap-2 bg-[#118CD9] hover:bg-[#16498C] text-white px-4 py-2 rounded-md cursor-pointer"
         >
           <i class="bi bi-plus-circle"></i> เพิ่มแหล่งทุน
         </button>
@@ -57,7 +57,7 @@
       </div>
 
       <div class="overflow-x-auto font-light text-lg">
-        <table class="min-w-225 w-full table-auto">
+        <table id="fundingTable" class="min-w-225 w-full table-auto">
           <colgroup>
             <col class="w-[5%]" />
             <col class="w-[35%]" />
@@ -171,7 +171,7 @@
           (click)="changePage(i + 1)"
           class="px-2 md:px-3 py-1 rounded text-sm transition cursor-pointer"
           [ngClass]="{
-            'bg-[#FACC15] text-[#1E293B]': currentPage === i + 1,
+            'bg-[#118CD9] text-[#ffffff]': currentPage === i + 1,
             'hover:bg-gray-100': currentPage !== i + 1
           }"
         >
@@ -268,7 +268,7 @@
     <div class="flex justify-center gap-2 font-medium text-xl">
       <button
         (click)="modalMode === 'add' ? saveFunding() : updateFunding()"
-        class="px-4 py-2 rounded-md bg-yellow-400 text-[#394250] hover:bg-yellow-500 cursor-pointer"
+        class="px-4 py-2 rounded-md bg-[#118CD9] text-white hover:bg-[#16498C] cursor-pointer"
       >
         {{ modalMode === "add" ? "บันทึก" : "อัปเอต" }}
       </button>

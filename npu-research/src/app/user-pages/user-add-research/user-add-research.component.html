@@ -10,7 +10,7 @@
       <span>ไปที่โครงการวิจัยของคุณ</span>
 
       <i
-        class="bi bi-arrow-right-circle-fill text-xl transition-all group-hover:translate-x-1 group-hover:text-yellow-500"
+        class="bi bi-arrow-right-circle-fill text-xl transition-all group-hover:translate-x-1 group-hover:text-[#118CD9]"
       ></i>
     </button>
   </div>
@@ -19,7 +19,7 @@
     class="mt-2 p-3 md:mt-5 mb-5 md:mb-10 mx-auto md:px-20 md:py-10 bg-white rounded-xl shadow-md"
   >
     <div
-      class="mx-auto p-4 md:p-6 mb-4 md:mb-6 flex items-center gap-4 rounded-xl bg-linear-to-r from-[#9DE1EF] to-[#D3DFEB] shadow"
+      class="mx-auto p-4 md:p-6 mb-4 md:mb-6 flex items-center gap-4 rounded-xl bg-linear-to-r from-[#16498C] to-[#118CD9] text-white shadow"
     >
       <i class="bi bi-cloud-arrow-up-fill text-3xl"></i>
 
@@ -74,7 +74,7 @@
 
     <div class="grid grid-cols-1 md:grid-cols-1 md:gap-2 mb-2 md:mb-6 md:mt-6">
       <label class="md:col-span-1 text-start">
-        Abstract <span class="text-red-500">*</span>
+        บทคัดย่อ <span class="text-red-500">*</span>
       </label>
       <textarea
         name="abstract"
@@ -83,7 +83,7 @@
         [class.border-red-500]="abstract.invalid && abstract.touched"
         [(ngModel)]="projectData.abstract"
         class="md:col-span-3 w-full text-lg font-light border h-12 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400"
-        placeholder="ระบุ abstract"
+        placeholder="ระบุบทคัดย่อ"
       ></textarea>
 
       <div
@@ -91,6 +91,62 @@
         class="text-red-500 text-sm"
       >
         กรุณากรอกข้อมูล
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-1 md:gap-2 mb-2 md:mb-6 md:mt-6">
+      <label class="md:col-span-1 text-start">
+        Abstract <span class="text-red-500">*</span>
+      </label>
+      <textarea
+        name="abstract_en"
+        required
+        #abstract_en="ngModel"
+        [class.border-red-500]="abstract_en.invalid && abstract_en.touched"
+        [(ngModel)]="projectData.abstract_en"
+        class="md:col-span-3 w-full text-lg font-light border h-12 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400"
+        placeholder="ระบุ abstract"
+      ></textarea>
+
+      <div
+        *ngIf="abstract_en.invalid && abstract_en.touched"
+        class="text-red-500 text-sm"
+      >
+        กรุณากรอกข้อมูล
+      </div>
+    </div>
+
+    <!-- Keyword -->
+    <div class="grid grid-cols-1 md:gap-2 mb-2 md:mb-6 md:mt-6">
+      <label class="text-start">
+        Keyword <span class="text-red-500">*</span>
+      </label>
+
+      <div
+        class="flex flex-wrap items-center gap-2 border rounded-md px-2 h-12"
+      >
+        <span
+          *ngFor="let keyword of projectData.keywords; let i = index"
+          class="flex text-lg font-light items-center gap-2 px-2 py-1 text-white rounded-full bg-linear-to-r from-purple-500 to-indigo-500"
+        >
+          {{ keyword }}
+
+          <button
+            type="button"
+            (click)="removeKeyword(i)"
+            class="text-white hover:text-gray-200 cursor-pointer"
+          >
+            ✕
+          </button>
+        </span>
+
+        <input
+          [(ngModel)]="keywordInput"
+          (keydown)="addKeyword($event)"
+          type="text"
+          class="flex-1 outline-none border-none focus:ring-0 focus:outline-none min-w-30 text-lg font-light"
+          placeholder="ระบุคีย์เวิร์ด"
+        />
       </div>
     </div>
 
@@ -210,8 +266,7 @@
       <div
         class="md:col-span-3 md:px-4 sm:px-8 overflow-x-auto overflow-y-visible"
       >
-        <label
-          class="flex items-center gap-2 md:mt-4 md:mb-3"
+        <label class="flex items-center gap-2 md:mt-4 md:mb-3"
           >ระบุผู้ร่วมโครงการภายใน</label
         >
         <table class="w-full table-fixed min-w-150 text-lg font-light">
@@ -331,7 +386,7 @@
       <div class="flex justify-start mt-2">
         <button
           type="button"
-          class="md:mt-4 p-1 md:px-4 md:py-2 bg-[#FDE68A] text-[#1E293B] hover:bg-[#FACC15] rounded-md cursor-pointer text-lg font-light"
+          class="md:mt-4 p-1 md:px-4 md:py-2 bg-[#118CD9] hover:bg-[#4c7b98] text-white rounded-md cursor-pointer text-lg font-light"
           (click)="addInternalRow()"
         >
           เพิ่มรายการ
@@ -342,8 +397,7 @@
       <div
         class="md:col-span-3 md:px-4 sm:px-8 overflow-x-auto overflow-y-visible"
       >
-        <label
-          class="flex items-center gap-2 md:mt-4 md:mb-3"
+        <label class="flex items-center gap-2 md:mt-4 md:mb-3"
           >ระบุผู้ร่วมโครงการภายนอก</label
         >
         <table class="w-full table-fixed min-w-150 text-lg font-light">
@@ -456,7 +510,7 @@
       <div class="flex justify-start mt-2">
         <button
           type="button"
-          class="md:mt-4 p-1 md:p-2 bg-[#FDE68A] text-[#1E293B] hover:bg-[#FACC15] rounded-md cursor-pointer text-lg font-light"
+          class="md:mt-4 p-1 md:p-2 bg-[#118CD9] hover:bg-[#4c7b98] text-white rounded-md cursor-pointer text-lg font-light"
           (click)="addExternalRow()"
         >
           เพิ่มรายการ
@@ -677,9 +731,7 @@
 
     <!-- พื้นที่ใช้ประโยชน์ -->
     <div class="grid grid-cols-1 md:grid-cols-1 gap-2 mb-2 md:mb-6">
-      <label class="md:col-span-1 text-start">
-        พื้นที่ใช้ประโยชน์
-      </label>
+      <label class="md:col-span-1 text-start"> พื้นที่ใช้ประโยชน์ </label>
       <textarea
         [(ngModel)]="projectData.usable_area"
         name="attention"
@@ -722,7 +774,7 @@
 
           <button
             type="button"
-            class="px-4 py-1 bg-[#FDE68A] text-[#1E293B] hover:bg-[#FACC15] rounded-md cursor-pointer text-lg font-light"
+            class="px-4 py-1 bg-[#118CD9] hover:bg-[#4c7b98] text-white rounded-md cursor-pointer text-lg font-light"
             (click)="reportFileInput.click()"
           >
             เลือกไฟล์
@@ -762,7 +814,7 @@
 
           <button
             type="button"
-            class="px-4 py-1 bg-[#FDE68A] text-[#1E293B] cursor-pointer hover:bg-[#FACC15] rounded-md text-lg font-light"
+            class="px-4 py-1 bg-[#118CD9] hover:bg-[#4c7b98] text-white cursor-pointer rounded-md text-lg font-light"
             (click)="fileInput.click()"
           >
             เลือกไฟล์
@@ -776,7 +828,7 @@
       <button
         type="submit"
         (click)="submit()"
-        class="flex items-center justify-center gap-3 w-72 py-3 bg-yellow-300 hover:bg-yellow-400 text-xl rounded-lg shadow transition duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 cursor-pointer"
+        class="flex items-center justify-center gap-3 w-72 py-3 bg-[#118CD9] hover:bg-[#4c7b98] text-white text-xl rounded-lg shadow transition duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 cursor-pointer"
       >
         <i class="bi bi-floppy2 text-2xl"></i>
         <span>บันทึกข้อมูล</span>

@@ -9,7 +9,7 @@
     <div class="flex justify-between items-center mb-4 mt-2">
       <button
             (click)="openAddModal()"
-            class="flex items-center gap-2 bg-yellow-300 hover:bg-yellow-400 px-4 py-2 rounded-md text-lg cursor-pointer"
+            class="flex items-center gap-2 bg-[#118CD9] hover:bg-[#16498C] text-white px-4 py-2 rounded-md text-lg cursor-pointer"
           >
             <i class="bi bi-plus-circle"></i> เพิ่มแอดมิน
           </button>
@@ -101,7 +101,7 @@
         (click)="changePage(page)"
         class="px-3 py-1 rounded border text-sm transition cursor-pointer"
         [ngClass]="{
-          'bg-[#FACC15] text-[#394250] border-[#FACC15]': currentPage === page,
+          'bg-[#118CD9] text-white border-[#118CD9]': currentPage === page,
           'hover:bg-gray-100': currentPage !== page
         }"
       >
@@ -182,7 +182,7 @@
     <div class="flex flex-col sm:flex-row justify-center gap-2 font-medium text-xl">
       <button
         (click)="saveExpertise()"
-        class="w-full sm:w-auto px-4 py-2 rounded-md bg-[#F9CB34] hover:bg-[#fde07f] cursor-pointer"
+        class="w-full sm:w-auto px-4 py-2 rounded-md bg-[#118CD9] hover:bg-[#16498C] text-white cursor-pointer"
       >
         บันทึก
       </button>
@@ -247,7 +247,7 @@
     <div class="flex flex-col sm:flex-row justify-center gap-2 font-medium text-xl">
       <button
         (click)="updateExpertise()"
-        class="w-full sm:w-auto px-4 py-2 rounded-md bg-[#F9CB34] hover:bg-[#fde07f] cursor-pointer"
+        class="w-full sm:w-auto px-4 py-2 rounded-md bg-[#118CD9] hover:bg-[#16498C] text-white cursor-pointer"
       >
         อัปเดต
       </button>

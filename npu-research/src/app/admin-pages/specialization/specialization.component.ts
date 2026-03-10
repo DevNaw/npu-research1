@@ -4,6 +4,7 @@ import Swal from 'sweetalert2';
 import { AdminExpertiseService } from '../../services/admin-expertise.service';
 import { Expertise } from '../../models/admin-expertise.model';
 import { MainComponent } from '../../shared/layouts/main/main.component';
+import saveAs from 'file-saver';
 
 type MajorStatus = 'พร้อมใช้งาน' | 'ไม่พร้อมใช้งาน';
 
@@ -197,11 +198,134 @@ export class SpecializationComponent {
   }
 
   printPage() {
-    Swal.fire('ยังไม่ได้เปิดใช้งาน Print', '', 'info');
+
+    const table = document.getElementById('specializationTable');
+  
+    if (!table) {
+      Swal.fire('ไม่พบตาราง', '', 'warning');
+      return;
+    }
+  
+    const tableClone = table.cloneNode(true) as HTMLElement;
+  
+    const rows = tableClone.querySelectorAll('tr');
+  
+    rows.forEach((row, index) => {
+  
+      const cells = row.querySelectorAll('th, td');
+  
+      // ลบ column Action
+      if (cells[4]) {
+        cells[4].remove();
+      }
+  
+      // แปลง icon สถานะเป็นข้อความ
+      if (index > 0 && cells[3]) {
+  
+        const icon = cells[3].querySelector('i');
+  
+        if (icon?.classList.contains('bi-check-circle-fill')) {
+          cells[3].innerHTML = '✔ พร้อมใช้งาน';
+        } else {
+          cells[3].innerHTML = '✘ ไม่พร้อมใช้งาน';
+        }
+  
+      }
+  
+    });
+  
+    const printWindow = window.open('', '', 'width=900,height=700');
+  
+    printWindow?.document.write(`
+      <html>
+        <head>
+          <title>รายการแหล่งทุน</title>
+          <style>
+            body{
+              font-family: Arial;
+              padding:20px;
+            }
+  
+            h2{
+              text-align:center;
+              margin-bottom:20px;
+            }
+  
+            table{
+              width:100%;
+              border-collapse: collapse;
+            }
+  
+            th, td{
+              border:1px solid #ccc;
+              padding:8px;
+              text-align:center;
+            }
+  
+            th{
+              background:#394250;
+              color:white;
+            }
+          </style>
+        </head>
+        <body>
+  
+          <h2>รายการแหล่งทุน</h2>
+  
+          ${tableClone.outerHTML}
+  
+        </body>
+      </html>
+    `);
+  
+    printWindow?.document.close();
+  
+    setTimeout(() => {
+      printWindow?.print();
+      printWindow?.close();
+    }, 500);
+  
   }
 
   exportExcel() {
-    Swal.fire('ยังไม่ได้เปิดใช้งาน Export', '', 'info');
+    if (!this.filteredExpertises || this.filteredExpertises.length === 0) {
+      Swal.fire('ไม่มีข้อมูลให้ Export', '', 'warning');
+      return;
+    }
+
+    const data = this.filteredExpertises.map((e, index) => ({
+      'ลำดับ': index + 1,
+      'ชื่อสาขาที่เชี่ยวชาญ': e.name_th || '-',
+      'ชื่อสาขาที่เชี่ยวชาญภาษาอังกฤษ': e.name_en || '-',
+      'สถานะใช้งาน': e.is_active === 1 ? 'พร้อมใช้งาน' : 'ไม่พร้อมใช้งาน',
+    }));
+
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
+
+    const colWidths = Object.keys(data[0]).map((key) => ({
+      wch: Math.max(
+        key.length,
+        ...data.map((row) => ((row as any)[key] ? (row as any)[key].toString().length : 0))
+      ) + 5,
+    }));
+
+    worksheet['!cols'] = colWidths;
+
+    const workbook: XLSX.WorkBook = {
+      Sheets: { 'Specialization': worksheet },
+      SheetNames: ['Specialization'],
+    };
+
+    const excelBuffer: any = XLSX.write(workbook, {
+      bookType: 'xlsx',
+      type: 'array',
+    });
+
+    const blob: Blob = new Blob([excelBuffer], {
+      type: 'application/octet-stream',
+    });
+
+    saveAs(blob, 'specialization.xlsx');
   }
 
   resetForm() {

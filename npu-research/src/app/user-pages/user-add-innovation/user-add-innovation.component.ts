@@ -21,6 +21,8 @@ export const DEFAULT_INNOVATION: ResearchInnovationDetail = {
   title_th: '',
   title_en: '',
   abstract: '',
+  abstract_en: '',
+  keywords: [],
   year: '',
   published_date: '',
   image: null,
@@ -79,6 +81,7 @@ export class UserAddInnovationComponent {
   searchResearcher = '';
   selectedResearcher: string | null = null;
   searchKeyword = '';
+  keywordInput: string = '';
 
   internalRow: InternalMemberRow[] = [
     { id: 0, researcher_id: null, name: '', responsibilities: '' },
@@ -103,6 +106,7 @@ export class UserAddInnovationComponent {
   imagePreviews: string[] = [];
 
   projectData: ResearchInnovationDetail = { ...DEFAULT_INNOVATION };
+  keywords: string[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -159,6 +163,7 @@ export class UserAddInnovationComponent {
       next: (res) => {
         this.researchers = res.data.$researchers ?? [];
         this.filteredResearchers = this.researchers;
+
       },
       error: (err) => {
         console.error('Failed to load Researchers: ', err);
@@ -174,6 +179,7 @@ export class UserAddInnovationComponent {
         this.projectData = {
           ...this.projectData,
           ...data,
+          keywords: (data.keywords || []).map((k: any) => k.keyword)
         };
   
         this.selectedFileName = data.full_report?.file_name ?? '';
@@ -417,6 +423,14 @@ export class UserAddInnovationComponent {
       fd.append(key, val !== undefined ? String(val) : '');
 
     required('title_th', d.title_th);
+    required('title_en', d.title_en);
+    required('abstract', d.abstract);
+    required('abstract_en', d.abstract_en);
+
+    d.keywords.forEach((k, i) => {
+      fd.append(`keywords[${i}]`, k);
+    });
+
     required('published_date', d.published_date);
     required('source_funds', d.source_funds);
     required('principle', d.principle);
@@ -508,7 +522,6 @@ export class UserAddInnovationComponent {
       !d.title_th ||
       !d.title_en ||
       !d.source_funds ||
-      !d.subject_area ||
       !d.name_funding ||
       !d.budget_amount ||
       !d.year_received_budget ||
@@ -603,5 +616,23 @@ export class UserAddInnovationComponent {
   
     });
   
+  }
+
+  addKeyword(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      
+      const value = this.keywordInput.trim();
+      if (!value) return;
+      if (!this.projectData.keywords.includes(value)) {
+        this.projectData.keywords.push(value);
+      }
+
+      this.keywordInput = '';
+    }
+  }
+
+  removeKeyword(index: number) {
+    this.projectData.keywords.splice(index, 1);
   }
 }

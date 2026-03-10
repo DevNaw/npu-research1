@@ -46,6 +46,8 @@ export interface ArticleSubjectArea {
     title_th: string;
     title_en: string;
     abstract: string;
+    abstract_en: string;
+    keywords: string[];
     year: string;
     published_date: string;
     call_other: string | null;

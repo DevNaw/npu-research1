@@ -27,6 +27,8 @@ const DEFAULT_ARTICLE: Article = {
   title_th: '',
   title_en: '',
   abstract: '',
+  abstract_en: '',
+  keywords: [],
   year: '',
   published_date: '',
   call_other: null,
@@ -66,6 +68,8 @@ export class UserAddAticleComponent {
   selectedMajor: Major | null = null;
   searchMajor = '';
   searchSub = '';
+
+  keywordInput: string = '';
 
   // Dropdowns
   activeDropdown: string | null = null;
@@ -207,6 +211,8 @@ export class UserAddAticleComponent {
 
   articleId: number | null = null;
 
+  keywords: string[] = [];
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -261,6 +267,7 @@ export class UserAddAticleComponent {
         this.articleData = {
           ...this.articleData,
           ...data,
+          keywords: (data.keywords || []).map((k: any) => k.keyword)
         };
 
         this.selectedFileName = data.articleFile?.file_name ?? '';
@@ -478,7 +485,7 @@ export class UserAddAticleComponent {
       : this.researchService.createArticle(formData);
 
     request$.subscribe({
-      next: () => {
+      next: (res: any) => {
         Swal.fire({
           icon: 'success',
           title: this.isEdit ? 'อัพเดทสำเร็จ' : 'บันทึกสำเร็จ',
@@ -494,6 +501,7 @@ export class UserAddAticleComponent {
               });
           }, 1000);
         } else {
+          this.router.navigate(['/performance/article', res.data.research_id]);
           this.resetForm();
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -523,6 +531,12 @@ export class UserAddAticleComponent {
     required('title_th', d.title_th);
     required('title_en', d.title_en);
     required('abstract', d.abstract);
+    required('abstract_en', d.abstract_en);
+
+    d.keywords.forEach((k, i) => {
+      fd.append(`keywords[${i}]`, k);
+    });
+    required('published_date', d.published_date);
     required('article_type', d.article_type);
     required('journal_name', d.journal_name);
     required('pages', d.pages);
@@ -600,14 +614,14 @@ export class UserAddAticleComponent {
       !d.title_th ||
       !d.title_en ||
       !d.abstract ||
+      !d.abstract_en ||
       !d.article_type ||
       !d.journal_name ||
       !d.pages ||
       !d.year_published ||
       !d.volume ||
       !d.volume_no ||
-      !d.doi ||
-      !d.subject_area
+      !d.doi 
     ) {
       Swal.fire({
         icon: 'warning',
@@ -646,5 +660,23 @@ export class UserAddAticleComponent {
     }
   
     return true;
+  }
+
+  addKeyword(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+
+      const value = this.keywordInput.trim();
+      if (!value) return;
+      if (!this.articleData.keywords.includes(value)) {
+        this.articleData.keywords.push(value);
+      }
+
+      this.keywordInput = '';
+    }
+  }
+
+  removeKeyword(index: number) {
+    this.articleData.keywords.splice(index, 1);
   }
 }

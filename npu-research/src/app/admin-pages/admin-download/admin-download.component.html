@@ -11,7 +11,7 @@
           <div class="flex gap-2 font-light text-lg">
             <button
               (click)="openAddModal()"
-              class="flex items-center gap-2 bg-yellow-300 hover:bg-yellow-400 px-4 py-1 rounded-md text-xl cursor-pointer"
+              class="flex items-center gap-2 bg-[#118CD9] hover:bg-[#16498C] text-white px-4 py-1 rounded-md text-xl cursor-pointer"
             >
               <i class="bi bi-plus-circle"></i> เพิ่มเอกสาร
             </button>
@@ -123,7 +123,7 @@
             (click)="changePage(i + 1)"
             class="px-2 md:px-3 py-1 rounded border text-sm transition cursor-pointer"
             [ngClass]="{
-              'bg-[#FACC15] text-[#1E293B]': currentPage === i + 1,
+              'bg-[#118CD9] text-white': currentPage === i + 1,
               'hover:bg-gray-100': currentPage !== i + 1
             }"
           >
@@ -177,7 +177,7 @@
           <a
             [href]="newDocument.file_url"
             target="_blank"
-            class="text-blue-600 underline"
+            class="text-[#118CD9] hover:text-[#16498C] underline"
           >
             {{ newDocument.file_url.split('/').pop() }}
           </a>
@@ -195,7 +195,7 @@
       <div class="flex  justify-center gap-2 text-xl">
         <button
           (click)="modalMode === 'add' ? saveDocument() : updateDocument()"
-          class="px-4 py-2 rounded-md bg-[#F9CB34] hover:bg-yellow-500 cursor-pointer"
+          class="px-4 py-2 rounded-md bg-[#118CD9] hover:bg-[#16498C] text-white cursor-pointer"
         >
           {{ modalMode === 'add' ? 'บันทึก' : 'อัปเดต' }}
         </button>

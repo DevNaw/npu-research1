@@ -13,6 +13,8 @@ export interface ProjectDetailResponse {
     title_th: string;
     title_en: string | null;
     abstract: string | null;
+    abstract_en: string | null;
+    keywords: ResearchKeyword[];
     published_date: string;
     status: string | null;
     call_other: string | null;
@@ -66,5 +68,10 @@ export interface ProjectDetailResponse {
     organization: string;
     email: string;
     phone: string;
+  }
+
+  export interface ResearchKeyword {
+    id: number;
+    keyword: string;
   }
   

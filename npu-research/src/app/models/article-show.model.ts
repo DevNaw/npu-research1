@@ -14,7 +14,8 @@ export interface ArticleApiResponse {
     title_th: string;
     title_en: string | null;
     abstract: string | null;
-  
+    abstract_en: string | null;
+    keywords: keyword[];
     year: number;
     published_date: string;
     status: string | null;
@@ -77,4 +78,9 @@ export interface ArticleApiResponse {
     organization: string;
     email: string;
     phone: string;
+  }
+
+  export interface keyword {
+    id: number;
+    keyword: string;
   }

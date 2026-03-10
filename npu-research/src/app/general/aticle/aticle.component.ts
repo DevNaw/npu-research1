@@ -37,27 +37,25 @@ export class AticleComponent implements OnInit {
       next: (res) => {
         this.articles = res.data.articles;
         console.log(this.articles);
-        
+
         this.filteredArticles = [...this.articles];
         this.updatePagination();
-      }
-
+      },
     });
   }
 
   onSearch(): void {
     const keyword = this.searchText.toLowerCase().trim();
-  
+
     this.filteredArticles = this.articles.filter((a) => {
       const title = a.title_th?.toLowerCase() || '';
-  
-      const researchers = a.own
-        ?.map((o) => o.full_name.toLowerCase())
-        .join(' ') || '';
-  
+
+      const researchers =
+        a.own?.map((o) => o.full_name.toLowerCase()).join(' ') || '';
+
       return title.includes(keyword) || researchers.includes(keyword);
     });
-  
+
     this.currentPage = 1;
     this.updatePagination();
   }
@@ -98,8 +96,8 @@ export class AticleComponent implements OnInit {
 
   mapOwners(owners: any[]): string {
     if (!owners || owners.length === 0) return '-';
-  
-    return owners.map(o => o.full_name).join(', ');
+
+    return owners.map((o) => o.full_name).join(', ');
   }
 
   formatThaiDate(dateString: string): string {

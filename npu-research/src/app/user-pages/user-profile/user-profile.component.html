@@ -1,26 +1,31 @@
-<div class="contain-content bg-gray-100 p-5 md:p-6 min-h-screen text-xl font-medium text-[#394250]">
+<div
+  class="contain-content bg-gray-100 p-5 md:p-6 min-h-screen text-xl font-medium text-[#394250]"
+>
   <!-- Heaer -->
   <div class="flex items-center mx-auto md:px-10">
-
     <div class="relative">
-
       <!-- Avatar -->
-      <div class="border-2 border-[#118CD9] rounded-full flex items-center justify-center">
+      <div
+        class="border-2 border-[#118CD9] rounded-full flex items-center justify-center"
+      >
         <img
-          [src]="previewUrl || profileData?.avatar_url || '/assets/default_profile.png'"
+          [src]="
+            previewUrl ||
+            profileData?.avatar_url ||
+            '/assets/default_profile.png'
+          "
           class="w-20 h-20 md:w-30 md:h-30 rounded-full object-cover"
         />
       </div>
-    
+
       <!-- ปุ่มเลือกรูป -->
       <button
-        class="absolute bottom-0 right-0 bg-[#118CD9] hover:bg-[#4c7b98] text-white 
-        rounded-xl w-8 h-8 md:w-10 md:h-10 flex items-center justify-center shadow cursor-pointer"
+        class="absolute bottom-0 right-0 bg-[#118CD9] hover:bg-[#4c7b98] text-white rounded-xl w-8 h-8 md:w-10 md:h-10 flex items-center justify-center shadow cursor-pointer"
         (click)="fileInput.click()"
       >
         <i class="bi bi-pencil-square"></i>
       </button>
-    
+
       <!-- input file -->
       <input
         type="file"
@@ -29,30 +34,28 @@
         accept="image/*"
         (change)="onFileSelected($event)"
       />
-    
     </div>
-  
+
     <div class="ml-4">
       <h1 class="text-2xl md:text-3xl leading-none">
         {{ profileData?.full_name }}
       </h1>
-  
+
       <h2 class="text-xl italic">
         {{ profileData?.full_name }}
       </h2>
     </div>
-  
   </div>
 
-   <!-- ปุ่มบันทึก -->
-   <div class="mt-4 ml-6" *ngIf="selectedFile">
+  <!-- ปุ่มบันทึก -->
+  <div class="mt-4 ml-6" *ngIf="selectedFile">
     <button
       class="bg-[#118CD9] hover:bg-[#4c7b98] text-white px-4 py-2 rounded-lg shadow font-light text-sm cursor-pointer"
       (click)="saveAvatar()"
     >
       บันทึก
     </button>
-  
+
     <button
       class="ml-2 bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded-lg shadow font-light text-sm cursor-pointer"
       (click)="cancelAvatar()"
@@ -62,9 +65,13 @@
   </div>
 
   <!-- Main Layout -->
-  <div class="grid grid-cols-1 lg:grid-cols-12 md:gap-6 md:px-8 mx-auto mt-3 md:mt-6 text-[#394250]">
+  <div
+    class="grid grid-cols-1 lg:grid-cols-12 md:gap-6 md:px-8 mx-auto mt-3 md:mt-6 text-[#394250]"
+  >
     <div class="lg:col-span-4 space-y-5">
-      <div class="bg-white rounded-xl shadow-md px-6 py-8 w-full max-w-full mb-2 md:mb-5">
+      <div
+        class="bg-white rounded-xl shadow-md px-6 py-8 w-full max-w-full mb-2 md:mb-5"
+      >
         <div
           class="flex items-center justify-between cursor-pointer"
           (click)="isPersonalOpen = !isPersonalOpen"
@@ -73,9 +80,7 @@
             <div class="text-2xl">
               <i class="bi bi-person"></i>
             </div>
-            <h2>
-              ข้อมูลประวัติทั่วไป
-            </h2>
+            <h2>ข้อมูลประวัติทั่วไป</h2>
           </div>
 
           <div class="flex items-center gap-3">
@@ -94,42 +99,44 @@
         <div *ngIf="isPersonalOpen" class="transition-all duration-300">
           <div class="flex justify-end">
             <button
-              class="bg-[#FDE68A] hover:bg-[#FACC15] hover:text-white rounded-xl w-10 h-10 flex items-center justify-center shadow cursor-pointer"
+              class="bg-[#118CD9] hover:bg-[#4c7b98] text-white rounded-xl w-10 h-10 flex items-center justify-center shadow cursor-pointer"
               (click)="goToEditProfile(); $event.stopPropagation()"
             >
               <i class="bi bi-pencil-square"></i>
             </button>
           </div>
 
-          <ul *ngIf="profileData?.generalInfo as info; else noData" class="space-y-3 text-gray-600 font-medium">
+          <ul
+            *ngIf="profileData?.generalInfo as info; else noData"
+            class="space-y-3 text-gray-600 font-regular text-lg"
+          >
             <li *ngIf="isOwner" class="flex gap-2 flex-wrap">
-              <span class="text-gray-400 text-xl"> • เลขบัตรประชาชน : </span>
+              <span class="text-gray-400"> • เลขบัตรประชาชน : </span>
               {{ profileData?.generalInfo?.id_card_number }}
             </li>
-            
 
             <li class="flex gap-2 flex-wrap">
-              <span class="text-gray-400 text-xl"> • วันเดือนปีเกิด : </span>
+              <span class="text-gray-400"> • วันเดือนปีเกิด : </span>
               {{ profileData?.generalInfo?.date_of_birth }}
             </li>
 
             <li class="flex gap-2 flex-wrap">
-              <span class="text-gray-400 text-xl"> • อายุ : </span>
+              <span class="text-gray-400"> • อายุ : </span>
               {{ profileData?.generalInfo?.age }}
             </li>
 
             <li class="flex gap-2 flex-wrap">
-              <span class="text-gray-400 text-xl"> • เชื้อชาติ : </span>
+              <span class="text-gray-400"> • เชื้อชาติ : </span>
               {{ profileData?.generalInfo?.ethnicity }}
             </li>
 
             <li class="flex gap-2 flex-wrap">
-              <span class="text-gray-400 text-xl"> • สัญชาติ : </span>
+              <span class="text-gray-400"> • สัญชาติ : </span>
               {{ profileData?.generalInfo?.nationality }}
             </li>
 
             <li class="flex gap-2 flex-wrap">
-              <span class="text-gray-400 text-xl"> • ศาสนา : </span>
+              <span class="text-gray-400"> • ศาสนา : </span>
               {{ profileData?.generalInfo?.religion }}
             </li>
           </ul>
@@ -143,7 +150,9 @@
       </div>
 
       <!-- ข้อมูลการทำงาน -->
-      <div class="bg-white rounded-xl shadow-md px-6 py-8 w-full max-w-full mb-2 md:mb-5">
+      <div
+        class="bg-white rounded-xl shadow-md px-6 py-8 w-full max-w-full mb-2 md:mb-5"
+      >
         <!-- Header -->
         <div
           class="flex items-center justify-between cursor-pointer"
@@ -170,50 +179,51 @@
         <div *ngIf="isWorkOpen" class="transition-all duration-300">
           <div class="flex justify-end">
             <button
-              class="bg-[#FDE68A] hover:bg-[#FACC15] hover:text-white rounded-xl w-10 h-10 flex items-center justify-center shadow cursor-pointer"
+              class="bg-[#118CD9] hover:bg-[#4c7b98] text-white rounded-xl w-10 h-10 flex items-center justify-center shadow cursor-pointer"
               (click)="goToEditWork(); $event.stopPropagation()"
             >
               <i class="bi bi-pencil-square"></i>
             </button>
           </div>
           <!-- Content -->
-          <ul *ngIf="profileData?.workInfo as info; else noDataWorkInfo" class="space-y-3 text-gray-600 font-medium">
+          <ul
+            *ngIf="profileData?.workInfo as info; else noDataWorkInfo"
+            class="space-y-3 text-gray-600 font-regular text-lg"
+          >
             <li class="flex gap-2 flex-wrap wrap-break-word">
-              <span class="text-gray-400 text-xl">• ตำแหน่ง :</span>
+              <span class="text-gray-400">• ตำแหน่ง :</span>
               {{ profileData?.workInfo?.position }}
             </li>
             <li class="flex gap-2 flex-wrap wrap-break-word">
-              <span class="text-gray-400 text-xl">• สังกัด :</span>
+              <span class="text-gray-400">• สังกัด :</span>
               {{ profileData?.workInfo?.organization }}
             </li>
             <li class="flex gap-2 flex-wrap wrap-break-word">
-              <span class="text-gray-400 text-xl">• ประเภท :</span>
+              <span class="text-gray-400">• ประเภท :</span>
               {{ profileData?.workInfo?.type }}
             </li>
             <li class="flex gap-2 flex-wrap wrap-break-word">
-              <span class="text-gray-400 text-xl">• สายงาน :</span>
+              <span class="text-gray-400">• สายงาน :</span>
               {{ profileData?.workInfo?.line_work }}
             </li>
             <li class="flex gap-2 flex-wrap wrap-break-word">
-              <span class="text-gray-400 text-xl">• ตำแหน่งทางวิชาการ :</span>
+              <span class="text-gray-400">• ตำแหน่งทางวิชาการ :</span>
               {{ profileData?.workInfo?.academic_position }}
             </li>
             <li class="flex gap-2 flex-wrap wrap-break-word">
-              <span class="text-gray-400 text-xl">• ความความสนใจ :</span>
+              <span class="text-gray-400">• ความความสนใจ :</span>
               {{ profileData?.workInfo?.interest }}
             </li>
             <li class="flex gap-2 flex-wrap wrap-break-word">
-              <span class="text-gray-400 text-xl"
-                >• สาขาวิชาที่เชี่ยวชาญ :</span
-              >
+              <span class="text-gray-400">• สาขาวิชาที่เชี่ยวชาญ :</span>
               {{ profileData?.workInfo?.expertises }}
             </li>
             <li class="flex gap-2 flex-wrap wrap-break-word">
-              <span class="text-gray-400 text-xl">• วันที่เริ่มงาน :</span>
+              <span class="text-gray-400">• วันที่เริ่มงาน :</span>
               {{ profileData?.workInfo?.work_start_date }}
             </li>
             <li class="flex gap-2 flex-wrap wrap-break-word">
-              <span class="text-gray-400 text-xl">• อายุงาน :</span>
+              <span class="text-gray-400">• อายุงาน :</span>
               {{ profileData?.workInfo?.year_of_service }} ปี
             </li>
           </ul>
@@ -227,7 +237,9 @@
       </div>
 
       <!-- ข้อมูลการศึกษา -->
-      <div class="bg-white rounded-xl shadow-md px-6 py-8 w-full max-w-full mb-2 md:mb-5">
+      <div
+        class="bg-white rounded-xl shadow-md px-6 py-8 w-full max-w-full mb-2 md:mb-5"
+      >
         <!-- Header -->
         <div
           class="flex items-center justify-between cursor-pointer"
@@ -253,45 +265,51 @@
           <div class="flex justify-end">
             <!-- Edit Button -->
             <button
-              class="bg-[#FDE68A] hover:bg-[#FACC15] hover:text-white rounded-xl w-10 h-10 flex items-center justify-center shadow cursor-pointer"
+              class="bg-[#118CD9] hover:bg-[#4c7b98] text-white rounded-xl w-10 h-10 flex items-center justify-center shadow cursor-pointer"
               (click)="openEditModal(educationData)"
             >
               <i class="bi bi-pencil-square"></i>
             </button>
           </div>
           <!-- Content -->
-          <ul *ngIf="profileData?.educationalInfo as info; else noDataEducationalInfo" class="space-y-3 text-gray-600">
+          <ul
+            *ngIf="
+              profileData?.educationalInfo as info;
+              else noDataEducationalInfo
+            "
+            class="space-y-3 text-gray-600 font-regular text-lg"
+          >
             <li class="flex gap-2 flex-wrap wrap-break-word">
-              <span class="text-gray-400 text-xl">• การศึกษาสูงสุด :</span>
-              {{profileData?.educationalInfo?.highest_education}}
+              <span class="text-gray-400">• การศึกษาสูงสุด :</span>
+              {{ profileData?.educationalInfo?.highest_education }}
             </li>
             <li class="flex gap-2 flex-wrap wrap-break-word">
-              <span class="text-gray-400 text-xl">• สาขาวิชา :</span>
+              <span class="text-gray-400">• สาขาวิชา :</span>
               {{ profileData?.educationalInfo?.field_of_study }}
             </li>
             <li class="flex gap-2 flex-wrap wrap-break-word">
-              <span class="text-gray-400 text-xl">• คุณวุฒิ :</span>
+              <span class="text-gray-400">• คุณวุฒิ :</span>
               {{ profileData?.educationalInfo?.qualification }}
             </li>
             <li class="flex gap-2 flex-wrap wrap-break-word">
-              <span class="text-gray-400 text-xl">• GPA :</span>
+              <span class="text-gray-400">• GPA :</span>
               {{ profileData?.educationalInfo?.gpa }}
             </li>
             <li class="flex gap-2 flex-wrap wrap-break-word">
-              <span class="text-gray-400 text-xl">• สถานศึกษา :</span>
+              <span class="text-gray-400">• สถานศึกษา :</span>
               {{ profileData?.educationalInfo?.institution }}
             </li>
             <li class="flex gap-2 flex-wrap wrap-break-word">
-              <span class="text-gray-400 text-xl"
+              <span class="text-gray-400"
                 >• วันที่/เดือน/ปี ที่เข้าศึกษา :</span
               >
               {{ profileData?.educationalInfo?.date_enrollment }}
             </li>
             <li class="flex gap-2 flex-wrap wrap-break-word">
-              <span class="text-gray-400 text-xl"
+              <span class="text-gray-400"
                 >• วันที่/เดือน/ปี ที่สำเร็จการศึกษา :</span
               >
-              {{ profileData?.educationalInfo?.date_graduation}}
+              {{ profileData?.educationalInfo?.date_graduation }}
             </li>
           </ul>
 
@@ -377,15 +395,14 @@
               class="bg-white rounded-xl shadow-md p-4 hover:shadow-lg transition border border-gray-300"
             >
               <div class="flex items-center justify-between md:mb-4">
-                <h3 class="text-2xl">
-                  สัดส่วนข้อมูล
-                </h3>
+                <h3 class="text-2xl">สัดส่วนข้อมูล</h3>
                 <i class="bi bi-pie-chart-fill text-indigo-500 text-xl"></i>
               </div>
 
               <!-- Chart Center -->
               <div class="flex justify-center items-center">
-                <apx-chart class="text-white"
+                <apx-chart
+                  class="text-white"
                   [series]="pieChartOptions.series!"
                   [chart]="pieChartOptions.chart!"
                   [labels]="pieChartOptions.labels!"
@@ -401,9 +418,7 @@
               class="bg-white rounded-xl shadow-md p-4 hover:shadow-lg transition border border-gray-300"
             >
               <div class="flex items-center justify-between md:mb-4">
-                <h3 class="text-2xl">
-                  สถิติรายปี
-                </h3>
+                <h3 class="text-2xl">สถิติรายปี</h3>
                 <i class="bi bi-bar-chart-fill text-emerald-500 text-xl"></i>
               </div>
 
@@ -423,7 +438,6 @@
           </div>
 
           <div class="flex flex-wrap gap-2 mt-4 mb-4 md:mt-8 items-center">
-
             <!-- Tabs -->
             <div class="flex flex-wrap gap-2 items-center">
               <button
@@ -431,8 +445,8 @@
                 (click)="changeTab(tab.key)"
                 [ngClass]="
                   selectedTab === tab.key
-                    ? 'bg-[#FDE68A] text-[#394250] shadow'
-                    : 'text-[#394250] hover:bg-[#FDE68A]/70'
+                    ? 'bg-[#118CD9] text-[#ffffff] shadow'
+                    : 'text-[#394250] hover:bg-[#118CD9] hover:text-white'
                 "
                 class="flex items-center gap-2 px-2 py-1 md:px-5 md:py-2.5 rounded-xl transition-all duration-200 cursor-pointer"
               >
@@ -440,9 +454,11 @@
                 <span>{{ tab.label }}</span>
               </button>
             </div>
-          
+
             <!-- Search -->
-            <div class="flex items-center w-full md:w-auto mt-2 md:mt-0 justify-end md:ml-auto">
+            <div
+              class="flex items-center w-full md:w-auto mt-2 md:mt-0 justify-end md:ml-auto"
+            >
               <span>Search:</span>
               <input
                 type="text"
@@ -452,20 +468,17 @@
                 placeholder="ค้นหา..."
               />
             </div>
-          
           </div>
 
           <!-- Table -->
-          <div class="overflow-x-auto bg-white shadow-md font-regular text-lg">
+          <div class="overflow-x-auto bg-white shadow-md font-light text-lg">
             <table class="w-full text-gray-700">
               <!-- Header -->
               <thead class="bg-linear-to-r bg-[#394250] text-white">
                 <tr>
                   <th class="px-4 py-3 w-16 text-center">#</th>
                   <th class="px-4 py-3 text-left">ชื่อผลงาน</th>
-                  <th class="px-4 py-3 w-28 text-center">
-                    Action
-                  </th>
+                  <th class="px-4 py-3 w-28 text-center">Action</th>
                 </tr>
               </thead>
 
@@ -475,7 +488,6 @@
                 <tr
                   *ngFor="let item of paginationData; let i = index"
                   class="border-b border-gray-300 hover:bg-indigo-50 transition"
-                  
                 >
                   <!-- Index -->
                   <td class="text-center py-4">
@@ -485,7 +497,7 @@
                   <!-- Title -->
                   <td class="px-4 py-3">
                     <div
-                      class="text-indigo-600 hover:underline cursor-pointer truncate max-w-125 "
+                      class="text-[#16498C] hover:underline cursor-pointer truncate max-w-125"
                       title="{{ item.title_th }}"
                       (click)="viewItem(item.research_id)"
                     >
@@ -493,10 +505,14 @@
                     </div>
 
                     <div
-                      class="text-sm text-gray-500 mt-1 flex items-center gap-1"
+                      class="text-sm text-gray-500 mt-1 flex items-center gap-1 font-light"
                     >
                       <i class="bi bi-calendar-event"></i>
-                      วันที่สร้าง: {{ item.published_date | date: 'dd MMMM YYYY' : '' : 'TH-th' }}
+                      วันที่สร้าง:
+                      {{
+                        item.published_date
+                          | date : "dd MMMM YYYY" : "" : "TH-th"
+                      }}
                     </div>
                   </td>
 
@@ -532,18 +548,37 @@
           </div>
 
           <!-- Pagination -->
-          <div
-            class="flex items-center justify-between mt-4 text-sm font-light text-gray-600"
-          >
-            <div>Showing 1 to 1 of 1 entries</div>
-
-            <div class="flex items-center gap-2 text-sm">
-              <button class="border px-3 rounded cursor-pointer">‹</button>
-              <button class="border bg-[#FDE68A] px-3 rounded">
-                1
-              </button>
-              <button class="border px-3 rounded cursor-pointer">›</button>
-            </div>
+          <div class="flex justify-end md:mt-3 space-x-1">
+            <!-- Prev -->
+            <button
+              (click)="changePage(currentPage - 1)"
+              [disabled]="currentPage === 1"
+              class="px-2 md:px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
+            >
+              ‹
+            </button>
+    
+            <!-- Pages -->
+            <button
+              *ngFor="let page of pages"
+              (click)="changePage(page)"
+              class="px-2 md:px-3 py-1 rounded border text-sm transition cursor-pointer"
+              [ngClass]="{
+                'bg-[#118CD9] text-white border-gray-400': currentPage === page,
+                'hover:bg-gray-100': currentPage !== page
+              }"
+            >
+              {{ page }}
+            </button>
+    
+            <!-- Next -->
+            <button
+              (click)="changePage(currentPage + 1)"
+              [disabled]="currentPage === totalPages"
+              class="px-2 md:px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
+            >
+              ›
+            </button>
           </div>
         </div>
       </div>
@@ -578,7 +613,7 @@
         <label class="mb-1 block">ระดับการศึกษา</label>
         <button
           (click)="toggle('education', $event)"
-          class="flex justify-between items-center w-full border rounded-lg px-3 py-2 hover:border-indigo-500 transition"
+          class="flex justify-between items-center w-full border rounded-lg px-3 py-2 hover:border-indigo-500 transition font-light"
         >
           <span class="text-gray-700">
             {{ educationData.highest_education || "เลือก" }}
@@ -589,7 +624,7 @@
         <div
           *ngIf="isOpen('education')"
           (click)="$event.stopPropagation()"
-          class="absolute z-50 w-full bg-white border rounded-lg shadow mt-1"
+          class="absolute z-50 w-full bg-white border rounded-lg shadow mt-1 font-light"
         >
           <input
             [(ngModel)]="searchEducationLevel"
@@ -621,7 +656,7 @@
           <label class="mb-1 block">สาขา</label>
           <button
             (click)="toggle('majors', $event)"
-            class="flex justify-between items-center w-full border rounded-lg px-3 py-2"
+            class="flex justify-between items-center w-full border rounded-lg px-3 py-2 font-light"
           >
             {{ educationData.field_of_study || "เลือก" }}
             <i class="bi bi-chevron-down text-sm"></i>
@@ -630,7 +665,7 @@
           <div
             *ngIf="isOpen('majors')"
             (click)="$event.stopPropagation()"
-            class="absolute z-50 w-full bg-white border rounded-lg shadow mt-1"
+            class="absolute z-50 w-full bg-white border rounded-lg shadow mt-1 font-light"
           >
             <input
               [(ngModel)]="searchMajors"
@@ -654,7 +689,7 @@
           <label class="mb-1 block">คุณวุฒิ</label>
           <button
             (click)="toggle('qualifications', $event)"
-            class="flex justify-between items-center w-full border rounded-lg px-3 py-2"
+            class="flex justify-between items-center w-full border rounded-lg px-3 py-2 font-light"
           >
             {{ educationData.qualification || "เลือก" }}
             <i class="bi bi-chevron-down text-sm"></i>
@@ -663,7 +698,7 @@
           <div
             *ngIf="isOpen('qualifications')"
             (click)="$event.stopPropagation()"
-            class="absolute z-50 w-full bg-white border rounded-lg shadow mt-1"
+            class="absolute z-50 w-full bg-white border rounded-lg shadow mt-1 font-light"
           >
             <input
               [(ngModel)]="searchQualifications"
@@ -692,7 +727,7 @@
             [(ngModel)]="educationData.institution"
             type="text"
             placeholder="ชื่อสถานที่ศึกษา"
-            class="w-full border rounded-lg px-3 py-2"
+            class="w-full border rounded-lg px-3 py-2 font-light"
           />
         </div>
 
@@ -702,7 +737,7 @@
             [(ngModel)]="educationData.gpa"
             type="text"
             placeholder="เกรดเฉลี่ย"
-            class="w-full border rounded-lg px-3 py-2"
+            class="w-full border rounded-lg px-3 py-2 font-light"
           />
         </div>
       </div>
@@ -712,32 +747,32 @@
         <div>
           <label class="mb-1 block">ปีที่เข้าศึกษา</label>
           <input
-          [(ngModel)]="educationData.date_enrollment"
-          type="date"
-          placeholder="ปีที่เข้าศึกษา"
-          class="w-full border rounded-lg px-3 py-2"
-        />
+            [(ngModel)]="educationData.date_enrollment"
+            type="date"
+            placeholder="ปีที่เข้าศึกษา"
+            class="w-full border rounded-lg px-3 py-2 font-light"
+          />
         </div>
 
         <div>
           <label class="mb-1 block">ปีที่สำเร็จการศึกษา</label>
           <input
-          [(ngModel)]="educationData.date_graduation"
-          type="date"
-          placeholder="ปีที่สำเร็จการศึกษา"
-          class="w-full border rounded-lg px-3 py-2"
-        />
+            [(ngModel)]="educationData.date_graduation"
+            type="date"
+            placeholder="ปีที่สำเร็จการศึกษา"
+            class="w-full border rounded-lg px-3 py-2 font-light"
+          />
         </div>
-       
-        
       </div>
     </div>
 
     <!-- Footer -->
-    <div class="flex justify-center gap-3 mt-6 pt-4 border-t font-light text-lg">
+    <div
+      class="flex justify-center gap-3 mt-6 pt-4 border-t font-regular text-lg"
+    >
       <button
         (click)="save()"
-        class="px-5 py-2 rounded-lg bg-yellow-400 hover:bg-yellow-500 shadow cursor-pointer"
+        class="px-5 py-2 rounded-lg bg-[#118CD9] hover:bg-[#4c7b98] text-white shadow cursor-pointer"
       >
         บันทึก
       </button>
@@ -750,4 +785,3 @@
     </div>
   </div>
 </div>
-

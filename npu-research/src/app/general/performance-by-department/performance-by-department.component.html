@@ -31,7 +31,7 @@
             <td class="px-4 py-2">
               <div
                 (click)="goToDetail(d)"
-                class="text-indigo-600 truncate text-wrap hover:underline cursor-pointer"
+                class="text-[#16498C] truncate text-wrap hover:underline cursor-pointer"
               >
                 {{ d.major }}
               </div>
@@ -77,7 +77,7 @@
           (click)="changePage(page)"
           class="px-2 md:px-3 py-1 rounded border disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
           [ngClass]="{
-            'bg-[#FACC15] text-[#394250]': currentPage === page,
+            'bg-[#118CD9] text-white': currentPage === page,
             'hover:bg-gray-100': currentPage !== page
           }"
         >
