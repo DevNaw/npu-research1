@@ -14,16 +14,16 @@ import { MainComponent } from '../../shared/layouts/main/main.component';
 export class UserEditProfileComponent implements OnInit {
   openDropdown: string | null = null;
   userId!: string | null;
-  data: GeneralInfo = {
+  data: any = {
     first_name: '',
     last_name: '',
     first_name_en: null,
     last_name_en: null,
     email: '',
     phone: null,
+    age: 0,
     id_card_number: '',
     date_of_birth: '',
-    age: 0,
     ethnicity: '',
     nationality: '',
     religion: '',
@@ -82,7 +82,7 @@ export class UserEditProfileComponent implements OnInit {
 
   // ======= Update Profile ==========
   updateProfile(): void {
-    this.service.updateGeneral(this.data).subscribe({
+    this.service.updateGeneral(this.buildFormData()).subscribe({
       next: (res) => {
         Swal.fire({
           icon: 'success',
@@ -149,19 +149,19 @@ export class UserEditProfileComponent implements OnInit {
   }
 
   selectEthnicitys(v: string) {
-    this.selectedEthnicity = v;
+    this.data.ethnicity = v;
     this.searchEthnicity = '';
     this.openDropdown = null;
   }
 
   selectNationalitys(v: string) {
-    this.selectedNationality = v;
+    this.data.nationality = v;
     this.searchNationality = '';
     this.openDropdown = null;
   }
 
   selectReligion(v: string) {
-    this.selectedReligion = v;
+    this.data.religion = v;
     this.searchReligion = '';
     this.openDropdown = null;
   }
@@ -194,7 +194,23 @@ export class UserEditProfileComponent implements OnInit {
         didOpen: () => Swal.showLoading(),
       });
 
-      this.service.updateGeneral(this.data).subscribe({
+      const payload = {
+        first_name: this.data.first_name,
+        last_name: this.data.last_name,
+        first_name_en: this.data.first_name_en,
+        last_name_en: this.data.last_name_en,
+        email: this.data.email,
+        phone: this.data.phone,
+        id_card_number: this.data.id_card_number,
+        ...(this.data.age && { age: this.data.age }),
+        ethnicity: this.data.ethnicity,
+        nationality: this.data.nationality,
+        religion: this.data.religion,
+        date_of_birth: this.data.date_of_birth,
+
+      }
+
+      this.service.updateGeneral(payload).subscribe({
         next: () => {
           Swal.fire({
             icon: 'success',
@@ -251,5 +267,32 @@ export class UserEditProfileComponent implements OnInit {
     const date = new Date(year, month, day);
 
     return date.toISOString().split('T')[0]; // YYYY-MM-DD
+  }
+
+  private buildFormData(): FormData {
+    const fd = new FormData();
+    const d = this.data;
+
+    const required = (key: string, val: any) => fd.append(key, val ?? '');
+    const optional = (key: string, val: any) => {
+      if (val !== null && val !== undefined && val !== '') {
+        fd.append(key, val);
+      }
+    };
+
+    required('first_name', d.first_name);
+    required('last_name', d.last_name);
+    optional('first_name_en', d.first_name_en);
+    optional('last_name_en', d.last_name_en);
+    required('email', d.email);
+    optional('phone', d.phone);
+    optional('age', d.age);
+    optional('id_card_number', d.id_card_number);
+    required('date_of_birth', d.date_of_birth);
+    required('ethnicity', d.ethnicity);
+    required('nationality', d.nationality);
+    required('religion', d.religion);
+
+    return fd;
   }
 }

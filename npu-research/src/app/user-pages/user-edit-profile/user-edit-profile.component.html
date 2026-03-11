@@ -93,7 +93,13 @@
 
     <!-- ================= Section 3 ================= -->
     <div class="grid grid-cols-9 gap-3 md:gap-6">
+      
       <!-- เชื้อชาติ -->
+      <div class="col-span-12 md:col-span-3 relative">
+        <label>อายุ</label>
+        <input [(ngModel)]="data.age" class="w-full border rounded px-3 py-2 font-light text-lg" />
+      </div>
+
       <div class="col-span-12 md:col-span-3 relative">
         <label>เชื้อชาติ</label>
         <button
@@ -177,6 +183,11 @@
         </div>
       </div>
 
+      
+    </div>
+
+    <!-- ================== Section 5 ================= -->
+    <div class="grid grid-cols-9 gap-3 md:gap-6">
       <!-- ศาสนา -->
       <div class="col-span-12 md:col-span-3 relative">
         <label>ศาสนา</label>
@@ -215,17 +226,13 @@
           </ul>
         </div>
       </div>
-    </div>
-
-    <!-- ================== Section 5 ================= -->
-    <div class="grid grid-cols-12 gap-6">
       <!-- คำนำหน้า -->
-      <div class="col-span-12 md:col-span-4">
+      <div class="col-span-12 md:col-span-3">
         <label>เบอร์โทรศัพท์มือถือ</label>
         <input [(ngModel)]="data.phone" class="w-full border rounded px-3 py-2 font-light text-lg" />
       </div>
 
-      <div class="col-span-12 md:col-span-4">
+      <div class="col-span-12 md:col-span-3">
         <label>อีเมล</label>
         <input [(ngModel)]="data.email" class="w-full border rounded px-3 py-2 font-light text-lg" />
       </div>

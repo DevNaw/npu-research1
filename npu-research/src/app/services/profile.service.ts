@@ -67,7 +67,7 @@ export class ProfileService {
   }
   
   updateGeneral(data: any) {
-    return this.http.patch<any>(`${this.api}/user/infomation/general`, data);
+    return this.http.patch(`${this.api}/user/infomation/general`, data);
   }
 
   updateEducation(data: any) {
