@@ -75,14 +75,24 @@
               </div>
 
               <div>
-                <p class="text-[#767676]">Abstract</p>
+                <p class="text-[#767676]">บทคัดย่อ</p>
                 <p class="font-light text-xl">{{ researchData?.abstract || '-' }}</p>
+              </div>
+
+              <div>
+                <p class="text-[#767676]">Abstract</p>
+                <p class="font-light text-xl">{{ researchData?.abstract_en || '-' }}</p>
+              </div>
+
+              <div>
+                <p class="text-[#767676]">Keywords</p>
+                <p class="font-light text-xl">{{ researchData?.keywords || '-' }}</p>
               </div>
             </div>
 
             <!-- Internal Researchers Table -->
             <div>
-              <h2 class="mb-2">ผู้ร่วมโครงการภายใน</h2>
+              <h2 class="my-6">ผู้ร่วมโครงการภายใน</h2>
               <div class="overflow-x-auto font-light text-xl">
                 <table class="w-full border rounded-lg overflow-hidden">
                   <thead class="bg-[#394250] text-white">
@@ -135,7 +145,7 @@
 
             <!-- External Researchers Table -->
             <div>
-              <h2 class="mb-2">ผู้ร่วมโครงการภายนอก</h2>
+              <h2 class="my-6">ผู้ร่วมโครงการภายนอก</h2>
               <div class="overflow-x-auto font-light text-xl">
                 <table class="w-full border rounded-lg overflow-hidden">
                   <thead class="bg-[#394250] text-white">
@@ -368,7 +378,7 @@
 
             <!-- Internal Researchers Table -->
             <div>
-              <h2 class="md:text-2xl mb-2">ผู้ร่วมโครงการภายใน</h2>
+              <h2 class="md:text-2xl my-6">ผู้ร่วมโครงการภายใน</h2>
               <div class="overflow-x-auto">
                 <table class="w-full border rounded-lg overflow-hidden font-light text-xl">
                   <thead class="bg-[#394250] text-white">
@@ -420,7 +430,7 @@
 
             <!-- External Researchers Table -->
             <div>
-              <h2 class="mb-2">ผู้ร่วมโครงการภายนอก</h2>
+              <h2 class="my-6">ผู้ร่วมโครงการภายนอก</h2>
               <div class="overflow-x-auto font-light text-xl">
                 <table class="w-full border rounded-lg overflow-hidden">
                   <thead class="bg-[#394250] text-white">
@@ -620,7 +630,7 @@
 
             <!-- Internal Researchers Table -->
             <div>
-              <h2 class="md:text-2xl mb-2">ผู้ร่วมโครงการภายใน</h2>
+              <h2 class="my-6">ผู้ร่วมโครงการภายใน</h2>
               <div class="overflow-x-auto font-light text-xl">
                 <table class="w-full border rounded-lg overflow-hidden">
                   <thead class="bg-slate-600 text-white">
@@ -666,7 +676,7 @@
 
             <!-- External Researchers Table -->
             <div>
-              <h2 class="mb-2">ผู้ร่วมโครงการภายนอก</h2>
+              <h2 class="my-6">ผู้ร่วมโครงการภายนอก</h2>
               <div class="overflow-x-auto font-light text-xl">
                 <table class="w-full border rounded-lg overflow-hidden">
                   <thead class="bg-slate-600 text-white">
@@ -779,31 +789,31 @@
       <div class="grid gap-4 p-10">
         <div>
           <p>เจ้าของผลงาน</p>
-          <p *ngIf="type === 'article'" class="font-semibold text-gray-800">
+          <p *ngIf="type === 'article'" class="font-light text-gray-800">
             {{ ownerArticle?.full_name }}
           </p>
-          <p *ngIf="type === 'project'" class="font-semibold text-gray-800">
+          <p *ngIf="type === 'project'" class="font-light text-gray-800">
             {{ ownerProject?.full_name }}
           </p>
-          <p *ngIf="type === 'innovation'" class="font-semibold text-gray-800">
+          <p *ngIf="type === 'innovation'" class="font-light text-gray-800">
             {{ ownerInnovation?.full_name }}
           </p>
         </div>
 
         <div>
           <p>หน่วยงาน</p>
-          <p *ngIf="type === 'article'" class="font-semibold text-gray-800">
+          <p *ngIf="type === 'article'" class="font-light text-gray-800">
             {{ ownerArticle?.organization }}
           </p>
-          <p *ngIf="type === 'project'" class="font-semibold text-gray-800">
+          <p *ngIf="type === 'project'" class="font-light text-gray-800">
             {{ ownerProject?.organization }}
           </p>
-          <p *ngIf="type === 'innovation'" class="font-semibold text-gray-800">
+          <p *ngIf="type === 'innovation'" class="font-light text-gray-800">
             {{ ownerInnovation?.organization }}
           </p>
         </div>
 
-        <div class="space-y-1 text-gray-700">
+        <div class="space-y-1 text-gray-700 font-light">
           <p *ngIf="type === 'article'">
             {{ ownerArticle?.email || "ไม่ระบุ" }}
           </p>

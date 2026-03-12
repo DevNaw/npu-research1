@@ -365,7 +365,7 @@ export class UserProfileComponent implements OnInit {
         break;
 
       case 'article':
-        route = `${base}/edit-article/${id}`;
+        route = `${base}/edit-aticle/${id}`;
         break;
 
       case 'innovation':
@@ -664,7 +664,7 @@ export class UserProfileComponent implements OnInit {
   }
 
   tabs: { key: ResearchTab; label: string; icon: string }[] = [
-    { key: 'project', label: 'งานวิจัย', icon: 'bi-journal-text' },
+    { key: 'project', label: 'โครงการวิจัย', icon: 'bi-journal-text' },
     { key: 'article', label: 'บทความวิชาการ', icon: 'bi-file-earmark-text' },
     { key: 'innovation', label: 'นวัตกรรมสิ่งประดิษฐ์', icon: 'bi-award' },
   ];
