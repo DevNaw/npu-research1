@@ -69,8 +69,6 @@ export class UserAddAticleComponent {
   searchMajor = '';
   searchSub = '';
 
-  keywordInput: string = '';
-
   // Dropdowns
   activeDropdown: string | null = null;
 
@@ -213,6 +211,11 @@ export class UserAddAticleComponent {
 
   keywords: string[] = [];
 
+  abstractType: string = '';
+
+  keywordInput = '';
+  keywordInputEn = '';
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -267,7 +270,7 @@ export class UserAddAticleComponent {
         this.articleData = {
           ...this.articleData,
           ...data,
-          keywords: (data.keywords || []).map((k: any) => k.keyword)
+          keywords: (data.keywords || []).map((k: any) => k.keyword),
         };
 
         this.selectedFileName = data.articleFile?.file_name ?? '';
@@ -530,8 +533,8 @@ export class UserAddAticleComponent {
 
     required('title_th', d.title_th);
     required('title_en', d.title_en);
-    required('abstract', d.abstract);
-    required('abstract_en', d.abstract_en);
+    optional('abstract', d.abstract);
+    optional('abstract_en', d.abstract_en);
 
     d.keywords.forEach((k, i) => {
       fd.append(`keywords[${i}]`, k);
@@ -590,38 +593,38 @@ export class UserAddAticleComponent {
     this.searchCountries = '';
   }
 
-  isResearcherAlreadySelected(userId: number, currentRow: InternalMemberRow): boolean {
+  isResearcherAlreadySelected(
+    userId: number,
+    currentRow: InternalMemberRow
+  ): boolean {
     return this.internalRow.some(
-      row =>
-        row !== currentRow &&
-        row.researcher_id === userId
+      (row) => row !== currentRow && row.researcher_id === userId
     );
   }
 
   getAvailableResearchers(row: InternalMemberRow): Researcher[] {
-    return this.filteredResearchers.filter(res =>
-      !this.internalRow.some(
-        r => r !== row && r.researcher_id === res.user_id
-      )
+    return this.filteredResearchers.filter(
+      (res) =>
+        !this.internalRow.some(
+          (r) => r !== row && r.researcher_id === res.user_id
+        )
     );
   }
 
   validateForm(): boolean {
     const d = this.articleData;
-  
+
     // ตรวจ field หลัก
     if (
       !d.title_th ||
       !d.title_en ||
-      !d.abstract ||
-      !d.abstract_en ||
       !d.article_type ||
       !d.journal_name ||
       !d.pages ||
       !d.year_published ||
       !d.volume ||
       !d.volume_no ||
-      !d.doi 
+      !d.doi
     ) {
       Swal.fire({
         icon: 'warning',
@@ -630,12 +633,12 @@ export class UserAddAticleComponent {
       });
       return false;
     }
-  
+
     // ✅ internal member (กรอกก็ได้ แต่ถ้ากรอกต้องครบ)
     const invalidInternal = this.internalRow.some(
-      r => r.researcher_id && !r.responsibilities
+      (r) => r.researcher_id && !r.responsibilities
     );
-  
+
     if (invalidInternal) {
       Swal.fire({
         icon: 'warning',
@@ -644,12 +647,12 @@ export class UserAddAticleComponent {
       });
       return false;
     }
-  
+
     // ✅ external member
     const invalidExternal = this.externalRow.some(
-      r => (r.name && !r.responsibilities) || (r.responsibilities && !r.name)
+      (r) => (r.name && !r.responsibilities) || (r.responsibilities && !r.name)
     );
-  
+
     if (invalidExternal) {
       Swal.fire({
         icon: 'warning',
@@ -658,25 +661,39 @@ export class UserAddAticleComponent {
       });
       return false;
     }
-  
+
     return true;
   }
 
-  addKeyword(event: KeyboardEvent) {
+  addKeyword(event: KeyboardEvent, type: string) {
     if (event.key === 'Enter') {
       event.preventDefault();
 
-      const value = this.keywordInput.trim();
-      if (!value) return;
-      if (!this.articleData.keywords.includes(value)) {
-        this.articleData.keywords.push(value);
+      if (type === 'th') {
+        if (this.articleData.keywords.length >= 5) return;
+
+        if (this.keywordInput.trim()) {
+          this.articleData.keywords.push(this.keywordInput.trim());
+          this.keywordInput = '';
+        }
       }
 
-      this.keywordInput = '';
+      if (type === 'en') {
+        if (this.articleData.keywords.length >= 5) return;
+
+        if (this.keywordInputEn.trim()) {
+          this.articleData.keywords.push(this.keywordInputEn.trim());
+          this.keywordInputEn = '';
+        }
+      }
     }
   }
 
-  removeKeyword(index: number) {
-    this.articleData.keywords.splice(index, 1);
+  removeKeyword(i: number) {
+    this.articleData.keywords.splice(i, 1);
+  }
+
+  removeKeywordEn(i: number) {
+    this.articleData.keywords.splice(i, 1);
   }
 }

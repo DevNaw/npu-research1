@@ -81,7 +81,10 @@ export class UserAddInnovationComponent {
   searchResearcher = '';
   selectedResearcher: string | null = null;
   searchKeyword = '';
-  keywordInput: string = '';
+  abstractType: string = '';
+
+  keywordInput = '';
+  keywordInputEn = '';
 
   internalRow: InternalMemberRow[] = [
     { id: 0, researcher_id: null, name: '', responsibilities: '' },
@@ -422,10 +425,16 @@ export class UserAddInnovationComponent {
     const required = (key: string, val: any) =>
       fd.append(key, val !== undefined ? String(val) : '');
 
+    const optional = (key: string, val: any) => {
+      if (val !== null && val !== undefined && val !== '') {
+        fd.append(key, val);
+      }
+    };
+
     required('title_th', d.title_th);
     required('title_en', d.title_en);
-    required('abstract', d.abstract);
-    required('abstract_en', d.abstract_en);
+    optional('abstract', d.abstract);
+    optional('abstract_en', d.abstract_en);
 
     d.keywords.forEach((k, i) => {
       fd.append(`keywords[${i}]`, k);
@@ -516,7 +525,7 @@ export class UserAddInnovationComponent {
   }
 
   validateForm(): boolean {
-    const d = this.projectData
+    const d = this.projectData;
 
     if (
       !d.title_th ||
@@ -618,21 +627,35 @@ export class UserAddInnovationComponent {
   
   }
 
-  addKeyword(event: KeyboardEvent) {
+  addKeyword(event: KeyboardEvent, type: string) {
     if (event.key === 'Enter') {
       event.preventDefault();
-      
-      const value = this.keywordInput.trim();
-      if (!value) return;
-      if (!this.projectData.keywords.includes(value)) {
-        this.projectData.keywords.push(value);
+
+      if (type === 'th') {
+        if (this.projectData.keywords.length >= 5) return;
+
+        if (this.keywordInput.trim()) {
+          this.projectData.keywords.push(this.keywordInput.trim());
+          this.keywordInput = '';
+        }
       }
 
-      this.keywordInput = '';
+      if (type === 'en') {
+        if (this.projectData.keywords.length >= 5) return;
+
+        if (this.keywordInputEn.trim()) {
+          this.projectData.keywords.push(this.keywordInputEn.trim());
+          this.keywordInputEn = '';
+        }
+      }
     }
   }
 
-  removeKeyword(index: number) {
-    this.projectData.keywords.splice(index, 1);
+  removeKeyword(i: number) {
+    this.projectData.keywords.splice(i, 1);
+  }
+
+  removeKeywordEn(i: number) {
+    this.projectData.keywords.splice(i, 1);
   }
 }

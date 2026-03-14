@@ -1,4 +1,3 @@
-
 <div
   class="contain-content bg-gray-100 p-5 md:px-10 text-2xl font-medium text-[#394250]"
 >
@@ -66,83 +65,100 @@
         class="md:col-span-3 text-lg font-light w-full h-12 border rounded-md px-4 py-2"
         placeholder="ระบุบทความ/วารสาร ภาษาอังกฤษ"
       />
-      <div *ngIf="title_en.invalid && title_en.touched" class="text-red-500 text-sm">
+      <div
+        *ngIf="title_en.invalid && title_en.touched"
+        class="text-red-500 text-sm"
+      >
         กรุณากรอกชื่อบทความภาษาอังกฤษ
       </div>
     </div>
 
-    <div
-      class="grid grid-cols-1 md:grid-cols-1 md:gap-2 mb-2 mt-2 md:mb-6 md:mt-5"
-    >
-      <label class="md:col-span-1 text-start">
-        บทคัดย่อ <span class="text-red-500">*</span>
-      </label>
-      <input
-        type="text"
+    <div class="flex gap-6 mb-4">
+      <div>
+        <input
+          type="radio"
+          name="abstract_type"
+          value="th"
+          [(ngModel)]="abstractType"
+        />
+        <label class="ml-4">บทคัดย่อ</label>
+      </div>
+
+      <div>
+        <input
+          type="radio"
+          name="abstract_type"
+          value="en"
+          [(ngModel)]="abstractType"
+        />
+        <label class="ml-4">Abstract</label>
+      </div>
+    </div>
+
+    <div *ngIf="abstractType === 'th'">
+      <label> บทคัดย่อ <span class="text-red-500">*</span> </label>
+
+      <textarea
         name="abstract"
-        required
-        #abstract="ngModel"
         [(ngModel)]="articleData.abstract"
-        [class.border-red-500]="abstract.invalid && abstract.touched"
-        class="md:col-span-3 text-lg font-light w-full h-12 border rounded-md px-4 py-2"
+        class="w-full border h-20 rounded-md px-4 py-2 text-lg font-light my-2"
         placeholder="ระบุบทคัดย่อ"
-      />
-      <div *ngIf="abstract.invalid && abstract.touched" class="text-red-500 text-sm">
-        กรุณากรอกข้อมูล
-      </div>
-    </div>
+      ></textarea>
 
-    <div
-      class="grid grid-cols-1 md:grid-cols-1 md:gap-2 mb-2 mt-2 md:mb-6 md:mt-5"
-    >
-      <label class="md:col-span-1 text-start">
-        Abstract <span class="text-red-500">*</span>
-      </label>
-      <input
-        type="text"
-        name="abstract_en"
-        required
-        #abstract_en="ngModel"
-        [(ngModel)]="articleData.abstract_en"
-        [class.border-red-500]="abstract_en.invalid && abstract_en.touched"
-        class="md:col-span-3 text-lg font-light w-full h-12 border rounded-md px-4 py-2"
-        placeholder="ระบุ abstract"
-      />
-      <div *ngIf="abstract_en.invalid && abstract_en.touched" class="text-red-500 text-sm">
-        กรุณากรอกข้อมูล
-      </div>
-    </div>
-
-    <!-- Keyword -->
-    <div class="grid grid-cols-1 md:gap-2 mb-2 md:mb-6 md:mt-6">
-      <label class="text-start">
-        Keyword <span class="text-red-500">*</span>
-      </label>
+      <!-- Keyword -->
+      <label class="mt-4 block"> คำสำคัญ (ไม่เกิน 5 คำ) </label>
 
       <div
-        class="flex flex-wrap items-center gap-2 border rounded-md px-2 h-12"
+        class="flex flex-wrap items-center gap-2 border rounded-md px-2 h-12 text-lg font-light mt-2 mb-6"
       >
         <span
           *ngFor="let keyword of articleData.keywords; let i = index"
-          class="flex text-lg font-light items-center gap-2 px-2 py-1 text-white rounded-full bg-linear-to-r from-purple-500 to-indigo-500"
+          class="flex items-center gap-2 px-2 py-1 text-white rounded-full bg-purple-500"
         >
           {{ keyword }}
 
-          <button
-            type="button"
-            (click)="removeKeyword(i)"
-            class="text-white hover:text-gray-200 cursor-pointer"
-          >
-            ✕
-          </button>
+          <button type="button" (click)="removeKeyword(i)">✕</button>
         </span>
 
         <input
           [(ngModel)]="keywordInput"
-          (keydown)="addKeyword($event)"
-          type="text"
-          class="flex-1 outline-none border-none focus:ring-0 focus:outline-none min-w-30 text-lg font-light"
-          placeholder="ระบุคีย์เวิร์ด"
+          (keydown)="addKeyword($event, 'th')"
+          class="flex-1 outline-none"
+          placeholder="ระบุคำสำคัญ"
+        />
+      </div>
+    </div>
+
+    <div *ngIf="abstractType === 'en'">
+      <label> Abstract <span class="text-red-500">*</span> </label>
+
+      <textarea
+        name="abstract_en"
+        [(ngModel)]="articleData.abstract_en"
+        class="w-full border h-20 rounded-md px-4 py-2 text-lg font-light my-2"
+        placeholder="Enter abstract"
+      ></textarea>
+
+      <!-- Keywords -->
+      <label class="mt-4 block"> Keywords (no more than 5 words) </label>
+
+      <div
+        class="flex flex-wrap items-center gap-2 border rounded-md px-2 h-12 text-lg font-light mt-2 mb-6"
+      >
+        <span
+          *ngFor="let keyword of articleData.keywords; let i = index"
+          class="flex items-center gap-2 px-2 py-1 text-white rounded-full bg-indigo-500"
+        >
+          {{ keyword }}
+
+          <button type="button" (click)="removeKeywordEn(i)">✕</button>
+        </span>
+
+        <input
+          [(ngModel)]="keywordInputEn"
+          (keydown)="addKeyword($event, 'en')"
+          class="flex-1 outline-none"
+          placeholder="Enter keyword"
         />
       </div>
     </div>
@@ -155,12 +171,12 @@
 
       <div class="relative md:col-span-3 border rounded-md">
         <button
-        type="button"
-        [ngClass]="
-        !articleData.article_type  && submitted
-          ? 'border-red-500'
-          : 'border-gray-300'
-      "
+          type="button"
+          [ngClass]="
+            !articleData.article_type && submitted
+              ? 'border-red-500'
+              : 'border-gray-300'
+          "
           (click)="toggleDropdown('type', $event)"
           class="w-full border rounded-md px-3 py-2 flex justify-between items-center bg-white"
         >
@@ -190,11 +206,11 @@
         </div>
 
         <p
-      *ngIf="!articleData.article_type  && submitted"
-      class="text-red-500 text-sm mt-1"
-    >
-      กรุณาเลือกประเภท
-    </p>
+          *ngIf="!articleData.article_type && submitted"
+          class="text-red-500 text-sm mt-1"
+        >
+          กรุณาเลือกประเภท
+        </p>
       </div>
     </div>
 
@@ -209,7 +225,7 @@
 
       <div class="relative md:col-span-3">
         <button
-        type="button"
+          type="button"
           (click)="toggleDropdown('database_types', $event)"
           class="w-full border rounded-md px-3 py-2 flex justify-between items-center bg-white"
         >
@@ -247,7 +263,7 @@
     >
       <label class="mb-1 block">ประเทศ</label>
       <button
-      type="button"
+        type="button"
         (click)="toggleDropdown('countries', $event)"
         class="flex justify-between items-center w-full border rounded-lg px-3 py-2 text-lg font-light"
       >
@@ -303,7 +319,10 @@
         placeholder="ระบุบชื่อวารสาร"
       />
 
-      <div *ngIf="journalName.invalid && journalName.touched" class="text-red-500 text-sm">
+      <div
+        *ngIf="journalName.invalid && journalName.touched"
+        class="text-red-500 text-sm"
+      >
         กรุณากรอกชื่อบทความ
       </div>
     </div>
@@ -322,12 +341,17 @@
         #conferenceName="ngModel"
         [(ngModel)]="articleData.journal_name"
         type="text"
-        [class.border-red-500]="conferenceName.invalid && conferenceName.touched"
+        [class.border-red-500]="
+          conferenceName.invalid && conferenceName.touched
+        "
         class="md:col-span-3 text-lg font-light w-full h-12 border rounded-md px-4 py-2"
         placeholder="ระบุบชื่อการประชุมวิชาการ"
       />
 
-      <div *ngIf="conferenceName.invalid && conferenceName.touched" class="text-red-500 text-sm">
+      <div
+        *ngIf="conferenceName.invalid && conferenceName.touched"
+        class="text-red-500 text-sm"
+      >
         กรุณากรอกชื่อการประชุมวิชาการ
       </div>
     </div>
@@ -353,7 +377,10 @@
         class="md:col-span-3 w-full border text-lg font-light rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400"
       ></textarea>
 
-      <div *ngIf="preLocation.invalid && preLocation.touched" class="text-red-500 text-sm">
+      <div
+        *ngIf="preLocation.invalid && preLocation.touched"
+        class="text-red-500 text-sm"
+      >
         กรุณากรอกสถานที่นำเสนอ
       </div>
     </div>
@@ -375,7 +402,10 @@
           placeholder="ฉบับที่/เล่มที่"
         />
 
-        <div *ngIf="volume.invalid && volume.touched" class="text-red-500 text-sm">
+        <div
+          *ngIf="volume.invalid && volume.touched"
+          class="text-red-500 text-sm"
+        >
           กรุณากรอกฉบับที่/เล่มที่
         </div>
       </div>
@@ -396,7 +426,10 @@
           placeholder="ระบุหน้าที่ตีพิมพ์"
         />
 
-        <div *ngIf="pages.invalid && pages.touched" class="text-red-500 text-sm">
+        <div
+          *ngIf="pages.invalid && pages.touched"
+          class="text-red-500 text-sm"
+        >
           กรุณากรอกหน้าที่ตีพิมพ์
         </div>
       </div>
@@ -410,14 +443,19 @@
           name="year_published"
           required
           #yearPublished="ngModel"
-          [class.border-red-500]="yearPublished.invalid && yearPublished.touched"
+          [class.border-red-500]="
+            yearPublished.invalid && yearPublished.touched
+          "
           [(ngModel)]="articleData.year_published"
           type="text"
           class="md:col-span-2 w-full h-12 border text-lg font-light rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400"
           placeholder="ระบุปีบทความวิชาการ"
         />
 
-        <div *ngIf="yearPublished.invalid && yearPublished.touched" class="text-red-500 text-sm">
+        <div
+          *ngIf="yearPublished.invalid && yearPublished.touched"
+          class="text-red-500 text-sm"
+        >
           กรุณากรอกปีที่ตีพิมพ์
         </div>
       </div>
@@ -590,8 +628,7 @@
       <div
         class="md:col-span-3 md:px-4 sm:px-8 overflow-x-auto overflow-y-visible"
       >
-        <label
-          class="flex items-center gap-2 md:mt-4 md:mb-3"
+        <label class="flex items-center gap-2 md:mt-4 md:mb-3"
           >ระบุผู้ร่วมโครงการภายใน</label
         >
         <table class="w-full table-fixed min-w-150">
@@ -735,8 +772,7 @@
       <div
         class="md:col-span-3 md:px-4 sm:px-8 overflow-x-auto overflow-y-visible"
       >
-        <label
-          class="flex items-center gap-2 md:mt-4 md:mb-3"
+        <label class="flex items-center gap-2 md:mt-4 md:mb-3"
           >ระบุผู้ร่วมโครงการภายนอก</label
         >
         <table class="w-full table-fixed min-w-150">
@@ -871,7 +907,8 @@
     <!-- ความร่วมมือกับหน่วยงานอื่นๆ : -->
     <div class="grid grid-cols-1 md:grid-cols-1 md:gap-2 mb-2 md:mb-6">
       <label class="md:col-span-1 text-start">
-        ความร่วมมือระหว่างหน่วยงานภายในและภายนอก <span class="text-red-500">*</span>
+        ความร่วมมือระหว่างหน่วยงานภายในและภายนอก
+        <span class="text-red-500">*</span>
       </label>
 
       <div class="flex gap-10 mt-2 text-lg font-light">
@@ -965,7 +1002,7 @@
     <!-- ปุ่ม -->
     <div class="flex justify-center mt-10">
       <button
-      (click)="submitArticle()"
+        (click)="submitArticle()"
         type="button"
         class="flex items-center justify-center gap-3 w-72 text-xl py-3 bg-[#118CD9] hover:bg-[#4c7b98] text-white rounded-lg shadow transition duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 cursor-pointer"
       >

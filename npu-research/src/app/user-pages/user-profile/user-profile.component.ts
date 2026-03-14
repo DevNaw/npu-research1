@@ -296,6 +296,7 @@ export class UserProfileComponent implements OnInit {
     this.service.getProfile().subscribe({
       next: (res) => {
         this.profileData = res.data.user;
+        console.log(this.profileData.workInfo);
         this.barSummary = res.data.bar;
         this.researchData = res.data.researchs;
 

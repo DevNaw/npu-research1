@@ -158,6 +158,8 @@ export class EditWorkComponent {
         organization_id: this.workInfo.organization?.id ?? 0,
         expertise: this.selectedMajors.map((m) => m.expertise_id),
       };
+      console.log('payload', payload);
+      
 
       this.service.updateWork(payload).subscribe({
         next: () => {

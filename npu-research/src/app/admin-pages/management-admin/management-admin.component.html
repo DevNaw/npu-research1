@@ -202,7 +202,7 @@
   (click)="closeModal()"
 >
   <div
-    class="bg-white rounded-xl w-full max-w-lg p-2 md:p-6 max-h-[90vh] h-120 overflow-y-auto"
+    class="bg-white rounded-xl w-full max-w-lg p-2 md:p-6 max-h-[90vh] h-130 overflow-y-auto"
     (click)="$event.stopPropagation()"
   >
     <!-- Title -->
@@ -240,6 +240,16 @@
         [(ngModel)]="updateAdmin!.email"
         class="w-full border rounded-md px-3 py-2 focus:ring focus:ring-blue-200 text-xl font-light"
         placeholder="กรอกอีเมล"
+      />
+    </div>
+<!-- PASSWORD -->
+    <div class="mb-2 md:mb-4">
+      <label class="block mb-1">รหัสผ่านใหม่</label>
+      <input
+        type="text"
+        [(ngModel)]="updateAdmin!.password"
+        class="w-full border rounded-md px-3 py-2 focus:ring focus:ring-blue-200 text-xl font-light"
+        placeholder="กรอกรหัสผ่านใหม่"
       />
     </div>
 

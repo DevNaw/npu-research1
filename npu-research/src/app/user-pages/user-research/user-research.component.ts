@@ -333,22 +333,21 @@ export class UserResearchComponent {
   }
 
   onSearch(): void {
-    const keyword = this.searchText.trim();
+    const keyword = this.searchText?.trim().toLowerCase();
+  
     if (!keyword) {
-      this.search();
-      return;
+      this.filteredResearchers = [...this.allTableData];
+    } else {
+      this.filteredResearchers = this.allTableData.filter((item: any) => {
+        return (
+          item.title_th?.toLowerCase().includes(keyword) ||
+          item.title_en?.toLowerCase().includes(keyword) ||
+          item.own?.name?.toLowerCase().includes(keyword) ||
+          item.type?.toLowerCase().includes(keyword)
+        );
+      });
     }
-
-    const lowerKeyword = keyword.toLowerCase();
-
-    this.filteredResearchers = this.allTableData.filter(
-      (item) =>
-        item.title_th?.toLowerCase().includes(lowerKeyword) ||
-        item.title_en?.toLowerCase().includes(lowerKeyword) ||
-        item.own?.name?.toLowerCase().includes(lowerKeyword) ||
-        item.type.toLowerCase().includes(lowerKeyword)
-    );
-
+  
     this.currentPage = 1;
     this.updatePagination();
   }
@@ -431,6 +430,7 @@ export class UserResearchComponent {
         const data = res.data;
 
         this.searchResults = data.result;
+        this.allTableData = [...data.result];
         this.filteredResearchers = data.result;
         this.donutSeries = data.graph.map((g) => g.count);
         this.donutLabels = data.graph.map((g) => g.subject_area_name);

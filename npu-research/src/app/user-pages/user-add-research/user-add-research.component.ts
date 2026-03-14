@@ -67,8 +67,6 @@ export class UserAddResearchComponent {
   selectedResearcher: string | null = null;
   searchKeyword = '';
 
-  keywordInput: string = '';
-
   internalRow: InternalMemberRow[] = [
     { id: 0, researcher_id: null, name: '', responsibilities: '' },
   ];
@@ -96,6 +94,11 @@ export class UserAddResearchComponent {
   projectId: number | null = null;
 
   fundings: Funding[] = [];
+
+  abstractType: string = '';
+
+  keywordInput = '';
+  keywordInputEn = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -167,7 +170,7 @@ export class UserAddResearchComponent {
         this.projectData = {
           ...this.projectData,
           ...data,
-          keywords: data.keywords?.map((k: any) => k.keyword) ?? []
+          keywords: data.keywords?.map((k: any) => k.keyword) ?? [],
         };
 
         this.selectedFileName = data.full_report?.file_name ?? '';
@@ -260,20 +263,19 @@ export class UserAddResearchComponent {
   }
 
   selectResearcher(r: Researcher, row: InternalMemberRow): void {
-
     if (this.isResearcherAlreadySelected(r.user_id, row)) {
       Swal.fire({
         icon: 'warning',
         title: 'เลือกซ้ำไม่ได้',
         text: 'ผู้ร่วมโครงการคนนี้ถูกเลือกแล้ว',
-        confirmButtonColor: '#3085d6'
+        confirmButtonColor: '#3085d6',
       });
       return;
     }
-  
+
     row.name = r.full_name;
     row.researcher_id = r.user_id;
-  
+
     this.activeRowIndex = null;
   }
 
@@ -382,7 +384,6 @@ export class UserAddResearchComponent {
   }
 
   submit() {
-
     if (!this.validateForm()) {
       return;
     }
@@ -393,7 +394,6 @@ export class UserAddResearchComponent {
       allowOutsideClick: false,
       didOpen: () => Swal.showLoading(),
     });
-    
 
     const request$ = this.isEdit
       ? this.service.updateProject(this.projectData.id, formData)
@@ -446,9 +446,9 @@ export class UserAddResearchComponent {
 
     required('title_th', d.title_th);
     required('title_en', d.title_en);
-    required('abstract', d.abstract);
-    required('abstract_en', d.abstract_en);
-    
+    optional('abstract', d.abstract);
+    optional('abstract_en', d.abstract_en);
+
     d.keywords.forEach((k, i) => {
       fd.append(`keywords[${i}]`, k);
     });
@@ -507,30 +507,30 @@ export class UserAddResearchComponent {
     this.router.navigate(['/user/profile']);
   }
 
-  isResearcherAlreadySelected(userId: number, currentRow: InternalMemberRow): boolean {
+  isResearcherAlreadySelected(
+    userId: number,
+    currentRow: InternalMemberRow
+  ): boolean {
     return this.internalRow.some(
-      row =>
-        row !== currentRow &&
-        row.researcher_id === userId
+      (row) => row !== currentRow && row.researcher_id === userId
     );
   }
 
   getAvailableResearchers(row: InternalMemberRow): Researcher[] {
-    return this.filteredResearchers.filter(res =>
-      !this.internalRow.some(
-        r => r !== row && r.researcher_id === res.user_id
-      )
+    return this.filteredResearchers.filter(
+      (res) =>
+        !this.internalRow.some(
+          (r) => r !== row && r.researcher_id === res.user_id
+        )
     );
   }
 
   validateForm(): boolean {
     const d = this.projectData;
-  
+
     if (
       !d.title_th ||
       !d.title_en ||
-      !d.abstract ||
-      !d.abstract_en ||
       !d.source_funds ||
       !d.name_funding ||
       !d.budget_amount ||
@@ -543,12 +543,12 @@ export class UserAddResearchComponent {
       });
       return false;
     }
-  
+
     // ✅ internal member (กรอกก็ได้ แต่ถ้ากรอกต้องครบ)
     const invalidInternal = this.internalRow.some(
-      r => r.researcher_id && !r.responsibilities
+      (r) => r.researcher_id && !r.responsibilities
     );
-  
+
     if (invalidInternal) {
       Swal.fire({
         icon: 'warning',
@@ -557,12 +557,12 @@ export class UserAddResearchComponent {
       });
       return false;
     }
-  
+
     // ✅ external member
     const invalidExternal = this.externalRow.some(
-      r => (r.name && !r.responsibilities) || (r.responsibilities && !r.name)
+      (r) => (r.name && !r.responsibilities) || (r.responsibilities && !r.name)
     );
-  
+
     if (invalidExternal) {
       Swal.fire({
         icon: 'warning',
@@ -571,30 +571,39 @@ export class UserAddResearchComponent {
       });
       return false;
     }
-  
+
     return true;
   }
 
-  addKeyword(event: KeyboardEvent) {
-
+  addKeyword(event: KeyboardEvent, type: string) {
     if (event.key === 'Enter') {
-  
       event.preventDefault();
-  
-      const value = this.keywordInput.trim();
-  
-      if (!value) return;
-  
-      if (!this.projectData.keywords.includes(value)) {
-        this.projectData.keywords.push(value);
+
+      if (type === 'th') {
+        if (this.projectData.keywords.length >= 5) return;
+
+        if (this.keywordInput.trim()) {
+          this.projectData.keywords.push(this.keywordInput.trim());
+          this.keywordInput = '';
+        }
       }
-  
-      this.keywordInput = '';
-      
+
+      if (type === 'en') {
+        if (this.projectData.keywords.length >= 5) return;
+
+        if (this.keywordInputEn.trim()) {
+          this.projectData.keywords.push(this.keywordInputEn.trim());
+          this.keywordInputEn = '';
+        }
+      }
     }
   }
 
-  removeKeyword(index: number) {
-    this.projectData.keywords.splice(index, 1);
+  removeKeyword(i: number) {
+    this.projectData.keywords.splice(i, 1);
+  }
+
+  removeKeywordEn(i: number) {
+    this.projectData.keywords.splice(i, 1);
   }
 }

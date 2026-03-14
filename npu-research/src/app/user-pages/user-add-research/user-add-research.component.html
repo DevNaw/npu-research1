@@ -72,82 +72,101 @@
       </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-1 md:gap-2 mb-2 md:mb-6 md:mt-6">
-      <label class="md:col-span-1 text-start">
+    <div class="flex gap-6 mb-4">
+      <div>
+        <input
+          type="radio"
+          name="abstract_type"
+          value="th"
+          [(ngModel)]="abstractType"
+        />
+        <label class="ml-4">บทคัดย่อ</label>
+      </div>
+    
+      <div>
+        <input
+          type="radio"
+          name="abstract_type"
+          value="en"
+          [(ngModel)]="abstractType"
+        />
+        <label class="ml-4">Abstract</label>
+      </div>
+    </div>
+
+    <div *ngIf="abstractType === 'th'">
+
+      <label>
         บทคัดย่อ <span class="text-red-500">*</span>
       </label>
+    
       <textarea
         name="abstract"
-        required
-        #abstract="ngModel"
-        [class.border-red-500]="abstract.invalid && abstract.touched"
         [(ngModel)]="projectData.abstract"
-        class="md:col-span-3 w-full text-lg font-light border h-12 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400"
+        class="w-full border h-20 rounded-md px-4 py-2 text-lg font-light my-2"
         placeholder="ระบุบทคัดย่อ"
       ></textarea>
-
-      <div
-        *ngIf="abstract.invalid && abstract.touched"
-        class="text-red-500 text-sm"
-      >
-        กรุณากรอกข้อมูล
-      </div>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-1 md:gap-2 mb-2 md:mb-6 md:mt-6">
-      <label class="md:col-span-1 text-start">
-        Abstract <span class="text-red-500">*</span>
+    
+      <!-- Keyword -->
+      <label class="mt-4 block">
+        คำสำคัญ (ไม่เกิน 5 คำ)
       </label>
-      <textarea
-        name="abstract_en"
-        required
-        #abstract_en="ngModel"
-        [class.border-red-500]="abstract_en.invalid && abstract_en.touched"
-        [(ngModel)]="projectData.abstract_en"
-        class="md:col-span-3 w-full text-lg font-light border h-12 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400"
-        placeholder="ระบุ abstract"
-      ></textarea>
-
-      <div
-        *ngIf="abstract_en.invalid && abstract_en.touched"
-        class="text-red-500 text-sm"
-      >
-        กรุณากรอกข้อมูล
-      </div>
-    </div>
-
-    <!-- Keyword -->
-    <div class="grid grid-cols-1 md:gap-2 mb-2 md:mb-6 md:mt-6">
-      <label class="text-start">
-        Keyword <span class="text-red-500">*</span>
-      </label>
-
-      <div
-        class="flex flex-wrap items-center gap-2 border rounded-md px-2 h-12"
-      >
+    
+      <div class="flex flex-wrap items-center gap-2 border rounded-md px-2 h-12 text-lg font-light mt-2 mb-6">
         <span
           *ngFor="let keyword of projectData.keywords; let i = index"
-          class="flex text-lg font-light items-center gap-2 px-2 py-1 text-white rounded-full bg-linear-to-r from-purple-500 to-indigo-500"
+          class="flex items-center gap-2 px-2 py-1 text-white rounded-full bg-purple-500"
         >
           {{ keyword }}
-
-          <button
-            type="button"
-            (click)="removeKeyword(i)"
-            class="text-white hover:text-gray-200 cursor-pointer"
-          >
-            ✕
-          </button>
+    
+          <button type="button" (click)="removeKeyword(i)">✕</button>
         </span>
-
+    
         <input
           [(ngModel)]="keywordInput"
-          (keydown)="addKeyword($event)"
-          type="text"
-          class="flex-1 outline-none border-none focus:ring-0 focus:outline-none min-w-30 text-lg font-light"
-          placeholder="ระบุคีย์เวิร์ด"
+          (keydown)="addKeyword($event,'th')"
+          class="flex-1 outline-none"
+          placeholder="ระบุคำสำคัญ"
         />
       </div>
+    
+    </div>
+
+    <div *ngIf="abstractType === 'en'">
+      <label>
+        Abstract <span class="text-red-500">*</span>
+      </label>
+    
+      <textarea
+        name="abstract_en"
+        [(ngModel)]="projectData.abstract_en"
+        class="w-full border h-20 rounded-md px-4 py-2 text-lg font-light my-2"
+        placeholder="Enter abstract"
+      ></textarea>
+    
+      <!-- Keywords -->
+      <label class="mt-4 block">
+        Keywords (no more than 5 words)
+      </label>
+    
+      <div class="flex flex-wrap items-center gap-2 border rounded-md px-2 h-12 text-lg font-light mt-2 mb-6">
+        <span
+          *ngFor="let keyword of projectData.keywords; let i = index"
+          class="flex items-center gap-2 px-2 py-1 text-white rounded-full bg-indigo-500"
+        >
+          {{ keyword }}
+    
+          <button type="button" (click)="removeKeywordEn(i)">✕</button>
+        </span>
+    
+        <input
+          [(ngModel)]="keywordInputEn"
+          (keydown)="addKeyword($event,'en')"
+          class="flex-1 outline-none"
+          placeholder="Enter keyword"
+        />
+      </div>
+    
     </div>
 
     <!-- สาขาของงานวิจัย -->

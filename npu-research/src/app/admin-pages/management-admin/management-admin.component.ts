@@ -130,6 +130,7 @@ export class ManagementAdminComponent {
       first_name: admin.first_name,
       last_name: admin.last_name,
       email: admin.email,
+      password: ''
     };
   }
 
@@ -170,7 +171,14 @@ export class ManagementAdminComponent {
 
   updateExpertise() {
     if (!this.updateAdmin) return;
-
+  
+    const payload: any = { ...this.updateAdmin };
+  
+    // ถ้าไม่ได้กรอกรหัสใหม่ → ไม่ต้องส่ง
+    if (!payload.password || payload.password.trim() === '') {
+      delete payload.password;
+    }
+  
     Swal.fire({
       title: 'กำลังดำเนินการ...',
       text: 'กรุณารอสักครู่',
@@ -180,11 +188,12 @@ export class ManagementAdminComponent {
         Swal.showLoading();
       }
     });
-
-    this.managementService.updateAdmin(this.updateAdmin.id, this.updateAdmin).subscribe({
+  
+    this.managementService.updateAdmin(payload.id, payload).subscribe({
       next: () => {
         this.loadAdmins();
         this.closeModal();
+  
         Swal.fire({
           icon: 'success',
           title: 'แก้ไขสำเร็จ',
@@ -214,6 +223,7 @@ export class ManagementAdminComponent {
       first_name: '',
       last_name: '',
       email: '',
+      password: ''
     };
   }
 }
