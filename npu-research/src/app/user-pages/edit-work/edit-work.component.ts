@@ -156,7 +156,7 @@ export class EditWorkComponent {
         work_start_date: this.workInfo.work_start_date,
         year_of_service: Number(this.workInfo.year_of_service),
         organization_id: this.workInfo.organization?.id ?? 0,
-        expertise: this.selectedMajors.map((m) => m.expertise_id),
+        expertise_ids: this.selectedMajors.map((m) => m.expertise_id),
       };
       console.log('payload', payload);
       

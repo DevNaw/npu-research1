@@ -1,4 +1,10 @@
-import { Component, HostListener } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  QueryList,
+  ViewChildren,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { ResearchService } from '../../services/research.service';
@@ -60,6 +66,7 @@ const DEFAULT_ARTICLE: Article = {
   styleUrl: './user-add-aticle.component.css',
 })
 export class UserAddAticleComponent {
+  @ViewChildren('subItem') subItems!: QueryList<ElementRef>;
   isEdit = false;
 
   // Subject Area
@@ -266,12 +273,34 @@ export class UserAddAticleComponent {
     this.researchService.getArticleById(id).subscribe({
       next: (res) => {
         const data = res.data.researchArticle;
+        const subjectId = data.subject_area?.[0]?.subject_area_id;
 
         this.articleData = {
           ...this.articleData,
           ...data,
           keywords: (data.keywords || []).map((k: any) => k.keyword),
         };
+
+        if (data.abstract) {
+          this.abstractType = 'th';
+        } else if (data.abstract_en) {
+          this.abstractType = 'en';
+        }
+
+        if (subjectId) {
+          this.selectedMajor =
+            this.majors.find((m) =>
+              m.children?.some((c) => c.sub_id === subjectId)
+            ) ?? null;
+
+          this.selectedSub =
+            this.selectedMajor?.children.find((c) => c.sub_id === subjectId) ??
+            null;
+
+          if (this.selectedSub) {
+            this.selectSub(this.selectedSub);
+          }
+        }
 
         this.selectedFileName = data.articleFile?.file_name ?? '';
         this.selectedCountries = this.articleData.country;
@@ -317,7 +346,21 @@ export class UserAddAticleComponent {
 
   toggleDropdown(type: string, event: Event): void {
     event.stopPropagation();
-    this.activeDropdown = this.activeDropdown === type ? null : type;
+
+    if (this.activeDropdown === type) {
+      this.activeDropdown = null;
+    } else {
+      this.activeDropdown = type;
+
+      if (this.selectedSub) {
+        this.activeMajor =
+          this.majors.find((m) =>
+            m.children.some((c) => c.sub_id === this.selectedSub?.sub_id)
+          ) ?? null;
+
+        this.scrollToSelectedSub();
+      }
+    }
   }
 
   @HostListener('document:click')
@@ -348,8 +391,18 @@ export class UserAddAticleComponent {
   selectSub(sub: SubArea): void {
     this.selectedSub = sub;
     this.articleData.subject_area_id = sub.sub_id;
+
+    this.selectedMajor =
+      this.majors.find((m) =>
+        m.children.some((c) => c.sub_id === sub.sub_id)
+      ) ?? null;
+
+    this.activeMajor =
+      this.majors.find((m) =>
+        m.children.some((c) => c.sub_id === sub.sub_id)
+      ) ?? null;
+
     this.activeDropdown = null;
-    this.activeMajor = null;
   }
 
   filteredMajor(): Major[] {
@@ -695,5 +748,39 @@ export class UserAddAticleComponent {
 
   removeKeywordEn(i: number) {
     this.articleData.keywords.splice(i, 1);
+  }
+
+  scrollToSelectedSub() {
+    if (!this.selectedSub) return;
+
+    setTimeout(() => {
+      const element = document.querySelector(
+        `[data-id="${this.selectedSub?.sub_id}"]`
+      ) as HTMLElement;
+
+      if (element) {
+        element.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+        });
+      }
+    }, 200);
+  }
+
+  setSelectedSubjectArea() {
+    if (!this.articleData.subject_area_id) return;
+
+    for (const major of this.majors) {
+      const found = major.children.find(
+        (s) => s.sub_id === this.articleData.subject_area_id
+      );
+
+      if (found) {
+        this.selectedMajor = major;
+        this.selectedSub = found;
+        this.activeMajor = major;
+        break;
+      }
+    }
   }
 }

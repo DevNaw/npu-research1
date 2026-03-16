@@ -19,16 +19,17 @@
           </h1>
 
           <h1 class="text-2xl md:text-3xl mt-1">
-            {{ researchData?.title_en || '-' }}
+            {{ researchData?.title_en || "-" }}
           </h1>
         </div>
 
         <div class="mt-4 text-center flex justify-end">
           <button
-            class="bg-blue-600 text-white p-3 rounded-lg shadow hover:bg-blue-700 text-xl h-15 cursor-pointer"
+            class="bg-blue-600 text-white p-3 rounded-lg shadow hover:bg-blue-700 font-light text-xl h-15 cursor-pointer"
             (click)="editItem(researchData?.research_id)"
           >
-            แก้ไขข้อมูล <i class="bi bi-pencil"></i>
+            <span class="hidden lg:inline">แก้ไขข้อมูล</span>
+            <i class="bi bi-pencil ml-2"></i>
           </button>
         </div>
       </div>
@@ -55,7 +56,7 @@
             <ng-template #noImage>
               <div class="text-center text-gray-500">
                 <img
-                  src="/assets/default_img.png"
+                  src="/assets/research.png"
                   class="w-full h-80 mx-auto opacity-70"
                 />
                 <p class="text-xl">คลิกเพื่อเลือกรูป</p>
@@ -106,17 +107,21 @@
                 </p>
               </div>
 
-              <div>
+              <div *ngIf="researchData?.abstract">
                 <p class="text-[#767676]">บทคัดย่อ</p>
-                <p class="font-light my-2">{{ researchData?.abstract || '-' }}</p>
+                <p class="font-light my-2">
+                  {{ researchData?.abstract || "-" }}
+                </p>
+              </div>
+
+              <div *ngIf="researchData?.abstract_en">
+                <p class="text-[#767676]">Abstract</p>
+                <p class="font-light my-2">
+                  {{ researchData?.abstract_en || "-" }}
+                </p>
               </div>
 
               <div>
-                <p class="text-[#767676]">Abstract</p>
-                <p class="font-light my-2">{{ researchData?.abstract_en || '-' }}</p>
-              </div>
-              
-              <div >
                 <p class="text-[#767676]">Keyword</p>
                 <div class="flex flex-wrap gap-2 my-2">
                   <span
@@ -167,7 +172,9 @@
                         </div>
                         {{ internal?.full_name }}
                       </td>
-                      <td class="p-1 md:p-2 font-light my-2">{{ internal?.role }}</td>
+                      <td class="p-1 md:p-2 font-light my-2">
+                        {{ internal?.role }}
+                      </td>
                     </tr>
                   </tbody>
 
@@ -212,9 +219,15 @@
                       class="bg-gray-200 border-b border-gray-300"
                     >
                       <td class="p-1 md:p-2">{{ i + 1 }}</td>
-                      <td class="p-1 md:p-2 font-light my-2">{{ external?.full_name }}</td>
-                      <td class="p-1 md:p-2 font-light my-2">{{ external?.role }}</td>
-                      <td class="p-1 md:p-2 font-light my-2">{{ external?.organization }}</td>
+                      <td class="p-1 md:p-2 font-light my-2">
+                        {{ external?.full_name }}
+                      </td>
+                      <td class="p-1 md:p-2 font-light my-2">
+                        {{ external?.role }}
+                      </td>
+                      <td class="p-1 md:p-2 font-light my-2">
+                        {{ external?.organization }}
+                      </td>
                     </tr>
                   </tbody>
                 </table>
@@ -234,39 +247,35 @@
               class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-x-10 md:gap-y-6"
             >
               <div>
-                <p class="text-[#767676] md:mb-1">
-                  ที่มาแหล่งทุน
+                <p class="text-[#767676] md:mb-1">ที่มาแหล่งทุน</p>
+                <p class="text-gray-800 font-light my-2">
+                  {{ researchData?.source_funds }}
                 </p>
-                <p class="text-gray-800 font-light my-2">{{ researchData?.source_funds }}</p>
               </div>
 
               <div>
                 <p class="text-[#767676] md:mb-1">ชื่อแหล่งทุน</p>
-                <p class="text-gray-800 font-light my-2">{{ researchData?.name_funding }}</p>
+                <p class="text-gray-800 font-light my-2">
+                  {{ researchData?.name_funding }}
+                </p>
               </div>
 
               <div>
-                <p class="text-[#767676] md:mb-1">
-                  จำนวนงบประมาณ
-                </p>
+                <p class="text-[#767676] md:mb-1">จำนวนงบประมาณ</p>
                 <p class="text-gray-800 font-light my-2">
                   {{ researchData?.budget_amount }} บาท
                 </p>
               </div>
 
               <div>
-                <p class="text-[#767676] md:mb-1">
-                  ปีที่ได้รับทุน
-                </p>
+                <p class="text-[#767676] md:mb-1">ปีที่ได้รับทุน</p>
                 <p class="text-gray-800 font-light my-2">
                   {{ researchData?.year_received_budget }}
                 </p>
               </div>
 
               <div>
-                <p class="text-[#767676] md:mb-1">
-                  สถานะดำเนินการ
-                </p>
+                <p class="text-[#767676] md:mb-1">สถานะดำเนินการ</p>
                 <span
                   class="inline-block px-3 py-1 rounded-full bg-green-100 text-green-700"
                 >
@@ -290,29 +299,27 @@
 
               <div>
                 <p class="text-[#767676] md:mb-1">พื้นที่วิจัย</p>
-                <p class="text-gray-800 font-light my-2">{{ researchData?.research_area || '-' }}</p>
+                <p class="text-gray-800 font-light my-2">
+                  {{ researchData?.research_area || "-" }}
+                </p>
               </div>
 
               <div>
-                <p class="text-[#767676] md:mb-1">
-                  พื้นที่ใช้ประโยชน์
+                <p class="text-[#767676] md:mb-1">พื้นที่ใช้ประโยชน์</p>
+                <p class="text-gray-800 font-light my-2">
+                  {{ researchData?.research_area || "-" }}
                 </p>
-                <p class="text-gray-800 font-light my-2">{{ researchData?.research_area || '-' }}</p>
               </div>
 
               <div>
-                <p class="text-[#767676] md:mb-1">
-                  รายงานวิจัยฉบับสมบูรณ์
-                </p>
+                <p class="text-[#767676] md:mb-1">รายงานวิจัยฉบับสมบูรณ์</p>
                 <a href="#" class="text-[#16498C] font-light hover:underline">
                   {{ researchData?.full_report?.file_name || "-" }}
                 </a>
               </div>
 
               <div>
-                <p class="text-[#767676] md:mb-1">
-                  ไฟล์สัญญารับทุน
-                </p>
+                <p class="text-[#767676] md:mb-1">ไฟล์สัญญารับทุน</p>
                 <a href="#" class="text-[#16498C] font-light hover:underline">
                   {{ researchData?.contract_file?.file_name || "-" }}
                 </a>
@@ -332,7 +339,9 @@
 
     <!-- ===== Acticle ===== -->
     <div *ngIf="type === 'article'">
-      <div class="mx-auto bg-white rounded-2xl shadow-lg overflow-hidden font-medium text-2xl">
+      <div
+        class="mx-auto bg-white rounded-2xl shadow-lg overflow-hidden font-medium text-2xl"
+      >
         <!-- Header -->
         <div
           class="bg-[#394250] text-white px-4 py-2 md:px-8 md:py-6 flex justify-between"
@@ -345,16 +354,17 @@
               {{ articleData?.title_th }}
             </h1>
             <h1 class="text-2xl md:text-3xl mt-1">
-              {{ articleData?.title_en || '-' }}
+              {{ articleData?.title_en || "-" }}
             </h1>
           </div>
 
           <div class="mt-4 text-center flex justify-end">
             <button
-              class="bg-blue-600 text-white p-3 rounded-lg shadow hover:bg-blue-700 text-xl h-15 cursor-pointer"
+              class="bg-blue-600 text-white p-3 rounded-lg shadow hover:bg-blue-700 font-light text-xl h-15 cursor-pointer"
               (click)="editItem(articleData?.research_id)"
             >
-              แก้ไขข้อมูล <i class="bi bi-pencil"></i>
+              <span class="hidden sm:inline">แก้ไขข้อมูล</span
+              ><i class="bi bi-pencil ml-2"></i>
             </button>
           </div>
         </div>
@@ -382,7 +392,7 @@
               <ng-template #noImage>
                 <div class="text-center text-gray-500">
                   <img
-                    src="/assets/default_img.png"
+                    src="/assets/research.png"
                     class="w-full h-80 mx-auto opacity-70"
                   />
                   <p class="text-xl">คลิกเพื่อเลือกรูป</p>
@@ -431,17 +441,17 @@
               </p>
             </div>
 
-            <div>
+            <div *ngIf="articleData?.abstract">
               <p class="text-[#767676]">บทคัดย่อ</p>
               <p class="font-light">
-                {{ articleData?.abstract || '-' }}
+                {{ articleData?.abstract || "-" }}
               </p>
             </div>
 
-            <div>
+            <div *ngIf="articleData?.abstract_en">
               <p class="text-[#767676]">Abstract</p>
               <p class="font-light">
-                {{ articleData?.abstract_en || '-' }}
+                {{ articleData?.abstract_en || "-" }}
               </p>
             </div>
 
@@ -596,7 +606,9 @@
                 <p class="font-semibold text-[#767676] md:mb-1">
                   ฉบับที่/เล่มที่
                 </p>
-                <p class="text-gray-800 font-light">{{ articleData?.volume }}</p>
+                <p class="text-gray-800 font-light">
+                  {{ articleData?.volume }}
+                </p>
               </div>
               <div>
                 <p class="font-semibold text-[#767676] md:mb-1">
@@ -606,7 +618,9 @@
               </div>
               <div>
                 <p class="font-semibold text-[#767676] md:mb-1">ปีที่ตีพิมพ์</p>
-                <p class="text-gray-800 font-light">{{ articleData?.year_published }}</p>
+                <p class="text-gray-800 font-light">
+                  {{ articleData?.year_published }}
+                </p>
               </div>
 
               <div>
@@ -640,7 +654,10 @@
                 <p class="font-semibold text-[#767676] md:mb-1">
                   เว็บไซต์อ้างอิง/การเผยแพร่
                 </p>
-                <a href="#" class="text-[#16498C] hover:underline break-all font-light">
+                <a
+                  href="#"
+                  class="text-[#16498C] hover:underline break-all font-light"
+                >
                   {{ articleData?.doi }}
                 </a>
               </div>
@@ -652,7 +669,9 @@
 
     <!-- ===== Innovation ===== -->
     <div *ngIf="type === 'innovation'">
-      <div class="mx-auto bg-white rounded-2xl shadow-lg overflow-hidden text-2xl font-medium">
+      <div
+        class="mx-auto bg-white rounded-2xl shadow-lg overflow-hidden text-2xl font-medium"
+      >
         <!-- Header -->
         <div
           class="bg-[#394250] text-white px-4 md:px-8 py-2 md:py-6 flex justify-between"
@@ -663,16 +682,17 @@
               {{ innovationData?.title_th }}
             </h1>
             <h1 class="text-2xl md:text-3xl mt-1">
-              {{ innovationData?.title_en || '-' }}
+              {{ innovationData?.title_en || "-" }}
             </h1>
           </div>
 
           <div class="mt-4 text-center flex justify-end">
             <button
-              class="bg-blue-600 text-white p-3 rounded-lg shadow hover:bg-blue-700 text-xl h-15 cursor-pointer"
+              class="bg-blue-600 text-white p-3 rounded-lg shadow hover:bg-blue-700 font-light text-xl h-15 cursor-pointer"
               (click)="editItem(innovationData?.research_id)"
             >
-              แก้ไขข้อมูล <i class="bi bi-pencil"></i>
+              <span class="hidden sm:inline">แก้ไขข้อมูล</span>
+              <i class="bi bi-pencil ml-2"></i>
             </button>
           </div>
         </div>
@@ -700,7 +720,7 @@
               <ng-template #noImage>
                 <div class="text-center text-gray-500">
                   <img
-                    src="/assets/default_img.png"
+                    src="/assets/research.png"
                     class="w-full h-80 mx-auto mb-3 opacity-70"
                   />
                   <p class="text-xl">คลิกเพื่อเลือกรูป</p>
@@ -774,16 +794,16 @@
               </div>
 
               <div>
-                <p class="text-[#767676]">บทคัดย่อ/p>
+                <p class="text-[#767676]">บทคัดย่อ/p></p>
                 <p class="font-light">
-                  {{ innovationData?.abstract || '-' }}
+                  {{ innovationData?.abstract || "-" }}
                 </p>
               </div>
 
               <div>
                 <p class="text-[#767676]">Abstract</p>
                 <p class="font-light">
-                  {{ innovationData?.abstract_en || '-' }}
+                  {{ innovationData?.abstract_en || "-" }}
                 </p>
               </div>
 
@@ -794,10 +814,9 @@
                     *ngFor="let k of innovationData?.keywords"
                     class="px-2 py-1 font-light my-2 text-white rounded bg-[#118CD9]"
                   >
-                    {{ k.keyword || '-'}}
+                    {{ k.keyword || "-" }}
                   </span>
                 </div>
-
               </div>
               <div class="">
                 <p class="text-[#767676] mb-1">หลักการและเหตุผล</p>
@@ -885,68 +904,71 @@
               class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-x-10 md:gap-y-6"
             >
               <div>
-                <p class=" text-[#767676] md:mb-1">
-                  ที่มาแหล่งทุน
+                <p class="text-[#767676] md:mb-1">ที่มาแหล่งทุน</p>
+                <p class="text-gray-800 font-light">
+                  {{ innovationData?.source_funds }}
                 </p>
-                <p class="text-gray-800 font-light">{{ innovationData?.source_funds }}</p>
               </div>
 
               <div>
-                <p class=" text-[#767676] md:mb-1">ชื่อแหล่งทุน</p>
-                <p class="text-gray-800 font-light">{{ innovationData?.name_funding }}</p>
+                <p class="text-[#767676] md:mb-1">ชื่อแหล่งทุน</p>
+                <p class="text-gray-800 font-light">
+                  {{ innovationData?.name_funding }}
+                </p>
               </div>
 
               <div>
-                <p class=" text-[#767676] md:mb-1">งบประมาณ</p>
+                <p class="text-[#767676] md:mb-1">งบประมาณ</p>
                 <p class="text-gray-800 font-light">
                   {{ innovationData?.budget_amount }} บาท
                 </p>
               </div>
 
               <div>
-                <p class=" text-[#767676] md:mb-1">
-                  ปีที่เสร็จสิ้น
+                <p class="text-[#767676] md:mb-1">ปีที่เสร็จสิ้น</p>
+                <p class="text-gray-800 font-light">
+                  {{ innovationData?.year }}
                 </p>
-                <p class="text-gray-800 font-light">{{ innovationData?.year }}</p>
               </div>
 
               <div>
-                <p class=" text-[#767676] md:mb-1">
+                <p class="text-[#767676] md:mb-1">
                   ความร่วมมือกับหน่วยงานอื่นๆ
                 </p>
-                <p class="text-gray-800 font-light">{{ innovationData?.call_other || '-' }}</p>
+                <p class="text-gray-800 font-light">
+                  {{ innovationData?.call_other || "-" }}
+                </p>
               </div>
 
               <div>
-                <p class=" text-[#767676] md:mb-1">
-                  เลขที่ คำขอ/สิทธิบัตร
+                <p class="text-[#767676] md:mb-1">เลขที่ คำขอ/สิทธิบัตร</p>
+                <p class="text-gray-800 font-light">
+                  {{ innovationData?.patent_number }}
                 </p>
-                <p class="text-gray-800 font-light">{{ innovationData?.patent_number }}</p>
               </div>
 
               <div>
-                <p class=" text-[#767676] md:mb-1">
-                  เว็บไซต์ตรวจสิทธิบัตร
-                </p>
+                <p class="text-[#767676] md:mb-1">เว็บไซต์ตรวจสิทธิบัตร</p>
                 <p class="text-[#16498C] font-light hover:underline break-all">
                   {{ innovationData?.examination_url }}
                 </p>
               </div>
 
               <div>
-                <p class=" text-[#767676] md:mb-1">
-                  รายงานวิจัยฉบับสมบูรณ์
-                </p>
+                <p class="text-[#767676] md:mb-1">รายงานวิจัยฉบับสมบูรณ์</p>
                 <a href="#" class="text-[#16498C] font-light hover:underline">
                   {{ innovationData?.full_report?.file_name || "-" }}
                 </a>
               </div>
 
               <div class="md:col-span-2">
-                <p class=" text-[#767676] md:mb-1">
+                <p class="text-[#767676] md:mb-1">
                   ไฟล์ภาพนวัตกรรมสิ่งประดิษฐ์
                 </p>
-                <a href="#" class="text-[#16498C] font-light hover:underline break-all">
+                <a
+                  href="#"
+                  class="text-[#16498C] font-light hover:underline break-all"
+                >
                   https://example.com/innovation-images
                 </a>
               </div>
@@ -956,61 +978,71 @@
       </div>
     </div>
 
-    <div class="grid grid-cols-2 mt-6 bg-gray-300 rounded-xl overflow-hidden">
+    <div class="grid grid-cols-1 mt-6 bg-gray-300 rounded-xl overflow-hidden">
       <!-- ข้อมูลผู้ติดต่อ -->
-      <div class="grid gap-4 p-10">
-        <div>
-          <p>เจ้าของผลงาน</p>
-          <p *ngIf="type === 'article'" class=" text-gray-800 font-light">
-            {{ ownerArticle?.full_name }}
-          </p>
-          <p *ngIf="type === 'project'" class=" text-gray-800 font-light">
-            {{ ownerProject?.full_name }}
-          </p>
-          <p *ngIf="type === 'innovation'" class=" text-gray-800 font-light">
-            {{ ownerInnovation?.full_name }}
-          </p>
-        </div>
-
-        <div>
-          <p>หน่วยงาน</p>
-          <p *ngIf="type === 'article'" class=" text-gray-800 font-light">
-            {{ ownerArticle?.organization }}
-          </p>
-          <p *ngIf="type === 'project'" class=" text-gray-800 font-light">
-            {{ ownerProject?.organization }}
-          </p>
-          <p *ngIf="type === 'innovation'" class=" text-gray-800 font-light">
-            {{ ownerInnovation?.organization }}
-          </p>
-        </div>
-
-        <div class="space-y-1 text-gray-700 font-light">
-          <p *ngIf="type === 'article'">
-            {{ ownerArticle?.email || "ไม่ระบุ" }}
-          </p>
-          <p *ngIf="type === 'project'">
-            {{ ownerProject?.email || "ไม่ระบุ" }}
-          </p>
-          <p *ngIf="type === 'innovation'">
-            {{ ownerInnovation?.email || "ไม่ระบุ" }}
-          </p>
-          <p *ngIf="type === 'article'">
-            โทรศัพท์: {{ ownerArticle?.phone || "ไม่ระบุ" }}
-          </p>
-          <p *ngIf="type === 'project'">
-            โทรศัพท์: {{ ownerProject?.phone || "ไม่ระบุ" }}
-          </p>
-          <p *ngIf="type === 'innovation'">
-            โทรศัพท์: {{ ownerInnovation?.phone || "ไม่ระบุ" }}
-          </p>
+      <div class="mt-8">
+        <div
+          class="bg-linear-to-r from-gray-100 to-gray-200 rounded-t-2xl shadow-md px-12 py-10"
+        >
+          <div
+            class="grid grid-cols-1 md:grid-cols-3 gap-10 text-center items-center"
+          >
+            
+            <!-- Owner -->
+            <div class="space-y-2">
+              <div class="flex justify-center mb-2">
+                <div
+                  class="w-12 h-12 rounded-full bg-purple-500 text-white flex items-center justify-center text-xl"
+                >
+                  <i class="bi bi-person"></i>
+                </div>
+              </div>
+      
+              <p class="text-gray-500 text-lg">เจ้าของผลงาน</p>
+              <p class="text-gray-900 text-xl font-medium">
+                {{ owner?.full_name || "ไม่ระบุ" }}
+              </p>
+            </div>
+      
+            <!-- Organization -->
+            <div class="space-y-2 border-y md:border-y-0 md:border-x border-gray-300 px-6">
+              <div class="flex justify-center mb-2">
+                <div
+                  class="w-12 h-12 rounded-full bg-blue-500 text-white flex items-center justify-center text-xl"
+                >
+                  <i class="bi bi-building"></i>
+                </div>
+              </div>
+      
+              <p class="text-gray-500 text-lg">หน่วยงาน</p>
+              <p class="text-gray-900 text-xl font-medium">
+                {{ owner?.organization || "ไม่ระบุ" }}
+              </p>
+            </div>
+      
+            <!-- Contact -->
+            <div class="space-y-3">
+              <div class="flex justify-center mb-2">
+                <div
+                  class="w-12 h-12 rounded-full bg-green-500 text-white flex items-center justify-center text-xl"
+                >
+                  <i class="bi bi-envelope"></i>
+                </div>
+              </div>
+      
+              <p class="text-gray-900 text-lg">
+                {{ owner?.email || "ไม่ระบุ" }}
+              </p>
+      
+              <p class="text-gray-700 text-lg">
+                โทรศัพท์: {{ owner?.phone || "ไม่ระบุ" }}
+              </p>
+            </div>
+      
+          </div>
         </div>
       </div>
-
-      <!-- โลโก้ -->
-      <div class="flex items-center justify-center bg-[#F9CB34]">
-        <img src="/assets/logoNPU.png" class="h-48 object-contain" />
-      </div>
+    
     </div>
   </div>
 </div>

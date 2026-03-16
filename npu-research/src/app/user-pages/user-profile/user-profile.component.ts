@@ -296,7 +296,6 @@ export class UserProfileComponent implements OnInit {
     this.service.getProfile().subscribe({
       next: (res) => {
         this.profileData = res.data.user;
-        console.log(this.profileData.workInfo);
         this.barSummary = res.data.bar;
         this.researchData = res.data.researchs;
 
@@ -735,5 +734,21 @@ export class UserProfileComponent implements OnInit {
     };
 
     reader.readAsDataURL(file);
+  }
+
+  formatThaiDate(date: string): string {
+    if (!date) return '';
+  
+    const d = new Date(date);
+    const day = d.getDate();
+    const month = d.getMonth() + 1;
+    let year = d.getFullYear();
+  
+    // ถ้าเป็น ค.ศ. ให้แปลงเป็น พ.ศ.
+    if (year < 2500) {
+      year = year + 543;
+    }
+  
+    return `${day}/${month}/${year}`;
   }
 }

@@ -178,47 +178,14 @@
             (mouseleave)="onMouseLeave('manual')"
           >
             <button
-              (click)="onToggle('manual', $event)"
-              class="hover:bg-gray-50 hover:text-[#394250] px-3 py-2 rounded-md text-sm font-light flex items-center justify-center gap-1"
+              (click)="goToManual()"
+              class="hover:bg-gray-50 hover:text-[#394250] px-3 py-2 rounded-md text-sm font-light flex items-center justify-center gap-1 cursor-pointer"
             >
               <i class="bi bi-file-earmark-text-fill text-lg"></i>
               <span class="hidden md:inline text-lg"
                 >คู่มือการใช้งาน</span
               >
             </button>
-
-            <div
-              *ngIf="openMenu === 'manual'"
-              class="absolute left-1/2 mt-2 -translate-x-1/2 w-40 max-w-[90vw] bg-[#394250] text-white rounded-md shadow-lg z-50"
-            >
-              <a
-              (click)="closeMenu()"
-                [href]="doc.researcher.fileUrl"
-                target="_blank"
-                rel="noopener"
-                class="block px-4 py-2 hover:bg-gray-600 text-lg"
-              >
-                สำหรับนักวิจัย
-              </a>
-              <a
-              (click)="closeMenu()"
-                [href]="doc.admin.fileUrl"
-                target="_blank"
-                rel="noopener"
-                class="block px-4 py-2 hover:bg-gray-600 text-lg"
-              >
-                สำหรับแอดมิน
-              </a>
-              <a
-              (click)="closeMenu()"
-                [href]="doc.executive.fileUrl"
-                target="_blank"
-                rel="noopener"
-                class="block px-4 py-2 hover:bg-gray-600 text-lg"
-              >
-                สำหรับผู้บริหาร
-              </a>
-            </div>
           </div>
         </div>
       </div>
@@ -822,6 +789,14 @@
                 class="block px-4 py-2 hover:bg-gray-600 text-lg"
               >
                 เอกสารดาวน์โหลด
+              </a>
+
+              <a
+              (click)="closeMenu()"
+                routerLink="/admin/admin-manual"
+                class="block px-4 py-2 hover:bg-gray-600 text-lg"
+              >
+                คู่มือการใช้งาน
               </a>
             </div>
           </div>

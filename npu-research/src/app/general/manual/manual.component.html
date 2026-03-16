@@ -1,31 +1,29 @@
-<div class="contain-content bg-gray-100 p-5 md:px-10 text-xl md:text-2xl font-medium text-[#394250]">
+<div
+  class="contain-content bg-gray-100 p-5 md:px-10 text-xl md:text-2xl font-medium text-[#394250]"
+>
   <div class="mx-auto md:py-6 mb-2">
     <!-- Title -->
     <h1 class="text-3xl md:ml-5 text-[#16498C]">คู่มือการใช้งาน</h1>
   </div>
 
-  <div class="mb-2 md:mb-10 mx-auto px-2 py-2 md:py-6 bg-white rounded-xl font-light text-lg">
+  <div
+    class="mb-2 md:mb-10 mx-auto px-2 py-2 md:py-6 bg-white rounded-xl font-light text-lg"
+  >
     <div class="mx-auto md:px-6">
       <!-- Table -->
       <div class="w-full overflow-x-auto bg-white shadow-sm">
         <table class="w-full min-w-225 table-auto">
           <colgroup>
-            <col class="w-[5%]">
-            <col class="w-[70%]">
-            <col class="w-[25%]">
+            <col class="w-[5%]" />
+            <col class="w-[70%]" />
+            <col class="w-[25%]" />
           </colgroup>
           <!-- Header -->
-          <thead
-            class="bg-[#394250] text-white"
-          >
+          <thead class="bg-[#394250] text-white">
             <tr>
-              <th class="p-1 md:p-2 w-20 text-center">
-                #
-              </th>
+              <th class="p-1 md:p-2 w-20 text-center">#</th>
               <th class="p-1 md:p-2 text-left">เอกสาร</th>
-              <th class="p-1 md:p-2 text-center md:w-56">
-                ดาวน์โหลด
-              </th>
+              <th class="p-1 md:p-2 text-center md:w-56">ดาวน์โหลด</th>
             </tr>
           </thead>
 
@@ -48,18 +46,18 @@
                   ></i>
 
                   <a
-                    [href]="doc.fileUrl"
+                    (click)="downloadFile(doc.manual_id, doc.file_url)"
                     target="_blank"
-                    class="text-[#16498C] font-medium hover:underline wrap-break-word"
+                    class="text-[#16498C] font-medium hover:underline wrap-break-word cursor-pointer"
                   >
-                    {{ doc.title }}
+                    {{ doc.doc_name }}
                   </a>
                 </div>
               </td>
 
               <!-- Download Count -->
               <td class="p-1 md:p-2 text-center">
-                {{ doc.downloads | number }}
+                {{ doc.download_count | number }}
                 <span class="text-lg ml-1">ครั้ง</span>
               </td>
             </tr>

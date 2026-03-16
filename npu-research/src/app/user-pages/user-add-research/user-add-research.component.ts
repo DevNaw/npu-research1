@@ -1,4 +1,4 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, ElementRef, HostListener, QueryList, ViewChildren } from '@angular/core';
 import { Major, SubArea } from '../../models/subject.model';
 import { ResearchProjectData } from '../../models/researchs-detai.model';
 import { Researcher } from '../../models/researchers.model';
@@ -50,6 +50,7 @@ const DEFAULT_RESEARCH: ResearchProjectData = {
   styleUrl: './user-add-research.component.css',
 })
 export class UserAddResearchComponent {
+  @ViewChildren('subItem') subItems!: QueryList<ElementRef>;
   isEdit = false;
   activeDropdown: string | null = null;
   activeRowIndex: number | null = null;
@@ -166,12 +167,35 @@ export class UserAddResearchComponent {
     this.service.getProjectById(id).subscribe({
       next: (res) => {
         const data = res.data.projectDetail;
+        const subjectId = data.subject_area?.[0]?.subject_area_id;
 
         this.projectData = {
           ...this.projectData,
           ...data,
           keywords: data.keywords?.map((k: any) => k.keyword) ?? [],
         };
+
+        if (data.abstract) {
+          this.abstractType = 'th';
+        } else if (data.abstract_en) {
+          this.abstractType = 'en';
+        }
+
+        if (subjectId) {
+          this.selectedMajor =
+            this.major.find((m) =>
+              m.children?.some((c) => c.sub_id === subjectId)
+            ) ?? null;
+
+          this.selectedSub =
+            this.selectedMajor?.children.find(
+              (c) => c.sub_id === subjectId
+            ) ?? null;
+
+          if (this.selectedSub) {
+            this.selectSub(this.selectedSub);
+          }
+        }
 
         this.selectedFileName = data.full_report?.file_name ?? '';
         this.selectedContractFileName = data.contract_file?.file_name ?? '';
@@ -221,7 +245,20 @@ export class UserAddResearchComponent {
 
   toggleDropdown(type: string, event: Event): void {
     event.stopPropagation();
-    this.activeDropdown = this.activeDropdown === type ? null : type;
+  
+    if (this.activeDropdown === type) {
+      this.activeDropdown = null;
+    } else {
+      this.activeDropdown = type;
+  
+      if (this.selectedSub) {
+        this.activeMajor = this.major.find((m) =>
+          m.children.some((c) => c.sub_id === this.selectedSub?.sub_id)
+        ) ?? null;
+
+        this.scrollToSelectedSub();
+      }
+    }
   }
 
   @HostListener('document: click')
@@ -247,11 +284,19 @@ export class UserAddResearchComponent {
   }
 
   selectSub(sub: SubArea): void {
-    this.selectedSub = sub;
-    this.projectData.subject_area_id = sub.sub_id;
-    this.activeDropdown = null;
-    this.activeMajor = null;
-  }
+  this.selectedSub = sub;
+  this.projectData.subject_area_id = sub.sub_id;
+
+  this.selectedMajor = this.major.find((m) =>
+    m.children.some((c) => c.sub_id === sub.sub_id)
+  ) ?? null;
+
+  this.activeMajor = this.major.find((m) =>
+    m.children.some((c) => c.sub_id === sub.sub_id)
+  ) ?? null;
+
+  this.activeDropdown = null;
+}
 
   selectRowResponsibility(row: any, value: string) {
     if (value === FIRST_AUTHOR && this.isFirstAuthorTaken(row)) {
@@ -394,6 +439,8 @@ export class UserAddResearchComponent {
       allowOutsideClick: false,
       didOpen: () => Swal.showLoading(),
     });
+    console.log('formData', formData);
+    
 
     const request$ = this.isEdit
       ? this.service.updateProject(this.projectData.id, formData)
@@ -605,5 +652,39 @@ export class UserAddResearchComponent {
 
   removeKeywordEn(i: number) {
     this.projectData.keywords.splice(i, 1);
+  }
+
+  scrollToSelectedSub() {
+    if (!this.selectedSub) return;
+
+    setTimeout(() => {
+      const element = document.querySelector(
+        `[data-id="${this.selectedSub?.sub_id}"]`
+      ) as HTMLElement;
+
+      if (element) {
+        element.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+        });
+      }
+    }, 200);
+  }
+
+  setSelectedSubjectArea() {
+    if (!this.projectData.subject_area_id) return;
+
+    for (const major of this.major) {
+      const found = major.children.find(
+        (s) => s.sub_id === this.projectData.subject_area_id
+      );
+
+      if (found) {
+        this.selectedMajor = major;
+        this.selectedSub = found;
+        this.activeMajor = major;
+        break;
+      }
+    }
   }
 }

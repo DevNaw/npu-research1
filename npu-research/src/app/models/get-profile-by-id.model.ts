@@ -14,6 +14,7 @@ export interface ResearchProfileResponse {
   export interface UserProfile {
     user_id: number;
     full_name: string;
+    full_name_en: string;
     avatar_url: string | null;
     generalInfo: any | null;
     workInfo: any | null;

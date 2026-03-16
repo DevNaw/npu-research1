@@ -64,6 +64,7 @@
   export interface UserProfile {
     user_id: number;
     full_name: string;
+    full_name_en: string;
     avatar_url: string | null;
     generalInfo: GeneralInfo;
     workInfo: WorkInfo;

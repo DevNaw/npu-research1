@@ -1,4 +1,10 @@
-import { Component, HostListener } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  QueryList,
+  ViewChildren,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { InnovationForm, Major, SubArea } from '../../models/subject.model';
@@ -120,21 +126,21 @@ export class UserAddInnovationComponent {
 
   ngOnInit(): void {
     MainComponent.showLoading();
-  
+
     this.loadSubjectArea();
     this.loadResearchersData();
     this.loadFundings();
-  
+
     this.route.paramMap.subscribe((params) => {
       const id = params.get('id');
-  
+
       if (id) {
         this.isEdit = true;
         this.projectData.research_id = +id;
         this.loadProjectData(this.projectData.research_id);
       } else {
         this.isEdit = false;
-        MainComponent.hideLoading(); // ใส่เฉพาะกรณี create
+        MainComponent.hideLoading();
       }
     });
   }
@@ -166,7 +172,6 @@ export class UserAddInnovationComponent {
       next: (res) => {
         this.researchers = res.data.$researchers ?? [];
         this.filteredResearchers = this.researchers;
-
       },
       error: (err) => {
         console.error('Failed to load Researchers: ', err);
@@ -178,17 +183,40 @@ export class UserAddInnovationComponent {
     this.service.getInnovationById(id).subscribe({
       next: (res) => {
         const data = res.data.researchInnovation;
+        const subjectId = data.subject_area?.[0]?.subject_area_id;
   
         this.projectData = {
           ...this.projectData,
           ...data,
-          keywords: (data.keywords || []).map((k: any) => k.keyword)
+          keywords: (data.keywords || []).map((k: any) => k.keyword),
         };
+
+        if (data.abstract) {
+          this.abstractType = 'th';
+        } else if (data.abstract_en) {
+          this.abstractType = 'en';
+        }
+  
+        if (subjectId) {
+          this.selectedMajor =
+            this.major.find((m) =>
+              m.children?.some((c) => c.sub_id === subjectId)
+            ) ?? null;
+  
+          this.selectedSub =
+            this.selectedMajor?.children.find(
+              (c) => c.sub_id === subjectId
+            ) ?? null;
+  
+          if (this.selectedSub) {
+            this.selectSub(this.selectedSub);
+          }
+        }
   
         this.selectedFileName = data.full_report?.file_name ?? '';
         this.selectedImagesName = data.innovation_images ?? [];
   
-        MainComponent.hideLoading(); // ย้ายมาที่นี่
+        MainComponent.hideLoading();
       },
       error: (err) => {
         console.error('Failed to load article:', err);
@@ -199,7 +227,21 @@ export class UserAddInnovationComponent {
 
   toggleDropdown(type: string, event: Event): void {
     event.stopPropagation();
-    this.activeDropdown = this.activeDropdown === type ? null : type;
+
+    if (this.activeDropdown === type) {
+      this.activeDropdown = null;
+    } else {
+      this.activeDropdown = type;
+
+      if (this.selectedSub) {
+        this.activeMajor =
+          this.major.find((m) =>
+            m.children.some((c) => c.sub_id === this.selectedSub?.sub_id)
+          ) ?? null;
+
+        this.scrollToSelectedSub();
+      }
+    }
   }
 
   @HostListener('document: click')
@@ -224,11 +266,24 @@ export class UserAddInnovationComponent {
     this.activeDropdown = null;
   }
 
-  selectSub(sub: SubArea): void {
+  selectSub(sub: any): void {
     this.selectedSub = sub;
     this.projectData.subject_area_id = sub.sub_id;
+
+    const major = this.major.find((m) =>
+      m.children.some((c) => c.sub_id === sub.sub_id)
+    );
+
+    if (major) {
+      this.selectedMajor = major;
+      this.activeMajor = major;
+    }
+
     this.activeDropdown = null;
-    this.activeMajor = null;
+
+    setTimeout(() => {
+      this.scrollToSelectedSub();
+    });
   }
 
   selectRowResponsibility(row: any, value: string) {
@@ -338,16 +393,16 @@ export class UserAddInnovationComponent {
 
   onImageFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
-  
+
     if (input.files?.length) {
       const files = Array.from(input.files);
-  
+
       files.forEach((file) => {
         this.selectedImagesFile.push(file);
         this.imagePreviews.push(URL.createObjectURL(file));
       });
     }
-  
+
     input.value = '';
   }
 
@@ -369,7 +424,7 @@ export class UserAddInnovationComponent {
     if (!this.validateForm()) {
       return;
     }
-    
+
     const formData = this.buildFormData();
 
     Swal.fire({
@@ -403,7 +458,10 @@ export class UserAddInnovationComponent {
               });
           }, 1000);
         } else {
-          this.router.navigate(['/performance/innovation', res.data.research_id]);
+          this.router.navigate([
+            '/performance/innovation',
+            res.data.research_id,
+          ]);
           this.resetForm();
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -578,13 +636,12 @@ export class UserAddInnovationComponent {
   removeImage(index: number) {
     this.projectData.innovation_images.splice(index, 1);
   }
-  
+
   createImagePreview(file: File) {
     return URL.createObjectURL(file);
   }
 
   deleteImage(id: number) {
-
     Swal.fire({
       title: 'ยืนยันการลบ?',
       text: 'คุณต้องการลบรูปนี้ใช่หรือไม่',
@@ -595,36 +652,29 @@ export class UserAddInnovationComponent {
       confirmButtonColor: '#d33',
       cancelButtonColor: '#6b7280',
     }).then((result) => {
-  
       if (result.isConfirmed) {
-  
         this.service.deleteImage(id).subscribe({
           next: () => {
-  
             Swal.fire({
               icon: 'success',
               title: 'ลบข้อมูลสำเร็จ',
               showConfirmButton: false,
               timer: 1000,
             });
-  
+
             this.loadProjectData(this.projectData.research_id);
-  
           },
           error: (err) => {
             console.error(err);
-  
+
             Swal.fire({
               icon: 'error',
               title: 'ลบข้อมูลไม่สำเร็จ',
             });
           },
         });
-  
       }
-  
     });
-  
   }
 
   addKeyword(event: KeyboardEvent, type: string) {
@@ -657,5 +707,39 @@ export class UserAddInnovationComponent {
 
   removeKeywordEn(i: number) {
     this.projectData.keywords.splice(i, 1);
+  }
+
+  scrollToSelectedSub() {
+    if (!this.selectedSub) return;
+
+    setTimeout(() => {
+      const element = document.querySelector(
+        `[data-id="${this.selectedSub?.sub_id}"]`
+      ) as HTMLElement;
+
+      if (element) {
+        element.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+        });
+      }
+    }, 200);
+  }
+
+  setSelectedSubjectArea() {
+    if (!this.projectData.subject_area_id) return;
+
+    for (const major of this.major) {
+      const found = major.children.find(
+        (s) => s.sub_id === this.projectData.subject_area_id
+      );
+
+      if (found) {
+        this.selectedMajor = major;
+        this.selectedSub = found;
+        this.activeMajor = major;
+        break;
+      }
+    }
   }
 }

@@ -45,6 +45,7 @@ import { DashboardComponent } from './admin-pages/dashboard/dashboard.component'
 import { PerformancePublicComponent } from './user-pages/performance-public/performance-public.component';
 import { ManagementAdminComponent } from './admin-pages/management-admin/management-admin.component';
 import { ManagementUserComponent } from './admin-pages/management-user/management-user.component';
+import { AdminManualComponent } from './admin-pages/admin-manual/admin-manual.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -172,6 +173,7 @@ const routes: Routes = [
       { path: 'performance-by-departmaent/:type/:id', component: PerformanceDetailByDepartmentComponent },
       { path: 'management-user', component: ManagementUserComponent },
       { path: 'management-admin', component: ManagementAdminComponent },
+      { path: 'admin-manual', component: AdminManualComponent },
     ],
   },
 ];

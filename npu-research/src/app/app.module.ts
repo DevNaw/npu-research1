@@ -59,6 +59,7 @@ import { LoadingComponent } from './shared/loading/loading.component';
 import { ManagementUserComponent } from './admin-pages/management-user/management-user.component';
 import { ManagementAdminComponent } from './admin-pages/management-admin/management-admin.component';
 import { A11yModule } from "@angular/cdk/a11y";
+import { AdminManualComponent } from './admin-pages/admin-manual/admin-manual.component';
 
 @NgModule({
   declarations: [
@@ -109,6 +110,7 @@ import { A11yModule } from "@angular/cdk/a11y";
     LoadingComponent,
     ManagementUserComponent,
     ManagementAdminComponent,
+    AdminManualComponent,
   ],
   imports: [
     BrowserModule,

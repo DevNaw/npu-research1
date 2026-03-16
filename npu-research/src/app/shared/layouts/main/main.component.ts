@@ -23,5 +23,6 @@ export class MainComponent {
 
   static hideLoading() {
     MainComponent.instance.isLoading = false;
+    MainComponent.instance.cdr.detectChanges();
   }
 }

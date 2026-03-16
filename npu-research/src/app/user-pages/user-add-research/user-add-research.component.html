@@ -83,7 +83,7 @@
         />
         <label class="ml-4">บทคัดย่อ</label>
       </div>
-    
+
       <div>
         <input
           type="radio"
@@ -97,78 +97,84 @@
     </div>
 
     <div *ngIf="abstractType === 'th'">
+      <label> บทคัดย่อ <span class="text-red-500">*</span> </label>
 
-      <label>
-        บทคัดย่อ <span class="text-red-500">*</span>
-      </label>
-    
       <textarea
         name="abstract"
         [(ngModel)]="projectData.abstract"
         class="w-full border h-50 rounded-md px-4 py-2 text-lg font-light my-2"
         placeholder="ระบุบทคัดย่อ"
       ></textarea>
-    
+
       <!-- Keyword -->
-      <label class="mt-4 block">
-        คำสำคัญ (ไม่เกิน 5 คำ)
+      <label class="mt-4 block text-xl font-medium">
+        คำสำคัญ <span class="text-gray-500 text-lg">(ไม่เกิน 5 คำ)</span>
       </label>
-    
-      <div class="flex flex-wrap items-center gap-2 border rounded-md px-2 h-12 text-lg font-light mt-2 mb-6">
+
+      <div
+        class="flex flex-wrap items-center gap-2 border rounded-xl px-3 py-2 mt-2 mb-6 bg-white min-h-13"
+      >
+        <!-- Tag -->
         <span
           *ngFor="let keyword of projectData.keywords; let i = index"
-          class="flex items-center gap-2 px-2 py-1 text-white rounded-full bg-purple-500"
+          class="flex items-center gap-2 px-3 py-1 text-white font-light text-lg rounded-full bg-linear-to-r from-purple-500 to-purple-600 shadow-sm"
         >
           {{ keyword }}
-    
-          <button type="button" (click)="removeKeyword(i)">✕</button>
+
+          <button
+            type="button"
+            (click)="removeKeyword(i)"
+            class="text-white/80 hover:text-white text-base cursor-pointer"
+          >
+            ✕
+          </button>
         </span>
-    
+
+        <!-- Input -->
         <input
           [(ngModel)]="keywordInput"
-          (keydown)="addKeyword($event,'th')"
-          class="flex-1 outline-none"
+          (keydown)="addKeyword($event, 'th')"
+          class="flex-1 outline-none text-lg min-w-30 font-light"
+          [style.width]="(keywordInput.length || 1) + 'ch'"
           placeholder="ระบุคำสำคัญ"
         />
       </div>
-    
     </div>
 
     <div *ngIf="abstractType === 'en'">
-      <label>
-        Abstract <span class="text-red-500">*</span>
-      </label>
-    
+      <label> Abstract <span class="text-red-500">*</span> </label>
+
       <textarea
         name="abstract_en"
         [(ngModel)]="projectData.abstract_en"
         class="w-full border h-50 rounded-md px-4 py-2 text-lg font-light my-2"
         placeholder="Enter abstract"
       ></textarea>
-    
+
       <!-- Keywords -->
-      <label class="mt-4 block">
-        Keywords (no more than 5 words)
-      </label>
-    
-      <div class="flex flex-wrap items-center gap-2 border rounded-md px-2 h-12 text-lg font-light mt-2 mb-6">
+      <label class="mt-4 block"> Keywords (no more than 5 words) </label>
+
+      <div
+        class="flex flex-wrap items-center gap-2 border rounded-md px-2 h-12 text-lg font-light mt-2 mb-6"
+      >
         <span
           *ngFor="let keyword of projectData.keywords; let i = index"
           class="flex items-center gap-2 px-2 py-1 text-white rounded-full bg-indigo-500"
         >
           {{ keyword }}
-    
-          <button type="button" (click)="removeKeywordEn(i)">✕</button>
+
+          <button type="button" (click)="removeKeywordEn(i)" class="text-white/80 hover:text-white text-base cursor-pointer"
+          >✕</button>
         </span>
-    
+
         <input
           [(ngModel)]="keywordInputEn"
-          (keydown)="addKeyword($event,'en')"
-          class="flex-1 outline-none"
+          (keydown)="addKeyword($event, 'en')"
+          class="flex-1 outline-none text-lg min-w-30 font-light"
+          [style.width]="(keywordInputEn.length || 1) + 'ch'"
           placeholder="Enter keyword"
         />
       </div>
-    
     </div>
 
     <!-- สาขาของงานวิจัย -->
@@ -220,7 +226,9 @@
                 <li
                   *ngFor="let s of m.children"
                   (click)="selectSub(s)"
+                  [attr.data-id]="s.sub_id"
                   class="px-4 py-2 hover:bg-gray-200 cursor-pointer transition text-lg font-light"
+                  [class.bg-gray-300]="selectedSub?.sub_id === s.sub_id"
                 >
                   {{ s.name_en }}
                 </li>

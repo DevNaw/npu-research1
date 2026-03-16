@@ -119,13 +119,15 @@
         >
           {{ keyword }}
 
-          <button type="button" (click)="removeKeyword(i)">✕</button>
+          <button type="button" (click)="removeKeyword(i)" class="text-white/80 hover:text-white text-base cursor-pointer"
+          >✕</button>
         </span>
 
         <input
           [(ngModel)]="keywordInput"
           (keydown)="addKeyword($event, 'th')"
-          class="flex-1 outline-none"
+          class="flex-1 outline-none font-light text-lg min-w-30"
+          [style.width]="(keywordInput.length || 1) + 'ch'"
           placeholder="ระบุคำสำคัญ"
         />
       </div>
@@ -153,13 +155,15 @@
         >
           {{ keyword }}
 
-          <button type="button" (click)="removeKeywordEn(i)">✕</button>
+          <button type="button" (click)="removeKeywordEn(i)" class="text-white/80 hover:text-white text-base cursor-pointer"
+          >✕</button>
         </span>
 
         <input
           [(ngModel)]="keywordInputEn"
           (keydown)="addKeyword($event, 'en')"
-          class="flex-1 outline-none"
+          class="flex-1 outline-none font-light text-lg min-w-30"
+          [style.width]="(keywordInputEn.length || 1) + 'ch'"
           placeholder="Enter keyword"
         />
       </div>
@@ -517,7 +521,9 @@
                 <li
                   *ngFor="let s of m.children"
                   (click)="selectSub(s)"
+                  [attr.data-id]="s.sub_id"
                   class="px-4 py-2 hover:bg-gray-200 cursor-pointer transition"
+                  [class.bg-gray-300]="selectedSub?.sub_id === s.sub_id"
                 >
                   {{ s.name_en }}
                 </li>

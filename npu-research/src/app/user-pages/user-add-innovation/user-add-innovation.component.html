@@ -52,9 +52,7 @@
       </div>
     </div>
 
-    <div
-      class="grid grid-cols-1 md:grid-cols-1 md:gap-2 mb-2 mt-4 md:mb-6"
-    >
+    <div class="grid grid-cols-1 md:grid-cols-1 md:gap-2 mb-2 mt-4 md:mb-6">
       <label class="md:col-span-1 text-start">
         ชื่อนวัตกรรมสิ่งประดิษฐ์ภาษาอังกฤษ <span class="text-red-500">*</span>
       </label>
@@ -68,7 +66,10 @@
         class="md:col-span-3 text-lg font-light w-full h-12 border rounded-md px-4 py-2"
         placeholder="ระบุชื่อนวัตกรรมสิ่งประดิษฐ์ภาษาอังกฤษ"
       />
-      <div *ngIf="title_en.invalid && title_en.touched" class="text-red-500 text-sm">
+      <div
+        *ngIf="title_en.invalid && title_en.touched"
+        class="text-red-500 text-sm"
+      >
         กรุณากรอกชื่อนวัตกรรมสิ่งประดิษฐ์ภาษาอังกฤษ
       </div>
     </div>
@@ -84,7 +85,7 @@
         />
         <label class="ml-4">บทคัดย่อ</label>
       </div>
-    
+
       <div>
         <input
           type="radio"
@@ -98,78 +99,75 @@
     </div>
 
     <div *ngIf="abstractType === 'th'">
+      <label> บทคัดย่อ <span class="text-red-500">*</span> </label>
 
-      <label>
-        บทคัดย่อ <span class="text-red-500">*</span>
-      </label>
-    
       <textarea
         name="abstract"
         [(ngModel)]="projectData.abstract"
         class="w-full border h-50 rounded-md px-4 py-2 text-lg font-light my-2"
         placeholder="ระบุบทคัดย่อ"
       ></textarea>
-    
+
       <!-- Keyword -->
-      <label class="mt-4 block">
-        คำสำคัญ (ไม่เกิน 5 คำ)
-      </label>
-    
-      <div class="flex flex-wrap items-center gap-2 border rounded-md px-2 h-12 text-lg font-light mt-2 mb-6">
+      <label class="mt-4 block"> คำสำคัญ (ไม่เกิน 5 คำ) </label>
+
+      <div
+        class="flex flex-wrap items-center gap-2 border rounded-md px-2 h-12 text-lg font-light mt-2 mb-6"
+      >
         <span
           *ngFor="let keyword of projectData.keywords; let i = index"
           class="flex items-center gap-2 px-2 py-1 text-white rounded-full bg-purple-500"
         >
           {{ keyword }}
-    
-          <button type="button" (click)="removeKeyword(i)">✕</button>
+
+          <button type="button" (click)="removeKeyword(i)" class="text-white/80 hover:text-white text-base cursor-pointer"
+          >✕</button>
         </span>
-    
+
         <input
           [(ngModel)]="keywordInput"
-          (keydown)="addKeyword($event,'th')"
-          class="flex-1 outline-none"
+          (keydown)="addKeyword($event, 'th')"
+          class="flex-1 outline-none text-lg min-w-30 font-light"
+          [style.width]="(keywordInput.length || 1) + 'ch'"
           placeholder="ระบุคำสำคัญ"
         />
       </div>
-    
     </div>
 
     <div *ngIf="abstractType === 'en'">
-      <label>
-        Abstract <span class="text-red-500">*</span>
-      </label>
-    
+      <label> Abstract <span class="text-red-500">*</span> </label>
+
       <textarea
         name="abstract_en"
         [(ngModel)]="projectData.abstract_en"
         class="w-full border h-50 rounded-md px-4 py-2 text-lg font-light my-2"
         placeholder="Enter abstract"
       ></textarea>
-    
+
       <!-- Keywords -->
-      <label class="mt-4 block">
-        Keywords (no more than 5 words)
-      </label>
-    
-      <div class="flex flex-wrap items-center gap-2 border rounded-md px-2 h-12 text-lg font-light mt-2 mb-6">
+      <label class="mt-4 block"> Keywords (no more than 5 words) </label>
+
+      <div
+        class="flex flex-wrap items-center gap-2 border rounded-md px-2 h-12 text-lg font-light mt-2 mb-6"
+      >
         <span
           *ngFor="let keyword of projectData.keywords; let i = index"
           class="flex items-center gap-2 px-2 py-1 text-white rounded-full bg-indigo-500"
         >
           {{ keyword }}
-    
-          <button type="button" (click)="removeKeywordEn(i)">✕</button>
+
+          <button type="button" (click)="removeKeywordEn(i)" class="text-white/80 hover:text-white text-base cursor-pointer"
+          >✕</button>
         </span>
-    
+
         <input
           [(ngModel)]="keywordInputEn"
-          (keydown)="addKeyword($event,'en')"
-          class="flex-1 outline-none"
+          (keydown)="addKeyword($event, 'en')"
+          class="flex-1 outline-none text-lg min-w-30 font-light"
+          [style.width]="(keywordInputEn.length || 1) + 'ch'"
           placeholder="Enter keyword"
         />
       </div>
-    
     </div>
 
     <!-- สาขาของนวัตกรรมสิ่งประดิษฐ์ -->
@@ -212,7 +210,7 @@
                   class="bi"
                   [ngClass]="
                     activeMajor?.major_id === m.major_id
-                      ? 'bi-chevrin-down'
+                      ? 'bi-chevron-down'
                       : 'bi-chevron-right'
                   "
                 ></i>
@@ -224,8 +222,10 @@
               >
                 <li
                   *ngFor="let s of m.children"
+                  [attr.data-id]="s.sub_id"
                   (click)="selectSub(s)"
                   class="px-4 py-2 hover:bg-gray-200 cursor-pointer transition"
+                  [class.bg-gray-300]="selectedSub?.sub_id === s.sub_id"
                 >
                   {{ s.name_en }}
                 </li>
@@ -306,8 +306,7 @@
       <div
         class="md:col-span-3 md:px-4 sm:px-8 overflow-x-auto overflow-y-visible"
       >
-        <label
-          class="flex items-center gap-2 md:mt-4 md:mb-3"
+        <label class="flex items-center gap-2 md:mt-4 md:mb-3"
           >ระบุผู้ร่วมโครงการภายใน</label
         >
         <table class="w-full table-fixed min-w-150 text-lg font-light">
@@ -438,8 +437,7 @@
       <div
         class="md:col-span-3 md:px-4 sm:px-8 overflow-x-auto overflow-y-visible"
       >
-        <label
-          class="flex items-center gap-2 md:mt-4 md:mb-3"
+        <label class="flex items-center gap-2 md:mt-4 md:mb-3"
           >ระบุผู้ร่วมโครงการภายนอก</label
         >
         <table class="w-full table-fixed min-w-150">
@@ -850,10 +848,8 @@
 
         <!-- ไฟล์รูปนวัตกรรมสิ่งประดิษฐ์ -->
         <div class="flex flex-col gap-2 mt-2">
-          <label class="text-start">
-            ไฟล์รูปนวัตกรรมสิ่งประดิษฐ์ :
-          </label>
-        
+          <label class="text-start"> ไฟล์รูปนวัตกรรมสิ่งประดิษฐ์ : </label>
+
           <!-- รูปจาก DB -->
           <div
             *ngFor="let img of projectData.innovation_images"
@@ -863,11 +859,11 @@
               [src]="img.get_url"
               class="w-16 h-16 object-cover rounded border"
             />
-        
+
             <span class="text-gray-700 flex-1 truncate">
               {{ img.file_name }}
             </span>
-        
+
             <button
               type="button"
               class="text-red-500 hover:text-red-700 cursor-pointer"
@@ -876,7 +872,7 @@
               <i class="bi bi-trash"></i>
             </button>
           </div>
-        
+
           <!-- รูปใหม่ -->
           <div
             *ngFor="let file of selectedImagesFile; let i = index"
@@ -886,11 +882,11 @@
               [src]="imagePreviews[i]"
               class="w-16 h-16 object-cover rounded border"
             />
-        
+
             <span class="text-gray-600 flex-1 truncate">
               {{ file.name }}
             </span>
-        
+
             <button
               type="button"
               class="text-red-500 hover:text-red-700 cursor-pointer"
@@ -899,15 +895,18 @@
               <i class="bi bi-trash"></i>
             </button>
           </div>
-        
+
           <!-- ไม่มีรูป -->
           <div
-            *ngIf="!(projectData.innovation_images.length) && !selectedImagesFile.length"
+            *ngIf="
+              !projectData.innovation_images.length &&
+              !selectedImagesFile.length
+            "
             class="text-gray-400 text-lg font-light"
           >
             ยังไม่ได้เลือกรูป
           </div>
-        
+
           <!-- input file -->
           <input
             #fileInput
@@ -917,7 +916,7 @@
             multiple
             (change)="onImageFileSelected($event)"
           />
-        
+
           <!-- ปุ่มเลือกไฟล์ -->
           <button
             type="button"

@@ -44,7 +44,7 @@
             <ng-template #noImage>
               <div class="text-center text-gray-500">
                 <img
-                  src="/assets/default_img.png"
+                  src="/assets/research.png"
                   class="w-full h-80 mx-auto opacity-70"
                 />
                 
@@ -74,17 +74,17 @@
                 </p>
               </div>
 
-              <div>
+              <div *ngIf="researchData?.abstract">
                 <p class="text-[#767676]">บทคัดย่อ</p>
                 <p class="font-light text-xl">{{ researchData?.abstract || '-' }}</p>
               </div>
 
-              <div>
+              <div *ngIf="researchData?.abstract_en">
                 <p class="text-[#767676]">Abstract</p>
                 <p class="font-light text-xl">{{ researchData?.abstract_en || '-' }}</p>
               </div>
 
-              <div>
+              <div *ngIf="researchData?.keywords">
                 <p class="text-[#767676]">Keywords</p>
                 <p class="font-light text-xl">{{ researchData?.keywords || '-' }}</p>
               </div>
@@ -308,7 +308,7 @@
               <ng-template #noImage>
                 <div class="text-center text-gray-500">
                   <img
-                    src="/assets/default_img.png"
+                    src="/assets/research.png"
                     class="w-full h-80 mx-auto opacity-70"
                   />
                 </div>
@@ -337,10 +337,24 @@
               </p>
             </div>
 
-            <div>
-              <p class="text-[#767676]">Abstract</p>
+            <div *ngIf="articleData?.abstract">
+              <p class="text-[#767676]">บทคัดย่อ</p>
               <p class="text-[#394250] font-light text-xl">
                 {{ articleData?.abstract || '-' }}
+              </p>
+            </div>
+
+            <div *ngIf="articleData?.keywords">
+              <p class="text-[#767676]">Keywords</p>
+              <p class="text-[#394250] font-light text-xl">
+                {{ articleData?.keywords || '-' }}
+              </p>
+            </div>
+
+            <div *ngIf="articleData?.abstract_en">
+              <p class="text-[#767676]">Abstract</p>
+              <p class="text-[#394250] font-light text-xl">
+                {{ articleData?.abstract_en || '-' }}
               </p>
             </div>
 
@@ -571,7 +585,7 @@
               <ng-template #noImage>
                 <div class="text-center text-gray-500">
                   <img
-                    src="/assets/default_img.png"
+                    src="/assets/research.png"
                     class="w-full h-80 mx-auto mb-3 opacity-70"
                   />
                 </div>
@@ -616,11 +630,26 @@
                 </p>
               </div>
 
-              <div>
-                <p class="text-[#767676]">สาขาของนวัตกรรมสิ่งประดิษฐ์ย่อย</p>
-                <p class="font-light text-xl">การเปลี่ยนแปลงสภาพภูมิอากาศ</p>
+              <div *ngIf="innovationData?.abstract">
+                <p class="text-[#767676]">บทคัดย่อ</p>
+                <p class="font-light text-xl">
+                  {{ innovationData?.abstract || '-' }}
+                </p>
               </div>
-              <div class="">
+              <div *ngIf="innovationData?.abstract_en">
+                <p class="text-[#767676]">Abstract</p>
+                <p class="font-light text-xl">
+                  {{ innovationData?.abstract_en || '-' }}
+                </p>
+              </div>
+              <div *ngIf="innovationData?.keywords">
+                <p class="text-[#767676]">Keywords</p>
+                <p class="font-light text-xl">
+                  {{ innovationData?.keywords || '-' }}
+                </p>
+              </div>
+
+              <div>
                 <p class="text-[#767676] mb-1">หลักการและเหตุผล</p>
                 <p class="eading-relaxed font-light text-xl">
                   {{ innovationData?.principle }}
@@ -784,61 +813,71 @@
       </div>
     </div>
 
-    <div class="grid grid-cols-2 mt-6 bg-gray-300 rounded-xl overflow-hidden font-medium text-2xl">
+    <div class="grid grid-cols-1 mt-6 bg-gray-300 rounded-xl overflow-hidden">
       <!-- ข้อมูลผู้ติดต่อ -->
-      <div class="grid gap-4 p-10">
-        <div>
-          <p>เจ้าของผลงาน</p>
-          <p *ngIf="type === 'article'" class="font-light text-gray-800">
-            {{ ownerArticle?.full_name }}
-          </p>
-          <p *ngIf="type === 'project'" class="font-light text-gray-800">
-            {{ ownerProject?.full_name }}
-          </p>
-          <p *ngIf="type === 'innovation'" class="font-light text-gray-800">
-            {{ ownerInnovation?.full_name }}
-          </p>
-        </div>
-
-        <div>
-          <p>หน่วยงาน</p>
-          <p *ngIf="type === 'article'" class="font-light text-gray-800">
-            {{ ownerArticle?.organization }}
-          </p>
-          <p *ngIf="type === 'project'" class="font-light text-gray-800">
-            {{ ownerProject?.organization }}
-          </p>
-          <p *ngIf="type === 'innovation'" class="font-light text-gray-800">
-            {{ ownerInnovation?.organization }}
-          </p>
-        </div>
-
-        <div class="space-y-1 text-gray-700 font-light">
-          <p *ngIf="type === 'article'">
-            {{ ownerArticle?.email || "ไม่ระบุ" }}
-          </p>
-          <p *ngIf="type === 'project'">
-            {{ ownerProject?.email || "ไม่ระบุ" }}
-          </p>
-          <p *ngIf="type === 'innovation'">
-            {{ ownerInnovation?.email || "ไม่ระบุ" }}
-          </p>
-          <p *ngIf="type === 'article'">
-            โทรศัพท์: {{ ownerArticle?.phone || "ไม่ระบุ" }}
-          </p>
-          <p *ngIf="type === 'project'">
-            โทรศัพท์: {{ ownerProject?.phone || "ไม่ระบุ" }}
-          </p>
-          <p *ngIf="type === 'innovation'">
-            โทรศัพท์: {{ ownerInnovation?.phone || "ไม่ระบุ" }}
-          </p>
+      <div class="mt-8">
+        <div
+          class="bg-linear-to-r from-gray-100 to-gray-200 rounded-t-2xl shadow-md px-12 py-10"
+        >
+          <div
+            class="grid grid-cols-1 md:grid-cols-3 gap-10 text-center items-center"
+          >
+            
+            <!-- Owner -->
+            <div class="space-y-2">
+              <div class="flex justify-center mb-2">
+                <div
+                  class="w-12 h-12 rounded-full bg-purple-500 text-white flex items-center justify-center text-xl"
+                >
+                  <i class="bi bi-person"></i>
+                </div>
+              </div>
+      
+              <p class="text-gray-500 text-lg">เจ้าของผลงาน</p>
+              <p class="text-gray-900 text-xl font-medium">
+                {{ owner?.full_name || "ไม่ระบุ" }}
+              </p>
+            </div>
+      
+            <!-- Organization -->
+            <div class="space-y-2 border-y md:border-y-0 md:border-x border-gray-300 px-6">
+              <div class="flex justify-center mb-2">
+                <div
+                  class="w-12 h-12 rounded-full bg-blue-500 text-white flex items-center justify-center text-xl"
+                >
+                  <i class="bi bi-building"></i>
+                </div>
+              </div>
+      
+              <p class="text-gray-500 text-lg">หน่วยงาน</p>
+              <p class="text-gray-900 text-xl font-medium">
+                {{ owner?.organization || "ไม่ระบุ" }}
+              </p>
+            </div>
+      
+            <!-- Contact -->
+            <div class="space-y-3">
+              <div class="flex justify-center mb-2">
+                <div
+                  class="w-12 h-12 rounded-full bg-green-500 text-white flex items-center justify-center text-xl"
+                >
+                  <i class="bi bi-envelope"></i>
+                </div>
+              </div>
+      
+              <p class="text-gray-900 text-lg">
+                {{ owner?.email || "ไม่ระบุ" }}
+              </p>
+      
+              <p class="text-gray-700 text-lg">
+                โทรศัพท์: {{ owner?.phone || "ไม่ระบุ" }}
+              </p>
+            </div>
+      
+          </div>
         </div>
       </div>
-
-      <!-- โลโก้ -->
-      <div class="flex items-center justify-center bg-[#F9CB34]">
-        <img src="/assets/logoNPU.png" class="h-48 object-contain" />
-      </div>
+    
     </div>
   </div>
 </div>
