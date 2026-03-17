@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ResearchService } from '../../services/research.service';
 import { ResearchArticle, ResearchOwner } from '../../models/article-show.model';
 import { AuthService } from '../../services/auth.service';
-import { ProjectDetailApi, ResearchOwnerProject } from '../../models/research-detai.model';
+import { OecdMajorApi, OecdMajorUI, ProjectDetailApi, ResearchOwnerProject } from '../../models/research-detai.model';
 import { of, switchMap } from 'rxjs';
 import { InnovationApi, ResearchOwnerInnovation } from '../../models/innovation-detai.model';
 import Swal from 'sweetalert2';
@@ -37,6 +37,8 @@ export class PerformanceComponent {
   img: any;
 
   galleryImages: string[] = [];
+
+  oecdUI: OecdMajorUI[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -213,8 +215,8 @@ export class PerformanceComponent {
         break;
 
       case 'project':
-        this.researchData = res.data.projectDetail; console.log(this.researchData);
-        
+        this.researchData = res.data.projectDetail;
+        this.oecdUI = this.mapOecdApiToUI(this.researchData?.oecd || []);
         this.ownerProject = res.data.owner;
 
         if (this.researchData?.internal_members?.length) {
@@ -283,5 +285,24 @@ export class PerformanceComponent {
     if (this.type === 'project') return this.ownerProject;
     if (this.type === 'innovation') return this.ownerInnovation;
     return null;
+  }
+
+  mapOecdApiToUI(oecd: OecdMajorApi[]): OecdMajorUI[] {
+    return oecd.map(m => ({
+      major_id: m.major_id,
+      name_th: m.name_th,
+      children: m.children
+        ? [{
+            sub_id: m.children.sub_id,
+            name_th: m.children.name_th,
+            children: m.children.children
+              ? [{
+                  child_id: m.children.children.child_id,
+                  name_th: m.children.children.name_th
+                }]
+              : []
+          }]
+        : []
+    }));
   }
 }

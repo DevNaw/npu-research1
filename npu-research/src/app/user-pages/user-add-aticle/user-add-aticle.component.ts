@@ -8,7 +8,7 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { ResearchService } from '../../services/research.service';
-import { Major, SubArea } from '../../models/subject.model';
+import { Major, Sub, Child } from '../../models/subject.model';
 import { Researcher } from '../../models/researchers.model';
 import { Article } from '../../models/aticle.model';
 import { MainComponent } from '../../shared/layouts/main/main.component';
@@ -45,7 +45,7 @@ const DEFAULT_ARTICLE: Article = {
   journal_name: '',
   pre_location: '',
   pages: '',
-  year_published: '',
+  year_published: 0,
   volume: '',
   volume_no: '',
   is_cooperation: '',
@@ -57,6 +57,8 @@ const DEFAULT_ARTICLE: Article = {
   article_type: '',
   major_id: null,
   sub_id: null,
+  oecd_id: 0,
+  article_type_code: '',
 };
 
 @Component({
@@ -67,24 +69,20 @@ const DEFAULT_ARTICLE: Article = {
 })
 export class UserAddAticleComponent {
   @ViewChildren('subItem') subItems!: QueryList<ElementRef>;
-  isEdit = false;
 
-  // Subject Area
-  majors: Major[] = [];
-  selectedSub: SubArea | null = null;
+  isEdit = false;
+  oecdList: Major[] = [];
+  selectedSub: Sub | null = null;
   selectedMajor: Major | null = null;
   searchMajor = '';
   searchSub = '';
-
-  // Dropdowns
+  thaiYears: number[] = [];
+  searchSubSub = '';
+  selectedSubSub: Child | null = null;
   activeDropdown: string | null = null;
-
-  // Researchers
   researchers: Researcher[] = [];
   filteredResearchers: Researcher[] = [];
   activeRowIndex: number | null = null;
-
-  // Members Rows
   internalRow: InternalMemberRow[] = [
     { id: 0, researcher_id: null, name: '', responsibilities: '' },
   ];
@@ -92,134 +90,16 @@ export class UserAddAticleComponent {
     { name: '', organization: '', responsibilities: '' },
   ];
 
-  // Files
   selectedFileName = '';
   selectedFile: File | null = null;
-
   submitted = false;
-
-  // Country
-  searchCountries = '';
-  selectedCountries = '';
-
   articleData: Article = { ...DEFAULT_ARTICLE };
-
-  readonly countries = [
-    { code: 'AF', name: 'อัฟกานิสถาน' },
-    { code: 'AL', name: 'แอลเบเนีย' },
-    { code: 'DZ', name: 'แอลจีเรีย' },
-    { code: 'AD', name: 'อันดอร์รา' },
-    { code: 'AO', name: 'แองโกลา' },
-    { code: 'AG', name: 'แอนติกาและบาร์บูดา' },
-    { code: 'AR', name: 'อาร์เจนตินา' },
-    { code: 'AM', name: 'อาร์มีเนีย' },
-    { code: 'AU', name: 'ออสเตรเลีย' },
-    { code: 'AT', name: 'ออสเตรีย' },
-    { code: 'AZ', name: 'อาเซอร์ไบจาน' },
-    { code: 'BS', name: 'บาฮามาส' },
-    { code: 'BH', name: 'บาห์เรน' },
-    { code: 'BD', name: 'บังกลาเทศ' },
-    { code: 'BB', name: 'บาร์เบโดส' },
-    { code: 'BY', name: 'เบลารุส' },
-    { code: 'BE', name: 'เบลเยียม' },
-    { code: 'BZ', name: 'เบลีซ' },
-    { code: 'BJ', name: 'เบนิน' },
-    { code: 'BT', name: 'ภูฏาน' },
-    { code: 'BO', name: 'โบลิเวีย' },
-    { code: 'BA', name: 'บอสเนียและเฮอร์เซโกวีนา' },
-    { code: 'BW', name: 'บอตสวานา' },
-    { code: 'BR', name: 'บราซิล' },
-    { code: 'BN', name: 'บรูไน' },
-    { code: 'BG', name: 'บัลแกเรีย' },
-    { code: 'BF', name: 'บูร์กินาฟาโซ' },
-    { code: 'BI', name: 'บุรุนดี' },
-    { code: 'KH', name: 'กัมพูชา' },
-    { code: 'CM', name: 'แคเมอรูน' },
-    { code: 'CA', name: 'แคนาดา' },
-    { code: 'CV', name: 'เคปเวิร์ด' },
-    { code: 'CF', name: 'สาธารณรัฐแอฟริกากลาง' },
-    { code: 'TD', name: 'ชาด' },
-    { code: 'CL', name: 'ชิลี' },
-    { code: 'CN', name: 'จีน' },
-    { code: 'CO', name: 'โคลอมเบีย' },
-    { code: 'CR', name: 'คอสตาริกา' },
-    { code: 'HR', name: 'โครเอเชีย' },
-    { code: 'CU', name: 'คิวบา' },
-    { code: 'CY', name: 'ไซปรัส' },
-    { code: 'CZ', name: 'สาธารณรัฐเช็ก' },
-    { code: 'DK', name: 'เดนมาร์ก' },
-    { code: 'EG', name: 'อียิปต์' },
-    { code: 'EE', name: 'เอสโตเนีย' },
-    { code: 'ET', name: 'เอธิโอเปีย' },
-    { code: 'FI', name: 'ฟินแลนด์' },
-    { code: 'FR', name: 'ฝรั่งเศส' },
-    { code: 'DE', name: 'เยอรมนี' },
-    { code: 'GH', name: 'กานา' },
-    { code: 'GR', name: 'กรีซ' },
-    { code: 'HK', name: 'ฮ่องกง' },
-    { code: 'HU', name: 'ฮังการี' },
-    { code: 'IS', name: 'ไอซ์แลนด์' },
-    { code: 'IN', name: 'อินเดีย' },
-    { code: 'ID', name: 'อินโดนีเซีย' },
-    { code: 'IR', name: 'อิหร่าน' },
-    { code: 'IQ', name: 'อิรัก' },
-    { code: 'IE', name: 'ไอร์แลนด์' },
-    { code: 'IL', name: 'อิสราเอล' },
-    { code: 'IT', name: 'อิตาลี' },
-    { code: 'JP', name: 'ญี่ปุ่น' },
-    { code: 'JO', name: 'จอร์แดน' },
-    { code: 'KZ', name: 'คาซัคสถาน' },
-    { code: 'KE', name: 'เคนยา' },
-    { code: 'KR', name: 'เกาหลีใต้' },
-    { code: 'KW', name: 'คูเวต' },
-    { code: 'LA', name: 'ลาว' },
-    { code: 'LV', name: 'ลัตเวีย' },
-    { code: 'LB', name: 'เลบานอน' },
-    { code: 'LY', name: 'ลิเบีย' },
-    { code: 'LT', name: 'ลิทัวเนีย' },
-    { code: 'LU', name: 'ลักเซมเบิร์ก' },
-    { code: 'MY', name: 'มาเลเซีย' },
-    { code: 'MX', name: 'เม็กซิโก' },
-    { code: 'MM', name: 'เมียนมา' },
-    { code: 'NP', name: 'เนปาล' },
-    { code: 'NL', name: 'เนเธอร์แลนด์' },
-    { code: 'NZ', name: 'นิวซีแลนด์' },
-    { code: 'NO', name: 'นอร์เวย์' },
-    { code: 'PK', name: 'ปากีสถาน' },
-    { code: 'PH', name: 'ฟิลิปปินส์' },
-    { code: 'PL', name: 'โปแลนด์' },
-    { code: 'PT', name: 'โปรตุเกส' },
-    { code: 'QA', name: 'กาตาร์' },
-    { code: 'RU', name: 'รัสเซีย' },
-    { code: 'SA', name: 'ซาอุดีอาระเบีย' },
-    { code: 'SG', name: 'สิงคโปร์' },
-    { code: 'ZA', name: 'แอฟริกาใต้' },
-    { code: 'ES', name: 'สเปน' },
-    { code: 'SE', name: 'สวีเดน' },
-    { code: 'CH', name: 'สวิตเซอร์แลนด์' },
-    { code: 'TH', name: 'ไทย' },
-    { code: 'TR', name: 'ตุรกี' },
-    { code: 'UA', name: 'ยูเครน' },
-    { code: 'AE', name: 'สหรัฐอาหรับเอมิเรตส์' },
-    { code: 'GB', name: 'สหราชอาณาจักร' },
-    { code: 'US', name: 'สหรัฐอเมริกา' },
-    { code: 'VN', name: 'เวียดนาม' },
-    { code: 'ZW', name: 'ซิมบับเว' },
-  ];
-
   researchId?: number;
-  reportFilename = '';
   activeMajor: Major | null = null;
   searchResearcher = '';
-  selectedResearcher: string | null = null;
-  searchKeyword = '';
-
-  articleId: number | null = null;
 
   keywords: string[] = [];
-
   abstractType: string = '';
-
   keywordInput = '';
   keywordInputEn = '';
 
@@ -233,6 +113,7 @@ export class UserAddAticleComponent {
     MainComponent.showLoading();
     this.loadSubjectAreas();
     this.loadResearchersData();
+    this.generateThaiYears();
 
     this.route.paramMap.subscribe((params) => {
       const id = params.get('id');
@@ -251,7 +132,7 @@ export class UserAddAticleComponent {
   loadSubjectAreas(): void {
     this.researchService.getSubjectArea().subscribe({
       next: (res) => {
-        this.majors = res.data.subject_areas;
+        this.oecdList = res.data.oecd;
       },
       error: (err) => {
         console.error('Failed to load subject areas:', err);
@@ -273,7 +154,18 @@ export class UserAddAticleComponent {
     this.researchService.getArticleById(id).subscribe({
       next: (res) => {
         const data = res.data.researchArticle;
-        const subjectId = data.subject_area?.[0]?.subject_area_id;
+        const oecd = data.oecd?.[0];
+
+        if (oecd) {
+          this.selectedMajor = {
+            major_id: oecd.major_id,
+            name_th: oecd.name_th,
+            children: [oecd.children],
+          };
+
+          this.selectedSub = oecd.children;
+          this.selectedSubSub = oecd.children?.children;
+        }
 
         this.articleData = {
           ...this.articleData,
@@ -287,23 +179,7 @@ export class UserAddAticleComponent {
           this.abstractType = 'en';
         }
 
-        if (subjectId) {
-          this.selectedMajor =
-            this.majors.find((m) =>
-              m.children?.some((c) => c.sub_id === subjectId)
-            ) ?? null;
-
-          this.selectedSub =
-            this.selectedMajor?.children.find((c) => c.sub_id === subjectId) ??
-            null;
-
-          if (this.selectedSub) {
-            this.selectSub(this.selectedSub);
-          }
-        }
-
         this.selectedFileName = data.articleFile?.file_name ?? '';
-        this.selectedCountries = this.articleData.country;
 
         if (data.internal_members?.length) {
           this.internalRow = data.internal_members.map(
@@ -326,19 +202,6 @@ export class UserAddAticleComponent {
             })
           );
         }
-
-        if (this.articleData.subject_area_id) {
-          for (const major of this.majors) {
-            const found = major.children.find(
-              (s) => s.sub_id === this.articleData.subject_area_id
-            );
-            if (found) {
-              this.selectedMajor = major;
-              this.selectedSub = found;
-              break;
-            }
-          }
-        }
       },
       error: (err) => console.error('Failed to load article:', err),
     });
@@ -354,11 +217,15 @@ export class UserAddAticleComponent {
 
       if (this.selectedSub) {
         this.activeMajor =
-          this.majors.find((m) =>
+          this.oecdList.find((m) =>
             m.children.some((c) => c.sub_id === this.selectedSub?.sub_id)
           ) ?? null;
 
-        this.scrollToSelectedSub();
+        this.selectedMajor = this.activeMajor;
+        this.selectedSub =
+          this.activeMajor?.children.find(
+            (c) => c.sub_id === this.selectedSub?.sub_id
+          ) ?? null;
       }
     }
   }
@@ -381,53 +248,35 @@ export class UserAddAticleComponent {
     this.activeDropdown = null;
   }
 
-  toggleMajor(major: Major, event: Event): void {
-    event.stopPropagation();
-
-    this.activeMajor =
-      this.activeMajor?.major_id === major.major_id ? null : major;
-  }
-
-  selectSub(sub: SubArea): void {
+  selectSub(sub: Sub): void {
     this.selectedSub = sub;
+    this.selectedSubSub = null;
     this.articleData.subject_area_id = sub.sub_id;
 
     this.selectedMajor =
-      this.majors.find((m) =>
-        m.children.some((c) => c.sub_id === sub.sub_id)
-      ) ?? null;
-
-    this.activeMajor =
-      this.majors.find((m) =>
+      this.oecdList.find((m) =>
         m.children.some((c) => c.sub_id === sub.sub_id)
       ) ?? null;
 
     this.activeDropdown = null;
   }
 
-  filteredMajor(): Major[] {
-    if (!this.searchMajor) return this.majors;
+  selectMajor(m: Major) {
+    this.selectedMajor = m;
+    this.selectedSub = null;
+    this.selectedSubSub = null;
+    this.searchSub = '';
+    this.searchSubSub = '';
 
-    const keyword = this.searchMajor.toLowerCase();
-    return this.majors.filter((m) => m.name_en.toLowerCase().includes(keyword));
-  }
-
-  // -----Country -------------------------------------------------------
-  selectCountrie(c: { code: string; name: string }): void {
-    this.selectedCountries = c.name;
-    this.articleData.country = c.name;
-    this.searchCountries = '';
+    this.articleData.subject_area_id = 0;
     this.activeDropdown = null;
   }
 
-  filteredCountries() {
-    const keyword = this.searchCountries.toLowerCase();
+  selectSubSub(subSub: Child) {
+    this.selectedSubSub = subSub;
+    this.articleData.subject_area_id = subSub.child_id;
 
-    return this.countries.filter(
-      (c) =>
-        c.name.toLowerCase().includes(keyword) ||
-        c.code.toLowerCase().includes(keyword)
-    );
+    this.activeDropdown = null;
   }
 
   // -------- First Author Guard -------------------------------------------------------
@@ -575,6 +424,8 @@ export class UserAddAticleComponent {
   private buildFormData(): FormData {
     const fd = new FormData();
     const d = this.articleData;
+    const subSub = this.selectedSubSub?.child_id ?? '';
+    let article_type_code = '';
 
     const required = (key: string, val: any) => fd.append(key, val ?? '');
 
@@ -602,13 +453,21 @@ export class UserAddAticleComponent {
     required('doi', d.doi);
     required('is_cooperation', d.is_cooperation);
     optional('db_type', d.db_type);
-    optional('country', d.country);
     optional('responsibilities', d.responsibilities);
     optional('pre_location', d.pre_location);
 
     if (d.subject_area_id > 0)
       fd.append('subject_area_id', String(d.subject_area_id));
     if (this.selectedFile) fd.append('article_file', this.selectedFile);
+
+    if (d.article_type === 'วารสาร') {
+      article_type_code = '01';
+    } else {
+      article_type_code = '02';
+    }
+
+    required('oecd_id', subSub);
+    optional('article_type_code', d.article_type_code);
 
     this.internalRow
       .filter((r) => r.researcher_id)
@@ -642,8 +501,6 @@ export class UserAddAticleComponent {
     this.selectedSub = null;
     this.searchMajor = '';
     this.searchSub = '';
-    this.selectedCountries = '';
-    this.searchCountries = '';
   }
 
   isResearcherAlreadySelected(
@@ -750,37 +607,43 @@ export class UserAddAticleComponent {
     this.articleData.keywords.splice(i, 1);
   }
 
-  scrollToSelectedSub() {
-    if (!this.selectedSub) return;
+  generateThaiYears() {
+    const currentYear = new Date().getFullYear() + 543;
 
-    setTimeout(() => {
-      const element = document.querySelector(
-        `[data-id="${this.selectedSub?.sub_id}"]`
-      ) as HTMLElement;
-
-      if (element) {
-        element.scrollIntoView({
-          behavior: 'smooth',
-          block: 'center',
-        });
-      }
-    }, 200);
+    this.thaiYears = [];
+    for (let i = 0; i < 70; i++) {
+      this.thaiYears.push(currentYear - i);
+    }
   }
 
-  setSelectedSubjectArea() {
-    if (!this.articleData.subject_area_id) return;
+  selectYear(year: number) {
+    this.articleData.year_published = year;
+    this.activeDropdown = null;
+  }
 
-    for (const major of this.majors) {
-      const found = major.children.find(
-        (s) => s.sub_id === this.articleData.subject_area_id
-      );
+  filteredSubSubs() {
+    if (!this.selectedSub) return [];
 
-      if (found) {
-        this.selectedMajor = major;
-        this.selectedSub = found;
-        this.activeMajor = major;
-        break;
-      }
-    }
+    return (this.selectedSub.children || []).filter((ss: Child) =>
+      (ss.name_th || '')
+        .toLowerCase()
+        .includes((this.searchSubSub || '').toLowerCase())
+    );
+  }
+
+  filteredMajors() {
+    return this.oecdList.filter((m) =>
+      m.name_th.toLowerCase().includes(this.searchMajor.toLowerCase())
+    );
+  }
+
+  filteredSubs() {
+    if (!this.selectedMajor) return [];
+
+    return (this.selectedMajor.children || []).filter((s: Sub) =>
+      (s.name_th || '')
+        .toLowerCase()
+        .includes((this.searchSub || '').toLowerCase())
+    );
   }
 }

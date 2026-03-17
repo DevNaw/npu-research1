@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
-import { InnovationForm, Major, SubArea } from '../../models/subject.model';
+import { Major, Sub, Child } from '../../models/subject.model';
 import { ResearchService } from '../../services/research.service';
 import { Researcher } from '../../models/researchers.model';
 import { ResearchInnovationDetail } from '../../models/innovation.model';
@@ -29,7 +29,7 @@ export const DEFAULT_INNOVATION: ResearchInnovationDetail = {
   abstract: '',
   abstract_en: '',
   keywords: [],
-  year: '',
+  year: 0,
   published_date: '',
   image: null,
   call_other: null,
@@ -40,7 +40,7 @@ export const DEFAULT_INNOVATION: ResearchInnovationDetail = {
   source_funds: null,
   budget_amount: null,
   name_funding: null,
-  year_received_budget: null,
+  year_received_budget: 0,
   patent_number: null,
   application_number: null,
   examination_url: null,
@@ -63,6 +63,8 @@ export const DEFAULT_INNOVATION: ResearchInnovationDetail = {
   ],
   full_report: null,
   innovation_images: [],
+  oecd_id: 0,
+  funding_code: '',
 };
 
 @Component({
@@ -75,18 +77,19 @@ export class UserAddInnovationComponent {
   isEdit = false;
   activeDropdown: string | null = null;
   activeRowIndex: number | null = null;
-  activeMajor: Major | null = null;
 
-  major: Major[] = [];
+  oecdList: Major[] = [];
   selectedMajor: Major | null = null;
-  selectedSub: SubArea | null = null;
+  selectedSub: Sub | null = null;
   searchMajor = '';
+  searchSub = '';
+  searchSubSub = '';
+  selectedSubSub: Child | null = null;
+  thaiYears: number[] = [];
 
   researchers: Researcher[] = [];
   filteredResearchers: Researcher[] = [];
   searchResearcher = '';
-  selectedResearcher: string | null = null;
-  searchKeyword = '';
   abstractType: string = '';
 
   keywordInput = '';
@@ -98,21 +101,16 @@ export class UserAddInnovationComponent {
   externalRow: ExternalMemberRow[] = [
     { name: '', organization: '', responsibilities: '' },
   ];
-
-  internalFunds: string[] = [
-    'งบประมาณมหาวิทยาลัย',
-    'งบประมาณคณะ',
-    'งบประมาณภาควิชา',
-  ];
-
-  externalFunds: string[] = ['สำนักงานวิจัยแห่งชาติ', 'สกสว.', 'หน่วยงานเอกชน'];
-
+  activeMajor: Major | null = null;
   selectedFileName = '';
   selectedFile: File | null = null;
-  selectedImagesName = '';
   selectedImagesFile: File[] = [];
   fundings: Funding[] = [];
   imagePreviews: string[] = [];
+
+  filteredMajorsList: Major[] = [];
+  filteredSubsList: Sub[] = [];
+  filteredSubSubsList: Child[] = [];
 
   projectData: ResearchInnovationDetail = { ...DEFAULT_INNOVATION };
   keywords: string[] = [];
@@ -130,6 +128,7 @@ export class UserAddInnovationComponent {
     this.loadSubjectArea();
     this.loadResearchersData();
     this.loadFundings();
+    this.generateThaiYears();
 
     this.route.paramMap.subscribe((params) => {
       const id = params.get('id');
@@ -148,7 +147,7 @@ export class UserAddInnovationComponent {
   loadSubjectArea(): void {
     this.service.getSubjectArea().subscribe({
       next: (res) => {
-        this.major = res.data.subject_areas;
+        this.oecdList = res.data.oecd;
       },
       error: (err) => {
         console.error('Failed to load Subject Area: ', err);
@@ -183,8 +182,19 @@ export class UserAddInnovationComponent {
     this.service.getInnovationById(id).subscribe({
       next: (res) => {
         const data = res.data.researchInnovation;
-        const subjectId = data.subject_area?.[0]?.subject_area_id;
-  
+        const oced = data.oecd?.[0];
+
+        if (oced) {
+          this.selectedMajor = {
+            major_id: oced.major_id,
+            name_th: oced.name_th,
+            children: [oced.children],
+          };
+
+          this.selectedSub = oced.children;
+          this.selectedSubSub = oced.children?.children;
+        }
+
         this.projectData = {
           ...this.projectData,
           ...data,
@@ -196,26 +206,9 @@ export class UserAddInnovationComponent {
         } else if (data.abstract_en) {
           this.abstractType = 'en';
         }
-  
-        if (subjectId) {
-          this.selectedMajor =
-            this.major.find((m) =>
-              m.children?.some((c) => c.sub_id === subjectId)
-            ) ?? null;
-  
-          this.selectedSub =
-            this.selectedMajor?.children.find(
-              (c) => c.sub_id === subjectId
-            ) ?? null;
-  
-          if (this.selectedSub) {
-            this.selectSub(this.selectedSub);
-          }
-        }
-  
+
         this.selectedFileName = data.full_report?.file_name ?? '';
-        this.selectedImagesName = data.innovation_images ?? [];
-  
+
         MainComponent.hideLoading();
       },
       error: (err) => {
@@ -227,20 +220,23 @@ export class UserAddInnovationComponent {
 
   toggleDropdown(type: string, event: Event): void {
     event.stopPropagation();
+  
+    this.activeDropdown = this.activeDropdown === type ? null : type;
+  
+    if (this.activeDropdown && this.selectedSub) {
+      this.activeMajor =
+        this.oecdList.find((m) =>
+          (m.children || []).some(
+            (c) => c.sub_id === this.selectedSub?.sub_id
+          )
+        ) ?? null;
 
-    if (this.activeDropdown === type) {
-      this.activeDropdown = null;
-    } else {
-      this.activeDropdown = type;
-
-      if (this.selectedSub) {
-        this.activeMajor =
-          this.major.find((m) =>
-            m.children.some((c) => c.sub_id === this.selectedSub?.sub_id)
+        this.selectedMajor = this.activeMajor;
+        this.selectedSub =
+          this.activeMajor?.children.find(
+            (c) => c.sub_id === this.selectedSub?.sub_id
           ) ?? null;
-
-        this.scrollToSelectedSub();
-      }
+  
     }
   }
 
@@ -248,7 +244,6 @@ export class UserAddInnovationComponent {
   closeAll(): void {
     this.activeDropdown = null;
     this.activeRowIndex = null;
-    this.activeMajor = null;
   }
 
   selectValue<K extends keyof ResearchInnovationDetail>(
@@ -266,24 +261,27 @@ export class UserAddInnovationComponent {
     this.activeDropdown = null;
   }
 
-  selectSub(sub: any): void {
+  selectSub(sub: Sub) {
     this.selectedSub = sub;
     this.projectData.subject_area_id = sub.sub_id;
-
-    const major = this.major.find((m) =>
-      m.children.some((c) => c.sub_id === sub.sub_id)
-    );
-
-    if (major) {
-      this.selectedMajor = major;
-      this.activeMajor = major;
-    }
-
+  
     this.activeDropdown = null;
+  }
 
-    setTimeout(() => {
-      this.scrollToSelectedSub();
-    });
+  selectSubSub(subSub: Child) {
+    this.selectedSubSub = subSub;
+    this.projectData.subject_area_id = subSub.child_id;
+  
+    this.activeDropdown = null;
+  }
+
+  selectMajor(m: Major) {
+    this.selectedMajor = m;
+    this.selectedSub = null;
+    this.selectedSubSub = null;
+  
+    this.projectData.subject_area_id = 0;
+    this.activeDropdown = null;
   }
 
   selectRowResponsibility(row: any, value: string) {
@@ -308,20 +306,6 @@ export class UserAddInnovationComponent {
     row.name = r.full_name;
     row.researcher_id = r.user_id;
     this.activeRowIndex = null;
-  }
-
-  toggleMajor(major: Major, event: Event): void {
-    event.stopPropagation();
-
-    this.activeMajor =
-      this.activeMajor?.major_id === major.major_id ? null : major;
-  }
-
-  filteredMajor(): Major[] {
-    if (!this.searchMajor) return this.major;
-
-    const keyword = this.searchMajor.toLowerCase();
-    return this.major.filter((m) => m.name_en.toLowerCase().includes(keyword));
   }
 
   isFirstAuthorTaken(excludeRow?: any): boolean {
@@ -410,16 +394,6 @@ export class UserAddInnovationComponent {
     this.selectedImagesFile.splice(index, 1);
   }
 
-  onFilesSelected(event: any) {
-    const files: FileList = event.target.files;
-
-    if (!files) return;
-
-    for (let i = 0; i < files.length; i++) {
-      this.selectedImagesFile.push(files[i]);
-    }
-  }
-
   submit() {
     if (!this.validateForm()) {
       return;
@@ -479,6 +453,8 @@ export class UserAddInnovationComponent {
   buildFormData(): FormData {
     const fd = new FormData();
     const d = this.projectData;
+    const subSub = this.selectedSubSub?.child_id ?? '';
+    let funding_code = '';
 
     const required = (key: string, val: any) =>
       fd.append(key, val !== undefined ? String(val) : '');
@@ -519,6 +495,20 @@ export class UserAddInnovationComponent {
       });
     }
 
+    if (d.source_funds === 'แหล่งทุนภายใน') {
+      funding_code = '01';
+    } else if (d.source_funds === 'แหล่งทุนภายนอก') {
+      const selectedFund = this.fundings.find(
+        (f) => f.funding_name === d.name_funding
+      );
+      funding_code = selectedFund?.funding_code || '';
+    } else {
+      funding_code = '99';
+    }
+
+    required('oecd_id', subSub);
+    optional('funding_code', d.funding_code);
+
     this.internalRow
       .filter((r) => r.researcher_id)
       .forEach((r, i) => {
@@ -548,7 +538,6 @@ export class UserAddInnovationComponent {
     this.selectedFile = null;
     this.selectedFileName = '';
     this.selectedImagesFile = [];
-    (this.selectedImagesName = ''), (this.selectedMajor = null);
     this.selectedSub = null;
     this.searchMajor = '';
   }
@@ -637,10 +626,6 @@ export class UserAddInnovationComponent {
     this.projectData.innovation_images.splice(index, 1);
   }
 
-  createImagePreview(file: File) {
-    return URL.createObjectURL(file);
-  }
-
   deleteImage(id: number) {
     Swal.fire({
       title: 'ยืนยันการลบ?',
@@ -709,37 +694,71 @@ export class UserAddInnovationComponent {
     this.projectData.keywords.splice(i, 1);
   }
 
-  scrollToSelectedSub() {
-    if (!this.selectedSub) return;
+  filteredMajors(): Major[] {
+    const keyword = (this.searchMajor || '').toLowerCase();
 
-    setTimeout(() => {
-      const element = document.querySelector(
-        `[data-id="${this.selectedSub?.sub_id}"]`
-      ) as HTMLElement;
-
-      if (element) {
-        element.scrollIntoView({
-          behavior: 'smooth',
-          block: 'center',
-        });
-      }
-    }, 200);
+    return this.oecdList.filter((m) =>
+      (m.name_th || '').toLowerCase().includes(keyword)
+    );
   }
 
-  setSelectedSubjectArea() {
-    if (!this.projectData.subject_area_id) return;
+  filteredSubs(): Sub[] {
+    if (!this.selectedMajor) return [];
 
-    for (const major of this.major) {
-      const found = major.children.find(
-        (s) => s.sub_id === this.projectData.subject_area_id
-      );
+    const keyword = (this.searchSub || '').toLowerCase();
 
-      if (found) {
-        this.selectedMajor = major;
-        this.selectedSub = found;
-        this.activeMajor = major;
-        break;
-      }
+    return (this.selectedMajor.children || []).filter((s) =>
+      (s.name_th || '').toLowerCase().includes(keyword)
+    );
+  }
+
+  filteredSubSubs(): Child[] {
+    if (!this.selectedSub) return [];
+
+    const keyword = (this.searchSubSub || '').toLowerCase();
+
+    return (this.selectedSub.children || []).filter((ss) =>
+      (ss.name_th || '').toLowerCase().includes(keyword)
+    );
+  }
+
+  generateThaiYears() {
+    const currentYear = new Date().getFullYear() + 543;
+
+    this.thaiYears = [];
+    for (let i = 0; i < 70; i++) {
+      this.thaiYears.push(currentYear - i);
     }
   }
+
+  selectYear(year: number) {
+    this.projectData.year_received_budget = year;
+    this.activeDropdown = null;
+  }
+
+  // updateFilteredMajors() {
+  //   const keyword = (this.searchMajor || '').toLowerCase();
+  
+  //   this.filteredMajorsList = this.oecdList.filter((m) =>
+  //     (m.name_th || '').toLowerCase().includes(keyword)
+  //   );
+  // }
+  // updateFilteredSubs() {
+  //   if (!this.selectedMajor) return;
+  
+  //   const keyword = (this.searchSub || '').toLowerCase();
+  
+  //   this.filteredSubsList = (this.selectedMajor.children || []).filter((s) =>
+  //     (s.name_th || '').toLowerCase().includes(keyword)
+  //   );
+  // }
+  // updateFilteredSubSubs() {
+  //   if (!this.selectedSub) return;
+  
+  //   const keyword = (this.searchSubSub || '').toLowerCase();
+  
+  //   this.filteredSubSubsList = (this.selectedSub.children || []).filter((ss) =>
+  //     (ss.name_th || '').toLowerCase().includes(keyword)
+  //   );
+  // }
 }

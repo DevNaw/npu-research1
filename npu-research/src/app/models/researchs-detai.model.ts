@@ -48,7 +48,7 @@ export interface ResearchProjectData {
   source_funds: string;
   name_funding: string;
   budget_amount: string;
-  year_received_budget: string;
+  year_received_budget: number;
   research_area: string;
   usable_area: string;
   start_date: string;
@@ -60,6 +60,8 @@ export interface ResearchProjectData {
   external_members: ExternalMember[];
   full_report: ResearchFileResponse | null;
   contract_file: ResearchContractFile | null;
+  oecd_id: number;
+  funding_code: string;
 }
 
 export interface ResearchKeyword {

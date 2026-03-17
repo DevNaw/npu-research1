@@ -58,7 +58,7 @@ export interface ArticleSubjectArea {
     journal_name: string;
     pre_location: string;
     pages: string;
-    year_published: string;
+    year_published: number;
     volume: string;
     volume_no: string;
     is_cooperation: string;
@@ -71,5 +71,7 @@ export interface ArticleSubjectArea {
     article_type: string;
     major_id: number | null;
     sub_id: number | null;
+    oecd_id: number;
+    article_type_code: string;
   }
   

@@ -35,11 +35,11 @@
       </div>
 
       <!-- Content -->
-      <div class="grid grid-cols-1 md:grid-cols-3 md:gap-8 p-4 md:p-8">
+      <div class="grid grid-cols-1 md:grid-cols-4 md:gap-3 p-4 md:p-8">
         <!-- Left: Cover Image -->
         <div class="md:col-span-1">
           <div
-            class="bg-gray-200 rounded-xl shadow-inner flex items-center justify-center h-90 overflow-hidden cursor-pointer relative"
+            class="bg-gray-200 rounded-xl shadow-inner flex items-center justify-center h-90 w-full overflow-hidden cursor-pointer relative"
             (click)="fileInput.click()"
           >
             <!-- ถ้ามีรูป -->
@@ -96,15 +96,31 @@
         </div>
 
         <!-- Right: Details -->
-        <div class="md:col-span-2 space-y-6">
+        <div class="md:col-span-3 space-y-6">
           <!-- Research Fields -->
           <div class="space-y-2">
             <div class="grid grid-cols-1 gap-2 md:gap-4">
               <div>
                 <p class="text-[#767676]">สาขาของงานวิจัย</p>
                 <p class="font-light my-2">
-                  {{ researchData?.subject_area?.[0]?.name_en }}
+                  {{ oecdUI[0]?.name_th || '-' }}
                 </p>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <p class="text-[#767676]">สาขาย่อย</p>
+                  <p class="font-light my-2">
+                    {{ oecdUI[0]?.children?.[0]?.name_th || '-' }}
+                  </p>
+                </div>
+
+                <div>
+                  <p class="text-[#767676]">สาขาที่เกี่ยวข้อง</p>
+                  <p class="font-light my-2">
+                    {{ oecdUI[0]?.children?.[0]?.children?.[0]?.name_th || '-' }}
+                  </p>
+                </div>
               </div>
 
               <div *ngIf="researchData?.abstract">
@@ -283,20 +299,6 @@
                 </span>
               </div>
 
-              <!-- <div>
-                <p class="text-[#767676] md:mb-1">
-                  ปีที่เสร็จสิ้น
-                </p>
-                <p class="text-gray-800 font-light my-2">{{ researchData?.end_date || "-" }}</p>
-              </div> -->
-
-              <!-- <div>
-                <p class="text-[#767676] md:mb-1">
-                  ความร่วมมือกับหน่วยงานอื่นๆ
-                </p>
-                <p class="text-gray-800 font-light my-2">{{ researchData?.call_other }}</p>
-              </div> -->
-
               <div>
                 <p class="text-[#767676] md:mb-1">พื้นที่วิจัย</p>
                 <p class="text-gray-800 font-light my-2">
@@ -324,13 +326,6 @@
                   {{ researchData?.contract_file?.file_name || "-" }}
                 </a>
               </div>
-              <!-- 
-              <div>
-                <p class="text-[#767676] md:mb-1">การเผยแพร่</p>
-                <a href="#" class="text-blue-600 hover:underline break-all">
-                  https://doi.org/xx.xxxx/abcd
-                </a>
-              </div> -->
             </div>
           </div>
         </div>
@@ -370,7 +365,7 @@
         </div>
 
         <!-- Content -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 p-4 md:p-8">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-8 p-4 md:p-8">
           <!-- Left: Cover Image -->
           <div class="md:col-span-1">
             <div
@@ -432,7 +427,7 @@
           </div>
 
           <!-- Right: Details -->
-          <div class="md:col-span-2 space-y-6">
+          <div class="md:col-span-3 space-y-6">
             <!-- Research Fields -->
             <div>
               <p class="text-[#767676]">สาขาของบทความ</p>
@@ -698,7 +693,7 @@
         </div>
 
         <!-- Content -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 p-4 md:p-8">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 p-4 md:p-8">
           <!-- Left: Cover Image -->
           <div class="md:col-span-1">
             <div
@@ -783,7 +778,7 @@
           </div>
 
           <!-- Right: Details -->
-          <div class="md:col-span-2 space-y-6">
+          <div class="md:col-span-3 space-y-6">
             <!-- Research Fields -->
             <div class="grid grid-cols-1 gap-4">
               <div>
@@ -793,14 +788,30 @@
                 </p>
               </div>
 
-              <div>
-                <p class="text-[#767676]">บทคัดย่อ/p></p>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <p class="text-[#767676]">สาขาย่อย</p>
+                  <p class="font-light">
+                    {{ innovationData?.subject_area?.[0]?.name_en || '-' }}
+                  </p>
+                </div>
+  
+                <div>
+                  <p class="text-[#767676]">สาขาที่เกี่ยวข้อง</p>
+                  <p class="font-light">
+                    {{ innovationData?.subject_area?.[0]?.name_en || '-' }}
+                  </p>
+                </div>
+              </div>
+
+              <div *ngIf="innovationData?.abstract">
+                <p class="text-[#767676]">บทคัดย่อ</p>
                 <p class="font-light">
                   {{ innovationData?.abstract || "-" }}
                 </p>
               </div>
 
-              <div>
+              <div *ngIf="innovationData?.abstract_en">
                 <p class="text-[#767676]">Abstract</p>
                 <p class="font-light">
                   {{ innovationData?.abstract_en || "-" }}
@@ -838,6 +849,13 @@
                       <th class="px-4 py-2 text-left">ประเภทความรับผิดชอบ</th>
                     </tr>
                   </thead>
+                  <tbody
+                    class="divide-y font-light"
+                    *ngIf="
+                      (innovationData?.internal_members?.length ?? 0) > 0;
+                      else noData
+                    "
+                  >
                   <tbody class="divide-y font-light">
                     <tr
                       *ngFor="
@@ -861,6 +879,14 @@
                     </tr>
                   </tbody>
                 </table>
+
+                <ng-template #noData>
+                  <tr>
+                    <td colspan="3" class="text-center py-4 text-gray-500">
+                      ไม่พบข้อมูล
+                    </td>
+                  </tr>
+                </ng-template>
               </div>
             </div>
 
@@ -879,7 +905,11 @@
                       <th class="px-4 py-2 text-left">หน่วยงาน</th>
                     </tr>
                   </thead>
-                  <tbody class="divide-y font-light">
+                  <tbody class="divide-y font-light" *ngIf="
+                      (innovationData?.external_members?.length ?? 0) > 0;
+                      else noDataExternal
+                    "
+                  >
                     <tr
                       *ngFor="
                         let external of innovationData?.external_members;
@@ -896,6 +926,14 @@
                     </tr>
                   </tbody>
                 </table>
+
+                <ng-template #noDataExternal>
+                  <tr>
+                    <td colspan="3" class="text-center py-4 text-gray-500">
+                      ไม่พบข้อมูล
+                    </td>
+                  </tr>
+                </ng-template>
               </div>
             </div>
 

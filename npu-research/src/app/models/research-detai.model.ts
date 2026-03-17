@@ -3,7 +3,7 @@ export interface ProjectDetailResponse {
     message: string;
     data: {
       projectDetail: ProjectDetailApi;
-      owner: ResearchOwnerProject[];
+      owner: ResearchOwnerProject;
     };
   }
   
@@ -34,6 +34,7 @@ export interface ProjectDetailResponse {
     external_members: ExternalMemberApi[];
     full_report: FileDetailApi;
     contract_file: FileDetailApi;
+    oecd: OecdMajorApi[];
   }
   
   export interface SubjectAreaApi {
@@ -75,3 +76,36 @@ export interface ProjectDetailResponse {
     keyword: string;
   }
   
+  export interface OecdMajorApi {
+    major_id: number;
+    name_th: string;
+    children: OecdSubApi;
+  }
+  
+  export interface OecdSubApi {
+    sub_id: number;
+    name_th: string;
+    children: OecdChildApi;
+  }
+  
+  export interface OecdChildApi {
+    child_id: number;
+    name_th: string;
+  }
+
+  export interface OecdMajorUI {
+    major_id: number;
+    name_th: string;
+    children: OecdSubUI[];
+  }
+  
+  export interface OecdSubUI {
+    sub_id: number;
+    name_th: string;
+    children: OecdChildUI[];
+  }
+  
+  export interface OecdChildUI {
+    child_id: number;
+    name_th: string;
+  }

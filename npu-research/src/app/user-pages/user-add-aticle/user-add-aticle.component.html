@@ -119,8 +119,13 @@
         >
           {{ keyword }}
 
-          <button type="button" (click)="removeKeyword(i)" class="text-white/80 hover:text-white text-base cursor-pointer"
-          >✕</button>
+          <button
+            type="button"
+            (click)="removeKeyword(i)"
+            class="text-white/80 hover:text-white text-base cursor-pointer"
+          >
+            ✕
+          </button>
         </span>
 
         <input
@@ -155,8 +160,13 @@
         >
           {{ keyword }}
 
-          <button type="button" (click)="removeKeywordEn(i)" class="text-white/80 hover:text-white text-base cursor-pointer"
-          >✕</button>
+          <button
+            type="button"
+            (click)="removeKeywordEn(i)"
+            class="text-white/80 hover:text-white text-base cursor-pointer"
+          >
+            ✕
+          </button>
         </span>
 
         <input
@@ -198,16 +208,16 @@
           class="absolute z-50 mt-1 w-full bg-white border rounded-md shadow text-lg font-light"
         >
           <div
-            (click)="selectValue('article_type', 'Journal')"
+            (click)="selectValue('article_type', 'Journal'); selectValue('article_type_code', '01')"
             class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
           >
-            Journal
+            วารสาร
           </div>
           <div
-            (click)="selectValue('article_type', 'Conference')"
+            (click)="selectValue('article_type', 'Conference'); selectValue('article_type_code', '02')"
             class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
           >
-            Conference
+            การประชุมวิชาการ
           </div>
         </div>
 
@@ -259,50 +269,6 @@
             TCI
           </div>
         </div>
-      </div>
-    </div>
-
-    <!-- Country -->
-    <div
-      *ngIf="articleData.article_type === 'Journal'"
-      class="relative mb:-2 md:mb-6"
-    >
-      <label class="mb-1 block">ประเทศ</label>
-      <button
-        type="button"
-        (click)="toggleDropdown('countries', $event)"
-        class="flex justify-between items-center w-full border rounded-lg px-3 py-2 text-lg font-light"
-      >
-        {{ selectedCountries || "เลือกประเทศ" }}
-        <i class="bi bi-chevron-down text-sm"></i>
-      </button>
-
-      <div
-        *ngIf="activeDropdown === 'countries'"
-        (click)="$event.stopPropagation()"
-        class="absolute z-50 w-full bg-white border rounded-lg shadow mt-1 text-lg font-light"
-      >
-        <input
-          [(ngModel)]="searchCountries"
-          placeholder="ค้นหา..."
-          class="w-full px-3 py-2 border-b"
-        />
-        <ul class="max-h-44 overflow-y-auto">
-          <li
-            *ngFor="let c of filteredCountries()"
-            (click)="selectCountrie(c)"
-            class="px-4 py-2 hover:bg-indigo-50 cursor-pointer"
-          >
-            {{ c.name }} ({{ c.code }})
-          </li>
-
-          <li
-            *ngIf="filteredCountries().length === 0"
-            class="px-4 py-2 text-gray-400 text-center"
-          >
-            ไม่พบข้อมูล
-          </li>
-        </ul>
       </div>
     </div>
 
@@ -442,101 +408,173 @@
 
       <!-- ปีที่ตีพิมพ์ -->
       <div class="mb-2">
-        <label class="md:col-span-1 text-start">
-          ปีที่ตีพิมพ์ <span class="text-red-500">*</span>
+        <label class="text-start">
+          ปีที่ตีพิมพ์ (พ.ศ.) <span class="text-red-500">*</span>
         </label>
+
+        <div class="relative">
+          <!-- BUTTON -->
+          <button
+            (click)="toggleDropdown('yearPublished', $event)"
+            type="button"
+            class="w-full h-12 border rounded-md px-4 flex justify-between items-center bg-white text-lg font-light"
+            [class.border-red-500]="
+              yearPublished.invalid && yearPublished.touched
+            "
+          >
+            <span>
+              {{ articleData.year_published || "เลือกปี" }}
+            </span>
+            <i class="bi bi-chevron-down"></i>
+          </button>
+
+          <!-- DROPDOWN -->
+          <div
+            *ngIf="activeDropdown === 'yearPublished'"
+            class="absolute z-50 w-full bg-white border rounded-md mt-1 shadow text-lg font-light"
+            (click)="$event.stopPropagation()"
+          >
+            <ul class="max-h-60 overflow-y-auto">
+              <li
+                *ngFor="let year of thaiYears"
+                (click)="selectYear(year)"
+                class="px-4 py-2 hover:bg-gray-200 cursor-pointer"
+                [class.bg-blue-100]="articleData.year_published === year"
+              >
+                {{ year }}
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- ✅ ใช้ hidden input สำหรับ validation -->
         <input
+          type="hidden"
           name="year_published"
           required
-          #yearPublished="ngModel"
-          [class.border-red-500]="
-            yearPublished.invalid && yearPublished.touched
-          "
           [(ngModel)]="articleData.year_published"
-          type="text"
-          class="md:col-span-2 w-full h-12 border text-lg font-light rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400"
-          placeholder="ระบุปีบทความวิชาการ"
+          #yearPublished="ngModel"
         />
 
+        <!-- ERROR -->
         <div
           *ngIf="yearPublished.invalid && yearPublished.touched"
           class="text-red-500 text-sm"
         >
-          กรุณากรอกปีที่ตีพิมพ์
+          กรุณาเลือกปีที่ตีพิมพ์
         </div>
       </div>
     </div>
 
     <!-- สาขาของบทความ/วารสาร -->
-    <div class="grid grid-cols-1 md:grid-cols-1 md:gap-2 mb-2 md:mb-6">
-      <label class="md:col-span-1 text-start">
-        สาขาของบทความ <span class="text-red-500">*</span>
-      </label>
+    <div class="grid grid-cols-1 md:grid-cols-3 md:gap-2 mb-2 md:mb-6">
+      <!-- Major -->
+      <div>
+        <label class="text-start">
+          สาขาหลัก <span class="text-red-500">*</span>
+        </label>
 
-      <div class="relative">
-        <button
-          type="button"
-          (click)="toggleDropdown('major', $event)"
-          class="w-full border rounded-lg px-4 py-2 flex justify-between items-center bg-white shadow-sm transition"
-        >
-          <span class="truncate text-lg font-light">
-            {{ selectedSub?.name_en
-              || articleData.subject_area?.[0]?.name_en
-              || 'ระบุสาขาของบทความ' }}
-          </span>
-          <i class="bi bi-chevron-down"></i>
-        </button>
+        <div class="relative">
+          <button
+            (click)="toggleDropdown('major', $event)"
+            type="button"
+            class="w-full border rounded-md px-3 py-2 flex justify-between items-center bg-white"
+          >
+            <span class="truncate text-lg font-light">
+              {{ selectedMajor?.name_th || "เลือกสาขาหลัก" }}
+            </span>
+            <i class="bi bi-chevron-down"></i>
+          </button>
 
-        <!-- Dropdown -->
-        <div
-          *ngIf="activeDropdown === 'major'"
-          class="absolute z-50 mt-2 w-full bg-white border rounded-xl shadow-lg text-lg font-light"
-          (click)="$event.stopPropagation()"
-        >
-          <ul class="relative max-h-72 overflow-y-auto">
-            <li *ngFor="let m of filteredMajor()" class="relative">
-              <!-- Major -->
-              <div
-                (click)="toggleMajor(m, $event)"
-                class="flex justify-between items-center px-4 py-2 cursor-pointer hover:bg-gray-200 transition"
-                [class.bg-gray-200]="activeMajor?.major_id === m.major_id"
+          <div
+            *ngIf="activeDropdown === 'major'"
+            class="absolute z-50 w-full bg-white border rounded-md mt-1 shadow text-lg font-light"
+            (click)="$event.stopPropagation()"
+          >
+            <ul class="relative max-h-72 overflow-y-auto">
+              <li
+                *ngFor="let m of filteredMajors()"
+                (click)="selectMajor(m)"
+                class="px-4 py-2 hover:bg-gray-200 cursor-pointer"
               >
-                {{ m.name_en }}
-                <i
-                  class="bi"
-                  [ngClass]="
-                    activeMajor?.major_id === m.major_id
-                      ? 'bi-chevron-down'
-                      : 'bi-chevron-right'
-                  "
-                >
-                </i>
-              </div>
+                {{ m.name_th }}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
 
-              <!-- Sub -->
-              <ul
-                *ngIf="activeMajor?.major_id === m.major_id"
-                class="bg-gray-100 rounded-xl shadow-lg"
+      <!-- SUB -->
+      <div>
+        <label class="text-start">
+          สาขาย่อย <span class="text-red-500">*</span>
+        </label>
+
+        <div class="relative">
+          <button
+            (click)="toggleDropdown('sub', $event)"
+            [disabled]="!selectedMajor"
+            type="button"
+            class="w-full border rounded-md px-3 py-2 flex justify-between items-center bg-white"
+          >
+            <span class="truncate text-lg font-light">
+              {{ selectedSub?.name_th || "เลือกสาขาย่อย" }}
+            </span>
+            <i class="bi bi-chevron-down"></i>
+          </button>
+
+          <div
+            *ngIf="activeDropdown === 'sub'"
+            class="absolute z-50 w-full bg-white border rounded-md mt-1 shadow text-lg font-light"
+            (click)="$event.stopPropagation()"
+          >
+            <ul class="relative max-h-72 overflow-y-auto">
+              <li
+                *ngFor="let s of filteredSubs()"
+                (click)="selectSub(s)"
+                class="px-4 py-2 hover:bg-gray-200 cursor-pointer"
               >
-                <li
-                  *ngFor="let s of m.children"
-                  (click)="selectSub(s)"
-                  [attr.data-id]="s.sub_id"
-                  class="px-4 py-2 hover:bg-gray-200 cursor-pointer transition"
-                  [class.bg-gray-300]="selectedSub?.sub_id === s.sub_id"
-                >
-                  {{ s.name_en }}
-                </li>
+                {{ s.name_th }}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
 
-                <li
-                  *ngIf="m.children.length === 0"
-                  class="px-4 py-2 text-gray-400 text-center"
-                >
-                  ไม่พบข้อมูล
-                </li>
-              </ul>
-            </li>
-          </ul>
+      <!-- SUB SUB -->
+      <div>
+        <label class="text-start">
+          สาขาที่เกี่ยวข้อง <span class="text-red-500">*</span>
+        </label>
+
+        <div class="relative">
+          <button
+            (click)="toggleDropdown('subSub', $event)"
+            [disabled]="!selectedSub"
+            type="button"
+            class="w-full border rounded-md px-3 py-2 flex justify-between items-center bg-white"
+          >
+            <span class="truncate text-lg font-light">
+              {{ selectedSubSub?.name_th || "เลือกสาขาที่เกี่ยวข้อง" }}
+            </span>
+            <i class="bi bi-chevron-down"></i>
+          </button>
+
+          <div
+            *ngIf="activeDropdown === 'subSub'"
+            class="absolute z-50 w-full bg-white border rounded-md mt-1 shadow text-lg font-light"
+            (click)="$event.stopPropagation()"
+          >
+            <ul class="relative max-h-72 overflow-y-auto">
+              <li
+                *ngFor="let ss of filteredSubSubs()"
+                (click)="selectSubSub(ss)"
+                class="px-4 py-2 hover:bg-gray-200 cursor-pointer"
+              >
+                {{ ss.name_th }}
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>

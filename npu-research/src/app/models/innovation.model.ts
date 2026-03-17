@@ -75,7 +75,7 @@ export interface ResearchInnovationDetail {
   abstract: string;
   abstract_en: string;
   keywords: string[];
-  year: string;
+  year: number;
   published_date: string;
   status: string | null;
   call_other: string | null;
@@ -87,7 +87,7 @@ export interface ResearchInnovationDetail {
   source_funds: string | null;
   budget_amount: string | null;
   name_funding: string | null;
-  year_received_budget: string | null;
+  year_received_budget: number;
   patent_number: string | null;
   application_number: string | null;
   examination_url: string | null;
@@ -98,6 +98,8 @@ export interface ResearchInnovationDetail {
 
   full_report: FullReport | null;
   innovation_images: InnovationImage[];
+  oecd_id: number;
+  funding_code: string;
 }
 export interface InternalMember {
   user_id: number;

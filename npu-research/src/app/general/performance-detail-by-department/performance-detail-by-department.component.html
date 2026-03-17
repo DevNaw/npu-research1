@@ -1,12 +1,12 @@
 <!-- research-detail -->
 <div
-  class="min-h-screen bg-gray-100 p-5 md:p-10 font-bold text-[#394250] text-xl md:text-2xl"
+  class="min-h-screen bg-gray-100 p-5 md:p-10 font-medium text-[#394250] text-2xl md:text-2xl"
 >
   <div>
     <!-- ===== Reseach ===== -->
     <div
       *ngIf="type === 'project'"
-      class="mx-auto bg-white rounded-2xl shadow-lg overflow-hidden"
+      class="mx-auto bg-white rounded-2xl shadow-lg overflow-hidden "
     >
       <!-- Header -->
       <div
@@ -24,7 +24,7 @@
       </div>
 
       <!-- Content -->
-      <div class="grid grid-cols-1 md:grid-cols-3 md:gap-8 p-4 md:p-8">
+      <div class="grid grid-cols-1 md:grid-cols-4 md:gap-8 p-4 md:p-8">
         <!-- Left: Cover Image -->
         <div class="md:col-span-1">
           <div
@@ -74,26 +74,43 @@
         </div>
 
         <!-- Right: Details -->
-        <div class="md:col-span-2 space-y-6">
+        <div class="md:col-span-3 space-y-6">
           <!-- Research Fields -->
           <div class="space-y-2">
             <div class="grid grid-cols-1 gap-2 md:gap-4">
               <div>
                 <p class="text-[#767676]">สาขาของงานวิจัย</p>
-                <p class="font-bold">
+                <p class="font-light">
                   {{ researchData?.subject_area?.[0]?.name_en }}
                 </p>
               </div>
 
-              <div>
+              <div *ngIf="researchData?.abstract">
+                <p class="text-[#767676]">บทคัดย่อ</p>
+                <p class="font-light">{{ researchData?.abstract || '-' }}</p>
+              </div>
+
+              <div *ngIf="researchData?.abstract_en">
                 <p class="text-[#767676]">Abstract</p>
-                <p class="font-bold">{{ researchData?.abstract || '-' }}</p>
+                <p class="font-light">{{ researchData?.abstract_en || '-' }}</p>
+              </div>
+
+              <div>
+                <p class="text-[#767676]">Keyword</p>
+                <div class="flex flex-wrap gap-2 my-2">
+                  <span
+                    *ngFor="let k of researchData?.keywords"
+                    class="px-2 py-1 font-light my-2 text-white rounded bg-[#118CD9]"
+                  >
+                    {{ k.keyword }}
+                  </span>
+                </div>
               </div>
             </div>
 
             <!-- Internal Researchers Table -->
             <div>
-              <h2 class="text-2xl mb-2">ผู้ร่วมโครงการภายใน</h2>
+              <h2 class="mb-2">ผู้ร่วมโครงการภายใน</h2>
               <div class="overflow-x-auto">
                 <table class="w-full border rounded-lg overflow-hidden">
                   <thead class="bg-[#394250] text-white">
@@ -105,7 +122,7 @@
                   </thead>
 
                   <tbody
-                    class="divide-y"
+                    class="divide-y font-light"
                     *ngIf="
                       (researchData?.internal_members?.length ?? 0) > 0;
                       else noData
@@ -146,7 +163,7 @@
 
             <!-- External Researchers Table -->
             <div>
-              <h2 class="font-semibold mb-2">ผู้ร่วมโครงการภายนอก</h2>
+              <h2 class="my-4">ผู้ร่วมโครงการภายนอก</h2>
               <div class="overflow-x-auto">
                 <table class="w-full border rounded-lg overflow-hidden">
                   <thead class="bg-[#394250] text-white">
@@ -160,7 +177,7 @@
                     </tr>
                   </thead>
                   <tbody
-                    class="divide-y"
+                    class="divide-y font-light"
                     *ngIf="
                       (researchData?.external_members?.length ?? 0) > 0;
                       else noDataExternal
@@ -196,96 +213,75 @@
               class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-x-10 md:gap-y-6"
             >
               <div>
-                <p class="font-semibold text-[#767676] md:mb-1">
+                <p class=" text-[#767676] md:mb-1">
                   ที่มาแหล่งทุน
                 </p>
-                <p class="text-gray-800">{{ researchData?.source_funds }}</p>
+                <p class="text-gray-800 font-light">{{ researchData?.source_funds }}</p>
               </div>
 
               <div>
-                <p class="font-semibold text-[#767676] md:mb-1">ชื่อแหล่งทุน</p>
-                <p class="text-gray-800">{{ researchData?.name_funding }}</p>
+                <p class=" text-[#767676] md:mb-1">ชื่อแหล่งทุน</p>
+                <p class="text-gray-800 font-light">{{ researchData?.name_funding }}</p>
               </div>
 
               <div>
-                <p class="font-semibold text-[#767676] md:mb-1">
+                <p class=" text-[#767676] md:mb-1">
                   จำนวนงบประมาณ
                 </p>
-                <p class="text-gray-800">
+                <p class="text-gray-800 font-light">
                   {{ researchData?.budget_amount }} บาท
                 </p>
               </div>
 
               <div>
-                <p class="font-semibold text-[#767676] md:mb-1">
+                <p class=" text-[#767676] md:mb-1">
                   ปีที่ได้รับทุน
                 </p>
-                <p class="text-gray-800">
+                <p class="text-gray-800 font-light">
                   {{ researchData?.year_received_budget }}
                 </p>
               </div>
 
               <div>
-                <p class="font-semibold text-[#767676] md:mb-1">
+                <p class=" text-[#767676] md:mb-1">
                   สถานะดำเนินการ
                 </p>
                 <span
-                  class="inline-block px-3 py-1 rounded-full bg-green-100 text-green-700"
+                  class="inline-block px-3 py-1 rounded-full bg-green-100 text-green-700 font-light"
                 >
                   {{ researchData?.status || "-" }}
                 </span>
               </div>
 
-              <!-- <div>
-                <p class="font-semibold text-[#767676] md:mb-1">
-                  ปีที่เสร็จสิ้น
-                </p>
-                <p class="text-gray-800">{{ researchData?.end_date || "-" }}</p>
-              </div> -->
-
-              <!-- <div>
-                <p class="font-semibold text-[#767676] md:mb-1">
-                  ความร่วมมือกับหน่วยงานอื่นๆ
-                </p>
-                <p class="text-gray-800">{{ researchData?.call_other }}</p>
-              </div> -->
-
               <div>
-                <p class="font-semibold text-[#767676] md:mb-1">พื้นที่วิจัย</p>
-                <p class="text-gray-800">{{ researchData?.research_area }}</p>
+                <p class=" text-[#767676] md:mb-1">พื้นที่วิจัย</p>
+                <p class="text-gray-800 font-light">{{ researchData?.research_area }}</p>
               </div>
 
               <div>
-                <p class="font-semibold text-[#767676] md:mb-1">
+                <p class=" text-[#767676] md:mb-1">
                   พื้นที่ใช้ประโยชน์
                 </p>
-                <p class="text-gray-800">{{ researchData?.research_area }}</p>
+                <p class="text-gray-800 font-light">{{ researchData?.research_area }}</p>
               </div>
 
               <div>
-                <p class="font-semibold text-[#767676] md:mb-1">
+                <p class=" text-[#767676] md:mb-1">
                   รายงานวิจัยฉบับสมบูรณ์
                 </p>
-                <a href="#" class="text-blue-600 hover:underline">
+                <a href="#" class="text-blue-600 hover:underline font-light">
                   {{ researchData?.full_report?.file_name || "-" }}
                 </a>
               </div>
 
               <div>
-                <p class="font-semibold text-[#767676] md:mb-1">
+                <p class=" text-[#767676] md:mb-1">
                   ไฟล์สัญญารับทุน
                 </p>
-                <a href="#" class="text-blue-600 hover:underline">
+                <a href="#" class="text-blue-600 hover:underline font-light">
                   {{ researchData?.contract_file?.file_name || "-" }}
                 </a>
               </div>
-              <!-- 
-              <div>
-                <p class="font-semibold text-[#767676] md:mb-1">การเผยแพร่</p>
-                <a href="#" class="text-blue-600 hover:underline break-all">
-                  https://doi.org/xx.xxxx/abcd
-                </a>
-              </div> -->
             </div>
           </div>
         </div>
@@ -294,7 +290,7 @@
 
     <!-- ===== Acticle ===== -->
     <div *ngIf="type === 'article'">
-      <div class="mx-auto bg-white rounded-2xl shadow-lg overflow-hidden">
+      <div class="mx-auto bg-white rounded-2xl shadow-lg overflow-hidden font-medium text-2xl">
         <!-- Header -->
         <div
           class="bg-[#394250] text-white px-4 py-2 md:px-8 md:py-6 flex justify-between"
@@ -313,7 +309,7 @@
         </div>
 
         <!-- Content -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 p-4 md:p-8">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-8 p-4 md:p-8">
           <!-- Left: Cover Image -->
           <div class="md:col-span-1">
             <div
@@ -364,51 +360,65 @@
           </div>
 
           <!-- Right: Details -->
-          <div class="md:col-span-2 space-y-6">
+          <div class="md:col-span-3 space-y-6">
             <!-- Research Fields -->
             <div>
               <p class="text-[#767676]">สาขาของบทความ</p>
-              <p class="font-bold">
+              <p class="font-light">
                 {{ articleData?.subject_area?.[0]?.name_en }}
               </p>
             </div>
 
-            <div>
-              <p class="text-[#767676]">Abstract</p>
-              <p class="font-bold">
+            <div *ngIf="articleData?.abstract">
+              <p class="text-[#767676]">บทคัดย่อ</p>
+              <p class="font-light">
                 {{ articleData?.abstract || '-' }}
+              </p>
+            </div>
+
+            <div *ngIf="articleData?.abstract_en">
+              <p class="text-[#767676]">Abstract</p>
+              <p class="font-light">
+                {{ articleData?.abstract_en || '-' }}
+              </p>
+            </div>
+
+            <div *ngIf="articleData?.keywords">
+              <p class="text-[#767676]">Keywords</p>
+              <p class="font-light">
+                {{ articleData?.keywords || '-' }}
               </p>
             </div>
 
             <div class="grid grid-cols-2 gap-2 md:gap-4">
               <div>
                 <p class="text-[#767676]">ประเภท</p>
-                <p class="font-bold">{{ articleData?.article_type }}</p>
+                <p class="font-light">{{ articleData?.article_type }}</p>
               </div>
 
               <div *ngIf="articleData?.article_type === 'Journal'">
                 <p class="text-[#767676]">ชื่องานวิจัย</p>
-                <p class="font-bold">{{ articleData?.journal_name }}</p>
+                <p class="font-light">{{ articleData?.journal_name }}</p>
               </div>
 
               <div *ngIf="articleData?.article_type === 'Conference'">
                 <p class="text-[#767676]">ชื่อการประชุมวิชาการ</p>
-                <p class="font-bold">{{ articleData?.journal_name }}</p>
+                <p class="font-light">{{ articleData?.journal_name }}</p>
               </div>
 
               <div *ngIf="articleData?.article_type === 'Journal'">
                 <p class="text-[#767676]">ประเทศ</p>
-                <p class="font-bold">{{ articleData?.country }}</p>
+                <p class="font-light">{{ articleData?.country }}</p>
               </div>
 
               <div *ngIf="articleData?.article_type === 'Journal'">
                 <p class="text-[#767676]">ประเภทฐานข้อมูล</p>
-                <p class="font-bold">{{ articleData?.db_type }}</p>
+                <p class="font-light">{{ articleData?.db_type }}</p>
               </div>
 
               <div class="">
                 <p class="text-[#767676] mb-1">ค่าน้ำหนัก/ระดับคุณภาพ</p>
-                <p class="font-bold">{{ articleData?.volume_no }}</p>
+                <p class="font-light">{{ articleData?.volume_no }}</p>
               </div>
             </div>
 
@@ -425,7 +435,7 @@
                     </tr>
                   </thead>
                   <tbody
-                    class="divide-y"
+                    class="divide-y font-light"
                     *ngIf="
                       (articleData?.internal_members?.length ?? 0) > 0;
                       else noData
@@ -466,7 +476,7 @@
 
             <!-- External Researchers Table -->
             <div>
-              <h2 class="font-semibold mb-2">ผู้ร่วมโครงการภายนอก</h2>
+              <h2 class="my-4">ผู้ร่วมโครงการภายนอก</h2>
               <div class="overflow-x-auto">
                 <table class="w-full border rounded-lg overflow-hidden">
                   <thead class="bg-[#394250] text-white">
@@ -480,7 +490,7 @@
                     </tr>
                   </thead>
                   <tbody
-                    class="divide-y"
+                    class="divide-y font-light"
                     *ngIf="
                       (articleData?.external_members?.length ?? 0) > 0;
                       else noDataExternal
@@ -516,54 +526,54 @@
               class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-x-10 md:gap-y-6"
             >
               <div>
-                <p class="font-semibold text-[#767676] md:mb-1">
+                <p class="text-[#767676] md:mb-1">
                   ฉบับที่/เล่มที่
                 </p>
-                <p class="text-gray-800">{{ articleData?.volume }}</p>
+                <p class="text-gray-800 font-light">{{ articleData?.volume }}</p>
               </div>
               <div>
-                <p class="font-semibold text-[#767676] md:mb-1">
+                <p class="text-[#767676] md:mb-1">
                   หน้าที่ตีพิมพ์
                 </p>
-                <p class="text-gray-800">{{ articleData?.pages }}</p>
+                <p class="text-gray-800 font-light">{{ articleData?.pages }}</p>
               </div>
               <div>
-                <p class="font-semibold text-[#767676] md:mb-1">ปีที่ตีพิมพ์</p>
-                <p class="text-gray-800">{{ articleData?.year_published }}</p>
+                <p class="text-[#767676] md:mb-1">ปีที่ตีพิมพ์</p>
+                <p class="text-gray-800 font-light">{{ articleData?.year_published }}</p>
               </div>
 
               <div>
-                <p class="font-semibold text-[#767676] md:mb-1">
+                <p class="text-[#767676] md:mb-1">
                   ความร่วมมือกับหน่วยงานอื่นๆ
                 </p>
-                <p class="text-gray-800">
+                <p class="text-gray-800 font-light">
                   {{ articleData?.is_cooperation === "yes" ? "มี" : "ไม่มี" }}
                 </p>
               </div>
 
               <div *ngIf="articleData?.article_type === 'Conference'">
-                <p class="font-semibold text-[#767676] md:mb-1">
+                <p class="text-[#767676] md:mb-1">
                   สถานที่นำเสนอ
                 </p>
-                <p class="text-gray-800">
+                <p class="text-gray-800 font-light">
                   {{ articleData?.pre_location || "-" }}
                 </p>
               </div>
 
               <div>
-                <p class="font-semibold text-[#767676] md:mb-1">
+                <p class="text-[#767676] md:mb-1">
                   ไฟล์บทความ PDF
                 </p>
-                <p class="text-gray-800">
+                <p class="text-gray-800 font-light">
                   {{ articleData?.article_file?.file_name || "-" }}
                 </p>
               </div>
 
               <div>
-                <p class="font-semibold text-[#767676] md:mb-1">
+                <p class="text-[#767676] md:mb-1">
                   เว็บไซต์อ้างอิง/การเผยแพร่
                 </p>
-                <a href="#" class="text-blue-600 hover:underline break-all">
+                <a href="#" class="text-blue-600 hover:underline break-all font-light">
                   {{ articleData?.doi }}
                 </a>
               </div>
@@ -593,7 +603,7 @@
         </div>
 
         <!-- Content -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 p-4 md:p-8">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 p-4 md:p-8">
           <!-- Left: Cover Image -->
           <div class="md:col-span-1">
             <div
@@ -644,7 +654,7 @@
 
             <!-- Gelleries Images -->
             <div class="md:col-span-1 mt-5">
-              <label class="font-bold text-gray-600">Gallery</label>
+              <label class="text-gray-600">Gallery</label>
 
               <div class="grid grid-cols-3 gap-2 mt-5">
                 <img
@@ -669,23 +679,45 @@
           </div>
 
           <!-- Right: Details -->
-          <div class="md:col-span-2 space-y-6">
+          <div class="md:col-span-3 space-y-6">
             <!-- Research Fields -->
             <div class="grid grid-cols-1 gap-4">
               <div>
                 <p class="text-[#767676]">สาขาของนวัตกรรมสิ่งประดิษฐ์</p>
-                <p class="font-bold">
+                <p class="font-light">
                   {{ innovationData?.subject_area?.[0]?.name_en || '-' }}
                 </p>
               </div>
 
-              <div>
-                <p class="text-[#767676]">สาขาของนวัตกรรมสิ่งประดิษฐ์ย่อย</p>
-                <p class="font-bold">การเปลี่ยนแปลงสภาพภูมิอากาศ</p>
+              <div *ngIf="innovationData?.abstract">
+                <p class="text-[#767676]">บทคัดย่อ</p>
+                <p class="font-light">
+                  {{ innovationData?.abstract || '-' }}
+                </p>
               </div>
+
+              <div *ngIf="innovationData?.abstract_en">
+                <p class="text-[#767676]">Abstract</p>
+                <p class="font-light">
+                  {{ innovationData?.abstract_en || '-' }}
+                </p>
+              </div>
+
+              <div>
+                <p class="text-[#767676]">keywords</p>
+                <div class="flex flex-wrap gap-2 my-2">
+                  <span
+                    *ngFor="let k of innovationData?.keywords"
+                    class="px-2 py-1 font-light my-2 text-white rounded bg-[#118CD9]"
+                  >
+                    {{ k.keyword || "-" }}
+                  </span>
+                </div>
+              </div>
+
               <div class="">
                 <p class="text-[#767676] mb-1">หลักการและเหตุผล</p>
-                <p class="eading-relaxed">
+                <p class="eading-relaxed font-light">
                   {{ innovationData?.principle }}
                 </p>
               </div>
@@ -693,7 +725,7 @@
 
             <!-- Internal Researchers Table -->
             <div>
-              <h2 class="md:text-2xl mb-2">ผู้ร่วมโครงการภายใน</h2>
+              <h2 class="mb-2">ผู้ร่วมโครงการภายใน</h2>
               <div class="overflow-x-auto">
                 <table class="w-full border rounded-lg overflow-hidden">
                   <thead class="bg-slate-600 text-white">
@@ -703,7 +735,7 @@
                       <th class="px-4 py-2 text-left">ประเภทความรับผิดชอบ</th>
                     </tr>
                   </thead>
-                  <tbody class="divide-y">
+                  <tbody class="divide-y font-light">
                     <tr
                       *ngFor="
                         let internal of innovationData?.internal_members;
@@ -731,7 +763,7 @@
 
             <!-- External Researchers Table -->
             <div>
-              <h2 class="font-semibold mb-2">ผู้ร่วมโครงการภายนอก</h2>
+              <h2 class="my-4">ผู้ร่วมโครงการภายนอก</h2>
               <div class="overflow-x-auto">
                 <table class="w-full border rounded-lg overflow-hidden">
                   <thead class="bg-slate-600 text-white">
@@ -744,7 +776,12 @@
                       <th class="px-4 py-2 text-left">หน่วยงาน</th>
                     </tr>
                   </thead>
-                  <tbody class="divide-y">
+                  <tbody class="divide-y font-light"
+                    *ngIf="
+                      (innovationData?.external_members?.length ?? 0) > 0;
+                      else noDataExternal
+                    "
+                  >
                     <tr
                       *ngFor="
                         let external of innovationData?.external_members;
@@ -761,6 +798,14 @@
                     </tr>
                   </tbody>
                 </table>
+
+                <ng-template #noDataExternal>
+                  <tr>
+                    <td colspan="3" class="text-center py-4 text-gray-500">
+                      ไม่พบข้อมูล
+                    </td>
+                  </tr>
+                </ng-template>
               </div>
             </div>
 
@@ -769,68 +814,68 @@
               class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-x-10 md:gap-y-6"
             >
               <div>
-                <p class="font-semibold text-[#767676] md:mb-1">
+                <p class="text-[#767676] md:mb-1">
                   ที่มาแหล่งทุน
                 </p>
-                <p class="text-gray-800">{{ innovationData?.source_funds }}</p>
+                <p class="text-gray-800 font-light">{{ innovationData?.source_funds }}</p>
               </div>
 
               <div>
-                <p class="font-semibold text-[#767676] md:mb-1">ชื่อแหล่งทุน</p>
-                <p class="text-gray-800">{{ innovationData?.name_funding }}</p>
+                <p class="text-[#767676] md:mb-1">ชื่อแหล่งทุน</p>
+                <p class="text-gray-800 font-light">{{ innovationData?.name_funding }}</p>
               </div>
 
               <div>
-                <p class="font-semibold text-[#767676] md:mb-1">งบประมาณ</p>
-                <p class="text-gray-800">
+                <p class="text-[#767676] md:mb-1">งบประมาณ</p>
+                <p class="text-gray-800 font-light">
                   {{ innovationData?.budget_amount }} บาท
                 </p>
               </div>
 
               <div>
-                <p class="font-semibold text-[#767676] md:mb-1">
+                <p class="text-[#767676] md:mb-1">
                   ปีที่เสร็จสิ้น
                 </p>
-                <p class="text-gray-800">{{ innovationData?.year }}</p>
+                <p class="text-gray-800 font-light">{{ innovationData?.year }}</p>
               </div>
 
               <div>
-                <p class="font-semibold text-[#767676] md:mb-1">
+                <p class="text-[#767676] md:mb-1">
                   ความร่วมมือกับหน่วยงานอื่นๆ
                 </p>
-                <p class="text-gray-800">{{ innovationData?.call_other }}</p>
+                <p class="text-gray-800 font-light">{{ innovationData?.call_other }}</p>
               </div>
 
               <div>
-                <p class="font-semibold text-[#767676] md:mb-1">
+                <p class="text-[#767676] md:mb-1">
                   เลขที่ คำขอ/สิทธิบัตร
                 </p>
-                <p class="text-gray-800">{{ innovationData?.patent_number }}</p>
+                <p class="text-gray-800 font-light">{{ innovationData?.patent_number }}</p>
               </div>
 
               <div>
-                <p class="font-semibold text-[#767676] md:mb-1">
+                <p class="text-[#767676] md:mb-1">
                   เว็บไซต์ตรวจสิทธิบัตร
                 </p>
-                <p class="text-blue-600 hover:underline break-all">
+                <p class="text-blue-600 hover:underline break-all font-light">
                   {{ innovationData?.examination_url }}
                 </p>
               </div>
 
               <div>
-                <p class="font-semibold text-[#767676] md:mb-1">
+                <p class="text-[#767676] md:mb-1">
                   รายงานวิจัยฉบับสมบูรณ์
                 </p>
-                <a href="#" class="text-blue-600 hover:underline">
+                <a href="#" class="text-blue-600 hover:underline font-light">
                   {{ innovationData?.full_report?.file_name || "-" }}
                 </a>
               </div>
 
               <div class="md:col-span-2">
-                <p class="font-semibold text-[#767676] md:mb-1">
+                <p class="text-[#767676] md:mb-1">
                   ไฟล์ภาพนวัตกรรมสิ่งประดิษฐ์
                 </p>
-                <a href="#" class="text-blue-600 hover:underline break-all">
+                <a href="#" class="text-blue-600 hover:underline break-all font-light">
                   https://example.com/innovation-images
                 </a>
               </div>
@@ -840,61 +885,72 @@
       </div>
     </div>
 
-    <div class="grid grid-cols-2 mt-6 bg-gray-300 rounded-xl overflow-hidden">
+
+    <div class="grid grid-cols-1 mt-6 bg-gray-300 rounded-xl overflow-hidden">
       <!-- ข้อมูลผู้ติดต่อ -->
-      <div class="grid gap-4 p-10">
-        <div>
-          <p>เจ้าของผลงาน</p>
-          <p *ngIf="type === 'article'" class="font-semibold text-gray-800">
-            {{ ownerArticle?.full_name }}
-          </p>
-          <p *ngIf="type === 'project'" class="font-semibold text-gray-800">
-            {{ ownerProject?.full_name }}
-          </p>
-          <p *ngIf="type === 'innovation'" class="font-semibold text-gray-800">
-            {{ ownerInnovation?.full_name }}
-          </p>
-        </div>
-
-        <div>
-          <p>หน่วยงาน</p>
-          <p *ngIf="type === 'article'" class="font-semibold text-gray-800">
-            {{ ownerArticle?.organization }}
-          </p>
-          <p *ngIf="type === 'project'" class="font-semibold text-gray-800">
-            {{ ownerProject?.organization }}
-          </p>
-          <p *ngIf="type === 'innovation'" class="font-semibold text-gray-800">
-            {{ ownerInnovation?.organization }}
-          </p>
-        </div>
-
-        <div class="space-y-1 text-gray-700">
-          <p *ngIf="type === 'article'">
-            {{ ownerArticle?.email || "ไม่ระบุ" }}
-          </p>
-          <p *ngIf="type === 'project'">
-            {{ ownerProject?.email || "ไม่ระบุ" }}
-          </p>
-          <p *ngIf="type === 'innovation'">
-            {{ ownerInnovation?.email || "ไม่ระบุ" }}
-          </p>
-          <p *ngIf="type === 'article'">
-            โทรศัพท์: {{ ownerArticle?.phone || "ไม่ระบุ" }}
-          </p>
-          <p *ngIf="type === 'project'">
-            โทรศัพท์: {{ ownerProject?.phone || "ไม่ระบุ" }}
-          </p>
-          <p *ngIf="type === 'innovation'">
-            โทรศัพท์: {{ ownerInnovation?.phone || "ไม่ระบุ" }}
-          </p>
+      <div class="mt-8">
+        <div
+          class="bg-linear-to-r from-gray-100 to-gray-200 rounded-t-2xl shadow-md px-12 py-10"
+        >
+          <div
+            class="grid grid-cols-1 md:grid-cols-3 gap-10 text-center items-center"
+          >
+            
+            <!-- Owner -->
+            <div class="space-y-2">
+              <div class="flex justify-center mb-2">
+                <div
+                  class="w-12 h-12 rounded-full bg-purple-500 text-white flex items-center justify-center text-xl"
+                >
+                  <i class="bi bi-person"></i>
+                </div>
+              </div>
+      
+              <p class="text-gray-500 text-lg">เจ้าของผลงาน</p>
+              <p class="text-gray-900 text-xl font-medium">
+                {{ owner?.full_name || "ไม่ระบุ" }}
+              </p>
+            </div>
+      
+            <!-- Organization -->
+            <div class="space-y-2 border-y md:border-y-0 md:border-x border-gray-300 px-6">
+              <div class="flex justify-center mb-2">
+                <div
+                  class="w-12 h-12 rounded-full bg-blue-500 text-white flex items-center justify-center text-xl"
+                >
+                  <i class="bi bi-building"></i>
+                </div>
+              </div>
+      
+              <p class="text-gray-500 text-lg">หน่วยงาน</p>
+              <p class="text-gray-900 text-xl font-medium">
+                {{ owner?.organization || "ไม่ระบุ" }}
+              </p>
+            </div>
+      
+            <!-- Contact -->
+            <div class="space-y-3">
+              <div class="flex justify-center mb-2">
+                <div
+                  class="w-12 h-12 rounded-full bg-green-500 text-white flex items-center justify-center text-xl"
+                >
+                  <i class="bi bi-envelope"></i>
+                </div>
+              </div>
+      
+              <p class="text-gray-900 text-lg">
+                {{ owner?.email || "ไม่ระบุ" }}
+              </p>
+      
+              <p class="text-gray-700 text-lg">
+                โทรศัพท์: {{ owner?.phone || "ไม่ระบุ" }}
+              </p>
+            </div>
+      
+          </div>
         </div>
       </div>
-
-      <!-- โลโก้ -->
-      <div class="flex items-center justify-center bg-[#F9CB34]">
-        <img src="/assets/logoNPU.png" class="h-48 object-contain" />
-      </div>
+    
     </div>
   </div>
 </div>

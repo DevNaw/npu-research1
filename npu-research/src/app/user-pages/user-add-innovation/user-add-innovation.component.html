@@ -171,73 +171,119 @@
     </div>
 
     <!-- สาขาของนวัตกรรมสิ่งประดิษฐ์ -->
-    <div class="grid grid-cols-1 md:grid-cols-1 md:gap-2 mb-2 md:mb-6">
-      <label class="text-start">
-        สาขาของนวัตกรรมสิ่งประดิษฐ์ <span class="text-red-500">*</span>
-      </label>
+    <div class="grid grid-cols-1 md:grid-cols-3 md:gap-2 mb-2 md:mb-6">
+      <!-- Major -->
+      <div>
+        <label class="text-start">
+          สาขาหลัก <span class="text-red-500">*</span>
+        </label>
 
-      <div class="relative md:col-span-3">
-        <button
-          (click)="toggleDropdown('major', $event)"
-          type="button"
-          class="w-full border rounded-md px-3 py-2 flex justify-between items-center bg-white"
-        >
-          <span class="truncate text-lg font-light">
-            {{
-              selectedSub?.name_en ||
-                projectData.subject_area?.[0]?.name_en ||
-                "ระบุสาขาของนวัตกรรมสิ่งประดิษฐ์"
-            }}
-          </span>
-          <i class="bi bi-chevron-down"></i>
-        </button>
+        <div class="relative">
+          <button
+            (click)="toggleDropdown('major', $event)"
+            type="button"
+            class="w-full border rounded-md px-3 py-2 flex justify-between items-center bg-white"
+          >
+            <span class="truncate text-lg font-light">
+              {{ selectedMajor?.name_th || "เลือกสาขาหลัก" }}
+            </span>
+            <i class="bi bi-chevron-down"></i>
+          </button>
 
-        <!-- Dropdown panel -->
-        <div
-          *ngIf="activeDropdown === 'major'"
-          class="absolute z-50 w-full bg-white text-lg font-light border rounded-md mt-1 shadow"
-          (click)="$event.stopPropagation()"
-        >
-          <ul class="relative max-h-48 overflow-y-auto">
-            <li *ngFor="let m of filteredMajor()" class="relative">
-              <div
-                (click)="toggleMajor(m, $event)"
-                class="flex justify-between items-center px-4 py-2 hover:bg-gray-200 cursor-pointer transition"
-                [class.bg-gray-200]="activeMajor?.major_id === m.major_id"
+          <div
+            *ngIf="activeDropdown === 'major'"
+            class="absolute z-50 w-full bg-white border rounded-md mt-1 shadow text-lg font-light"
+            (click)="$event.stopPropagation()"
+          >
+            <ul class="relative max-h-72 overflow-y-auto">
+              <li
+                *ngFor="let m of filteredMajors()"
+                (click)="selectMajor(m)"
+                [class.bg-blue-100]="selectedMajor?.major_id === m.major_id"
+                class="px-4 py-2 hover:bg-gray-200 cursor-pointer"
               >
-                {{ m.name_en }}
-                <i
-                  class="bi"
-                  [ngClass]="
-                    activeMajor?.major_id === m.major_id
-                      ? 'bi-chevron-down'
-                      : 'bi-chevron-right'
-                  "
-                ></i>
-              </div>
+                {{ m.name_th }}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
 
-              <ul
-                *ngIf="activeMajor?.major_id === m.major_id"
-                class="bg-gray-100 rounded-xl shadow-lg"
+      <!-- SUB -->
+      <div>
+        <label class="text-start">
+          สาขาย่อย <span class="text-red-500">*</span>
+        </label>
+
+        <div class="relative">
+          <button
+            (click)="toggleDropdown('sub', $event)"
+            [disabled]="!selectedMajor"
+            type="button"
+            class="w-full border rounded-md px-3 py-2 flex justify-between items-center bg-white"
+          >
+            <span class="truncate text-lg font-light">
+              {{ selectedSub?.name_th || "เลือกสาขาย่อย" }}
+            </span>
+            <i class="bi bi-chevron-down"></i>
+          </button>
+
+          <div
+            *ngIf="activeDropdown === 'sub'"
+            class="absolute z-50 w-full bg-white border rounded-md mt-1 shadow text-lg font-light"
+            (click)="$event.stopPropagation()"
+          >
+            <ul class="relative max-h-72 overflow-y-auto">
+              <li
+                *ngFor="let s of filteredSubs()"
+                (click)="selectSub(s)"
+                class="px-4 py-2 hover:bg-gray-200 cursor-pointer"
+                [attr.data-id]="'sub-' + s.sub_id"
+                [class.bg-blue-100]="selectedSub?.sub_id === s.sub_id"
               >
-                <li
-                  *ngFor="let s of m.children"
-                  [attr.data-id]="s.sub_id"
-                  (click)="selectSub(s)"
-                  class="px-4 py-2 hover:bg-gray-200 cursor-pointer transition"
-                  [class.bg-gray-300]="selectedSub?.sub_id === s.sub_id"
-                >
-                  {{ s.name_en }}
-                </li>
-                <li
-                  *ngIf="filteredMajor().length === 0"
-                  class="px-4 py-2 text-gray-400 text-center"
-                >
-                  ไม่พบข้อมูล
-                </li>
-              </ul>
-            </li>
-          </ul>
+                {{ s.name_th }}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUB SUB -->
+      <div>
+        <label class="text-start">
+          สาขาที่เกี่ยวข้อง <span class="text-red-500">*</span>
+        </label>
+
+        <div class="relative">
+          <button
+            (click)="toggleDropdown('subSub', $event)"
+            [disabled]="!selectedSub"
+            type="button"
+            class="w-full border rounded-md px-3 py-2 flex justify-between items-center bg-white"
+          >
+            <span class="truncate text-lg font-light">
+              {{ selectedSubSub?.name_th || "เลือกสาขาที่เกี่ยวข้อง" }}
+            </span>
+            <i class="bi bi-chevron-down"></i>
+          </button>
+
+          <div
+            *ngIf="activeDropdown === 'subSub'"
+            class="absolute z-50 w-full bg-white border rounded-md mt-1 shadow text-lg font-light"
+            (click)="$event.stopPropagation()"
+          >
+            <ul class="relative max-h-72 overflow-y-auto">
+              <li
+                *ngFor="let ss of filteredSubSubs()"
+                (click)="selectSubSub(ss)"
+                [attr.data-id]="ss.child_id"
+                [class.bg-blue-100]="selectedSubSub?.child_id === ss.child_id"
+                class="px-4 py-2 hover:bg-gray-200 cursor-pointer"
+              >
+                {{ ss.name_th }}
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -562,7 +608,7 @@
         <!-- แหล่งเงินทุน -->
         <div class="relative">
           <label class="block mb-2">
-            แหล่งเงินทุน <span class="text-red-500">*</span>
+            แหล่งทุน <span class="text-red-500">*</span>
           </label>
 
           <button
@@ -591,6 +637,12 @@
               (click)="selectValue('source_funds', 'แหล่งทุนภายนอก')"
             >
               แหล่งทุนภายนอก
+            </div>
+            <div
+              class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
+              (click)="selectValue('source_funds', 'แหล่งทุนอื่น')"
+            >
+              แหล่งทุนอื่น
             </div>
           </div>
         </div>
@@ -642,6 +694,19 @@
           </div>
         </div>
 
+        <div *ngIf="projectData.source_funds === 'แหล่งทุนอื่น'">
+          <label class="block mb-2">
+            ชื่อแหล่งทุน <span class="text-red-500">*</span>
+          </label>
+
+          <input
+            type="text"
+            [(ngModel)]="projectData.name_funding"
+            placeholder="กรอกชื่อแหล่งทุน"
+            class="w-full h-12 border rounded-md px-3 text-lg font-light"
+          />
+        </div>
+
         <!-- จำนวนงบประมาณ -->
         <div>
           <label class="block text-2xl mb-2">
@@ -670,41 +735,58 @@
 
         <!-- ปีที่ได้รับทุน -->
         <div>
-          <label class="block font-bold text-2xl mb-2">
-            ปีที่ได้รับทุน <span class="text-red-500">*</span>
+          <label class="block mb-2">
+            ปีที่ได้รับทุน (พ.ศ.) <span class="text-red-500">*</span>
           </label>
+        
+          <div class="relative">
+            <!-- BUTTON -->
+            <button
+              (click)="toggleDropdown('year', $event)"
+              type="button"
+              class="w-full border rounded-md px-4 h-12 flex justify-between items-center bg-white text-lg font-light"
+              [class.border-red-500]="yearReceivedBudget.invalid && yearReceivedBudget.touched"
+            >
+              <span>
+                {{ projectData.year_received_budget || "เลือกปี" }}
+              </span>
+              <i class="bi bi-chevron-down"></i>
+            </button>
+        
+            <!-- DROPDOWN -->
+            <div
+              *ngIf="activeDropdown === 'year'"
+              class="absolute z-50 w-full bg-white border rounded-md mt-1 shadow text-lg font-light"
+              (click)="$event.stopPropagation()"
+            >
+              <ul class="max-h-60 overflow-y-auto">
+                <li
+                  *ngFor="let year of thaiYears"
+                  (click)="selectYear(year)"
+                  class="px-4 py-2 hover:bg-gray-200 cursor-pointer"
+                >
+                  {{ year }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        
+          <!-- VALIDATE -->
           <input
+            type="hidden"
             name="year_received_budget"
             required
-            #yearReceivedBudget="ngModel"
-            [class.border-red-500]="
-              yearReceivedBudget.invalid && yearReceivedBudget.touched
-            "
             [(ngModel)]="projectData.year_received_budget"
-            type="text"
-            class="w-full border rounded-md text-lg font-light px-4 h-12 py-2 focus:ring-2 focus:ring-blue-400"
-            placeholder="ระบุปีที่ได้รับทุน"
+            #yearReceivedBudget="ngModel"
           />
-
+        
           <div
             *ngIf="yearReceivedBudget.invalid && yearReceivedBudget.touched"
             class="text-red-500 text-sm"
           >
-            กรุณากรอกปีที่ได้รับทุน
+            กรุณาเลือกปีที่ได้รับทุน
           </div>
         </div>
-        <!-- ปีที่ได้รับทุน -->
-        <!-- <div class="grid grid-cols-1 md:grid-cols-1 gap-2 mb-6">
-          <label class="md:col-span-1 text-start">
-            ปี <span class="text-red-500">*</span>
-          </label>
-          <input
-            [(ngModel)]="projectData.year"
-            type="text"
-            class="h-12 text-lg font-light w-full border rounded-md px-4 py-2"
-            placeholder="ระบุปี"
-          />
-        </div> -->
       </div>
 
       <!-- ความร่วมมือกับหน่วยงานอื่นๆ : -->

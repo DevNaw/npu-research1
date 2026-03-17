@@ -60,6 +60,7 @@ import { ManagementUserComponent } from './admin-pages/management-user/managemen
 import { ManagementAdminComponent } from './admin-pages/management-admin/management-admin.component';
 import { A11yModule } from "@angular/cdk/a11y";
 import { AdminManualComponent } from './admin-pages/admin-manual/admin-manual.component';
+import { ChartsModule } from '@progress/kendo-angular-charts';
 
 @NgModule({
   declarations: [
@@ -127,7 +128,8 @@ import { AdminManualComponent } from './admin-pages/admin-manual/admin-manual.co
     HttpClientModule,
     RouterModule,
     RouterModule.forRoot([]),
-    A11yModule
+    A11yModule,
+    ChartsModule,
 ],
   providers: [
     {

@@ -1,5 +1,5 @@
-import { Component, ElementRef, HostListener, QueryList, ViewChildren } from '@angular/core';
-import { Major, SubArea } from '../../models/subject.model';
+import { Component, HostListener } from '@angular/core';
+import { Major, Sub, Child } from '../../models/subject.model';
 import { ResearchProjectData } from '../../models/researchs-detai.model';
 import { Researcher } from '../../models/researchers.model';
 import {
@@ -30,7 +30,7 @@ const DEFAULT_RESEARCH: ResearchProjectData = {
   source_funds: '',
   name_funding: '',
   budget_amount: '',
-  year_received_budget: '',
+  year_received_budget: 0,
   research_area: '',
   usable_area: '',
   start_date: '',
@@ -41,6 +41,8 @@ const DEFAULT_RESEARCH: ResearchProjectData = {
   external_members: [{ full_name: '', role: '', organization: '', no: '' }],
   full_report: null,
   contract_file: null,
+  oecd_id: 0,
+  funding_code: '',
 };
 
 @Component({
@@ -50,23 +52,23 @@ const DEFAULT_RESEARCH: ResearchProjectData = {
   styleUrl: './user-add-research.component.css',
 })
 export class UserAddResearchComponent {
-  @ViewChildren('subItem') subItems!: QueryList<ElementRef>;
   isEdit = false;
   activeDropdown: string | null = null;
   activeRowIndex: number | null = null;
   activeMajor: Major | null = null;
 
-  major: Major[] = [];
-  selectedSub: SubArea | null = null;
+  oecdList: Major[] = [];
+
   selectedMajor: Major | null = null;
+  selectedSub: Sub | null = null;
+  selectedSubSub: Child | null = null;
+
   searchMajor = '';
   searchSub = '';
 
   researchers: Researcher[] = [];
   filteredResearchers: Researcher[] = [];
   searchResearcher = '';
-  selectedResearcher: string | null = null;
-  searchKeyword = '';
 
   internalRow: InternalMemberRow[] = [
     { id: 0, researcher_id: null, name: '', responsibilities: '' },
@@ -74,14 +76,6 @@ export class UserAddResearchComponent {
   externalRow: ExternalMemberRow[] = [
     { name: '', organization: '', responsibilities: '' },
   ];
-
-  internalFunds: string[] = [
-    'งบประมาณมหาวิทยาลัย',
-    'งบประมาณคณะ',
-    'งบประมาณภาควิชา',
-  ];
-
-  externalFunds: string[] = ['สำนักงานวิจัยแห่งชาติ', 'สกสว.', 'หน่วยงานเอกชน'];
 
   selectedFileName = '';
   selectedFile: File | null = null;
@@ -91,8 +85,6 @@ export class UserAddResearchComponent {
   projectData: ResearchProjectData = { ...DEFAULT_RESEARCH };
 
   researchId?: number;
-  reportFilename = '';
-  projectId: number | null = null;
 
   fundings: Funding[] = [];
 
@@ -100,6 +92,9 @@ export class UserAddResearchComponent {
 
   keywordInput = '';
   keywordInputEn = '';
+
+  searchSubSub = '';
+  thaiYears: number[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -113,6 +108,7 @@ export class UserAddResearchComponent {
     this.loadSubjectArea();
     this.loadResearchersData();
     this.loadFundings();
+    this.generateThaiYears();
 
     this.route.paramMap.subscribe((params) => {
       const id = params.get('id');
@@ -132,7 +128,7 @@ export class UserAddResearchComponent {
   loadSubjectArea(): void {
     this.service.getSubjectArea().subscribe({
       next: (res) => {
-        this.major = res.data.subject_areas;
+        this.oecdList = res.data.oecd;
       },
       error: (err) => {
         console.error('Failed to load Subject Area:', err);
@@ -167,7 +163,16 @@ export class UserAddResearchComponent {
     this.service.getProjectById(id).subscribe({
       next: (res) => {
         const data = res.data.projectDetail;
-        const subjectId = data.subject_area?.[0]?.subject_area_id;
+        const oecd = data.oecd?.[0];
+        if (oecd) {
+          this.selectedMajor = {
+            major_id: oecd.major_id,
+            name_th: oecd.name_th,
+            children: [oecd.children],
+          };
+          this.selectedSub = oecd.children;
+          this.selectedSubSub = oecd.children?.children;
+        }
 
         this.projectData = {
           ...this.projectData,
@@ -179,22 +184,6 @@ export class UserAddResearchComponent {
           this.abstractType = 'th';
         } else if (data.abstract_en) {
           this.abstractType = 'en';
-        }
-
-        if (subjectId) {
-          this.selectedMajor =
-            this.major.find((m) =>
-              m.children?.some((c) => c.sub_id === subjectId)
-            ) ?? null;
-
-          this.selectedSub =
-            this.selectedMajor?.children.find(
-              (c) => c.sub_id === subjectId
-            ) ?? null;
-
-          if (this.selectedSub) {
-            this.selectSub(this.selectedSub);
-          }
         }
 
         this.selectedFileName = data.full_report?.file_name ?? '';
@@ -221,21 +210,6 @@ export class UserAddResearchComponent {
             })
           );
         }
-
-        if (this.projectData.subject_area_id) {
-          for (const major of this.major) {
-            const found = major.children.find(
-              (s) => s.sub_id === this.projectData.subject_area_id
-            );
-
-            if (found) {
-              this.selectedMajor = major;
-              this.selectedSub = found;
-
-              break;
-            }
-          }
-        }
       },
       error: (err) => {
         console.error('Failed to load article:', err);
@@ -245,18 +219,23 @@ export class UserAddResearchComponent {
 
   toggleDropdown(type: string, event: Event): void {
     event.stopPropagation();
-  
+
     if (this.activeDropdown === type) {
       this.activeDropdown = null;
     } else {
       this.activeDropdown = type;
-  
-      if (this.selectedSub) {
-        this.activeMajor = this.major.find((m) =>
-          m.children.some((c) => c.sub_id === this.selectedSub?.sub_id)
-        ) ?? null;
 
-        this.scrollToSelectedSub();
+      if (this.selectedSub) {
+        this.activeMajor =
+          this.oecdList.find((m) =>
+            m.children.some((c) => c.sub_id === this.selectedSub?.sub_id)
+          ) ?? null;
+
+        this.selectedMajor = this.activeMajor;
+        this.selectedSub =
+          this.activeMajor?.children.find(
+            (c) => c.sub_id === this.selectedSub?.sub_id
+          ) ?? null;
       }
     }
   }
@@ -283,20 +262,36 @@ export class UserAddResearchComponent {
     this.activeDropdown = null;
   }
 
-  selectSub(sub: SubArea): void {
-  this.selectedSub = sub;
-  this.projectData.subject_area_id = sub.sub_id;
+  selectSub(sub: any): void {
+    this.selectedSub = sub;
+    this.projectData.subject_area_id = sub.sub_id;
 
-  this.selectedMajor = this.major.find((m) =>
-    m.children.some((c) => c.sub_id === sub.sub_id)
-  ) ?? null;
+    const major = this.oecdList.find((m) =>
+      m.children.some((c) => c.sub_id === sub.sub_id)
+    );
 
-  this.activeMajor = this.major.find((m) =>
-    m.children.some((c) => c.sub_id === sub.sub_id)
-  ) ?? null;
+    if (major) {
+      this.selectedMajor = major;
+      this.activeMajor = major;
+    }
 
-  this.activeDropdown = null;
-}
+    this.activeDropdown = null;
+
+    setTimeout(() => {
+      this.scrollToSelectedSub();
+    });
+  }
+
+  selectMajor(m: Major) {
+    this.selectedMajor = m;
+    this.selectedSub = null;
+    this.selectedSubSub = null;
+    this.searchSub = '';
+    this.searchSubSub = '';
+
+    this.projectData.subject_area_id = 0;
+    this.activeDropdown = null;
+  }
 
   selectRowResponsibility(row: any, value: string) {
     if (value === FIRST_AUTHOR && this.isFirstAuthorTaken(row)) {
@@ -331,11 +326,11 @@ export class UserAddResearchComponent {
       this.activeMajor?.major_id === major.major_id ? null : major;
   }
 
-  filteredMajor(): Major[] {
-    if (!this.searchMajor) return this.major;
+  selectSubSub(subSub: any) {
+    this.selectedSubSub = subSub;
+    this.projectData.subject_area_id = subSub.child_id;
 
-    const keyword = this.searchMajor.toLowerCase();
-    return this.major.filter((m) => m.name_en.toLowerCase().includes(keyword));
+    this.activeDropdown = null;
   }
 
   isFirstAuthorTaken(excludeRow?: any): boolean {
@@ -440,7 +435,6 @@ export class UserAddResearchComponent {
       didOpen: () => Swal.showLoading(),
     });
     console.log('formData', formData);
-    
 
     const request$ = this.isEdit
       ? this.service.updateProject(this.projectData.id, formData)
@@ -481,6 +475,7 @@ export class UserAddResearchComponent {
   buildFormData(): FormData {
     const fd = new FormData();
     const d = this.projectData;
+    let funding_code = '';
 
     const required = (key: string, val: any) =>
       fd.append(key, val !== null && val !== undefined ? String(val) : '');
@@ -490,6 +485,7 @@ export class UserAddResearchComponent {
         fd.append(key, val);
       }
     };
+    const subSub = this.selectedSubSub?.child_id ?? '';
 
     required('title_th', d.title_th);
     required('title_en', d.title_en);
@@ -515,6 +511,20 @@ export class UserAddResearchComponent {
     if (this.selectedFile) fd.append('full_report', this.selectedFile);
     if (this.selectedContractFile)
       fd.append('contract_file', this.selectedContractFile);
+
+    if (d.source_funds === 'แหล่งทุนภายใน') {
+      funding_code = '01';
+    } else if (d.source_funds === 'แหล่งทุนภายนอก') {
+      const selectedFund = this.fundings.find(
+        (f) => f.funding_name === d.name_funding
+      );
+      funding_code = selectedFund?.funding_code || '';
+    } else {
+      funding_code = '99';
+    }
+
+    required('oecd_id', subSub);
+    optional('funding_code', d.funding_code);
 
     this.internalRow
       .filter((r) => r.researcher_id)
@@ -591,7 +601,6 @@ export class UserAddResearchComponent {
       return false;
     }
 
-    // ✅ internal member (กรอกก็ได้ แต่ถ้ากรอกต้องครบ)
     const invalidInternal = this.internalRow.some(
       (r) => r.researcher_id && !r.responsibilities
     );
@@ -671,20 +680,38 @@ export class UserAddResearchComponent {
     }, 200);
   }
 
-  setSelectedSubjectArea() {
-    if (!this.projectData.subject_area_id) return;
+  filteredSubs() {
+    if (!this.selectedMajor) return [];
 
-    for (const major of this.major) {
-      const found = major.children.find(
-        (s) => s.sub_id === this.projectData.subject_area_id
-      );
+    return (this.selectedMajor.children || []).filter((s: Sub) =>
+      (s.name_th || '')
+        .toLowerCase()
+        .includes((this.searchSub || '').toLowerCase())
+    );
+  }
 
-      if (found) {
-        this.selectedMajor = major;
-        this.selectedSub = found;
-        this.activeMajor = major;
-        break;
-      }
+  filteredSubSubs() {
+    if (!this.selectedSub) return [];
+    console.log(this.selectedSub.children);
+
+    return (this.selectedSub.children || []).filter((ss: Child) =>
+      (ss.name_th || '')
+        .toLowerCase()
+        .includes((this.searchSubSub || '').toLowerCase())
+    );
+  }
+
+  generateThaiYears() {
+    const currentYear = new Date().getFullYear() + 543;
+
+    this.thaiYears = [];
+    for (let i = 0; i < 70; i++) {
+      this.thaiYears.push(currentYear - i);
     }
+  }
+
+  selectYear(year: number) {
+    this.projectData.year_received_budget = year;
+    this.activeDropdown = null;
   }
 }

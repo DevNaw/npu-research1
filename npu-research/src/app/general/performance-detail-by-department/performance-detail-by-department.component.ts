@@ -276,4 +276,11 @@ export class PerformanceDetailByDepartmentComponent {
       error: (err) => console.error(err),
     });
   }
+
+  get owner() {
+    if (this.type === 'article') return this.ownerArticle;
+    if (this.type === 'project') return this.ownerProject;
+    if (this.type === 'innovation') return this.ownerInnovation;
+    return null;
+  }
 }

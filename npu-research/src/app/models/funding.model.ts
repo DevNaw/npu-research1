@@ -1,6 +1,7 @@
 export interface Funding {
     id: number;
     funding_name: string;
+    funding_code: string;
   }
 
   export interface FundingData {

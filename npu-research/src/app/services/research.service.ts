@@ -8,7 +8,7 @@ import {
 } from '../models/research.model';
 import { Observable } from 'rxjs/internal/Observable';
 import { map } from 'rxjs/operators';
-import { SubjectAreaResponse } from '../models/subject.model';
+import { OecdResponse } from '../models/subject.model';
 import { ResearcherResponse } from '../models/researchers.model';
 import { InnovationResponse } from '../models/innovation-public.model';
 import { ProjectResponse } from '../models/project-public.model';
@@ -133,8 +133,8 @@ export class ResearchService {
 
   // Subject Area
   getSubjectArea() {
-    return this.http.get<SubjectAreaResponse>(
-      `${this.baseUrl}/research/subject-areas`
+    return this.http.get<OecdResponse>(
+      `${this.baseUrl}/research/oecd`
     );
   }
 
