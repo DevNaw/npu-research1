@@ -87,7 +87,7 @@
             class="w-full h-11 border border-gray-300 rounded-full px-6 flex justify-between items-center bg-white"
           >
             <span class="truncate">
-              {{ organizations[0].faculty || "เลือกหน่วยงาน" }}
+              {{ organizations[0]?.faculty || "เลือกหน่วยงาน" }}
             </span>
             <i class="bi bi-chevron-down"></i>
           </button>
@@ -184,65 +184,7 @@
       </div>
 
       <!-- ===== เลือกสาขาวิชา ===== -->
-      <!-- <div class="col-span-12 md:col-span-10 relative font-light text-lg">
-        <button
-          (click)="toggleDropdown('faculties', $event)"
-          class="w-full h-11 border rounded-full px-6 flex justify-between items-center bg-white border-gray-300"
-        >
-          <span class="truncate">{{
-            selectedFaculty || "หมวดหมู่สาขาวิชาการและสาขาวิจัย (OECD)"
-          }}</span>
-          <i class="bi bi-chevron-down"></i>
-        </button>
-
-        <div
-          *ngIf="activeDropdown === 'faculties'"
-          class="absolute z-50 w-full bg-white border rounded-md mt-1 shadow"
-          (click)="$event.stopPropagation()"
-        >
-          <ul class="relative max-h-72 overflow-y-auto">
-            <li *ngFor="let m of filteredMajor()" class="relative">
-              <div
-                (click)="toggleMajor(m, $event)"
-                class="flex justify-between items-center px-4 py-2 cursor-pointer hover:bg-gray-200 transition"
-                [class.bg-gray-200]="activeMajor?.major_id === m.major_id"
-              >
-                {{ m.name_th }}
-                <i
-                  class="bi"
-                  [ngClass]="
-                    activeMajor?.major_id === m.major_id
-                      ? 'bi-chevron-down'
-                      : 'bi-chevron-right'
-                  "
-                ></i>
-              </div>
-
-              <ul
-                *ngIf="activeMajor?.major_id === m.major_id"
-                class="bg-gray-100 rounded-xl shadow-lg"
-              >
-                <li
-                  *ngFor="let s of m.children"
-                  (click)="selectSub(s)"
-                  class="px-4 py-2 text-gray-400"
-                >
-                  {{ s.name_th }}
-                </li>
-
-                <li
-                  *ngIf="m.children.length === 0"
-                  class="px-4 py-2 text-gray-400 text-center"
-                >
-                  ไม่พบข้อมูล
-                </li>
-              </ul>
-            </li>
-          </ul>
-        </div>
-      </div> -->
-
-      <div class="col-span-12 md:col-span-10 relative font-light text-lg">
+      <div class="grid grid-cols-3 gap-3 col-span-12 md:col-span-10 relative font-light text-lg">
         <div class="relative">
           <button
             (click)="toggleDropdown('major', $event)"
@@ -362,12 +304,14 @@
         <h2 class="text-xl md:text-2xl">สัดส่วนนักวิจัย จำแนกตามสาขาวิชา</h2>
       </div>
 
-      <canvasjs-chart
-        [options]="chartOptions"
-        (chartInstance)="getChartInstance($event)"
-        [styles]="{ width: '100%', height: '300px' }"
-      >
-      </canvasjs-chart>
+      <ng-container *ngIf="chartOptions?.data?.[0]?.dataPoints?.length > 0; else noData">
+        <canvasjs-chart
+          [options]="chartOptions"
+          (chartInstance)="getChartInstance($event)"
+          [styles]="{ width: '100%', height: '300px' }"
+        >
+        </canvasjs-chart>
+      </ng-container>
 
       <ng-template #noData>
         <div class="text-center text-white py-16">ไม่พบข้อมูล</div>

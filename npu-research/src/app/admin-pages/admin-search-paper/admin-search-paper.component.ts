@@ -19,7 +19,7 @@ import { CanvasJSChart } from '@canvasjs/angular-charts';
   styleUrl: './admin-search-paper.component.css',
 })
 export class AdminSearchPaperComponent {
-  @ViewChild(CanvasJSChart) chart: any;
+  chart: any;
   activeDropdown: string | null = null;
   searchSubSub: string = '';
   selectedMajor: OecdMajor | null = null;
@@ -204,12 +204,15 @@ export class AdminSearchPaperComponent {
   selectMajor(major: OecdMajor) {
     this.selectedMajor = major;
     this.searchMajor = '';
+    this.selectedSub = null;
+  this.selectedSubSub = null;
     this.activeDropdown = null;
   }
 
   selectSub(sub: OecdSub) {
     this.selectedSub = sub;
     this.searchSub = '';
+    this.selectedSubSub = null;
     this.activeDropdown = null;
   }
 
@@ -269,6 +272,7 @@ export class AdminSearchPaperComponent {
   // ===== Search =====
   search() {
     const payload: SearchResearchRequest = {};
+    let oecdId = null;
 
     if (this.researchItems?.trim()) {
       payload.q = this.researchItems.trim();
@@ -282,12 +286,20 @@ export class AdminSearchPaperComponent {
       payload.org_id = this.selectedOrg.id;
     }
 
-    if (this.selectedFunding) {
-      payload.funding = this.selectedFunding;
+    if (this.selectedSubSub?.child_id) {
+      oecdId = this.selectedSubSub.child_id;
+    } else if (this.selectedSub?.sub_id) {
+      oecdId = this.selectedSub.sub_id;
+    } else if (this.selectedMajor?.major_id) {
+      oecdId = this.selectedMajor.major_id;
+    }
+    
+    if (oecdId) {
+      payload.oecd_id = oecdId;
     }
 
-    if (this.selectedMajor?.major_id) {
-      payload.subject_area_id = this.selectedMajor.major_id;
+    if (this.selectedFunding) {
+      payload.funding = this.selectedFunding;
     }
 
     if (this.date_from) {
@@ -310,29 +322,20 @@ export class AdminSearchPaperComponent {
         this.allTableData = [...data.result];
         this.filteredResearchers = data.result;
 
-        this.chartOptions = {
-          colorSet: 'customColorSet',
-          animationEnabled: true,
-          data: [
-            {
-              type: 'doughnut',
-              yValueFormatString: '#,##0',
-              indexLabel: '{name} ({y})',
-              dataPoints: data.graph.map((g: any) => ({
-                name: g.oecd_name,
-                y: g.count,
-              })),
-            },
-          ],
-        };
+        if (this.chartOptions?.data?.length) {
+          this.chartOptions.data[0].dataPoints = data.graph.map((g: any) => ({
+            name: g.oecd_name,
+            y: g.count,
+          }));
+        }
+      
+        if (this.chart && this.chart.container) {
+          this.chart.render();
+        }
 
         this.donutSeries = data.graph.map((g) => g.count);
         this.donutLabels = data.graph.map((g) => g.oecd_name);
         this.totalResearchers = data.total;
-
-        if (this.chart) {
-          this.chart.render();
-        }
 
         this.currentPage = 1;
         this.updatePagination();
@@ -342,7 +345,7 @@ export class AdminSearchPaperComponent {
 
   onSearch(): void {
     const keyword = this.searchText?.trim().toLowerCase();
-
+  
     if (!keyword) {
       this.filteredResearchers = [...this.allTableData];
     } else {
@@ -355,7 +358,7 @@ export class AdminSearchPaperComponent {
         );
       });
     }
-
+  
     this.currentPage = 1;
     this.updatePagination();
   }
@@ -400,11 +403,11 @@ export class AdminSearchPaperComponent {
   }
 
   updatePagination(): void {
-    const start = (this.currentPage - 1) * this.pageSize;
-    const end = start + this.pageSize;
-
-    this.paginationData = this.filteredResearchers.slice(start, end);
-  }
+      const start = (this.currentPage - 1) * this.pageSize;
+      const end = start + this.pageSize;
+  
+      this.paginationData = this.filteredResearchers.slice(start, end);
+    }
 
   mapTypeToApi(type: string): 'ARTICLE' | 'PROJECT' | 'INNOVATION' {
     const map: any = {
@@ -440,13 +443,13 @@ export class AdminSearchPaperComponent {
   }
 
   @HostListener('document:click')
-  closeAll() {
-    this.activeDropdown = null;
-  }
+      closeAll() {
+        this.activeDropdown = null;
+      }
 
-  trackById(item: any): number {
-    return item.id;
-  }
+      trackById(item: any): number {
+        return item.id;
+      }
 
   // === Route ===
   goToResearch(id: number, type: 'ARTICLE' | 'PROJECT' | 'INNOVATION') {
