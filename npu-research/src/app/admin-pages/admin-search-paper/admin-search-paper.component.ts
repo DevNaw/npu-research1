@@ -51,7 +51,7 @@ export class AdminSearchPaperComponent {
   subTypeMap: any = {
     โครงการวิจัย: [],
     บทความ: ['ประชุมวิชาการระดับชาติ', 'ประชุมวิชาการระดับนานาชาติ'],
-    วารสาร: ['วารสารในประเทศ', 'วารสารต่างประเทศ'],
+    วารสาร: ['TCI', 'Scopus'],
     นวัตกรรมสิ่งประดิษฐ์: [],
   };
 
@@ -182,11 +182,11 @@ export class AdminSearchPaperComponent {
 
     this.activeDropdown = null;
 
-    if (this.subTypeMap[t] && this.subTypeMap[t].length > 0) {
-      setTimeout(() => {
-        this.activeDropdown = 'subType';
-      }, 0);
-    }
+    // if (this.subTypeMap[t] && this.subTypeMap[t].length > 0) {
+    //   setTimeout(() => {
+    //     this.activeDropdown = 'subType';
+    //   }, 0);
+    // }
   }
 
   selectSubType(st: string) {
