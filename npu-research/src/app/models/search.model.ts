@@ -12,7 +12,7 @@ export interface SummaryBySubjectData {
 
 export interface SubjectGraphItem {
   subject_area_id: number;
-  subject_area_name: string;
+  oecd_name: string;
   count: number;
   percent: number;
 }
@@ -42,10 +42,16 @@ export interface Owner {
 export interface SearchResearchRequest {
   q?: string;
   org_id?: number;
+  oecd_id?: number;
+  article_type?: string;
+  db_type?: string;
+  con_type?: string;
   funding?: string;
+  funding_id?: number;
   subject_area_id?: number;
   type?: 'ARTICLE' | 'PROJECT' | 'INNOVATION';
   year?: number;
-  date_from?: string; // 👈 เพิ่ม
+  date_from?: string;
   date_to?: string;
+  per_page?: number;
 }

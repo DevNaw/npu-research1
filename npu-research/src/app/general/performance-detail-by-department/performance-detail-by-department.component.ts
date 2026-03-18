@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ResearchService } from '../../services/research.service';
-import { ResearchArticle, ResearchOwner } from '../../models/article-show.model';
+import { OecdMajorApi, OecdMajorUI, ResearchArticle, ResearchOwner } from '../../models/article-show.model';
 import { AuthService } from '../../services/auth.service';
 import { ProjectDetailApi, ResearchOwnerProject } from '../../models/research-detai.model';
 import { of, switchMap } from 'rxjs';
@@ -34,6 +34,7 @@ export class PerformanceDetailByDepartmentComponent {
     ownerProject: ResearchOwnerProject | null = null;
     ownerInnovation: ResearchOwnerInnovation | null = null;
   img: any;
+  oecdUI: OecdMajorUI[] = [];
 
   galleryImages: string[] = [];
 
@@ -203,6 +204,7 @@ export class PerformanceDetailByDepartmentComponent {
       case 'article':
         this.articleData = res.data.researchArticle;
         this.ownerArticle = res.data.owner;
+        this.oecdUI = this.mapOecdApiToUI(this.articleData?.oecd || []);
 
         if (this.articleData?.internal_members?.length) {
           this.articleData.internal_members = this.sortFirstAuthorFirst(
@@ -213,8 +215,8 @@ export class PerformanceDetailByDepartmentComponent {
 
       case 'project':
         this.researchData = res.data.projectDetail; console.log(this.researchData);
-        
         this.ownerProject = res.data.owner;
+        this.oecdUI = this.mapOecdApiToUI(this.researchData?.oecd || []);
 
         if (this.researchData?.internal_members?.length) {
           this.researchData.internal_members = this.sortFirstAuthorFirst(
@@ -226,6 +228,7 @@ export class PerformanceDetailByDepartmentComponent {
       case 'innovation':
         this.innovationData = res.data.researchInnovation;
         this.ownerInnovation = res.data.owner;
+        this.oecdUI = this.mapOecdApiToUI(this.innovationData?.oecd || []);
 
         if (this.innovationData?.internal_members?.length) {
           this.innovationData.internal_members = this.sortFirstAuthorFirst(
@@ -282,5 +285,24 @@ export class PerformanceDetailByDepartmentComponent {
     if (this.type === 'project') return this.ownerProject;
     if (this.type === 'innovation') return this.ownerInnovation;
     return null;
+  }
+
+  mapOecdApiToUI(oecd: OecdMajorApi[]): OecdMajorUI[] {
+    return oecd.map(m => ({
+      major_id: m.major_id, 
+      name_th: m.name_th,
+      children: m.children
+        ? [{
+            sub_id: m.children.sub_id,
+            name_th: m.children.name_th,
+            children: m.children.children
+              ? [{
+                  child_id: m.children.children.child_id,
+                  name_th: m.children.children.name_th
+                }]
+              : []
+          }]
+        : []
+    }));
   }
 }

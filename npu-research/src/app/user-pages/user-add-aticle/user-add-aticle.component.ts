@@ -59,6 +59,7 @@ const DEFAULT_ARTICLE: Article = {
   sub_id: null,
   oecd_id: 0,
   article_type_code: '',
+  con_type: '',
 };
 
 @Component({
@@ -426,6 +427,7 @@ export class UserAddAticleComponent {
     const d = this.articleData;
     const subSub = this.selectedSubSub?.child_id ?? '';
     let article_type_code = '';
+    let article_type = '';
 
     const required = (key: string, val: any) => fd.append(key, val ?? '');
 
@@ -445,25 +447,38 @@ export class UserAddAticleComponent {
     });
     required('published_date', d.published_date);
     required('article_type', d.article_type);
+    article_type = d.article_type;
     required('journal_name', d.journal_name);
     required('pages', d.pages);
     required('year_published', d.year_published);
     required('volume', d.volume);
     required('volume_no', d.volume_no);
-    required('doi', d.doi);
+
+    const isJournal = ['วารสาร', 'Journal'].includes(d.article_type);
+
+    if (isJournal) {
+      required('doi', d.doi);
+    } else {
+      optional('doi', d.doi);
+    }
     required('is_cooperation', d.is_cooperation);
     optional('db_type', d.db_type);
     optional('responsibilities', d.responsibilities);
     optional('pre_location', d.pre_location);
+    optional('con_type', d.con_type);
 
     if (d.subject_area_id > 0)
       fd.append('subject_area_id', String(d.subject_area_id));
     if (this.selectedFile) fd.append('article_file', this.selectedFile);
 
-    if (d.article_type === 'วารสาร') {
+    if (d.db_type === 'Scopus') {
       article_type_code = '01';
-    } else {
+    } else if (d.db_type === 'TCI') {
       article_type_code = '02';
+    } else if (d.con_type === 'การประชุมวิชาการนานาชาติ') {
+      article_type_code = '03';
+    } else if (d.con_type === 'การประชุมวิชาการ') {
+      article_type_code = '04';
     }
 
     required('oecd_id', subSub);
@@ -524,7 +539,6 @@ export class UserAddAticleComponent {
   validateForm(): boolean {
     const d = this.articleData;
 
-    // ตรวจ field หลัก
     if (
       !d.title_th ||
       !d.title_en ||
@@ -544,7 +558,6 @@ export class UserAddAticleComponent {
       return false;
     }
 
-    // ✅ internal member (กรอกก็ได้ แต่ถ้ากรอกต้องครบ)
     const invalidInternal = this.internalRow.some(
       (r) => r.researcher_id && !r.responsibilities
     );
@@ -558,7 +571,6 @@ export class UserAddAticleComponent {
       return false;
     }
 
-    // ✅ external member
     const invalidExternal = this.externalRow.some(
       (r) => (r.name && !r.responsibilities) || (r.responsibilities && !r.name)
     );

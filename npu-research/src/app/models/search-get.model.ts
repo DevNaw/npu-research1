@@ -1,26 +1,32 @@
-export interface SubjectAreaResponse {
-    result: number;
-    message: string;
-    data: SubjectAreaData;
-  }
-  
-  export interface SubjectAreaData {
-    organizations: Organization[];
-    subject_areas: MajorSubjectArea[];
-  }
-  
-  export interface Organization {
-    id: number;
-    faculty: string;
-  }
-  
-  export interface MajorSubjectArea {
-    major_id: number;
-    name_en: string;
-    children: SubSubjectArea[];
-  }
-  
-  export interface SubSubjectArea {
-    sub_id: number;
-    name_en: string;
-  }
+export interface OecdResponse {
+  result: number;
+  message: string;
+  data: OecdData;
+}
+
+export interface OecdData {
+  organizations: Organization[];
+  oecd: OecdMajor[];
+}
+
+export interface Organization {
+  id: number;
+  faculty: string;
+}
+
+export interface OecdMajor {
+  major_id: number;
+  name_th: string;
+  children: OecdSub[];
+}
+
+export interface OecdSub {
+  sub_id: number;
+  name_th: string;
+  children: OecdChild[];
+}
+
+export interface OecdChild {
+  child_id: number;
+  name_th: string;
+}

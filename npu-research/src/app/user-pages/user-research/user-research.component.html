@@ -87,7 +87,7 @@
             class="w-full h-11 border border-gray-300 rounded-full px-6 flex justify-between items-center bg-white"
           >
             <span class="truncate">
-              {{ selectedAgency?.faculty || "เลือกหน่วยงาน" }}
+              {{ organizations[0]?.faculty || "เลือกหน่วยงาน" }}
             </span>
             <i class="bi bi-chevron-down"></i>
           </button>
@@ -98,14 +98,14 @@
             (click)="$event.stopPropagation()"
           >
             <input
-              [(ngModel)]="searchAgency"
+              [(ngModel)]="searchOrg"
               placeholder="ค้นหา..."
               class="w-full px-3 py-2 border-b outline-none"
             />
             <ul class="max-h-48 overflow-y-auto">
               <li
-                *ngFor="let a of filteredAgency()"
-                (click)="selectAgency(a)"
+                *ngFor="let a of filteredOrg()"
+                (click)="selectOrg(a)"
                 class="px-4 py-2 hover:bg-gray-50 cursor-pointer"
               >
                 {{ a.faculty }}
@@ -113,7 +113,7 @@
 
               <!-- ไม่พบข้อมูล -->
               <li
-                *ngIf="filteredAgency().length === 0"
+                *ngIf="filteredOrg().length === 0"
                 class="px-4 py-2 text-gray-400 text-center"
               >
                 ไม่พบข้อมูล
@@ -124,15 +124,17 @@
       </div>
 
       <!-- แหล่งเงินทุน -->
-      <div class="grid grid-cols-12 gap-3 items-center mt-4 mb-4 font-light text-lg">
+      <div
+        class="grid grid-cols-12 gap-3 items-center mt-4 mb-4 font-light text-lg"
+      >
         <label
           class="col-span-12 md:col-span-4 flex items-center gap-3 border border-gray-200 rounded-full px-5 h-12 cursor-pointer hover:border-[#118CD9] transition"
         >
           <input
-          type="radio"
-          name="funding"
-          value="แหล่งทุนภายนอก"
-          [(ngModel)]="selectedFunding"
+            type="radio"
+            name="funding"
+            value="แหล่งทุนภายนอก"
+            [(ngModel)]="selectedFunding"
             class="w-4 h-4 text-[#118CD9] border-gray-300 rounded focus:ring-2 focus:ring-[#118CD9]"
           />
           <span class="text-gray-700"> แหล่งเงินทุนภายนอก </span>
@@ -143,10 +145,10 @@
           class="col-span-12 md:col-span-4 flex items-center gap-3 border border-gray-200 rounded-full px-5 h-12 cursor-pointer hover:border-[#118CD9] transition"
         >
           <input
-          type="radio"
-          name="funding"
-          value="แหล่งทุนภายใน"
-          [(ngModel)]="selectedFunding"
+            type="radio"
+            name="funding"
+            value="แหล่งทุนภายใน"
+            [(ngModel)]="selectedFunding"
             class="w-4 h-4 text-[#118CD9] border-gray-300 rounded focus:ring-2 focus:ring-[#118CD9]"
           />
           <span class="text-gray-700"> แหล่งเงินทุนภายใน </span>
@@ -182,16 +184,17 @@
       </div>
 
       <!-- ===== เลือกสาขาวิชา ===== -->
-      <div class="col-span-12 md:col-span-10 relative font-light text-lg">
+      <!-- <div class="col-span-12 md:col-span-10 relative font-light text-lg">
         <button
           (click)="toggleDropdown('faculties', $event)"
           class="w-full h-11 border rounded-full px-6 flex justify-between items-center bg-white border-gray-300"
         >
-          <span class="truncate">{{ selectedFaculty || "หมวดหมู่สาขาวิชาการและสาขาวิจัย (OECD)" }}</span>
+          <span class="truncate">{{
+            selectedFaculty || "หมวดหมู่สาขาวิชาการและสาขาวิจัย (OECD)"
+          }}</span>
           <i class="bi bi-chevron-down"></i>
         </button>
 
-        <!-- Dropdown -->
         <div
           *ngIf="activeDropdown === 'faculties'"
           class="absolute z-50 w-full bg-white border rounded-md mt-1 shadow"
@@ -204,7 +207,7 @@
                 class="flex justify-between items-center px-4 py-2 cursor-pointer hover:bg-gray-200 transition"
                 [class.bg-gray-200]="activeMajor?.major_id === m.major_id"
               >
-                {{ m.name_en }}
+                {{ m.name_th }}
                 <i
                   class="bi"
                   [ngClass]="
@@ -215,7 +218,6 @@
                 ></i>
               </div>
 
-              <!-- === Sub === -->
               <ul
                 *ngIf="activeMajor?.major_id === m.major_id"
                 class="bg-gray-100 rounded-xl shadow-lg"
@@ -225,7 +227,7 @@
                   (click)="selectSub(s)"
                   class="px-4 py-2 text-gray-400"
                 >
-                  {{ s.name_en }}
+                  {{ s.name_th }}
                 </li>
 
                 <li
@@ -237,6 +239,89 @@
               </ul>
             </li>
           </ul>
+        </div>
+      </div> -->
+
+      <div class="grid grid-cols-3 gap-3 col-span-12 md:col-span-10 relative font-light text-lg">
+        <div class="relative">
+          <button
+            (click)="toggleDropdown('major', $event)"
+            class="w-full border rounded-md px-3 py-2 flex justify-between items-center bg-white">
+            <span class="truncate text-lg font-light">
+              {{ selectedMajor?.name_th || "หมวดหมู่สาขาวิชาการและสาขาวิจัย (OECD)" }}
+            </span>
+            <i class="bi bi-chevron-down"></i>
+          </button>
+
+          <div
+            *ngIf="activeDropdown === 'major'"
+            class="absolute z-50 w-full bg-white border rounded-md mt-1 shadow text-lg font-light"
+            (click)="$event.stopPropagation()"
+          >
+            <ul class="relative max-h-72 overflow-y-auto">
+              <li
+                *ngFor="let m of filteredMajor()"
+                (click)="selectMajor(m)"
+                class="px-4 py-2 hover:bg-gray-200 cursor-pointer"
+              >
+                {{ m.name_th }}
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="relative">
+          <button
+            (click)="toggleDropdown('sub', $event)"
+            class="w-full border rounded-md px-3 py-2 flex justify-between items-center bg-white">
+            <span class="truncate text-lg font-light">
+              {{ selectedSub?.name_th || "หมวดหมู่สาขาย่อย" }}
+            </span>
+            <i class="bi bi-chevron-down"></i>
+          </button>
+
+          <div
+            *ngIf="activeDropdown === 'sub'"
+            class="absolute z-50 w-full bg-white border rounded-md mt-1 shadow text-lg font-light"
+            (click)="$event.stopPropagation()"
+          >
+            <ul class="relative max-h-72 overflow-y-auto">
+              <li
+                *ngFor="let s of filteredSub()"
+                (click)="selectSub(s)"
+                class="px-4 py-2 hover:bg-gray-200 cursor-pointer"
+              >
+                {{ s.name_th }}
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="relative">
+          <button
+            (click)="toggleDropdown('subsub', $event)"
+            class="w-full border rounded-md px-3 py-2 flex justify-between items-center bg-white">
+            <span class="truncate text-lg font-light">
+              {{ selectedSubSub?.name_th || "หมวดหมู่สาขาที่เกี่ยวข้อง" }}
+            </span>
+            <i class="bi bi-chevron-down"></i>
+          </button>
+
+          <div
+            *ngIf="activeDropdown === 'subsub'"
+            class="absolute z-50 w-full bg-white border rounded-md mt-1 shadow text-lg font-light"
+            (click)="$event.stopPropagation()"
+          >
+            <ul class="relative max-h-72 overflow-y-auto">
+              <li
+                *ngFor="let ss of filteredSubSub()"
+                (click)="selectSubSub(ss)"
+                class="px-4 py-2 hover:bg-gray-200 cursor-pointer"
+              >
+                {{ ss.name_th }}
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
 
@@ -277,13 +362,12 @@
         <h2 class="text-xl md:text-2xl">สัดส่วนนักวิจัย จำแนกตามสาขาวิชา</h2>
       </div>
 
-      <apx-chart
-        *ngIf="donutSeries.length > 0; else noData"
-        [series]="donutSeries"
-        [labels]="donutLabels"
-        [chart]="donutChart"
-        [legend]="donutLegend"
-      ></apx-chart>
+      <canvasjs-chart
+        [options]="chartOptions"
+        (chartInstance)="getChartInstance($event)"
+        [styles]="{ width: '100%', height: '300px' }"
+      >
+      </canvasjs-chart>
 
       <ng-template #noData>
         <div class="text-center text-white py-16">ไม่พบข้อมูล</div>
@@ -304,7 +388,7 @@
       <!-- List -->
       <div class="space-y-2 text-[#394250] px-8 max-h-60 overflow-y-auto">
         <p
-          *ngFor="let l of donutLabels; let i = index;"
+          *ngFor="let l of donutLabels; let i = index"
           class="flex justify-between border-b last:border-b-0 pb-1"
         >
           <span class="font-light text-lg">{{ l }}</span>
@@ -364,7 +448,9 @@
             <col class="w[25%]" />
             <col class="w[15%]" />
           </colgroup>
-          <thead class="bg-[#394250] text-white border-b-2 border-gray-300 font-light text-lg">
+          <thead
+            class="bg-[#394250] text-white border-b-2 border-gray-300 font-light text-lg"
+          >
             <tr>
               <th class="p-1 md:p-2">#</th>
               <th class="p-1 md:p-2 text-start">ชื่องานวิจัย</th>

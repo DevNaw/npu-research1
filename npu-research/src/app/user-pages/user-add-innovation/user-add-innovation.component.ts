@@ -486,8 +486,6 @@ export class UserAddInnovationComponent {
     required('application_number', d.application_number);
     required('examination_url', d.examination_url);
 
-    if (d.subject_area_id > 0)
-      fd.append('subject_area_id', String(d.subject_area_id));
     if (this.selectedFile) fd.append('full_report', this.selectedFile);
     if (this.selectedImagesFile.length > 0) {
       this.selectedImagesFile.forEach((file) => {
@@ -495,13 +493,17 @@ export class UserAddInnovationComponent {
       });
     }
 
-    if (d.source_funds === 'แหล่งทุนภายใน') {
+    if (d?.source_funds === 'แหล่งทุนภายใน') {
       funding_code = '01';
-    } else if (d.source_funds === 'แหล่งทุนภายนอก') {
-      const selectedFund = this.fundings.find(
-        (f) => f.funding_name === d.name_funding
+    
+    } else if (d?.source_funds === 'แหล่งทุนภายนอก') {
+    
+      const selectedFund = this.fundings?.find(
+        (f) => f?.funding_name === d?.name_funding
       );
-      funding_code = selectedFund?.funding_code || '';
+    
+      funding_code = selectedFund?.funding_code ?? '';
+    
     } else {
       funding_code = '99';
     }

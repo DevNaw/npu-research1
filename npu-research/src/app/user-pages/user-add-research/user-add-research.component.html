@@ -627,7 +627,10 @@
         >
           <div
             class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
-            (click)="selectValue('source_funds', 'แหล่งทุนภายใน'); selectValue('funding_code', '01')"
+            (click)="
+              selectValue('source_funds', 'แหล่งทุนภายใน');
+              selectValue('funding_code', '01')
+            "
           >
             แหล่งทุนภายใน
           </div>
@@ -639,7 +642,10 @@
           </div>
           <div
             class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
-            (click)="selectValue('source_funds', 'แหล่งทุนอื่น'); selectValue('funding_code', '99')"
+            (click)="
+              selectValue('source_funds', 'แหล่งทุนอื่น');
+              selectValue('funding_code', '99')
+            "
           >
             แหล่งทุนอื่น
           </div>
@@ -681,12 +687,12 @@
 
         <div
           *ngIf="activeDropdown === 'fundName'"
-          class="absolute left-0 top-full mt-1 w-full bg-white border rounded-md shadow z-50 text-lg font-light"
+          class="absolute left-0 top-full mt-1 h-60 w-full bg-white border rounded-md shadow z-50 text-lg font-light overflow-y-auto"
         >
           <div
             *ngFor="let fund of fundings"
             class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
-            (click)="selectValue('name_funding', fund.funding_name)"
+            (click)="selectValue('name_funding', fund.funding_name); selectValue('funding_code', fund.funding_code)"
           >
             {{ fund.funding_name }}
           </div>

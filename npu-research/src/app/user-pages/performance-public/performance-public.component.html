@@ -67,11 +67,34 @@
           <!-- Research Fields -->
           <div class="space-y-2">
             <div class="grid grid-cols-1 gap-2 md:gap-4">
-              <div>
-                <p class="text-[#767676]">สาขาของงานวิจัย</p>
-                <p class="font-light text-xl">
-                  {{ researchData?.subject_area?.[0]?.name_en }}
-                </p>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4">
+                <div>
+                  <p class="text-[#767676]">รหัสโครงการวิจัย</p>
+                  <p class="font-light text-xl">
+                    {{ researchData?.research_code || '-'}}
+                  </p>
+                </div>
+
+                <div>
+                  <p class="text-[#767676]">สาขาของงานวิจัย</p>
+                  <p class="font-light text-xl">
+                    {{ oecdUI[0]?.name_th || '-' }}
+                  </p>
+                </div>
+
+                <div>
+                  <p class="text-[#767676]">สาขาย่อย</p>
+                  <p class="font-light text-xl">
+                    {{ oecdUI[0]?.children?.[0]?.name_th || '-' }}
+                  </p>
+                </div>
+
+                <div>
+                  <p class="text-[#767676]">สาขาที่เกี่ยวข้อง</p>
+                  <p class="font-light text-xl">
+                    {{ oecdUI[0]?.children?.[0]?.children?.[0]?.name_th || '-' }}
+                  </p>
+                </div>
               </div>
 
               <div *ngIf="researchData?.abstract">
@@ -84,9 +107,16 @@
                 <p class="font-light text-xl">{{ researchData?.abstract_en || '-' }}</p>
               </div>
 
-              <div *ngIf="researchData?.keywords">
-                <p class="text-[#767676]">Keywords</p>
-                <p class="font-light text-xl">{{ researchData?.keywords || '-' }}</p>
+              <div>
+                <p class="text-[#767676]">Keyword</p>
+                <div class="flex flex-wrap gap-2 my-2">
+                  <span
+                    *ngFor="let k of researchData?.keywords"
+                    class="px-2 py-1 font-light my-2 text-white rounded bg-[#118CD9]"
+                  >
+                    {{ k.keyword }}
+                  </span>
+                </div>
               </div>
             </div>
 
@@ -235,20 +265,6 @@
                 </span>
               </div>
 
-              <!-- <div>
-                <p class="text-[#767676] md:mb-1">
-                  ปีที่เสร็จสิ้น
-                </p>
-                <p class="text-gray-800">{{ researchData?.end_date || "-" }}</p>
-              </div> -->
-
-              <!-- <div>
-                <p class="text-[#767676] md:mb-1">
-                  ความร่วมมือกับหน่วยงานอื่นๆ
-                </p>
-                <p class="text-gray-800">{{ researchData?.call_other || '-' }}</p>
-              </div> -->
-
               <div>
                 <p class="text-[#767676] md:mb-1">พื้นที่วิจัย</p>
                 <p class="text-[#394250] font-light text-xl">{{ researchData?.research_area }}</p>
@@ -330,11 +346,34 @@
           <!-- Right: Details -->
           <div class="md:col-span-2 space-y-6">
             <!-- Research Fields -->
-            <div>
-              <p class="text-[#767676]">สาขาของบทความ</p>
-              <p class="text-[#394250] font-light text-xl">
-                {{ articleData?.subject_area?.[0]?.name_en || '-' }}
-              </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4">
+              <div>
+                <p class="text-[#767676]">รหัสบทความ</p>
+                <p class="text-[#394250] font-light text-xl">
+                  {{ articleData?.research_code || '-' }}
+                </p>
+              </div>
+
+              <div>
+                <p class="text-[#767676]">สาขาของบทความ</p>
+                <p class="text-[#394250] font-light text-xl">
+                  {{ oecdUI[0]?.name_th || '-' }}
+                </p>
+              </div>
+
+              <div>
+                <p class="text-[#767676]">สาขาย่อย</p>
+                <p class="text-[#394250] font-light text-xl">
+                  {{ oecdUI[0]?.children?.[0]?.name_th || '-' }}
+                </p>
+              </div>
+
+              <div>
+                <p class="text-[#767676]">สาขาที่เกี่ยวข้อง</p>
+                <p class="text-[#394250] font-light text-xl">
+                  {{ oecdUI[0]?.children?.[0]?.children?.[0]?.name_th || '-' }}
+                </p>
+              </div>
             </div>
 
             <div *ngIf="articleData?.abstract">
@@ -344,18 +383,23 @@
               </p>
             </div>
 
-            <div *ngIf="articleData?.keywords">
-              <p class="text-[#767676]">Keywords</p>
-              <p class="text-[#394250] font-light text-xl">
-                {{ articleData?.keywords || '-' }}
-              </p>
-            </div>
-
             <div *ngIf="articleData?.abstract_en">
               <p class="text-[#767676]">Abstract</p>
               <p class="text-[#394250] font-light text-xl">
                 {{ articleData?.abstract_en || '-' }}
               </p>
+            </div>
+
+            <div>
+              <p class="text-[#767676]">keywords</p>
+              <div class="flex flex-wrap gap-2 my-2">
+                <span
+                  *ngFor="let k of articleData?.keywords"
+                  class="px-2 py-1 font-light my-2 text-white rounded bg-[#118CD9]"
+                >
+                  {{ k.keyword }}
+                </span>
+              </div>
             </div>
 
             <div class="grid grid-cols-2 gap-2 md:gap-4">
@@ -623,11 +667,34 @@
           <div class="md:col-span-2 space-y-6">
             <!-- Research Fields -->
             <div class="grid grid-cols-1 gap-4">
-              <div>
-                <p class="text-[#767676]">สาขาของนวัตกรรมสิ่งประดิษฐ์</p>
-                <p class="font-light text-xl">
-                  {{ innovationData?.subject_area?.[0]?.name_en || '-' }}
-                </p>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4">
+                <div>
+                  <p class="text-[#767676]">รหัสนวัตกรรม</p>
+                  <p class="font-light text-xl">
+                    {{ innovationData?.research_code || '-' }}
+                  </p>
+                </div>
+
+                <div>
+                  <p class="text-[#767676]">สาขาของนวัตกรรมสิ่งประดิษฐ์</p>
+                  <p class="font-light text-xl">
+                    {{ oecdUI[0]?.name_th || '-' }}
+                  </p>
+                </div>
+
+                <div>
+                  <p class="text-[#767676]">สาขาย่อย</p>
+                  <p class="font-light text-xl">
+                    {{ oecdUI[0]?.children?.[0]?.name_th || '-' }}
+                  </p>
+                </div>
+
+                <div>
+                  <p class="text-[#767676]">ส่ข่ที่เกี่ยวข้อง</p>
+                  <p class="font-light text-xl">
+                    {{ oecdUI[0]?.children?.[0]?.children?.[0]?.name_th || '-' }}
+                  </p>
+                </div>
               </div>
 
               <div *ngIf="innovationData?.abstract">
@@ -642,11 +709,16 @@
                   {{ innovationData?.abstract_en || '-' }}
                 </p>
               </div>
-              <div *ngIf="innovationData?.keywords">
-                <p class="text-[#767676]">Keywords</p>
-                <p class="font-light text-xl">
-                  {{ innovationData?.keywords || '-' }}
-                </p>
+              <div>
+                <p class="text-[#767676]">keywords</p>
+                <div class="flex flex-wrap gap-2 my-2">
+                  <span
+                    *ngFor="let k of innovationData?.keywords"
+                    class="px-2 py-1 font-light my-2 text-white rounded bg-[#118CD9]"
+                  >
+                    {{ k.keyword || "-" }}
+                  </span>
+                </div>
               </div>
 
               <div>

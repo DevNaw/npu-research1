@@ -10,6 +10,7 @@ export interface ProjectDetailResponse {
   export interface ProjectDetailApi {
     research_id: number;
     research_type: string;
+    research_code: string;
     title_th: string;
     title_en: string | null;
     abstract: string | null;

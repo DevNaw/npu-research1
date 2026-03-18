@@ -206,6 +206,7 @@ export class PerformanceComponent {
       case 'article':
         this.articleData = res.data.researchArticle;
         this.ownerArticle = res.data.owner;
+        this.oecdUI = this.mapOecdApiToUI(this.articleData?.oecd || []);
 
         if (this.articleData?.internal_members?.length) {
           this.articleData.internal_members = this.sortFirstAuthorFirst(
@@ -229,6 +230,7 @@ export class PerformanceComponent {
       case 'innovation':
         this.innovationData = res.data.researchInnovation;
         this.ownerInnovation = res.data.owner;
+        this.oecdUI = this.mapOecdApiToUI(this.innovationData?.oecd || []);
 
         if (this.innovationData?.internal_members?.length) {
           this.innovationData.internal_members = this.sortFirstAuthorFirst(

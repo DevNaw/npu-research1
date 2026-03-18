@@ -1,13 +1,11 @@
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { AuthService } from '../../services/auth.service';
 import { Address } from '../../models/data-performance.model';
 import {
   ChartComponent,
   ApexChart,
-  ApexResponsive,
-  ApexNonAxisChartSeries,
   ApexLegend,
   ApexDataLabels,
   ApexAxisChartSeries,
@@ -25,15 +23,13 @@ import { EducationService } from '../../services/education.service';
 import { EducationInfo } from '../../models/education.model';
 import { MainComponent } from '../../shared/layouts/main/main.component';
 
-export type PieChartOptions = {
-  series: ApexNonAxisChartSeries;
-  chart: ApexChart;
-  labels: string[];
-  responsive: ApexResponsive[];
-  legend: ApexLegend;
-  dataLabels: ApexDataLabels;
-  plotOptions: ApexPlotOptions;
-};
+import { CanvasJS } from '@canvasjs/angular-charts';
+
+CanvasJS.addColorSet('customColorSet', [
+  '#038FFB',
+  '#06E396',
+  '#FEB119',
+]);
 
 export type BarChartOptions = {
   series: ApexAxisChartSeries;
@@ -64,8 +60,8 @@ export class UserProfileComponent implements OnInit {
   originalData: ResearchItem[] = [];
 
   /* ===== Charts ===== */
-  pieChartOptions!: Partial<PieChartOptions>;
   barChartOptions!: Partial<BarChartOptions>;
+  chartOptions: any;
 
   /* ===== Table ===== */
   selectedTab: ResearchTab = 'project';
@@ -201,30 +197,15 @@ export class UserProfileComponent implements OnInit {
     private service: ProfileService,
     private serviceEducation: EducationService
   ) {
-    this.pieChartOptions = {
-      series: [44, 55, 13],
-      chart: {
-        type: 'pie',
-        width: 200,
-      },
-      labels: ['โครงการวิจัย', 'บทความ', 'นวัตกรรม'],
-      legend: {
-        show: false,
-      },
-      dataLabels: {
-        enabled: true,
-      },
-      responsive: [
+    this.chartOptions = {
+      colorSet: 'customColorSet',
+      animationEnabled: true,
+      data: [
         {
-          breakpoint: 480,
-          options: {
-            chart: {
-              width: 250,
-            },
-            legend: {
-              show: false,
-            },
-          },
+          type: 'doughnut',
+          yValueFormatString: '#,##0',
+          indexLabel: '{name} ({y})',
+          dataPoints: [],
         },
       ],
     };
@@ -246,7 +227,7 @@ export class UserProfileComponent implements OnInit {
       ],
       chart: {
         type: 'bar',
-        height: 200,
+        height: 300,
       },
       plotOptions: {
         bar: {
@@ -327,13 +308,17 @@ export class UserProfileComponent implements OnInit {
       xaxis: { categories: years },
     };
 
-    // ===== PIE (รวมทั้งหมดทุกปี) =====
-    this.pieChartOptions = {
-      ...this.pieChartOptions,
-      series: [
-        projectData.reduce((a, b) => a + b, 0),
-        articleData.reduce((a, b) => a + b, 0),
-        innovationData.reduce((a, b) => a + b, 0),
+    this.chartOptions = {
+      ...this.chartOptions,
+      data: [
+        {
+          ...this.chartOptions.data[0],
+          dataPoints: [
+            { name: 'โครงการวิจัย', y: projectData.reduce((a, b) => a + b, 0) },
+            { name: 'บทความ', y: articleData.reduce((a, b) => a + b, 0) },
+            { name: 'นวัตกรรม', y: innovationData.reduce((a, b) => a + b, 0) },
+          ],
+        },
       ],
     };
   }
@@ -738,17 +723,21 @@ export class UserProfileComponent implements OnInit {
 
   formatThaiDate(date: string): string {
     if (!date) return '';
-  
+
     const d = new Date(date);
     const day = d.getDate();
     const month = d.getMonth() + 1;
     let year = d.getFullYear();
-  
+
     // ถ้าเป็น ค.ศ. ให้แปลงเป็น พ.ศ.
     if (year < 2500) {
       year = year + 543;
     }
-  
+
     return `${day}/${month}/${year}`;
+  }
+
+  getChartInstance(chart: any) {
+    this.chart = chart;
   }
 }

@@ -120,8 +120,13 @@
         >
           {{ keyword }}
 
-          <button type="button" (click)="removeKeyword(i)" class="text-white/80 hover:text-white text-base cursor-pointer"
-          >✕</button>
+          <button
+            type="button"
+            (click)="removeKeyword(i)"
+            class="text-white/80 hover:text-white text-base cursor-pointer"
+          >
+            ✕
+          </button>
         </span>
 
         <input
@@ -156,8 +161,13 @@
         >
           {{ keyword }}
 
-          <button type="button" (click)="removeKeywordEn(i)" class="text-white/80 hover:text-white text-base cursor-pointer"
-          >✕</button>
+          <button
+            type="button"
+            (click)="removeKeywordEn(i)"
+            class="text-white/80 hover:text-white text-base cursor-pointer"
+          >
+            ✕
+          </button>
         </span>
 
         <input
@@ -628,19 +638,27 @@
           >
             <div
               class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
-              (click)="selectValue('source_funds', 'แหล่งทุนภายใน')"
+              (click)="
+                selectValue('source_funds', 'แหล่งทุนภายใน');
+                selectValue('funding_code', '01')
+              "
             >
               แหล่งทุนภายใน
             </div>
             <div
               class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
-              (click)="selectValue('source_funds', 'แหล่งทุนภายนอก')"
+              (click)="
+                selectValue('source_funds', 'แหล่งทุนภายนอก');
+              "
             >
               แหล่งทุนภายนอก
             </div>
             <div
               class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
-              (click)="selectValue('source_funds', 'แหล่งทุนอื่น')"
+              (click)="
+                selectValue('source_funds', 'แหล่งทุนอื่น');
+                selectValue('funding_code', '99')
+              "
             >
               แหล่งทุนอื่น
             </div>
@@ -682,12 +700,12 @@
 
           <div
             *ngIf="activeDropdown === 'fundName'"
-            class="absolute left-0 top-full mt-1 w-full bg-white border rounded-md shadow z-50"
+            class="absolute left-0 top-full mt-1 h-60 w-full bg-white border rounded-md shadow z-50 overflow-y-auto"
           >
             <div
               *ngFor="let fund of fundings"
               class="px-3 py-2 hover:bg-gray-100 cursor-pointer font-light text-lg"
-              (click)="selectValue('name_funding', fund.funding_name)"
+              (click)="selectValue('name_funding', fund.funding_name); selectValue('funding_code', fund.funding_code)"
             >
               {{ fund.funding_name }}
             </div>
@@ -738,21 +756,23 @@
           <label class="block mb-2">
             ปีที่ได้รับทุน (พ.ศ.) <span class="text-red-500">*</span>
           </label>
-        
+
           <div class="relative">
             <!-- BUTTON -->
             <button
               (click)="toggleDropdown('year', $event)"
               type="button"
               class="w-full border rounded-md px-4 h-12 flex justify-between items-center bg-white text-lg font-light"
-              [class.border-red-500]="yearReceivedBudget.invalid && yearReceivedBudget.touched"
+              [class.border-red-500]="
+                yearReceivedBudget.invalid && yearReceivedBudget.touched
+              "
             >
               <span>
                 {{ projectData.year_received_budget || "เลือกปี" }}
               </span>
               <i class="bi bi-chevron-down"></i>
             </button>
-        
+
             <!-- DROPDOWN -->
             <div
               *ngIf="activeDropdown === 'year'"
@@ -770,7 +790,7 @@
               </ul>
             </div>
           </div>
-        
+
           <!-- VALIDATE -->
           <input
             type="hidden"
@@ -779,7 +799,7 @@
             [(ngModel)]="projectData.year_received_budget"
             #yearReceivedBudget="ngModel"
           />
-        
+
           <div
             *ngIf="yearReceivedBudget.invalid && yearReceivedBudget.touched"
             class="text-red-500 text-sm"

@@ -61,6 +61,7 @@ import { ManagementAdminComponent } from './admin-pages/management-admin/managem
 import { A11yModule } from "@angular/cdk/a11y";
 import { AdminManualComponent } from './admin-pages/admin-manual/admin-manual.component';
 import { ChartsModule } from '@progress/kendo-angular-charts';
+import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
 
 @NgModule({
   declarations: [
@@ -130,6 +131,7 @@ import { ChartsModule } from '@progress/kendo-angular-charts';
     RouterModule.forRoot([]),
     A11yModule,
     ChartsModule,
+    CanvasJSAngularChartsModule,
 ],
   providers: [
     {

@@ -37,12 +37,6 @@
             {{ dashboardData?.statistic_research?.total_project }}
           </h2>
         </div>
-        <!-- <div class="ml-auto flex items-center gap-6 justify-between">
-          <h2 class="text-4xl font-bold">{{ dashboardData.statistic_research.total_project }}</h2>
-          <div>
-            <p class="text-xl font-semibold">ชาย 501 | หญิง 600</p>
-          </div>
-        </div> -->
       </div>
 
       <div class="items-center p-6 bg-white rounded-xl shadow">
@@ -315,20 +309,26 @@
           </div>
         </div>
 
-        <div class="overflow-x-auto font-regular">
+        <div class="overflow-x-auto font-light">
           <table class="w-full text-lg min-w-225 table-auto">
             <colgroup>
               <col class="w-[5%]" />
-              <col class="w-[50%]" />
+              <col class="w-[10%]" />
               <col class="w-[30%]" />
-              <col class="w-[15%]" />
+              <col class="w-[20%]" />
+              <col class="w-[10%]" />
+              <col class="w-[20%]" />
+              <col class="w-[5%]" />
             </colgroup>
 
             <thead class="bg-[#394250] text-white">
               <tr>
                 <th class="p-2">#</th>
+                <th class="p-2 text-start">รหัส</th>
                 <th class="p-2 text-start">ชื่อผลงาน</th>
-                <th class="p-2 text-start">ผู้วิจัย</th>
+                <th class="p-2 text-start">แหล่งทุน</th>
+                <th class="p-2 text-start">ชื่อแหล่งทุน</th>
+                <th class="p-2 text-start">{{ selectedTab === 'PROJECT' ? 'หัวหน้าโครงการ': selectedTab === 'ARTICLE' ? 'ผู้ประพันธ์อันดับแรก' : 'หัวหน้าโครงการ' }}</th>
                 <th class="p-2">ปี</th>
               </tr>
             </thead>
@@ -340,6 +340,7 @@
                 <td class="p-2 text-center">
                   {{ (currentPage - 1) * pageSize + i + 1 }}
                 </td>
+                <td class="p-2">รหัส</td>
                 <td class="p-2">
                   <div
                     class="text-[#16498C] hover:underline cursor-pointer truncate max-w-125 text-wrap text-lg"
@@ -359,6 +360,8 @@
                     }}
                   </div>
                 </td>
+                <td class="p-2">แหล่งเงิน</td>
+                <td class="p-2">ชื่อแหล่งเงิน</td>
                 <td class="p-2">{{ p.own[0].full_name }}</td>
                 <td class="p-2 text-center">{{ p.year }}</td>
               </tr>

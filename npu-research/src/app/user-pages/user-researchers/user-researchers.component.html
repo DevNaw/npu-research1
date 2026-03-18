@@ -166,15 +166,12 @@
           </h2>
         </div>
 
-        <ng-container>
-          <apx-chart
-            *ngIf="donutSeries.length > 0; else noData"
-            [series]="donutSeries"
-            [labels]="donutLabels"
-            [chart]="donutChart"
-            [legend]="donutLegend"
-          ></apx-chart>
-        </ng-container>
+        <canvasjs-chart
+        [options]="chartOptions"
+        (chartInstance)="getChartInstance($event)"
+        [styles]="{ width: '100%', height: '300px' }"
+      >
+      </canvasjs-chart>
 
         <ng-template #noData>
           <div class="text-center text-white py-16">ไม่พบข้อมูล</div>

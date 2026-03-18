@@ -208,13 +208,13 @@
           class="absolute z-50 mt-1 w-full bg-white border rounded-md shadow text-lg font-light"
         >
           <div
-            (click)="selectValue('article_type', 'Journal'); selectValue('article_type_code', '01')"
+            (click)="selectValue('article_type', 'วารสาร')"
             class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
           >
             วารสาร
           </div>
           <div
-            (click)="selectValue('article_type', 'Conference'); selectValue('article_type_code', '02')"
+            (click)="selectValue('article_type', 'การประชุมวิชาการ')"
             class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
           >
             การประชุมวิชาการ
@@ -232,7 +232,7 @@
 
     <!-- ประเภทฐานข้อมูล -->
     <div
-      *ngIf="articleData.article_type === 'Journal'"
+      *ngIf="articleData.article_type === 'วารสาร'"
       class="grid grid-cols-1 md:grid-cols-1 md:gap-2 mb:-2 md:mb-6"
     >
       <label class="text-start">
@@ -257,16 +257,69 @@
           class="absolute z-50 mt-1 w-full bg-white border rounded-md shadow text-lg font-light"
         >
           <div
-            (click)="selectValue('db_type', 'Scopus')"
+            (click)="
+              selectValue('db_type', 'Scopus');
+              selectValue('article_type_code', '01')
+            "
             class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
           >
             Scopus
           </div>
           <div
-            (click)="selectValue('db_type', 'TCI')"
+            (click)="
+              selectValue('db_type', 'TCI');
+              selectValue('article_type_code', '02')
+            "
             class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
           >
             TCI
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      *ngIf="articleData.article_type === 'การประชุมวิชาการ'"
+      class="grid grid-cols-1 md:grid-cols-1 md:gap-2 mb:-2 md:mb-6"
+    >
+      <label class="text-start">
+        ระดับ <span class="text-red-500">*</span>
+      </label>
+
+      <div class="relative md:col-span-3">
+        <button
+          type="button"
+          (click)="toggleDropdown('database_types', $event)"
+          class="w-full border rounded-md px-3 py-2 flex justify-between items-center bg-white"
+        >
+          <span class="truncate text-lg font-light">{{
+            articleData.con_type || "เลือกระดับ"
+          }}</span>
+          <i class="bi bi-chevron-down"></i>
+        </button>
+
+        <div
+          *ngIf="activeDropdown === 'database_types'"
+          (click)="$event.stopPropagation()"
+          class="absolute z-50 mt-1 w-full bg-white border rounded-md shadow text-lg font-light"
+        >
+          <div
+            (click)="
+              selectValue('con_type', 'ประชุมวิชาการระดับนานาชาติ');
+              selectValue('article_type_code', '03')
+            "
+            class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
+          >
+            ประชุมวิชาการระดับนานาชาติ
+          </div>
+          <div
+            (click)="
+              selectValue('con_type', 'ประชุมวิชาการระดับชาติ');
+              selectValue('article_type_code', '04')
+            "
+            class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
+          >
+            ประชุมวิชาการระดับชาติ
           </div>
         </div>
       </div>
@@ -467,7 +520,7 @@
     </div>
 
     <!-- สาขาของบทความ/วารสาร -->
-    <div class="grid grid-cols-1 md:grid-cols-3 md:gap-2 mb-2 md:mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-3 md:gap-6 mb-2 md:mb-6">
       <!-- Major -->
       <div>
         <label class="text-start">

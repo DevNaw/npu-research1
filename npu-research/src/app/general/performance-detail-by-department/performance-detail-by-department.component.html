@@ -78,11 +78,34 @@
           <!-- Research Fields -->
           <div class="space-y-2">
             <div class="grid grid-cols-1 gap-2 md:gap-4">
-              <div>
-                <p class="text-[#767676]">สาขาของงานวิจัย</p>
-                <p class="font-light">
-                  {{ researchData?.subject_area?.[0]?.name_en }}
-                </p>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4">
+                <div>
+                  <p class="text-[#767676]">รหัสโครงการ</p>
+                  <p class="font-light">
+                    {{ researchData?.research_code }}
+                  </p>
+                </div>
+
+                <div>
+                  <p class="text-[#767676]">สาขาของโครงการวิจัย</p>
+                  <p class="font-light">
+                    {{ oecdUI[0]?.name_th || '-' }}
+                  </p>
+                </div>
+
+                <div>
+                  <p class="text-[#767676]">สาขาย่อย</p>
+                  <p class="font-light">
+                    {{ oecdUI[0]?.children?.[0]?.name_th || '-' }}
+                  </p>
+                </div>
+
+                <div>
+                  <p class="text-[#767676]">สาขาที่เกี่ยวข้อง</p>
+                  <p class="font-light">
+                    {{ oecdUI[0]?.children?.[0]?.children?.[0]?.name_th || '-' }}
+                  </p>
+                </div>
               </div>
 
               <div *ngIf="researchData?.abstract">
@@ -362,11 +385,34 @@
           <!-- Right: Details -->
           <div class="md:col-span-3 space-y-6">
             <!-- Research Fields -->
-            <div>
-              <p class="text-[#767676]">สาขาของบทความ</p>
-              <p class="font-light">
-                {{ articleData?.subject_area?.[0]?.name_en }}
-              </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4">
+              <div>
+                <p class="text-[#767676]">รหัสบทความ</p>
+                <p class="font-light">
+                  {{ articleData?.research_code || '-' }}
+                </p>
+              </div>
+
+              <div>
+                <p class="text-[#767676]">สาขาของบทความ</p>
+                <p class="font-light">
+                  {{ oecdUI[0]?.name_th || '-' }}
+                </p>
+              </div>
+
+              <div>
+                <p class="text-[#767676]">สาขาย่อย</p>
+                <p class="font-light">
+                  {{ oecdUI[0]?.children?.[0]?.name_th || '-' }}
+                </p>
+              </div>
+
+              <div>
+                <p class="text-[#767676]">สาขาที่เกี่ยวข้อง</p>
+                <p class="font-light">
+                  {{ oecdUI[0]?.children?.[0]?.children?.[0]?.name_th || '-' }}
+                </p>
+              </div>
             </div>
 
             <div *ngIf="articleData?.abstract">
@@ -383,11 +429,16 @@
               </p>
             </div>
 
-            <div *ngIf="articleData?.keywords">
+            <div >
               <p class="text-[#767676]">Keywords</p>
-              <p class="font-light">
-                {{ articleData?.keywords || '-' }}
-              </p>
+              <div class="flex flex-wrap gap-2 my-2">
+                <span
+                  *ngFor="let k of articleData?.keywords"
+                  class="px-2 py-1 font-light my-2 text-white rounded bg-[#118CD9]"
+                >
+                  {{ k.keyword }}
+                </span>
+              </div>
             </div>
 
             <div class="grid grid-cols-2 gap-2 md:gap-4">
@@ -682,11 +733,34 @@
           <div class="md:col-span-3 space-y-6">
             <!-- Research Fields -->
             <div class="grid grid-cols-1 gap-4">
-              <div>
-                <p class="text-[#767676]">สาขาของนวัตกรรมสิ่งประดิษฐ์</p>
-                <p class="font-light">
-                  {{ innovationData?.subject_area?.[0]?.name_en || '-' }}
-                </p>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4">
+                <div>
+                  <p class="text-[#767676]">รหัสนวัตกรรม</p>
+                  <p class="font-light">
+                    {{ innovationData?.research_code || '-' }}
+                  </p>
+                </div>
+
+                <div>
+                  <p class="text-[#767676]">สาขาของนวัตกรรมสิ่งประดิษฐ์</p>
+                  <p class="font-light">
+                    {{ oecdUI[0]?.name_th || '-' }}
+                  </p>
+                </div>
+
+                <div>
+                  <p class="text-[#767676]">สาขาย่อย</p>
+                  <p class="font-light">
+                    {{ oecdUI[0]?.children?.[0]?.name_th || '-' }}
+                  </p>
+                </div>
+
+                <div>
+                  <p class="text-[#767676]">สาขาที่เกี่ยวข้อง</p>
+                  <p class="font-light">
+                    {{ oecdUI[0]?.children?.[0]?.children?.[0]?.name_th || '-' }}
+                  </p>
+                </div>
               </div>
 
               <div *ngIf="innovationData?.abstract">

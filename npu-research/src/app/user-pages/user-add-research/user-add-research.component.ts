@@ -512,13 +512,17 @@ export class UserAddResearchComponent {
     if (this.selectedContractFile)
       fd.append('contract_file', this.selectedContractFile);
 
-    if (d.source_funds === 'แหล่งทุนภายใน') {
+    if (d?.source_funds === 'แหล่งทุนภายใน') {
       funding_code = '01';
-    } else if (d.source_funds === 'แหล่งทุนภายนอก') {
-      const selectedFund = this.fundings.find(
-        (f) => f.funding_name === d.name_funding
+    
+    } else if (d?.source_funds === 'แหล่งทุนภายนอก') {
+    
+      const selectedFund = this.fundings?.find(
+        (f) => f?.funding_name === d?.name_funding
       );
-      funding_code = selectedFund?.funding_code || '';
+      
+      funding_code = selectedFund?.funding_code ?? '';
+    
     } else {
       funding_code = '99';
     }

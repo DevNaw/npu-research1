@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
-import { SubjectAreaResponse } from '../models/search-get.model';
+import { OecdResponse } from '../models/search-get.model';
 import {
   SearchResearchRequest,
   SummaryBySubjectResponse,
@@ -18,8 +18,8 @@ export class SearchService {
 
   constructor(private http: HttpClient) {}
 
-  getData(): Observable<SubjectAreaResponse> {
-    return this.http.get<SubjectAreaResponse>(`${this.apiUrl}/search/innit`);
+  getData(): Observable<OecdResponse> {
+    return this.http.get<OecdResponse>(`${this.apiUrl}/search/innit`);
   }
 
   searchData(data: SearchResearchRequest) {
