@@ -68,7 +68,9 @@
         <div>
           <div class="flex items-center">
             <label class="block text-xl text-gray-700 mb-1"> อีเมล </label>
-            <p class="text-sm text-red-600 mb-1 ml-3">(เฉพาะ &#64;npu.ac.th เท่านั้น!) <span class="text-lg">*</span></p>
+            <p class="text-sm text-red-600 mb-1 ml-3">
+              (เฉพาะ &#64;npu.ac.th เท่านั้น!) <span class="text-lg">*</span>
+            </p>
           </div>
 
           <div class="relative">
@@ -83,6 +85,42 @@
               class="w-full pl-12 pr-4 py-2 border rounded-md font-light text-lg"
               placeholder="กรอกอีเมล"
             />
+          </div>
+        </div>
+
+        <div>
+          <div class="flex items-center">
+            <label class="block text-xl text-gray-700 mb-1"> หน่วยงาน </label>
+            <p class="text-lg text-red-600 mb-1 ml-3">*</p>
+          </div>
+
+          <div class="relative">
+            <button
+              type="button"
+              (click)="toggle('organization', $event)"
+              class="w-full border rounded-full border-gray-300 px-3 py-2 flex justify-between items-center bg-white"
+            >
+              <span class="truncate text-lg font-light">
+                {{ selectedOrganization?.faculty || "เลือกหน่วยงาน" }}
+              </span>
+              <i class="bi bi-chevron-down"></i>
+            </button>
+
+            <div
+              *ngIf="openDropdown === 'organization'"
+              (click)="$event.stopPropagation()"
+              class="absolute z-50 w-full bg-white border rounded-md mt-1 shadow font-light text-lg"
+            >
+              <ul class="max-h-48 overflow-y-auto">
+                <li
+                  *ngFor="let o of organizations"
+                  (click)="selectOrganization(o)"
+                  class="px-4 py-2 hover:bg-indigo-50 cursor-pointer"
+                >
+                  {{ o.faculty }}
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
 
@@ -133,73 +171,40 @@
         </div>
 
         <!-- Majors -->
-        <div class="relative">
+        <div>
           <div class="flex items-center">
-            <label class="block text-xl mb-1"> สาขาวิชาที่เชี่ยวชาญ </label>
-
-            <p class="text-sm text-red-600 mb-1 ml-3">
-              * เลือกได้มากกว่า 1 รายการ
-            </p>
+            <label class="block text-xl text-gray-700 mb-1">
+              สาขาที่เชี่ยวชาญ
+            </label>
+            <p class="text-lg text-red-600 mb-1 ml-3">*</p>
           </div>
 
           <div
-            class="min-h-10.5 border rounded-md px-3 py-2 flex flex-wrap gap-2 cursor-pointer font-light text-lg"
-            (click)="toggle('majors', $event)"
+            class="flex flex-wrap items-center gap-2 border rounded-md px-2 py-2 min-h-12 text-lg font-light mt-2 mb-6"
           >
             <span
-              *ngFor="let m of selectedMajors; let i = index"
-              class="bg-indigo-500 text-white px-3 py-1 rounded-full flex items-center font-light text-lg"
+              *ngFor="let m of registerData.expertises; let i = index"
+              class="flex items-center gap-2 px-2 py-1 text-white rounded-full bg-indigo-500"
             >
-              {{ m.name_th }}
-              <span
-                class="ml-2 cursor-pointer hover:text-gray-300"
-                (click)="removeMajor(i); $event.stopPropagation()"
+              {{ m }}
+
+              <button
+                type="button"
+                (click)="removeMajor(i)"
+                class="text-white/80 hover:text-white text-base cursor-pointer"
               >
                 ✕
-              </span>
+              </button>
             </span>
 
-            <div
-              class="flex items-center justify-between w-full font-light text-lg"
-              *ngIf="selectedMajors.length === 0"
-            >
-              <span class="text-gray-400"> คลิกเพื่อเลือก </span>
-
-              <i
-                class="bi bi-caret-down-fill text-gray-400 transition-transform duration-300"
-              ></i>
-            </div>
-          </div>
-
-          <div
-            *ngIf="isOpen('majors')"
-            class="absolute z-50 w-full bg-white border rounded-md mt-1 shadow font-light text-lg"
-            (click)="$event.stopPropagation()"
-          >
             <input
-              name="searchMajor"
-              [(ngModel)]="searchMajor"
-              name="searchMajor"
-              placeholder="ค้นหา..."
-              class="w-full px-3 py-2 border-b text-xl outline-none"
+              name="majorInput"
+              [(ngModel)]="majorInput"
+              (keydown)="addMajor($event)"
+              [attr.size]="majorInput.length || 1"
+              class="outline-none font-light text-lg min-w-37.5"
+              placeholder="พิมพ์แล้วกด Enter..."
             />
-
-            <ul class="max-h-48 overflow-y-auto text-xl">
-              <li
-                *ngFor="let m of filteredMajors()"
-                (click)="selectMajor(m)"
-                class="px-4 py-2 hover:bg-indigo-50 cursor-pointer"
-              >
-                {{ m.name_th }}
-              </li>
-
-              <li
-                *ngIf="filteredMajors().length === 0"
-                class="px-4 py-3 text-center text-gray-400 italic"
-              >
-                🔍 ไม่พบข้อมูล
-              </li>
-            </ul>
           </div>
         </div>
 
@@ -210,6 +215,7 @@
           </label>
 
           <textarea
+            name="interests"
             rows="3"
             class="w-full px-4 py-2 border rounded-md font-light text-lg"
             placeholder="ระบุความสนใจพิเศษ"

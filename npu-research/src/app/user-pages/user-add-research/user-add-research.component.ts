@@ -43,6 +43,7 @@ const DEFAULT_RESEARCH: ResearchProjectData = {
   contract_file: null,
   oecd_id: 0,
   funding_code: '',
+  funding_id: 0,
 };
 
 @Component({
@@ -529,6 +530,7 @@ export class UserAddResearchComponent {
 
     required('oecd_id', subSub);
     optional('funding_code', d.funding_code);
+    optional('funding_id', d.funding_id);
 
     this.internalRow
       .filter((r) => r.researcher_id)

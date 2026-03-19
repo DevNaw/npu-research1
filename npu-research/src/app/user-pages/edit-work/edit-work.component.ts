@@ -1,10 +1,7 @@
 import { Component, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
-import {
-  ExpertiseOption,
-  OrganizationOption,
-} from '../../models/work.model';
+import { Expertise, Organization } from '../../models/work.model';
 import { WorkService } from '../../services/work.service';
 import { MainComponent } from '../../shared/layouts/main/main.component';
 
@@ -15,14 +12,15 @@ import { MainComponent } from '../../shared/layouts/main/main.component';
   styleUrl: './edit-work.component.css',
 })
 export class EditWorkComponent {
-  selectedMajors: ExpertiseOption[] = [];
+  selectedMajors: Expertise[] = [];
   searchMajor = '';
 
-  organizationOptions: OrganizationOption[] = [];
-  selectOrganization: OrganizationOption | null = null;
+  organizationOptions: Organization[] = [];
+  selectOrganization: Organization | null = null;
   searchOrganization = '';
 
   openDropdown: string | null = null;
+  majorInput: string = '';
 
   workInfo: any = {
     position: '',
@@ -31,12 +29,12 @@ export class EditWorkComponent {
     line_work: '',
     academic_position: '',
     interest: '',
-    expertise: [{ id: 0, name_th: '', name_en: '' }],
+    expertises: [],
     work_start_date: '',
     year_of_service: 0,
   };
 
-  expertiseOptions: ExpertiseOption[] = [];
+  expertiseOptions: Expertise[] = [];
 
   typeOptions: string[] = ['พนักงาน', 'ลูกจ้าง', 'อาจารย์พิเศษ'];
 
@@ -61,30 +59,26 @@ export class EditWorkComponent {
       this.expertiseOptions = res.data.expertises || [];
       this.organizationOptions = res.data.organizations || [];
   
-      // ✅ map organization จาก id จริง
       if (data.organization?.id) {
         const found = this.organizationOptions.find(
-          (o) => o.id === data.organization.id
+          (o) => o.id === data.organization?.id
         );
   
         if (found) {
-          data.organization = found;  // 👈 สำคัญมาก
+          data.organization = found;
         }
       }
   
       this.workInfo = data;
-      console.log(this.workInfo);
       
-  
       if (this.workInfo?.work_start_date) {
         this.workInfo.work_start_date =
           this.workInfo.work_start_date.slice(0, 10);
       }
   
-      this.selectedMajors = (data.expertise || []).map((e: any) => ({
-        expertise_id: e.id,
-        name_th: e.name_th,
-        name_en: e.name_en,
+      this.selectedMajors = (data.expertises || []).map((e: any) => ({
+        expertise: e.expertise,
+        
       }));
     });
   }
@@ -109,15 +103,15 @@ export class EditWorkComponent {
 
     const parts = thaiDate.trim().split(' ');
     if (parts.length === 3) {
-      const day = parts[0].padStart(2, '0'); // เติม 0 ข้างหน้าถ้าเป็นเลขหลักเดียว
+      const day = parts[0].padStart(2, '0');
       const month = thaiMonths[parts[1]];
-      const year = (parseInt(parts[2], 10) - 543).toString(); // แปลง พ.ศ. เป็น ค.ศ.
+      const year = (parseInt(parts[2], 10) - 543).toString();
 
       if (day && month && year) {
         return `${day}-${month}-${year}`;
       }
     }
-    return ''; // คืนค่าว่างถ้าฟอร์แมตไม่ถูกต้อง
+    return '';
   }
 
   saveWork() {
@@ -156,9 +150,8 @@ export class EditWorkComponent {
         work_start_date: this.workInfo.work_start_date,
         year_of_service: Number(this.workInfo.year_of_service),
         organization_id: this.workInfo.organization?.id ?? 0,
-        expertise_ids: this.selectedMajors.map((m) => m.expertise_id),
+        expertises: this.selectedMajors.map((m) => m.expertise),
       };
-      console.log('payload', payload);
       
 
       this.service.updateWork(payload).subscribe({
@@ -201,10 +194,6 @@ export class EditWorkComponent {
     }
   }
 
-  isOpen(name: string) {
-    return this.openDropdown === name;
-  }
-
   @HostListener('document:click')
   closeAll() {
     this.openDropdown = null;
@@ -222,13 +211,10 @@ export class EditWorkComponent {
     );
   }
 
-  removeMajor(index: number): void {
-    this.selectedMajors.splice(index, 1);
-  }
 
-  selectMajor(major: ExpertiseOption): void {
+  selectMajor(major: Expertise): void {
     const exists = this.selectedMajors.find(
-      (m) => m.expertise_id === major.expertise_id
+      (m) => m.expertise === major.expertise
     );
 
     if (!exists) {
@@ -247,17 +233,8 @@ export class EditWorkComponent {
     this.openDropdown = null;
   }
 
-  filteredMajors(): ExpertiseOption[] {
-    if (!this.searchMajor.trim()) {
-      return this.expertiseOptions;
-    }
 
-    return this.expertiseOptions.filter((m) =>
-      m.name_th.toLowerCase().includes(this.searchMajor.toLowerCase())
-    );
-  }
-
-  filteredOrganizations(): OrganizationOption[] {
+  filteredOrganizations(): Organization[] {
     if (!this.searchOrganization.trim()) {
       return this.organizationOptions;
     }
@@ -267,7 +244,7 @@ export class EditWorkComponent {
     );
   }
 
-  selectOrganizationOption(org: OrganizationOption) {
+  selectOrganizationOption(org: Organization) {
     this.selectOrganization = org;
     this.workInfo.organization = {
       id: org.id,
@@ -275,5 +252,27 @@ export class EditWorkComponent {
     };
 
     this.openDropdown = null;
+  }
+
+  removeMajor(index: number) {
+    this.selectedMajors.splice(index, 1);
+  }
+
+  addMajor(event: KeyboardEvent) {
+    if (event.key === 'Enter' && this.majorInput.trim()) {
+      event.preventDefault();
+  
+      const value = this.majorInput.trim();
+  
+      const exists = this.selectedMajors.find(
+        (m) => m.expertise === value
+      );
+  
+      if (!exists) {
+        this.selectedMajors.push({ expertise: value });
+      }
+  
+      this.majorInput = '';
+    }
   }
 }

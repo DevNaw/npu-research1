@@ -4,7 +4,7 @@ import { User } from '../models/user.model';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { map, tap } from 'rxjs';
-import { Expertise, ExpertiseResponse } from '../models/expertise.model';
+import {  OrganizationResponse } from '../models/expertise.model';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +12,6 @@ import { Expertise, ExpertiseResponse } from '../models/expertise.model';
 export class AuthService {
   private readonly baseUrl = `${environment.apiBaseUrl}/v1/extreme/auth`;
 
-  expertises: Expertise[] = [];
 
   private TOKEN_KEY = 'token';
   private USER_KEY = 'use';
@@ -93,11 +92,11 @@ export class AuthService {
   
 
   // ดึงข้อมูลสาขาที่เชี่ยวชาญ
-  getExpertise() {
+  getOrganizations() {
     return this.http
-    .get<ExpertiseResponse>(`${this.baseUrl}/list-expertises`)
+    .get<OrganizationResponse>(`${this.baseUrl}/list-organizations`)
     .pipe(
-      map(res => res.data.expertises)
+      map(res => res.data.organizations)
     );
   }
 

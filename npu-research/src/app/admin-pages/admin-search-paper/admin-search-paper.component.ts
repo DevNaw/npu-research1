@@ -10,7 +10,6 @@ import {
 } from '../../models/search-get.model';
 import { ResearchItem, SearchResearchRequest } from '../../models/search.model';
 import { MainComponent } from '../../shared/layouts/main/main.component';
-import { CanvasJSChart } from '@canvasjs/angular-charts';
 
 @Component({
   selector: 'app-admin-search-paper',
@@ -19,21 +18,16 @@ import { CanvasJSChart } from '@canvasjs/angular-charts';
   styleUrl: './admin-search-paper.component.css',
 })
 export class AdminSearchPaperComponent {
-  chart: any;
   activeDropdown: string | null = null;
   searchSubSub: string = '';
   selectedMajor: OecdMajor | null = null;
   selectedSub: OecdSub | null = null;
   selectedSubSub: OecdChild | null = null;
   searchOrg: string = '';
-  selectedYear = '';
-  researchTitle = '';
   searchSubType = '';
   searchText = '';
   researchItems = '';
-  searchFaculitie = '';
   searchType = '';
-  facultySearch: string = '';
   date_from?: Date;
   date_to?: Date;
   searchMajor: string = '';
@@ -83,6 +77,7 @@ export class AdminSearchPaperComponent {
     private service: SearchService
   ) {
     this.chartOptions = {
+      backgroundColor: '#394250',
       colorSet: 'customColorSet',
       animationEnabled: true,
       data: [
@@ -90,6 +85,7 @@ export class AdminSearchPaperComponent {
           type: 'doughnut',
           yValueFormatString: '#,##0',
           indexLabel: '{name} ({y})',
+          indexLabelFontColor: '#ffffff',
           dataPoints: [],
         },
       ],
@@ -111,45 +107,6 @@ export class AdminSearchPaperComponent {
         this.organizations = res.data.organizations;
       },
     });
-  }
-
-  prepareDonut() {
-    type ResearchType = 'project' | 'article' | 'innovation';
-
-    const map: Record<ResearchType, number> = {
-      project: 0,
-      article: 0,
-      innovation: 0,
-    };
-
-    this.filteredResearchers.forEach((r) => {
-      const type = r.type as ResearchType;
-
-      if (map[type] !== undefined) {
-        map[type]++;
-      }
-    });
-
-    this.chartOptions = {
-      colorSet: 'customColorSet',
-      animationEnabled: true,
-      data: [
-        {
-          type: 'doughnut',
-          yValueFormatString: '#,##0',
-          indexLabel: '{name} ({y})',
-          dataPoints: [
-            { name: 'โครงการวิจัย', y: map.project },
-            { name: 'บทความ', y: map.article },
-            { name: 'นวัตกรรม', y: map.innovation },
-          ],
-        },
-      ],
-    };
-
-    if (this.chart) {
-      this.chart.render();
-    }
   }
 
   displaySelectedType(): string {
@@ -181,12 +138,6 @@ export class AdminSearchPaperComponent {
     this.searchSubType = '';
 
     this.activeDropdown = null;
-
-    // if (this.subTypeMap[t] && this.subTypeMap[t].length > 0) {
-    //   setTimeout(() => {
-    //     this.activeDropdown = 'subType';
-    //   }, 0);
-    // }
   }
 
   selectSubType(st: string) {
@@ -280,6 +231,21 @@ export class AdminSearchPaperComponent {
 
     if (this.selectedType) {
       payload.type = this.mapTypeToApi(this.selectedType);
+      if (this.selectedType === 'บทความ') {
+        payload.article_type = 'ประชุมวิชาการ';
+      } else if (this.selectedType === 'วารสาร') {
+        payload.article_type = 'วารสาร';
+      }
+    }
+
+    if (this.selectedSubType) {
+      if (this.selectedType === 'บทความ') {
+        payload.article_type = 'ประชุมวิชาการ';
+        payload.con_type = this.selectedSubType;
+      } else if (this.selectedType === 'วารสาร') {
+        payload.article_type = 'วารสาร';
+        payload.db_type = this.selectedSubType;
+      }
     }
 
     if (this.selectedOrg?.id) {
@@ -322,16 +288,27 @@ export class AdminSearchPaperComponent {
         this.allTableData = [...data.result];
         this.filteredResearchers = data.result;
 
-        if (this.chartOptions?.data?.length) {
-          this.chartOptions.data[0].dataPoints = data.graph.map((g: any) => ({
-            name: g.oecd_name,
-            y: g.count,
-          }));
-        }
-      
-        if (this.chart && this.chart.container) {
-          this.chart.render();
-        }
+        const colors = [
+          '#038FFB', '#06E396', '#FEB119', '#FF4560', '#775DD0',
+          '#00E396', '#0090FF', '#FF66C4', '#00B8D9', '#FFB800',
+          '#4CAF50', '#2196F3', '#9C27B0', '#FF5722', '#3F51B5',
+        ];
+
+        const graphData = data.graph.map((g: any, index: number) => ({
+          name: g.oecd_name,
+          y: g.count,
+          color: colors[index % colors.length],
+        }));
+
+        this.chartOptions = {
+          ...this.chartOptions,
+          data: [
+            {
+              ...this.chartOptions.data[0],
+              dataPoints: graphData,
+            },
+          ],
+        };
 
         this.donutSeries = data.graph.map((g) => g.count);
         this.donutLabels = data.graph.map((g) => g.oecd_name);
@@ -339,6 +316,8 @@ export class AdminSearchPaperComponent {
 
         this.currentPage = 1;
         this.updatePagination();
+
+        this.loading = false;
       },
     });
   }
@@ -436,10 +415,6 @@ export class AdminSearchPaperComponent {
 
     this.currentPage = page;
     this.updatePagination();
-  }
-
-  getChartInstance(chart: any) {
-    this.chart = chart;
   }
 
   @HostListener('document:click')

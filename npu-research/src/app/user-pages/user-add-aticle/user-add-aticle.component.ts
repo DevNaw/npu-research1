@@ -447,7 +447,7 @@ export class UserAddAticleComponent {
     });
     required('published_date', d.published_date);
     required('article_type', d.article_type);
-    article_type = d.article_type;
+    // article_type = d.article_type;
     required('journal_name', d.journal_name);
     required('pages', d.pages);
     required('year_published', d.year_published);

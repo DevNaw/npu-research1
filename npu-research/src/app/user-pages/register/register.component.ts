@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { RegisterData } from '../../models/profile.model';
 import Swal from 'sweetalert2';
-import { Expertise } from '../../models/expertise.model';
+import { Organization } from '../../models/expertise.model';
 
 @Component({
   selector: 'app-register',
@@ -13,16 +13,17 @@ import { Expertise } from '../../models/expertise.model';
 })
 export class RegisterComponent {
   openDropdown: string | null = null;
-
-  expertises: Expertise[] = [];
-  selectedMajors: Expertise[] = [];
-  searchMajor = '';
+  majorInput: string = '';
+  searchOrganization = '';
+  organizations: Organization[] = [];
+  selectedOrganization: Organization | null = null;
 
   registerData: RegisterData = {
     first_name: '',
     last_name: '',
     email: '',
-    expertise_ids: [],
+    org_id: 0,
+    expertises: [],
     password: '',
     password_confirmation: '',
   };
@@ -30,9 +31,9 @@ export class RegisterComponent {
   constructor(private router: Router, private registerService: AuthService) {}
 
   ngOnInit() {
-    this.registerService.getExpertise().subscribe({
-      next: (expertises) => {
-        this.expertises = expertises;
+    this.registerService.getOrganizations().subscribe({
+      next: (organizations) => {
+        this.organizations = organizations;
       },
     });
   }
@@ -97,10 +98,7 @@ export class RegisterComponent {
 
   toggle(name: string, event: MouseEvent) {
     event.stopPropagation();
-
-    if (this.openDropdown !== name) {
-      this.openDropdown = name;
-    }
+    this.openDropdown = this.openDropdown === name ? null : name;
   }
 
   isOpen(name: string) {
@@ -112,34 +110,26 @@ export class RegisterComponent {
     this.openDropdown = null;
   }
 
-  selectMajor(ex: Expertise) {
-    const exists = this.selectedMajors.find(
-      (m) => m.expertise_id === ex.expertise_id
-    );
-
-    if (!exists) {
-      this.selectedMajors.push(ex);
-
-      // เก็บ id ลง registerData
-      this.registerData.expertise_ids.push(ex.expertise_id);
-    }
-    this.searchMajor = '';
-    this.openDropdown = null;
-  }
-
-  filteredMajors(): Expertise[] {
-    return this.expertises.filter((ex) =>
-      ex.name_th.toLowerCase().includes(this.searchMajor.toLowerCase())
-    );
-  }
-
   removeMajor(index: number) {
-    const removed = this.selectedMajors[index];
+    this.registerData.expertises.splice(index, 1);
+  }
 
-    this.selectedMajors.splice(index, 1);
+  addMajor(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      
+      const value = this.majorInput.trim();
+      if (value && !this.registerData.expertises.includes(value)) {
+        this.registerData.expertises.push(value);
+      }
+      this.majorInput = '';
+    }
+  }
 
-    this.registerData.expertise_ids = this.registerData.expertise_ids.filter(
-      (id) => id !== removed.expertise_id
-    );
+  selectOrganization(o: any) {
+    this.selectedOrganization = o;
+    this.registerData.org_id = o.id;
+    this.openDropdown = null;
+    this.searchOrganization = '';
   }
 }

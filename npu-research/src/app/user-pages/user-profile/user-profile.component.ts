@@ -15,6 +15,8 @@ import {
   ApexXAxis,
   ApexFill,
   ApexTooltip,
+  ApexNonAxisChartSeries,
+  ApexMarkers,
 } from 'ng-apexcharts';
 import { ProfileService } from '../../services/profile.service';
 import { BarSummary, UserProfile } from '../../models/profiledetai.model';
@@ -44,6 +46,20 @@ export type BarChartOptions = {
   legend: ApexLegend;
 };
 
+export type RadarChartOptions = {
+  series: ApexAxisChartSeries;
+  chart: ApexChart;
+  labels: string[];
+  fill: ApexFill;
+  stroke: ApexStroke;
+  markers: ApexMarkers;
+  xaxis: ApexXAxis;
+  dataLabels: ApexDataLabels;
+  plotOptions?: ApexPlotOptions;
+  yaxis?: ApexYAxis;
+  tooltip?: ApexTooltip;
+};
+
 type ResearchTab = 'project' | 'article' | 'innovation';
 
 @Component({
@@ -61,6 +77,7 @@ export class UserProfileComponent implements OnInit {
 
   /* ===== Charts ===== */
   barChartOptions!: Partial<BarChartOptions>;
+  radarChartOptions!: Partial<RadarChartOptions>;
   chartOptions: any;
 
   /* ===== Table ===== */
@@ -262,6 +279,77 @@ export class UserProfileComponent implements OnInit {
         show: true,
       },
     };
+    this.radarChartOptions = {
+      series: [
+        {
+          name: 'จำนวนงานวิจัย',
+          data: [80, 50, 30, 40, 100]
+        }
+      ],
+      chart: {
+        type: 'radar',
+        height: 350,
+        toolbar: { show: false },
+        foreColor: '#ffffff'
+      },
+      labels: [
+        'พืชสวน',
+        'เคมีอิเล็กทรอนิกส์',
+        'ทฤษฎีคณิตศาสตร์',
+        'จริยธรรม',
+        'การทำฟาร์มชีวภาพ'
+      ],
+      fill: {
+        opacity: 0.3
+      },
+      stroke: {
+        width: 2,
+        colors: ['#038FFB']
+      },
+      markers: {
+        size: 4,
+        colors: ['#038FFB'],
+        strokeColors: '#ffffff'
+      },
+      dataLabels: {
+        enabled: true,
+        style: {
+          colors: ['#ffffff']
+        }
+      },
+    
+      // 🔥 ส่วนสำคัญ: ทำ grid ให้เข้ากับ dark theme
+      plotOptions: {
+        radar: {
+          polygons: {
+            strokeColors: '#555', // เส้นวง
+            fill: {
+              colors: ['transparent']
+            }
+          }
+        }
+      },
+    
+      yaxis: {
+        labels: {
+          style: {
+            colors: '#ffffff'
+          }
+        }
+      },
+    
+      xaxis: {
+        labels: {
+          style: {
+            colors: '#ffffff'
+          }
+        }
+      },
+    
+      tooltip: {
+        theme: 'dark' // 👈 tooltip สีเข้ม
+      }
+    };
   }
 
   ngOnInit(): void {
@@ -319,6 +407,16 @@ export class UserProfileComponent implements OnInit {
             { name: 'นวัตกรรม', y: innovationData.reduce((a, b) => a + b, 0) },
           ],
         },
+      ],
+    };
+
+    this.radarChartOptions = {
+      ...this.radarChartOptions,
+      series: [
+        {
+          name: 'จำนวนงานเงิน',
+          data: [80, 50, 30, 40, 100]
+        }
       ],
     };
   }

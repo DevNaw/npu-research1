@@ -214,10 +214,10 @@
             วารสาร
           </div>
           <div
-            (click)="selectValue('article_type', 'การประชุมวิชาการ')"
+            (click)="selectValue('article_type', 'ประชุมวิชาการ')"
             class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
           >
-            การประชุมวิชาการ
+            ประชุมวิชาการ
           </div>
         </div>
 
@@ -279,7 +279,7 @@
     </div>
 
     <div
-      *ngIf="articleData.article_type === 'การประชุมวิชาการ'"
+      *ngIf="articleData.article_type === 'ประชุมวิชาการ'"
       class="grid grid-cols-1 md:grid-cols-1 md:gap-2 mb:-2 md:mb-6"
     >
       <label class="text-start">
@@ -327,7 +327,7 @@
 
     <!-- ชื่องานวิจัย -->
     <div
-      *ngIf="articleData.article_type === 'Journal'"
+      *ngIf="articleData.article_type === 'วารสาร'"
       class="grid grid-cols-1 md:grid-cols-1 md:gap-2 mb-2 mt-2 md:mb-6 md:mt-5"
     >
       <label class="md:col-span-1 text-start">
@@ -354,7 +354,7 @@
 
     <!-- ชื่อการประชุมวิชาการ -->
     <div
-      *ngIf="articleData.article_type === 'Conference'"
+      *ngIf="articleData.article_type === 'ประชุมวิชาการ'"
       class="grid grid-cols-1 md:grid-cols-1 md:gap-2 mb-2 mt-2 md:mb-6 md:mt-5"
     >
       <label class="md:col-span-1 text-start">

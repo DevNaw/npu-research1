@@ -11,7 +11,8 @@ export interface RegisterData {
   first_name: string;
   last_name: string;
   email: string;
-  expertise_ids: number[];
+  org_id: number;
+  expertises: string[];
   password: string;
   password_confirmation: string;
 }

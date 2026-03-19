@@ -1,14 +1,14 @@
-export interface Expertise {
-    expertise_id: number;
-    name_th: string;
-    name_en: string;
-  }
-  
-  export interface ExpertiseResponse {
-    result: number;
-    message: string;
-    data: {
-      expertises: Expertise[];
-    };
-  }
-  
+export interface Organization {
+  id: number;
+  faculty: string;
+}
+
+export interface OrganizationData {
+  organizations: Organization[];
+}
+
+export interface OrganizationResponse {
+  result: number;
+  message: string;
+  data: OrganizationData;
+}

@@ -1,13 +1,11 @@
 import { Component, HostListener, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { ApexChart, ApexLegend } from 'ng-apexcharts';
 import { AuthService } from '../../services/auth.service';
 import { SearchService } from '../../services/search.service';
 import { Researcher } from '../../models/search-researchers.model';
 import { Expertise, Organization } from '../../models/get-researcher.model';
 import { MainComponent } from '../../shared/layouts/main/main.component';
 import { CanvasJS } from '@canvasjs/angular-charts';
-import { CanvasJSChart } from '@canvasjs/angular-charts';
 
 CanvasJS.addColorSet('customColorSet', [
   '#038FFB',
@@ -40,13 +38,9 @@ CanvasJS.addColorSet('customColorSet', [
   styleUrl: './user-researchers.component.css',
 })
 export class UserResearchersComponent {
-  @ViewChild(CanvasJSChart) chart: any;
   chartOptions: any;
-
   isSearched = false;
-  selectedCareer: string = '';
   researcherName: string = '';
-  facultySearch: string = '';
 
   searchMajor = '';
   selectedMajor = '';
@@ -66,19 +60,6 @@ export class UserResearchersComponent {
   donutSeries: number[] = [];
   totalResearchers = 0;
 
-  donutChart: ApexChart = {
-    type: 'donut',
-    height: 320,
-  };
-
-  donutLegend: ApexLegend = {
-    position: 'bottom',
-    show: false,
-    labels: {
-      colors: '#fffff',
-    },
-  };
-
   filteredResearchers: Researcher[] = [];
   researchers: Researcher[] = [];
   organizations: Organization[] = [];
@@ -95,6 +76,7 @@ export class UserResearchersComponent {
     private searchService: SearchService
   ) {
     this.chartOptions = {
+      backgroundColor: '#394250',
       colorSet: 'customColorSet',
       animationEnabled: true,
       data: [
@@ -102,6 +84,7 @@ export class UserResearchersComponent {
           type: 'doughnut',
           yValueFormatString: '#,##0',
           indexLabel: '{name} ({y})',
+          indexLabelFontColor: '#ffffff',
           dataPoints: [],
         },
       ],
@@ -155,13 +138,41 @@ export class UserResearchersComponent {
 
     this.searchService.searchResearchers(payload).subscribe({
       next: (res) => {
-        this.filteredData = res.data.result;
-        this.filteredResearchers = res.data.result;
+        const data = res.data;
+        console.log(data);
+      
+        this.filteredData = data.result;
+        this.filteredResearchers = data.result;
 
+        const colors = [
+          '#038FFB', '#06E396', '#FEB119', '#FF4560', '#775DD0',
+          '#00E396', '#0090FF', '#FF66C4', '#00B8D9', '#FFB800',
+          '#4CAF50', '#2196F3', '#9C27B0', '#FF5722', '#3F51B5',
+        ];
+
+        const graphData = data.graph.map((g: any, index: number) => ({
+          name: g.faculty,
+          y: g.count,
+          color: colors[index % colors.length],
+        }));
+      
+        this.chartOptions = {
+          ...this.chartOptions,
+          data: [
+            {
+              ...this.chartOptions.data[0],
+              dataPoints: graphData,
+            },
+          ],
+        };
+      
+        this.donutLabels = data.graph.map((g) => g.faculty);
+        this.donutSeries = data.graph.map((g) => g.count);
+        this.totalResearchers = data.total;
+      
         this.currentPage = 1;
         this.updatePagination();
-        this.prepareDonutChart();
-
+      
         this.loading = false;
       },
       error: (err) => {
@@ -170,46 +181,6 @@ export class UserResearchersComponent {
         this.loading = false;
       },
     });
-  }
-
-  /** ===== DONUT CALCULATION (อิงข้อมูลตารางจริง) ===== */
-  hasDonutData = false;
-  prepareDonutChart() {
-    const map: Record<string, number> = {};
-  
-    this.filteredData.forEach((r) => {
-      const list = r.expertises?.split(',') ?? ['ไม่ระบุ'];
-  
-      list.forEach((exp) => {
-        const key = exp.trim() || 'ไม่ระบุ';
-        map[key] = (map[key] || 0) + 1;
-      });
-    });
-  
-    const dataPoints = Object.entries(map).map(([key, value]) => ({
-      name: key,
-      y: value,
-    }));
-  
-    this.chartOptions = {
-      ...this.chartOptions,
-      colorSet: 'customColorSet',
-      animationEnabled: true,
-      data: [
-        {
-          type: 'doughnut',
-          yValueFormatString: '#,##0',
-          indexLabel: '{name} ({y})',
-          dataPoints: [...dataPoints],
-        },
-      ],
-    };
-  
-    this.donutLabels = Object.keys(map);
-    this.donutSeries = Object.values(map);
-  
-    this.totalResearchers = this.filteredData.length;
-    this.hasDonutData = dataPoints.length > 0;
   }
 
   toggleDropdown(name: string, event: MouseEvent) {
@@ -274,7 +245,6 @@ export class UserResearchersComponent {
 
     this.currentPage = 1;
     this.updatePagination();
-    this.prepareDonutChart();
   }
 
   updatePagination(): void {
@@ -312,9 +282,5 @@ export class UserResearchersComponent {
 
   get pages(): number[] {
     return Array.from({ length: this.totalPages }, (_, i) => i + 1);
-  }
-
-  getChartInstance(chart: any) {
-    this.chart = chart;
   }
 }

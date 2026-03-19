@@ -65,6 +65,7 @@ export const DEFAULT_INNOVATION: ResearchInnovationDetail = {
   innovation_images: [],
   oecd_id: 0,
   funding_code: '',
+  funding_id: 0,
 };
 
 @Component({
@@ -477,7 +478,7 @@ export class UserAddInnovationComponent {
     required('published_date', d.published_date);
     required('source_funds', d.source_funds);
     required('principle', d.principle);
-    required('call_other', d.call_other);
+    optional('call_other', d.call_other);
     required('name_funding', d.name_funding);
     required('budget_amount', d.budget_amount);
     required('year_received_budget', d.year_received_budget);
@@ -510,6 +511,7 @@ export class UserAddInnovationComponent {
 
     required('oecd_id', subSub);
     optional('funding_code', d.funding_code);
+    optional('funding_id', d.funding_id);
 
     this.internalRow
       .filter((r) => r.researcher_id)

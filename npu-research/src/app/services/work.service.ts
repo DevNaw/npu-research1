@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { WorkInfoResponse } from '../models/work.model';
+import { WorkResponse } from '../models/work.model';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -12,8 +12,8 @@ export class WorkService {
 
   constructor(private http: HttpClient) {}
 
-  getWorkInfo(): Observable<WorkInfoResponse> {
-    return this.http.get<WorkInfoResponse>(`${this.apiUrl}/user/infomation/work-for-update`);
+  getWorkInfo(): Observable<WorkResponse> {
+    return this.http.get<WorkResponse>(`${this.apiUrl}/user/infomation/work-for-update`);
   }
 
   updateWork(data: any) {

@@ -59,6 +59,7 @@ export interface DashboardResponse {
   export interface ResearchItem {
     research_id: number;
     research_type: ResearchType;
+    research_code: string;
     title_th: string;
     title_en: string | null;
     abstract: string | null;
@@ -68,10 +69,16 @@ export interface DashboardResponse {
     call_other: string | null;
     img_url: string | null;
     own: ResearchOwner[];
+    funding: Funding;
   }
   
   export interface ResearchOwner {
     user_id: number;
     full_name: string;
     role: string;
+  }
+
+  export interface Funding {
+    funding_name: string;
+    source_funds: string;
   }

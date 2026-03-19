@@ -34,6 +34,8 @@
     "@tailwindcss/postcss": "^4.1.18",
     "@tailwindcss/typography": "^0.5.19",
     "apexcharts": "^3.54.1",
+    "chart.js": "^4.5.1",
+    "chartjs-plugin-datalabels": "^2.2.0",
     "file-saver": "^2.0.5",
     "flowbite": "^4.0.1",
     "flowbite-datepicker": "^2.0.0",

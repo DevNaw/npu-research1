@@ -692,7 +692,7 @@
           <div
             *ngFor="let fund of fundings"
             class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
-            (click)="selectValue('name_funding', fund.funding_name); selectValue('funding_code', fund.funding_code)"
+            (click)="selectValue('name_funding', fund.funding_name); selectValue('funding_code', fund.funding_code); selectValue('funding_id', fund.id)"
           >
             {{ fund.funding_name }}
           </div>
