@@ -543,6 +543,7 @@
               <thead class="bg-linear-to-r bg-[#394250] text-white">
                 <tr>
                   <th class="px-4 py-3 w-16 text-center">#</th>
+                  <th class="px-4 py-3 text-center">รหัส</th>
                   <th class="px-4 py-3 text-left">ชื่อผลงาน</th>
                   <th class="px-4 py-3 w-28 text-center">Action</th>
                 </tr>
@@ -558,6 +559,10 @@
                   <!-- Index -->
                   <td class="text-center py-4">
                     {{ (currentPage - 1) * pageSize + i + 1 }}
+                  </td>
+
+                  <td class="text-center py-4">
+                    {{ item.research_code || '-' }}
                   </td>
 
                   <!-- Title -->

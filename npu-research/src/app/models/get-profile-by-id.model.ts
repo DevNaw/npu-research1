@@ -8,6 +8,7 @@ export interface ResearchProfileResponse {
     user: UserProfile;
     donut: DonutSummary;
     bar: BarSummary[];
+    radar: RadarData;
     researchs: ResearchGroup;
   }
 
@@ -52,10 +53,28 @@ export interface ResearchProfileResponse {
     call_other: string | null;
     img_url: string | null;
     own: ResearchOwner[];
+    research_code: string;
   }
 
   export interface ResearchOwner {
     user_id: number;
     full_name: string;
     role: string;
+  }
+
+  export interface RadarData {
+    major: RadarSection;
+    sub: RadarSection;
+    child: RadarSection;
+  }
+
+  export interface RadarSection {
+    labels: string[];
+    datasets: RadarDataset[];
+    raw: any[];
+  }
+
+  export interface RadarDataset {
+    label: string;
+    data: number[];
   }

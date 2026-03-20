@@ -1,18 +1,23 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { BarSummary, ResearchItem, ResearchProfileData } from '../../models/get-profile-by-id.model';
 import { ProfileService } from '../../services/profile.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ApexNonAxisChartSeries, ApexChart, ApexResponsive, ApexLegend, ApexDataLabels, ApexPlotOptions, ApexAxisChartSeries, ApexYAxis, ApexXAxis, ApexFill, ApexTooltip, ApexStroke } from 'ng-apexcharts';
+import { ApexNonAxisChartSeries, ApexChart, ApexResponsive, ApexLegend, ApexDataLabels, ApexPlotOptions, ApexAxisChartSeries, ApexYAxis, ApexXAxis, ApexFill, ApexTooltip, ApexStroke, ChartComponent, ApexMarkers } from 'ng-apexcharts';
 import { MainComponent } from '../../shared/layouts/main/main.component';
 
-export type PieChartOptions = {
-  series: ApexNonAxisChartSeries;
+export type RadarChartOptions = {
+  series: ApexAxisChartSeries;
   chart: ApexChart;
   labels: string[];
-  responsive: ApexResponsive[];
-  legend: ApexLegend;
+  fill: ApexFill;
+  stroke: ApexStroke;
+  markers: ApexMarkers;
+  xaxis: ApexXAxis;
   dataLabels: ApexDataLabels;
-  plotOptions: ApexPlotOptions;
+  plotOptions?: ApexPlotOptions;
+  yaxis?: ApexYAxis;
+  tooltip?: ApexTooltip;
+  colors?: string[];
 };
 
 export type BarChartOptions = {
@@ -37,6 +42,12 @@ type ResearchTab = 'project' | 'article' | 'innovation';
   styleUrl: './dashboard.component.css'
 })
 export class DashboardComponent {
+  @ViewChild('chart') chart!: ChartComponent;
+  chartOptions: any;
+  fullLabels: string[] = [];
+  fullLabelsSub: string[] = [];
+  radarData: any;
+
   profileDataById: ResearchProfileData | null = null;
   isPersonalOpen = true;
   isWorkOpen = false;
@@ -73,7 +84,8 @@ export class DashboardComponent {
   };
 
    /* ===== Charts ===== */
-    pieChartOptions!: Partial<PieChartOptions>;
+    radarChartOptions!: Partial<RadarChartOptions>;
+    radarChartOptionsSub!: Partial<RadarChartOptions>;
     barChartOptions!: Partial<BarChartOptions>;
     barSummary: BarSummary[] = [];
 
@@ -89,30 +101,15 @@ export class DashboardComponent {
     private router: Router,
     private route: ActivatedRoute,
   ) {
-    this.pieChartOptions = {
-      series: [44, 55, 13],
-      chart: {
-        type: 'pie',
-        width: 200,
-      },
-      labels: ['โครงการวิจัย', 'บทความ', 'นวัตกรรม'],
-      legend: {
-        show: false,
-      },
-      dataLabels: {
-        enabled: true,
-      },
-      responsive: [
+    this.chartOptions = {
+      colorSet: 'customColorSet',
+      animationEnabled: true,
+      data: [
         {
-          breakpoint: 480,
-          options: {
-            chart: {
-              width: 250,
-            },
-            legend: {
-              show: false,
-            },
-          },
+          type: 'doughnut',
+          yValueFormatString: '#,##0',
+          indexLabel: '{name} ({y})',
+          dataPoints: [],
         },
       ],
     };
@@ -169,6 +166,168 @@ export class DashboardComponent {
         show: true,
       },
     };
+
+    this.radarChartOptions = {
+      series: [
+        {
+          name: 'จำนวนงานวิจัย',
+          data: [],
+        },
+      ],
+      chart: {
+        type: 'radar',
+        height: 300,
+        width: '100%',
+        toolbar: { show: false },
+        foreColor: '#394250',
+      },
+      labels: [],
+      fill: {
+        opacity: 0.3,
+      },
+      stroke: {
+        width: 2,
+        colors: ['#038FFB'],
+      },
+      markers: {
+        size: 4,
+        colors: ['#038FFB'],
+        strokeColors: '#394250',
+      },
+      dataLabels: {
+        enabled: true,
+        style: {
+          colors: ['#394250'],
+        },
+      },
+
+      plotOptions: {
+        radar: {
+          size: 120,
+          polygons: {
+            strokeColors: '#e5e7eb',
+            fill: {
+              colors: ['transparent'],
+            },
+          },
+        },
+      },
+
+      yaxis: {
+        labels: {
+          style: {
+            colors: '#394250',
+          },
+        },
+      },
+
+      xaxis: {
+        labels: {
+          style: {
+            colors: '#394250',
+          },
+        },
+      },
+
+      tooltip: {
+        theme: 'dark',
+        custom: ({ series, seriesIndex, dataPointIndex }) => {
+          const fullLabel = this.fullLabels[dataPointIndex]; // ⭐ ตัวจริง
+          const value = series[seriesIndex][dataPointIndex];
+      
+          return  `<div style="padding:8px 12px; background:#333; color:#fff; border-radius:6px;">
+        <div style="font-weight:600; margin-bottom:4px;">${fullLabel}</div>
+        <hr style="border-color:#555; margin:4px 0;">
+        <div style="display:flex; justify-content:space-around; align-items:center; gap:6px;">
+          <span style="width:10px; height:10px; border-radius:50%; background:#038FFB; display:inline-block;"></span>
+          <span>จำนวน: ${value}</span>
+        </div>
+      </div>`;
+        }
+      },
+    };
+
+    this.radarChartOptionsSub = {
+      series: [
+        {
+          name: 'จำนวนงานวิจัย',
+          data: [],
+          color: '#FF4560',
+        },
+      ],
+      chart: {
+        type: 'radar',
+        height: 300,
+        width: '100%',
+        toolbar: { show: false },
+        foreColor: '#394250',
+      },
+      labels: [],
+      fill: {
+        opacity: 0.3,
+        colors: ['#FF4560'],
+      },
+      stroke: {
+        width: 2,
+        colors: ['#FF4560'],
+      },
+      markers: {
+        size: 4,
+        colors: ['#FF4560'],
+        strokeColors: '#ffffff',
+      },
+      dataLabels: {
+        enabled: true,
+        style: {
+          colors: ['#394250'],
+        },
+      },
+
+      plotOptions: {
+        radar: {
+          size: 120,
+          polygons: {
+            strokeColors: '#e5e7eb',
+            fill: {
+              colors: ['transparent'],
+            },
+          },
+        },
+      },
+
+      yaxis: {
+        labels: {
+          style: {
+            colors: '#394250',
+          },
+        },
+      },
+
+      xaxis: {
+        labels: {
+          style: {
+            colors: '#394250',
+          },
+        },
+      },
+
+      tooltip: {
+        theme: 'dark',
+        custom: ({ series, seriesIndex, dataPointIndex }) => {
+          const fullLabelsSub = this.fullLabelsSub[dataPointIndex]; // ⭐ ตัวจริง
+          const value = series[seriesIndex][dataPointIndex];
+      
+          return  `<div style="padding:8px 12px; background:#333; color:#fff; border-radius:6px;">
+        <div style="font-weight:600; margin-bottom:4px;">${fullLabelsSub}</div>
+        <hr style="border-color:#555; margin:4px 0;">
+        <div style="display:flex; justify-content:space-around; align-items:center; gap:6px;">
+          <span style="width:10px; height:10px; border-radius:50%; background:#FF4560; display:inline-block;"></span>
+          <span>จำนวน: ${value}</span>
+        </div>
+      </div>`;
+        }
+      },
+    };
   }
 
   ngOnInit() {
@@ -189,10 +348,10 @@ export class DashboardComponent {
         this.profileDataById = res.data;
         this.barSummary = res.data.bar;
         this.researchData = res.data.researchs;
+        this.radarData = res.data.radar;
 
         this.changeTab('project');
         this.updateCharts();
-        console.log(this.profileDataById);
         
       },
       error: (err) => console.error(err),
@@ -283,13 +442,69 @@ export class DashboardComponent {
     };
   
     // ===== PIE (รวมทั้งหมดทุกปี) =====
-    this.pieChartOptions = {
-      ...this.pieChartOptions,
-      series: [
-        projectData.reduce((a, b) => a + b, 0),
-        articleData.reduce((a, b) => a + b, 0),
-        innovationData.reduce((a, b) => a + b, 0),
+    this.chartOptions = {
+      ...this.chartOptions,
+      data: [
+        {
+          ...this.chartOptions.data[0],
+          dataPoints: [
+            { name: 'โครงการวิจัย', y: projectData.reduce((a, b) => a + b, 0) },
+            { name: 'บทความ', y: articleData.reduce((a, b) => a + b, 0) },
+            { name: 'นวัตกรรม', y: innovationData.reduce((a, b) => a + b, 0) },
+          ],
+        },
       ],
+    }
+
+    const tabIndex =
+      this.selectedTab === 'project'
+        ? 0
+        : this.selectedTab === 'article'
+        ? 1
+        : 2;
+
+    this.fullLabels = this.radarData?.major?.labels || [];
+    this.fullLabelsSub = this.radarData?.sub?.labels || [];
+    
+    
+    const labels = (this.radarData?.major?.labels || []).map((label: any) =>
+      this.shortLabel(label)
+    );
+
+    const values = [
+      ...(this.radarData?.major?.datasets[tabIndex]?.data || []),
+    ];
+
+    const labelsSub = 
+      (this.radarData?.sub?.labels || [])
+      .map((label: any) => this.shortLabel(label));
+
+    const valuesSub = [
+      ...(this.radarData?.sub?.datasets[tabIndex]?.data || []),
+    ];
+
+    this.radarChartOptions = {
+      ...this.radarChartOptions,
+      series: [
+        {
+          name: this.tabs.find((t) => t.key === this.selectedTab)?.label || '',
+          data: values,
+        },
+      ],
+      labels: labels,
+      xaxis: { categories: labels },
+    };
+
+    this.radarChartOptionsSub = {
+      ...this.radarChartOptionsSub,
+      series: [
+        {
+          name: this.tabs.find((t) => t.key === this.selectedTab)?.label || '',
+          data: valuesSub,
+        },
+      ],
+      labels: labelsSub,
+      xaxis: { categories: labelsSub },
     };
   }
 
@@ -303,5 +518,19 @@ export class DashboardComponent {
     const start = (this.currentPage - 1) * this.pageSize;
     const end = start + this.pageSize;
     this.paginationData = this.filteredData.slice(start, end);
+  }
+
+  getChartInstance(chart: any) {
+    this.chart = chart;
+  }
+
+  shortLabel(fullLabel: any) {
+    const maxLength = 12;
+    const shortLabel =
+      fullLabel.length > maxLength
+        ? fullLabel.slice(0, maxLength) + '...'
+        : fullLabel;
+
+    return shortLabel;
   }
 }

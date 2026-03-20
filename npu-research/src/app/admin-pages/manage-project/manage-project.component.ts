@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { MainComponent } from '../../shared/layouts/main/main.component';
-import { ResearchItem, ResearchSection, ResearchType } from '../../models/dashboard-main.model';
 import { Router } from '@angular/router';
+import { AdminMProjectService } from '../../services/admin-m-project.service';
+import { Research, ResearchData } from '../../models/admin-m-project.model';
+
+type ResearchType = 'PROJECT' | 'ARTICLE' | 'INNOVATION';
 
 @Component({
   selector: 'app-manage-project',
@@ -11,58 +14,65 @@ import { Router } from '@angular/router';
 })
 export class ManageProjectComponent implements OnInit {
   searchText: string = '';
-  filteredDocuments: any[] = [];
   totalAcademic: number = 0;
   totalSupport: number = 0;
   selectedTab: ResearchType = 'PROJECT';
-  paginatedPublications: ResearchItem[] = [];
-  filteredResearch: ResearchItem[] = [];
   today = new Date();
-  documents: any[] = [
-    {
-      title: 'ผู้ผู้...',
-      academic: 5,
-      support: 3,
-    },
-    {
-      title: 'ผู้ผู้...',
-      academic: 5,
-      support: 3,
-    },
-  ];
+  
   pageSize = 10;
   currentPage = 1;
-
-  publications: ResearchSection = {
-    projects: [],
-    articles: [],
-    innovations: [],
-  };
-
-  constructor(private router: Router) {}
+  
+  researchs: Research[] = [];
+  filteredResearch: Research[] = [];
+  paginatedPublications: Research[] = [];
+  
+  constructor(private router: Router, private service: AdminMProjectService) {}
 
   ngOnInit() {
     MainComponent.showLoading();
     Promise.all([
+      this.loadData(),
       new Promise((resolve) => setTimeout(resolve, 1000)),
     ]).then(() => MainComponent.hideLoading());
   }
 
+  loadData() {
+    this.service.getProject().subscribe({
+      next: (res) => {
+        this.researchs = res.data.researchs;
+  
+        // ✅ สำคัญมาก
+        this.filteredResearch = this.researchs.filter(
+          (r) => r.research_type === this.selectedTab
+        );
+  
+        this.updatePagination();
+      },
+      error: (err) => console.error(err),
+    });
+  }
+
   onSearch() {
     const keyword = this.searchText.toLowerCase().trim();
+  
+    this.filteredResearch = this.researchs
+      .filter((r) => r.research_type === this.selectedTab) // filter tab ก่อน
+      .filter((r) =>
+        r.title_th?.toLowerCase().includes(keyword) ||
+        r.title_en?.toLowerCase().includes(keyword)
+      );
+  
+    this.currentPage = 1;
+  }
 
-    this.filteredDocuments = this.documents.filter((p) =>
-      p.title.toLowerCase().includes(keyword)
-    );
+  // ===== Pagination =====
+  get paginatedReseacrchs(): Research[] {
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    return this.filteredResearch.slice(startIndex, startIndex + this.pageSize);
   }
 
   get totalPages(): number {
-    return Math.ceil(this.documents.length / this.pageSize);
-  }
-
-  get paginatedReseacrchs() {
-    const startIndex = (this.currentPage - 1) * this.pageSize;
-    return this.documents.slice(startIndex, startIndex + this.pageSize);
+    return Math.ceil(this.filteredResearch.length / this.pageSize);
   }
 
   changePage(page: number) {
@@ -70,32 +80,22 @@ export class ManageProjectComponent implements OnInit {
     if (page === this.currentPage) return;
 
     this.currentPage = page;
+    scrollTo({ top: 0, behavior: 'smooth' });
   }
+
   get pages(): number[] {
     return Array.from({ length: this.totalPages }, (_, i) => i + 1);
   }
 
   changeTab(tab: ResearchType): void {
-      this.selectedTab = tab;
-      this.searchText = '';
-      this.currentPage = 1;
+    this.selectedTab = tab;
+    this.searchText = '';
+    this.currentPage = 1;
   
-      const key = this.mapResearchTypeToKey(tab);
-      this.filteredResearch = [...this.publications[key]];
-  
-      this.updatePagination();
-    }
-
-    private mapResearchTypeToKey(type: ResearchType): keyof ResearchSection {
-        switch (type) {
-          case 'PROJECT':
-            return 'projects';
-          case 'ARTICLE':
-            return 'articles';
-          case 'INNOVATION':
-            return 'innovations';
-        }
-      }
+    this.filteredResearch = this.researchs.filter(
+      (r) => r.research_type === tab
+    );
+  }
 
       updatePagination(): void {
         const start = (this.currentPage - 1) * this.pageSize;

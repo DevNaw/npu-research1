@@ -2,9 +2,7 @@
   class="contain-content bg-gray-100 p-5 md:px-10 text-xl md:text-2xl font-medium text-[#394250]"
 >
   <div class="mx-auto md:py-6">
-    <h1 class="text-3xl">
-      การจัดการผลงาน
-    </h1>
+    <h1 class="text-3xl">การจัดการผลงาน</h1>
   </div>
 
   <div class="bg-white rounded-xl p-2 md:p-6 shadow text-[#394250]">
@@ -21,7 +19,7 @@
         >
           โครงการวิจัย
         </button>
-    
+
         <button
           (click)="changeTab('ARTICLE')"
           [ngClass]="
@@ -33,7 +31,7 @@
         >
           บทความ
         </button>
-    
+
         <button
           (click)="changeTab('INNOVATION')"
           [ngClass]="
@@ -46,7 +44,7 @@
           นวัตกรรมสิ่งประดิษฐ์
         </button>
       </div>
-    
+
       <!-- Search -->
       <div class="ml-auto flex items-center gap-2 text-sm md:text-lg">
         <span>Search:</span>
@@ -66,10 +64,10 @@
           <col class="w-[5%]" />
           <col class="w-[10%]" />
           <col class="w-[30%]" />
-          <col class="w-[15%]" />
-          <col class="w-[20%]" />
+          <col class="w-[30%]" />
           <col class="w-[15%]" />
           <col class="w-[5%]" />
+          <col class="w-[15%]" />
         </colgroup>
 
         <thead class="bg-[#394250] text-white">
@@ -78,43 +76,58 @@
             <th class="p-2 text-center">รหัส</th>
             <th class="p-2 text-start">ชื่อผลงาน</th>
             <th class="p-2 text-center">แหล่งทุน</th>
-            <th class="p-2 text-center">ชื่อแหล่งทุน</th>
-            <th class="p-2 text-start">{{ selectedTab === 'PROJECT' ? 'หัวหน้าโครงการ': selectedTab === 'ARTICLE' ? 'ผู้ประพันธ์อันดับแรก' : 'หัวหน้าโครงการ' }}</th>
+            <th class="p-2 text-start">
+              {{
+                selectedTab === "PROJECT"
+                  ? "หัวหน้าโครงการ"
+                  : selectedTab === "ARTICLE"
+                  ? "ผู้ประพันธ์อันดับแรก"
+                  : "หัวหน้าโครงการ"
+              }}
+            </th>
             <th class="p-2">ปี</th>
+            <th class="p-2">แก้ไข</th>
           </tr>
         </thead>
         <tbody>
           <tr
-            *ngFor="let p of paginatedPublications; let i = index"
+            *ngFor="let p of paginatedReseacrchs; let i = index"
             class="border-b border-gray-300 hover:bg-gray-50"
           >
             <td class="p-2 text-center">
               {{ (currentPage - 1) * pageSize + i + 1 }}
             </td>
-            <td class="p-2 text-center">{{ p.research_code || '-' }}</td>
+            <td class="p-2 text-center">{{ p.research_code || "-" }}</td>
             <td class="p-2">
               <div
-                class="text-[#16498C] hover:underline cursor-pointer truncate max-w-125 text-wrap text-lg"
-                title="{{ p.title_th }}"
+                class="text-[#16498C] hover:underline cursor-pointer wrap-break-word whitespace-normal"
                 (click)="viewItem(p.research_id)"
+                title="{{ p.title_th }}"
               >
-                {{ p.title_th }}
+                {{ p.title_th || '-' }}
               </div>
-
-              <div
-                class="text-sm hidden md:inline text-gray-500 mt-1 items-center gap-1"
-              >
+            
+              <div class="text-sm text-gray-500 mt-1 hidden md:block">
                 <i class="bi bi-calendar-event"></i>
-                วันที่สร้าง:
-                {{
-                  p.published_date | date : "dd MMMM YYYY" : "" : "TH-th"
-                }}
+                {{ p.published_date | date : "dd MMM YYYY" : "" : "th-TH" }}
               </div>
             </td>
-            <td class="p-2">{{ p.funding.source_funds || '-' }}</td>
-            <td class="p-2">{{ p.funding.funding_name || '-' }}</td>
-            <td class="p-2">{{ p.own[0].full_name }}</td>
+            <td class="p-2 text-sm leading-relaxed">
+              <div>
+                <span class="font-medium">ประเภท:</span>
+                {{ p.funding.source_funds || '-' }}
+              </div>
+              <div>
+                <span class="font-medium">ชื่อ:</span>
+                {{ p.funding.funding_name || '-' }}
+              </div>
+            </td>
+            <td class="p-2">{{ p.own[0]?.full_name }}</td>
             <td class="p-2 text-center">{{ p.year }}</td>
+            <td class="p-2 text-center space-x-2">
+              <i class="bi bi-pen-fill text-lg text-[#16498C] hover:text-[#118CD9] cursor-pointer"></i>
+              <i class="bi bi-trash3 text-lg text-red-500 hover:text-red-700 cursor-pointer"></i>
+            </td>
           </tr>
 
           <!-- ไม่พบข้อมูล -->
@@ -143,8 +156,7 @@
         (click)="changePage(page)"
         class="px-2 md:px-3 py-1 rounded border text-sm transition cursor-pointer"
         [ngClass]="{
-          'bg-[#118CD9] text-[#ffffff] border-[#118CD9]':
-            currentPage === page,
+          'bg-[#118CD9] text-[#ffffff] border-[#118CD9]': currentPage === page,
           'hover:bg-gray-100': currentPage !== page
         }"
       >

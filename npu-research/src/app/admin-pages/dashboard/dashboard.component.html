@@ -296,27 +296,22 @@
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-2 md:gap-6">
               <!-- PIE CARD -->
               <div
-                class="bg-white rounded-xl shadow-md p-4 hover:shadow-lg transition border border-gray-300"
-              >
-                <div class="flex items-center justify-between md:mb-4">
-                  <h3 class="text-2xl">
-                    สัดส่วนข้อมูล
-                  </h3>
-                  <i class="bi bi-pie-chart-fill text-indigo-500 text-xl"></i>
-                </div>
-  
-                <!-- Chart Center -->
-                <div class="flex justify-center items-center">
-                  <apx-chart class="text-white"
-                    [series]="pieChartOptions.series!"
-                    [chart]="pieChartOptions.chart!"
-                    [labels]="pieChartOptions.labels!"
-                    [legend]="pieChartOptions.legend!"
-                    [dataLabels]="pieChartOptions.dataLabels!"
-                    [responsive]="pieChartOptions.responsive!"
-                  ></apx-chart>
-                </div>
+              class="bg-white rounded-xl shadow-md p-4 hover:shadow-lg transition border border-gray-300"
+            >
+              <div class="flex items-center justify-between md:mb-4">
+                <h3 class="text-2xl">สัดส่วนข้อมูล</h3>
+                <i class="bi bi-pie-chart-fill text-indigo-500 text-xl"></i>
               </div>
+
+              <div>
+                <canvasjs-chart
+                  [options]="chartOptions"
+                  (chartInstance)="getChartInstance($event)"
+                  [styles]="{ width: '100%', height: '300px' }"
+                >
+                </canvasjs-chart>
+              </div>
+            </div>
   
               <!-- BAR CARD -->
               <div
@@ -342,6 +337,77 @@
                   [tooltip]="barChartOptions.tooltip!"
                 ></apx-chart>
               </div>
+
+              <div class="bg-white rounded-xl shadow-md p-4 hover:shadow-lg transition border border-gray-300 mt-6">
+                <div class="flex flex-col items-center justify-between mb-2">
+                  <h3 class="text-xl text-center">
+                    ภาพรวมทักษะงานวิจัย (สาขา OECD หลัก)
+                  </h3>
+                  <h4 class="text-lg mt-1">
+                    {{
+                      selectedTab === "project"
+                        ? "โครงการวิจัย"
+                        : selectedTab === "article"
+                        ? "บทความ"
+                        : "นวัตกรรม"
+                    }}
+                  </h4>
+                </div>
+              
+                <!-- ⭐ สำคัญ: ต้องมี container height -->
+                <div class="w-full">
+                  <apx-chart
+                    class="w-full h-full text-white"
+                    [series]="radarChartOptions.series!"
+                    [chart]="radarChartOptions.chart!"
+                    [labels]="radarChartOptions.labels!"
+                    [fill]="radarChartOptions.fill!"
+                    [stroke]="radarChartOptions.stroke!"
+                    [markers]="radarChartOptions.markers!"
+                    [xaxis]="radarChartOptions.xaxis!"
+                    [yaxis]="radarChartOptions.yaxis!"
+                    [plotOptions]="radarChartOptions.plotOptions!"
+                    [dataLabels]="radarChartOptions.dataLabels!"
+                    [tooltip]="radarChartOptions.tooltip!"
+                  >
+                  </apx-chart>
+                </div>
+              </div>
+  
+              <div
+                class="bg-white rounded-xl shadow-md px-4 pt-4 pb-0 hover:shadow-lg transition border border-gray-300 mt-6"
+              >
+                <div class="flex flex-col items-center justify-between mb-1">
+                  <h3 class="text-xl">รายละเอียดทักษะงานวิจัย (สาขา OECD ย่อย)</h3>
+                  <h4 class="text-xl mt-1">
+                    {{
+                      selectedTab === "project"
+                        ? "โครงการวิจัย"
+                        : selectedTab === "article"
+                        ? "บทความ"
+                        : "นวัตกรรม"
+                    }}
+                  </h4>
+                </div>
+  
+                <div class="-mx-4 -mb-6">
+                  <apx-chart
+                    class="w-full h-full text-white"
+                    [series]="radarChartOptionsSub.series!"
+                    [chart]="radarChartOptionsSub.chart!"
+                    [labels]="radarChartOptionsSub.labels!"
+                    [fill]="radarChartOptionsSub.fill!"
+                    [stroke]="radarChartOptionsSub.stroke!"
+                    [markers]="radarChartOptionsSub.markers!"
+                    [xaxis]="radarChartOptionsSub.xaxis!"
+                    [yaxis]="radarChartOptionsSub.yaxis!"
+                    [plotOptions]="radarChartOptionsSub.plotOptions!"
+                    [dataLabels]="radarChartOptionsSub.dataLabels!"
+                    [tooltip]="radarChartOptionsSub.tooltip!"
+                  >
+                  </apx-chart>
+                </div>
+              </div>
             </div>
   
             <div class="flex flex-wrap gap-2 mt-4 mb-4 md:mt-8 items-center">
@@ -349,18 +415,18 @@
               <!-- Tabs -->
               <div class="flex flex-wrap gap-2 items-center">
                 <button
-                  *ngFor="let tab of tabs"
-                  (click)="changeTab(tab.key)"
-                  [ngClass]="
-                    selectedTab === tab.key
-                      ? 'bg-[#FDE68A] text-[#394250] shadow'
-                      : 'text-[#394250] hover:bg-[#FDE68A]/70'
-                  "
-                  class="flex items-center gap-2 px-2 py-1 md:px-5 md:py-2.5 rounded-xl transition-all duration-200 cursor-pointer"
-                >
-                  <i class="bi {{ tab.icon }} text-lg"></i>
-                  <span>{{ tab.label }}</span>
-                </button>
+                *ngFor="let tab of tabs"
+                (click)="changeTab(tab.key)"
+                [ngClass]="
+                  selectedTab === tab.key
+                    ? 'bg-[#118CD9] text-[#ffffff] shadow'
+                    : 'text-[#394250] hover:bg-[#118CD9] hover:text-white'
+                "
+                class="flex items-center gap-2 px-2 py-1 md:px-5 md:py-2.5 rounded-xl transition-all duration-200 cursor-pointer"
+              >
+                <i class="bi {{ tab.icon }} text-lg"></i>
+                <span>{{ tab.label }}</span>
+              </button>
               </div>
             
               <!-- Search -->
@@ -384,6 +450,7 @@
                 <thead class="bg-linear-to-r bg-[#394250] text-white">
                   <tr>
                     <th class="px-4 py-3 w-16 text-center">#</th>
+                    <th class="px-4 py-3 text-center">รหัส</th>
                     <th class="px-4 py-3 text-left">ชื่อผลงาน</th>
                   </tr>
                 </thead>
@@ -399,6 +466,10 @@
                     <!-- Index -->
                     <td class="text-center py-4">
                       {{ (currentPage - 1) * pageSize + i + 1 }}
+                    </td>
+
+                    <td class="text-center py-4">
+                      {{ item.research_code || '-' }}
                     </td>
   
                     <!-- Title -->

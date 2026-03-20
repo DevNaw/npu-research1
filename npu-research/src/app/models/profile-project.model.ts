@@ -24,6 +24,7 @@ export interface ResearchListResponse {
     call_other: string | null;
     img_url: string | null;
     own: ResearchOwner[];
+    research_code: string;
   }
 
   export interface ResearchOwner {

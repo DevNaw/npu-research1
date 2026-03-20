@@ -469,7 +469,6 @@ export class UserProfileComponent implements OnInit {
         this.barSummary = res.data.bar;
         this.radarData = res.data.radar;
         this.researchData = res.data.researchs;
-        console.log(this.radarData);
 
         this.updateCharts();
         this.changeTab('project');

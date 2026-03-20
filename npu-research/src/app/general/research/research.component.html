@@ -25,13 +25,12 @@
     <div class="w-full overflow-x-auto bg-white shadow-sm">
       <table class="w-full text-gray-700 table-auto min-w-225">
         <colgroup>
-          <col class="w-[5%]" />   <!-- # -->
-          <col class="w-[10%]" />  <!-- รหัส -->
-          <col class="w-[35%]" />  <!-- ชื่อ -->
-          <!-- <col class="w-[10%]" />  แหล่งทุน -->
-          <col class="w-[15%]" />  <!-- ชื่อแหล่งทุน -->
-          <col class="w-[10%]" />  <!-- สาขา -->
-          <col class="w-[15%]" />  <!-- ผู้วิจัย -->
+          <col class="w-[5%]" />
+          <col class="w-[10%]" />
+          <col class="w-[40%]" />
+          <col class="w-[20%]" />
+          <col class="w-[10%]" />
+          <col class="w-[15%]" />
         </colgroup>
         <!-- Header -->
         <thead class="bg-[#394250] text-white">
@@ -111,7 +110,7 @@
 
           <!-- No result from search -->
           <tr *ngIf="filteredReseacrchs.length === 0">
-            <td colspan="4" class="text-center py-10 text-[#394250]">
+            <td colspan="6" class="text-center py-10 text-[#394250]">
               <i class="bi bi-folder-x text-3xl block mb-2"></i>
               ไม่พบผลงานที่ค้นหา
             </td>
