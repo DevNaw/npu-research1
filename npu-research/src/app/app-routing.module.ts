@@ -46,6 +46,7 @@ import { PerformancePublicComponent } from './user-pages/performance-public/perf
 import { ManagementAdminComponent } from './admin-pages/management-admin/management-admin.component';
 import { ManagementUserComponent } from './admin-pages/management-user/management-user.component';
 import { AdminManualComponent } from './admin-pages/admin-manual/admin-manual.component';
+import { ManageProjectComponent } from './admin-pages/manage-project/manage-project.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -174,6 +175,7 @@ const routes: Routes = [
       { path: 'management-user', component: ManagementUserComponent },
       { path: 'management-admin', component: ManagementAdminComponent },
       { path: 'admin-manual', component: AdminManualComponent },
+      { path: 'manage-project', component: ManageProjectComponent },
     ],
   },
 ];

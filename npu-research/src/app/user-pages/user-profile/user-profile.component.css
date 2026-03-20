@@ -9,4 +9,7 @@
     animation: fadeIn 0.2s ease-out;
   }
   
-  
+  .apexcharts-canvas .apexchartsmhyyh6iw .apexcharts-theme {
+    padding: 0 !important;
+    margin: 0 !important;
+  }

@@ -27,11 +27,7 @@ import { MainComponent } from '../../shared/layouts/main/main.component';
 
 import { CanvasJS } from '@canvasjs/angular-charts';
 
-CanvasJS.addColorSet('customColorSet', [
-  '#038FFB',
-  '#06E396',
-  '#FEB119',
-]);
+CanvasJS.addColorSet('customColorSet', ['#038FFB', '#06E396', '#FEB119']);
 
 export type BarChartOptions = {
   series: ApexAxisChartSeries;
@@ -58,6 +54,7 @@ export type RadarChartOptions = {
   plotOptions?: ApexPlotOptions;
   yaxis?: ApexYAxis;
   tooltip?: ApexTooltip;
+  colors?: string[];
 };
 
 type ResearchTab = 'project' | 'article' | 'innovation';
@@ -78,6 +75,7 @@ export class UserProfileComponent implements OnInit {
   /* ===== Charts ===== */
   barChartOptions!: Partial<BarChartOptions>;
   radarChartOptions!: Partial<RadarChartOptions>;
+  radarChartOptionsSub!: Partial<RadarChartOptions>;
   chartOptions: any;
 
   /* ===== Table ===== */
@@ -117,6 +115,7 @@ export class UserProfileComponent implements OnInit {
   openDropdown: string | null = null;
 
   barSummary: BarSummary[] = [];
+  radarData: any;
   researchData: any;
 
   previewUrl: string | ArrayBuffer | null = null;
@@ -200,13 +199,14 @@ export class UserProfileComponent implements OnInit {
     'วุฒิบัตรวิชาชีพ (Professional Certificate)',
   ];
 
-  // ตัวอย่างเงื่อนไข
   isOwner = this.currentUserId === this.profileUserId;
 
   totalItems: number = 0;
 
   filteredData: ResearchItem[] = [];
   paginationData: ResearchItem[] = [];
+  fullLabels: string[] = [];
+  fullLabelsSub: string[] = [];
 
   constructor(
     private router: Router,
@@ -279,77 +279,178 @@ export class UserProfileComponent implements OnInit {
         show: true,
       },
     };
+    
     this.radarChartOptions = {
       series: [
         {
           name: 'จำนวนงานวิจัย',
-          data: [80, 50, 30, 40, 100]
-        }
+          data: [],
+        },
       ],
       chart: {
         type: 'radar',
-        height: 350,
+        height: 300,
+        width: '100%',
         toolbar: { show: false },
-        foreColor: '#ffffff'
+        foreColor: '#394250',
       },
-      labels: [
-        'พืชสวน',
-        'เคมีอิเล็กทรอนิกส์',
-        'ทฤษฎีคณิตศาสตร์',
-        'จริยธรรม',
-        'การทำฟาร์มชีวภาพ'
-      ],
+      labels: [],
       fill: {
-        opacity: 0.3
+        opacity: 0.3,
       },
       stroke: {
         width: 2,
-        colors: ['#038FFB']
+        colors: ['#038FFB'],
       },
       markers: {
         size: 4,
         colors: ['#038FFB'],
-        strokeColors: '#ffffff'
+        strokeColors: '#394250',
       },
       dataLabels: {
         enabled: true,
         style: {
-          colors: ['#ffffff']
-        }
+          colors: ['#394250'],
+        },
       },
-    
-      // 🔥 ส่วนสำคัญ: ทำ grid ให้เข้ากับ dark theme
+
       plotOptions: {
         radar: {
+          size: 120,
           polygons: {
-            strokeColors: '#555', // เส้นวง
+            strokeColors: '#e5e7eb',
             fill: {
-              colors: ['transparent']
-            }
-          }
-        }
+              colors: ['transparent'],
+            },
+          },
+        },
       },
-    
+
       yaxis: {
         labels: {
           style: {
-            colors: '#ffffff'
-          }
-        }
+            colors: '#394250',
+          },
+        },
       },
-    
+
       xaxis: {
         labels: {
           style: {
-            colors: '#ffffff'
-          }
+            colors: '#394250',
+          },
+        },
+      },
+
+      tooltip: {
+        theme: 'dark',
+        custom: ({ series, seriesIndex, dataPointIndex }) => {
+          const fullLabel = this.fullLabels[dataPointIndex]; // ⭐ ตัวจริง
+          const value = series[seriesIndex][dataPointIndex];
+      
+          return  `<div style="padding:8px 12px; background:#333; color:#fff; border-radius:6px;">
+        <div style="font-weight:600; margin-bottom:4px;">${fullLabel}</div>
+        <hr style="border-color:#555; margin:4px 0;">
+        <div style="display:flex; justify-content:space-around; align-items:center; gap:6px;">
+          <span style="width:10px; height:10px; border-radius:50%; background:#038FFB; display:inline-block;"></span>
+          <span>จำนวน: ${value}</span>
+        </div>
+      </div>`;
         }
       },
-    
-      tooltip: {
-        theme: 'dark' // 👈 tooltip สีเข้ม
-      }
     };
+
+    this.radarChartOptionsSub = {
+      series: [
+        {
+          name: 'จำนวนงานวิจัย',
+          data: [],
+          color: '#FF4560',
+        },
+      ],
+      chart: {
+        type: 'radar',
+        height: 300,
+        width: '100%',
+        toolbar: { show: false },
+        foreColor: '#394250',
+      },
+      labels: [],
+      fill: {
+        opacity: 0.3,
+        colors: ['#FF4560'],
+      },
+      stroke: {
+        width: 2,
+        colors: ['#FF4560'],
+      },
+      markers: {
+        size: 4,
+        colors: ['#FF4560'],
+        strokeColors: '#ffffff',
+      },
+      dataLabels: {
+        enabled: true,
+        style: {
+          colors: ['#394250'],
+        },
+      },
+
+      plotOptions: {
+        radar: {
+          size: 120,
+          polygons: {
+            strokeColors: '#e5e7eb',
+            fill: {
+              colors: ['transparent'],
+            },
+          },
+        },
+      },
+
+      yaxis: {
+        labels: {
+          style: {
+            colors: '#394250',
+          },
+        },
+      },
+
+      xaxis: {
+        labels: {
+          style: {
+            colors: '#394250',
+          },
+        },
+      },
+
+      tooltip: {
+        theme: 'dark',
+        custom: ({ series, seriesIndex, dataPointIndex }) => {
+          const fullLabelsSub = this.fullLabelsSub[dataPointIndex]; // ⭐ ตัวจริง
+          const value = series[seriesIndex][dataPointIndex];
+      
+          return  `<div style="padding:8px 12px; background:#333; color:#fff; border-radius:6px;">
+        <div style="font-weight:600; margin-bottom:4px;">${fullLabelsSub}</div>
+        <hr style="border-color:#555; margin:4px 0;">
+        <div style="display:flex; justify-content:space-around; align-items:center; gap:6px;">
+          <span style="width:10px; height:10px; border-radius:50%; background:#FF4560; display:inline-block;"></span>
+          <span>จำนวน: ${value}</span>
+        </div>
+      </div>`;
+        }
+      },
+    };
+  }
+
+  shortLabel(fullLabel: any) {
+    const maxLength = 12;
+    const shortLabel =
+      fullLabel.length > maxLength
+        ? fullLabel.slice(0, maxLength) + '...'
+        : fullLabel;
+
+    return shortLabel;
   }
 
   ngOnInit(): void {
@@ -366,7 +467,9 @@ export class UserProfileComponent implements OnInit {
       next: (res) => {
         this.profileData = res.data.user;
         this.barSummary = res.data.bar;
+        this.radarData = res.data.radar;
         this.researchData = res.data.researchs;
+        console.log(this.radarData);
 
         this.updateCharts();
         this.changeTab('project');
@@ -409,15 +512,54 @@ export class UserProfileComponent implements OnInit {
         },
       ],
     };
+    const tabIndex =
+      this.selectedTab === 'project'
+        ? 0
+        : this.selectedTab === 'article'
+        ? 1
+        : 2;
+
+    this.fullLabels = this.radarData?.major?.labels || [];
+    this.fullLabelsSub = this.radarData?.sub?.labels || [];
+    
+    const labels = (this.radarData?.major?.labels || []).map((label: any) =>
+      this.shortLabel(label)
+    );
+
+    const values = [
+      ...(this.radarData?.major?.datasets[tabIndex]?.data || []),
+    ];
+
+    const labelsSub = 
+      (this.radarData?.sub?.labels || [])
+      .map((label: any) => this.shortLabel(label));
+
+    const valuesSub = [
+      ...(this.radarData?.sub?.datasets[tabIndex]?.data || []),
+    ];
 
     this.radarChartOptions = {
       ...this.radarChartOptions,
       series: [
         {
-          name: 'จำนวนงานเงิน',
-          data: [80, 50, 30, 40, 100]
-        }
+          name: this.tabs.find((t) => t.key === this.selectedTab)?.label || '',
+          data: values,
+        },
       ],
+      labels: labels,
+      xaxis: { categories: labels },
+    };
+
+    this.radarChartOptionsSub = {
+      ...this.radarChartOptionsSub,
+      series: [
+        {
+          name: this.tabs.find((t) => t.key === this.selectedTab)?.label || '',
+          data: valuesSub,
+        },
+      ],
+      labels: labelsSub,
+      xaxis: { categories: labelsSub },
     };
   }
 
@@ -589,6 +731,7 @@ export class UserProfileComponent implements OnInit {
     this.filteredData = [...this.originalData];
     this.totalItems = this.filteredData.length;
 
+    this.updateCharts();
     this.updatePagination();
   }
 

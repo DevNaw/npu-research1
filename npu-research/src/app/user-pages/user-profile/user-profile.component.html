@@ -430,27 +430,77 @@
                 [tooltip]="barChartOptions.tooltip!"
               ></apx-chart>
             </div>
-          </div>
 
-          <div
-            class="bg-white rounded-xl shadow-md p-4 hover:shadow-lg transition border border-gray-300 mt-6"
-          >
-            <div class="flex items-center justify-between md:mb-4">
-              <h3 class="text-2xl">SKILLS</h3>
-              <i class="bi bi-bar-chart-fill text-emerald-500 text-xl"></i>
+            <div class="bg-white rounded-xl shadow-md p-4 hover:shadow-lg transition border border-gray-300 mt-6">
+              <div class="flex flex-col items-center justify-between mb-2">
+                <h3 class="text-xl text-center">
+                  ภาพรวมทักษะงานวิจัย (สาขา OECD หลัก)
+                </h3>
+                <h4 class="text-lg mt-1">
+                  {{
+                    selectedTab === "project"
+                      ? "โครงการวิจัย"
+                      : selectedTab === "article"
+                      ? "บทความ"
+                      : "นวัตกรรม"
+                  }}
+                </h4>
+              </div>
+            
+              <!-- ⭐ สำคัญ: ต้องมี container height -->
+              <div class="w-full">
+                <apx-chart
+                  class="w-full h-full text-white"
+                  [series]="radarChartOptions.series!"
+                  [chart]="radarChartOptions.chart!"
+                  [labels]="radarChartOptions.labels!"
+                  [fill]="radarChartOptions.fill!"
+                  [stroke]="radarChartOptions.stroke!"
+                  [markers]="radarChartOptions.markers!"
+                  [xaxis]="radarChartOptions.xaxis!"
+                  [yaxis]="radarChartOptions.yaxis!"
+                  [plotOptions]="radarChartOptions.plotOptions!"
+                  [dataLabels]="radarChartOptions.dataLabels!"
+                  [tooltip]="radarChartOptions.tooltip!"
+                >
+                </apx-chart>
+              </div>
             </div>
 
-            <apx-chart
-              [series]="radarChartOptions.series!"
-              [chart]="radarChartOptions.chart!"
-              [labels]="radarChartOptions.labels!"
-              [fill]="radarChartOptions.fill!"
-              [stroke]="radarChartOptions.stroke!"
-              [markers]="radarChartOptions.markers!"
-              [xaxis]="radarChartOptions.xaxis!"
-              [dataLabels]="radarChartOptions.dataLabels!"
+            <div
+              class="bg-white rounded-xl shadow-md px-4 pt-4 pb-0 hover:shadow-lg transition border border-gray-300 mt-6"
             >
-            </apx-chart>
+              <div class="flex flex-col items-center justify-between mb-1">
+                <h3 class="text-xl">รายละเอียดทักษะงานวิจัย (สาขา OECD ย่อย)</h3>
+                <h4 class="text-xl mt-1">
+                  {{
+                    selectedTab === "project"
+                      ? "โครงการวิจัย"
+                      : selectedTab === "article"
+                      ? "บทความ"
+                      : "นวัตกรรม"
+                  }}
+                </h4>
+              </div>
+
+              <div class="-mx-4 -mb-6">
+                <apx-chart
+                  class="w-full h-full text-white"
+                  [series]="radarChartOptionsSub.series!"
+                  [chart]="radarChartOptionsSub.chart!"
+                  [labels]="radarChartOptionsSub.labels!"
+                  [fill]="radarChartOptionsSub.fill!"
+                  [stroke]="radarChartOptionsSub.stroke!"
+                  [markers]="radarChartOptionsSub.markers!"
+                  [xaxis]="radarChartOptionsSub.xaxis!"
+                  [yaxis]="radarChartOptionsSub.yaxis!"
+                  [plotOptions]="radarChartOptionsSub.plotOptions!"
+                  [dataLabels]="radarChartOptionsSub.dataLabels!"
+                  [tooltip]="radarChartOptionsSub.tooltip!"
+                >
+                </apx-chart>
+              </div>
+            </div>
           </div>
 
           <div class="flex flex-wrap gap-2 mt-4 mb-4 md:mt-8 items-center">

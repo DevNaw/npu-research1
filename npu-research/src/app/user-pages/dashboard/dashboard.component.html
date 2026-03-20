@@ -88,6 +88,199 @@
       </div>
     </div>
 
+    <!-- ===== FORD ===== -->
+    <div class="bg-white p-4 md:p-6 rounded-2xl shadow-lg space-y-6">
+
+      <!-- 🔷 HEADER -->
+      <div class="flex items-center gap-3 text-2xl md:text-3xl text-[#16498C]">
+        <i class="bi bi-pie-chart-fill"></i>
+        <h1 class="font-semibold">Skills Overview</h1>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2 md:gap-4 mt-6 mb-4">
+        <div class="flex flex-wrap gap-2 md:gap-3">
+          <button
+            (click)="changeTabForChart('PROJECT')"
+            [ngClass]="
+              selectedTab === 'PROJECT'
+                ? 'bg-[#118CD9] text-white'
+                : 'text-[#394250] hover:bg-[#4c7b98] hover:text-white'
+            "
+            class="px-2 md:px-4 py-2 rounded-lg cursor-pointer text-sm md:text-lg whitespace-nowrap"
+          >
+            โครงการวิจัย
+          </button>
+      
+          <button
+            (click)="changeTabForChart('ARTICLE')"
+            [ngClass]="
+              selectedTab === 'ARTICLE'
+                ? 'bg-[#118CD9] text-white'
+                : 'text-[#394250] hover:bg-[#4c7b98] hover:text-white'
+            "
+            class="px-2 md:px-4 py-2 rounded-lg cursor-pointer text-sm md:text-lg"
+          >
+            บทความ
+          </button>
+      
+          <button
+            (click)="changeTabForChart('INNOVATION')"
+            [ngClass]="
+              selectedTab === 'INNOVATION'
+                ? 'bg-[#118CD9] text-white'
+                : 'text-[#394250] hover:bg-[#4c7b98] hover:text-white'
+            "
+            class="px-2 md:px-4 py-2 rounded-lg cursor-pointer text-sm md:text-lg whitespace-nowrap"
+          >
+            นวัตกรรมสิ่งประดิษฐ์
+          </button>
+        </div>
+      </div>
+    
+      <!-- 🔷 CONTENT (2 COLUMN) -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    
+        <!-- ===== LEFT: RADAR ===== -->
+        <div class="bg-white rounded-xl shadow-md p-4 border border-gray-200 hover:shadow-lg transition">
+          <div class="flex items-center gap-2">
+            <h3 class="text-lg md:text-xl">
+              สาขา OECD หลัก
+            </h3>
+            <h4 class="text-lg">
+              {{
+                selectedTab === "PROJECT"
+                  ? "(โครงการวิจัย)"
+                  : selectedTab === "ARTICLE"
+                  ? "(บทความ)"
+                  : "(นวัตกรรม)"
+              }}
+            </h4>
+          </div>
+    
+          <div class="w-full">
+            <apx-chart
+              class="w-full h-full"
+              [series]="radarChartOptions.series!"
+              [chart]="radarChartOptions.chart!"
+              [labels]="radarChartOptions.labels!"
+              [fill]="radarChartOptions.fill!"
+              [stroke]="radarChartOptions.stroke!"
+              [markers]="radarChartOptions.markers!"
+              [xaxis]="radarChartOptions.xaxis!"
+              [yaxis]="radarChartOptions.yaxis!"
+              [plotOptions]="radarChartOptions.plotOptions!"
+              [dataLabels]="radarChartOptions.dataLabels!"
+              [tooltip]="radarChartOptions.tooltip!"
+            >
+            </apx-chart>
+          </div>
+        </div>
+    
+        <!-- ===== RIGHT: PIE ===== -->
+        <div class="bg-[#394250] text-white rounded-xl shadow p-4 md:p-6">
+          <div class="flex items-center gap-2">
+            <i class="bi bi-pie-chart-fill"></i>
+            <h2 class="text-lg md:text-xl">
+              การจัดกลุ่มของ FORD
+            </h2>
+
+            <h4 class="text-lg">
+              {{
+                selectedTab === "PROJECT"
+                  ? "(โครงการวิจัย)"
+                  : selectedTab === "ARTICLE"
+                  ? "(บทความ)"
+                  : "(นวัตกรรม)"
+              }}
+            </h4>
+          </div>
+    
+          <ng-container *ngIf="chartOptions?.data?.[0]?.dataPoints?.length > 0 && !loading; else noData">
+            <canvasjs-chart
+            *ngIf="!loading"
+              [options]="chartOptions"
+              [styles]="{ width: '100%', height: '320px' }"
+            >
+            </canvasjs-chart>
+          </ng-container>
+    
+          <ng-template #noData>
+            <div class="text-center py-16 opacity-80">ไม่พบข้อมูล</div>
+          </ng-template>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-md p-4 border border-gray-200 hover:shadow-lg transition">
+          <div class="flex items-center gap-2">
+            <h3 class="text-lg md:text-xl">
+              สาขา OECD ย่อย
+           </h3>
+           <h4 class="text-lg">
+             {{
+               selectedTab === "PROJECT"
+                 ? "(โครงการวิจัย)"
+                 : selectedTab === "ARTICLE"
+                 ? "(บทความ)"
+                 : "(นวัตกรรม)"
+             }}
+           </h4>
+          </div>
+    
+          <div class="w-full">
+            <apx-chart
+              class="w-full h-full"
+              [series]="radarChartOptionsSub.series!"
+              [chart]="radarChartOptionsSub.chart!"
+              [labels]="radarChartOptionsSub.labels!"
+              [fill]="radarChartOptionsSub.fill!"
+              [stroke]="radarChartOptionsSub.stroke!"
+              [markers]="radarChartOptionsSub.markers!"
+              [xaxis]="radarChartOptionsSub.xaxis!"
+              [yaxis]="radarChartOptionsSub.yaxis!"
+              [plotOptions]="radarChartOptionsSub.plotOptions!"
+              [dataLabels]="radarChartOptionsSub.dataLabels!"
+              [tooltip]="radarChartOptionsSub.tooltip!"
+            >
+            </apx-chart>
+          </div>
+        </div>
+  
+        <div class="bg-white rounded-xl shadow-md p-4 border border-gray-200">
+          <div class="flex items-center gap-2">
+            <h3 class="text-lg md:text-xl">
+              Top 10 สาขาที่เกี่ยวข้อง
+           </h3>
+           <h4 class="text-lg">
+             {{
+               selectedTab === "PROJECT"
+                 ? "(โครงการวิจัย)"
+                 : selectedTab === "ARTICLE"
+                 ? "(บทความ)"
+                 : "(นวัตกรรม)"
+             }}
+           </h4>
+          </div>
+      
+          <div class="overflow-x-auto">
+            <div *ngIf="chartsOECD.length > 0" class="min-w-175">
+              <apx-chart
+                [series]="chartsOECD[0].options.series"
+                [chart]="chartsOECD[0].options.chart"
+                [dataLabels]="chartsOECD[0].options.dataLabels"
+                [plotOptions]="chartsOECD[0].options.plotOptions"
+                [yaxis]="chartsOECD[0].options.yaxis"
+                [xaxis]="chartsOECD[0].options.xaxis"
+                [stroke]="chartsOECD[0].options.stroke"
+                [grid]="chartsOECD[0].options.grid"
+                [fill]="chartsOECD[0].options.fill"
+              ></apx-chart>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      
+    </div>
+
     <!-- ===== Charts ===== -->
     <div class="bg-white p-2 md:p-6 sm:p-8 rounded-2xl shadow-lg space-y-5">
       <div

@@ -26,6 +26,9 @@ import {
   ApexAnnotations,
   ApexFill,
   ChartComponent,
+  ApexMarkers,
+  ApexTooltip,
+  ApexXAxis,
 } from 'ng-apexcharts';
 import { MainComponent } from '../../shared/layouts/main/main.component';
 
@@ -42,6 +45,21 @@ export type ChartOptions = {
   grid: ApexGrid;
 };
 
+export type RadarChartOptions = {
+  series: ApexAxisChartSeries;
+  chart: ApexChart;
+  labels: string[];
+  fill: ApexFill;
+  stroke: ApexStroke;
+  markers: ApexMarkers;
+  xaxis: ApexXAxis;
+  dataLabels: ApexDataLabels;
+  plotOptions?: ApexPlotOptions;
+  yaxis?: ApexYAxis;
+  tooltip?: ApexTooltip;
+  colors?: string[];
+};
+
 export type ReportType = 'project' | 'article' | 'innovation';
 
 registerLocaleData(localeTh);
@@ -54,8 +72,19 @@ registerLocaleData(localeTh);
 })
 export class UserDashboardComponent implements OnInit {
   @ViewChild('chart') chart: ChartComponent | undefined;
+  radarChartOptions!: Partial<RadarChartOptions>;
+  radarChartOptionsSub!: Partial<RadarChartOptions>;
+  fullLabels: string[] = [];
+  chartOptions: any;
 
   charts: {
+    type: ReportType;
+    title: string;
+    subtitle: string;
+    options: ChartOptions;
+  }[] = [];
+
+  chartsOECD: {
     type: ReportType;
     title: string;
     subtitle: string;
@@ -86,7 +115,168 @@ export class UserDashboardComponent implements OnInit {
   filteredResearch: ResearchItem[] = [];
   paginatedPublications: ResearchItem[] = [];
 
-  constructor(private router: Router, private service: DashboardService) {}
+  constructor(private router: Router, private service: DashboardService) {
+    this.radarChartOptions = {
+      series: [
+        {
+          name: 'จำนวนงานวิจัย',
+          data: [],
+        },
+      ],
+      chart: {
+        type: 'radar',
+        height: 300,
+        width: '100%',
+        toolbar: { show: false },
+        foreColor: '#394250',
+      },
+      labels: [],
+      fill: {
+        opacity: 0.3,
+      },
+      stroke: {
+        width: 2,
+        colors: ['#038FFB'],
+      },
+      markers: {
+        size: 4,
+        colors: ['#038FFB'],
+        strokeColors: '#394250',
+      },
+      dataLabels: {
+        enabled: true,
+        style: {
+          colors: ['#394250'],
+        },
+      },
+
+      plotOptions: {
+        radar: {
+          size: 120,
+          polygons: {
+            strokeColors: '#e5e7eb',
+            fill: {
+              colors: ['transparent'],
+            },
+          },
+        },
+      },
+
+      yaxis: {
+        labels: {
+          style: {
+            colors: '#394250',
+          },
+        },
+      },
+
+      xaxis: {
+        labels: {
+          style: {
+            colors: '#394250',
+          },
+        },
+      },
+
+      tooltip: {
+        theme: 'dark',
+        custom: ({ series, seriesIndex, dataPointIndex }) => {
+          const fullLabel = this.fullLabels[dataPointIndex]; // ⭐ ตัวจริง
+          const value = series[seriesIndex][dataPointIndex];
+      
+          return  `<div style="padding:8px 12px; background:#333; color:#fff; border-radius:6px;">
+        <div style="font-weight:600; margin-bottom:4px;">${fullLabel}</div>
+        <hr style="border-color:#555; margin:4px 0;">
+        <div style="display:flex; justify-content:space-around; align-items:center; gap:6px;">
+          <span style="width:10px; height:10px; border-radius:50%; background:#038FFB; display:inline-block;"></span>
+          <span>จำนวน: ${value}</span>
+        </div>
+      </div>`;
+        }
+      },
+    };
+
+    this.radarChartOptionsSub = {
+      series: [
+        {
+          name: 'จำนวนงานวิจัย',
+          data: [],
+        },
+      ],
+      chart: {
+        type: 'radar',
+        height: 480,
+        width: '100%',
+        toolbar: { show: false },
+        foreColor: '#394250',
+      },
+      labels: [],
+      fill: {
+        opacity: 0.3,
+        colors: ['#FF4560'],
+      },
+      stroke: {
+        width: 2,
+        colors: ['#FF4560'],
+      },
+      markers: {
+        size: 4,
+        colors: ['#FF4560'],
+        strokeColors: '#ffffff',
+      },
+      dataLabels: {
+        enabled: true,
+        style: {
+          colors: ['#394250'],
+        },
+      },
+
+      plotOptions: {
+        radar: {
+          size: 120,
+          polygons: {
+            strokeColors: '#e5e7eb',
+            fill: {
+              colors: ['transparent'],
+            },
+          },
+        },
+      },
+
+      yaxis: {
+        labels: {
+          style: {
+            colors: '#394250',
+          },
+        },
+      },
+
+      xaxis: {
+        labels: {
+          style: {
+            colors: '#394250',
+          },
+        },
+      },
+
+      tooltip: {
+        theme: 'dark',
+        custom: ({ series, seriesIndex, dataPointIndex }) => {
+          const fullLabel = this.fullLabels[dataPointIndex];
+          const value = series[seriesIndex][dataPointIndex];
+      
+          return  `<div style="padding:8px 12px; background:#333; color:#fff; border-radius:6px;">
+        <div style="font-weight:600; margin-bottom:4px;">${fullLabel}</div>
+        <hr style="border-color:#555; margin:4px 0;">
+        <div style="display:flex; justify-content:space-around; align-items:center; gap:6px;">
+          <span style="width:10px; height:10px; border-radius:50%; background:#FF4560; display:inline-block;"></span>
+          <span>จำนวน: ${value}</span>
+        </div>
+      </div>`;
+        }
+      },
+    };
+  }
 
   ngOnInit(): void {
     MainComponent.showLoading();
@@ -107,8 +297,8 @@ export class UserDashboardComponent implements OnInit {
       next: (res: DashboardResponse) => {
         if (res?.result === 1 && res?.data) {
           this.dashboardData = res.data;
-          this.newsList = res.data.news; console.log(this.dashboardData);
-          
+          this.newsList = res.data.news;
+
 
           this.publications = res.data.researchs;
 
@@ -117,6 +307,8 @@ export class UserDashboardComponent implements OnInit {
 
           this.updatePagination();
           this.initCharts();
+          this.initChartsOECD();
+          this.changeTabForChart(this.selectedTab);
           this.loading = false;
         }
       },
@@ -271,6 +463,156 @@ export class UserDashboardComponent implements OnInit {
     };
   }
 
+  initChartsOECD(): void {
+    const raw = this.dashboardData?.radar.child?.raw || [];
+  
+    const getValue = (item: any) => {
+      switch (this.selectedTab) {
+        case 'PROJECT':
+          return item.PROJECT;
+        case 'ARTICLE':
+          return item.ARTICLE;
+        case 'INNOVATION':
+          return item.INNOVATION;
+        default:
+          return 0;
+      }
+    };
+  
+    const mappedData = raw.map(item => ({
+      label: item.name,
+      count: getValue(item),
+    }));
+  
+    this.chartsOECD = [
+      {
+        type: this.selectedTab.toLowerCase() as any,
+        title: 'กราฟสรุปตาม OECD (สาขาย่อย)',
+        subtitle: 'จำแนกตามประเภทผลงาน',
+        options: this.createBarChartOECD(mappedData),
+      },
+    ];
+  }
+
+  private createBarChartOECD(
+    data: { label: string; count: number }[]
+  ): ChartOptions {
+    return {
+      series: [
+        {
+          name: 'จำนวนผลงาน',
+          data: data.map((item) => item.count),
+        },
+      ],
+      annotations: {
+        points: [],
+      },
+      chart: {
+        type: 'bar',
+        height: 500,
+        stacked: false,
+        animations: {
+          enabled: false,
+        },
+        zoom: {
+          enabled: false,
+        },
+        toolbar: {
+          show: true,
+        },
+      },
+      plotOptions: {
+        bar: {
+          columnWidth: '50%',
+          borderRadius: 6,
+          borderRadiusApplication: 'around',
+          backgroundBarOpacity: 1,
+          backgroundBarRadius: 6,
+        } as any,
+      },
+      dataLabels: {
+        enabled: false,
+      },
+      xaxis: {
+        categories: data.map((item) => item.label),
+        tickPlacement: 'on',
+        axisBorder: {
+          show: true,
+          color: '#000',
+          height: 1,
+        },
+        labels: {
+          rotate: -90,
+          style: {
+            fontSize: '12px',
+          },
+        },
+        axisTicks: {
+          show: true,
+          color: '#000',
+        },
+      },
+      yaxis: {
+        title: {
+          text: 'จำนวน',
+        },
+        min: 0,
+        max: Math.max(...data.map((item) => item.count)) < 10 ? 10 : Math.max(...data.map((item) => item.count)),
+        tickAmount: 4,
+        axisBorder: {
+          show: true,
+          color: '#000',
+        },
+        axisTicks: {
+          show: true,
+          color: '#000',
+        },
+      },
+      stroke: {
+        width: 1,
+      },
+
+      fill: {
+        opacity: 1,
+        type: 'gradient',
+        gradient: {
+          shade: 'light',
+          type: 'horizontal',
+          shadeIntensity: 0.25,
+          gradientToColors: undefined,
+          inverseColors: true,
+          opacityFrom: 0.85,
+          opacityTo: 0.85,
+          stops: [50, 0, 100],
+        },
+      },
+      grid: {
+        show: true,
+        borderColor: '#bdbdbd',
+        strokeDashArray: 0,
+        position: 'back',
+        xaxis: {
+          lines: {
+            show: true
+          }
+        },
+        yaxis: {
+          lines: {
+            show: true
+          }
+        },
+        row: {
+          colors: ['#f3f3f3', 'transparent'],
+          opacity: 0.5
+        },
+        column: {
+          colors: ['#f3f3f3', 'transparent'],
+          opacity: 0.5
+        }
+      }
+    };
+  }
+
   onSearch() {
     const keyword = this.searchText.toLowerCase().trim();
 
@@ -339,6 +681,113 @@ export class UserDashboardComponent implements OnInit {
     this.filteredResearch = [...this.publications[key]];
 
     this.updatePagination();
+  }
+
+  changeTabForChart(tab: ResearchType): void {
+    this.selectedTab = tab;
+
+    const tabIndex = 
+      tab === 'PROJECT'
+        ? 0
+        : tab === 'ARTICLE'
+        ? 1
+        : 2;
+
+    let values: any;
+    let labels: string[] = [];
+  
+    if (tab === 'PROJECT') {
+      labels = this.dashboardData?.radar.major.labels || [];
+      values = this.dashboardData?.radar.major.datasets[tabIndex].data || [];
+      
+    } else if (tab === 'ARTICLE') {
+      labels = this.dashboardData?.radar.major.labels || [];
+      values = this.dashboardData?.radar.major.datasets[tabIndex].data || [];
+    } else {
+      labels = this.dashboardData?.radar.major.labels || [];
+      values = this.dashboardData?.radar.major.datasets[tabIndex].data || [];
+    }
+  
+    // ===== RADAR =====
+    this.fullLabels = labels;
+    this.radarChartOptions.labels = labels.map(l => this.shortLabel(l));
+    this.radarChartOptions.series = [
+      {
+        name: 'จำนวนงานวิจัย',
+        data: values,
+      },
+    ];
+  
+    if (tab === 'PROJECT') {
+      labels = this.dashboardData?.radar.sub.labels || [];
+      values = this.dashboardData?.radar.sub.datasets[tabIndex].data || [];
+      
+    } else if (tab === 'ARTICLE') {
+      labels = this.dashboardData?.radar.sub.labels || [];
+      values = this.dashboardData?.radar.sub.datasets[tabIndex].data || [];
+    } else {
+      labels = this.dashboardData?.radar.sub.labels || [];
+      values = this.dashboardData?.radar.sub.datasets[tabIndex].data || [];
+    }
+  
+    // ===== RADAR =====
+    this.fullLabels = labels;
+    this.radarChartOptionsSub.labels = labels.map(l => this.shortLabel(l));
+    this.radarChartOptionsSub.series = [
+      {
+        name: 'จำนวนงานวิจัย',
+        data: values,
+      },
+    ];
+
+    const ford = this.dashboardData?.ford || {
+      project: [],
+      article: [],
+      innovation: [],
+    };
+    let dataFord = 
+      tab === 'PROJECT'
+        ? ford.project
+        : tab === 'ARTICLE'
+        ? ford.article
+        : ford.innovation;
+  
+    // ===== PIE (CanvasJS) ⭐ สำคัญ =====
+    this.loading = true;
+    // this.chartOptions = {
+    //   animationEnabled: true,
+    //   backgroundColor: 'transparent',
+    //   legend: {
+    //     fontColor: '#ffffff',
+    //   },
+    setTimeout(() => {
+      this.chartOptions = {
+        ...this.chartOptions, // trigger change
+        animationEnabled: true,
+        backgroundColor: 'transparent',
+        legend: {
+          fontColor: '#ffffff',
+        },
+      data: [
+        {
+          type: 'doughnut',
+          startAngle: 90,
+          showInLegend: false,
+          indexLabel: '{label}, ({percent}%)',
+          indexLabelFontColor: '#ffffff',
+          dataPoints: dataFord.map((ford, i) => ({
+            label: ford.name,
+            y: ford.count,
+            percent: ford.percent,
+          })),
+        },
+      ],
+      colorSet: 'customColorSet',
+    };
+
+    this.initChartsOECD();
+    this.loading = false;
+    }, 0);
   }
 
   SeeMoreDetails(type: ReportType) {
@@ -434,5 +883,15 @@ export class UserDashboardComponent implements OnInit {
         : this.dashboardData?.statistic_graph?.graph_innovation;
   
     return data?.reduce((sum, item) => sum + (item.count || 0), 0) || 0;
+  }
+
+  shortLabel(fullLabel: any) {
+    const maxLength = 12;
+    const shortLabel =
+      fullLabel.length > maxLength
+        ? fullLabel.slice(0, maxLength) + '...'
+        : fullLabel;
+
+    return shortLabel;
   }
 }

@@ -1,0 +1,163 @@
+<div
+  class="contain-content bg-gray-100 p-5 md:px-10 text-xl md:text-2xl font-medium text-[#394250]"
+>
+  <div class="mx-auto md:py-6">
+    <h1 class="text-3xl">
+      การจัดการผลงาน
+    </h1>
+  </div>
+
+  <div class="bg-white rounded-xl p-2 md:p-6 shadow text-[#394250]">
+    <div class="flex flex-wrap items-center gap-2 md:gap-4 mt-6 mb-4">
+      <div class="flex flex-wrap gap-2 md:gap-3">
+        <button
+          (click)="changeTab('PROJECT')"
+          [ngClass]="
+            selectedTab === 'PROJECT'
+              ? 'bg-[#118CD9] text-white'
+              : 'text-[#394250] hover:bg-[#4c7b98] hover:text-white'
+          "
+          class="px-2 md:px-4 py-2 rounded-lg cursor-pointer text-sm md:text-lg whitespace-nowrap"
+        >
+          โครงการวิจัย
+        </button>
+    
+        <button
+          (click)="changeTab('ARTICLE')"
+          [ngClass]="
+            selectedTab === 'ARTICLE'
+              ? 'bg-[#118CD9] text-white'
+              : 'text-[#394250] hover:bg-[#4c7b98] hover:text-white'
+          "
+          class="px-2 md:px-4 py-2 rounded-lg cursor-pointer text-sm md:text-lg"
+        >
+          บทความ
+        </button>
+    
+        <button
+          (click)="changeTab('INNOVATION')"
+          [ngClass]="
+            selectedTab === 'INNOVATION'
+              ? 'bg-[#118CD9] text-white'
+              : 'text-[#394250] hover:bg-[#4c7b98] hover:text-white'
+          "
+          class="px-2 md:px-4 py-2 rounded-lg cursor-pointer text-sm md:text-lg whitespace-nowrap"
+        >
+          นวัตกรรมสิ่งประดิษฐ์
+        </button>
+      </div>
+    
+      <!-- Search -->
+      <div class="ml-auto flex items-center gap-2 text-sm md:text-lg">
+        <span>Search:</span>
+        <input
+          type="text"
+          [(ngModel)]="searchText"
+          (input)="onSearch()"
+          class="border border-gray-300 rounded px-2 py-1 w-28 md:w-40 font-light"
+          placeholder="ค้นหา..."
+        />
+      </div>
+    </div>
+
+    <div class="overflow-x-auto font-light">
+      <table class="w-full text-lg min-w-225 table-auto">
+        <colgroup>
+          <col class="w-[5%]" />
+          <col class="w-[10%]" />
+          <col class="w-[30%]" />
+          <col class="w-[15%]" />
+          <col class="w-[20%]" />
+          <col class="w-[15%]" />
+          <col class="w-[5%]" />
+        </colgroup>
+
+        <thead class="bg-[#394250] text-white">
+          <tr>
+            <th class="p-2">#</th>
+            <th class="p-2 text-center">รหัส</th>
+            <th class="p-2 text-start">ชื่อผลงาน</th>
+            <th class="p-2 text-center">แหล่งทุน</th>
+            <th class="p-2 text-center">ชื่อแหล่งทุน</th>
+            <th class="p-2 text-start">{{ selectedTab === 'PROJECT' ? 'หัวหน้าโครงการ': selectedTab === 'ARTICLE' ? 'ผู้ประพันธ์อันดับแรก' : 'หัวหน้าโครงการ' }}</th>
+            <th class="p-2">ปี</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let p of paginatedPublications; let i = index"
+            class="border-b border-gray-300 hover:bg-gray-50"
+          >
+            <td class="p-2 text-center">
+              {{ (currentPage - 1) * pageSize + i + 1 }}
+            </td>
+            <td class="p-2 text-center">{{ p.research_code || '-' }}</td>
+            <td class="p-2">
+              <div
+                class="text-[#16498C] hover:underline cursor-pointer truncate max-w-125 text-wrap text-lg"
+                title="{{ p.title_th }}"
+                (click)="viewItem(p.research_id)"
+              >
+                {{ p.title_th }}
+              </div>
+
+              <div
+                class="text-sm hidden md:inline text-gray-500 mt-1 items-center gap-1"
+              >
+                <i class="bi bi-calendar-event"></i>
+                วันที่สร้าง:
+                {{
+                  p.published_date | date : "dd MMMM YYYY" : "" : "TH-th"
+                }}
+              </div>
+            </td>
+            <td class="p-2">{{ p.funding.source_funds || '-' }}</td>
+            <td class="p-2">{{ p.funding.funding_name || '-' }}</td>
+            <td class="p-2">{{ p.own[0].full_name }}</td>
+            <td class="p-2 text-center">{{ p.year }}</td>
+          </tr>
+
+          <!-- ไม่พบข้อมูล -->
+          <tr *ngIf="filteredResearch.length === 0">
+            <td colspan="7" class="text-center p-4 text-gray-500">
+              <i class="bi bi-folder-x text-3xl block mb-2"></i>
+              ไม่พบข้อมูล
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="flex justify-end mt-3 space-x-1 font-light">
+      <button
+        (click)="changePage(currentPage - 1)"
+        [disabled]="currentPage === 1"
+        class="px-2 md:px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
+      >
+        ‹
+      </button>
+
+      <button
+        *ngFor="let page of pages"
+        (click)="changePage(page)"
+        class="px-2 md:px-3 py-1 rounded border text-sm transition cursor-pointer"
+        [ngClass]="{
+          'bg-[#118CD9] text-[#ffffff] border-[#118CD9]':
+            currentPage === page,
+          'hover:bg-gray-100': currentPage !== page
+        }"
+      >
+        {{ page }}
+      </button>
+
+      <button
+        (click)="changePage(currentPage + 1)"
+        [disabled]="currentPage === totalPages"
+        class="px-2 md:px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
+      >
+        ›
+      </button>
+    </div>
+  </div>
+</div>

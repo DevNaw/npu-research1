@@ -334,13 +334,16 @@
         />
       </div>
     </div>
+
     <div class="bg-white rounded-xl shadow p-4 md:p-8">
       <div class="overflow-x-auto">
         <table class="w-full border border-gray-300 min-w-225 table-auto">
           <colgroup>
             <col class="w[5%]" />
-            <col class="w[55%]" />
-            <col class="w[25%]" />
+            <col class="w[15%]" />
+            <col class="w[35%]" />
+            <col class="w[15%]" />
+            <col class="w[15%]" />
             <col class="w[15%]" />
           </colgroup>
           <thead
@@ -348,7 +351,10 @@
           >
             <tr>
               <th class="p-1 md:p-2">#</th>
+              <th class="p-1 md:p-2">รหัส</th>
               <th class="p-1 md:p-2 text-start">ชื่องานวิจัย</th>
+              <th class="p-1 md:p-2">แหล่งทุน</th>
+              <th class="p-1 md:p-2">ชื่อแหล่งทุน</th>
               <th class="p-1 md:p-2 text-start">ชื่อเจ้าของผลงาน</th>
               <th class="p-1 md:p-2">ประเภท</th>
             </tr>
@@ -366,12 +372,15 @@
               <td class="p-1 md:p-2 text-center">
                 {{ (currentPage - 1) * pageSize + i + 1 }}
               </td>
+              <td class="p-1 md:p-2">{{ r.code || '-' }}</td>
               <td
                 (click)="goToResearch(r.id, r.type)"
                 class="p-1 md:p-2 cursor-pointer text-[#0F4C82] hover:underline"
               >
                 {{ r.title_th || r.title_en }}
               </td>
+              <td class="p-1 md:p-2">{{ r.funding.source_funds || '-' }}</td>
+              <td class="p-1 md:p-2">{{ r.funding.funding_name || '-' }}</td>
               <td class="p-1 md:p-2">{{ r.own?.name }}</td>
               <td class="p-1 md:p-2 text-center">
                 {{ getTypeLabel(r.type) }}
@@ -379,7 +388,7 @@
             </tr>
 
             <tr *ngIf="filteredResearchers.length === 0">
-              <td colspan="5" class="p-4 text-center text-gray-500 font-bold">
+              <td colspan="7" class="p-4 text-center text-gray-500 font-bold">
                 <i class="bi bi-folder-x text-3xl block mb-2"></i>
                 ไม่พบข้อมูล
               </td>

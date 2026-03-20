@@ -19,6 +19,7 @@ export interface SubjectGraphItem {
 
 export interface ResearchItem {
   id: number;
+  code: string;
   type: 'ARTICLE' | 'PROJECT' | 'INNOVATION';
   title_th: string;
   title_en: string | null;
@@ -26,6 +27,7 @@ export interface ResearchItem {
   image_url: string | null;
   subject_area: SubjectArea[];
   own: Owner | null;
+  funding: Funding;
 }
 
 export interface SubjectArea {
@@ -54,4 +56,9 @@ export interface SearchResearchRequest {
   date_from?: string;
   date_to?: string;
   per_page?: number;
+}
+
+export interface Funding {
+  funding_name: string;
+  source_funds: string;
 }

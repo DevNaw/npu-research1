@@ -17,6 +17,9 @@ export interface Owner {
     img_url: string | null;
     own: Owner[];
     subjectAreas: SubjectArea[];
+    research_code: string;
+    funding: Funding;
+    oecd: OecdMajor[];
   }
 
   export interface ProjectResponse {
@@ -30,4 +33,25 @@ export interface Owner {
   export interface SubjectArea {
     subject_area_id: number;
     name_en: string;
+  }
+  export interface Funding {
+    source_funds: string;
+    funding_name: string;
+  }
+
+  export interface OecdMajor {
+    major_id: number;
+    name_th: string;
+    children: OecdSub;
+  }
+
+  export interface OecdSub {
+    sub_id: number;
+    name_th: string;
+    children: OecdChild;
+  }
+
+  export interface OecdChild {
+    child_id: number;
+    name_th: string;
   }

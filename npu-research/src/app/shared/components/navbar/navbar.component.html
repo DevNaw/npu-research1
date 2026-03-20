@@ -728,28 +728,28 @@
               <a
               (click)="closeMenu()"
                 routerLink="/admin/external-funding"
-                class="block px-4 py-2 hover:bg-gray-600 text-lg"
+                class="block px-4 py-2 hover:bg-gray-600 hover:rounded-md text-lg"
               >
                 แหล่งทุนภายนอก
               </a>
               <a
               (click)="closeMenu()"
                 routerLink="/admin/specialization"
-                class="block px-4 py-2 hover:bg-gray-600 text-lg"
+                class="block px-4 py-2 hover:bg-gray-600 hover:rounded-md text-lg"
               >
                 สาขาวิชาที่เชี่ยวชาญ
               </a>
               <a
               (click)="closeMenu()"
                 routerLink="/admin/management-admin"
-                class="block px-4 py-2 hover:bg-gray-600 text-lg"
+                class="block px-4 py-2 hover:bg-gray-600 hover:rounded-md text-lg"
               >
                 การจัดการผู้ใช้งานแอดมิน
               </a>
               <a
               (click)="closeMenu()"
                 routerLink="/admin/management-user"
-                class="block px-4 py-2 hover:bg-gray-600 text-lg"
+                class="block px-4 py-2 hover:bg-gray-600 hover:rounded-md text-lg"
               >
               การจัดการผู้ใช้งาน
               </a>
@@ -779,14 +779,14 @@
               <a
               (click)="closeMenu()"
                 routerLink="/admin/news"
-                class="block px-4 py-2 hover:bg-gray-600 text-lg"
+                class="block px-4 py-2 hover:bg-gray-600 hover:rounded-md text-lg"
               >
                 ข่าวประชาสัมพันธ์
               </a>
               <a
               (click)="closeMenu()"
                 routerLink="/admin/download"
-                class="block px-4 py-2 hover:bg-gray-600 text-lg"
+                class="block px-4 py-2 hover:bg-gray-600 hover:rounded-md text-lg"
               >
                 เอกสารดาวน์โหลด
               </a>
@@ -794,7 +794,7 @@
               <a
               (click)="closeMenu()"
                 routerLink="/admin/admin-manual"
-                class="block px-4 py-2 hover:bg-gray-600 text-lg"
+                class="block px-4 py-2 hover:bg-gray-600 hover:rounded-md text-lg"
               >
                 คู่มือการใช้งาน
               </a>
@@ -824,23 +824,31 @@
               <a
               (click)="closeMenu()"
                 routerLink="/admin/add-research"
-                class="block px-4 py-2 hover:bg-gray-600 text-lg"
+                class="block px-4 py-2 hover:bg-gray-600 hover:rounded-md text-lg"
               >
                 โครงการวิจัย
               </a>
               <a
               (click)="closeMenu()"
                 routerLink="/admin/add-aticle"
-                class="block px-4 py-2 hover:bg-gray-600 text-lg"
+                class="block px-4 py-2 hover:bg-gray-600 hover:rounded-md text-lg"
               >
                 บทความ/วารสาร
               </a>
               <a
               (click)="closeMenu()"
                 routerLink="/admin/add-innovation"
-                class="block px-4 py-2 hover:bg-gray-600 text-lg"
+                class="block px-4 py-2 hover:bg-gray-600 hover:rounded-md text-lg"
               >
                 นวัตกรรมสิ่งประดิษฐ์
+              </a>
+
+              <a
+              (click)="closeMenu()"
+                routerLink="/admin/manage-project"
+                class="block px-4 py-2 hover:bg-gray-600 hover:rounded-md text-lg"
+              >
+                การจัดการผลงานวิจัย
               </a>
             </div>
           </div>
@@ -1004,6 +1012,13 @@
               routerLink="/admin/add-innovation"
               class="block px-4 py-2 hover:bg-gray-600 text-lg"
               >นวัตกรรมสิ่งประดิษฐ์</a
+            >
+
+            <a
+              (click)="closeAllMobileMenus()"
+              routerLink="/admin/manage-project"
+              class="block px-4 py-2 hover:bg-gray-600 text-lg"
+              >การจัดการผลงานวิจัย</a
             >
           </div>
         </div>
