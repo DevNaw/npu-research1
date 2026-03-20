@@ -1,135 +1,109 @@
 import { Component, OnInit } from '@angular/core';
-import { DepartmentData } from '../../models/department.model';
-import { Router } from '@angular/router';
-import { ActivatedRoute } from '@angular/router';
 import { MainComponent } from '../../shared/layouts/main/main.component';
+import { GraphItem, StatisticGraph } from '../../models/dashboard-main.model';
+import { ActivatedRoute, Router } from '@angular/router';
+import { DashboardService } from '../../services/dashboard.service';
 
 type ReportType = 'project' | 'article' | 'innovation';
-
 
 @Component({
   selector: 'app-performance-by-department',
   standalone: false,
   templateUrl: './performance-by-department.component.html',
-  styleUrl: './performance-by-department.component.css'
+  styleUrl: './performance-by-department.component.css',
 })
 export class PerformanceByDepartmentComponent implements OnInit {
-reportType: ReportType | null = null;
+  dataChart: StatisticGraph | null = null;
+  reportType: ReportType | null = null;
 
-pageSize = 10;
-currentPage = 1;
+  currentPage = 1;
+  pageSize = 10;
 
-documents: DepartmentData[] = [
-  {
-    id: 1,
-    major: 'คณะวิศวกรรมศาสตร์',
-    academic: 12
-  },
-  {
-    id: 2,
-    major: 'คณะวิทยาศาสตร์',
-    academic: 9
-  },
-  {
-    id: 3,
-    major: 'คณะครุศาสตร์',
-    academic: 7
-  },
-  {
-    id: 4,
-    major: 'คณะเทคโนโลยีอุตสาหกรรม',
-    academic: 10
-  },
-  {
-    id: 5,
-    major: 'คณะวิทยาการจัดการและเทคโนโลยีสารสนเทศ',
-    academic: 14
-  },
-];
+  filteredDocuments: GraphItem[] = [];
 
-filteredDocuments: DepartmentData[] = [];
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private service: DashboardService
+  ) {}
 
-titles: Record<ReportType, { main: string; sub: string }> = {
-  project: {
-    main: 'รายงานจำนวนโครงการวิจัย',
-    sub: 'จำแนกตามหน่วยงาน',
-  },
-  article: {
-    main: 'รายงานจำนวนบทความ/วารสาร',
-    sub: 'จำแนกตามหน่วยงาน',
-  },
-  innovation: {
-    main: 'รายงานจำนวนนวัตกรรมสิ่งประดิษฐ์',
-    sub: 'จำแนกตามหน่วยงาน',
-  },
-};
+  ngOnInit() {
+    MainComponent.showLoading();
 
-
-constructor(private router: Router, private route: ActivatedRoute) {}
-
-ngOnInit(){
-  MainComponent.showLoading();
-  const type = this.route.snapshot.paramMap.get('type');
+    const type = this.route.snapshot.paramMap.get('type');
     this.reportType = this.isReportType(type) ? type : null;
 
-    this.filteredDocuments = [...this.documents];
-    MainComponent.hideLoading();
-}
+    this.loadData();
+  }
 
-isReportType(value: string | null): value is ReportType {
-  return value === 'project' || value === 'article' || value === 'innovation';
-}
+  loadData() {
+    this.service.getDashboardData().subscribe({
+      next: (res) => {
+        this.dataChart = res.data.statistic_graph;
 
-viewResearchReport() {
-  this.reportType = 'project';
-}
+        this.mapData();
 
-viewArticleReport() {
-  this.reportType = 'article';
-}
+        MainComponent.hideLoading(); // ✅ ย้ายมาถูกที่
+      },
+      error: (err) => {
+        console.error(err);
+        MainComponent.hideLoading();
+      },
+    });
+  }
 
-viewInnovationReport() {
-  this.reportType = 'innovation';
-}
+  isReportType(value: string | null): value is ReportType {
+    return value === 'project' || value === 'article' || value === 'innovation';
+  }
 
-get totalPages(): number {
-  return Math.ceil(this.filteredDocuments.length / this.pageSize);
-}
+  get totalPages(): number {
+    return Math.ceil(this.filteredDocuments.length / this.pageSize);
+  }
 
-get pages(): number[] {
-  return Array.from({ length: this.totalPages }, (_, i) => i + 1);
-}
+  get pages(): number[] {
+    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  }
 
-get totalDepartment(): number {
-  return this.filteredDocuments.reduce(
-    (sum, r) => sum + r.academic,
-    0
-  );
-}
+  get totalDepartment(): number {
+    return this.filteredDocuments.reduce((sum, r) => sum + r.count, 0);
+  }
 
-get totalSupport():number {
-  return this.filteredDocuments.reduce(
-    (sum: number, r: any) => sum + r.support, 0
-  );
-}
+  get paginatedDepartment(): GraphItem[] {
+    const start = (this.currentPage - 1) * this.pageSize;
+    return this.filteredDocuments.slice(start, start + this.pageSize);
+  }
 
-get paginatedDepartment(): DepartmentData[] {
-  const start = (this.currentPage - 1) * this.pageSize;
-  return this.filteredDocuments.slice(start, start + this.pageSize);
-}
+  changePage(page: number): void {
+    if (page < 1 || page > this.totalPages) return;
+    this.currentPage = page;
+  }
 
-changePage(page: number): void {
-  if (page < 1 || page > this.totalPages) return;
-  this.currentPage = page;
-}
+  mapData() {
+    if (!this.dataChart || !this.reportType) return;
 
-goToDetail(d: DepartmentData): void {
-  if (!this.reportType) return;
+    if (this.reportType === 'project') {
+      this.filteredDocuments = this.dataChart.graph_project;
+    } else if (this.reportType === 'article') {
+      this.filteredDocuments = this.dataChart.graph_article;
+    } else {
+      this.filteredDocuments = this.dataChart.graph_innovation;
+    }
 
-  this.router.navigate([
-    '/performance-detail-by-departmaent',
-    this.reportType,
-    d.id,
-  ]);
-}
+    this.currentPage = 1;
+  }
+
+  titles: Record<ReportType, { main: string; sub: string }> = {
+    project: {
+      main: 'รายงานโครงการวิจัย',
+      sub: 'แยกตามหน่วยงาน',
+    },
+    article: {
+      main: 'รายงานบทความวิจัย',
+      sub: 'แยกตามหน่วยงาน',
+    },
+    innovation: {
+      main: 'รายงานนวัตกรรม',
+      sub: 'แยกตามหน่วยงาน',
+    },
+  };
 }
