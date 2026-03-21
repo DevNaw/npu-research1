@@ -273,6 +273,7 @@
                 [grid]="chartsOECD[0].options.grid"
                 [fill]="chartsOECD[0].options.fill"
                 [annotations]="chartsOECD[0].options.annotations"
+                [tooltip]="chartsOECD[0].options.tooltip!"
               ></apx-chart>
             </div>
           </div>
@@ -508,20 +509,18 @@
             <colgroup>
               <col class="w-[5%]" />
               <col class="w-[10%]" />
-              <col class="w-[30%]" />
-              <col class="w-[15%]" />
+              <col class="w-[40%]" />
               <col class="w-[20%]" />
+              <col class="w-[10%]" />
               <col class="w-[15%]" />
-              <col class="w-[5%]" />
             </colgroup>
 
             <thead class="bg-[#394250] text-white">
               <tr>
                 <th class="p-2">#</th>
                 <th class="p-2 text-center">รหัส</th>
-                <th class="p-2 text-start">ชื่อผลงาน</th>
+                <th class="p-2 text-center">ชื่อผลงาน</th>
                 <th class="p-2 text-center">แหล่งทุน</th>
-                <th class="p-2 text-center">ชื่อแหล่งทุน</th>
                 <th class="p-2 text-start">{{ selectedTab === 'PROJECT' ? 'หัวหน้าโครงการ': selectedTab === 'ARTICLE' ? 'ผู้ประพันธ์อันดับแรก' : 'หัวหน้าโครงการ' }}</th>
                 <th class="p-2">ปี</th>
               </tr>
@@ -554,15 +553,19 @@
                     }}
                   </div>
                 </td>
-                <td class="p-2">{{ p.funding.source_funds || '-' }}</td>
-                <td class="p-2">{{ p.funding.funding_name || '-' }}</td>
+                <td>
+                  <strong>ประเภท : </strong>{{ p.funding.source_funds || '-' }}
+                  <br />
+                  <strong>ชื่อแหล่งทุน : </strong>{{ p.funding.funding_name || '-' }}
+                </td>
+
                 <td class="p-2">{{ p.own[0].full_name }}</td>
                 <td class="p-2 text-center">{{ p.year }}</td>
               </tr>
 
               <!-- ไม่พบข้อมูล -->
               <tr *ngIf="filteredResearch.length === 0">
-                <td colspan="5" class="text-center p-4 text-gray-500">
+                <td colspan="6" class="text-center p-4 text-gray-500">
                   <i class="bi bi-folder-x text-3xl block mb-2"></i>
                   ไม่พบข้อมูล
                 </td>

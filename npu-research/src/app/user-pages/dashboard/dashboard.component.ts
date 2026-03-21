@@ -77,6 +77,7 @@ export class UserDashboardComponent implements OnInit {
   radarChartOptionsSub!: Partial<RadarChartOptions>;
   fullLabels: string[] = [];
   fullLabelsSub: string[] = [];
+  fullLabelSubSub: string[] = [];
   chartOptions: any;
 
   charts: {
@@ -502,7 +503,10 @@ export class UserDashboardComponent implements OnInit {
     data: { label: string; count: number }[]
   ): ChartOptions {
 
-    const maxValue = Math.max(...data.map((item) => item.count), 10);
+  const shortLabels = data.map(item => this.truncateText(item.label, 8));
+  const values = data.map(item => item.count);
+
+  const maxValue = Math.max(...values, 10);
 
     return {
       series: [
@@ -541,10 +545,9 @@ export class UserDashboardComponent implements OnInit {
         enabled: false,
       },
       xaxis: {
-        categories: data.map((item) => item.label),
+        categories: shortLabels,
         tickPlacement: 'on',
         labels: {
-          formatter: (val: string) => this.truncateText(val, 8),
           rotate: -45,
           hideOverlappingLabels: true,
           trim: true,
@@ -554,10 +557,20 @@ export class UserDashboardComponent implements OnInit {
         },
       },
       tooltip: {
-        x: {
-          formatter: (_: any, opts: any) => {
-            return data[opts.dataPointIndex]?.label || '';
-          },
+        custom: ({ series, seriesIndex, dataPointIndex }: any) => {
+          const fullLabel = data[dataPointIndex]?.label ?? '';
+          const value = series[seriesIndex][dataPointIndex];
+      
+          return `
+            <div style="padding:10px 14px; background:#fff; color:#333; border-radius:6px; border:1px solid #e0e0e0; box-shadow:0 2px 8px rgba(0,0,0,0.15);">
+              <div style="font-weight:600; margin-bottom:6px;">${fullLabel}</div>
+              <hr style="border-color:#eee; margin:4px 0;">
+              <div style="display:flex; align-items:center; gap:6px;">
+                <span style="width:10px; height:10px; border-radius:50%; background:#008FFB; display:inline-block;"></span>
+                <span>จำนวนผลงาน: <strong>${value}</strong></span>
+              </div>
+            </div>
+          `;
         },
       },
       yaxis: {
@@ -762,15 +775,10 @@ export class UserDashboardComponent implements OnInit {
   
     // ===== PIE (CanvasJS) ⭐ สำคัญ =====
     this.loading = true;
-    // this.chartOptions = {
-    //   animationEnabled: true,
-    //   backgroundColor: 'transparent',
-    //   legend: {
-    //     fontColor: '#ffffff',
-    //   },
+
     setTimeout(() => {
       this.chartOptions = {
-        ...this.chartOptions, // trigger change
+        ...this.chartOptions,
         animationEnabled: true,
         backgroundColor: 'transparent',
         legend: {

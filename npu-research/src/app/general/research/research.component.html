@@ -39,7 +39,7 @@
             <th class="p-2 text-center">รหัส</th>
             <th class="p-1 md:p-2 text-start font-bold">ชื่อผลงานวิจัย</th>
             <!-- <th class="p-2 text-center">แหล่งทุน</th> -->
-            <th class="p-2 text-center">ชื่อแหล่งทุน</th>
+            <th class="p-2 text-center">แหล่งทุน</th>
             <th class="p-1 md:p-2 text-start font-bold">สาขา</th>
             <th class="p-1 md:p-2 text-start font-bold">ผู้วิจัย</th>
           </tr>
@@ -80,9 +80,8 @@
             <td>
               <strong>ประเภท : </strong>{{ r.funding.source_funds || '-' }}
               <br />
-              <strong>ชื่อแหล่งเงิน : </strong>{{ r.funding.funding_name || '-' }}
+              <strong>ชื่อแหล่งทุน : </strong>{{ r.funding.funding_name || '-' }}
             </td>
-            <!-- <td>{{ r.funding.funding_name || '-' }}</td> -->
 
             <!-- Major -->
             <td class="p-1 md:p-2">
