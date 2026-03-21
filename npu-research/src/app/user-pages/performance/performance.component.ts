@@ -9,6 +9,7 @@ import { InnovationApi, ResearchOwnerInnovation } from '../../models/innovation-
 import Swal from 'sweetalert2';
 import { HttpClient } from '@angular/common/http';
 import { MainComponent } from '../../shared/layouts/main/main.component';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 type WorkType = 'project' | 'article' | 'innovation';
 
@@ -19,6 +20,7 @@ type WorkType = 'project' | 'article' | 'innovation';
   styleUrl: './performance.component.css',
 })
 export class PerformanceComponent {
+  safeDescription!: SafeHtml;
   type!: WorkType;
   id!: number;
   selectedImage: string | null = null;
@@ -45,7 +47,8 @@ export class PerformanceComponent {
     private router: Router,
     private service: ResearchService,
     private authService: AuthService,
-    private http: HttpClient
+    private http: HttpClient,
+    private sanitizer: DomSanitizer
   ) {}
 
   ngOnInit(): void {
@@ -205,6 +208,9 @@ export class PerformanceComponent {
     switch (this.type) {
       case 'article':
         this.articleData = res.data.researchArticle;
+        this.safeDescription = this.formatAbstract(
+          this.articleData?.abstract_en || this.articleData?.abstract
+        );
         this.ownerArticle = res.data.owner;
         this.oecdUI = this.mapOecdApiToUI(this.articleData?.oecd || []);
 
@@ -217,6 +223,9 @@ export class PerformanceComponent {
 
       case 'project':
         this.researchData = res.data.projectDetail;
+        this.safeDescription = this.formatAbstract(
+          this.researchData?.abstract_en || this.researchData?.abstract
+        );
         this.oecdUI = this.mapOecdApiToUI(this.researchData?.oecd || []);
         this.ownerProject = res.data.owner;
 
@@ -229,6 +238,9 @@ export class PerformanceComponent {
 
       case 'innovation':
         this.innovationData = res.data.researchInnovation;
+        this.safeDescription = this.formatAbstract(
+          this.innovationData?.abstract_en || this.innovationData?.abstract
+        );
         this.ownerInnovation = res.data.owner;
         this.oecdUI = this.mapOecdApiToUI(this.innovationData?.oecd || []);
 
@@ -306,5 +318,16 @@ export class PerformanceComponent {
           }]
         : []
     }));
+  }
+
+  formatAbstract(text: string | null | undefined): SafeHtml {
+    if (!text) return '-';
+  
+    const html = text
+      .split('\n')
+      .map(line => `<p>${line}</p>`)
+      .join('');
+  
+    return this.sanitizer.bypassSecurityTrustHtml(html);
   }
 }

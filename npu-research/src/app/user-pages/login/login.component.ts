@@ -37,7 +37,6 @@ export class LoginComponent {
           showConfirmButton: false,
           timer: 1000,
         });
-        // console.log(res);
 
         localStorage.setItem('user', JSON.stringify(res.user));
 

@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
-import { MOCK_USERS } from '../models/mock-user';
-import { User } from '../models/user.model';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { map, tap } from 'rxjs';
-import {  OrganizationResponse } from '../models/expertise.model';
+import { catchError, map, tap, throwError } from 'rxjs';
+import { OrganizationResponse } from '../models/expertise.model';
 
 @Injectable({
   providedIn: 'root',
@@ -12,13 +10,19 @@ import {  OrganizationResponse } from '../models/expertise.model';
 export class AuthService {
   private readonly baseUrl = `${environment.apiBaseUrl}/v1/extreme/auth`;
 
-
   private TOKEN_KEY = 'token';
   private USER_KEY = 'use';
 
   constructor(private http: HttpClient) {}
 
+  // private setSession(token: string, user: any) {
+  //   localStorage.setItem(this.TOKEN_KEY, token);
+  //   localStorage.setItem(this.USER_KEY, JSON.stringify(user));
+  // }
+
   private setSession(token: string, user: any) {
+    if (!token || !user) return;
+
     localStorage.setItem(this.TOKEN_KEY, token);
     localStorage.setItem(this.USER_KEY, JSON.stringify(user));
   }
@@ -31,21 +35,59 @@ export class AuthService {
   // ===== helper อ่านจาก localStorage แบบปลอดภัย =====
   getUserFromStorage(): any {
     const user = localStorage.getItem(this.USER_KEY);
-    return user ? JSON.parse(user) : null;
+
+    if (!user) return null;
+    try {
+      return JSON.parse(user);
+    } catch (e) {
+      console.warn('Invalid user in storage, clearing...');
+      this.clearSession();
+      return null;
+    }
   }
 
+  // getUserFromStorage(): any {
+  //   const user = localStorage.getItem(this.USER_KEY);
+  //   if (!user) return null;
+  
+  //   try {
+  //     return JSON.parse(user);
+  //   } catch (e) {
+  //     console.warn('Invalid user in storage, clearing...');
+  //     localStorage.removeItem(this.USER_KEY);
+  //     localStorage.removeItem(this.TOKEN_KEY);
+  //     return null;
+  //   }
+  // }
+
   // ===== login =====
+  // login(username: string, password: string) {
+  //   return this.http
+  //     .post<any>(`${this.baseUrl}/users/login`, { username, password })
+  //     .pipe(
+  //       tap((res) => {
+  //         // 🔥 ปรับตาม response จริงของ backend
+  //         const token = res?.data?.token;
+  //         const user = res?.data?.user;
+
+  //         if (token && user) {
+  //           this.setSession(token, user);
+  //         }
+  //       })
+  //     );
+  // }
+
   login(username: string, password: string) {
     return this.http
       .post<any>(`${this.baseUrl}/users/login`, { username, password })
       .pipe(
         tap((res) => {
-          // 🔥 ปรับตาม response จริงของ backend
           const token = res?.data?.token;
           const user = res?.data?.user;
-
           if (token && user) {
             this.setSession(token, user);
+          } else {
+            console.warn('Token or user missing in response!');
           }
         })
       );
@@ -53,7 +95,8 @@ export class AuthService {
 
   // ===== เช็คว่า login อยู่ไหม =====
   isLoggedIn(): boolean {
-    return !!localStorage.getItem(this.TOKEN_KEY);
+    const token = localStorage.getItem(this.TOKEN_KEY);
+    return !!token;
   }
 
   // ===== ดึง user ปัจจุบัน =====
@@ -76,28 +119,35 @@ export class AuthService {
   // ===== logout =====
   logout() {
     const token = localStorage.getItem(this.TOKEN_KEY);
-  
-    return this.http.post(
-      `${this.baseUrl}/logout`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`
+
+    return this.http
+      .post(
+        `${this.baseUrl}/logout`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      }
-    ).pipe(
-      tap(() => this.clearSession())
-    );
+      )
+      .pipe(
+        tap(() => this.clearSession()),
+        catchError((err) => {
+          this.clearSession();
+          return throwError(() => err);
+        })
+      );
   }
-  
+
+  forceLogout() {
+    this.clearSession();
+  }
 
   // ดึงข้อมูลสาขาที่เชี่ยวชาญ
   getOrganizations() {
     return this.http
-    .get<OrganizationResponse>(`${this.baseUrl}/list-organizations`)
-    .pipe(
-      map(res => res.data.organizations)
-    );
+      .get<OrganizationResponse>(`${this.baseUrl}/list-organizations`)
+      .pipe(map((res) => res.data.organizations));
   }
 
   // ลงทะเบียน

@@ -43,6 +43,7 @@ export type ChartOptions = {
   fill: ApexFill;
   stroke: ApexStroke;
   grid: ApexGrid;
+  tooltip?: ApexTooltip;
 };
 
 export type RadarChartOptions = {
@@ -75,6 +76,7 @@ export class UserDashboardComponent implements OnInit {
   radarChartOptions!: Partial<RadarChartOptions>;
   radarChartOptionsSub!: Partial<RadarChartOptions>;
   fullLabels: string[] = [];
+  fullLabelsSub: string[] = [];
   chartOptions: any;
 
   charts: {
@@ -262,11 +264,11 @@ export class UserDashboardComponent implements OnInit {
       tooltip: {
         theme: 'dark',
         custom: ({ series, seriesIndex, dataPointIndex }) => {
-          const fullLabel = this.fullLabels[dataPointIndex];
+          const fullLabelSub = this.fullLabelsSub[dataPointIndex];
           const value = series[seriesIndex][dataPointIndex];
       
           return  `<div style="padding:8px 12px; background:#333; color:#fff; border-radius:6px;">
-        <div style="font-weight:600; margin-bottom:4px;">${fullLabel}</div>
+        <div style="font-weight:600; margin-bottom:4px;">${fullLabelSub}</div>
         <hr style="border-color:#555; margin:4px 0;">
         <div style="display:flex; justify-content:space-around; align-items:center; gap:6px;">
           <span style="width:10px; height:10px; border-radius:50%; background:#FF4560; display:inline-block;"></span>
@@ -402,6 +404,8 @@ export class UserDashboardComponent implements OnInit {
           color: '#000',
         },
       },
+      tooltip: {
+      },
       yaxis: {
         title: {
           text: 'จำนวน',
@@ -497,6 +501,9 @@ export class UserDashboardComponent implements OnInit {
   private createBarChartOECD(
     data: { label: string; count: number }[]
   ): ChartOptions {
+
+    const maxValue = Math.max(...data.map((item) => item.count), 10);
+
     return {
       series: [
         {
@@ -523,7 +530,7 @@ export class UserDashboardComponent implements OnInit {
       },
       plotOptions: {
         bar: {
-          columnWidth: '50%',
+          columnWidth: '40%',
           borderRadius: 6,
           borderRadiusApplication: 'around',
           backgroundBarOpacity: 1,
@@ -536,20 +543,21 @@ export class UserDashboardComponent implements OnInit {
       xaxis: {
         categories: data.map((item) => item.label),
         tickPlacement: 'on',
-        axisBorder: {
-          show: true,
-          color: '#000',
-          height: 1,
-        },
         labels: {
-          rotate: -90,
+          formatter: (val: string) => this.truncateText(val, 8),
+          rotate: -45,
+          hideOverlappingLabels: true,
+          trim: true,
           style: {
-            fontSize: '12px',
+            fontSize: '11px',
           },
         },
-        axisTicks: {
-          show: true,
-          color: '#000',
+      },
+      tooltip: {
+        x: {
+          formatter: (_: any, opts: any) => {
+            return data[opts.dataPointIndex]?.label || '';
+          },
         },
       },
       yaxis: {
@@ -557,7 +565,7 @@ export class UserDashboardComponent implements OnInit {
           text: 'จำนวน',
         },
         min: 0,
-        max: Math.max(...data.map((item) => item.count)) < 10 ? 10 : Math.max(...data.map((item) => item.count)),
+        max: maxValue,
         tickAmount: 4,
         axisBorder: {
           show: true,
@@ -731,7 +739,7 @@ export class UserDashboardComponent implements OnInit {
     }
   
     // ===== RADAR =====
-    this.fullLabels = labels;
+    this.fullLabelsSub = labels;
     this.radarChartOptionsSub.labels = labels.map(l => this.shortLabel(l));
     this.radarChartOptionsSub.series = [
       {
@@ -893,5 +901,12 @@ export class UserDashboardComponent implements OnInit {
         : fullLabel;
 
     return shortLabel;
+  }
+
+  truncateText(text: string, maxLength: number = 6): string {
+    if (!text) return '';
+    return text.length > maxLength
+      ? text.substring(0, maxLength) + '...'
+      : text;
   }
 }

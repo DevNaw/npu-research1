@@ -399,13 +399,20 @@
               </div>
 
               <div>
+                <ng-container *ngIf="chartOptions?.data?.[0]?.dataPoints?.length > 0; else noData">
                 <canvasjs-chart
                   [options]="chartOptions"
                   (chartInstance)="getChartInstance($event)"
                   [styles]="{ width: '100%', height: '300px' }"
                 >
                 </canvasjs-chart>
+              </ng-container>
               </div>
+
+              <!-- ไม่พบข้อมูล -->
+               <ng-template #noData>
+                  <div class="text-center text-gray-500 py-16">ไม่พบข้อมูล</div>
+                </ng-template>
             </div>
 
             <!-- BAR CARD -->

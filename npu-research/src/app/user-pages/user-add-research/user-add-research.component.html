@@ -80,6 +80,7 @@
           value="th"
           class="cursor-pointer"
           [(ngModel)]="abstractType"
+          (ngModelChange)="onAbstractTypeChange($event)"
         />
         <label class="ml-4">บทคัดย่อ</label>
       </div>
@@ -91,6 +92,7 @@
           value="en"
           class="cursor-pointer"
           [(ngModel)]="abstractType"
+          (ngModelChange)="onAbstractTypeChange($event)"
         />
         <label class="ml-4">Abstract</label>
       </div>
@@ -102,6 +104,7 @@
       <textarea
         name="abstract"
         [(ngModel)]="projectData.abstract"
+        (keydown)="handleTab($event)"
         class="w-full border h-50 rounded-md px-4 py-2 text-lg font-light my-2"
         placeholder="ระบุบทคัดย่อ"
       ></textarea>
@@ -147,6 +150,7 @@
       <textarea
         name="abstract_en"
         [(ngModel)]="projectData.abstract_en"
+        (keydown)="handleTab($event)"
         class="w-full border h-50 rounded-md px-4 py-2 text-lg font-light my-2"
         placeholder="Enter abstract"
       ></textarea>
@@ -723,7 +727,7 @@
           #budgetAmount="ngModel"
           [class.border-red-500]="budgetAmount.invalid && budgetAmount.touched"
           [(ngModel)]="projectData.budget_amount"
-          type="text"
+          type="number"
           class="w-full border text-lg font-light rounded-md h-12 px-4 py-2 focus:ring-2 focus:ring-blue-400"
           placeholder="ระบุจำนวนงบประมาณ"
         />

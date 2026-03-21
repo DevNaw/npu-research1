@@ -19,6 +19,7 @@ import {
 } from '../../models/innovation-detai.model';
 import Swal from 'sweetalert2';
 import { MainComponent } from '../../shared/layouts/main/main.component';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 type WorkType = 'project' | 'article' | 'innovation';
 
@@ -29,6 +30,7 @@ type WorkType = 'project' | 'article' | 'innovation';
   styleUrl: './performance-public.component.css',
 })
 export class PerformancePublicComponent {
+  safeDescription!: SafeHtml;
   type!: WorkType;
   id!: number;
   selectedImage: string | null = null;
@@ -52,7 +54,8 @@ export class PerformancePublicComponent {
   constructor(
     private route: ActivatedRoute,
     private service: ResearchService,
-    private http: HttpClient
+    private http: HttpClient,
+    private sanitizer: DomSanitizer
   ) {}
 
   ngOnInit(): void {
@@ -183,6 +186,9 @@ export class PerformancePublicComponent {
     switch (this.type) {
       case 'article':
         this.articleData = res.data.researchArticle;
+        this.safeDescription = this.formatAbstract(
+          this.articleData?.abstract_en || this.articleData?.abstract
+        );
         this.ownerArticle = res.data.owner;
         this.oecdUI = this.mapOecdApiToUI(this.articleData?.oecd || []);
 
@@ -195,6 +201,9 @@ export class PerformancePublicComponent {
 
       case 'project':
         this.researchData = res.data.projectDetail;
+        this.safeDescription = this.formatAbstract(
+          this.researchData?.abstract_en || this.researchData?.abstract
+        );
         this.ownerProject = res.data.owner;
         this.oecdUI = this.mapOecdApiToUI(this.researchData?.oecd || []);
 
@@ -207,6 +216,9 @@ export class PerformancePublicComponent {
 
       case 'innovation':
         this.innovationData = res.data.researchInnovation;
+        this.safeDescription = this.formatAbstract(
+          this.innovationData?.abstract_en || this.innovationData?.abstract
+        );
         this.ownerInnovation = res.data.owner;
         this.oecdUI = this.mapOecdApiToUI(this.innovationData?.oecd || []);
 
@@ -284,5 +296,16 @@ export class PerformancePublicComponent {
             }]
           : []
       }));
+    }
+
+    formatAbstract(text: string | null | undefined): SafeHtml {
+      if (!text) return '-';
+    
+      const html = text
+        .split('\n')
+        .map(line => `<p>${line}</p>`)
+        .join('');
+    
+      return this.sanitizer.bypassSecurityTrustHtml(html);
     }
 }

@@ -62,7 +62,7 @@ export interface ResearchProjectData {
   contract_file: ResearchContractFile | null;
   oecd_id: number;
   funding_code: string;
-  funding_id: number;
+  funding_id: number | null;
 }
 
 export interface ResearchKeyword {

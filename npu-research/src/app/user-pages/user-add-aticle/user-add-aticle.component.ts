@@ -100,7 +100,7 @@ export class UserAddAticleComponent {
   searchResearcher = '';
 
   keywords: string[] = [];
-  abstractType: string = '';
+  abstractType: 'th' | 'en' = 'th';
   keywordInput = '';
   keywordInputEn = '';
 
@@ -111,6 +111,8 @@ export class UserAddAticleComponent {
   ) {}
 
   ngOnInit() {
+    this.resetForm();
+
     MainComponent.showLoading();
     this.loadSubjectAreas();
     this.loadResearchersData();
@@ -125,6 +127,7 @@ export class UserAddAticleComponent {
         this.loadAticleData(this.articleData.id);
       } else {
         this.isEdit = false;
+        // this.resetForm();
       }
       MainComponent.hideLoading();
     });
@@ -437,8 +440,14 @@ export class UserAddAticleComponent {
       }
     };
 
-    required('title_th', d.title_th);
-    required('title_en', d.title_en);
+    // required('title_th', d.title_th);
+    // required('title_en', d.title_en);
+    if (this.abstractType === 'th') {
+      required('title_th', d.title_th);
+    } else {
+      required('title_en', d.title_en);
+    }
+
     optional('abstract', d.abstract);
     optional('abstract_en', d.abstract_en);
 
@@ -516,6 +525,10 @@ export class UserAddAticleComponent {
     this.selectedSub = null;
     this.searchMajor = '';
     this.searchSub = '';
+    this.keywordInput = '';
+    this.keywordInputEn = '';
+    this.abstractType = 'th';
+    this.articleData.keywords = [];
   }
 
   isResearcherAlreadySelected(
@@ -657,5 +670,46 @@ export class UserAddAticleComponent {
         .toLowerCase()
         .includes((this.searchSub || '').toLowerCase())
     );
+  }
+
+  onAbstractTypeChange(type: 'th' | 'en') {
+    this.abstractType = type;
+  
+    if (type === 'en') {
+      // 👇 reset ตอนเลือก EN
+      this.keywordInputEn = '';
+      this.articleData.keywords = [];
+      this.articleData.abstract_en = '';
+    } else {
+      // 👇 reset ตอนเลือก TH
+      this.keywordInput = '';
+      this.articleData.keywords = [];
+      this.articleData.abstract = '';
+    }
+  }
+
+  handleTab(event: KeyboardEvent) {
+    if (event.key === 'Tab') {
+      event.preventDefault(); // ❗ หยุดการเปลี่ยน focus
+  
+      const textarea = event.target as HTMLTextAreaElement;
+  
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+  
+      // ใส่ tab (\t) หรือจะใช้ช่องว่าง 4 ตัวก็ได้
+      const tab = '\t'; // หรือ '    '
+  
+      textarea.value =
+        textarea.value.substring(0, start) +
+        tab +
+        textarea.value.substring(end);
+  
+      // อัปเดต cursor
+      textarea.selectionStart = textarea.selectionEnd = start + tab.length;
+  
+      // sync กับ ngModel
+      this.articleData.abstract = textarea.value;
+    }
   }
 }

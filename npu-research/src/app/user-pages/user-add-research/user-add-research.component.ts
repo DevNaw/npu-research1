@@ -43,7 +43,7 @@ const DEFAULT_RESEARCH: ResearchProjectData = {
   contract_file: null,
   oecd_id: 0,
   funding_code: '',
-  funding_id: 0,
+  funding_id: null,
 };
 
 @Component({
@@ -435,12 +435,11 @@ export class UserAddResearchComponent {
       allowOutsideClick: false,
       didOpen: () => Swal.showLoading(),
     });
-    console.log('formData', formData);
 
     const request$ = this.isEdit
       ? this.service.updateProject(this.projectData.id, formData)
       : this.service.createProject(formData);
-
+      console.log('formData', formData);
     request$.subscribe({
       next: (res: any) => {
         Swal.fire({
@@ -523,7 +522,6 @@ export class UserAddResearchComponent {
       );
       
       funding_code = selectedFund?.funding_code ?? '';
-    
     } else {
       funding_code = '99';
     }
@@ -531,6 +529,8 @@ export class UserAddResearchComponent {
     required('oecd_id', subSub);
     optional('funding_code', d.funding_code);
     optional('funding_id', d.funding_id);
+
+    console.log('funding_id', d.funding_id);
 
     this.internalRow
       .filter((r) => r.researcher_id)
@@ -719,5 +719,46 @@ export class UserAddResearchComponent {
   selectYear(year: number) {
     this.projectData.year_received_budget = year;
     this.activeDropdown = null;
+  }
+
+  onAbstractTypeChange(type: 'th' | 'en') {
+    this.abstractType = type;
+  
+    if (type === 'en') {
+      // 👇 reset ตอนเลือก EN
+      this.keywordInputEn = '';
+      this.projectData.keywords = [];
+      this.projectData.abstract_en = '';
+    } else {
+      // 👇 reset ตอนเลือก TH
+      this.keywordInput = '';
+      this.projectData.keywords = [];
+      this.projectData.abstract = '';
+    }
+  }
+
+  handleTab(event: KeyboardEvent) {
+    if (event.key === 'Tab') {
+      event.preventDefault(); // ❗ หยุดการเปลี่ยน focus
+  
+      const textarea = event.target as HTMLTextAreaElement;
+  
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+  
+      // ใส่ tab (\t) หรือจะใช้ช่องว่าง 4 ตัวก็ได้
+      const tab = '\t'; // หรือ '    '
+  
+      textarea.value =
+        textarea.value.substring(0, start) +
+        tab +
+        textarea.value.substring(end);
+  
+      // อัปเดต cursor
+      textarea.selectionStart = textarea.selectionEnd = start + tab.length;
+  
+      // sync กับ ngModel
+      this.projectData.abstract = textarea.value;
+    }
   }
 }

@@ -740,29 +740,44 @@ export class UserAddInnovationComponent {
     this.activeDropdown = null;
   }
 
-  // updateFilteredMajors() {
-  //   const keyword = (this.searchMajor || '').toLowerCase();
+  onAbstractTypeChange(type: 'th' | 'en') {
+    this.abstractType = type;
   
-  //   this.filteredMajorsList = this.oecdList.filter((m) =>
-  //     (m.name_th || '').toLowerCase().includes(keyword)
-  //   );
-  // }
-  // updateFilteredSubs() {
-  //   if (!this.selectedMajor) return;
+    if (type === 'en') {
+      // 👇 reset ตอนเลือก EN
+      this.keywordInputEn = '';
+      this.projectData.keywords = [];
+      this.projectData.abstract_en = '';
+    } else {
+      // 👇 reset ตอนเลือก TH
+      this.keywordInput = '';
+      this.projectData.keywords = [];
+      this.projectData.abstract = '';
+    }
+  }
+
+  handleTab(event: KeyboardEvent) {
+    if (event.key === 'Tab') {
+      event.preventDefault(); // ❗ หยุดการเปลี่ยน focus
   
-  //   const keyword = (this.searchSub || '').toLowerCase();
+      const textarea = event.target as HTMLTextAreaElement;
   
-  //   this.filteredSubsList = (this.selectedMajor.children || []).filter((s) =>
-  //     (s.name_th || '').toLowerCase().includes(keyword)
-  //   );
-  // }
-  // updateFilteredSubSubs() {
-  //   if (!this.selectedSub) return;
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
   
-  //   const keyword = (this.searchSubSub || '').toLowerCase();
+      // ใส่ tab (\t) หรือจะใช้ช่องว่าง 4 ตัวก็ได้
+      const tab = '\t'; // หรือ '    '
   
-  //   this.filteredSubSubsList = (this.selectedSub.children || []).filter((ss) =>
-  //     (ss.name_th || '').toLowerCase().includes(keyword)
-  //   );
-  // }
+      textarea.value =
+        textarea.value.substring(0, start) +
+        tab +
+        textarea.value.substring(end);
+  
+      // อัปเดต cursor
+      textarea.selectionStart = textarea.selectionEnd = start + tab.length;
+  
+      // sync กับ ngModel
+      this.projectData.abstract = textarea.value;
+    }
+  }
 }

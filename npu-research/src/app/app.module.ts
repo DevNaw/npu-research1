@@ -63,6 +63,7 @@ import { AdminManualComponent } from './admin-pages/admin-manual/admin-manual.co
 import { ChartsModule } from '@progress/kendo-angular-charts';
 import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
 import { ManageProjectComponent } from './admin-pages/manage-project/manage-project.component';
+import { provideHttpClient } from '@angular/common/http';
 
 @NgModule({
   declarations: [
