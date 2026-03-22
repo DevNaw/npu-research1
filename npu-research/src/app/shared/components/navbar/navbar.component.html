@@ -1,7 +1,7 @@
 <!-- ===== Navbar General ===== -->
 <ng-container *ngIf="!isLoggedIn">
   <nav class="text-[#394250] font-medium sticky top-0 z-50 bg-gray-100">
-    <div class="max-w-full mx-auto px-4 md:px-8 cursor-pointer p-1 bg-white">
+    <div class="max-w-full mx-auto p-2 sm:px-6 lg:px-8 cursor-pointer bg-white">
       <div class="flex items-center justify-between h-16">
         <div class="flex items-center gap-3">
           <img
@@ -9,16 +9,16 @@
             alt="NPU Logo"
             class="h-18 w-16 object-contain"
           />
-          <div class="leading-none sm:block">
+          <div class="leading-none sm:block p-2">
             <h1
               routerLink="/dashboard"
-              class="text-lg text-[#394250] leading-none sm:text-xl md:text-2xl transition-all duration-300"
+              class="text-base text-[#394250] leading-none sm:text-xl md:text-2xl transition-all duration-300"
             >
-              ระบบฐานข้อมูลวิจัย
-              <span class="block md:inline"> มหาวิทยาลัยนครพนม </span>
+              ระบบฐานข้อมูลเพื่องานวิจัย
+              <span class="block md:inline">และงานบริการวิชาการ มนพ.</span>
             </h1>
             <p class="text-sm sm:text-lg text-gray-600">
-              Research Database System
+              NPU Research & Academic Service Database
             </p>
           </div>
         </div>
@@ -360,7 +360,7 @@
 <ng-container *ngIf="isLoggedIn && role === 'use'">
   <nav class="text-[#394250] font-medium bg-gray-100 sticky top-0 z-50">
     <div
-      class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 cursor-pointer p-1 bg-white"
+      class="max-w-full mx-auto p-2 sm:px-6 lg:px-8 cursor-pointer bg-white"
     >
       <div class="flex items-center justify-between h-16">
         <div class="flex items-center gap-3">
@@ -369,16 +369,16 @@
             alt="NPU Logo"
             class="h-18 w-16 object-contain"
           />
-          <div class="leading-none sm:block">
+          <div class="leading-none sm:block p-2">
             <h1
-              routerLink="/user/dashboard"
-              class="text-lg sm:text-xl leading-none md:text-2xl transition-all duration-300"
+              routerLink="/dashboard"
+              class="text-base text-[#394250] leading-none sm:text-xl md:text-2xl transition-all duration-300"
             >
-              <span class="block sm:inline">ระบบฐานข้อมูลวิจัย</span>
-              <span class="block sm:inline">มหาวิทยาลัยนครพนม</span>
+              ระบบฐานข้อมูลเพื่องานวิจัย
+              <span class="block md:inline">และงานบริการวิชาการ มนพ.</span>
             </h1>
             <p class="text-sm sm:text-lg text-gray-600">
-              Research Database System
+              NPU Research & Academic Service Database
             </p>
           </div>
         </div>
@@ -627,7 +627,7 @@
 <ng-container *ngIf="isLoggedIn && role === 'adm'">
   <nav class="text-[#394250] font-medium bg-gray-100 sticky top-0 z-50">
     <div
-      class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 cursor-pointer p-1 bg-white"
+      class="max-w-full mx-auto p-2 sm:px-6 lg:px-8 cursor-pointer bg-white"
     >
       <div class="flex items-center justify-between h-16">
         <div class="flex items-center gap-3">
@@ -636,16 +636,16 @@
             alt="npu-logo"
             class="h-18 w-16 object-contain"
           />
-          <div class="leading-none sm:block">
+          <div class="leading-none sm:block p-2">
             <h1
-              routerLink="/admin/dashboard"
-              class="text-lg sm:text-xl md:text-2xl leading-none  transition-all duration-300"
+              routerLink="/dashboard"
+              class="text-base text-[#394250] leading-none sm:text-xl md:text-2xl transition-all duration-300"
             >
-              <span class="block sm:inline">ระบบฐานข้อมูลวิจัย</span>
-              <span class="block sm:inline">มหาวิทยาลัยนครพนม</span>
+              ระบบฐานข้อมูลเพื่องานวิจัย
+              <span class="block md:inline">และงานบริการวิชาการ มนพ.</span>
             </h1>
-            <p class="text-sm sm:text-lg  text-gray-600">
-              Research Database System
+            <p class="text-sm sm:text-lg text-gray-600">
+              NPU Research & Academic Service Database
             </p>
           </div>
         </div>

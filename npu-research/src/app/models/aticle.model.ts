@@ -43,6 +43,7 @@ export interface ArticleSubjectArea {
   // -----------------------------
   export interface Article {
     id: number;
+    lang_type: string;
     title_th: string;
     title_en: string;
     abstract: string;

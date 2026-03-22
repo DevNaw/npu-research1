@@ -112,14 +112,12 @@
 
               <div *ngIf="researchData?.abstract">
                 <p class="text-[#767676]">บทคัดย่อ</p>
-                <!-- <p class="font-light text-xl">{{ researchData?.abstract || '-' }}</p> -->
-                <p class="font-light text-xl" [innerHTML]="safeDescription"></p>
+                <p class="font-light text-xl leading-relaxed" [innerHTML]="safeDescription"></p>
               </div>
 
               <div *ngIf="researchData?.abstract_en">
                 <p class="text-[#767676]">Abstract</p>
-                <!-- <p class="font-light text-xl">{{ researchData?.abstract_en || '-' }}</p> -->
-                <p class="font-light text-xl" [innerHTML]="safeDescription"></p>
+                <p class="font-light text-xl leading-relaxed" [innerHTML]="safeDescription"></p>
               </div>
 
               <div>
@@ -314,20 +312,21 @@
 
             <!-- TH -->
             <h1
+              *ngIf="articleData?.lang_type === 'th'"
               class="text-lg md:text-2xl font-semibold mt-1 leading-relaxed wrap-break-word"
             >
               {{ articleData?.title_th }}
             </h1>
 
+            <h1
+              *ngIf="articleData?.lang_type === 'en'"
+              class="text-lg md:text-2xl font-semibold mt-1 leading-relaxed wrap-break-word"
+            >
+              {{ articleData?.title_en }}
+            </h1>
+
             <!-- Divider -->
             <div class="w-full h-0.5 bg-white/40 my-2"></div>
-
-            <!-- EN -->
-            <h2
-              class="text-sm md:text-lg opacity-80 italic leading-relaxed wrap-break-word"
-            >
-              {{ articleData?.title_en || "-" }}
-            </h2>
           </div>
         </div>
 
@@ -405,19 +404,13 @@
               </div>
             </div>
 
-            <div *ngIf="articleData?.abstract">
+            <div *ngIf="articleData?.lang_type === 'th'">
               <p class="text-[#767676]">บทคัดย่อ</p>
-              <!-- <p class="text-[#394250] font-light text-xl">
-                {{ articleData?.abstract || '-' }}
-              </p> -->
               <p class="font-light text-xl" [innerHTML]="safeDescription"></p>
             </div>
 
-            <div *ngIf="articleData?.abstract_en">
+            <div *ngIf="articleData?.lang_type === 'en'">
               <p class="text-[#767676]">Abstract</p>
-              <!-- <p class="text-[#394250] font-light text-xl">
-                {{ articleData?.abstract_en || '-' }}
-              </p> -->
               <p class="font-light text-xl" [innerHTML]="safeDescription"></p>
             </div>
 

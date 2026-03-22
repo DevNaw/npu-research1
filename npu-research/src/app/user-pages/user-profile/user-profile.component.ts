@@ -745,8 +745,8 @@ export class UserProfileComponent implements OnInit {
     }).then((result) => {
       if (!result.isConfirmed) return;
 
-      const payload = { ...this.educationData };
-      const request$ = this.service.updateEducation(payload);
+      // const payload = { ...this.educationData };
+      const request$ = this.service.updateEducation(this.buildEducationPayload());
 
       request$.subscribe({
         next: () => {
@@ -979,5 +979,19 @@ export class UserProfileComponent implements OnInit {
 
   getChartInstance(chart: any) {
     this.chart = chart;
+  }
+
+  private buildEducationPayload(): Record<string, any> {
+    const payload = this.educationData ;
+
+    return {
+      ...(payload.highest_education && { highest_education: payload.highest_education }),
+      ...(payload.field_of_study && { field_of_study: payload.field_of_study }),
+      ...(payload.qualification && { qualification: payload.qualification }),
+      ...(payload.gpa && { gpa: payload.gpa }),
+      ...(payload.institution && { institution: payload.institution }),
+      ...(payload.date_enrollment && { date_enrollment: payload.date_enrollment }),
+      ...(payload.date_graduation && { date_graduation: payload.date_graduation }),
+    };
   }
 }

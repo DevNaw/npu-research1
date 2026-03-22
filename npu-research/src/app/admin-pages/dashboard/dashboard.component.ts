@@ -4,6 +4,7 @@ import { ProfileService } from '../../services/profile.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApexNonAxisChartSeries, ApexChart, ApexResponsive, ApexLegend, ApexDataLabels, ApexPlotOptions, ApexAxisChartSeries, ApexYAxis, ApexXAxis, ApexFill, ApexTooltip, ApexStroke, ChartComponent, ApexMarkers } from 'ng-apexcharts';
 import { MainComponent } from '../../shared/layouts/main/main.component';
+import { AuthService } from '../../services/auth.service';
 
 export type RadarChartOptions = {
   series: ApexAxisChartSeries;
@@ -100,6 +101,7 @@ export class DashboardComponent {
     private service: ProfileService,
     private router: Router,
     private route: ActivatedRoute,
+    private authService: AuthService,
   ) {
     this.chartOptions = {
       colorSet: 'customColorSet',
@@ -393,8 +395,20 @@ export class DashboardComponent {
 
   onSearch() {}
   
+  // viewItem(id: number) {
+  //   this.router.navigate(['/performance-public', this.selectedTab, id]);
+  // }
+
   viewItem(id: number) {
-    this.router.navigate(['/performance-public', this.selectedTab, id]);
+    if (this.authService.isLoggedIn()) {
+      const basePath = this.authService.isAdmin()
+        ? '/admin/performance-by-departmaent'
+        : '/user/performance-by-departmaent';
+  
+      this.router.navigate([basePath, this.selectedTab, id]);
+    } else {
+      this.router.navigate(['/performance-public', this.selectedTab, id]);
+    }
   }
 
   editItem(id: number) {}
@@ -532,5 +546,21 @@ export class DashboardComponent {
         : fullLabel;
 
     return shortLabel;
+  }
+
+  changePage(page: number) {
+    if (page < 1 || page > this.totalPages) return;
+    if (page === this.currentPage) return;
+
+    this.currentPage = page;
+    this.updatePagination();
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.filteredData.length / this.pageSize);
+  }
+
+  get pages(): number[] {
+    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
   }
 }

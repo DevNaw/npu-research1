@@ -15,6 +15,8 @@ export class UserEditProfileComponent implements OnInit {
   openDropdown: string | null = null;
   userId!: string | null;
   data: any = {
+    prefix_th: '',
+    prefix_en: '',
     first_name: '',
     last_name: '',
     first_name_en: null,
@@ -76,34 +78,6 @@ export class UserEditProfileComponent implements OnInit {
       },
       error: (err) => {
         console.error(err);
-      },
-    });
-  }
-
-  // ======= Update Profile ==========
-  updateProfile(): void {
-    this.service.updateGeneral(this.buildFormData()).subscribe({
-      next: (res) => {
-        Swal.fire({
-          icon: 'success',
-          title: 'สำเร็จ',
-          text: 'อัปเดตข้อมูลเรียบร้อยแล้ว',
-        });
-
-        const role = localStorage.getItem('role');
-
-        setTimeout(() => {
-          this.router.navigateByUrl(
-            role === 'admin' ? '/admin/profile' : '/user/profile'
-          );
-        }, 1500);
-      },
-      error: (err) => {
-        Swal.fire({
-          icon: 'error',
-          title: 'ผิดพลาด',
-          text: 'ไม่สามารถอัปเดตข้อมูลได้',
-        });
       },
     });
   }
@@ -194,23 +168,7 @@ export class UserEditProfileComponent implements OnInit {
         didOpen: () => Swal.showLoading(),
       });
 
-      const payload = {
-        first_name: this.data.first_name,
-        last_name: this.data.last_name,
-        first_name_en: this.data.first_name_en,
-        last_name_en: this.data.last_name_en,
-        email: this.data.email,
-        phone: this.data.phone,
-        id_card_number: this.data.id_card_number,
-        ...(this.data.age && { age: this.data.age }),
-        ethnicity: this.data.ethnicity,
-        nationality: this.data.nationality,
-        religion: this.data.religion,
-        date_of_birth: this.data.date_of_birth,
-
-      }
-
-      this.service.updateGeneral(payload).subscribe({
+      this.service.updateGeneral(this.buildFormData()).subscribe({
         next: () => {
           Swal.fire({
             icon: 'success',
@@ -262,37 +220,48 @@ export class UserEditProfileComponent implements OnInit {
     const parts = thaiDate.split(' ');
     const day = parseInt(parts[0], 10);
     const month = months[parts[1]];
-    const year = parseInt(parts[2], 10) - 543; // แปลง พ.ศ. → ค.ศ.
+    const year = parseInt(parts[2], 10) - 543;
 
     const date = new Date(year, month, day);
 
-    return date.toISOString().split('T')[0]; // YYYY-MM-DD
+    return date.toISOString().split('T')[0];
   }
 
-  private buildFormData(): FormData {
-    const fd = new FormData();
+  private buildFormData(): Record<string, any> {
     const d = this.data;
 
-    const required = (key: string, val: any) => fd.append(key, val ?? '');
-    const optional = (key: string, val: any) => {
-      if (val !== null && val !== undefined && val !== '') {
-        fd.append(key, val);
-      }
+    return {
+      ...(d.prefix_th && { prefix_th: d.prefix_th }),
+      ...(d.first_name && { first_name: d.first_name }),
+      ...(d.last_name && { last_name: d.last_name }),
+      ...(d.prefix_en && { prefix_en: d.prefix_en }),
+      ...(d.first_name_en && { first_name_en: d.first_name_en }),
+      ...(d.last_name_en && { last_name_en: d.last_name_en }),
+      ...(d.email && { email: d.email }),
+      ...(d.phone && { phone: d.phone }),
+      ...(d.age && { age: d.age }),
+      ...(d.id_card_number && { id_card_number: d.id_card_number }),
+      ...(d.date_of_birth && { date_of_birth: d.date_of_birth }),
+      ...(d.ethnicity && { ethnicity: d.ethnicity }),
+      ...(d.nationality && { nationality: d.nationality }),
+      ...(d.religion && { religion: d.religion }),
     };
+  }
 
-    required('first_name', d.first_name);
-    required('last_name', d.last_name);
-    optional('first_name_en', d.first_name_en);
-    optional('last_name_en', d.last_name_en);
-    required('email', d.email);
-    optional('phone', d.phone);
-    optional('age', d.age);
-    optional('id_card_number', d.id_card_number);
-    required('date_of_birth', d.date_of_birth);
-    required('ethnicity', d.ethnicity);
-    required('nationality', d.nationality);
-    required('religion', d.religion);
-
-    return fd;
+  calculateAge(): void {
+    if (!this.data.date_of_birth) return;
+  
+    const birth = new Date(this.data.date_of_birth);
+    const today = new Date();
+  
+    let age = today.getFullYear() - birth.getFullYear();
+    const monthDiff = today.getMonth() - birth.getMonth();
+  
+    // ยังไม่ถึงวันเกิดในปีนี้ ให้ลบ 1
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+      age--;
+    }
+  
+    this.data.age = age;
   }
 }

@@ -60,7 +60,8 @@
         <table id="fundingTable" class="min-w-225 w-full table-auto">
           <colgroup>
             <col class="w-[5%]" />
-            <col class="w-[35%]" />
+            <col class="w-[10%]" />
+            <col class="w-[25%]" />
             <col class="w-[35%]" />
             <col class="w-[15%]" />
             <col class="w-[10%]" />
@@ -69,6 +70,7 @@
           <thead>
             <tr class="bg-[#394250] text-white border-b">
               <th class="p-1 md:p-3 w-16">#</th>
+              <th class="p-1 md:p-3 md:pl-6">รหัส</th>
               <th class="p-1 md:p-3 md:pl-6">ชื่อแหล่งทุน</th>
               <th class="p-1 md:p-3 md:pl-6">คำอธิบาย</th>
               <th class="p-1 md:p-3 w-35">สถานะใช้งาน</th>
@@ -86,13 +88,18 @@
                 {{ (currentPage - 1) * pageSize + i + 1 }}
               </td>
 
+              <!-- รหัส -->
+              <td class="p-1 md:p-3 md:pl-6 text-center">
+                {{ e.funding_code || "-" }}
+              </td>
+
               <!-- ชื่อแหล่งทุน -->
-              <td class="p-1 md:p-3 md:pl-6 font-medium">
+              <td class="p-1 md:p-3 md:pl-6">
                 {{ e.funding_name || "-" }}
               </td>
 
               <!-- คำอธิบาย -->
-              <td class="p-1 md:p-3 md:pl-6 text-gray-700">
+              <td class="p-1 md:p-3 md:pl-6 text-gray-700 text-center">
                 {{ e.description || "-" }}
               </td>
 
@@ -197,7 +204,7 @@
   (click)="closeModal()"
 >
   <div
-    class="bg-white rounded-xl w-full max-w-lg p-3 md:p-6 mt-15 md:mt-0 max-h-[90vh] h-135 overflow-y-auto"
+    class="bg-white rounded-xl w-full max-w-lg p-3 md:p-6 mt-15 md:mt-0 max-h-[90vh] h-155 overflow-y-auto"
     (click)="$event.stopPropagation()"
   >
     <h2 class="text-3xl mb-2 md:mb-4 text-center md:text-left">
@@ -212,6 +219,16 @@
         [(ngModel)]="selectedFunding!.funding_name"
         class="w-full border rounded-md px-3 py-2 focus:ring focus:ring-blue-200 font-light text-lg"
         placeholder="กรอกชื่อแหล่งทุน"
+      />
+    </div>
+
+    <div class="md:mb-4">
+      <label class="block mb-1">รหัสแหล่งทุน</label>
+      <input
+        type="text"
+        [(ngModel)]="selectedFunding!.funding_code"
+        class="w-full border rounded-md px-3 py-2 focus:ring focus:ring-blue-200 font-light text-lg"
+        placeholder="กรอกรหัสแหล่งทุน"
       />
     </div>
 
@@ -235,13 +252,17 @@
         (click)="isStatusOpen = !isStatusOpen"
         class="w-full border rounded-md px-3 py-2 flex justify-between items-center font-light text-lg"
       >
-        {{
-          selectedFunding!.is_active === 1
-            ? "พร้อมใช้งาน"
-            : selectedFunding!.is_active === 0
-            ? "ไม่พร้อมใช้งาน"
-            : "เลือกสถานะ"
-        }}
+      <span
+      [class.text-green-600]="selectedFunding!.is_active === 1"
+      [class.text-red-500]="selectedFunding!.is_active === 0"
+      [class.text-gray-400]="selectedFunding!.is_active === null || selectedFunding!.is_active === undefined"
+    >
+      {{
+        selectedFunding!.is_active === 1 ? "พร้อมใช้งาน"
+        : selectedFunding!.is_active === 0 ? "ไม่พร้อมใช้งาน"
+        : "เลือกสถานะ"
+      }}
+    </span>
         <i class="bi bi-chevron-down"></i>
       </button>
 
@@ -250,13 +271,13 @@
         class="absolute z-50 mt-1 w-full bg-white border rounded-md shadow font-light text-lg cursor-pointer"
       >
         <div
-          class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
+          class="px-3 py-2 hover:bg-gray-100 hover:rounded-md  cursor-pointer text-green-600"
           (click)="selectStatus(1)"
         >
           พร้อมใช้งาน
         </div>
         <div
-          class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
+          class="px-3 py-2 hover:bg-gray-100 hover:rounded-md cursor-pointer text-red-500"
           (click)="selectStatus(0)"
         >
           ไม่พร้อมใช้งาน

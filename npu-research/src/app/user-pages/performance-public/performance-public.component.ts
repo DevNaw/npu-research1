@@ -298,14 +298,49 @@ export class PerformancePublicComponent {
       }));
     }
 
+    // formatAbstract(text: string | null | undefined): SafeHtml {
+    //   if (!text) return '-';
+    
+    //   const html = text
+    //     .split('\n')
+    //     .map(line => `<p>${line}</p>`)
+    //     .join('');
+    
+    //   return this.sanitizer.bypassSecurityTrustHtml(html);
+    // }
+
     formatAbstract(text: string | null | undefined): SafeHtml {
       if (!text) return '-';
     
       const html = text
         .split('\n')
-        .map(line => `<p>${line}</p>`)
+        .map(line => {
+          const trimmed = line.trimEnd();
+          if (!trimmed) return '<p>&nbsp;</p>'; // บรรทัดว่าง = เว้นวรรค
+          return `<p style="text-indent: 2.5em;">${trimmed}</p>`;
+        })
         .join('');
     
       return this.sanitizer.bypassSecurityTrustHtml(html);
+    }
+
+    openPDF() {
+      const map: any = {
+        project: this.researchData?.full_report?.get_url,
+        article: this.articleData?.article_file?.get_url,
+        innovation: this.innovationData?.full_report?.get_url,
+      };
+  
+      const getUrl = map[this.type];
+  
+      if (!getUrl) return;
+  
+      this.http.post<any>(getUrl, {}).subscribe({
+        next: (res) => {
+          const signedUrl = res?.data?.url;
+          if (signedUrl) window.open(signedUrl, '_blank');
+        },
+        error: (err) => console.error(err),
+      });
     }
 }

@@ -31,6 +31,7 @@ import {
   ApexXAxis,
 } from 'ng-apexcharts';
 import { MainComponent } from '../../shared/layouts/main/main.component';
+import { AuthService } from '../../services/auth.service';
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -118,7 +119,11 @@ export class UserDashboardComponent implements OnInit {
   filteredResearch: ResearchItem[] = [];
   paginatedPublications: ResearchItem[] = [];
 
-  constructor(private router: Router, private service: DashboardService) {
+  constructor(
+    private router: Router,
+    private service: DashboardService,
+    private authService: AuthService,
+  ) {
     this.radarChartOptions = {
       series: [
         {
@@ -685,12 +690,28 @@ export class UserDashboardComponent implements OnInit {
     this.router.navigateByUrl('/manual');
   }
 
+  // viewItem(id: number) {
+  //   this.router.navigate([
+  //     '/performance-public',
+  //     this.selectedTab.toLowerCase(),
+  //     id,
+  //   ]);
+  // }
+
   viewItem(id: number) {
-    this.router.navigate([
-      '/performance-public',
-      this.selectedTab.toLowerCase(),
-      id,
-    ]);
+    if (this.authService.isLoggedIn()) {
+      const basePath = this.authService.isAdmin()
+        ? '/admin/performance-by-departmaent'
+        : '/user/performance-by-departmaent';
+  
+      this.router.navigate([basePath, this.selectedTab.toLowerCase(), id]);
+    } else {
+      this.router.navigate([
+        '/performance-public',
+        this.selectedTab.toLowerCase(),
+        id,
+      ]);
+    }
   }
 
   changeTab(tab: ResearchType): void {

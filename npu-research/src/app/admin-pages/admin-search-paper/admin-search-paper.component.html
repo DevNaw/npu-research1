@@ -46,7 +46,10 @@
         </div>
 
         <!-- SubType Dropdown -->
-        <div *ngIf="selectedType === 'บทความ' || selectedType === 'วารสาร'" class="col-span-12 md:col-span-5 relative font-light text-lg">
+        <div
+          *ngIf="selectedType === 'บทความ' || selectedType === 'วารสาร'"
+          class="col-span-12 md:col-span-5 relative font-light text-lg"
+        >
           <button
             type="button"
             [disabled]="!selectedType"
@@ -135,14 +138,62 @@
         </div>
       </div>
 
+      <!-- Dropdown เลือกชื่อแหล่งทุน — แสดงเฉพาะเมื่อเลือกแหล่งทุนภายนอก -->
+      <div
+        *ngIf="selectedFunding === 'แหล่งทุนภายนอก'"
+        class="col-span-12 md:col-span-8 relative font-light text-lg md:mb-4"
+      >
+        <!-- Trigger Button -->
+        <button
+          (click)="toggleDropdown('fundingSource', $event)"
+          class="w-full h-12 rounded-full px-6 flex justify-between items-center bg-white border border-gray-200 hover:border-[#118CD9] transition text-gray-700"
+        >
+          <span class="truncate" [class.text-gray-400]="!selectedFundingSource">
+            {{ selectedFundingSource?.funding_name || "ชื่อแหล่งทุน" }}
+          </span>
+          <i
+            class="bi bi-chevron-down transition-transform duration-200"
+            [class.rotate-180]="activeDropdown === 'fundingSource'"
+          ></i>
+        </button>
+
+        <!-- Dropdown List -->
+        <div
+          *ngIf="activeDropdown === 'fundingSource'"
+          class="absolute z-40 w-full bg-white border border-gray-200 rounded-2xl mt-2 shadow-lg overflow-hidden"
+          (click)="$event.stopPropagation()"
+        >
+          <ul class="max-h-52 overflow-y-auto py-2">
+            <li
+              *ngFor="let fs of fundings"
+              (click)="selectFundingSource(fs)"
+              class="px-6 py-3 cursor-pointer hover:bg-blue-50 hover:text-[#118CD9] transition text-gray-700 text-base font-light"
+              [class.text-[#118CD9]]="
+                selectedFundingSource?.funding_id === fs.funding_id
+              "
+              [class.font-medium]="
+                selectedFundingSource?.funding_id === fs.funding_id
+              "
+            >
+              {{ fs.funding_name }}
+            </li>
+          </ul>
+        </div>
+      </div>
       <!-- ===== เลือกสาขาวิชา ===== -->
-      <div class="grid grid-cols-3 gap-3 col-span-12 md:col-span-10 relative font-light text-lg">
+      <div
+        class="grid grid-cols-3 gap-3 col-span-12 md:col-span-10 relative font-light text-lg"
+      >
         <div class="relative">
           <button
             (click)="toggleDropdown('major', $event)"
-            class="w-full border rounded-full border-gray-300 px-3 py-2 flex justify-between items-center bg-white">
+            class="w-full border rounded-full border-gray-300 px-3 py-2 flex justify-between items-center bg-white"
+          >
             <span class="truncate text-lg font-light">
-              {{ selectedMajor?.name_th || "หมวดหมู่สาขาวิชาการและสาขาวิจัย (OECD)" }}
+              {{
+                selectedMajor?.name_th ||
+                  "หมวดหมู่สาขาวิชาการและสาขาวิจัย (OECD)"
+              }}
             </span>
             <i class="bi bi-chevron-down"></i>
           </button>
@@ -167,7 +218,8 @@
         <div class="relative">
           <button
             (click)="toggleDropdown('sub', $event)"
-            class="w-full border rounded-full border-gray-300 px-3 py-2 flex justify-between items-center bg-white">
+            class="w-full border rounded-full border-gray-300 px-3 py-2 flex justify-between items-center bg-white"
+          >
             <span class="truncate text-lg font-light">
               {{ selectedSub?.name_th || "หมวดหมู่สาขาย่อย" }}
             </span>
@@ -194,7 +246,8 @@
         <div class="relative">
           <button
             (click)="toggleDropdown('subsub', $event)"
-            class="w-full border rounded-full border-gray-300 px-3 py-2 flex justify-between items-center bg-white">
+            class="w-full border rounded-full border-gray-300 px-3 py-2 flex justify-between items-center bg-white"
+          >
             <span class="truncate text-lg font-light">
               {{ selectedSubSub?.name_th || "หมวดหมู่สาขาที่เกี่ยวข้อง" }}
             </span>
@@ -253,10 +306,14 @@
     <div class="bg-[#394250] text-white rounded-xl shadow p-6">
       <div class="flex items-center gap-2 mb-4">
         <i class="bi bi-pie-chart-fill text-lg"></i>
-        <h2 class="text-xl md:text-2xl">สัดส่วนนักวิจัย จำแนกตามสาขาที่เกี่ยวข้อง</h2>
+        <h2 class="text-xl md:text-2xl">
+          สัดส่วนนักวิจัย จำแนกตามสาขาที่เกี่ยวข้อง
+        </h2>
       </div>
 
-      <ng-container *ngIf="chartOptions?.data?.[0]?.dataPoints?.length > 0  && !loading; else noData">
+      <ng-container
+        *ngIf="chartOptions?.data?.[0]?.dataPoints?.length > 0  && !loading; else noData"
+      >
         <canvasjs-chart
           [options]="chartOptions"
           [styles]="{ width: '100%', height: '300px' }"
@@ -371,7 +428,7 @@
               <td class="p-1 md:p-2 text-center">
                 {{ (currentPage - 1) * pageSize + i + 1 }}
               </td>
-              <td class="p-1 md:p-2">{{ r.code || '-' }}</td>
+              <td class="p-1 md:p-2">{{ r.code || "-" }}</td>
               <td
                 (click)="goToResearch(r.id, r.type)"
                 class="p-1 md:p-2 cursor-pointer text-[#0F4C82] hover:underline"
@@ -379,9 +436,10 @@
                 {{ r.title_th || r.title_en }}
               </td>
               <td>
-                <strong>ประเภท : </strong>{{ r.funding.source_funds || '-' }}
+                <strong>ประเภท : </strong>{{ r.funding.source_funds || "-" }}
                 <br />
-                <strong>ชื่อแหล่งทุน : </strong>{{ r.funding.funding_name || '-' }}
+                <strong>ชื่อแหล่งทุน : </strong
+                >{{ r.funding.funding_name || "-" }}
               </td>
               <td class="p-1 md:p-2">{{ r.own?.name }}</td>
               <td class="p-1 md:p-2 text-center">

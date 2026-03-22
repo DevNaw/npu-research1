@@ -325,7 +325,11 @@ export class PerformanceComponent {
   
     const html = text
       .split('\n')
-      .map(line => `<p>${line}</p>`)
+      .map(line => {
+        const trimmed = line.trimEnd();
+        if (!trimmed) return '<p>&nbsp;</p>'; // บรรทัดว่าง = เว้นวรรค
+        return `<p style="text-indent: 2.5em;">${trimmed}</p>`;
+      })
       .join('');
   
     return this.sanitizer.bypassSecurityTrustHtml(html);

@@ -50,6 +50,14 @@
                 {{ doc.download_count | number }}
               </td>
             </tr>
+
+            <!-- No search result -->
+            <tr *ngIf="filteredDocument.length === 0">
+              <td colspan="3" class="text-center py-10 text-[#394250]">
+                <i class="bi bi-folder-x text-3xl block mb-2"></i>
+                ไม่พบเอกสาร
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>

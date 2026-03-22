@@ -11,6 +11,7 @@ export interface ProjectDetailResponse {
     research_id: number;
     research_type: string;
     research_code: string;
+    lang_type: string;
     title_th: string;
     title_en: string | null;
     abstract: string | null;

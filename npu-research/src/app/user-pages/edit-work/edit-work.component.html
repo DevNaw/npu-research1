@@ -14,7 +14,7 @@
     <form class="space-y-3 md:space-y-6">
       <!-- ตำแหน่ง -->
       <div>
-        <label class="block text-gray-700 mb-1">ตำแหน่ง</label>
+        <label class="block text-gray-700 mb-1">ตำแหน่งทางการบริหาร</label>
         <input
           type="text"
           [(ngModel)]="workInfo.position"
@@ -99,17 +99,6 @@
         </div>
       </div>
 
-      <!-- สายงาน -->
-      <div>
-        <label class="block text-gray-700 mb-1">สายงาน</label>
-        <input
-          type="text"
-          [(ngModel)]="workInfo!.line_work"
-          name="line"
-          class="w-full rounded-lg font-light text-lg border-gray-300 focus:ring-indigo-500 focus:border-indigo-500"
-        />
-      </div>
-
       <!-- ตำแหน่งทางวิชาการ -->
       <div>
         <label class="block text-gray-700 mb-1">
@@ -181,6 +170,7 @@
           <input
             type="date"
             [(ngModel)]="workInfo.work_start_date"
+            (change)="calculateYearsOfService()"
             name="startDate"
             class="w-full rounded-lg font-light text-lg border-gray-300 focus:ring-indigo-500 focus:border-indigo-500"
           />

@@ -36,7 +36,7 @@ export class EditWorkComponent {
 
   expertiseOptions: Expertise[] = [];
 
-  typeOptions: string[] = ['พนักงาน', 'ลูกจ้าง', 'อาจารย์พิเศษ'];
+  typeOptions: string[] = ['วิชาการ', 'สนับสนุน'];
 
   constructor(private router: Router, private service: WorkService) {}
 
@@ -44,7 +44,7 @@ export class EditWorkComponent {
     MainComponent.showLoading();
     Promise.all([
       this.loadWork(),
-      new Promise(resolve => setTimeout(resolve, 1000))
+      new Promise((resolve) => setTimeout(resolve, 1000)),
     ]).then(() => {
       MainComponent.hideLoading();
     });
@@ -53,32 +53,33 @@ export class EditWorkComponent {
   loadWork() {
     this.service.getWorkInfo().subscribe((res) => {
       const data = res?.data?.work_info;
-  
+
       if (!data) return;
-  
+
       this.expertiseOptions = res.data.expertises || [];
       this.organizationOptions = res.data.organizations || [];
-  
+
       if (data.organization?.id) {
         const found = this.organizationOptions.find(
           (o) => o.id === data.organization?.id
         );
-  
+
         if (found) {
           data.organization = found;
         }
       }
-  
+
       this.workInfo = data;
-      
+
       if (this.workInfo?.work_start_date) {
-        this.workInfo.work_start_date =
-          this.workInfo.work_start_date.slice(0, 10);
+        this.workInfo.work_start_date = this.workInfo.work_start_date.slice(
+          0,
+          10
+        );
       }
-  
+
       this.selectedMajors = (data.expertises || []).map((e: any) => ({
         expertise: e.expertise,
-        
       }));
     });
   }
@@ -139,22 +140,7 @@ export class EditWorkComponent {
         didOpen: () => Swal.showLoading(),
       });
 
-      const payload = {
-        position: this.workInfo.position,
-        type: this.workInfo.type,
-        line_work: this.workInfo.line_work,
-        academic_position: this.workInfo.academic_position,
-        ...(this.workInfo.interest && {
-          interest: this.workInfo.interest,
-        }),
-        work_start_date: this.workInfo.work_start_date,
-        year_of_service: Number(this.workInfo.year_of_service),
-        organization_id: this.workInfo.organization?.id ?? 0,
-        expertises: this.selectedMajors.map((m) => m.expertise),
-      };
-      
-
-      this.service.updateWork(payload).subscribe({
+      this.service.updateWork(this.buildPayload()).subscribe({
         next: () => {
           Swal.fire({
             icon: 'success',
@@ -211,7 +197,6 @@ export class EditWorkComponent {
     );
   }
 
-
   selectMajor(major: Expertise): void {
     const exists = this.selectedMajors.find(
       (m) => m.expertise === major.expertise
@@ -232,7 +217,6 @@ export class EditWorkComponent {
 
     this.openDropdown = null;
   }
-
 
   filteredOrganizations(): Organization[] {
     if (!this.searchOrganization.trim()) {
@@ -261,18 +245,50 @@ export class EditWorkComponent {
   addMajor(event: KeyboardEvent) {
     if (event.key === 'Enter' && this.majorInput.trim()) {
       event.preventDefault();
-  
+
       const value = this.majorInput.trim();
-  
-      const exists = this.selectedMajors.find(
-        (m) => m.expertise === value
-      );
-  
+
+      const exists = this.selectedMajors.find((m) => m.expertise === value);
+
       if (!exists) {
         this.selectedMajors.push({ expertise: value });
       }
-  
+
       this.majorInput = '';
     }
+  }
+
+  calculateYearsOfService() {
+    if (!this.workInfo.work_start_date) return;
+
+    const startDate = new Date(this.workInfo.work_start_date);
+    const today = new Date();
+
+    let year = today.getFullYear() - startDate.getFullYear();
+    let month = today.getMonth() - startDate.getMonth();
+
+    if (month < 0 || (month === 0 && today.getDate() < startDate.getDate())) {
+      year--;
+    }
+
+    this.workInfo.year_of_service = year;
+  }
+
+  private buildPayload(): Record<string, any> {
+    const w = this.workInfo;
+
+    return {
+      ...(w.position && { position: w.position }),
+      ...(w.type && { type: w.type }),
+      ...(w.line_work && { line_work: w.line_work }),
+      ...(w.academic_position && { academic_position: w.academic_position }),
+      ...(w.interest && { interest: w.interest }),
+      ...(w.work_start_date && { work_start_date: w.work_start_date }),
+      ...(w.year_of_service && { year_of_service: Number(w.year_of_service) }),
+      ...(w.organization?.id && { organization_id: w.organization.id }),
+      ...(this.selectedMajors.length > 0 && {
+        expertises: this.selectedMajors.map((m) => m.expertise),
+      }),
+    };
   }
 }

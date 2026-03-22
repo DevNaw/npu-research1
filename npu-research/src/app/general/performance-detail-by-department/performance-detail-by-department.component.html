@@ -44,7 +44,7 @@
             <ng-template #noImage>
               <div class="text-center text-gray-500">
                 <img
-                  src="/assets/default_img.png"
+                  src="/assets/research.png"
                   class="w-full h-80 mx-auto opacity-70"
                 />
               </div>
@@ -111,6 +111,7 @@
               <div *ngIf="researchData?.abstract">
                 <p class="text-[#767676]">บทคัดย่อ</p>
                 <p class="font-light">{{ researchData?.abstract || '-' }}</p>
+                <p class="font-light leading-relaxed" [innerHTML]="safeDescription"></p>
               </div>
 
               <div *ngIf="researchData?.abstract_en">
@@ -322,10 +323,17 @@
             <p class="text-xl md:text-2xl opacity-80">
               บทความวิชาการ / วารสาร / ในประเทศ
             </p>
-            <h1 class="text-2xl md:text-3xl mt-1">
+            <h1
+              *ngIf="articleData?.lang_type === 'th'"
+              class="text-2xl md:text-3xl mt-1"
+            >
               {{ articleData?.title_th }}
             </h1>
-            <h1 class="text-2xl md:text-3xl mt-1">
+
+            <h1
+              *ngIf="articleData?.lang_type === 'en'"
+              class="text-2xl md:text-3xl mt-1"
+            >
               {{ articleData?.title_en }}
             </h1>
           </div>
@@ -417,16 +425,12 @@
 
             <div *ngIf="articleData?.abstract">
               <p class="text-[#767676]">บทคัดย่อ</p>
-              <p class="font-light">
-                {{ articleData?.abstract || '-' }}
-              </p>
+              <p class="font-light leading-relaxed" [innerHTML]="safeDescription"></p>
             </div>
 
             <div *ngIf="articleData?.abstract_en">
               <p class="text-[#767676]">Abstract</p>
-              <p class="font-light">
-                {{ articleData?.abstract_en || '-' }}
-              </p>
+              <p class="font-light leading-relaxed" [innerHTML]="safeDescription"></p>
             </div>
 
             <div >
@@ -765,16 +769,12 @@
 
               <div *ngIf="innovationData?.abstract">
                 <p class="text-[#767676]">บทคัดย่อ</p>
-                <p class="font-light">
-                  {{ innovationData?.abstract || '-' }}
-                </p>
+                <p class="font-light leading-relaxed" [innerHTML]="safeDescription"></p>
               </div>
 
               <div *ngIf="innovationData?.abstract_en">
                 <p class="text-[#767676]">Abstract</p>
-                <p class="font-light">
-                  {{ innovationData?.abstract_en || '-' }}
-                </p>
+                <p class="font-light leading-relaxed" [innerHTML]="safeDescription"></p>
               </div>
 
               <div>

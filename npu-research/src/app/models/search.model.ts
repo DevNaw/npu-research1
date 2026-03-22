@@ -59,6 +59,7 @@ export interface SearchResearchRequest {
 }
 
 export interface Funding {
+  funding_id: number;
   funding_name: string;
   source_funds: string;
 }

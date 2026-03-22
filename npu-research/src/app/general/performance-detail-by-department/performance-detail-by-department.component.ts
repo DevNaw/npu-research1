@@ -9,6 +9,7 @@ import { InnovationApi, ResearchOwnerInnovation } from '../../models/innovation-
 import Swal from 'sweetalert2';
 import { HttpClient } from '@angular/common/http';
 import { MainComponent } from '../../shared/layouts/main/main.component';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 type WorkType = 'project' | 'article' | 'innovation';
 @Component({
@@ -37,13 +38,15 @@ export class PerformanceDetailByDepartmentComponent {
   oecdUI: OecdMajorUI[] = [];
 
   galleryImages: string[] = [];
+  safeDescription!: SafeHtml;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private service: ResearchService,
     private authService: AuthService,
-    private http: HttpClient
+    private http: HttpClient,
+    private sanitizer: DomSanitizer
   ) {}
 
   ngOnInit(): void {
@@ -205,6 +208,9 @@ export class PerformanceDetailByDepartmentComponent {
         this.articleData = res.data.researchArticle;
         this.ownerArticle = res.data.owner;
         this.oecdUI = this.mapOecdApiToUI(this.articleData?.oecd || []);
+        this.safeDescription = this.formatAbstract(
+          this.articleData?.abstract_en || this.articleData?.abstract
+        );
 
         if (this.articleData?.internal_members?.length) {
           this.articleData.internal_members = this.sortFirstAuthorFirst(
@@ -217,6 +223,9 @@ export class PerformanceDetailByDepartmentComponent {
         this.researchData = res.data.projectDetail; console.log(this.researchData);
         this.ownerProject = res.data.owner;
         this.oecdUI = this.mapOecdApiToUI(this.researchData?.oecd || []);
+        this.safeDescription = this.formatAbstract(
+          this.researchData?.abstract_en || this.researchData?.abstract
+        );
 
         if (this.researchData?.internal_members?.length) {
           this.researchData.internal_members = this.sortFirstAuthorFirst(
@@ -229,6 +238,9 @@ export class PerformanceDetailByDepartmentComponent {
         this.innovationData = res.data.researchInnovation;
         this.ownerInnovation = res.data.owner;
         this.oecdUI = this.mapOecdApiToUI(this.innovationData?.oecd || []);
+        this.safeDescription = this.formatAbstract(
+          this.innovationData?.abstract_en || this.innovationData?.abstract
+        );
 
         if (this.innovationData?.internal_members?.length) {
           this.innovationData.internal_members = this.sortFirstAuthorFirst(
@@ -304,5 +316,20 @@ export class PerformanceDetailByDepartmentComponent {
           }]
         : []
     }));
+  }
+
+  formatAbstract(text: string | null | undefined): SafeHtml {
+    if (!text) return '-';
+  
+    const html = text
+      .split('\n')
+      .map(line => {
+        const trimmed = line.trimEnd();
+        if (!trimmed) return '<p>&nbsp;</p>'; // บรรทัดว่าง = เว้นวรรค
+        return `<p style="text-indent: 2.5em;">${trimmed}</p>`;
+      })
+      .join('');
+  
+    return this.sanitizer.bypassSecurityTrustHtml(html);
   }
 }

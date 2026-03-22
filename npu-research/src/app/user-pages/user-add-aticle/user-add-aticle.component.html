@@ -35,7 +35,7 @@
           name="abstract_type"
           value="th"
           class="cursor-pointer"
-          [(ngModel)]="abstractType"
+          [(ngModel)]="type"
           (ngModelChange)="onAbstractTypeChange($event)"
         />
         <label class="ml-4">ไทย</label>
@@ -47,14 +47,14 @@
           name="abstract_type"
           value="en"
           class="cursor-pointer"
-          [(ngModel)]="abstractType"
+          [(ngModel)]="type"
           (ngModelChange)="onAbstractTypeChange($event)"
         />
         <label class="ml-4">อังกฤษ</label>
       </div>
     </div>
 
-    <div *ngIf="abstractType === 'th'"
+    <div *ngIf="type === 'th'"
       class="grid grid-cols-1 md:grid-cols-1 md:gap-2 mb-2 mt-2 md:mb-6 md:mt-5"
     >
       <label class="md:col-span-1 text-start">
@@ -75,7 +75,7 @@
       </div>
     </div>
 
-    <div *ngIf="abstractType === 'en'"
+    <div *ngIf="type === 'en'"
       class="grid grid-cols-1 md:grid-cols-1 md:gap-2 mb-2 mt-2 md:mb-6 md:mt-5"
     >
       <label class="md:col-span-1 text-start">
@@ -99,7 +99,7 @@
       </div>
     </div>
 
-    <div *ngIf="abstractType === 'th'">
+    <div *ngIf="type === 'th'">
       <label> บทคัดย่อ <span class="text-red-500">*</span> </label>
 
       <textarea
@@ -141,7 +141,7 @@
       </div>
     </div>
 
-    <div *ngIf="abstractType === 'en'">
+    <div *ngIf="type === 'en'">
       <label> Abstract <span class="text-red-500">*</span> </label>
 
       <textarea
@@ -442,11 +442,10 @@
       <!-- หน้าที่ตีพิมพ์ -->
       <div class="mb-2">
         <label class="md:col-span-1 text-start">
-          หน้าที่ตีพิมพ์ <span class="text-red-500">*</span>
+          หน้าที่ตีพิมพ์
         </label>
         <input
           name="pages"
-          required
           #pages="ngModel"
           [class.border-red-500]="pages.invalid && pages.touched"
           [(ngModel)]="articleData.pages"

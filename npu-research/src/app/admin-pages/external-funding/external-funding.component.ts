@@ -210,6 +210,7 @@ export class ExternalFundingComponent {
     this.selectedFunding = {
       id: 0,
       funding_name: '',
+      funding_code: '',
       description: '',
       is_active: 1,
     };
@@ -227,7 +228,7 @@ export class ExternalFundingComponent {
     if (!this.selectedFunding) return;
 
     this.service
-      .updateFunding(this.selectedFunding.id, this.selectedFunding)
+      .updateFunding(this.selectedFunding.id, this.buildFundingData())
       .subscribe({
         next: () => {
           this.loadFunding();
@@ -257,7 +258,7 @@ export class ExternalFundingComponent {
   saveFunding() {
     if (!this.selectedFunding) return;
 
-    this.service.createFunding(this.selectedFunding).subscribe({
+    this.service.createFunding(this.buildFundingData()).subscribe({
       next: () => {
         this.loadFunding();
         this.resetForm();
@@ -278,6 +279,7 @@ export class ExternalFundingComponent {
     this.selectedFunding = {
       id: 0,
       funding_name: '',
+      funding_code: '',
       description: '',
       is_active: 1,
     };
@@ -319,5 +321,16 @@ export class ExternalFundingComponent {
     if (this.isStatusOpen) {
       this.isStatusOpen = false;
     }
+  }
+
+  private buildFundingData(): Partial<Funding> {
+    const d = this.selectedFunding!;
+
+    return {
+      ...(d.funding_name && { funding_name: d.funding_name }),
+      ...(d.funding_code && { funding_code: d.funding_code }),
+      ...(d.description && { description: d.description }),
+      ...(d.is_active !== undefined && { is_active: d.is_active }),
+    };
   }
 }

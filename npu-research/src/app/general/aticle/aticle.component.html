@@ -60,7 +60,7 @@
                 (click)="viewAticleDetails(publication.research_id)"
                 class="leading-relaxed wrap-break-word whitespace-normal text-[#16498C] hover:underline cursor-pointer"
               >
-                {{ publication.title_th }}
+                {{ publication.title_th || publication.title_en }}
               </div>
 
               <div class="hidden md:inline text-gray-500 mt-1  items-center gap-1 text-sm">

@@ -11,6 +11,8 @@ import {
   OecdSub,
   Organization,
 } from '../../models/search-get.model';
+import { Funding } from '../../models/funding.model';
+import { FundingService } from '../../services/funding.service';
 
 CanvasJS.addColorSet('customColorSet', [
   '#038FFB', // น้ำเงิน
@@ -71,6 +73,8 @@ export class UserResearchComponent {
   searchResults: ResearchItem[] = [];
   allTableData: ResearchItem[] = [];
 
+  fundings: Funding[] = [];
+
   subTypeMap: any = {
     โครงการวิจัย: [],
     บทความ: ['ประชุมวิชาการระดับชาติ', 'ประชุมวิชาการระดับนานาชาติ'],
@@ -89,6 +93,8 @@ export class UserResearchComponent {
     end: null,
   };
 
+  selectedFundingSource: Funding | null = null;
+
   selectedType: string | null = null;
   selectedSubType: string | null = null;
   donutLabels: string[] = [];
@@ -103,7 +109,8 @@ export class UserResearchComponent {
   constructor(
     private router: Router,
     private authService: AuthService,
-    private service: SearchService
+    private service: SearchService,
+    private fundingService: FundingService
   ) {
     this.chartOptions = {
       backgroundColor: '#394250',
@@ -125,6 +132,7 @@ export class UserResearchComponent {
     MainComponent.showLoading();
     Promise.all([
       this.loadSubOrgan(),
+      this.loadFundings(),
       new Promise((resolve) => setTimeout(resolve, 1000)),
     ]).then(() => MainComponent.hideLoading());
   }
@@ -134,6 +142,17 @@ export class UserResearchComponent {
       next: (res) => {
         this.major = res.data.oecd;
         this.organizations = res.data.organizations;
+      },
+    });
+  }
+
+  loadFundings(): void {
+    this.fundingService.getFundings().subscribe({
+      next: (res) => {
+        this.fundings = res.data.fundings;
+      },
+      error: (err) => {
+        console.error('Failed to load fundings:', err);
       },
     });
   }
@@ -185,7 +204,7 @@ export class UserResearchComponent {
     this.selectedMajor = major;
     this.searchMajor = '';
     this.selectedSub = null;
-  this.selectedSubSub = null;
+    this.selectedSubSub = null;
     this.activeDropdown = null;
   }
 
@@ -277,6 +296,10 @@ export class UserResearchComponent {
       }
     }
 
+    if (this.selectedFundingSource) {
+      payload.funding_id = this.selectedFundingSource.id;
+    }
+
     if (this.selectedOrg?.id) {
       payload.org_id = this.selectedOrg.id;
     }
@@ -288,7 +311,7 @@ export class UserResearchComponent {
     } else if (this.selectedMajor?.major_id) {
       oecdId = this.selectedMajor.major_id;
     }
-    
+
     if (oecdId) {
       payload.oecd_id = oecdId;
     }
@@ -318,9 +341,21 @@ export class UserResearchComponent {
         this.filteredResearchers = data.result;
 
         const colors = [
-          '#038FFB', '#06E396', '#FEB119', '#FF4560', '#775DD0',
-          '#00E396', '#0090FF', '#FF66C4', '#00B8D9', '#FFB800',
-          '#4CAF50', '#2196F3', '#9C27B0', '#FF5722', '#3F51B5',
+          '#038FFB',
+          '#06E396',
+          '#FEB119',
+          '#FF4560',
+          '#775DD0',
+          '#00E396',
+          '#0090FF',
+          '#FF66C4',
+          '#00B8D9',
+          '#FFB800',
+          '#4CAF50',
+          '#2196F3',
+          '#9C27B0',
+          '#FF5722',
+          '#3F51B5',
         ];
 
         const graphData = data.graph.map((g: any, index: number) => ({
@@ -353,7 +388,7 @@ export class UserResearchComponent {
 
   onSearch(): void {
     const keyword = this.searchText?.trim().toLowerCase();
-  
+
     if (!keyword) {
       this.filteredResearchers = [...this.allTableData];
     } else {
@@ -366,7 +401,7 @@ export class UserResearchComponent {
         );
       });
     }
-  
+
     this.currentPage = 1;
     this.updatePagination();
   }
@@ -411,11 +446,11 @@ export class UserResearchComponent {
   }
 
   updatePagination(): void {
-      const start = (this.currentPage - 1) * this.pageSize;
-      const end = start + this.pageSize;
-  
-      this.paginationData = this.filteredResearchers.slice(start, end);
-    }
+    const start = (this.currentPage - 1) * this.pageSize;
+    const end = start + this.pageSize;
+
+    this.paginationData = this.filteredResearchers.slice(start, end);
+  }
 
   mapTypeToApi(type: string): 'ARTICLE' | 'PROJECT' | 'INNOVATION' {
     const map: any = {
@@ -447,13 +482,13 @@ export class UserResearchComponent {
   }
 
   @HostListener('document:click')
-      closeAll() {
-        this.activeDropdown = null;
-      }
+  closeAll() {
+    this.activeDropdown = null;
+  }
 
-      trackById(item: any): number {
-        return item.id;
-      }
+  trackById(item: any): number {
+    return item.id;
+  }
 
   // === Route ===
   goToResearch(id: number, type: 'ARTICLE' | 'PROJECT' | 'INNOVATION') {
@@ -474,5 +509,10 @@ export class UserResearchComponent {
     }
 
     this.router.navigate([basePath, mappedType, id]);
+  }
+
+  selectFundingSource(fundings: Funding) {
+    this.selectedFundingSource = fundings;
+    this.activeDropdown = null;
   }
 }

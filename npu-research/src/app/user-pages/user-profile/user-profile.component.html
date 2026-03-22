@@ -110,32 +110,33 @@
             *ngIf="profileData?.generalInfo as info; else noData"
             class="space-y-3 text-gray-600 font-regular text-lg"
           >
-            <li *ngIf="isOwner" class="flex gap-2 flex-wrap">
-              <span class="text-gray-400"> • เลขบัตรประชาชน : </span>
+            <li *ngIf="profileData?.generalInfo?.id_card_number" class="flex gap-2 flex-wrap">
+              <span
+              class="text-gray-400"> • เลขบัตรประชาชน : </span>
               {{ profileData?.generalInfo?.id_card_number }}
             </li>
 
-            <li class="flex gap-2 flex-wrap">
+            <li *ngIf="profileData?.generalInfo?.date_of_birth" class="flex gap-2 flex-wrap">
               <span class="text-gray-400"> • วันเดือนปีเกิด : </span>
               {{ profileData?.generalInfo?.date_of_birth }}
             </li>
 
-            <li class="flex gap-2 flex-wrap">
+            <li *ngIf="profileData?.generalInfo?.age" class="flex gap-2 flex-wrap">
               <span class="text-gray-400"> • อายุ : </span>
               {{ profileData?.generalInfo?.age }} ปี
             </li>
 
-            <li class="flex gap-2 flex-wrap">
+            <li *ngIf="profileData?.generalInfo?.ethnicity" class="flex gap-2 flex-wrap">
               <span class="text-gray-400"> • เชื้อชาติ : </span>
               {{ profileData?.generalInfo?.ethnicity }}
             </li>
 
-            <li class="flex gap-2 flex-wrap">
+            <li *ngIf="profileData?.generalInfo?.nationality" class="flex gap-2 flex-wrap">
               <span class="text-gray-400"> • สัญชาติ : </span>
               {{ profileData?.generalInfo?.nationality }}
             </li>
 
-            <li class="flex gap-2 flex-wrap">
+            <li *ngIf="profileData?.generalInfo?.religion" class="flex gap-2 flex-wrap">
               <span class="text-gray-400"> • ศาสนา : </span>
               {{ profileData?.generalInfo?.religion }}
             </li>
@@ -191,7 +192,7 @@
             class="space-y-3 text-gray-600 font-regular text-lg"
           >
             <li class="flex gap-2 flex-wrap wrap-break-word">
-              <span class="text-gray-400">• ตำแหน่ง :</span>
+              <span class="text-gray-400">• ตำแหน่งทางการบริหาร :</span>
               {{ profileData?.workInfo?.position }}
             </li>
             <li class="flex gap-2 flex-wrap wrap-break-word">
@@ -201,10 +202,6 @@
             <li class="flex gap-2 flex-wrap wrap-break-word">
               <span class="text-gray-400">• ประเภท :</span>
               {{ profileData?.workInfo?.type }}
-            </li>
-            <li class="flex gap-2 flex-wrap wrap-break-word">
-              <span class="text-gray-400">• สายงาน :</span>
-              {{ profileData?.workInfo?.line_work }}
             </li>
             <li class="flex gap-2 flex-wrap wrap-break-word">
               <span class="text-gray-400">• ตำแหน่งทางวิชาการ :</span>
@@ -292,18 +289,8 @@
               {{ profileData?.educationalInfo?.qualification }}
             </li>
             <li class="flex gap-2 flex-wrap wrap-break-word">
-              <span class="text-gray-400">• GPA :</span>
-              {{ profileData?.educationalInfo?.gpa }}
-            </li>
-            <li class="flex gap-2 flex-wrap wrap-break-word">
               <span class="text-gray-400">• สถานศึกษา :</span>
               {{ profileData?.educationalInfo?.institution }}
-            </li>
-            <li class="flex gap-2 flex-wrap wrap-break-word">
-              <span class="text-gray-400"
-                >• วันที่/เดือน/ปี ที่เข้าศึกษา :</span
-              >
-              {{ profileData?.educationalInfo?.date_enrollment }}
             </li>
             <li class="flex gap-2 flex-wrap wrap-break-word">
               <span class="text-gray-400"
@@ -399,20 +386,22 @@
               </div>
 
               <div>
-                <ng-container *ngIf="chartOptions?.data?.[0]?.dataPoints?.length > 0; else noData">
-                <canvasjs-chart
-                  [options]="chartOptions"
-                  (chartInstance)="getChartInstance($event)"
-                  [styles]="{ width: '100%', height: '300px' }"
+                <ng-container
+                  *ngIf="chartOptions?.data?.[0]?.dataPoints?.length > 0; else noData"
                 >
-                </canvasjs-chart>
-              </ng-container>
+                  <canvasjs-chart
+                    [options]="chartOptions"
+                    (chartInstance)="getChartInstance($event)"
+                    [styles]="{ width: '100%', height: '300px' }"
+                  >
+                  </canvasjs-chart>
+                </ng-container>
               </div>
 
               <!-- ไม่พบข้อมูล -->
-               <ng-template #noData>
-                  <div class="text-center text-gray-500 py-16">ไม่พบข้อมูล</div>
-                </ng-template>
+              <ng-template #noData>
+                <div class="text-center text-gray-500 py-16">ไม่พบข้อมูล</div>
+              </ng-template>
             </div>
 
             <!-- BAR CARD -->
@@ -438,7 +427,9 @@
               ></apx-chart>
             </div>
 
-            <div class="bg-white rounded-xl shadow-md p-4 hover:shadow-lg transition border border-gray-300 mt-6">
+            <div
+              class="bg-white rounded-xl shadow-md p-4 hover:shadow-lg transition border border-gray-300 mt-6"
+            >
               <div class="flex flex-col items-center justify-between mb-2">
                 <h3 class="text-xl text-center">
                   ภาพรวมทักษะงานวิจัย (สาขา OECD หลัก)
@@ -453,7 +444,7 @@
                   }}
                 </h4>
               </div>
-            
+
               <!-- ⭐ สำคัญ: ต้องมี container height -->
               <div class="w-full">
                 <apx-chart
@@ -478,7 +469,9 @@
               class="bg-white rounded-xl shadow-md px-4 pt-4 pb-0 hover:shadow-lg transition border border-gray-300 mt-6"
             >
               <div class="flex flex-col items-center justify-between mb-1">
-                <h3 class="text-xl">รายละเอียดทักษะงานวิจัย (สาขา OECD ย่อย)</h3>
+                <h3 class="text-xl">
+                  รายละเอียดทักษะงานวิจัย (สาขา OECD ย่อย)
+                </h3>
                 <h4 class="text-xl mt-1">
                   {{
                     selectedTab === "project"
@@ -569,7 +562,7 @@
                   </td>
 
                   <td class="text-center py-4">
-                    {{ item.research_code || '-' }}
+                    {{ item.research_code || "-" }}
                   </td>
 
                   <!-- Title -->
@@ -579,7 +572,7 @@
                       title="{{ item.title_th }}"
                       (click)="viewItem(item.research_id)"
                     >
-                      {{ item.title_th }}
+                      {{ item.title_th || item.title_en }}
                     </div>
 
                     <div
@@ -689,42 +682,12 @@
       <!-- ====== Education Level ===== -->
       <div class="relative">
         <label class="mb-1 block">ระดับการศึกษา</label>
-        <button
-          (click)="toggle('education', $event)"
-          class="flex justify-between items-center w-full border rounded-lg px-3 py-2 hover:border-indigo-500 transition font-light"
-        >
-          <span class="text-gray-700">
-            {{ educationData.highest_education || "เลือก" }}
-          </span>
-          <i class="bi bi-chevron-down text-sm"></i>
-        </button>
-
-        <div
-          *ngIf="isOpen('education')"
-          (click)="$event.stopPropagation()"
-          class="absolute z-50 w-full bg-white border rounded-lg shadow mt-1 font-light"
-        >
-          <input
-            [(ngModel)]="searchEducationLevel"
-            placeholder="ค้นหา..."
-            class="w-full px-3 py-2 border-b outline-none"
-          />
-          <ul class="max-h-44 overflow-y-auto">
-            <li
-              *ngFor="let e of filteredEducationLevel()"
-              (click)="selectEducationLevel(e)"
-              class="px-4 py-2 hover:bg-indigo-50 cursor-pointer"
-            >
-              {{ e }}
-            </li>
-            <li
-              *ngIf="filteredEducationLevel().length === 0"
-              class="px-4 py-2 text-gray-400 text-center"
-            >
-              ไม่พบข้อมูล
-            </li>
-          </ul>
-        </div>
+        <input
+          [(ngModel)]="educationData.highest_education"
+          type="text"
+          placeholder="กรอกระดับการศึกษา"
+          class="w-full border rounded-lg px-3 py-2 font-light"
+        />
       </div>
 
       <!-- ====== Major & Qualification ===== -->
@@ -732,67 +695,23 @@
         <!-- Major -->
         <div class="relative">
           <label class="mb-1 block">สาขา</label>
-          <button
-            (click)="toggle('majors', $event)"
-            class="flex justify-between items-center w-full border rounded-lg px-3 py-2 font-light"
-          >
-            {{ educationData.field_of_study || "เลือก" }}
-            <i class="bi bi-chevron-down text-sm"></i>
-          </button>
-
-          <div
-            *ngIf="isOpen('majors')"
-            (click)="$event.stopPropagation()"
-            class="absolute z-50 w-full bg-white border rounded-lg shadow mt-1 font-light"
-          >
-            <input
-              [(ngModel)]="searchMajors"
-              placeholder="ค้นหา..."
-              class="w-full px-3 py-2 border-b"
-            />
-            <ul class="max-h-44 overflow-y-auto">
-              <li
-                *ngFor="let m of filteredMajor()"
-                (click)="selectMajor(m)"
-                class="px-4 py-2 hover:bg-indigo-50 cursor-pointer"
-              >
-                {{ m }}
-              </li>
-            </ul>
-          </div>
+          <input
+            [(ngModel)]="educationData.field_of_study"
+            type="text"
+            placeholder="กรอกสาขาวิชา"
+            class="w-full border rounded-lg px-3 py-2 font-light"
+          />
         </div>
 
         <!-- Qualification -->
         <div class="relative">
-          <label class="mb-1 block">คุณวุฒิ</label>
-          <button
-            (click)="toggle('qualifications', $event)"
-            class="flex justify-between items-center w-full border rounded-lg px-3 py-2 font-light"
-          >
-            {{ educationData.qualification || "เลือก" }}
-            <i class="bi bi-chevron-down text-sm"></i>
-          </button>
-
-          <div
-            *ngIf="isOpen('qualifications')"
-            (click)="$event.stopPropagation()"
-            class="absolute z-50 w-full bg-white border rounded-lg shadow mt-1 font-light"
-          >
-            <input
-              [(ngModel)]="searchQualifications"
-              placeholder="ค้นหา..."
-              class="w-full px-3 py-2 border-b"
-            />
-            <ul class="max-h-44 overflow-y-auto">
-              <li
-                *ngFor="let q of filteredQualification()"
-                (click)="selectQualification(q)"
-                class="px-4 py-2 hover:bg-indigo-50 cursor-pointer"
-              >
-                {{ q }}
-              </li>
-            </ul>
-          </div>
+          <label class="mb-1 block">วุฒิการศึกษา</label>
+          <input
+            [(ngModel)]="educationData.qualification"
+            type="text"
+            placeholder="กรอกวุฒิการศึกษา"
+            class="w-full border rounded-lg px-3 py-2 font-light"
+          />
         </div>
       </div>
 
@@ -805,29 +724,6 @@
             [(ngModel)]="educationData.institution"
             type="text"
             placeholder="ชื่อสถานที่ศึกษา"
-            class="w-full border rounded-lg px-3 py-2 font-light"
-          />
-        </div>
-
-        <div>
-          <label class="mb-1 block">เกรดเฉลี่ย</label>
-          <input
-            [(ngModel)]="educationData.gpa"
-            type="text"
-            placeholder="เกรดเฉลี่ย"
-            class="w-full border rounded-lg px-3 py-2 font-light"
-          />
-        </div>
-      </div>
-
-      <!-- ===== GPA & Year ===== -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label class="mb-1 block">ปีที่เข้าศึกษา</label>
-          <input
-            [(ngModel)]="educationData.date_enrollment"
-            type="date"
-            placeholder="ปีที่เข้าศึกษา"
             class="w-full border rounded-lg px-3 py-2 font-light"
           />
         </div>

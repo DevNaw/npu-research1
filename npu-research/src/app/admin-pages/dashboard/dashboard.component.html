@@ -2,7 +2,7 @@
     <!-- Heaer -->
     <div class="flex items-center mx-auto md:px-10">
       <div
-        class="border-2 border-yellow-500 rounded-full items-center flex justify-center mr-4"
+        class="border-2 border-[#118CD9] rounded-full items-center flex justify-center mr-4"
       >
         <img [src]="profileDataById?.user?.avatar_url || '/assets/default_profile.png'" class="w-20 h-20 md:w-30 md:h-30 rounded-full" />
       </div>
@@ -110,41 +110,43 @@
             
             <!-- Content -->
             <ul class="space-y-3 text-gray-600 font-regular text-lg" *ngIf="profileDataById?.user?.workInfo as info; else noDataWorkInfo">
-              <li class="flex gap-2 flex-wrap wrap-break-word">
-                <span class="text-gray-400">• ตำแหน่ง :</span>
+              <li *ngIf="profileDataById?.user?.workInfo?.position" class="flex gap-2 flex-wrap wrap-break-word">
+                <span class="text-gray-400">• ตำแหน่งทางการบริหาร :</span>
                 {{ profileDataById?.user?.workInfo?.position }}
               </li>
-              <li class="flex gap-2 flex-wrap wrap-break-word">
+
+              <li *ngIf="profileDataById?.user?.workInfo?.organization" class="flex gap-2 flex-wrap wrap-break-word">
                 <span class="text-gray-400">• สังกัด :</span>
                 {{ profileDataById?.user?.workInfo?.organization }}
               </li>
-              <li class="flex gap-2 flex-wrap wrap-break-word">
+
+              <li *ngIf="profileDataById?.user?.workInfo?.type" class="flex gap-2 flex-wrap wrap-break-word">
                 <span class="text-gray-400">• ประเภท :</span>
                 {{ profileDataById?.user?.workInfo?.type }}
               </li>
-              <li class="flex gap-2 flex-wrap wrap-break-word">
-                <span class="text-gray-400">• สายงาน :</span>
-                {{ profileDataById?.user?.workInfo?.line_work }}
-              </li>
-              <li class="flex gap-2 flex-wrap wrap-break-word">
+
+              <li *ngIf="profileDataById?.user?.workInfo?.academic_position" class="flex gap-2 flex-wrap wrap-break-word">
                 <span class="text-gray-400">• ตำแหน่งทางวิชาการ :</span>
                 {{ profileDataById?.user?.workInfo?.academic_position }}
               </li>
-              <li class="flex gap-2 flex-wrap wrap-break-word">
+
+              <li *ngIf="profileDataById?.user?.workInfo?.interest" class="flex gap-2 flex-wrap wrap-break-word">
                 <span class="text-gray-400">• ความความสนใจ :</span>
                 {{ profileDataById?.user?.workInfo?.interest }}
               </li>
-              <li class="flex gap-2 flex-wrap wrap-break-word">
+
+              <li *ngIf="profileDataById?.user?.workInfo?.expertises" class="flex gap-2 flex-wrap wrap-break-word">
                 <span class="text-gray-400"
                   >• สาขาวิชาที่เชี่ยวชาญ :</span
                 >
                 {{ profileDataById?.user?.workInfo?.expertises }}
               </li>
-              <li class="flex gap-2 flex-wrap wrap-break-word">
+
+              <li *ngIf="profileDataById?.user?.workInfo?.work_start_date" class="flex gap-2 flex-wrap wrap-break-word">
                 <span class="text-gray-400">• วันที่เริ่มงาน :</span>
                 {{ profileDataById?.user?.workInfo?.work_start_date }}
               </li>
-              <li class="flex gap-2 flex-wrap wrap-break-word">
+              <li *ngIf="profileDataById?.user?.workInfo?.year_of_service" class="flex gap-2 flex-wrap wrap-break-word">
                 <span class="text-gray-400">• อายุงาน :</span>
                 {{ profileDataById?.user?.workInfo?.year_of_service }} ปี
               </li>
@@ -186,33 +188,27 @@
             
             <!-- Content -->
             <ul class="space-y-3 text-gray-600 font-regular text-lg" *ngIf="profileDataById?.user?.workInfo as info; else noDataEducationalInfo">
-              <li class="flex gap-2 flex-wrap wrap-break-word">
+              <li *ngIf="profileDataById?.user?.educationalInfo?.highest_education" class="flex gap-2 flex-wrap wrap-break-word">
                 <span class="text-gray-400">• การศึกษาสูงสุด :</span>
                 {{profileDataById?.user?.educationalInfo?.highest_education}}
               </li>
-              <li class="flex gap-2 flex-wrap wrap-break-word">
+
+              <li *ngIf="profileDataById?.user?.educationalInfo?.field_of_study" class="flex gap-2 flex-wrap wrap-break-word">
                 <span class="text-gray-400">• สาขาวิชา :</span>
                 {{ profileDataById?.user?.educationalInfo?.field_of_study }}
               </li>
-              <li class="flex gap-2 flex-wrap wrap-break-word">
-                <span class="text-gray-400">• คุณวุฒิ :</span>
+
+              <li *ngIf="profileDataById?.user?.educationalInfo?.qualification" class="flex gap-2 flex-wrap wrap-break-word">
+                <span class="text-gray-400">• วุฒิการศึกษา :</span>
                 {{ profileDataById?.user?.educationalInfo?.qualification }}
               </li>
-              <li class="flex gap-2 flex-wrap wrap-break-word">
-                <span class="text-gray-400">• GPA :</span>
-                {{ profileDataById?.user?.educationalInfo?.gpa }}
-              </li>
-              <li class="flex gap-2 flex-wrap wrap-break-word">
+
+              <li *ngIf="profileDataById?.user?.educationalInfo?.institution" class="flex gap-2 flex-wrap wrap-break-word">
                 <span class="text-gray-400">• สถานศึกษา :</span>
                 {{ profileDataById?.user?.educationalInfo?.institution }}
               </li>
-              <li class="flex gap-2 flex-wrap wrap-break-word">
-                <span class="text-gray-400"
-                  >• วันที่/เดือน/ปี ที่เข้าศึกษา :</span
-                >
-                {{ profileDataById?.user?.educationalInfo?.date_enrollment }}
-              </li>
-              <li class="flex gap-2 flex-wrap wrap-break-word">
+
+              <li *ngIf="profileDataById?.user?.educationalInfo?.date_graduation" class="flex gap-2 flex-wrap wrap-break-word">
                 <span class="text-gray-400"
                   >• วันที่/เดือน/ปี ที่สำเร็จการศึกษา :</span
                 >
@@ -230,8 +226,7 @@
         </div>
   
         <!-- ข้อมูลการฝึกอบรม -->
-        <div class="bg-white rounded-xl shadow-md px-6 py-8 w-full max-w-full mb-2 md:mb-5">
-          <!-- Header -->
+        <!-- <div class="bg-white rounded-xl shadow-md px-6 py-8 w-full max-w-full mb-2 md:mb-5">
           <div
             class="flex items-center justify-between cursor-pointer"
             (click)="isTraining = !isTraining"
@@ -244,7 +239,6 @@
             </div>
   
             <div class="flex items-center gap-3">
-              <!-- Arrow -->
               <i
                 class="bi bi-chevron-down text-xl transition-transform duration-300"
                 [class.rotate-180]="isTraining"
@@ -255,7 +249,6 @@
           <hr class="my-4 text-gray-400" />
   
           <div *ngIf="isTraining" class="transtion-all duration-300">
-            <!-- Content -->
             <ul
               *ngIf="trainings.length > 0; else noTraining"
               class="space-y-3 text-gray-600 font-regular text-lg"
@@ -271,14 +264,13 @@
               </li>
             </ul>
   
-            <!-- ไม่มีข้อมูล -->
             <ng-template #noTraining>
               <div class="text-red-500 text-center font-regular py-4">
                 ไม่พบข้อมูล
               </div>
             </ng-template>
           </div>
-        </div>
+        </div> -->
       </div>
   
       <!-- ข้อมูลผลงาน -->
@@ -479,7 +471,7 @@
                         title="{{ item.title_th }}"
                         (click)="viewItem(item.research_id)"
                       >
-                        {{ item.title_th }}
+                        {{ item.title_th || item.title_en }}
                       </div>
   
                        <div
@@ -503,17 +495,37 @@
             </div>
   
             <!-- Pagination -->
-            <div
-              class="flex items-center justify-end mt-4 text-sm font-light text-gray-600"
-            >
+            <div class="flex justify-end md:mt-3 space-x-1">
+              <!-- Prev -->
+              <button
+                (click)="changePage(currentPage - 1)"
+                [disabled]="currentPage === 1"
+                class="px-2 md:px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
+              >
+                ‹
+              </button>
   
-              <div class="flex items-center gap-2 text-lg font-light">
-                <button class="border px-3 rounded cursor-pointer">‹</button>
-                <button class="border bg-[#FDE68A] px-3 rounded">
-                  1
-                </button>
-                <button class="border px-3 rounded cursor-pointer">›</button>
-              </div>
+              <!-- Pages -->
+              <button
+                *ngFor="let page of pages"
+                (click)="changePage(page)"
+                class="px-2 md:px-3 py-1 rounded border text-sm transition cursor-pointer"
+                [ngClass]="{
+                  'bg-[#118CD9] text-white border-gray-400': currentPage === page,
+                  'hover:bg-gray-100': currentPage !== page
+                }"
+              >
+                {{ page }}
+              </button>
+  
+              <!-- Next -->
+              <button
+                (click)="changePage(currentPage + 1)"
+                [disabled]="currentPage === totalPages"
+                class="px-2 md:px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
+              >
+                ›
+              </button>
             </div>
           </div>
         </div>
