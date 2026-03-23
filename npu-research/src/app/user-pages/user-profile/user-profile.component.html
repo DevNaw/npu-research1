@@ -274,7 +274,7 @@
         <hr class="my-4 text-gray-400" />
 
         <div *ngIf="isEducation" class="transition-all duration-300">
-          <div class="flex justify-end">
+          <div class="flex justify-end gap-2">
             <!-- Edit Button -->
             <button
               class="bg-[#118CD9] hover:bg-[#4c7b98] text-white rounded-xl w-10 h-10 flex items-center justify-center shadow cursor-pointer"
@@ -285,10 +285,10 @@
 
             <!-- Delete Button -->
             <!-- <button
-              class="bg-red-500 hover:bg-red-600 text-white rounded-xl w-10 h-10 flex items-center justify-center shadow cursor-pointer"
+              class="bg-green-500 hover:bg-green-600 text-white rounded-xl w-10 h-10 flex items-center justify-center shadow cursor-pointer"
               (click)="gotoEditStudy()"
             >
-              <i class="bi bi-trash"></i>
+              <i class="bi bi-plus"></i>
             </button> -->
           </div>
           <!-- Content -->
@@ -755,7 +755,7 @@
           <label class="mb-1 block">ปีที่สำเร็จการศึกษา</label>
           <input
             [(ngModel)]="educationData.date_graduation"
-            type="date"
+            type="text"
             placeholder="ปีที่สำเร็จการศึกษา"
             class="w-full border rounded-lg px-3 py-2 font-light"
           />
