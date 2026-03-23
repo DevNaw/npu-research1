@@ -270,10 +270,15 @@
               <div>
                 <p class="text-[#767676] md:mb-1">สถานะดำเนินการ</p>
                 <span
-                  class="inline-block px-3 py-1 rounded-full bg-green-100 text-green-700 font-light text-xl"
-                >
-                  {{ researchData?.status || "-" }}
-                </span>
+                class="inline-block px-3 py-1 rounded-full font-light"
+                [ngClass]="{
+                  'bg-green-100 text-green-700': researchData?.status === 'เสร็จสิ้น',
+                  'bg-yellow-100 text-yellow-700': researchData?.status === 'อยู่ระหว่างดำเนินการ',
+                  'bg-gray-100 text-gray-500': !researchData?.status
+                }"
+              >
+                {{ researchData?.status || "-" }}
+              </span>
               </div>
 
               <div>

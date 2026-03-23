@@ -99,12 +99,23 @@
           </div>
 
           <!-- PDF Button -->
-          <div class="mt-2 md:mt-6 flex justify-center">
+          <div class="mt-2 md:mt-6 flex flex-wrap justify-center gap-3">
             <button
+              *ngIf="researchData?.full_report?.get_url"
               (click)="openPDF()"
-              class="w-32 bg-blue-300 hover:bg-blue-400 text-[#394250] py-3 rounded-lg shadow transition cursor-pointer"
+              class="flex items-center gap-2 px-4 py-2.5 bg-blue-50 hover:bg-blue-100 border border-blue-200 text-[#16498C] rounded-lg shadow-sm transition cursor-pointer text-sm font-medium"
             >
-              PDF
+              <i class="bi bi-file-earmark-pdf-fill text-red-500 text-base"></i>
+              รายงานวิจัยฉบับสมบูรณ์
+            </button>
+
+            <button
+              *ngIf="researchData?.contract_file?.get_url"
+              (click)="openContract()"
+              class="flex items-center gap-2 px-4 py-2.5 bg-blue-50 hover:bg-blue-100 border border-blue-200 text-[#16498C] rounded-lg shadow-sm transition cursor-pointer text-sm font-medium"
+            >
+              <i class="bi bi-file-earmark-pdf-fill text-red-500 text-base"></i>
+              ไฟล์สัญญารับทุน
             </button>
           </div>
         </div>
@@ -310,7 +321,14 @@
               <div>
                 <p class="text-[#767676] md:mb-1">สถานะดำเนินการ</p>
                 <span
-                  class="inline-block px-3 py-1 rounded-full bg-green-100 text-green-700"
+                  class="inline-block px-3 py-1 rounded-full font-light"
+                  [ngClass]="{
+                    'bg-green-100 text-green-700':
+                      researchData?.status === 'เสร็จสิ้น',
+                    'bg-yellow-100 text-yellow-700':
+                      researchData?.status === 'อยู่ระหว่างดำเนินการ',
+                    'bg-gray-100 text-gray-500': !researchData?.status
+                  }"
                 >
                   {{ researchData?.status || "-" }}
                 </span>
@@ -450,8 +468,11 @@
             <div class="mt-2 md:mt-6 flex justify-center">
               <button
                 (click)="openPDF()"
-                class="w-32 bg-blue-300 hover:bg-blue-400 text-[#394250] py-3 rounded-lg shadow transition cursor-pointer"
+                class="flex items-center gap-2 px-4 py-2.5 bg-blue-50 hover:bg-blue-100 border border-blue-200 text-[#16498C] rounded-lg shadow-sm transition cursor-pointer text-lg font-medium"
               >
+                <i
+                  class="bi bi-file-earmark-pdf-fill text-red-500 text-base"
+                ></i>
                 PDF
               </button>
             </div>
@@ -664,7 +685,7 @@
               <div>
                 <p class="font-semibold text-[#767676] md:mb-1">ปีที่ตีพิมพ์</p>
                 <p class="text-gray-800 font-light">
-                  {{ articleData?.year_published || '-' }}
+                  {{ articleData?.year_published }}
                 </p>
               </div>
 
@@ -700,8 +721,9 @@
                   เว็บไซต์อ้างอิง/การเผยแพร่
                 </p>
                 <a
-                  href="#"
-                  class="text-[#16498C] hover:underline break-all font-light"
+                  href="{{ articleData?.doi }}"
+                  target="_blank"
+                  class="text-[#16498C] hover:underline break-all font-light cursor-pointer"
                 >
                   {{ articleData?.doi }}
                 </a>
@@ -812,8 +834,11 @@
             <div class="mt-2 md:mt-6 flex justify-center">
               <button
                 (click)="openPDF()"
-                class="w-32 bg-blue-300 hover:bg-blue-400 text-[#394250] py-3 rounded-lg shadow transition cursor-pointer"
+                class="flex items-center gap-2 px-4 py-2.5 bg-blue-50 hover:bg-blue-100 border border-blue-200 text-[#16498C] rounded-lg shadow-sm transition cursor-pointer text-lg font-medium"
               >
+                <i
+                  class="bi bi-file-earmark-pdf-fill text-red-500 text-base"
+                ></i>
                 PDF
               </button>
             </div>
@@ -878,17 +903,11 @@
 
               <div *ngIf="innovationData?.abstract">
                 <p class="text-[#767676]">บทคัดย่อ</p>
-                <!-- <p class="font-light">
-                  {{ innovationData?.abstract || "-" }}
-                </p> -->
                 <p class="font-light" [innerHTML]="safeDescription"></p>
               </div>
 
               <div *ngIf="innovationData?.abstract_en">
                 <p class="text-[#767676]">Abstract</p>
-                <!-- <p class="font-light">
-                  {{ innovationData?.abstract_en || "-" }}
-                </p> -->
                 <p class="font-light" [innerHTML]="safeDescription"></p>
               </div>
 
@@ -1063,28 +1082,20 @@
 
               <div>
                 <p class="text-[#767676] md:mb-1">เว็บไซต์ตรวจสิทธิบัตร</p>
-                <p class="text-[#16498C] font-light hover:underline break-all">
+                <a
+                  href="{{ innovationData?.examination_url }}"
+                  target="_blank"
+                  class="text-[#16498C] font-light hover:underline break-all cursor-pointer"
+                >
                   {{ innovationData?.examination_url }}
-                </p>
+                </a>
               </div>
 
               <div>
                 <p class="text-[#767676] md:mb-1">รายงานวิจัยฉบับสมบูรณ์</p>
-                <a href="#" class="text-[#16498C] font-light hover:underline">
+                <p class="font-light">
                   {{ innovationData?.full_report?.file_name || "-" }}
-                </a>
-              </div>
-
-              <div class="md:col-span-2">
-                <p class="text-[#767676] md:mb-1">
-                  ไฟล์ภาพนวัตกรรมสิ่งประดิษฐ์
                 </p>
-                <a
-                  href="#"
-                  class="text-[#16498C] font-light hover:underline break-all"
-                >
-                  https://example.com/innovation-images
-                </a>
               </div>
             </div>
           </div>

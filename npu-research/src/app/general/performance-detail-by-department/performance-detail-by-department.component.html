@@ -6,7 +6,7 @@
     <!-- ===== Reseach ===== -->
     <div
       *ngIf="type === 'project'"
-      class="mx-auto bg-white rounded-2xl shadow-lg overflow-hidden "
+      class="mx-auto bg-white rounded-2xl shadow-lg overflow-hidden"
     >
       <!-- Header -->
       <div
@@ -18,7 +18,7 @@
             {{ researchData?.title_th }}
           </h1>
           <h1 class="text-2xl md:text-3xl mt-1">
-            {{ researchData?.title_en || '-' }}
+            {{ researchData?.title_en || "-" }}
           </h1>
         </div>
       </div>
@@ -63,12 +63,23 @@
           </div>
 
           <!-- PDF Button -->
-          <div class="mt-2 md:mt-6 flex justify-center">
+          <div class="mt-2 md:mt-6 flex flex-wrap justify-center gap-3">
             <button
+              *ngIf="researchData?.full_report?.get_url"
               (click)="openPDF()"
-              class="w-32 bg-blue-300 hover:bg-blue-400 text-[#394250] py-3 rounded-lg shadow transition cursor-pointer"
+              class="flex items-center gap-2 px-4 py-2.5 bg-blue-50 hover:bg-blue-100 border border-blue-200 text-[#16498C] rounded-lg shadow-sm transition cursor-pointer text-sm font-medium"
             >
-              PDF
+              <i class="bi bi-file-earmark-pdf-fill text-red-500 text-base"></i>
+              รายงานวิจัยฉบับสมบูรณ์
+            </button>
+
+            <button
+              *ngIf="researchData?.contract_file?.get_url"
+              (click)="openContract()"
+              class="flex items-center gap-2 px-4 py-2.5 bg-blue-50 hover:bg-blue-100 border border-blue-200 text-[#16498C] rounded-lg shadow-sm transition cursor-pointer text-sm font-medium"
+            >
+              <i class="bi bi-file-earmark-pdf-fill text-red-500 text-base"></i>
+              ไฟล์สัญญารับทุน
             </button>
           </div>
         </div>
@@ -89,7 +100,7 @@
                 <div>
                   <p class="text-[#767676]">สาขาของโครงการวิจัย</p>
                   <p class="font-light">
-                    {{ oecdUI[0]?.name_th || '-' }}
+                    {{ oecdUI[0]?.name_th || "-" }}
                   </p>
                 </div>
 
@@ -110,13 +121,18 @@
 
               <div *ngIf="researchData?.abstract">
                 <p class="text-[#767676]">บทคัดย่อ</p>
-                <p class="font-light">{{ researchData?.abstract || '-' }}</p>
-                <p class="font-light leading-relaxed" [innerHTML]="safeDescription"></p>
+                <p
+                  class="font-light leading-relaxed"
+                  [innerHTML]="safeDescription"
+                ></p>
               </div>
 
               <div *ngIf="researchData?.abstract_en">
                 <p class="text-[#767676]">Abstract</p>
-                <p class="font-light">{{ researchData?.abstract_en || '-' }}</p>
+                <p
+                  class="font-light leading-relaxed"
+                  [innerHTML]="safeDescription"
+                ></p>
               </div>
 
               <div>
@@ -237,74 +253,75 @@
               class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-x-10 md:gap-y-6"
             >
               <div>
-                <p class=" text-[#767676] md:mb-1">
-                  ที่มาแหล่งทุน
+                <p class="text-[#767676] md:mb-1">ที่มาแหล่งทุน</p>
+                <p class="text-gray-800 font-light">
+                  {{ researchData?.source_funds }}
                 </p>
-                <p class="text-gray-800 font-light">{{ researchData?.source_funds }}</p>
               </div>
 
               <div>
-                <p class=" text-[#767676] md:mb-1">ชื่อแหล่งทุน</p>
-                <p class="text-gray-800 font-light">{{ researchData?.name_funding }}</p>
+                <p class="text-[#767676] md:mb-1">ชื่อแหล่งทุน</p>
+                <p class="text-gray-800 font-light">
+                  {{ researchData?.name_funding }}
+                </p>
               </div>
 
               <div>
-                <p class=" text-[#767676] md:mb-1">
-                  จำนวนงบประมาณ
-                </p>
+                <p class="text-[#767676] md:mb-1">จำนวนงบประมาณ</p>
                 <p class="text-gray-800 font-light">
                   {{ researchData?.budget_amount }} บาท
                 </p>
               </div>
 
               <div>
-                <p class=" text-[#767676] md:mb-1">
-                  ปีที่ได้รับทุน
-                </p>
+                <p class="text-[#767676] md:mb-1">ปีที่ได้รับทุน</p>
                 <p class="text-gray-800 font-light">
                   {{ researchData?.year_received_budget }}
                 </p>
               </div>
 
               <div>
-                <p class=" text-[#767676] md:mb-1">
-                  สถานะดำเนินการ
-                </p>
+                <p class="text-[#767676] md:mb-1">สถานะดำเนินการ</p>
                 <span
-                  class="inline-block px-3 py-1 rounded-full bg-green-100 text-green-700 font-light"
+                  class="inline-block px-3 py-1 rounded-full font-light"
+                  [ngClass]="{
+                    'bg-green-100 text-green-700':
+                      researchData?.status === 'เสร็จสิ้น',
+                    'bg-yellow-100 text-yellow-700':
+                      researchData?.status === 'อยู่ระหว่างดำเนินการ',
+                    'bg-gray-100 text-gray-500': !researchData?.status
+                  }"
                 >
                   {{ researchData?.status || "-" }}
                 </span>
               </div>
 
               <div>
-                <p class=" text-[#767676] md:mb-1">พื้นที่วิจัย</p>
-                <p class="text-gray-800 font-light">{{ researchData?.research_area }}</p>
+                <p class="text-[#767676] md:mb-1">พื้นที่วิจัย</p>
+                <p class="text-gray-800 font-light">
+                  {{ researchData?.research_area }}
+                </p>
               </div>
 
               <div>
-                <p class=" text-[#767676] md:mb-1">
-                  พื้นที่ใช้ประโยชน์
+                <p class="text-[#767676] md:mb-1">พื้นที่ใช้ประโยชน์</p>
+                <p class="text-gray-800 font-light">
+                  {{ researchData?.research_area }}
                 </p>
-                <p class="text-gray-800 font-light">{{ researchData?.research_area }}</p>
               </div>
 
               <div>
-                <p class=" text-[#767676] md:mb-1">
-                  รายงานวิจัยฉบับสมบูรณ์
-                </p>
-                <a href="#" class="text-blue-600 hover:underline font-light">
+                <p class="text-[#767676] md:mb-1">รายงานวิจัยฉบับสมบูรณ์</p>
+                <p class="font-light">
                   {{ researchData?.full_report?.file_name || "-" }}
-                </a>
+                </p>
               </div>
 
               <div>
-                <p class=" text-[#767676] md:mb-1">
-                  ไฟล์สัญญารับทุน
-                </p>
-                <a href="#" class="text-blue-600 hover:underline font-light">
+                <p class="text-[#767676] md:mb-1">ไฟล์สัญญารับทุน</p>
+                <p class="font-light">
                   {{ researchData?.contract_file?.file_name || "-" }}
-                </a>
+                </p>
               </div>
             </div>
           </div>
@@ -314,7 +331,9 @@
 
     <!-- ===== Acticle ===== -->
     <div *ngIf="type === 'article'">
-      <div class="mx-auto bg-white rounded-2xl shadow-lg overflow-hidden font-medium text-2xl">
+      <div
+        class="mx-auto bg-white rounded-2xl shadow-lg overflow-hidden font-medium text-2xl"
+      >
         <!-- Header -->
         <div
           class="bg-[#394250] text-white px-4 py-2 md:px-8 md:py-6 flex justify-between"
@@ -383,8 +402,11 @@
             <div class="mt-2 md:mt-6 flex justify-center">
               <button
                 (click)="openPDF()"
-                class="w-32 bg-blue-300 hover:bg-blue-400 text-[#394250] py-3 rounded-lg shadow transition cursor-pointer"
+                class="flex items-center gap-2 px-4 py-2.5 bg-blue-50 hover:bg-blue-100 border border-blue-200 text-[#16498C] rounded-lg shadow-sm transition cursor-pointer text-lg font-medium"
               >
+                <i
+                  class="bi bi-file-earmark-pdf-fill text-red-500 text-base"
+                ></i>
                 PDF
               </button>
             </div>
@@ -397,14 +419,14 @@
               <div>
                 <p class="text-[#767676]">รหัสบทความ</p>
                 <p class="font-light">
-                  {{ articleData?.research_code || '-' }}
+                  {{ articleData?.research_code || "-" }}
                 </p>
               </div>
 
               <div>
                 <p class="text-[#767676]">สาขาของบทความ</p>
                 <p class="font-light">
-                  {{ oecdUI[0]?.name_th || '-' }}
+                  {{ oecdUI[0]?.name_th || "-" }}
                 </p>
               </div>
 
@@ -425,15 +447,21 @@
 
             <div *ngIf="articleData?.abstract">
               <p class="text-[#767676]">บทคัดย่อ</p>
-              <p class="font-light leading-relaxed" [innerHTML]="safeDescription"></p>
+              <p
+                class="font-light leading-relaxed"
+                [innerHTML]="safeDescription"
+              ></p>
             </div>
 
             <div *ngIf="articleData?.abstract_en">
               <p class="text-[#767676]">Abstract</p>
-              <p class="font-light leading-relaxed" [innerHTML]="safeDescription"></p>
+              <p
+                class="font-light leading-relaxed"
+                [innerHTML]="safeDescription"
+              ></p>
             </div>
 
-            <div >
+            <div>
               <p class="text-[#767676]">Keywords</p>
               <div class="flex flex-wrap gap-2 my-2">
                 <span
@@ -581,20 +609,20 @@
               class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-x-10 md:gap-y-6"
             >
               <div>
-                <p class="text-[#767676] md:mb-1">
-                  ฉบับที่/เล่มที่
+                <p class="text-[#767676] md:mb-1">ฉบับที่/เล่มที่</p>
+                <p class="text-gray-800 font-light">
+                  {{ articleData?.volume }}
                 </p>
-                <p class="text-gray-800 font-light">{{ articleData?.volume }}</p>
               </div>
               <div>
-                <p class="text-[#767676] md:mb-1">
-                  หน้าที่ตีพิมพ์
-                </p>
+                <p class="text-[#767676] md:mb-1">หน้าที่ตีพิมพ์</p>
                 <p class="text-gray-800 font-light">{{ articleData?.pages }}</p>
               </div>
               <div>
                 <p class="text-[#767676] md:mb-1">ปีที่ตีพิมพ์</p>
-                <p class="text-gray-800 font-light">{{ articleData?.year_published }}</p>
+                <p class="text-gray-800 font-light">
+                  {{ articleData?.year_published }}
+                </p>
               </div>
 
               <div>
@@ -607,28 +635,26 @@
               </div>
 
               <div *ngIf="articleData?.article_type === 'Conference'">
-                <p class="text-[#767676] md:mb-1">
-                  สถานที่นำเสนอ
-                </p>
+                <p class="text-[#767676] md:mb-1">สถานที่นำเสนอ</p>
                 <p class="text-gray-800 font-light">
                   {{ articleData?.pre_location || "-" }}
                 </p>
               </div>
 
               <div>
-                <p class="text-[#767676] md:mb-1">
-                  ไฟล์บทความ PDF
-                </p>
+                <p class="text-[#767676] md:mb-1">ไฟล์บทความ PDF</p>
                 <p class="text-gray-800 font-light">
                   {{ articleData?.article_file?.file_name || "-" }}
                 </p>
               </div>
 
               <div>
-                <p class="text-[#767676] md:mb-1">
-                  เว็บไซต์อ้างอิง/การเผยแพร่
-                </p>
-                <a href="#" class="text-blue-600 hover:underline break-all font-light">
+                <p class="text-[#767676] md:mb-1">เว็บไซต์อ้างอิง/การเผยแพร่</p>
+                <a
+                  href="{{ articleData?.doi }}"
+                  target="_blank"
+                  class="text-blue-600 hover:underline break-all font-light cursor-pointer"
+                >
                   {{ articleData?.doi }}
                 </a>
               </div>
@@ -652,7 +678,7 @@
             </h1>
 
             <h1 class="text-2xl md:text-3xl mt-1">
-              {{ innovationData?.title_en || '-' }}
+              {{ innovationData?.title_en || "-" }}
             </h1>
           </div>
         </div>
@@ -701,8 +727,11 @@
             <div class="mt-2 md:mt-6 flex justify-center">
               <button
                 (click)="openPDF()"
-                class="w-32 bg-blue-300 hover:bg-blue-400 text-[#394250] py-3 rounded-lg shadow transition cursor-pointer"
+                class="flex items-center gap-2 px-4 py-2.5 bg-blue-50 hover:bg-blue-100 border border-blue-200 text-[#16498C] rounded-lg shadow-sm transition cursor-pointer text-lg font-medium"
               >
+                <i
+                  class="bi bi-file-earmark-pdf-fill text-red-500 text-base"
+                ></i>
                 PDF
               </button>
             </div>
@@ -741,14 +770,14 @@
                 <div>
                   <p class="text-[#767676]">รหัสนวัตกรรม</p>
                   <p class="font-light">
-                    {{ innovationData?.research_code || '-' }}
+                    {{ innovationData?.research_code || "-" }}
                   </p>
                 </div>
 
                 <div>
                   <p class="text-[#767676]">สาขาของนวัตกรรมสิ่งประดิษฐ์</p>
                   <p class="font-light">
-                    {{ oecdUI[0]?.name_th || '-' }}
+                    {{ oecdUI[0]?.name_th || "-" }}
                   </p>
                 </div>
 
@@ -769,12 +798,18 @@
 
               <div *ngIf="innovationData?.abstract">
                 <p class="text-[#767676]">บทคัดย่อ</p>
-                <p class="font-light leading-relaxed" [innerHTML]="safeDescription"></p>
+                <p
+                  class="font-light leading-relaxed"
+                  [innerHTML]="safeDescription"
+                ></p>
               </div>
 
               <div *ngIf="innovationData?.abstract_en">
                 <p class="text-[#767676]">Abstract</p>
-                <p class="font-light leading-relaxed" [innerHTML]="safeDescription"></p>
+                <p
+                  class="font-light leading-relaxed"
+                  [innerHTML]="safeDescription"
+                ></p>
               </div>
 
               <div>
@@ -850,7 +885,8 @@
                       <th class="px-4 py-2 text-left">หน่วยงาน</th>
                     </tr>
                   </thead>
-                  <tbody class="divide-y font-light"
+                  <tbody
+                    class="divide-y font-light"
                     *ngIf="
                       (innovationData?.external_members?.length ?? 0) > 0;
                       else noDataExternal
@@ -888,15 +924,17 @@
               class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-x-10 md:gap-y-6"
             >
               <div>
-                <p class="text-[#767676] md:mb-1">
-                  ที่มาแหล่งทุน
+                <p class="text-[#767676] md:mb-1">ที่มาแหล่งทุน</p>
+                <p class="text-gray-800 font-light">
+                  {{ innovationData?.source_funds }}
                 </p>
-                <p class="text-gray-800 font-light">{{ innovationData?.source_funds }}</p>
               </div>
 
               <div>
                 <p class="text-[#767676] md:mb-1">ชื่อแหล่งทุน</p>
-                <p class="text-gray-800 font-light">{{ innovationData?.name_funding }}</p>
+                <p class="text-gray-800 font-light">
+                  {{ innovationData?.name_funding }}
+                </p>
               </div>
 
               <div>
@@ -907,58 +945,50 @@
               </div>
 
               <div>
-                <p class="text-[#767676] md:mb-1">
-                  ปีที่เสร็จสิ้น
+                <p class="text-[#767676] md:mb-1">ปีที่เสร็จสิ้น</p>
+                <p class="text-gray-800 font-light">
+                  {{ innovationData?.year }}
                 </p>
-                <p class="text-gray-800 font-light">{{ innovationData?.year }}</p>
               </div>
 
               <div>
                 <p class="text-[#767676] md:mb-1">
                   ความร่วมมือกับหน่วยงานอื่นๆ
                 </p>
-                <p class="text-gray-800 font-light">{{ innovationData?.call_other }}</p>
+                <p class="text-gray-800 font-light">
+                  {{ innovationData?.call_other }}
+                </p>
               </div>
 
               <div>
-                <p class="text-[#767676] md:mb-1">
-                  เลขที่ คำขอ/สิทธิบัตร
+                <p class="text-[#767676] md:mb-1">เลขที่ คำขอ/สิทธิบัตร</p>
+                <p class="text-gray-800 font-light">
+                  {{ innovationData?.patent_number }}
                 </p>
-                <p class="text-gray-800 font-light">{{ innovationData?.patent_number }}</p>
               </div>
 
               <div>
-                <p class="text-[#767676] md:mb-1">
-                  เว็บไซต์ตรวจสิทธิบัตร
-                </p>
-                <p class="text-blue-600 hover:underline break-all font-light">
+                <p class="text-[#767676] md:mb-1">เว็บไซต์ตรวจสิทธิบัตร</p>
+                <a
+                  href="{{ innovationData?.examination_url }}"
+                  target="_blank"
+                  class="text-blue-600 hover:underline break-all font-light cursor-pointer"
+                >
                   {{ innovationData?.examination_url }}
-                </p>
+                </a>
               </div>
 
               <div>
-                <p class="text-[#767676] md:mb-1">
-                  รายงานวิจัยฉบับสมบูรณ์
-                </p>
-                <a href="#" class="text-blue-600 hover:underline font-light">
+                <p class="text-[#767676] md:mb-1">รายงานวิจัยฉบับสมบูรณ์</p>
+                <p class="font-light">
                   {{ innovationData?.full_report?.file_name || "-" }}
-                </a>
-              </div>
-
-              <div class="md:col-span-2">
-                <p class="text-[#767676] md:mb-1">
-                  ไฟล์ภาพนวัตกรรมสิ่งประดิษฐ์
                 </p>
-                <a href="#" class="text-blue-600 hover:underline break-all font-light">
-                  https://example.com/innovation-images
-                </a>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-
 
     <div class="grid grid-cols-1 mt-6 bg-gray-300 rounded-xl overflow-hidden">
       <!-- ข้อมูลผู้ติดต่อ -->
@@ -969,7 +999,6 @@
           <div
             class="grid grid-cols-1 md:grid-cols-3 gap-10 text-center items-center"
           >
-            
             <!-- Owner -->
             <div class="space-y-2">
               <div class="flex justify-center mb-2">
@@ -979,15 +1008,17 @@
                   <i class="bi bi-person"></i>
                 </div>
               </div>
-      
+
               <p class="text-gray-500 text-lg">เจ้าของผลงาน</p>
               <p class="text-gray-900 text-xl font-medium">
                 {{ owner?.full_name || "ไม่ระบุ" }}
               </p>
             </div>
-      
+
             <!-- Organization -->
-            <div class="space-y-2 border-y md:border-y-0 md:border-x border-gray-300 px-6">
+            <div
+              class="space-y-2 border-y md:border-y-0 md:border-x border-gray-300 px-6"
+            >
               <div class="flex justify-center mb-2">
                 <div
                   class="w-12 h-12 rounded-full bg-blue-500 text-white flex items-center justify-center text-xl"
@@ -995,13 +1026,13 @@
                   <i class="bi bi-building"></i>
                 </div>
               </div>
-      
+
               <p class="text-gray-500 text-lg">หน่วยงาน</p>
               <p class="text-gray-900 text-xl font-medium">
                 {{ owner?.organization || "ไม่ระบุ" }}
               </p>
             </div>
-      
+
             <!-- Contact -->
             <div class="space-y-3">
               <div class="flex justify-center mb-2">
@@ -1011,20 +1042,18 @@
                   <i class="bi bi-envelope"></i>
                 </div>
               </div>
-      
+
               <p class="text-gray-900 text-lg">
                 {{ owner?.email || "ไม่ระบุ" }}
               </p>
-      
+
               <p class="text-gray-700 text-lg">
                 โทรศัพท์: {{ owner?.phone || "ไม่ระบุ" }}
               </p>
             </div>
-      
           </div>
         </div>
       </div>
-    
     </div>
   </div>
 </div>

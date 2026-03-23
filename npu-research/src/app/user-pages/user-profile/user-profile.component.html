@@ -68,6 +68,7 @@
   <div
     class="grid grid-cols-1 lg:grid-cols-12 md:gap-6 md:px-8 mx-auto mt-3 md:mt-6 text-[#394250]"
   >
+  <!-- =========== ข้อมูลทั่วไป ================ -->
     <div class="lg:col-span-4 space-y-5">
       <div
         class="bg-white rounded-xl shadow-md px-6 py-8 w-full max-w-full mb-2 md:mb-5"
@@ -84,7 +85,6 @@
           </div>
 
           <div class="flex items-center gap-3">
-            <!-- Arrow -->
             <i
               class="bi bi-chevron-down text-xl transition-transform duration-300"
               [class.rotate-180]="isPersonalOpen"
@@ -92,7 +92,6 @@
           </div>
         </div>
 
-        <!-- Divider -->
         <hr class="my-4 text-gray-400" />
 
         <!-- Dropdown Content -->
@@ -110,33 +109,50 @@
             *ngIf="profileData?.generalInfo as info; else noData"
             class="space-y-3 text-gray-600 font-regular text-lg"
           >
-            <li *ngIf="profileData?.generalInfo?.id_card_number" class="flex gap-2 flex-wrap">
-              <span
-              class="text-gray-400"> • เลขบัตรประชาชน : </span>
+            <li
+              *ngIf="profileData?.generalInfo?.id_card_number"
+              class="flex gap-2 flex-wrap"
+            >
+              <span class="text-gray-400"> • เลขบัตรประชาชน : </span>
               {{ profileData?.generalInfo?.id_card_number }}
             </li>
 
-            <li *ngIf="profileData?.generalInfo?.date_of_birth" class="flex gap-2 flex-wrap">
+            <li
+              *ngIf="profileData?.generalInfo?.date_of_birth"
+              class="flex gap-2 flex-wrap"
+            >
               <span class="text-gray-400"> • วันเดือนปีเกิด : </span>
               {{ profileData?.generalInfo?.date_of_birth }}
             </li>
 
-            <li *ngIf="profileData?.generalInfo?.age" class="flex gap-2 flex-wrap">
+            <li
+              *ngIf="profileData?.generalInfo?.age"
+              class="flex gap-2 flex-wrap"
+            >
               <span class="text-gray-400"> • อายุ : </span>
               {{ profileData?.generalInfo?.age }} ปี
             </li>
 
-            <li *ngIf="profileData?.generalInfo?.ethnicity" class="flex gap-2 flex-wrap">
+            <li
+              *ngIf="profileData?.generalInfo?.ethnicity"
+              class="flex gap-2 flex-wrap"
+            >
               <span class="text-gray-400"> • เชื้อชาติ : </span>
               {{ profileData?.generalInfo?.ethnicity }}
             </li>
 
-            <li *ngIf="profileData?.generalInfo?.nationality" class="flex gap-2 flex-wrap">
+            <li
+              *ngIf="profileData?.generalInfo?.nationality"
+              class="flex gap-2 flex-wrap"
+            >
               <span class="text-gray-400"> • สัญชาติ : </span>
               {{ profileData?.generalInfo?.nationality }}
             </li>
 
-            <li *ngIf="profileData?.generalInfo?.religion" class="flex gap-2 flex-wrap">
+            <li
+              *ngIf="profileData?.generalInfo?.religion"
+              class="flex gap-2 flex-wrap"
+            >
               <span class="text-gray-400"> • ศาสนา : </span>
               {{ profileData?.generalInfo?.religion }}
             </li>
@@ -167,7 +183,6 @@
           </div>
 
           <div class="flex items-center gap-3">
-            <!-- Arrow -->
             <i
               class="bi bi-chevron-down text-xl transition-transform duration-300"
               [class.rotate-180]="isWorkOpen"
@@ -267,6 +282,14 @@
             >
               <i class="bi bi-pencil-square"></i>
             </button>
+
+            <!-- Delete Button -->
+            <button
+              class="bg-red-500 hover:bg-red-600 text-white rounded-xl w-10 h-10 flex items-center justify-center shadow cursor-pointer"
+              (click)="gotoEditStudy()"
+            >
+              <i class="bi bi-trash"></i>
+            </button>
           </div>
           <!-- Content -->
           <ul
@@ -364,7 +387,7 @@
       </div> -->
     </div>
 
-    <!-- ข้อมูลผลงาน -->
+    <!-- =============== กราฟ ============ -->
     <div class="lg:col-span-8">
       <div class="bg-white rounded-2xl shadow-lg">
         <!-- Header -->

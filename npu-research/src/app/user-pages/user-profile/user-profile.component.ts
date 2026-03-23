@@ -207,6 +207,7 @@ export class UserProfileComponent implements OnInit {
   paginationData: ResearchItem[] = [];
   fullLabels: string[] = [];
   fullLabelsSub: string[] = [];
+  donutSummary: any;
 
   constructor(
     private router: Router,
@@ -272,7 +273,7 @@ export class UserProfileComponent implements OnInit {
       },
       tooltip: {
         y: {
-          formatter: (val) => `$ ${val} thousands`,
+          formatter: (val) => `${val} ผลงาน `,
         },
       },
       legend: {
@@ -467,6 +468,7 @@ export class UserProfileComponent implements OnInit {
       next: (res) => {
         this.profileData = res.data.user;
         this.barSummary = res.data.bar;
+        this.donutSummary = res.data.donut;
         this.radarData = res.data.radar;
         this.researchData = res.data.researchs;
 
@@ -504,9 +506,9 @@ export class UserProfileComponent implements OnInit {
         {
           ...this.chartOptions.data[0],
           dataPoints: [
-            { name: 'โครงการวิจัย', y: projectData.reduce((a, b) => a + b, 0) },
-            { name: 'บทความ', y: articleData.reduce((a, b) => a + b, 0) },
-            { name: 'นวัตกรรม', y: innovationData.reduce((a, b) => a + b, 0) },
+            { name: 'โครงการวิจัย', y: this.donutSummary.projects_count },
+            { name: 'บทความ', y: this.donutSummary.articles_count },
+            { name: 'นวัตกรรม', y: this.donutSummary.innovations_count },
           ],
         },
       ],
@@ -779,6 +781,10 @@ export class UserProfileComponent implements OnInit {
     this.isEditMode = true;
     this.educationData = { ...data };
     this.isModalOpen = true;
+  }
+
+  gotoEditStudy() {
+    this.router.navigate(['/user/edit-study']);
   }
 
   filteredQualification() {

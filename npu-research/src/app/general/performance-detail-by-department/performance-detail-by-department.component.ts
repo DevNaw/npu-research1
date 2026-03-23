@@ -292,6 +292,24 @@ export class PerformanceDetailByDepartmentComponent {
     });
   }
 
+  openContract() {
+    const map: any = {
+      project: this.researchData?.contract_file?.get_url,
+    };
+
+    const getUrl = map[this.type];
+
+    if (!getUrl) return;
+
+    this.http.post<any>(getUrl, {}).subscribe({
+      next: (res) => {
+        const signedUrl = res?.data?.url;
+        if (signedUrl) window.open(signedUrl, '_blank');
+      },
+      error: (err) => console.error(err),
+    });
+  }
+
   get owner() {
     if (this.type === 'article') return this.ownerArticle;
     if (this.type === 'project') return this.ownerProject;

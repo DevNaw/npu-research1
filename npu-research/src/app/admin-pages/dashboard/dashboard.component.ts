@@ -89,6 +89,7 @@ export class DashboardComponent {
     radarChartOptionsSub!: Partial<RadarChartOptions>;
     barChartOptions!: Partial<BarChartOptions>;
     barSummary: BarSummary[] = [];
+    donutSummary: any;
 
       researchList: ResearchItem[] = [];
       originalData: ResearchItem[] = [];
@@ -161,7 +162,7 @@ export class DashboardComponent {
       },
       tooltip: {
         y: {
-          formatter: (val) => `$ ${val} thousands`,
+          formatter: (val) => `${val} ผลงาน`,
         },
       },
       legend: {
@@ -349,6 +350,7 @@ export class DashboardComponent {
       next: (res) => {
         this.profileDataById = res.data;
         this.barSummary = res.data.bar;
+        this.donutSummary = res.data.donut;
         this.researchData = res.data.researchs;
         this.radarData = res.data.radar;
 
@@ -359,14 +361,6 @@ export class DashboardComponent {
       error: (err) => console.error(err),
     });
   }
-
-  goToEditProfile() {}
-
-  goToEditWork() {}
-
-  goToEditTraning() {}
-
-  openEditModal() {}
 
   changeTab(tab: ResearchTab): void {
     this.selectedTab = tab;
@@ -390,6 +384,7 @@ export class DashboardComponent {
     this.filteredData = [...this.originalData];
     this.totalItems = this.filteredData.length;
   
+    this.updateCharts();
     this.updatePagination(); // 🔥 
   }
 
@@ -411,39 +406,114 @@ export class DashboardComponent {
     }
   }
 
-  editItem(id: number) {}
-
-  deleteItem(id: number) {}
-
-  closeModal() {}
 
   toggle(name: string, event: MouseEvent) {
     event.stopPropagation();
   }
 
-  isOpen(name: string) {
+
+  changeTabForChart(tab: ResearchTab): void {
+    this.selectedTab = tab;
+    this.updateCharts();
   }
 
-  filteredEducationLevel(): void {}
+  // updateCharts(): void {
+  //   if (!this.barSummary.length) return;
+  
+  //   const sorted = [...this.barSummary].sort((a, b) => a.year - b.year);
+  
+  //   const years = sorted.map(i => i.year.toString());
+  //   const projectData = sorted.map(i => i.project_count);
+  //   const articleData = sorted.map(i => i.article_count);
+  //   const innovationData = sorted.map(i => i.innovation_count);
+  
+  //   // ===== BAR =====
+  //   this.barChartOptions = {
+  //     ...this.barChartOptions,
+  //     series: [
+  //       { name: 'โครงการวิจัย', data: projectData },
+  //       { name: 'บทความ', data: articleData },
+  //       { name: 'นวัตกรรม', data: innovationData },
+  //     ],
+  //     xaxis: { categories: years },
+  //   };
+  
+  //   // ===== PIE (รวมทั้งหมดทุกปี) =====
+  //   this.chartOptions = {
+  //     ...this.chartOptions,
+  //     data: [
+  //       {
+  //         ...this.chartOptions.data[0],
+  //         dataPoints: [
+  //           { name: 'โครงการวิจัย', y: this.donutSummary.projects_count },
+  //           { name: 'บทความ', y: this.donutSummary.articles_count },
+  //           { name: 'นวัตกรรม', y: this.donutSummary.innovations_count },
+  //         ],
+  //       },
+  //     ],
+  //   }
 
-  selectEducationLevel(e: string) {}
-  filteredMajor(): void {}
-  selectMajor(m: string) {}
-  filteredQualification(): void {}
-  selectQualification(q: string) {}
+  //   const tabIndex =
+  //     this.selectedTab === 'project'
+  //       ? 0
+  //       : this.selectedTab === 'article'
+  //       ? 1
+  //       : 2;
 
-  save() {}
+  //   this.fullLabels = this.radarData?.major?.labels || [];
+  //   this.fullLabelsSub = this.radarData?.sub?.labels || [];
+    
+    
+  //   const labels = (this.radarData?.major?.labels || []).map((label: any) =>
+  //     this.shortLabel(label)
+  //   );
 
+  //   const values = [
+  //     ...(this.radarData?.major?.datasets[tabIndex]?.data || []),
+  //   ];
+
+  //   const labelsSub = 
+  //     (this.radarData?.sub?.labels || [])
+  //     .map((label: any) => this.shortLabel(label));
+
+  //   const valuesSub = [
+  //     ...(this.radarData?.sub?.datasets[tabIndex]?.data || []),
+  //   ];
+
+  //   this.radarChartOptions = {
+  //     ...this.radarChartOptions,
+  //     series: [
+  //       {
+  //         name: this.tabs.find((t) => t.key === this.selectedTab)?.label || '',
+  //         data: values,
+  //       },
+  //     ],
+  //     labels: labels,
+  //     xaxis: { categories: labels },
+  //   };
+
+  //   this.radarChartOptionsSub = {
+  //     ...this.radarChartOptionsSub,
+  //     series: [
+  //       {
+  //         name: this.tabs.find((t) => t.key === this.selectedTab)?.label || '',
+  //         data: valuesSub,
+  //       },
+  //     ],
+  //     labels: labelsSub,
+  //     xaxis: { categories: labelsSub },
+  //   };
+  // }
   updateCharts(): void {
     if (!this.barSummary.length) return;
-  
+
     const sorted = [...this.barSummary].sort((a, b) => a.year - b.year);
-  
-    const years = sorted.map(i => i.year.toString());
-    const projectData = sorted.map(i => i.project_count);
-    const articleData = sorted.map(i => i.article_count);
-    const innovationData = sorted.map(i => i.innovation_count);
-  
+
+    const years = sorted.map((i) => i.year.toString());
+    const projectData = sorted.map((i) => i.project_count);
+    const articleData = sorted.map((i) => i.article_count);
+    const innovationData = sorted.map((i) => i.innovation_count);
+
     // ===== BAR =====
     this.barChartOptions = {
       ...this.barChartOptions,
@@ -454,22 +524,20 @@ export class DashboardComponent {
       ],
       xaxis: { categories: years },
     };
-  
-    // ===== PIE (รวมทั้งหมดทุกปี) =====
+
     this.chartOptions = {
       ...this.chartOptions,
       data: [
         {
           ...this.chartOptions.data[0],
           dataPoints: [
-            { name: 'โครงการวิจัย', y: projectData.reduce((a, b) => a + b, 0) },
-            { name: 'บทความ', y: articleData.reduce((a, b) => a + b, 0) },
-            { name: 'นวัตกรรม', y: innovationData.reduce((a, b) => a + b, 0) },
+            { name: 'โครงการวิจัย', y: this.donutSummary.projects_count },
+            { name: 'บทความ', y: this.donutSummary.articles_count },
+            { name: 'นวัตกรรม', y: this.donutSummary.innovations_count },
           ],
         },
       ],
-    }
-
+    };
     const tabIndex =
       this.selectedTab === 'project'
         ? 0
@@ -479,7 +547,6 @@ export class DashboardComponent {
 
     this.fullLabels = this.radarData?.major?.labels || [];
     this.fullLabelsSub = this.radarData?.sub?.labels || [];
-    
     
     const labels = (this.radarData?.major?.labels || []).map((label: any) =>
       this.shortLabel(label)
