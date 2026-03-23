@@ -7,7 +7,7 @@ export interface DashboardResponse {
   export interface DashboardData {
     statistic: Statistic;
     graph_research: GraphResearch[];
-    graph_subject_area: GraphSubjectArea[];
+    graph_oecd: GraphOECD[];
     top_researcher: TopResearcher[];
   }
   
@@ -27,9 +27,9 @@ export interface DashboardResponse {
     percent: number;
   }
   
-  export interface GraphSubjectArea {
-    subject_area_id: number;
-    subject_area_name: string;
+  export interface GraphOECD {
+    oecd_id: number;
+    oecd_name: string;
     count: number;
     percent: number;
   }

@@ -19,7 +19,7 @@ export interface ResearchProfileResponse {
     avatar_url: string | null;
     generalInfo: any | null;
     workInfo: any | null;
-    educationalInfo: any | null;
+    educationalInfo: EducationalInfo[];
   }
 
   export interface DonutSummary {
@@ -77,4 +77,14 @@ export interface ResearchProfileResponse {
   export interface RadarDataset {
     label: string;
     data: number[];
+  }
+
+  export interface EducationalInfo {
+    highest_education: string;
+    field_of_study: string;
+    qualification: string;
+    gpa: string;
+    institution: string;
+    date_enrollment: string;
+    date_graduation: string;
   }

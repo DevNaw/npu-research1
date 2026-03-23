@@ -4,10 +4,14 @@
     <div
       class="flex flex-col md:flex-row items-center gap-2 md:gap-6 mb-6 md:mb-8 text-center md:text-left"
     >
-      <div class="flex flex-col md:flex-row md:items-end justify-center gap-3 md:justify-start">
-        <h1 class="text-xl  md:text-xl lg:text-3xl">ยินดีต้อนรับเข้าสู่</h1>
+      <div
+        class="flex flex-col md:flex-row md:items-end justify-center gap-3 md:justify-start"
+      >
+        <h1 class="text-xl md:text-xl lg:text-3xl">ยินดีต้อนรับเข้าสู่</h1>
 
-        <h1 class="text-xl md:text-2xl lg:text-4xl text-[#16498C]">ระบบฐานข้อมูลเพื่องานวิจัยและงานบริการวิชาการ</h1>
+        <h1 class="text-xl md:text-2xl lg:text-4xl text-[#16498C]">
+          ระบบฐานข้อมูลเพื่องานวิจัยและงานบริการวิชาการ
+        </h1>
       </div>
 
       <!-- Date -->
@@ -90,7 +94,6 @@
 
     <!-- ===== FORD ===== -->
     <div class="bg-white p-4 md:p-6 rounded-2xl shadow-lg space-y-6">
-
       <!-- 🔷 HEADER -->
       <div class="flex items-center gap-3 text-2xl md:text-3xl text-[#16498C]">
         <i class="bi bi-pie-chart-fill"></i>
@@ -110,7 +113,7 @@
           >
             โครงการวิจัย
           </button>
-      
+
           <button
             (click)="changeTabForChart('ARTICLE')"
             [ngClass]="
@@ -122,7 +125,7 @@
           >
             บทความ
           </button>
-      
+
           <button
             (click)="changeTabForChart('INNOVATION')"
             [ngClass]="
@@ -136,16 +139,15 @@
           </button>
         </div>
       </div>
-    
+
       <!-- 🔷 CONTENT (2 COLUMN) -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-    
         <!-- ===== LEFT: RADAR ===== -->
-        <div class="bg-white rounded-xl shadow-md p-4 border border-gray-200 hover:shadow-lg transition">
+        <div
+          class="bg-white rounded-xl shadow-md p-4 border border-gray-200 hover:shadow-lg transition"
+        >
           <div class="flex items-center gap-2">
-            <h3 class="text-lg md:text-xl">
-              สาขา OECD หลัก
-            </h3>
+            <h3 class="text-lg md:text-xl">สาขา OECD หลัก</h3>
             <h4 class="text-lg">
               {{
                 selectedTab === "PROJECT"
@@ -156,7 +158,7 @@
               }}
             </h4>
           </div>
-    
+
           <div class="w-full">
             <apx-chart
               class="w-full h-full"
@@ -175,15 +177,44 @@
             </apx-chart>
           </div>
         </div>
-    
+
         <!-- ===== RIGHT: PIE ===== -->
         <div class="bg-[#394250] text-white rounded-xl shadow p-4 md:p-6">
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-2 flex-wrap">
             <i class="bi bi-pie-chart-fill"></i>
-            <h2 class="text-lg md:text-xl">
-              การจัดกลุ่มของ FORD
-            </h2>
+            <h2 class="text-lg md:text-xl">การจัดกลุ่มของ FORD</h2>
+            <h4 class="text-base md:text-lg text-gray-300">
+              {{
+                selectedTab === "PROJECT"
+                  ? "(โครงการวิจัย)"
+                  : selectedTab === "ARTICLE"
+                  ? "(บทความ)"
+                  : "(นวัตกรรม)"
+              }}
+            </h4>
+          </div>
 
+          <ng-container
+            *ngIf="chartOptions?.data?.[0]?.dataPoints?.length > 0 && !loading; else noData"
+          >
+            <canvasjs-chart
+              *ngIf="!loading"
+              [options]="chartOptions"
+              [styles]="{ width: '100%', height: '320px' }"
+            >
+            </canvasjs-chart>
+          </ng-container>
+
+          <ng-template #noData>
+            <div class="text-center py-16 opacity-80">ไม่พบข้อมูล</div>
+          </ng-template>
+        </div>
+
+        <div
+          class="bg-white rounded-xl shadow-md p-4 border border-gray-200 hover:shadow-lg transition"
+        >
+          <div class="flex items-center gap-2">
+            <h3 class="text-lg md:text-xl">สาขา OECD ย่อย</h3>
             <h4 class="text-lg">
               {{
                 selectedTab === "PROJECT"
@@ -194,37 +225,7 @@
               }}
             </h4>
           </div>
-    
-          <ng-container *ngIf="chartOptions?.data?.[0]?.dataPoints?.length > 0 && !loading; else noData">
-            <canvasjs-chart
-            *ngIf="!loading"
-              [options]="chartOptions"
-              [styles]="{ width: '100%', height: '320px' }"
-            >
-            </canvasjs-chart>
-          </ng-container>
-    
-          <ng-template #noData>
-            <div class="text-center py-16 opacity-80">ไม่พบข้อมูล</div>
-          </ng-template>
-        </div>
 
-        <div class="bg-white rounded-xl shadow-md p-4 border border-gray-200 hover:shadow-lg transition">
-          <div class="flex items-center gap-2">
-            <h3 class="text-lg md:text-xl">
-              สาขา OECD ย่อย
-           </h3>
-           <h4 class="text-lg">
-             {{
-               selectedTab === "PROJECT"
-                 ? "(โครงการวิจัย)"
-                 : selectedTab === "ARTICLE"
-                 ? "(บทความ)"
-                 : "(นวัตกรรม)"
-             }}
-           </h4>
-          </div>
-    
           <div class="w-full">
             <apx-chart
               class="w-full h-full"
@@ -243,23 +244,22 @@
             </apx-chart>
           </div>
         </div>
-  
+
         <div class="bg-white rounded-xl shadow-md p-4 border border-gray-200">
-          <div class="flex items-center gap-2">
-            <h3 class="text-lg md:text-xl">
-              Top 10 สาขาที่เกี่ยวข้อง
-           </h3>
-           <h4 class="text-lg">
-             {{
-               selectedTab === "PROJECT"
-                 ? "(โครงการวิจัย)"
-                 : selectedTab === "ARTICLE"
-                 ? "(บทความ)"
-                 : "(นวัตกรรม)"
-             }}
-           </h4>
+          <div class="flex items-center gap-2 flex-wrap">
+            <i class="bi bi-pie-chart-fill"></i>
+            <h2 class="text-lg md:text-xl">Top 10 สาขาที่เกี่ยวข้อง</h2>
+            <h4 class="text-lg">
+              {{
+                selectedTab === "PROJECT"
+                  ? "(โครงการวิจัย)"
+                  : selectedTab === "ARTICLE"
+                  ? "(บทความ)"
+                  : "(นวัตกรรม)"
+              }}
+            </h4>
           </div>
-      
+
           <div class="overflow-x-auto">
             <div *ngIf="chartsOECD.length > 0" class="min-w-175">
               <apx-chart
@@ -279,8 +279,6 @@
           </div>
         </div>
       </div>
-
-      
     </div>
 
     <!-- ===== Charts ===== -->
@@ -328,7 +326,9 @@
           </button>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-1 w-full  lg:grid-cols-[60%_40%] gap-6">
+        <div
+          class="grid grid-cols-1 md:grid-cols-1 w-full lg:grid-cols-[60%_40%] gap-6"
+        >
           <!-- Chart Body -->
           <div class="p-4 md:p-5 w-full h-full overflow-x-auto">
             <div class="min-w-200">
@@ -465,7 +465,7 @@
             >
               โครงการวิจัย
             </button>
-        
+
             <button
               (click)="changeTab('ARTICLE')"
               [ngClass]="
@@ -477,7 +477,7 @@
             >
               บทความ
             </button>
-        
+
             <button
               (click)="changeTab('INNOVATION')"
               [ngClass]="
@@ -490,7 +490,7 @@
               นวัตกรรมสิ่งประดิษฐ์
             </button>
           </div>
-        
+
           <!-- Search -->
           <div class="ml-auto flex items-center gap-2 text-sm md:text-lg">
             <span>Search:</span>
@@ -521,7 +521,15 @@
                 <th class="p-2 text-center">รหัส</th>
                 <th class="p-2 text-center">ชื่อผลงาน</th>
                 <th class="p-2 text-center">แหล่งทุน</th>
-                <th class="p-2 text-start">{{ selectedTab === 'PROJECT' ? 'หัวหน้าโครงการ': selectedTab === 'ARTICLE' ? 'ผู้ประพันธ์อันดับแรก' : 'หัวหน้าโครงการ' }}</th>
+                <th class="p-2 text-start">
+                  {{
+                    selectedTab === "PROJECT"
+                      ? "หัวหน้าโครงการ"
+                      : selectedTab === "ARTICLE"
+                      ? "ผู้ประพันธ์อันดับแรก"
+                      : "หัวหน้าโครงการ"
+                  }}
+                </th>
                 <th class="p-2">ปี</th>
               </tr>
             </thead>
@@ -533,7 +541,7 @@
                 <td class="p-2 text-center">
                   {{ (currentPage - 1) * pageSize + i + 1 }}
                 </td>
-                <td class="p-2 text-center">{{ p.research_code || '-' }}</td>
+                <td class="p-2 text-center">{{ p.research_code || "-" }}</td>
                 <td class="p-2">
                   <div
                     class="text-[#16498C] hover:underline cursor-pointer truncate max-w-125 text-wrap text-lg"
@@ -554,9 +562,10 @@
                   </div>
                 </td>
                 <td>
-                  <strong>ประเภท : </strong>{{ p.funding.source_funds || '-' }}
+                  <strong>ประเภท : </strong>{{ p.funding.source_funds || "-" }}
                   <br />
-                  <strong>ชื่อแหล่งทุน : </strong>{{ p.funding.funding_name || '-' }}
+                  <strong>ชื่อแหล่งทุน : </strong
+                  >{{ p.funding.funding_name || "-" }}
                 </td>
 
                 <td class="p-2">{{ p.own[0].full_name }}</td>
@@ -575,35 +584,51 @@
         </div>
 
         <!-- Pagination -->
-        <div class="flex justify-end mt-3 space-x-1 font-light">
-          <button
-            (click)="changePage(currentPage - 1)"
-            [disabled]="currentPage === 1"
-            class="px-2 md:px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
-          >
-            ‹
-          </button>
+        <div
+          class="flex flex-col md:flex-row md:justify-end md:items-center mt-4 gap-2 font-light"
+        >
+          <div class="flex items-center justify-end space-x-1">
+            <!-- Prev -->
+            <button
+              (click)="changePage(currentPage - 1)"
+              [disabled]="currentPage === 1"
+              class="px-2 md:px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
+            >
+              ‹
+            </button>
 
-          <button
-            *ngFor="let page of pages"
-            (click)="changePage(page)"
-            class="px-2 md:px-3 py-1 rounded border text-sm transition cursor-pointer"
-            [ngClass]="{
-              'bg-[#118CD9] text-[#ffffff] border-[#118CD9]':
-                currentPage === page,
-              'hover:bg-gray-100': currentPage !== page
-            }"
-          >
-            {{ page }}
-          </button>
+            <!-- Pages -->
+            <ng-container *ngFor="let page of visiblePages">
+              <!-- ปุ่มตัวเลข -->
+              <button
+                *ngIf="page !== '...'"
+                (click)="changePage(+page)"
+                class="px-2 md:px-3 py-1 rounded border text-sm transition cursor-pointer"
+                [ngClass]="{
+                  'bg-[#118CD9] text-white': currentPage === page,
+                  'hover:bg-gray-100': currentPage !== page
+                }"
+              >
+                {{ page }}
+              </button>
 
-          <button
-            (click)="changePage(currentPage + 1)"
-            [disabled]="currentPage === totalPages"
-            class="px-2 md:px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
-          >
-            ›
-          </button>
+              <!-- จุด ... -->
+              <span
+                *ngIf="page === '...'"
+                class="px-2 py-1 text-sm text-gray-400 select-none"
+                >...</span
+              >
+            </ng-container>
+
+            <!-- Next -->
+            <button
+              (click)="changePage(currentPage + 1)"
+              [disabled]="currentPage === totalPages"
+              class="px-2 md:px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
+            >
+              ›
+            </button>
+          </div>
         </div>
       </div>
     </div>

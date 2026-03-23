@@ -1,4 +1,6 @@
-<div class="bg-gray-100 min-h-screen p-5 md:px-10 text-2xl font-medium text-[#394250]">
+<div
+  class="bg-gray-100 min-h-screen p-5 md:px-10 text-2xl font-medium text-[#394250]"
+>
   <div class="mx-auto md:p-6">
     <div class="flex flex-col justify-center items-center text-center">
       <div
@@ -14,9 +16,7 @@
     <div class="max-w-3xl mx-auto mt-4 md:mt-10 md:mb-6">
       <div class="grid grid-cols-12 gap-1 items-center">
         <!-- Label -->
-        <label
-          class="col-span-12 text-xl md:text-2xl md:col-span-2"
-        >
+        <label class="col-span-12 text-xl md:text-2xl md:col-span-2">
           ตัวกรอง
         </label>
 
@@ -35,7 +35,7 @@
 
           <!-- Dropdown panel -->
           <div
-            *ngIf="activeDropdown ==='faculties'"
+            *ngIf="activeDropdown === 'faculties'"
             class="absolute z-50 w-full bg-white border rounded-md mt-1 shadow"
             (click)="$event.stopPropagation()"
           >
@@ -123,22 +123,15 @@
             placeholder="พิมพ์คำค้นหา ชื่อนักวิจัย"
             class="flex-1 px-6 border-none md:px-8 text-lg md:text-xl outline-none"
           />
-      
+
           <!-- Button -->
           <button
             (click)="search()"
-            class="
-              flex items-center justify-center
-              h-14 md:h-full
-              bg-[#118CD9] hover:bg-[#4c7b98]
-              text-white font-semibold
-              px-4 md:px-10
-              rounded-full transition cursor-pointer
-            "
+            class="flex items-center justify-center h-14 md:h-full bg-[#118CD9] hover:bg-[#4c7b98] text-white font-semibold px-4 md:px-10 rounded-full transition cursor-pointer"
           >
             <!-- text: โชว์เฉพาะจอใหญ่ -->
             <span class="hidden md:inline text-2xl mr-4">ค้นหา</span>
-      
+
             <!-- icon -->
             <span
               class="w-10 h-10 rounded-full bg-[#0F4C82] flex items-center justify-center text-white"
@@ -148,7 +141,6 @@
           </button>
         </div>
       </div>
-      
     </div>
 
     <!-- ===== DONUT CHART ===== -->
@@ -159,12 +151,12 @@
       <div class="bg-[#394250] text-white rounded-xl shadow p-6">
         <div class="flex items-center gap-2 mb-4">
           <i class="bi bi-pie-chart-fill text-xl"></i>
-          <h2 class="text-xl md:text-2xl">
-            สัดส่วนนักวิจัย จำแนกตามหน่วยงาน
-          </h2>
+          <h2 class="text-xl md:text-2xl">สัดส่วนนักวิจัย จำแนกตามหน่วยงาน</h2>
         </div>
 
-        <ng-container *ngIf="chartOptions?.data?.[0]?.dataPoints?.length > 0  && !loading; else noData">
+        <ng-container
+          *ngIf="chartOptions?.data?.[0]?.dataPoints?.length > 0  && !loading; else noData"
+        >
           <canvasjs-chart
             [options]="chartOptions"
             [styles]="{ width: '100%', height: '300px' }"
@@ -177,14 +169,10 @@
         </ng-template>
       </div>
 
-      <div
-        class="bg-white rounded-xl shadow p-6 flex flex-col justify-between"
-      >
+      <div class="bg-white rounded-xl shadow p-6 flex flex-col justify-between">
         <div class="flex items-center gap-2 mb-4">
           <i class="bi bi-pie-chart-fill text-xl"></i>
-          <h2 class="text-xl md:text-2xl">
-            สัดส่วนนักวิจัย จำแนกตามหน่วยงาน
-          </h2>
+          <h2 class="text-xl md:text-2xl">สัดส่วนนักวิจัย จำแนกตามหน่วยงาน</h2>
         </div>
 
         <div class="space-y-1 max-h-60 overflow-y-auto">
@@ -251,7 +239,9 @@
               *ngFor="let r of paginationData; let i = index"
               class="hover:bg-gray-50 bg-gray-200 border-b border-gray-300"
             >
-              <td class="p-1 md:p-2 text-center">{{ (currentPage - 1) * pageSize + i + 1 }}</td>
+              <td class="p-1 md:p-2 text-center">
+                {{ (currentPage - 1) * pageSize + i + 1 }}
+              </td>
 
               <td class="p-1 md:p-2 text-center">
                 <div
@@ -265,9 +255,16 @@
                 </div>
               </td>
 
-              <td (click)="goToUserProfile(r.id)" class="p-1 md:p-2 cursor-pointer text-[#0F4C82] hover:underline">{{ r.name }}</td>
-              <td class="p-1 md:p-2 text-center">{{ r.expertises || '-' }}</td>
-              <td class="p-1 md:p-2 text-center">{{ r.organization || '-' }}</td>
+              <td
+                (click)="goToUserProfile(r.id)"
+                class="p-1 md:p-2 cursor-pointer text-[#0F4C82] hover:underline"
+              >
+                {{ r.name }}
+              </td>
+              <td class="p-1 md:p-2 text-center">{{ r.expertises || "-" }}</td>
+              <td class="p-1 md:p-2 text-center">
+                {{ r.organization || "-" }}
+              </td>
               <td class="p-1 md:p-2 text-center">{{ r.position }}</td>
             </tr>
 
@@ -282,43 +279,51 @@
       </div>
 
       <div
-    class="flex flex-col md:flex-row md:justify-end md:items-center mt-4 gap-2 font-light"
-  >
-    <div class="flex items-center justify-end space-x-1">
-      <!-- Prev -->
-      <button
-        (click)="changePage(currentPage - 1)"
-        [disabled]="currentPage === 1"
-        class="px-2 md:px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
+        class="flex flex-col md:flex-row md:justify-end md:items-center mt-4 gap-2 font-light"
       >
-        ‹
-      </button>
+        <div class="flex items-center justify-end space-x-1">
+          <!-- Prev -->
+          <button
+            (click)="changePage(currentPage - 1)"
+            [disabled]="currentPage === 1"
+            class="px-2 md:px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
+          >
+            ‹
+          </button>
 
-      <!-- Pages -->
-      <button
-        *ngFor="let page of pages"
-        (click)="changePage(page)"
-        class="px-2 md:px-3 py-1 rounded border text-sm min-w-8 transition cursor-pointer"
-        [ngClass]="{
-          'bg-[#118CD9] text-[#ffffff]':
-            currentPage === page,
-          'hover:bg-gray-100': currentPage !== page
-        }"
-      >
-        {{ page }}
-      </button>
+          <!-- Pages -->
+          <ng-container *ngFor="let page of visiblePages">
+            <!-- ปุ่มตัวเลข -->
+            <button
+              *ngIf="page !== '...'"
+              (click)="changePage(+page)"
+              class="px-2 md:px-3 py-1 rounded border text-sm transition cursor-pointer"
+              [ngClass]="{
+                'bg-[#118CD9] text-white': currentPage === page,
+                'hover:bg-gray-100': currentPage !== page
+              }"
+            >
+              {{ page }}
+            </button>
 
-      <!-- Next -->
-      <button
-        (click)="changePage(currentPage + 1)"
-        [disabled]="currentPage === totalPages"
-        class="px-2 md:px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
-      >
-        ›
-      </button>
-    </div>
-  </div>
-  
+            <!-- จุด ... -->
+            <span
+              *ngIf="page === '...'"
+              class="px-2 py-1 text-sm text-gray-400 select-none"
+              >...</span
+            >
+          </ng-container>
+
+          <!-- Next -->
+          <button
+            (click)="changePage(currentPage + 1)"
+            [disabled]="currentPage === totalPages"
+            class="px-2 md:px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
+          >
+            ›
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>

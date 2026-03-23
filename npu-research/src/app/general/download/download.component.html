@@ -1,26 +1,28 @@
-<div class="contain-content bg-gray-100 p-5 md:px-10 text-xl md:text-2xl text-[#394250] font-medium">
+<div
+  class="contain-content bg-gray-100 p-5 md:px-10 text-xl md:text-2xl text-[#394250] font-medium"
+>
   <div class="mx-auto md:py-6">
     <!-- Title -->
     <h1 class="text-3xl md:ml-5 mb-2 text-[#16498C]">เอกสารดาวน์โหลด</h1>
   </div>
 
-  <div class="mb-10 mx-auto p-2 md:px-6 md:py-6 bg-white rounded-xl font-light text-lg">
+  <div
+    class="mb-10 mx-auto p-2 md:px-6 md:py-6 bg-white rounded-xl font-light text-lg"
+  >
     <div class="mx-auto">
       <!-- Table -->
       <div class="overflow-x-auto bg-white shadow">
         <table class="w-full min-w-225 table-auto">
           <colgroup>
-            <col class="w-[5%]">
-            <col class="w-[70%]">
-            <col class="w-[25%]">
+            <col class="w-[5%]" />
+            <col class="w-[70%]" />
+            <col class="w-[25%]" />
           </colgroup>
           <thead class="bg-[#394250] text-white">
             <tr>
               <th class="p-1 md:p-2 text-center">#</th>
               <th class="p-1 md:p-2 text-start">เอกสาร</th>
-              <th class="p-1 md:p-2 text-center">
-                จำนวนครั้งดาวน์โหลด
-              </th>
+              <th class="p-1 md:p-2 text-center">จำนวนครั้งดาวน์โหลด</th>
             </tr>
           </thead>
 
@@ -60,6 +62,53 @@
             </tr>
           </tbody>
         </table>
+      </div>
+
+      <div
+        class="flex flex-col md:flex-row md:justify-end md:items-center mt-4 gap-2 font-light"
+      >
+        <div class="flex items-center justify-end space-x-1">
+          <!-- Prev -->
+          <button
+            (click)="changePage(currentPage - 1)"
+            [disabled]="currentPage === 1"
+            class="px-2 md:px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
+          >
+            ‹
+          </button>
+
+          <!-- Pages -->
+          <ng-container *ngFor="let page of visiblePages">
+            <!-- ปุ่มตัวเลข -->
+            <button
+              *ngIf="page !== '...'"
+              (click)="changePage(+page)"
+              class="px-2 md:px-3 py-1 rounded border text-sm transition cursor-pointer"
+              [ngClass]="{
+                'bg-[#118CD9] text-white': currentPage === page,
+                'hover:bg-gray-100': currentPage !== page
+              }"
+            >
+              {{ page }}
+            </button>
+
+            <!-- จุด ... -->
+            <span
+              *ngIf="page === '...'"
+              class="px-2 py-1 text-sm text-gray-400 select-none"
+              >...</span
+            >
+          </ng-container>
+
+          <!-- Next -->
+          <button
+            (click)="changePage(currentPage + 1)"
+            [disabled]="currentPage === totalPages"
+            class="px-2 md:px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
+          >
+            ›
+          </button>
+        </div>
       </div>
     </div>
   </div>

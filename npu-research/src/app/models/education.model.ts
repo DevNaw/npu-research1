@@ -17,3 +17,7 @@ export interface EducationResponse {
     date_enrollment: string;
     date_graduation: string;
   }
+
+
+  // New
+  

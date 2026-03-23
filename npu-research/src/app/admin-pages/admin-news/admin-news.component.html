@@ -90,34 +90,44 @@
     </table>
     </div>
 
-    <div class="flex justify-end mt-3 space-x-1 font-light text-sm">
-      <button
-        (click)="changePage(currentPage - 1)"
-        [disabled]="currentPage === 1"
-        class="px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
-      >
-        ‹
-      </button>
-
-      <button
-        *ngFor="let page of pages"
-        (click)="changePage(page)"
-        class="px-3 py-1 rounded border text-sm transition cursor-pointer"
-        [ngClass]="{
-          'bg-[#118CD9] text-white border-[#118CD9]': currentPage === page,
-          'hover:bg-gray-100': currentPage !== page
-        }"
-      >
-        {{ page }}
-      </button>
-
-      <button
-        (click)="changePage(currentPage + 1)"
-        [disabled]="currentPage === totalPages"
-        class="px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
-      >
-        ›
-      </button>
+    <div class="flex flex-col md:flex-row md:justify-end md:items-center mt-4 gap-2 font-light">
+      <div class="flex items-center justify-end space-x-1">
+    
+        <!-- Prev -->
+        <button
+          (click)="changePage(currentPage - 1)"
+          [disabled]="currentPage === 1"
+          class="px-2 md:px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
+        >‹</button>
+    
+        <!-- Pages -->
+        <ng-container *ngFor="let page of visiblePages">
+          <!-- ปุ่มตัวเลข -->
+          <button
+            *ngIf="page !== '...'"
+            (click)="changePage(+page)"
+            class="px-2 md:px-3 py-1 rounded border text-sm transition cursor-pointer"
+            [ngClass]="{
+              'bg-[#118CD9] text-white': currentPage === page,
+              'hover:bg-gray-100': currentPage !== page
+            }"
+          >{{ page }}</button>
+    
+          <!-- จุด ... -->
+          <span
+            *ngIf="page === '...'"
+            class="px-2 py-1 text-sm text-gray-400 select-none"
+          >...</span>
+        </ng-container>
+    
+        <!-- Next -->
+        <button
+          (click)="changePage(currentPage + 1)"
+          [disabled]="currentPage === totalPages"
+          class="px-2 md:px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
+        >›</button>
+    
+      </div>
     </div>
   </div>
 </div>

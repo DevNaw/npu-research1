@@ -280,7 +280,7 @@ export class UserProfileComponent implements OnInit {
         show: true,
       },
     };
-    
+
     this.radarChartOptions = {
       series: [
         {
@@ -348,8 +348,8 @@ export class UserProfileComponent implements OnInit {
         custom: ({ series, seriesIndex, dataPointIndex }) => {
           const fullLabel = this.fullLabels[dataPointIndex]; // ⭐ ตัวจริง
           const value = series[seriesIndex][dataPointIndex];
-      
-          return  `<div style="padding:8px 12px; background:#333; color:#fff; border-radius:6px;">
+
+          return `<div style="padding:8px 12px; background:#333; color:#fff; border-radius:6px;">
         <div style="font-weight:600; margin-bottom:4px;">${fullLabel}</div>
         <hr style="border-color:#555; margin:4px 0;">
         <div style="display:flex; justify-content:space-around; align-items:center; gap:6px;">
@@ -357,7 +357,7 @@ export class UserProfileComponent implements OnInit {
           <span>จำนวน: ${value}</span>
         </div>
       </div>`;
-        }
+        },
       },
     };
 
@@ -430,8 +430,8 @@ export class UserProfileComponent implements OnInit {
         custom: ({ series, seriesIndex, dataPointIndex }) => {
           const fullLabelsSub = this.fullLabelsSub[dataPointIndex]; // ⭐ ตัวจริง
           const value = series[seriesIndex][dataPointIndex];
-      
-          return  `<div style="padding:8px 12px; background:#333; color:#fff; border-radius:6px;">
+
+          return `<div style="padding:8px 12px; background:#333; color:#fff; border-radius:6px;">
         <div style="font-weight:600; margin-bottom:4px;">${fullLabelsSub}</div>
         <hr style="border-color:#555; margin:4px 0;">
         <div style="display:flex; justify-content:space-around; align-items:center; gap:6px;">
@@ -439,7 +439,7 @@ export class UserProfileComponent implements OnInit {
           <span>จำนวน: ${value}</span>
         </div>
       </div>`;
-        }
+        },
       },
     };
   }
@@ -522,18 +522,16 @@ export class UserProfileComponent implements OnInit {
 
     this.fullLabels = this.radarData?.major?.labels || [];
     this.fullLabelsSub = this.radarData?.sub?.labels || [];
-    
+
     const labels = (this.radarData?.major?.labels || []).map((label: any) =>
       this.shortLabel(label)
     );
 
-    const values = [
-      ...(this.radarData?.major?.datasets[tabIndex]?.data || []),
-    ];
+    const values = [...(this.radarData?.major?.datasets[tabIndex]?.data || [])];
 
-    const labelsSub = 
-      (this.radarData?.sub?.labels || [])
-      .map((label: any) => this.shortLabel(label));
+    const labelsSub = (this.radarData?.sub?.labels || []).map((label: any) =>
+      this.shortLabel(label)
+    );
 
     const valuesSub = [
       ...(this.radarData?.sub?.datasets[tabIndex]?.data || []),
@@ -748,7 +746,9 @@ export class UserProfileComponent implements OnInit {
       if (!result.isConfirmed) return;
 
       // const payload = { ...this.educationData };
-      const request$ = this.service.updateEducation(this.buildEducationPayload());
+      const request$ = this.service.updateEducation(
+        this.buildEducationPayload()
+      );
 
       request$.subscribe({
         next: () => {
@@ -763,14 +763,6 @@ export class UserProfileComponent implements OnInit {
     this.serviceEducation.getEducation().subscribe({
       next: (res) => {
         const data = res.data.education_info;
-        if (data.date_graduation) {
-          data.date_graduation = this.convertToISO(data.date_graduation);
-        }
-
-        if (data.date_enrollment) {
-          data.date_enrollment = this.convertToISO(data.date_enrollment);
-        }
-
         this.educationData = data;
       },
       error: (err) => console.error(err),
@@ -868,32 +860,6 @@ export class UserProfileComponent implements OnInit {
     this.openDropdown = null;
   }
 
-  private convertToISO(thaiDate: string): string {
-    if (!thaiDate) return '';
-
-    const months: any = {
-      มกราคม: '01',
-      กุมภาพันธ์: '02',
-      มีนาคม: '03',
-      เมษายน: '04',
-      พฤษภาคม: '05',
-      มิถุนายน: '06',
-      กรกฎาคม: '07',
-      สิงหาคม: '08',
-      กันยายน: '09',
-      ตุลาคม: '10',
-      พฤศจิกายน: '11',
-      ธันวาคม: '12',
-    };
-
-    const parts = thaiDate.split(' ');
-    const day = parts[0].padStart(2, '0');
-    const month = months[parts[1]];
-    const year = (parseInt(parts[2], 10) - 543).toString(); // แปลง พ.ศ. → ค.ศ.
-
-    return `${year}-${month}-${day}`;
-  }
-
   tabs: { key: ResearchTab; label: string; icon: string }[] = [
     { key: 'project', label: 'โครงการวิจัย', icon: 'bi-journal-text' },
     { key: 'article', label: 'บทความวิชาการ', icon: 'bi-file-earmark-text' },
@@ -988,16 +954,46 @@ export class UserProfileComponent implements OnInit {
   }
 
   private buildEducationPayload(): Record<string, any> {
-    const payload = this.educationData ;
+    const payload = this.educationData;
 
     return {
-      ...(payload.highest_education && { highest_education: payload.highest_education }),
+      ...(payload.highest_education && {
+        highest_education: payload.highest_education,
+      }),
       ...(payload.field_of_study && { field_of_study: payload.field_of_study }),
       ...(payload.qualification && { qualification: payload.qualification }),
       ...(payload.gpa && { gpa: payload.gpa }),
       ...(payload.institution && { institution: payload.institution }),
-      ...(payload.date_enrollment && { date_enrollment: payload.date_enrollment }),
-      ...(payload.date_graduation && { date_graduation: payload.date_graduation }),
+      ...(payload.date_enrollment && {
+        date_enrollment: payload.date_enrollment,
+      }),
+      ...(payload.date_graduation && {
+        date_graduation: payload.date_graduation,
+      }),
     };
+  }
+
+  get visiblePages(): (number | string)[] {
+    const total = this.totalPages;
+    const current = this.currentPage;
+    const pages: (number | string)[] = [];
+  
+    if (total <= 5) {
+      return Array.from({ length: total }, (_, i) => i + 1);
+    }
+  
+    pages.push(1);
+  
+    if (current > 3) pages.push('...');
+  
+    for (let i = Math.max(2, current - 1); i <= Math.min(total - 1, current + 1); i++) {
+      pages.push(i);
+    }
+  
+    if (current < total - 2) pages.push('...');
+  
+    pages.push(total);
+  
+    return pages;
   }
 }

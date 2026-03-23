@@ -471,17 +471,27 @@
           </button>
 
           <!-- Pages -->
-          <button
-            *ngFor="let page of pages"
-            (click)="changePage(page)"
-            class="px-2 md:px-3 py-1 rounded border text-sm transition cursor-pointer"
-            [ngClass]="{
-              'bg-[#118CD9] text-[#ffffff]': currentPage === page,
-              'hover:bg-gray-100': currentPage !== page
-            }"
-          >
-            {{ page }}
-          </button>
+          <ng-container *ngFor="let page of visiblePages">
+            <!-- ปุ่มตัวเลข -->
+            <button
+              *ngIf="page !== '...'"
+              (click)="changePage(+page)"
+              class="px-2 md:px-3 py-1 rounded border text-sm transition cursor-pointer"
+              [ngClass]="{
+                'bg-[#118CD9] text-white': currentPage === page,
+                'hover:bg-gray-100': currentPage !== page
+              }"
+            >
+              {{ page }}
+            </button>
+
+            <!-- จุด ... -->
+            <span
+              *ngIf="page === '...'"
+              class="px-2 py-1 text-sm text-gray-400 select-none"
+              >...</span
+            >
+          </ng-container>
 
           <!-- Next -->
           <button

@@ -44,7 +44,7 @@
             <td class="text-center p-2">
               {{ (currentPage - 1) * pageSize + i + 1 }}
             </td>
-            <td class="p-2">{{ users.first_name + ' ' + users.last_name }}</td>
+            <td class="p-2">{{ users.first_name + " " + users.last_name }}</td>
             <td class="text-center p-2">
               {{ users.role }}
             </td>
@@ -71,7 +71,7 @@
 
           <tr *ngIf="paginatedUsers.length === 0">
             <td colspan="5" class="text-center text-gray-500 p-4">
-                <i class="bi bi-folder-x text-3xl block mb-2"></i>
+              <i class="bi bi-folder-x text-3xl block mb-2"></i>
               ไม่พบข้อมูล
             </td>
           </tr>
@@ -79,34 +79,51 @@
       </table>
     </div>
 
-    <div class="flex justify-end mt-3 space-x-1 font-light text-sm">
-      <button
-        (click)="changePage(currentPage - 1)"
-        [disabled]="currentPage === 1"
-        class="px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
-      >
-        ‹
-      </button>
+    <div
+      class="flex flex-col md:flex-row md:justify-end md:items-center mt-4 gap-2 font-light"
+    >
+      <div class="flex items-center justify-end space-x-1">
+        <!-- Prev -->
+        <button
+          (click)="changePage(currentPage - 1)"
+          [disabled]="currentPage === 1"
+          class="px-2 md:px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
+        >
+          ‹
+        </button>
 
-      <button
-        *ngFor="let page of pages"
-        (click)="changePage(page)"
-        class="px-3 py-1 rounded border text-sm transition cursor-pointer"
-        [ngClass]="{
-          'bg-[#118CD9] text-white border-[#118CD9]': currentPage === page,
-          'hover:bg-gray-100': currentPage !== page
-        }"
-      >
-        {{ page }}
-      </button>
+        <!-- Pages -->
+        <ng-container *ngFor="let page of visiblePages">
+          <!-- ปุ่มตัวเลข -->
+          <button
+            *ngIf="page !== '...'"
+            (click)="changePage(+page)"
+            class="px-2 md:px-3 py-1 rounded border text-sm transition cursor-pointer"
+            [ngClass]="{
+              'bg-[#118CD9] text-white': currentPage === page,
+              'hover:bg-gray-100': currentPage !== page
+            }"
+          >
+            {{ page }}
+          </button>
 
-      <button
-        (click)="changePage(currentPage + 1)"
-        [disabled]="currentPage === totalPages"
-        class="px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
-      >
-        ›
-      </button>
+          <!-- จุด ... -->
+          <span
+            *ngIf="page === '...'"
+            class="px-2 py-1 text-sm text-gray-400 select-none"
+            >...</span
+          >
+        </ng-container>
+
+        <!-- Next -->
+        <button
+          (click)="changePage(currentPage + 1)"
+          [disabled]="currentPage === totalPages"
+          class="px-2 md:px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
+        >
+          ›
+        </button>
+      </div>
     </div>
   </div>
 </div>
@@ -117,7 +134,6 @@
   class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center text-2xl text-[#394250] font-medium"
 >
   <div class="bg-white w-full max-w-xl rounded-2xl shadow-xl p-6 relative">
-
     <!-- Header -->
     <div class="flex items-center justify-between border-b pb-3 mb-5">
       <h2 class="">แก้ไขรหัสผ่าน</h2>
@@ -132,7 +148,6 @@
 
     <!-- Content -->
     <div class="space-y-4">
-
       <!-- Password -->
       <div>
         <label class="mb-1 block">รหัสผ่านใหม่</label>
@@ -156,7 +171,9 @@
       </div>
 
       <!-- Footer -->
-      <div class="flex justify-center gap-3 pt-4 border-t mt-4 font-medium text-xl">
+      <div
+        class="flex justify-center gap-3 pt-4 border-t mt-4 font-medium text-xl"
+      >
         <button
           (click)="save()"
           class="px-5 py-2 rounded-lg bg-[#118CD9] hover:bg-[#16498C] text-white shadow cursor-pointer"
@@ -171,7 +188,6 @@
           ยกเลิก
         </button>
       </div>
-
     </div>
   </div>
 </div>

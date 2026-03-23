@@ -20,7 +20,7 @@
     avatar_url: string | null;
     generalInfo: GeneralInfo;
     workInfo: WorkInfo;
-    educationalInfo: EducationalInfo;
+    educationalInfo: EducationalInfo[];
   }
 
   export interface GeneralInfo {

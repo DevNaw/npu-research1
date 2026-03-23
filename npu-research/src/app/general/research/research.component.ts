@@ -84,7 +84,7 @@ export class ResearchComponent implements OnInit {
 
   viewDetails(id: number): void {
     console.log('id', id);
-    
+
     if (!id) {
       console.error('Project ID undefined');
       return;
@@ -104,14 +104,41 @@ export class ResearchComponent implements OnInit {
 
   formatThaiDate(dateString: string): string {
     if (!dateString) return '-';
-  
+
     const d = new Date(dateString);
-  
+
     const day = d.getDate();
     const month = d.toLocaleDateString('th-TH', { month: 'long' });
     const year = d.getFullYear() + 543;
-  
+
     return `${day} ${month} ${year}`;
   }
-  
+
+  get visiblePages(): (number | string)[] {
+    const total = this.totalPages;
+    const current = this.currentPage;
+    const pages: (number | string)[] = [];
+
+    if (total <= 5) {
+      return Array.from({ length: total }, (_, i) => i + 1);
+    }
+
+    pages.push(1);
+
+    if (current > 3) pages.push('...');
+
+    for (
+      let i = Math.max(2, current - 1);
+      i <= Math.min(total - 1, current + 1);
+      i++
+    ) {
+      pages.push(i);
+    }
+
+    if (current < total - 2) pages.push('...');
+
+    pages.push(total);
+
+    return pages;
+  }
 }

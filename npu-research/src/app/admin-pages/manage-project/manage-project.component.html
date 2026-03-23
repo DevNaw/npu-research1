@@ -99,20 +99,22 @@
             </td>
             <td class="p-2 text-center">{{ p.research_code || "-" }}</td>
             <td class="p-2">
-              <div
+              <a
                 class="text-[#16498C] hover:underline cursor-pointer wrap-break-word whitespace-normal"
-                (click)="viewItem(p.research_id)"
+               
+                href="/performance/{{ selectedTab.toLowerCase() }}/{{ p.research_id }}"
+                routerLink="/performance/{{ selectedTab.toLowerCase() }}/{{ p.research_id }}"
                 title="{{ p.title_th }}"
               >
                 {{ p.title_th || '-' }}
-              </div>
+            </a>
             
               <div class="text-sm text-gray-500 mt-1 hidden md:block">
                 <i class="bi bi-calendar-event"></i>
                 {{ p.published_date | date : "dd MMM YYYY" : "" : "th-TH" }}
               </div>
             </td>
-            <td class="p-2 text-sm leading-relaxed">
+            <td class="p-2 leading-relaxed">
               <div>
                 <span class="font-medium">ประเภท:</span>
                 {{ p.funding.source_funds || '-' }}

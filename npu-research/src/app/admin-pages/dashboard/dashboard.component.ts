@@ -70,16 +70,6 @@ export class DashboardComponent {
   searchMajors = '';
   searchQualifications = '';
 
-  educationData: any = {
-    highest_education: '',
-    field_of_study: '',
-    qualification: '',
-    gpa: '',
-    institution: '',
-    date_enrollment: '',
-    date_graduation: '',
-  };
-
   researchData: any = {
     projects: [],
     articles: [],
@@ -420,93 +410,6 @@ export class DashboardComponent {
     this.updateCharts();
   }
 
-  // updateCharts(): void {
-  //   if (!this.barSummary.length) return;
-  
-  //   const sorted = [...this.barSummary].sort((a, b) => a.year - b.year);
-  
-  //   const years = sorted.map(i => i.year.toString());
-  //   const projectData = sorted.map(i => i.project_count);
-  //   const articleData = sorted.map(i => i.article_count);
-  //   const innovationData = sorted.map(i => i.innovation_count);
-  
-  //   // ===== BAR =====
-  //   this.barChartOptions = {
-  //     ...this.barChartOptions,
-  //     series: [
-  //       { name: 'โครงการวิจัย', data: projectData },
-  //       { name: 'บทความ', data: articleData },
-  //       { name: 'นวัตกรรม', data: innovationData },
-  //     ],
-  //     xaxis: { categories: years },
-  //   };
-  
-  //   // ===== PIE (รวมทั้งหมดทุกปี) =====
-  //   this.chartOptions = {
-  //     ...this.chartOptions,
-  //     data: [
-  //       {
-  //         ...this.chartOptions.data[0],
-  //         dataPoints: [
-  //           { name: 'โครงการวิจัย', y: this.donutSummary.projects_count },
-  //           { name: 'บทความ', y: this.donutSummary.articles_count },
-  //           { name: 'นวัตกรรม', y: this.donutSummary.innovations_count },
-  //         ],
-  //       },
-  //     ],
-  //   }
-
-  //   const tabIndex =
-  //     this.selectedTab === 'project'
-  //       ? 0
-  //       : this.selectedTab === 'article'
-  //       ? 1
-  //       : 2;
-
-  //   this.fullLabels = this.radarData?.major?.labels || [];
-  //   this.fullLabelsSub = this.radarData?.sub?.labels || [];
-    
-    
-  //   const labels = (this.radarData?.major?.labels || []).map((label: any) =>
-  //     this.shortLabel(label)
-  //   );
-
-  //   const values = [
-  //     ...(this.radarData?.major?.datasets[tabIndex]?.data || []),
-  //   ];
-
-  //   const labelsSub = 
-  //     (this.radarData?.sub?.labels || [])
-  //     .map((label: any) => this.shortLabel(label));
-
-  //   const valuesSub = [
-  //     ...(this.radarData?.sub?.datasets[tabIndex]?.data || []),
-  //   ];
-
-  //   this.radarChartOptions = {
-  //     ...this.radarChartOptions,
-  //     series: [
-  //       {
-  //         name: this.tabs.find((t) => t.key === this.selectedTab)?.label || '',
-  //         data: values,
-  //       },
-  //     ],
-  //     labels: labels,
-  //     xaxis: { categories: labels },
-  //   };
-
-  //   this.radarChartOptionsSub = {
-  //     ...this.radarChartOptionsSub,
-  //     series: [
-  //       {
-  //         name: this.tabs.find((t) => t.key === this.selectedTab)?.label || '',
-  //         data: valuesSub,
-  //       },
-  //     ],
-  //     labels: labelsSub,
-  //     xaxis: { categories: labelsSub },
-  //   };
-  // }
   updateCharts(): void {
     if (!this.barSummary.length) return;
 
@@ -632,5 +535,29 @@ export class DashboardComponent {
 
   get pages(): number[] {
     return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  }
+
+  get visiblePages(): (number | string)[] {
+    const total = this.totalPages;
+    const current = this.currentPage;
+    const pages: (number | string)[] = [];
+  
+    if (total <= 5) {
+      return Array.from({ length: total }, (_, i) => i + 1);
+    }
+  
+    pages.push(1);
+  
+    if (current > 3) pages.push('...');
+  
+    for (let i = Math.max(2, current - 1); i <= Math.min(total - 1, current + 1); i++) {
+      pages.push(i);
+    }
+  
+    if (current < total - 2) pages.push('...');
+  
+    pages.push(total);
+  
+    return pages;
   }
 }

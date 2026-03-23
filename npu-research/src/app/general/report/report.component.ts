@@ -66,17 +66,19 @@ export class ReportComponent {
     },
     responsive: [
       {
+        breakpoint: 1024,
+        options: {
+          chart: { height: 300 },
+          legend: { show: false },
+          dataLabels: { enabled: true }
+        }
+      },
+      {
         breakpoint: 768,
         options: {
-          chart: {
-            height: 280
-          },
-          legend: {
-            position: 'bottom',
-            labels: {
-              colors: ['#ffffff']
-            }
-          }
+          chart: { height: 260 },
+          legend: { show: false },
+          dataLabels: { enabled: true }
         }
       }
     ]
@@ -116,16 +118,16 @@ export class ReportComponent {
 
   preparePieChart() {
 
-    if (!this.data?.graph_subject_area) return;
+    if (!this.data?.graph_oecd) return;
   
-    const filtered = this.data.graph_subject_area
+    const filtered = this.data.graph_oecd
       .filter(i => i.count > 0)
       .sort((a, b) => b.count - a.count);
   
     const top = filtered.slice(0, 10);
     const others = filtered.slice(10);
     const otherCount = others.reduce((sum, i) => sum + i.count, 0);
-    const labels = top.map(i => i.subject_area_name);
+    const labels = top.map(i => i.oecd_name);
     const series = top.map(i => i.count);
   
     if (otherCount > 0) {
