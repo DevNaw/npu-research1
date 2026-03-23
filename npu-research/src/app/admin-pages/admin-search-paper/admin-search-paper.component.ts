@@ -43,10 +43,6 @@ export class AdminSearchPaperComponent {
   filteredResearchers: ResearchItem[] = [];
   searchResults: ResearchItem[] = [];
   allTableData: ResearchItem[] = [];
-  selectedYear: number | null = null;
-  thaiYears: number[] = [];
-  searchAgency = '';
-  selectedAgency: Organization | null = null;
 
   fundings: Funding[] = [];
 
@@ -80,6 +76,11 @@ export class AdminSearchPaperComponent {
   currentPage = 1;
   pageSize = 10;
   paginationData: ResearchItem[] = [];
+  searchAgency = '';
+  selectedAgency: Organization | null = null;
+
+  selectedYear: number | null = null;
+  thaiYears: number[] = [];
 
   constructor(
     private router: Router,
@@ -108,6 +109,7 @@ export class AdminSearchPaperComponent {
     Promise.all([
       this.loadSubOrgan(),
       this.loadFundings(),
+      this.generateThaiYears(),
       new Promise((resolve) => setTimeout(resolve, 1000)),
     ]).then(() => MainComponent.hideLoading());
   }
@@ -271,12 +273,24 @@ export class AdminSearchPaperComponent {
       }
     }
 
+    if (this.selectedAgency) {
+      payload.org_id = this.selectedAgency.id;
+    }
+
     if (this.selectedFundingSource) {
       payload.funding_id = this.selectedFundingSource.id;
     }
 
     if (this.selectedOrg?.id) {
       payload.org_id = this.selectedOrg.id;
+    }
+
+    if (this.dateRange.start) {
+      payload.date_from = this.dateRange.start;
+    }
+
+    if (this.dateRange.end) {
+      payload.date_to = this.dateRange.end;
     }
 
     if (this.selectedSubSub?.child_id) {
@@ -287,14 +301,6 @@ export class AdminSearchPaperComponent {
       oecdId = this.selectedMajor.major_id;
     }
 
-    if (this.dateRange.start) {
-      payload.date_from = this.dateRange.start;
-    }
-
-    if (this.dateRange.end) {
-      payload.date_to = this.dateRange.end;
-    }
-    
     if (oecdId) {
       payload.oecd_id = oecdId;
     }
@@ -499,24 +505,42 @@ export class AdminSearchPaperComponent {
     const total = this.totalPages;
     const current = this.currentPage;
     const pages: (number | string)[] = [];
-  
+
     if (total <= 5) {
       return Array.from({ length: total }, (_, i) => i + 1);
     }
-  
+
     pages.push(1);
-  
+
     if (current > 3) pages.push('...');
-  
-    for (let i = Math.max(2, current - 1); i <= Math.min(total - 1, current + 1); i++) {
+
+    for (
+      let i = Math.max(2, current - 1);
+      i <= Math.min(total - 1, current + 1);
+      i++
+    ) {
       pages.push(i);
     }
-  
+
     if (current < total - 2) pages.push('...');
-  
+
     pages.push(total);
-  
+
     return pages;
+  }
+
+  selectAgency(org: Organization) {
+    this.selectedAgency = org;
+    this.searchAgency = '';
+    this.activeDropdown = null;
+  }
+  
+  filteredAgency(): Organization[] {
+    if (!this.searchAgency) return this.organizations;
+  
+    return this.organizations.filter((o) =>
+      o.faculty.toLowerCase().includes(this.searchAgency.toLowerCase())
+    );
   }
 
   selectYear(year: number) {
@@ -531,19 +555,5 @@ export class AdminSearchPaperComponent {
     for (let i = 0; i < 70; i++) {
       this.thaiYears.push(currentYear - i);
     }
-  }
-
-  filteredAgency(): Organization[] {
-    if (!this.searchAgency) return this.organizations;
-
-    return this.organizations.filter((o) =>
-      o.faculty.toLowerCase().includes(this.searchAgency.toLowerCase())
-    );
-  }
-
-  selectAgency(org: Organization) {
-    this.selectedAgency = org;
-    this.searchAgency = '';
-    this.activeDropdown = null;
   }
 }
