@@ -20,32 +20,25 @@
     </div>
 
     <div class="w-full overflow-x-auto bg-white shadow-sm mb-4 md:mb-8">
-      <table class="min-w-225 w-full border-collapse">
+      <table class="min-w-225 w-full border-collapse font-light">
         <!-- Table Header -->
-        <thead>
+        <thead class="text-lg ">
           <tr class="bg-[#394250] text-white">
-            <th class="p-1 md:p-2 text-center whitespace-nowrap font-semibold">
-              ระดับ
+            <th class="p-1 md:p-2 text-center whitespace-nowrap">
+              ระดับการศึกษา
             </th>
-            <th class="p-1 md:p-2 text-center font-semibold">สาขา / คุณวุฒิ</th>
-            <th class="p-1 md:p-2 text-center font-semibold">
-              สถานศึกษา
-              <!-- </th>
-            <th class="p-1 md:p-2 text-center font-semibold">
-              ประเทศ
-            </th> -->
+            <th class="p-1 md:p-2 text-center">สาขา</th>
+            <th class="p-1 md:p-2 text-center">
+              วุฒิการศึกษา
             </th>
 
-            <th class="p-1 md:p-2 text-center whitespace-nowrap font-semibold">
-              เกรดเฉลี่ย
+            <th class="p-1 md:p-2 text-center whitespace-nowrap">
+              สถานที่ศึกษา
             </th>
-            <th class="p-1 md:p-2 text-center whitespace-nowrap font-semibold">
-              ปีที่เข้า
+            <th class="p-1 md:p-2 text-center whitespace-nowrap">
+              ปีที่สำเร็จการศึกษา
             </th>
-            <th class="p-1 md:p-2 text-center whitespace-nowrap font-semibold">
-              ปีที่สำเร็จ
-            </th>
-            <th class="p-1 md:p-2 text-center whitespace-nowrap font-semibold">
+            <th class="p-1 md:p-2 text-center whitespace-nowrap">
               การจัดการ
             </th>
           </tr>
@@ -61,27 +54,15 @@
             </td>
 
             <td class="p-1 md:p-2 max-w-60 wrap-break-word">
-              {{ educationData.qualification }} /
-              {{ educationData.field_of_study }}
+              {{ educationData.qualification }}
             </td>
 
             <td class="p-1 md:p-2 max-w-56 wrap-break-word">
+              {{ educationData.field_of_study }}
+            </td>
+
+            <td class="p-1 md:p-2 whitespace-nowrap">
               {{ educationData.institution }}
-            </td>
-            <!--     
-            <td class="p-1 md:p-2 whitespace-nowrap">
-              ไทยแลนด์
-            </td> -->
-
-            <td class="p-1 md:p-2 whitespace-nowrap">
-              {{ educationData.gpa }}
-            </td>
-
-            <td class="p-1 md:p-2 whitespace-nowrap">
-              {{
-                educationData.date_enrollment
-                  | date : "dd MMMM YYYY" : "" : "TH-th"
-              }}
             </td>
 
             <td class="p-1 md:p-2 whitespace-nowrap">
@@ -201,7 +182,7 @@
           <label class="mb-1 block">ปีที่สำเร็จการศึกษา</label>
           <input
             [(ngModel)]="educationData.date_graduation"
-            type="date"
+            type="text"
             placeholder="ปีที่สำเร็จการศึกษา"
             class="w-full border rounded-lg px-3 py-2 font-light"
           />
