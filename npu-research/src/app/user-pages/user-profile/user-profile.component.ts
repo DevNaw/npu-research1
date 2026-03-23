@@ -472,8 +472,8 @@ export class UserProfileComponent implements OnInit {
         this.radarData = res.data.radar;
         this.researchData = res.data.researchs;
 
-        this.updateCharts();
         this.changeTab('project');
+        this.updateCharts();
       },
       error: (err) => console.error(err),
     });

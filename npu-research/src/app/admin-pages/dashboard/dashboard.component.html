@@ -348,7 +348,7 @@
               
                 <!-- ⭐ สำคัญ: ต้องมี container height -->
                 <div class="w-full">
-                  <apx-chart
+                  <apx-chart *ngIf="!loading"
                     class="w-full h-full text-white"
                     [series]="radarChartOptions.series!"
                     [chart]="radarChartOptions.chart!"
@@ -383,7 +383,7 @@
                 </div>
   
                 <div class="-mx-4 -mb-6">
-                  <apx-chart
+                  <apx-chart *ngIf="!loading"
                     class="w-full h-full text-white"
                     [series]="radarChartOptionsSub.series!"
                     [chart]="radarChartOptionsSub.chart!"

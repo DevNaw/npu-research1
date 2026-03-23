@@ -49,6 +49,8 @@ export class DashboardComponent {
   fullLabelsSub: string[] = [];
   radarData: any;
 
+  loading = false;
+
   profileDataById: ResearchProfileData | null = null;
   isPersonalOpen = true;
   isWorkOpen = false;
@@ -339,6 +341,7 @@ export class DashboardComponent {
       const id = params.get('id');
 
       if (id) {
+        this.loading = true;
         this.loadDataById(+id);
       }
       MainComponent.hideLoading();
@@ -354,9 +357,9 @@ export class DashboardComponent {
         this.researchData = res.data.researchs;
         this.radarData = res.data.radar;
 
+        this.loading = false;
         this.changeTab('project');
         this.updateCharts();
-        
       },
       error: (err) => console.error(err),
     });
