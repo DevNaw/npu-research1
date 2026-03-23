@@ -53,9 +53,9 @@ export interface SearchResearchRequest {
   subject_area_id?: number;
   type?: 'ARTICLE' | 'PROJECT' | 'INNOVATION';
   year?: number;
-  date_from?: string;
-  date_to?: string;
   per_page?: number;
+  date_from?: Date;
+  date_to?: Date;
 }
 
 export interface Funding {

@@ -13,6 +13,7 @@ import {
 } from '../../models/search-get.model';
 import { Funding } from '../../models/funding.model';
 import { FundingService } from '../../services/funding.service';
+import { MatDateRangePicker } from '@angular/material/datepicker';
 
 CanvasJS.addColorSet('customColorSet', [
   '#038FFB', // น้ำเงิน
@@ -105,6 +106,11 @@ export class UserResearchComponent {
   currentPage = 1;
   pageSize = 10;
   paginationData: ResearchItem[] = [];
+  searchAgency = '';
+  selectedAgency: Organization | null = null;
+
+  selectedYear: number | null = null;
+  thaiYears: number[] = [];
 
   constructor(
     private router: Router,
@@ -133,6 +139,7 @@ export class UserResearchComponent {
     Promise.all([
       this.loadSubOrgan(),
       this.loadFundings(),
+      this.generateThaiYears(),
       new Promise((resolve) => setTimeout(resolve, 1000)),
     ]).then(() => MainComponent.hideLoading());
   }
@@ -296,12 +303,24 @@ export class UserResearchComponent {
       }
     }
 
+    if (this.selectedAgency) {
+      payload.org_id = this.selectedAgency.id;
+    }
+
     if (this.selectedFundingSource) {
       payload.funding_id = this.selectedFundingSource.id;
     }
 
     if (this.selectedOrg?.id) {
       payload.org_id = this.selectedOrg.id;
+    }
+
+    if (this.dateRange.start) {
+      payload.date_from = this.dateRange.start;
+    }
+
+    if (this.dateRange.end) {
+      payload.date_to = this.dateRange.end;
     }
 
     if (this.selectedSubSub?.child_id) {
@@ -320,12 +339,8 @@ export class UserResearchComponent {
       payload.funding = this.selectedFunding;
     }
 
-    if (this.date_from) {
-      payload.date_from = this.formatDateForApi(this.date_from);
-    }
-
-    if (this.date_to) {
-      payload.date_to = this.formatDateForApi(this.date_to);
+    if (this.selectedYear) {
+      payload.year = this.selectedYear;
     }
 
     this.loading = true;
@@ -542,5 +557,33 @@ export class UserResearchComponent {
     pages.push(total);
 
     return pages;
+  }
+
+  selectAgency(org: Organization) {
+    this.selectedAgency = org;
+    this.searchAgency = '';
+    this.activeDropdown = null;
+  }
+  
+  filteredAgency(): Organization[] {
+    if (!this.searchAgency) return this.organizations;
+  
+    return this.organizations.filter((o) =>
+      o.faculty.toLowerCase().includes(this.searchAgency.toLowerCase())
+    );
+  }
+
+  selectYear(year: number) {
+    this.selectedYear = year;
+    this.activeDropdown = null;
+  }
+
+  generateThaiYears() {
+    const currentYear = new Date().getFullYear() + 543;
+
+    this.thaiYears = [];
+    for (let i = 0; i < 70; i++) {
+      this.thaiYears.push(currentYear - i);
+    }
   }
 }
