@@ -4,6 +4,8 @@ import { OECDChild, OECDMajor, OECDSub } from '../../models/oecd.model';
 import { OECDService } from '../../services/oecd.service';
 import Swal from 'sweetalert2';
 import { AuthService } from '../../services/auth.service';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-manage-oecd',
@@ -74,12 +76,95 @@ export class ManageOecdComponent {
     });
   }
 
-  onSearch() {}
+  onSearch() {
+    const keyword = this.searchText.toLowerCase().trim();
 
-  printPage() {}
+    this.filteredMajors = this.oecdList.filter(
+      (m) =>
+        m.name_th.toLowerCase().includes(keyword) ||
+        m.code.toLowerCase().includes(keyword)
+    );
+    this.filteredMajors.forEach((m) => {
+      m.children = m.children.filter(
+        (s) =>
+          s.name_th.toLowerCase().includes(keyword) ||
+          s.code.toLowerCase().includes(keyword)
+      );
+      m.children.forEach((s) => {
+        s.children = s.children.filter(
+          (c) =>
+            c.name_th.toLowerCase().includes(keyword) ||
+            c.code.toLowerCase().includes(keyword)
+        );
+      });
+    });
 
-  exportExcel() {}
+    this.currentPage = 1;
+  }
 
+  exportExcel() {
+    if (!this.oecdList || this.oecdList.length === 0) {
+      Swal.fire('ไม่มีข้อมูลให้ Export', '', 'warning');
+      return;
+    }
+  
+    const data: any[] = [];
+  
+    this.oecdList.forEach((major) => {
+      // แถว major
+      data.push({
+        'ระดับ': 'สาขาหลัก',
+        'Code': major.code,
+        'ชื่อสาขา': major.name_th,
+        'สาขาแม่': '-',
+      });
+  
+      major.children?.forEach((sub) => {
+        // แถว sub
+        data.push({
+          'ระดับ': 'สาขาย่อย',
+          'Code': sub.code,
+          'ชื่อสาขา': sub.name_th,
+          'สาขาแม่': major.name_th,
+        });
+  
+        sub.children?.forEach((child) => {
+          // แถว child
+          data.push({
+            'ระดับ': 'สาขาที่เกี่ยวข้อง',
+            'Code': child.code,
+            'ชื่อสาขา': child.name_th,
+            'สาขาแม่': sub.name_th,
+          });
+        });
+      });
+    });
+  
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
+  
+    const colWidths = Object.keys(data[0]).map((key) => ({
+      wch: Math.max(
+        key.length,
+        ...data.map((row) => (row[key] ? row[key].toString().length : 0))
+      ) + 4,
+    }));
+  
+    worksheet['!cols'] = colWidths;
+  
+    const workbook: XLSX.WorkBook = {
+      Sheets: { 'OECD': worksheet },
+      SheetNames: ['OECD'],
+    };
+  
+    const excelBuffer: any = XLSX.write(workbook, {
+      bookType: 'xlsx',
+      type: 'array',
+    });
+  
+    const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+    saveAs(blob, 'oecd.xlsx');
+  }
+  
   closeModal() {
     this.showModal = false;
     this.showSubModal = false;

@@ -55,7 +55,7 @@
           </thead>
 
           <tbody>
-            <ng-container *ngFor="let major of oecdList; let mi = index">
+            <ng-container *ngFor="let major of filteredMajors; let mi = index">
               <tr class="border-b border-gray-300 bg-gray-100 align-top">
                 <td class="p-2 md:p-3 text-center font-medium">{{ mi + 1 }}</td>
                 <td class="p-2 md:p-3 text-center">{{ major.code }}</td>
@@ -210,7 +210,7 @@
               </tr>
             </ng-container>
 
-            <tr *ngIf="oecdList.length === 0">
+            <tr *ngIf="filteredMajors.length === 0">
               <td colspan="4" class="text-center p-6 text-gray-400 italic">
                 <i class="bi bi-folder-x text-3xl block mb-2"></i>
                 ไม่พบข้อมูล
