@@ -353,8 +353,9 @@ export class UserDashboardComponent implements OnInit {
   }
 
   private createBarChart(
-    data: { label: string; count: number }[]
+    data: { label: string; count: number; label_full: string }[]
   ): ChartOptions {
+
     return {
       series: [
         {
@@ -411,6 +412,20 @@ export class UserDashboardComponent implements OnInit {
         },
       },
       tooltip: {
+        theme: 'dark',
+        custom: ({ series, seriesIndex, dataPointIndex }) => {
+          const fullLabel = data[dataPointIndex]?.label_full ?? '';
+          const value = series[seriesIndex][dataPointIndex]; // แก้ตรงนี้
+      
+          return `<div style="padding:8px 12px; background:#333; color:#fff; border-radius:6px;">
+            <div style="font-weight:600; margin-bottom:4px;">${fullLabel}</div>
+            <hr style="border-color:#555; margin:4px 0;">
+            <div style="display:flex; justify-content:space-around; align-items:center; gap:6px;">
+              <span style="width:10px; height:10px; border-radius:50%; background:#038FFB; display:inline-block;"></span>
+              <span>จำนวน: ${value}</span>
+            </div>
+          </div>`;
+        }
       },
       yaxis: {
         title: {

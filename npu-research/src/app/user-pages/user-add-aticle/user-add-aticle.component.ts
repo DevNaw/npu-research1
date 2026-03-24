@@ -61,6 +61,7 @@ const DEFAULT_ARTICLE: Article = {
   oecd_id: 0,
   article_type_code: '',
   con_type: '',
+  article_published: '',
 };
 
 @Component({
@@ -456,6 +457,11 @@ export class UserAddAticleComponent {
     d.keywords.forEach((k, i) => {
       fd.append(`keywords[${i}]`, k);
     });
+
+    if (d.article_type === 'วารสาร') {
+      required('article_published', d.article_published);
+    }
+    
     required('published_date', d.published_date);
     required('article_type', d.article_type);
     required('journal_name', d.journal_name);

@@ -27,8 +27,8 @@
             (click)="toggleDropdown('faculties', $event)"
             class="w-full h-11 border border-gray-300 rounded-full px-6 flex justify-between items-center bg-white"
           >
-            <span class="truncate">
-              {{ selectedFaculty || "เลือกหน่วยงาน" }}
+            <span class="truncate" [class.text-gray-400]="selectedFaculty === undefined">
+              {{ selectedFaculty === undefined ? "เลือกหน่วยงาน" : (selectedFaculty || "หน่วยงานทั้งงหมด") }}
             </span>
             <i class="bi bi-chevron-down"></i>
           </button>

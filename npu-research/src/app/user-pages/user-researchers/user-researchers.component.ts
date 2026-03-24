@@ -192,16 +192,23 @@ export class UserResearchersComponent {
     this.activeDropdown = null;
   }
 
-  selectFaculities(org: Organization) {
-    this.selectedFaculty = org.faculty;
-    this.selectedFacultyId = org.id;
-    this.searchFaculitie = '';
+  selectFaculities(org: Organization | { id: null; faculty: string }) {
+    if (org.id === null) {
+      this.selectedFaculty = null;
+      this.selectedFacultyId = null;
+    } else {
+      this.selectedFaculty = org.faculty;
+      this.selectedFacultyId = org.id;
+    }
 
+    this.searchFaculitie = '';
     this.activeDropdown = null;
   }
 
-  filteredFaculties(): Organization[] {
-    if (!this.searchFaculitie) return this.organizations;
+  filteredFaculties(): (Organization | { id: null; faculty: string })[] {
+    const all = { id: null, faculty: 'หน่วยงานทั้งหมด' };
+
+    if (!this.searchFaculitie) return [all, ...this.organizations];
 
     return this.organizations.filter((org) =>
       org.faculty.toLowerCase().includes(this.searchFaculitie.toLowerCase())

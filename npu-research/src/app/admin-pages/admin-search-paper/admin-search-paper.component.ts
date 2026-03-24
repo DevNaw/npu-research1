@@ -48,13 +48,27 @@ export class AdminSearchPaperComponent {
 
   subTypeMap: any = {
     โครงการวิจัย: [],
-    บทความ: ['ประชุมวิชาการระดับชาติ', 'ประชุมวิชาการระดับนานาชาติ'],
-    วารสาร: ['TCI', 'Scopus'],
+    บทความ: [
+      'ประเภทย่อยทั้งหมด',
+      'ประชุมวิชาการระดับชาติ',
+      'ประชุมวิชาการระดับนานาชาติ',
+    ],
+    วารสาร: ['ประเภทย่อยทั้งหมด', 'TCI', 'Scopus'],
     นวัตกรรมสิ่งประดิษฐ์: [],
   };
 
-  typeList = ['โครงการวิจัย', 'บทความ', 'วารสาร', 'นวัตกรรมสิ่งประดิษฐ์'];
-  selectedFunding: 'แหล่งทุนภายใน' | 'แหล่งทุนภายนอก' | null = null;
+  typeList = [
+    'ทั้งหมด',
+    'โครงการวิจัย',
+    'บทความ',
+    'วารสาร',
+    'นวัตกรรมสิ่งประดิษฐ์',
+  ];
+  selectedFunding:
+    | 'แหล่งทุนทั้งหมด'
+    | 'แหล่งทุนภายใน'
+    | 'แหล่งทุนภายนอก'
+    | null = null;
 
   dateRange: {
     start: Date | null;
@@ -177,8 +191,13 @@ export class AdminSearchPaperComponent {
     this.activeDropdown = null;
   }
 
-  selectMajor(major: OecdMajor) {
-    this.selectedMajor = major;
+  selectMajor(major: OecdMajor | { major_id: null; name_th: string }) {
+    if (major.major_id === null) {
+      this.selectedMajor = null;
+    } else {
+      this.selectedMajor = major as OecdMajor;
+    }
+
     this.searchMajor = '';
     this.selectedSub = null;
     this.selectedSubSub = null;
@@ -220,9 +239,11 @@ export class AdminSearchPaperComponent {
     );
   }
 
-  filteredMajor() {
-    if (!this.searchMajor) return this.major;
-
+  filteredMajor(): ({ major_id: null; name_th: string } | OecdMajor)[] {
+    const all = { major_id: null, name_th: 'ทั้งหมด' };
+  
+    if (!this.searchMajor) return [all, ...this.major];
+  
     const keyword = this.searchMajor.toLowerCase();
     return this.major.filter((m) => m.name_th.toLowerCase().includes(keyword));
   }
@@ -305,7 +326,7 @@ export class AdminSearchPaperComponent {
       payload.oecd_id = oecdId;
     }
 
-    if (this.selectedFunding) {
+    if (this.selectedFunding && this.selectedFunding !== 'แหล่งทุนทั้งหมด') {
       payload.funding = this.selectedFunding;
     }
 
@@ -448,13 +469,16 @@ export class AdminSearchPaperComponent {
     return map[type];
   }
 
-  getTypeLabel(type: 'ARTICLE' | 'PROJECT' | 'INNOVATION'): string {
+  getTypeLabel(type: 'ARTICLE' | 'PROJECT' | 'INNOVATION', article_type?: string): string {
+    if (type === 'ARTICLE') {
+      return article_type === 'วารสาร' ? 'วารสาร' : 'บทความ';
+    }
+  
     const map = {
       PROJECT: 'โครงการวิจัย',
-      ARTICLE: 'บทความ / วารสาร',
       INNOVATION: 'นวัตกรรม',
     };
-
+  
     return map[type] ?? '-';
   }
 
@@ -529,15 +553,22 @@ export class AdminSearchPaperComponent {
     return pages;
   }
 
-  selectAgency(org: Organization) {
-    this.selectedAgency = org;
+  selectAgency(org: Organization | { id: null; faculty: string }) {
+    if (org.id === null) {
+      this.selectedAgency = null;
+    } else {
+      this.selectedAgency = org as Organization;
+    }
+
     this.searchAgency = '';
     this.activeDropdown = null;
   }
-  
-  filteredAgency(): Organization[] {
-    if (!this.searchAgency) return this.organizations;
-  
+
+  filteredAgency(): (Organization | { id: null; faculty: string })[] {
+    const all = { id: null, faculty: 'หน่วยงานทั้งหมด' };
+
+    if (!this.searchAgency) return [all, ...this.organizations];
+
     return this.organizations.filter((o) =>
       o.faculty.toLowerCase().includes(this.searchAgency.toLowerCase())
     );
@@ -555,5 +586,39 @@ export class AdminSearchPaperComponent {
     for (let i = 0; i < 70; i++) {
       this.thaiYears.push(currentYear - i);
     }
+  }
+
+  onFundingChange(
+    value: 'แหล่งทุนทั้งหมด' | 'แหล่งทุนภายใน' | 'แหล่งทุนภายนอก' | null
+  ) {
+    this.selectedFunding = value;
+    this.selectedFundingSource = null;
+  }
+
+  clearFilter() {
+    this.selectedType = null;
+    this.selectedSubType = null;
+    this.selectedMajor = null;
+    this.selectedSub = null;
+    this.selectedSubSub = null;
+    this.selectedOrg = null;
+    this.selectedFunding = null;
+    this.selectedFundingSource = null;
+    this.selectedYear = null;
+    this.dateRange = { start: null, end: null };
+    this.searchText = '';
+    this.searchOrg = '';
+    this.searchMajor = '';
+    this.searchSub = '';
+    this.searchSubSub = '';
+    this.searchAgency = '';
+    this.searchType = '';
+    this.searchSubType = '';
+    this.isSearched = false;
+    this.filteredResearchers = [];
+    this.allTableData = [];
+    this.searchResults = [];
+    this.currentPage = 1;
+    this.updatePagination();
   }
 }

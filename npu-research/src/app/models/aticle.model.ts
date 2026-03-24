@@ -75,5 +75,6 @@ export interface ArticleSubjectArea {
     oecd_id: number;
     article_type_code: string;
     con_type: string;
+    article_published: string;
   }
   

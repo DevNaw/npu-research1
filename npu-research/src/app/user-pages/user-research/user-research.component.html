@@ -85,9 +85,9 @@
           (click)="toggleDropdown('agency', $event)"
           class="w-full h-11 border border-gray-300 rounded-full px-6 flex justify-between items-center bg-white hover:border-[#118CD9] transition"
         >
-          <span class="truncate" [class.text-gray-400]="!selectedAgency">
-            {{ selectedAgency?.faculty || "หน่วยงาน" }}
-          </span>
+        <span class="truncate" [class.text-gray-400]="selectedAgency === undefined">
+          {{ selectedAgency === undefined ? "หน่วยงานทั้งหมด" : (selectedAgency?.faculty || "หน่วยงานทั้งหมด") }}
+        </span>
           <i
             class="bi bi-chevron-down transition-transform duration-200"
             [class.rotate-180]="isOpen('agency')"
@@ -111,8 +111,16 @@
               *ngFor="let org of filteredAgency()"
               (click)="selectAgency(org)"
               class="px-4 py-2.5 cursor-pointer hover:bg-blue-50 hover:text-[#118CD9] transition text-base"
-              [class.text-[#118CD9]]="selectedAgency?.id === org.id"
-              [class.font-medium]="selectedAgency?.id === org.id"
+              [class.text-[#118CD9]]="
+                org.id === null
+                  ? !selectedAgency
+                  : selectedAgency?.id === org.id
+              "
+              [class.font-medium]="
+                org.id === null
+                  ? !selectedAgency
+                  : selectedAgency?.id === org.id
+              "
             >
               {{ org.faculty }}
             </li>
@@ -122,40 +130,56 @@
 
       <!-- แหล่งเงินทุน -->
       <div
-        class="grid grid-cols-8 gap-3 items-center mt-4 mb-4 font-light text-lg"
+        class="grid grid-cols-12 gap-3 items-center mt-4 mb-4 font-light text-lg"
       >
+      <label
+          class="col-span-12 md:col-span-4 flex items-center gap-3 border border-gray-400 rounded-full px-5 h-12 cursor-pointer hover:border-[#118CD9] transition"
+        >
+          <input
+            type="radio"
+            name="funding"
+            value="แหล่งทุนทั้งหมด"
+            [(ngModel)]="selectedFunding"
+            (ngModelChange)="onFundingChange($event)"
+            class="w-4 h-4 text-[#118CD9] border-gray-300 rounded focus:ring-2 focus:ring-[#118CD9]"
+          />
+          <span class="text-gray-700"> แหล่งทุนทั้งหมด </span>
+        </label>
+
         <label
-          class="col-span-12 md:col-span-4 flex items-center gap-3 border border-gray-200 rounded-full px-5 h-12 cursor-pointer hover:border-[#118CD9] transition"
+          class="col-span-12 md:col-span-4 flex items-center gap-3 border border-gray-400 rounded-full px-5 h-12 cursor-pointer hover:border-[#118CD9] transition"
         >
           <input
             type="radio"
             name="funding"
             value="แหล่งทุนภายนอก"
             [(ngModel)]="selectedFunding"
+            (ngModelChange)="onFundingChange($event)"
             class="w-4 h-4 text-[#118CD9] border-gray-300 rounded focus:ring-2 focus:ring-[#118CD9]"
           />
-          <span class="text-gray-700"> แหล่งเงินทุนภายนอก </span>
+          <span class="text-gray-700"> แหล่งทุนภายนอก </span>
         </label>
 
         <!-- แหล่งเงินทุนภายใน -->
         <label
-          class="col-span-12 md:col-span-4 flex items-center gap-3 border border-gray-200 rounded-full px-5 h-12 cursor-pointer hover:border-[#118CD9] transition"
+          class="col-span-12 md:col-span-4 flex items-center gap-3 border border-gray-400 rounded-full px-5 h-12 cursor-pointer hover:border-[#118CD9] transition"
         >
           <input
             type="radio"
             name="funding"
             value="แหล่งทุนภายใน"
             [(ngModel)]="selectedFunding"
+            (ngModelChange)="onFundingChange($event)"
             class="w-4 h-4 text-[#118CD9] border-gray-300 rounded focus:ring-2 focus:ring-[#118CD9]"
           />
-          <span class="text-gray-700"> แหล่งเงินทุนภายใน </span>
+          <span class="text-gray-700"> แหล่งทุนภายใน </span>
         </label>
       </div>
 
       <!-- Dropdown เลือกชื่อแหล่งทุน — แสดงเฉพาะเมื่อเลือกแหล่งทุนภายนอก -->
       <div
         *ngIf="selectedFunding === 'แหล่งทุนภายนอก'"
-        class="col-span-12 md:col-span-8 relative font-light text-lg md:mb-4"
+        class="col-span-12 md:col-span-8 relative font-light text-lg mb-4"
       >
         <button
           (click)="toggleDropdown('fundingSource', $event)"
@@ -197,7 +221,11 @@
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
         <!-- ช่วงเวลา -->
-        <div class="relative font-light text-lg">
+        <div
+          *ngIf="selectedType === 'วารสาร'"
+          class="relative font-light text-lg"
+          class="relative font-light text-lg"
+        >
           <div
             class="absolute inset-y-0 left-0 flex items-center ps-4 pointer-events-none text-gray-500 z-10"
           >
@@ -224,7 +252,10 @@
         </div>
 
         <!-- เลือกปี -->
-        <div class="relative font-light text-lg">
+        <div
+          [class.md:col-span-2]="selectedType !== 'วารสาร'"
+          class="relative font-light text-lg"
+        >
           <button
             (click)="toggleDropdown('yearPublished', $event)"
             type="button"
@@ -286,8 +317,8 @@
           >
             <span class="truncate text-lg font-light">
               {{
-                selectedMajor?.name_th ||
-                  "หมวดหมู่สาขาวิชาการและสาขาวิจัย (OECD)"
+                selectedMajor === undefined
+                  ? "" : (selectedMajor?.name_th || "ทั้งหมด")
               }}
             </span>
             <i class="bi bi-chevron-down"></i>
@@ -389,6 +420,16 @@
             ></span>
           </button>
         </div>
+      </div>
+
+      <!-- ==== Clear Filter ===== -->
+       <div class="flex justify-center mt-6 font-light text-lg">
+        <button
+          (click)="clearFilter()"
+          class="flex items-center justify-center h-full bg-[#118CD9] hover:bg-[#4c7b98] text-white px-4 font-semibold md:px-10 rounded-full transition cursor-pointer"
+        >
+          <span class="font-light md:inline text-lg mr-4">ล้างการตั้งค่า</span>
+        </button>
       </div>
     </div>
   </div>
@@ -538,7 +579,7 @@
               </td>
               <td class="p-1 md:p-2">{{ r.own?.name }}</td>
               <td class="p-1 md:p-2 text-center">
-                {{ getTypeLabel(r.type) }}
+                {{ getTypeLabel(r.type) == 'บทความ' ? r.article_type : getTypeLabel(r.type) }}
               </td>
             </tr>
 

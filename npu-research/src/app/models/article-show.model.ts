@@ -40,6 +40,7 @@ export interface ResearchArticle {
   pre_location: string | null;
   responsibilities: string | null;
   status: string | null;
+  article_published: string;
 }
 
 export interface SubjectArea {

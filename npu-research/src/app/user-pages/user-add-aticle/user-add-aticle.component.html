@@ -415,7 +415,7 @@
     </div>
 
     <!-- ฉบับที่/เล่มที่ -->
-    <div class="grid grid-cols-1 md:grid-cols-3 md:gap-6 md:mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 md:gap-6 md:mb-6">
       <div class="mb-2">
         <label class="md:col-span-1 text-start">
           ฉบับที่/เล่มที่ <span class="text-red-500">*</span>
@@ -459,6 +459,29 @@
           class="text-red-500 text-sm"
         >
           กรุณากรอกหน้าที่ตีพิมพ์
+        </div>
+      </div>
+
+      <!-- วันที่เผยแพร่ -->
+      <div  *ngIf="articleData.article_type === 'วารสาร'" class="mb-2">
+        <label class="md:col-span-1 text-start">
+          วันที่เผยแพร่
+        </label>
+        <input
+          name="article_published"
+          #pages="ngModel"
+          [class.border-red-500]="pages.invalid && pages.touched"
+          [(ngModel)]="articleData.article_published"
+          type="date"
+          class="md:col-span-2 text-lg font-light w-full h-12 border rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400"
+          placeholder="ระบุวันที่เผยแพร่"
+        />
+
+        <div
+          *ngIf="pages.invalid && pages.touched"
+          class="text-red-500 text-sm"
+        >
+          กรุณากรอกวันที่เผยแพร่
         </div>
       </div>
 
@@ -525,7 +548,7 @@
     <!-- สาขาของบทความ/วารสาร -->
     <div class="grid grid-cols-1 md:grid-cols-3 md:gap-6 mb-2 md:mb-6">
       <!-- Major -->
-      <div>
+      <div class="mb-2">
         <label class="text-start">
           สาขาหลัก <span class="text-red-500">*</span>
         </label>
@@ -561,7 +584,7 @@
       </div>
 
       <!-- SUB -->
-      <div>
+      <div class="mb-2">
         <label class="text-start">
           สาขาย่อย <span class="text-red-500">*</span>
         </label>
@@ -598,7 +621,7 @@
       </div>
 
       <!-- SUB SUB -->
-      <div>
+      <div class="mb-2">
         <label class="text-start">
           สาขาที่เกี่ยวข้อง <span class="text-red-500">*</span>
         </label>

@@ -21,6 +21,7 @@ export interface ResearchItem {
   id: number;
   code: string;
   type: 'ARTICLE' | 'PROJECT' | 'INNOVATION';
+  article_type?: string;
   title_th: string;
   title_en: string | null;
   year: number;
