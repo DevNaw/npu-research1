@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { catchError, map, tap, throwError } from 'rxjs';
+import { catchError, map, Observable, tap, throwError } from 'rxjs';
 import { OrganizationResponse } from '../models/expertise.model';
 
 @Injectable({
@@ -189,5 +189,10 @@ export class AuthService {
         newPassword,
       }
     );
+  }
+
+  verifyPassword(password: string): Observable<boolean> {
+    return this.http.post<{ valid: boolean }>('/api/auth/verify-password', { password })
+      .pipe(map(res => res.valid));
   }
 }
