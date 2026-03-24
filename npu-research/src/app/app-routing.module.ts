@@ -47,6 +47,8 @@ import { ManagementAdminComponent } from './admin-pages/management-admin/managem
 import { ManagementUserComponent } from './admin-pages/management-user/management-user.component';
 import { AdminManualComponent } from './admin-pages/admin-manual/admin-manual.component';
 import { ManageProjectComponent } from './admin-pages/manage-project/manage-project.component';
+import { OrganizationComponent } from './admin-pages/organization/organization.component';
+import { ManageOecdComponent } from './admin-pages/manage-oecd/manage-oecd.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -176,6 +178,8 @@ const routes: Routes = [
       { path: 'management-admin', component: ManagementAdminComponent },
       { path: 'admin-manual', component: AdminManualComponent },
       { path: 'manage-project', component: ManageProjectComponent },
+      {  path: 'manage-organization', component: OrganizationComponent },
+      { path: 'manage-oecd', component: ManageOecdComponent },
     ],
   },
 ];

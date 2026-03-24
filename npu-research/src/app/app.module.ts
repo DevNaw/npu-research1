@@ -64,6 +64,8 @@ import { ChartsModule } from '@progress/kendo-angular-charts';
 import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
 import { ManageProjectComponent } from './admin-pages/manage-project/manage-project.component';
 import { provideHttpClient } from '@angular/common/http';
+import { OrganizationComponent } from './admin-pages/organization/organization.component';
+import { ManageOecdComponent } from './admin-pages/manage-oecd/manage-oecd.component';
 
 @NgModule({
   declarations: [
@@ -116,6 +118,8 @@ import { provideHttpClient } from '@angular/common/http';
     ManagementAdminComponent,
     AdminManualComponent,
     ManageProjectComponent,
+    OrganizationComponent,
+    ManageOecdComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,458 @@
+<div
+  class="contain-content bg-gray-100 p-5 md:px-10 text-2xl font-medium text-[#394250]"
+>
+  <div class="mx-auto p-2 md:p-6">
+    <h1 class="text-3xl">การจัดการสาขาวิจัยของ OECD</h1>
+  </div>
+
+  <div class="mx-auto md:mb-10 p-2 md:p-6 bg-white rounded-xl">
+    <div
+      class="flex flex-col md:flex-row md:justify-between md:items-center md:mt-3 gap-3"
+    >
+      <!-- Buttons -->
+      <div class="flex gap-2 font-light text-lg">
+        <button
+          (click)="exportExcel()"
+          class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md cursor-pointer"
+        >
+          <i class="bi bi-file-earmark-excel"></i> Excel
+        </button>
+
+        <button
+          (click)="printPage()"
+          class="flex items-center gap-2 bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-md cursor-pointer"
+        >
+          <i class="bi bi-printer"></i> Print
+        </button>
+
+        <button
+          (click)="openAddModal()"
+          class="flex items-center gap-2 bg-[#118CD9] hover:bg-[#16498C] text-white px-4 py-2 rounded-md cursor-pointer"
+        >
+          <i class="bi bi-plus-circle"></i> เพิ่มหน่วยงาน
+        </button>
+      </div>
+
+      <!-- Search -->
+      <div class="flex items-center justify-end">
+        <label class="text-lg mr-2">Search:</label>
+        <input
+          type="text"
+          [(ngModel)]="searchText"
+          (input)="onSearch()"
+          class="border border-gray-300 rounded px-2 text-lg font-light py-1"
+          placeholder="ค้นหา..."
+        />
+      </div>
+    </div>
+
+    <div class="w-full overflow-x-auto mt-4" id="print-section text-lg">
+      <div class="overflow-x-auto font-light text-lg">
+        <table class="min-w-full w-full table-auto border border-gray-300">
+          <thead>
+            <tr class="bg-[#394250] text-white border-b">
+              <th class="p-2 md:p-3 w-12">#</th>
+              <th class="p-2 md:p-3 text-left">Code</th>
+              <th
+                class="p-2 md:p-3 text-left flex justify-between items-center"
+              >
+                สาขาหลัก OECD
+                <button
+                  (click)="openAddModal()"
+                  class="bg-[#48D42B] text-white hover:bg-[#0C9509] text-lg rounded-md px-2 cursor-pointer"
+                >
+                  <i class="bi bi-plus-circle"></i>
+                </button>
+              </th>
+              <th class="p-2 md:p-3 text-left">สาขาย่อย OECD</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <ng-container *ngFor="let major of oecdList; let mi = index">
+              <tr class="border-b border-gray-300 bg-gray-100 align-top">
+                <!-- ลำดับ major -->
+                <td class="p-2 md:p-3 text-center font-medium">{{ mi + 1 }}</td>
+                <td class="p-2 md:p-3 text-center">{{ major.code }}</td>
+                <td class="p-2 md:p-3 flex justify-between">
+                  {{ major.name_th }}
+                  <button
+                    (click)="openEditModal(major)"
+                    class="text-blue-500 bg-blue-50 hover:bg-blue-100 rounded-md px-2 cursor-pointer"
+                  >
+                    <i class="bi bi-pencil-square"></i>
+                  </button>
+                </td>
+
+                <!-- children (OecdSub) -->
+                <td class="p-0">
+                  <table class="w-full table-auto border-l border-gray-300">
+                    <thead>
+                      <tr class="bg-[#4a5568] text-white">
+                        <th class="p-2 w-10">#</th>
+                        <th class="p-2 text-left">sub code</th>
+                        <th class="p-2 text-left flex justify-between">
+                          ชื่อสาขาย่อย OECD
+                          <button
+                            (click)="openAddSubModal(major, mi)"
+                          class="bg-[#48D42B] text-white hover:bg-[#0C9509] text-lg rounded-md px-2 cursor-pointer">
+                            <i class="bi bi-plus-circle"></i>
+                          </button>
+                        </th>
+                        <th class="p-2 text-left">สาขาที่เกี่ยวข้อง</th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      <ng-container
+                        *ngFor="let sub of major.children; let si = index"
+                      >
+                        <tr class="border-b border-gray-200 bg-white align-top">
+                          <td class="p-2 text-center">{{ si + 1 }}</td>
+                          <td class="p-2">{{ sub.code }}</td>
+                          <td class="p-2 flex justify-between">
+                            {{ sub.name_th }}
+                            <button
+                              class="text-blue-500 bg-blue-50 hover:bg-blue-100 rounded-md px-2 cursor-pointer"
+                            >
+                              <i class="bi bi-pencil-square"></i>
+                            </button>
+                          </td>
+
+                          <!-- children (OecdChild) -->
+                          <td class="p-0">
+                            <table
+                              class="w-full table-auto border-l border-gray-200"
+                            >
+                              <thead>
+                                <tr class="bg-[#718096] text-white">
+                                  <th class="p-2 w-10">#</th>
+                                  <th class="p-2 text-left">child code</th>
+                                  <th
+                                    class="p-2 text-left flex justify-between"
+                                  >
+                                    ชื่อสาขาที่เกี่ยวข้อง
+                                    <button
+                                      class="text-white bg-[#48D42B] hover:bg-[#0C9509] text-lg rounded-md px-2 cursor-pointer"
+                                    >
+                                      <i class="bi bi-plus-circle"></i>
+                                    </button>
+                                  </th>
+                                </tr>
+                              </thead>
+
+                              <tbody>
+                                <tr
+                                  *ngFor="
+                                    let child of sub.children;
+                                    let ci = index
+                                  "
+                                  class="border-b border-gray-100 hover:bg-gray-50 transition"
+                                >
+                                  <td class="p-2 text-center text-gray-500">
+                                    {{ ci + 1 }}
+                                  </td>
+                                  <td class="p-2 text-gray-600">
+                                    {{ child.code }}
+                                  </td>
+                                  <td class="p-2 flex justify-between">
+                                    {{ child.name_th }}
+                                    <button
+                                      class="text-blue-500 bg-blue-50 hover:bg-blue-100 rounded-md px-2 cursor-pointer"
+                                    >
+                                      <i class="bi bi-pencil-square"></i>
+                                    </button>
+                                  </td>
+                                </tr>
+
+                                <tr *ngIf="sub.children.length === 0">
+                                  <td
+                                    colspan="3"
+                                    class="p-2 text-center text-gray-400 italic"
+                                  >
+                                    ไม่มีข้อมูล
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </td>
+                        </tr>
+                      </ng-container>
+
+                      <tr *ngIf="major.children.length === 0">
+                        <td
+                          colspan="4"
+                          class="p-2 text-center text-gray-400 italic text-sm"
+                        >
+                          ไม่มีข้อมูล
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+            </ng-container>
+
+            <tr *ngIf="oecdList.length === 0">
+              <td colspan="4" class="text-center p-6 text-gray-400 italic">
+                <i class="bi bi-folder-x text-3xl block mb-2"></i>
+                ไม่พบข้อมูล
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- <div
+      class="flex flex-col md:flex-row md:justify-between md:items-center mt-2 md:mt-4 md:gap-2 font-light text-sm"
+    >
+      <p class="text-gray-600">หน้า {{ currentPage }} จาก {{ totalPages }}</p>
+
+      <p class="text-gray-500">
+        แสดง {{ paginatedOrganizations.length }} รายการ จาก
+        {{ filteredOrganizations.length }} รายการ
+      </p>
+
+      <div
+        class="flex flex-col md:flex-row md:justify-end md:items-center mt-4 gap-2 font-light"
+      >
+        <div class="flex items-center justify-end space-x-1">
+          <button
+            (click)="changePage(currentPage - 1)"
+            [disabled]="currentPage === 1"
+            class="px-2 md:px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
+          >
+            ‹
+          </button>
+
+          <ng-container *ngFor="let page of visiblePages">
+            <button
+              *ngIf="page !== '...'"
+              (click)="changePage(+page)"
+              class="px-2 md:px-3 py-1 rounded border text-sm transition cursor-pointer"
+              [ngClass]="{
+                'bg-[#118CD9] text-white': currentPage === page,
+                'hover:bg-gray-100': currentPage !== page
+              }"
+            >
+              {{ page }}
+            </button>
+
+            <span
+              *ngIf="page === '...'"
+              class="px-2 py-1 text-sm text-gray-400 select-none"
+              >...</span
+            >
+          </ng-container>
+
+          <button
+            (click)="changePage(currentPage + 1)"
+            [disabled]="currentPage === totalPages"
+            class="px-2 md:px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
+          >
+            ›
+          </button>
+        </div>
+      </div>
+    </div> -->
+  </div>
+</div>
+
+<!-- MODAL -->
+<div
+  *ngIf="showModal"
+  class="fixed inset-0 z-50 flex items-center justify-center px-4 text-2xl text-[#394250] font-medium"
+  
+>
+  <div
+    class="bg-white rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Header -->
+    <div
+      class="relative px-8 py-7 overflow-hidden bg-linear-to-r from-[#16498c] to-[#118cd9]"
+    >
+      <button
+      (click)="closeModal()"
+        class="absolute top-4 right-4 w-8 h-8 rounded-lg flex items-center justify-center text-white cursor-pointer border-0 bg-[#4292D2] hover:bg-[#16498c]"
+      >
+        ✕
+      </button>
+
+      <h2 class="text-2xl text-white">{{ modalMode === 'add' ? 'เพิ่มสาขาหลัก OECD ' : 'แก้ไขสาขาหลัก OECD ' }}</h2>
+      <p class="text-lg text-[#FFFFFFA6]">กรอกข้อมูลหน่วยงานให้ครบถ้วน</p>
+    </div>
+
+    <!-- Body -->
+    <div class="px-8 py-7 flex flex-col gap-3">
+      <div class="flex flex-col gap-1.5">
+        <label class="text-lg uppercase tracking-wide text-slate-500"
+          >Code</label
+        >
+        <input
+          type="text"
+          [disabled]="true"
+          [(ngModel)]="newMajor.code"
+          class="w-full border border-slate-200 rounded-xl px-4 py-3 text-base font-light bg-slate-50 focus:outline-none focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-100 transition"
+          placeholder="เช่น 001"
+        />
+      </div>
+
+      <div class="flex flex-col gap-1.5">
+        <label class="text-lg uppercase tracking-wide text-slate-500"
+          >ชื่อสาขาหลัก OECD</label
+        >
+        <input
+          type="text"
+          [(ngModel)]="newMajor.name_th"
+          class="w-full border border-slate-200 rounded-xl px-4 py-3 text-base font-light bg-slate-50 focus:outline-none focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-100 transition"
+          placeholder="เช่น คณะวิศวกรรมศาสตร์"
+        />
+      </div>
+
+      <div *ngIf="modalMode === 'add'" class="flex flex-col gap-1.5">
+        <label class="text-lg uppercase tracking-wide text-slate-500"
+          >Level</label
+        >
+        <input
+          type="text"
+          [disabled]="true"
+          [(ngModel)]="newMajor.level"
+          class="w-full border border-slate-200 rounded-xl px-4 py-3 text-base font-light bg-slate-50 focus:outline-none focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-100 transition"
+          placeholder="e.g. Faculty of Engineering"
+        />
+      </div>
+
+      <div *ngIf="modalMode === 'add'" class="flex flex-col gap-1.5">
+        <label class="text-lg uppercase tracking-wide text-slate-500"
+          >Sort Order</label
+        >
+        <input
+          type="text"
+          [disabled]="true"
+          [(ngModel)]="newMajor.sort_order"
+          class="w-full border border-slate-200 rounded-xl px-4 py-3 text-base font-light bg-slate-50 focus:outline-none focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-100 transition"
+          placeholder="เช่น วศ., กท."
+        />
+      </div>
+    </div>
+
+    <div class="h-px bg-slate-100 mx-8"></div>
+
+    <!-- Footer -->
+    <div class="px-8 py-5 flex justify-end gap-3">
+      <button
+        (click)="closeModal()"
+        class="px-5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-slate-600 font-medium text-base hover:bg-slate-100 cursor-pointer transition"
+      >
+        ยกเลิก
+      </button>
+      <button
+        (click)="modalMode === 'add' ? saveMajor() : updateMajor(newMajor.major_id)"
+        class="px-5 py-2.5 rounded-xl text-white font-medium text-base cursor-pointer transition bg-linear-to-r from-[#118CD9] to-[#094A73] hover:from-[#0f7ec2] hover:to-[#073a5a]"
+      >
+        บันทึก
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Sub Modal ===== -->
+<div
+*ngIf="showModal"
+class="fixed inset-0 z-50 flex items-center justify-center px-4 text-2xl text-[#394250] font-medium"
+
+>
+<div
+  class="bg-white rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl"
+  (click)="$event.stopPropagation()"
+>
+  <!-- Header -->
+  <div
+    class="relative px-8 py-7 overflow-hidden bg-linear-to-r from-[#16498c] to-[#118cd9]"
+  >
+    <button
+    (click)="closeModal()"
+      class="absolute top-4 right-4 w-8 h-8 rounded-lg flex items-center justify-center text-white cursor-pointer border-0 bg-[#4292D2] hover:bg-[#16498c]"
+    >
+      ✕
+    </button>
+
+    <h2 class="text-2xl text-white">{{ modalSub === 'add' ? 'เพิ่มสาขาหลัก OECD ' : 'แก้ไขสาขาหลัก OECD ' }}</h2>
+    <p class="text-lg text-[#FFFFFFA6]">กรอกข้อมูลหน่วยงานให้ครบถ้วน</p>
+  </div>
+
+  <!-- Body -->
+  <div class="px-8 py-7 flex flex-col gap-3">
+    <div class="flex flex-col gap-1.5">
+      <label class="text-lg uppercase tracking-wide text-slate-500"
+        >Code</label
+      >
+      <input
+        type="text"
+        [disabled]="true"
+        [(ngModel)]="newSub.code"
+        class="w-full border border-slate-200 rounded-xl px-4 py-3 text-base font-light bg-slate-50 focus:outline-none focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-100 transition"
+        placeholder="เช่น 001"
+      />
+    </div>
+
+    <div class="flex flex-col gap-1.5">
+      <label class="text-lg uppercase tracking-wide text-slate-500"
+        >ชื่อสาขาหลัก OECD</label
+      >
+      <input
+        type="text"
+        [(ngModel)]="newSub.name_th"
+        class="w-full border border-slate-200 rounded-xl px-4 py-3 text-base font-light bg-slate-50 focus:outline-none focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-100 transition"
+        placeholder="เช่น คณะวิศวกรรมศาสตร์"
+      />
+    </div>
+
+    <div *ngIf="modalMode === 'add'" class="flex flex-col gap-1.5">
+      <label class="text-lg uppercase tracking-wide text-slate-500"
+        >Level</label
+      >
+      <input
+        type="text"
+        [disabled]="true"
+        [(ngModel)]="newSub.level"
+        class="w-full border border-slate-200 rounded-xl px-4 py-3 text-base font-light bg-slate-50 focus:outline-none focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-100 transition"
+        placeholder="e.g. Faculty of Engineering"
+      />
+    </div>
+
+    <div *ngIf="modalMode === 'add'" class="flex flex-col gap-1.5">
+      <label class="text-lg uppercase tracking-wide text-slate-500"
+        >Sort Order</label
+      >
+      <input
+        type="text"
+        [disabled]="true"
+        [(ngModel)]="newSub.sort_order"
+        class="w-full border border-slate-200 rounded-xl px-4 py-3 text-base font-light bg-slate-50 focus:outline-none focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-100 transition"
+        placeholder="เช่น วศ., กท."
+      />
+    </div>
+  </div>
+
+  <div class="h-px bg-slate-100 mx-8"></div>
+
+  <!-- Footer -->
+  <div class="px-8 py-5 flex justify-end gap-3">
+    <button
+      (click)="closeModal()"
+      class="px-5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-slate-600 font-medium text-base hover:bg-slate-100 cursor-pointer transition"
+    >
+      ยกเลิก
+    </button>
+    <button
+      (click)="modalMode === 'add' ? saveSub() : updateMajor(newMajor.major_id)"
+      class="px-5 py-2.5 rounded-xl text-white font-medium text-base cursor-pointer transition bg-linear-to-r from-[#118CD9] to-[#094A73] hover:from-[#0f7ec2] hover:to-[#073a5a]"
+    >
+      บันทึก
+    </button>
+  </div>
+</div>
+</div>

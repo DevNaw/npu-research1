@@ -729,13 +729,31 @@
               >
                 แหล่งทุนภายนอก
               </a>
-              <a
+
+              <!-- <a
               (click)="closeMenu()"
                 routerLink="/admin/specialization"
                 class="block px-4 py-2 hover:bg-gray-600 hover:rounded-md text-lg"
               >
                 สาขาวิชาที่เชี่ยวชาญ
+              </a> -->
+
+              <a
+              (click)="closeMenu()"
+                routerLink="/admin/manage-oecd"
+                class="block px-4 py-2 hover:bg-gray-600 hover:rounded-md text-lg"
+              >
+                การจัดการสาขาวิจัย OECD
               </a>
+
+              <a
+              (click)="closeMenu()"
+                routerLink="/admin/manage-organization"
+                class="block px-4 py-2 hover:bg-gray-600 hover:rounded-md text-lg"
+              >
+                การจัดการหน่วยงาน
+              </a>
+
               <a
               (click)="closeMenu()"
                 routerLink="/admin/management-admin"
@@ -743,6 +761,7 @@
               >
                 การจัดการผู้ใช้งานแอดมิน
               </a>
+
               <a
               (click)="closeMenu()"
                 routerLink="/admin/management-user"

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { NewsItem } from '../../models/news.model';
@@ -6,31 +6,51 @@ import { AdminNewsService } from '../../services/admin-news.service';
 import { MainComponent } from '../../shared/layouts/main/main.component';
 import { User } from '../../models/management-user.model';
 import { ManagementService } from '../../services/management.service';
+import { Organization } from '../../models/expertise.model';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-management-user',
   standalone: false,
   templateUrl: './management-user.component.html',
-  styleUrl: './management-user.component.css'
+  styleUrl: './management-user.component.css',
 })
 export class ManagementUserComponent {
-  
+  openDropdown: string | null = null;
   isModalOpen = false;
+  isModalOpenAdd = false;
   passwordData: any = {};
 
   users: User[] = [];
   filteredUsers: User[] = [];
 
+  newUser: any = {
+    id: 0,
+    first_name: '',
+    last_name: '',
+    email: '',
+    organization_id: 0,
+    password: '',
+  };
+
+  organizations: Organization[] = [];
+  selectedOrganization: Organization | null = null;
+
   pageSize = 10;
   currentPage = 1;
   searchText: string = '';
 
-  constructor(private router: Router, private managementService: ManagementService) {}
+  constructor(
+    private router: Router,
+    private managementService: ManagementService,
+    private orgService: AuthService
+  ) {}
 
   ngOnInit() {
     MainComponent.showLoading();
     Promise.all([
       this.loadUsers(),
+      this.loadOrganizations(),
       new Promise((resolve) => setTimeout(resolve, 1000)),
     ]).then(() => MainComponent.hideLoading());
   }
@@ -45,13 +65,21 @@ export class ManagementUserComponent {
     });
   }
 
+  loadOrganizations() {
+    this.orgService.getOrganizations().subscribe({
+      next: (res) => {
+        this.organizations = res;
+      },
+      error: (err) => console.error(err),
+    });
+  }
 
   editNews(id: number) {
     this.router.navigate(['/admin/news/edit', id]);
   }
 
   onSearch() {
-    this.filteredUsers = this.users.filter(n =>
+    this.filteredUsers = this.users.filter((n) =>
       n.first_name.toLowerCase().includes(this.searchText.toLowerCase())
     );
   }
@@ -75,8 +103,40 @@ export class ManagementUserComponent {
     return Array.from({ length: this.totalPages }, (_, i) => i + 1);
   }
 
-  createNews() {
-    this.router.navigate(['/admin/news/create']);
+  saveUser() {
+    if (!this.newUser) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'กรอกข้อมูลไม่ครบ',
+        text: 'ต้องกรอกข้อมูลให้ครบถ้วน',
+      });
+      return;
+    }
+
+    Swal.fire({
+      title: 'กำลังสร้างผู้ใช้งาน...',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+
+    this.managementService.createUser(this.newUser).subscribe({
+      next: () => {
+        Swal.fire({
+          icon: 'success',
+          title: 'สร้างผู้ใช้งานสำเร็จ',
+          showConfirmButton: false,
+          timer: 1000,
+          timerProgressBar: true,
+        });
+
+        this.loadUsers();
+        this.resetForm();
+        this.closeModal();
+      },
+      error: () => Swal.fire('เกิดข้อผิดพลาด'),
+    });
   }
 
   deleteUser(id: number) {
@@ -89,7 +149,6 @@ export class ManagementUserComponent {
       cancelButtonText: 'ยกเลิก',
     }).then((result) => {
       if (result.isConfirmed) {
-  
         this.managementService.deleteUser(id).subscribe({
           next: () => {
             this.loadUsers();
@@ -100,16 +159,21 @@ export class ManagementUserComponent {
               showConfirmButton: false,
             });
           },
-          error: (err) => console.error(err),
+          error: (err) => {
+            Swal.fire({
+              icon: 'error',
+              title: 'เกิดข้อผิดพลาด!',
+              text: err.error.message,
+            });
+          },
         });
-  
       }
     });
   }
 
   openModal(id: number) {
     this.isModalOpen = true;
-  
+
     this.passwordData = {
       id,
       new_password: '',
@@ -117,8 +181,23 @@ export class ManagementUserComponent {
     };
   }
 
+  openAddModal() {
+    this.isModalOpenAdd = true;
+    this.newUser = {
+      id: 0,
+      first_name: '',
+      last_name: '',
+      email: '',
+      organization_id: 0,
+      new_password: '',
+      confirm_password: '',
+    };
+  }
+
   closeModal() {
     this.isModalOpen = false;
+    this.isModalOpenAdd = false;
+    this.resetForm();
   }
 
   save() {
@@ -130,7 +209,7 @@ export class ManagementUserComponent {
       });
       return;
     }
-  
+
     this.managementService
       .updatePassword(this.passwordData.id, this.passwordData)
       .subscribe({
@@ -142,12 +221,12 @@ export class ManagementUserComponent {
             timer: 1500,
             showConfirmButton: false,
           });
-  
+
           this.closeModal();
         },
         error: (err) => {
           console.error(err);
-  
+
           Swal.fire({
             icon: 'error',
             title: 'เกิดข้อผิดพลาด',
@@ -161,23 +240,60 @@ export class ManagementUserComponent {
     const total = this.totalPages;
     const current = this.currentPage;
     const pages: (number | string)[] = [];
-  
+
     if (total <= 5) {
       return Array.from({ length: total }, (_, i) => i + 1);
     }
-  
+
     pages.push(1);
-  
+
     if (current > 3) pages.push('...');
-  
-    for (let i = Math.max(2, current - 1); i <= Math.min(total - 1, current + 1); i++) {
+
+    for (
+      let i = Math.max(2, current - 1);
+      i <= Math.min(total - 1, current + 1);
+      i++
+    ) {
       pages.push(i);
     }
-  
+
     if (current < total - 2) pages.push('...');
-  
+
     pages.push(total);
-  
+
     return pages;
+  }
+
+  resetForm() {
+    this.newUser = {
+      id: 0,
+      first_name: '',
+      last_name: '',
+      email: '',
+      organization_id: 0,
+      new_password: '',
+      confirm_password: '',
+    };
+  }
+
+  toggle(name: string, event: MouseEvent) {
+    event.stopPropagation();
+    this.openDropdown = this.openDropdown === name ? null : name;
+  }
+
+  isOpen(name: string) {
+    return this.openDropdown === name;
+  }
+
+  @HostListener('document:click')
+  closeAll() {
+    this.openDropdown = null;
+  }
+
+  selectOrganization(o: any) {
+    this.selectedOrganization = o;
+    this.newUser.organization_id = o.id;
+    this.openDropdown = null;
+    this.searchText = '';
   }
 }
