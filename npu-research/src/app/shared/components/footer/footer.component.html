@@ -76,14 +76,25 @@
           <li>งานบริหารทั่วไป: 012-345678</li>
         </ul>
 
-        <div
-          class="mt-6 inline-flex items-center gap-2
-                 text-2xl text-gray-300
-                 hover:text-yellow-400 transition cursor-pointer"
+        <!-- Policy -->
+         <div>
+          <div
+          class="mt-4 items-center
+                 text-lg text-gray-300
+                 hover:text-yellow-400 transition cursor-pointer" (click)="openLink()"
         >
-          <i class="bi bi-person-circle"></i>
-          <span>สำหรับเจ้าหน้าที่</span>
+          <span>นโยบายความเป็นส่วนตัว</span>
         </div>
+
+        <div
+          class="mt-2 items-center
+                 text-lg text-gray-300
+                 hover:text-yellow-400 transition cursor-pointer" (click)="openCookie()"
+        >
+          <span>Cookies & Storage Policy</span>
+        </div>
+         </div>
+        
       </div>
     </div>
   </div>

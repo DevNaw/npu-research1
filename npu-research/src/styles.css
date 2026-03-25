@@ -149,18 +149,18 @@ body {
 
 /* หัวข้อ */
 .my-title {
-  font-size: 26px !important;
-  font-weight: bold !important;
+  font-size: 22px !important;
+  font-weight: medium !important;
 }
 
 /* ข้อความ */
 .my-text {
-  font-size: 24px !important;
+  font-size: 20px !important;
 }
 
 /* ปุ่ม */
 .my-button {
-  font-size: 25px !important;
+  font-size: 20px !important;
   padding: 10px 30px !important;
   border-radius: 8px !important;
 }

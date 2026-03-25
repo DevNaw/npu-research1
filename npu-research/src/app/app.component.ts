@@ -22,4 +22,20 @@ export class AppComponent {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       });
   }
+
+  showCookies = false;
+
+ngOnInit() {
+  const consent = localStorage.getItem('cookieConsent');
+  if (!consent) this.showCookies = true;
+}
+
+acceptAll() {
+  localStorage.setItem('cookieConsent', JSON.stringify({
+    analytics: true,
+    marketing: true,
+    date: new Date().toISOString(),
+  }));
+  this.showCookies = false;
+}
 }

@@ -49,6 +49,7 @@ import { AdminManualComponent } from './admin-pages/admin-manual/admin-manual.co
 import { ManageProjectComponent } from './admin-pages/manage-project/manage-project.component';
 import { OrganizationComponent } from './admin-pages/organization/organization.component';
 import { ManageOecdComponent } from './admin-pages/manage-oecd/manage-oecd.component';
+import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -96,6 +97,7 @@ const routes: Routes = [
       { path: 'manual', component: ManualComponent },
       { path: 'performance/:type/:id', component: PerformanceComponent },
       { path: 'performance-public/:type/:id', component: PerformancePublicComponent },
+      { path: 'privacy-policy', component: PrivacyPolicyComponent },
     ],
   },
   /* ================= USER ================= */

@@ -66,6 +66,7 @@ import { ManageProjectComponent } from './admin-pages/manage-project/manage-proj
 import { provideHttpClient } from '@angular/common/http';
 import { OrganizationComponent } from './admin-pages/organization/organization.component';
 import { ManageOecdComponent } from './admin-pages/manage-oecd/manage-oecd.component';
+import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.component';
 
 @NgModule({
   declarations: [
@@ -120,6 +121,7 @@ import { ManageOecdComponent } from './admin-pages/manage-oecd/manage-oecd.compo
     ManageProjectComponent,
     OrganizationComponent,
     ManageOecdComponent,
+    PrivacyPolicyComponent,
   ],
   imports: [
     BrowserModule,
