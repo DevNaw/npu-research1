@@ -49,10 +49,16 @@ export class InnovationComponent implements OnInit {
     const keyword = this.searchText.toLowerCase().trim();
 
     this.filteredInnovations = this.innovations.filter((i) => {
-      const title = i.title_th?.toLowerCase() || '';
-      const researchers = this.mapInnovation(i.own).toLowerCase();
+      const title = [
+        i.title_th,
+        i.title_en,
+        i.research_code,
+        i.funding?.source_funds,
+        i.oecd?.[0]?.name_th,
+        this.mapInnovation(i.own),
+      ]
 
-      return title.includes(keyword) || researchers.includes(keyword);
+      return title.includes(keyword);
     });
 
     this.currentPage = 1;

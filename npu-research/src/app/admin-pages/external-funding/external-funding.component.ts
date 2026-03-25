@@ -53,6 +53,7 @@ export class ExternalFundingComponent {
 
     this.filteredFundings = this.fundings.filter((p) =>
       p.funding_name.toLowerCase().includes(keyword)
+      || p.funding_code.toLowerCase().includes(keyword)
     );
 
     this.currentPage = 1;
@@ -115,42 +116,108 @@ export class ExternalFundingComponent {
     saveAs(blob, 'external_funding.xlsx');
   }
 
-  printPage() {
-
-    const table = document.getElementById('fundingTable');
+  // printPage() {
+  //   const table = document.getElementById('fundingTable');
   
-    if (!table) {
-      Swal.fire('ไม่พบตาราง', '', 'warning');
+  //   if (!table) {
+  //     Swal.fire('ไม่พบตาราง', '', 'warning');
+  //     return;
+  //   }
+  
+  //   const tableClone = table.cloneNode(true) as HTMLElement;
+  
+  //   const rows = tableClone.querySelectorAll('tr');
+  
+  //   rows.forEach((row, index) => {
+  
+  //     const cells = row.querySelectorAll('th, td');
+  
+  //     // ลบ column Action
+  //     if (cells[4]) {
+  //       cells[4].remove();
+  //     }
+  
+  //     // แปลง icon สถานะเป็นข้อความ
+  //     if (index > 0 && cells[3]) {
+  
+  //       const icon = cells[3].querySelector('i');
+  
+  //       if (icon?.classList.contains('bi-check-circle-fill')) {
+  //         cells[3].innerHTML = '✔ พร้อมใช้งาน';
+  //       } else {
+  //         cells[3].innerHTML = '✘ ไม่พร้อมใช้งาน';
+  //       }
+  
+  //     }
+  
+  //   });
+  
+  //   const printWindow = window.open('', '', 'width=900,height=700');
+  
+  //   printWindow?.document.write(`
+  //     <html>
+  //       <head>
+  //         <title>รายการแหล่งทุน</title>
+  //         <style>
+  //           body{
+  //             font-family: Arial;
+  //             padding:20px;
+  //           }
+  
+  //           h2{
+  //             text-align:center;
+  //             margin-bottom:20px;
+  //           }
+  
+  //           table{
+  //             width:100%;
+  //             border-collapse: collapse;
+  //           }
+  
+  //           th, td{
+  //             border:1px solid #ccc;
+  //             padding:8px;
+  //             text-align:center;
+  //           }
+  
+  //           th{
+  //             background:#394250;
+  //             color:white;
+  //           }
+  //         </style>
+  //       </head>
+  //       <body>
+  
+  //         <h2>รายการแหล่งทุน</h2>
+  
+  //         ${tableClone.outerHTML}
+  
+  //       </body>
+  //     </html>
+  //   `);
+  
+  //   printWindow?.document.close();
+  
+  //   setTimeout(() => {
+  //     printWindow?.print();
+  //     printWindow?.close();
+  //   }, 500);
+  
+  // }
+  printPage() {
+    if (!this.filteredFundings || this.filteredFundings.length === 0) {
+      Swal.fire('ไม่มีข้อมูลให้พิมพ์', '', 'warning');
       return;
     }
   
-    const tableClone = table.cloneNode(true) as HTMLElement;
-  
-    const rows = tableClone.querySelectorAll('tr');
-  
-    rows.forEach((row, index) => {
-  
-      const cells = row.querySelectorAll('th, td');
-  
-      // ลบ column Action
-      if (cells[4]) {
-        cells[4].remove();
-      }
-  
-      // แปลง icon สถานะเป็นข้อความ
-      if (index > 0 && cells[3]) {
-  
-        const icon = cells[3].querySelector('i');
-  
-        if (icon?.classList.contains('bi-check-circle-fill')) {
-          cells[3].innerHTML = '✔ พร้อมใช้งาน';
-        } else {
-          cells[3].innerHTML = '✘ ไม่พร้อมใช้งาน';
-        }
-  
-      }
-  
-    });
+    const rows = this.filteredFundings.map((funding, index) => `
+      <tr>
+        <td>${index + 1}</td>
+        <td>${funding.funding_name || '-'}</td>
+        <td>${funding.funding_code || '-'}</td>
+        <td>${funding.is_active ? '✔ พร้อมใช้งาน' : '✘ ไม่พร้อมใช้งาน'}</td>
+      </tr>
+    `).join('');
   
     const printWindow = window.open('', '', 'width=900,height=700');
   
@@ -159,39 +226,27 @@ export class ExternalFundingComponent {
         <head>
           <title>รายการแหล่งทุน</title>
           <style>
-            body{
-              font-family: Arial;
-              padding:20px;
-            }
-  
-            h2{
-              text-align:center;
-              margin-bottom:20px;
-            }
-  
-            table{
-              width:100%;
-              border-collapse: collapse;
-            }
-  
-            th, td{
-              border:1px solid #ccc;
-              padding:8px;
-              text-align:center;
-            }
-  
-            th{
-              background:#394250;
-              color:white;
-            }
+            body { font-family: Arial; padding: 20px; }
+            h2 { text-align: center; margin-bottom: 20px; }
+            table { width: 100%; border-collapse: collapse; }
+            th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+            th { background: #394250; color: white; }
+            tr:nth-child(even) { background: #f9f9f9; }
           </style>
         </head>
         <body>
-  
           <h2>รายการแหล่งทุน</h2>
-  
-          ${tableClone.outerHTML}
-  
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>ชื่อแหล่งทุน</th>
+                <th>รหัส</th>
+                <th>สถานะ</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
         </body>
       </html>
     `);
@@ -202,7 +257,6 @@ export class ExternalFundingComponent {
       printWindow?.print();
       printWindow?.close();
     }, 500);
-  
   }
 
   openAddModal() {

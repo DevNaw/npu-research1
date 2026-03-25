@@ -429,11 +429,17 @@ export class UserResearchComponent {
       this.filteredResearchers = [...this.allTableData];
     } else {
       this.filteredResearchers = this.allTableData.filter((item: any) => {
-        return (
-          item.title_th?.toLowerCase().includes(keyword) ||
-          item.title_en?.toLowerCase().includes(keyword) ||
-          item.own?.name?.toLowerCase().includes(keyword) ||
-          item.type?.toLowerCase().includes(keyword)
+        const fields = [
+          item.title_th,
+          item.title_en,
+          item.code,
+          item.funding?.source_funds,
+          item.oecd?.[0]?.name_th,
+          item.own.name,
+        ];
+
+        return fields.some((field) =>
+          field?.toLowerCase().includes(keyword)
         );
       });
     }

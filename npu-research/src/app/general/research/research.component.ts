@@ -46,16 +46,40 @@ export class ResearchComponent implements OnInit {
   }
 
   // ===== SEARCH =====
+  // onSearch(): void {
+  //   const keyword = this.searchText.toLowerCase().trim();
+
+  //   this.filteredReseacrchs = this.research.filter((r) => {
+  //     return (
+  //       r.title_th?.toLowerCase().includes(keyword) ||
+  //       r.research_code?.toLowerCase().includes(keyword) ||
+  //       r.funding?.source_funds?.toLowerCase().includes(keyword) ||
+  //       r.oecd[0]?.name_th?.toLowerCase().includes(keyword) ||
+  //       this.mapResearchers(r.own).toLowerCase().includes(keyword)
+  //     );
+  //   });
+
+  //   this.currentPage = 1;
+  //   this.updatePagination();
+  // }
+
   onSearch(): void {
     const keyword = this.searchText.toLowerCase().trim();
-
+  
     this.filteredReseacrchs = this.research.filter((r) => {
-      const title = r.title_th?.toLowerCase() || '';
-      const researchers = this.mapResearchers(r.own).toLowerCase();
-
-      return title.includes(keyword) || researchers.includes(keyword);
+      const fields = [
+        r.title_th,
+        r.research_code,
+        r.funding?.source_funds,
+        r.oecd?.[0]?.name_th,
+        this.mapResearchers(r.own),
+      ];
+  
+      return fields.some((field) =>
+        field?.toLowerCase().includes(keyword)
+      );
     });
-
+  
     this.currentPage = 1;
     this.updatePagination();
   }

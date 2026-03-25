@@ -246,8 +246,8 @@
             [rangePicker]="picker"
             class="hidden-datepicker"
           >
-            <input matStartDate [(ngModel)]="date_from" />
-            <input matEndDate [(ngModel)]="date_to" />
+          <input matStartDate [(ngModel)]="dateRange.start" />
+          <input matEndDate [(ngModel)]="dateRange.end" />
           </mat-date-range-input>
         </div>
 

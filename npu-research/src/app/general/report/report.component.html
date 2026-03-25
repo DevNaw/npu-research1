@@ -75,32 +75,39 @@
   <div class="bg-white rounded-xl shadow p-6">
     <div class="flex justify-between mb-4">
       <h3 class="font-semibold">Top Researchers</h3>
-      <!-- <a class="text-indigo-600 text-sm cursor-pointer">View All</a> -->
     </div>
-
-    <div *ngFor="let r of topResearcher" class="flex items-center justify-between py-3 border-b last:border-0 font-light">
-      <div class="flex items-center gap-3">
-        <img [src]="r.avatar_url || '/assets/default_profile.png'" class="w-10 h-10 rounded-full" />
-        <div>
-          <p class="text-xl">{{ r.full_name }}</p>
-          <p class="text-lg text-gray-400">{{ r.organization }}</p>
+  
+    <div *ngFor="let r of topResearcher"
+      class="py-3 border-b last:border-0 font-light md:flex md:justify-between">
+  
+      <!-- บนสุด: avatar + ชื่อ + หน่วยงาน -->
+      <div class="flex items-center gap-3 mb-2">
+        <img
+          [src]="r.avatar_url || '/assets/default_profile.png'"
+          class="w-10 h-10 rounded-full shrink-0"
+        />
+        <div class="min-w-0">
+          <p class="text-xl truncate">{{ r.full_name }}</p>
+          <p class="text-lg text-gray-400 truncate">{{ r.organization }}</p>
         </div>
       </div>
-
-      <div class="flex gap-6 text-sm">
+  
+      <!-- ล่าง: สถิติ -->
+      <div class="flex gap-4 pl-13 text-sm">
         <div class="text-center">
-          <p class="text-xl">{{ r.project_count }}</p>
-          <p class="text-gray-400 text-lg">Projects</p>
+          <p class="text-xl font-medium">{{ r.project_count }}</p>
+          <p class="text-gray-400 text-base">Projects</p>
         </div>
         <div class="text-center">
-          <p class="text-xl">{{ r.article_count }}</p>
-          <p class="text-gray-400 text-lg">Articles</p>
+          <p class="text-xl font-medium">{{ r.article_count }}</p>
+          <p class="text-gray-400 text-base">Articles</p>
         </div>
         <div class="text-center">
-          <p class="text-xl">{{ r.innovation_count }}</p>
-          <p class="text-gray-400 text-lg">Innovations</p>
+          <p class="text-xl font-medium">{{ r.innovation_count }}</p>
+          <p class="text-gray-400 text-base">Innovations</p>
         </div>
       </div>
+  
     </div>
   </div>
 

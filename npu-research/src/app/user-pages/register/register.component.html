@@ -98,7 +98,7 @@
             <button
               type="button"
               (click)="toggle('organization', $event)"
-              class="w-full border rounded-full border-gray-300 px-3 py-2 flex justify-between items-center bg-white"
+              class="w-full border rounded-md border-gray-300 px-3 py-2 flex justify-between items-center bg-white"
             >
               <span class="truncate text-lg font-light">
                 {{ selectedOrganization?.faculty || "เลือกหน่วยงาน" }}
@@ -141,7 +141,7 @@
               [(ngModel)]="registerData.password"
               type="text"
               class="w-full pl-12 pr-4 py-2 border rounded-md font-light text-lg"
-              placeholder="รหัส"
+              placeholder="รหัสผ่าน"
             />
           </div>
         </div>

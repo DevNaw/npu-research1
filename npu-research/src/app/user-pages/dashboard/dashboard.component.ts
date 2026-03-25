@@ -664,6 +664,8 @@ export class UserDashboardComponent implements OnInit {
         p.title_th.toLowerCase().includes(keyword) ||
         (p.title_en?.toLowerCase().includes(keyword) ?? false) ||
         p.year.toString().includes(keyword) ||
+        p.research_code.toLowerCase().includes(keyword) ||
+        p.funding.source_funds.toLowerCase().includes(keyword) ||
         p.own.some((owner) => owner.full_name.toLowerCase().includes(keyword))
     );
 
@@ -704,14 +706,6 @@ export class UserDashboardComponent implements OnInit {
   goToManual() {
     this.router.navigateByUrl('/manual');
   }
-
-  // viewItem(id: number) {
-  //   this.router.navigate([
-  //     '/performance-public',
-  //     this.selectedTab.toLowerCase(),
-  //     id,
-  //   ]);
-  // }
 
   viewItem(id: number) {
     if (this.authService.isLoggedIn()) {
@@ -869,32 +863,6 @@ export class UserDashboardComponent implements OnInit {
       title: 'Your work has been saved',
       showConfirmButton: false,
       timer: 1500,
-    });
-  }
-
-  downloadPDF() {
-    const element = document.getElementById('chart-pdf');
-    if (!element) return;
-
-    html2canvas(element, {
-      scale: 2, // ⬅ เพิ่มความคม
-      useCORS: true,
-      backgroundColor: '#ffffff',
-    }).then((canvas) => {
-      const imgData = canvas.toDataURL('image/png');
-
-      const pdf = new jsPDF({
-        orientation: 'landscape',
-        unit: 'mm',
-        format: 'a4',
-      });
-
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-
-      pdf.addImage(imgData, 'PNG', 10, 10, pdfWidth - 20, pdfHeight);
-
-      pdf.save('research-chart.pdf');
     });
   }
 

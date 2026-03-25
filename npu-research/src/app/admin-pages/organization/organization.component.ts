@@ -227,72 +227,56 @@ export class OrganizationComponent {
   }
 
   printPage() {
-    const table = document.getElementById('organizationTable');
-
-    if (!table) {
-      Swal.fire('ไม่พบตาราง', '', 'warning');
+    if (!this.filteredOrganizations || this.filteredOrganizations.length === 0) {
+      Swal.fire('ไม่มีข้อมูลให้พิมพ์', '', 'warning');
       return;
     }
-
-    const tableClone = table.cloneNode(true) as HTMLElement;
-
-    const rows = tableClone.querySelectorAll('tr');
-
-    rows.forEach((row, index) => {
-      const cells = row.querySelectorAll('th, td');
-
-      // ลบ column Action
-      if (cells[5]) {
-        cells[5].remove();
-      }
-    });
-
-    const printWindow = window.open('', '', 'width=900,height=700');
-
+  
+    const rows = this.filteredOrganizations.map((org, index) => `
+      <tr>
+        <td>${index + 1}</td>
+        <td>${org.faculty_code || '-'}</td>
+        <td>${org.faculty || '-'}</td>
+        <td>${org.faculty_en || '-'}</td>
+        <td>${org.faculty_short || '-'}</td>
+      </tr>
+    `).join('');
+  
+    const printWindow = window.open('', '', 'width=1000,height=700');
+  
     printWindow?.document.write(`
-        <html>
-          <head>
-            <title>รายการหน่วยงาน</title>
-            <style>
-              body{
-                font-family: Arial;
-                padding:20px;
-              }
-    
-              h2{
-                text-align:center;
-                margin-bottom:20px;
-              }
-    
-              table{
-                width:100%;
-                border-collapse: collapse;
-              }
-    
-              th, td{
-                border:1px solid #ccc;
-                padding:8px;
-                text-align:center;
-              }
-    
-              th{
-                background:#394250;
-                color:white;
-              }
-            </style>
-          </head>
-          <body>
-    
-            <h2>รายการหน่วยงาน</h2>
-    
-            ${tableClone.outerHTML}
-    
-          </body>
-        </html>
-      `);
-
+      <html>
+        <head>
+          <title>รายการหน่วยงาน</title>
+          <style>
+            body { font-family: Arial; padding: 20px; }
+            h2 { text-align: center; margin-bottom: 20px; }
+            table { width: 100%; border-collapse: collapse; }
+            th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+            th { background: #394250; color: white; }
+            tr:nth-child(even) { background: #f9f9f9; }
+          </style>
+        </head>
+        <body>
+          <h2>รายการหน่วยงาน</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>รหัสหน่วยงาน</th>
+                <th>ชื่อหน่วยงาน</th>
+                <th>ชื่อหน่วยงานภาษาอังกฤษ</th>
+                <th>ชื่อย่อ</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </body>
+      </html>
+    `);
+  
     printWindow?.document.close();
-
+  
     setTimeout(() => {
       printWindow?.print();
       printWindow?.close();

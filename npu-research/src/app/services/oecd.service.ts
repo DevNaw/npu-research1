@@ -24,7 +24,11 @@ export class OECDService {
     return this.http.patch(`${this.baseUrl}/m/oecd/${id}/update`, data);
   }
 
-  deleteOECD(id: number) {
-    return this.http.delete(`${this.baseUrl}/m/oecd/${id}/delete`);
+  deleteOECD(id: number, password: string) {
+    return this.http.delete(`${this.baseUrl}/m/oecd/${id}/delete`, {
+      body: {
+        password,
+      },
+    });
   }
 }

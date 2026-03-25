@@ -54,7 +54,7 @@ export class ManageOecdComponent {
     sort_order: 0,
   };
 
-  constructor(private service: OECDService, private authService: AuthService) {}
+  constructor(private service: OECDService) {}
 
   ngOnInit() {
     MainComponent.showLoading();
@@ -76,29 +76,69 @@ export class ManageOecdComponent {
     });
   }
 
+  // onSearch() {
+  //   const keyword = this.searchText.toLowerCase().trim();
+
+  //   this.filteredMajors = this.oecdList.filter(
+  //     (m) =>
+  //       m.name_th.toLowerCase().includes(keyword) ||
+  //       m.code.toLowerCase().includes(keyword)
+  //   );
+  //   this.filteredMajors.forEach((m) => {
+  //     m.children = m.children.filter(
+  //       (s) =>
+  //         s.name_th.toLowerCase().includes(keyword) ||
+  //         s.code.toLowerCase().includes(keyword)
+  //     );
+  //     m.children.forEach((s) => {
+  //       s.children = s.children.filter(
+  //         (c) =>
+  //           c.name_th.toLowerCase().includes(keyword) ||
+  //           c.code.toLowerCase().includes(keyword)
+  //       );
+  //     });
+  //   });
+
+  //   if (keyword.length === 0) {
+  //     this.filteredMajors = [...this.oecdList];
+  //   }
+  //   this.currentPage = 1;
+  // }
+
   onSearch() {
     const keyword = this.searchText.toLowerCase().trim();
-
-    this.filteredMajors = this.oecdList.filter(
-      (m) =>
-        m.name_th.toLowerCase().includes(keyword) ||
-        m.code.toLowerCase().includes(keyword)
-    );
-    this.filteredMajors.forEach((m) => {
-      m.children = m.children.filter(
-        (s) =>
-          s.name_th.toLowerCase().includes(keyword) ||
-          s.code.toLowerCase().includes(keyword)
+  
+    if (!keyword) {
+      this.filteredMajors = [...this.oecdList];
+      return;
+    }
+  
+    this.filteredMajors = this.oecdList
+      .map((major) => ({
+        ...major,
+        children: major.children
+          .map((sub) => ({
+            ...sub,
+            children: sub.children.filter(
+              (child) =>
+                child.name_th.toLowerCase().includes(keyword) ||
+                child.code.toLowerCase().includes(keyword)
+            ),
+          }))
+          .filter(
+            (sub) =>
+              sub.name_th.toLowerCase().includes(keyword) ||
+              sub.code.toLowerCase().includes(keyword) ||
+              sub.children.length > 0
+          ),
+      }))
+      .filter(
+        (major) =>
+          major.name_th.toLowerCase().includes(keyword) ||
+          major.code.toLowerCase().includes(keyword) ||
+          major.children.length > 0
       );
-      m.children.forEach((s) => {
-        s.children = s.children.filter(
-          (c) =>
-            c.name_th.toLowerCase().includes(keyword) ||
-            c.code.toLowerCase().includes(keyword)
-        );
-      });
-    });
-
+  
     this.currentPage = 1;
   }
 
@@ -111,30 +151,33 @@ export class ManageOecdComponent {
     const data: any[] = [];
   
     this.oecdList.forEach((major) => {
-      // แถว major
       data.push({
-        'ระดับ': 'สาขาหลัก',
-        'Code': major.code,
-        'ชื่อสาขา': major.name_th,
-        'สาขาแม่': '-',
+        'สาขาหลัก Code': major.code,
+        'สาขาหลัก': major.name_th,
+        'สาขาย่อย Code': '',
+        'สาขาย่อย': '',
+        'สาขาที่เกี่ยวข้อง Code': '',
+        'สาขาที่เกี่ยวข้อง': '',
       });
   
       major.children?.forEach((sub) => {
-        // แถว sub
         data.push({
-          'ระดับ': 'สาขาย่อย',
-          'Code': sub.code,
-          'ชื่อสาขา': sub.name_th,
-          'สาขาแม่': major.name_th,
+          'สาขาหลัก Code': '',
+          'สาขาหลัก': '',
+          'สาขาย่อย Code': sub.code,
+          'สาขาย่อย': sub.name_th,
+          'สาขาที่เกี่ยวข้อง Code': '',
+          'สาขาที่เกี่ยวข้อง': '',
         });
   
         sub.children?.forEach((child) => {
-          // แถว child
           data.push({
-            'ระดับ': 'สาขาที่เกี่ยวข้อง',
-            'Code': child.code,
-            'ชื่อสาขา': child.name_th,
-            'สาขาแม่': sub.name_th,
+            'สาขาหลัก Code': '',
+            'สาขาหลัก': '',
+            'สาขาย่อย Code': '',
+            'สาขาย่อย': '',
+            'สาขาที่เกี่ยวข้อง Code': child.code,
+            'สาขาที่เกี่ยวข้อง': child.name_th,
           });
         });
       });
@@ -142,7 +185,18 @@ export class ManageOecdComponent {
   
     const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
   
-    const colWidths = Object.keys(data[0]).map((key) => ({
+    // Bold header row
+    const headers = Object.keys(data[0]);
+    headers.forEach((_, colIndex) => {
+      const cellAddress = XLSX.utils.encode_cell({ r: 0, c: colIndex });
+      if (!worksheet[cellAddress]) return;
+      worksheet[cellAddress].s = {
+        font: { bold: true },
+      };
+    });
+  
+    // Column widths
+    const colWidths = headers.map((key) => ({
       wch: Math.max(
         key.length,
         ...data.map((row) => (row[key] ? row[key].toString().length : 0))
@@ -152,13 +206,14 @@ export class ManageOecdComponent {
     worksheet['!cols'] = colWidths;
   
     const workbook: XLSX.WorkBook = {
-      Sheets: { 'OECD': worksheet },
+      Sheets: { OECD: worksheet },
       SheetNames: ['OECD'],
     };
   
     const excelBuffer: any = XLSX.write(workbook, {
       bookType: 'xlsx',
       type: 'array',
+      cellStyles: true,
     });
   
     const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
@@ -391,13 +446,18 @@ export class ManageOecdComponent {
 
   // ======= Delete =======
   deleteMajor(id: number) {
-    this.confirmDeleteWithPassword(id);
+    console.log('deleteMajor', id);
+    this.confirmDeleteWithPassword(id,);
   }
-  deleteSub(id: number) {
-    this.confirmDeleteWithPassword(id);
+  deleteSub(sub_id: number) {
+    console.log('deleteSub', sub_id);
+    
+    this.confirmDeleteWithPassword(sub_id);
   }
-  deleteChild(id: number) {
-    this.confirmDeleteWithPassword(id);
+  deleteChild(child_id: number) {
+    console.log('deleteChild', child_id);
+    
+    this.confirmDeleteWithPassword(child_id);
   }
 
   // ====== Build Data ======
@@ -476,32 +536,24 @@ export class ManageOecdComponent {
           Swal.showValidationMessage('กรุณากรอกรหัสผ่าน');
           return false;
         }
+        
         return password;
       },
     }).then((result) => {
+      console.log('password', result.value);
       if (!result.isConfirmed) return;
-
-      this.authService.verifyPassword(result.value).subscribe({
-        next: (valid) => {
-          if (!valid) {
-            Swal.fire('รหัสผ่านไม่ถูกต้อง', '', 'error');
-            return;
-          }
-
-          this.service.deleteOECD(id).subscribe({
-            next: () => {
-              this.loadOECD();
-              Swal.fire({
-                icon: 'success',
-                title: 'ลบข้อมูลสำเร็จ',
-                timer: 1500,
-                showConfirmButton: false,
-              });
-            },
-            error: () => Swal.fire('ลบข้อมูลไม่สำเร็จ', '', 'error'),
+      
+      this.service.deleteOECD(id, result.value).subscribe({
+        next: () => {
+          this.loadOECD();
+          Swal.fire({
+            icon: 'success',
+            title: 'ลบข้อมูลสำเร็จ',
+            timer: 1500,
+            showConfirmButton: false,
           });
         },
-        error: () => Swal.fire('รหัสผ่านไม่ถูกต้อง', '', 'error'),
+        error: (massage) => Swal.fire('ลบข้อมูลไม่สำเร็จ', massage.error.message, 'error'),
       });
     });
   }

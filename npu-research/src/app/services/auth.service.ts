@@ -191,8 +191,4 @@ export class AuthService {
     );
   }
 
-  verifyPassword(password: string): Observable<boolean> {
-    return this.http.post<{ valid: boolean }>('/api/auth/verify-password', { password })
-      .pipe(map(res => res.valid));
-  }
 }

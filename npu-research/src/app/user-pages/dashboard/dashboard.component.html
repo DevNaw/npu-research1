@@ -367,10 +367,14 @@
                     ? dashboardData?.statistic_graph?.graph_article
                     : dashboardData?.statistic_graph?.graph_innovation
                 "
-                class="flex justify-between md:px-8"
+                class="flex justify-between items-center px-2 xl:px-5 gap-3"
               >
-                <span class="font-light text-lg">{{ item.label_full }}</span>
-                <span class="font-light text-lg">{{ item.count }} ผลงาน</span>
+                <span class="font-light md:text-lg xl:text-lg min-w-0 wrap-break-word">
+                  {{ item.label_full }}
+                </span>
+                <span class="font-light text-md xl:text-lg shrink-0 whitespace-nowrap">
+                  {{ item.count }} ผลงาน
+                </span>
               </p>
             </div>
 

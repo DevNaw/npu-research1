@@ -17,7 +17,7 @@ export class PerformanceByDepartmentComponent implements OnInit {
   reportType: ReportType | null = null;
 
   currentPage = 1;
-  pageSize = 10;
+  pageSize = 20;
 
   filteredDocuments: GraphItem[] = [];
 

@@ -12,6 +12,9 @@ import { ResearchItem, SearchResearchRequest } from '../../models/search.model';
 import { MainComponent } from '../../shared/layouts/main/main.component';
 import { Funding } from '../../models/funding.model';
 import { FundingService } from '../../services/funding.service';
+import Swal from 'sweetalert2';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-admin-search-paper',
@@ -399,11 +402,17 @@ export class AdminSearchPaperComponent {
       this.filteredResearchers = [...this.allTableData];
     } else {
       this.filteredResearchers = this.allTableData.filter((item: any) => {
-        return (
-          item.title_th?.toLowerCase().includes(keyword) ||
-          item.title_en?.toLowerCase().includes(keyword) ||
-          item.own?.name?.toLowerCase().includes(keyword) ||
-          item.type?.toLowerCase().includes(keyword)
+        const fields = [
+          item.title_th,
+          item.title_en,
+          item.code,
+          item.funding?.source_funds,
+          item.oecd?.[0]?.name_th,
+          item.own.name,
+        ];
+
+        return fields.some((field) =>
+          field?.toLowerCase().includes(keyword)
         );
       });
     }
@@ -620,5 +629,48 @@ export class AdminSearchPaperComponent {
     this.searchResults = [];
     this.currentPage = 1;
     this.updatePagination();
+  }
+
+  exportExcel() {
+    if (!this.filteredResearchers || this.filteredResearchers.length === 0) {
+      Swal.fire('ไม่มีข้อมูลให้ Export', '', 'warning');
+      return;
+    }
+  
+    const data = this.filteredResearchers.map((e, index) => ({
+      '#': index + 1,
+      'รหัส': e.code || '-',
+      'ชื่องานวิจัย': e.title_th || e.title_en || '-',
+      'ประเภทแหล่งทุน': e.funding?.source_funds || '-',
+      'ชื่อแหล่งทุน': e.funding?.funding_name || '-',
+      'ชื่อเจ้าของผลงาน': e.own?.name || '-',
+      'ประเภท': this.getTypeLabel(e.type) === 'บทความ' ? e.article_type : this.getTypeLabel(e.type),
+    }));
+  
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
+  
+    const colWidths = Object.keys(data[0]).map((key) => ({
+      wch: Math.max(
+        key.length,
+        ...data.map((row) =>
+          (row as any)[key] ? (row as any)[key].toString().length : 0
+        )
+      ) + 5,
+    }));
+  
+    worksheet['!cols'] = colWidths;
+  
+    const workbook: XLSX.WorkBook = {
+      Sheets: { Research: worksheet },
+      SheetNames: ['Research'],
+    };
+  
+    const excelBuffer: any = XLSX.write(workbook, {
+      bookType: 'xlsx',
+      type: 'array',
+    });
+  
+    const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+    saveAs(blob, 'research.xlsx');
   }
 }

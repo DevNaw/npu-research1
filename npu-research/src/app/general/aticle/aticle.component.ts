@@ -48,12 +48,18 @@ export class AticleComponent implements OnInit {
     const keyword = this.searchText.toLowerCase().trim();
 
     this.filteredArticles = this.articles.filter((a) => {
-      const title = a.title_th?.toLowerCase() || '';
+      const fields = [
+        a.title_th,
+        a.title_en,
+        a.research_code,
+        a.funding?.source_funds,
+        a.oecd?.[0]?.name_th,
+        this.mapOwners(a.own),
+    ];
 
-      const researchers =
-        a.own?.map((o) => o.full_name.toLowerCase()).join(' ') || '';
-
-      return title.includes(keyword) || researchers.includes(keyword);
+      return fields.some((field) =>
+        field?.toLowerCase().includes(keyword)
+      );
     });
 
     this.currentPage = 1;
