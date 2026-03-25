@@ -164,8 +164,8 @@
             <!-- Internal Researchers Table -->
             <div>
               <h2 class="mb-2">ผู้ร่วมโครงการภายใน</h2>
-              <div class="overflow-x-auto">
-                <table class="w-full border rounded-lg overflow-hidden">
+              <div class="overflow-x-auto font-light text-xl">
+                <table class="min-w-125 w-full border rounded-lg overflow-hidden">
                   <thead class="bg-[#394250] text-white">
                     <tr>
                       <th class="p-1 md:p-2 text-left w-16">ลำดับ</th>
@@ -188,15 +188,10 @@
                       "
                       class="bg-gray-200 border-b border-gray-300"
                     >
-                      <td class="p-1 md:p-2">{{ i + 1 }}</td>
+                      <td class="p-1 md:p-2 text-center">{{ i + 1 }}</td>
                       <td
                         class="p-1 md:p-2 flex items-center gap-2 flex-wrap justify-center md:justify-start"
                       >
-                        <div
-                          class="w-8 h-8 rounded-full bg-gray-300 flex justify-center"
-                        >
-                          <i class="bi bi-person-fill"></i>
-                        </div>
                         {{ internal?.full_name }}
                       </td>
                       <td class="p-1 md:p-2">{{ internal?.role }}</td>
@@ -217,13 +212,13 @@
             <!-- External Researchers Table -->
             <div>
               <h2 class="my-4">ผู้ร่วมโครงการภายนอก</h2>
-              <div class="overflow-x-auto">
-                <table class="w-full border rounded-lg overflow-hidden">
+              <div class="overflow-x-auto font-light text-xl">
+                <table class="min-w-125 w-full border rounded-lg overflow-hidden">
                   <thead class="bg-[#394250] text-white">
                     <tr>
                       <th class="p-1 md:p-2 text-left w-16">ลำดับ</th>
                       <th class="p-1 md:p-2 text-left">
-                        ผู้ร่วม (บุคลากรภายนอก)
+                        ผู้ร่วม
                       </th>
                       <th class="p-1 md:p-2 text-left">ประเภทความรับผิดชอบ</th>
                       <th class="p-1 md:p-2 text-left">หน่วยงาน</th>
@@ -243,7 +238,7 @@
                       "
                       class="bg-gray-200 border-b border-gray-300"
                     >
-                      <td class="p-1 md:p-2">{{ i + 1 }}</td>
+                      <td class="p-1 md:p-2 text-center">{{ i + 1 }}</td>
                       <td class="p-1 md:p-2">{{ external?.full_name }}</td>
                       <td class="p-1 md:p-2">{{ external?.role }}</td>
                       <td class="p-1 md:p-2">{{ external?.organization }}</td>
@@ -282,7 +277,7 @@
               <div>
                 <p class="text-[#767676] md:mb-1">จำนวนงบประมาณ</p>
                 <p class="text-gray-800 font-light">
-                  {{ researchData?.budget_amount }} บาท
+                  {{ researchData?.budget_amount | number:'1.0-0' }} บาท
                 </p>
               </div>
 
@@ -526,8 +521,8 @@
             <!-- Internal Researchers Table -->
             <div>
               <h2 class="md:text-2xl mb-2">ผู้ร่วมโครงการภายใน</h2>
-              <div class="overflow-x-auto">
-                <table class="w-full border rounded-lg overflow-hidden">
+              <div class="overflow-x-auto font-light text-xl">
+                <table class="min-w-125 w-full border rounded-lg overflow-hidden">
                   <thead class="bg-[#394250] text-white">
                     <tr>
                       <th class="px-4 py-2 text-left w-16">ลำดับ</th>
@@ -549,15 +544,10 @@
                       "
                       class="bg-gray-200 border-b border-gray-300"
                     >
-                      <td class="px-4 py-3">{{ i + 1 }}</td>
+                      <td class="px-4 py-3 text-center">{{ i + 1 }}</td>
                       <td
                         class="px-4 py-3 flex items-center flex-wrap justify-center md:justify-start gap-2"
                       >
-                        <div
-                          class="w-8 h-8 rounded-full bg-gray-300 flex justify-center"
-                        >
-                          <i class="bi bi-person-fill"></i>
-                        </div>
                         {{ member?.full_name }}
                       </td>
                       <td class="px-4 py-3">{{ member?.role }}</td>
@@ -578,13 +568,13 @@
             <!-- External Researchers Table -->
             <div>
               <h2 class="my-4">ผู้ร่วมโครงการภายนอก</h2>
-              <div class="overflow-x-auto">
-                <table class="w-full border rounded-lg overflow-hidden">
+              <div class="overflow-x-auto font-light text-xl">
+                <table class="min-w-125 w-full border rounded-lg overflow-hidden">
                   <thead class="bg-[#394250] text-white">
                     <tr>
                       <th class="px-4 py-2 text-left w-16">ลำดับ</th>
                       <th class="px-4 py-2 text-left">
-                        ผู้ร่วม (บุคลากรภายนอก)
+                        ผู้ร่วม
                       </th>
                       <th class="px-4 py-2 text-left">ประเภทความรับผิดชอบ</th>
                       <th class="px-4 py-2 text-left">หน่วยงาน</th>
@@ -604,7 +594,7 @@
                       "
                       class="bg-gray-200 border-b border-gray-300"
                     >
-                      <td class="px-4 py-3">{{ i + 1 }}</td>
+                      <td class="px-4 py-3 text-center">{{ i + 1 }}</td>
                       <td class="px-4 py-3">{{ external.full_name }}</td>
                       <td class="px-4 py-3">{{ external.role }}</td>
                       <td class="px-4 py-3">{{ external.organization }}</td>
@@ -874,8 +864,8 @@
             <!-- Internal Researchers Table -->
             <div>
               <h2 class="mb-2">ผู้ร่วมโครงการภายใน</h2>
-              <div class="overflow-x-auto">
-                <table class="w-full border rounded-lg overflow-hidden">
+              <div class="overflow-x-auto font-light text-xl">
+                <table class="min-w-125 w-full border rounded-lg overflow-hidden">
                   <thead class="bg-slate-600 text-white">
                     <tr>
                       <th class="px-4 py-2 text-left w-16">ลำดับ</th>
@@ -891,15 +881,10 @@
                       "
                       class="bg-gray-200 border-b border-gray-300"
                     >
-                      <td class="px-4 py-3">{{ i + 1 }}</td>
+                      <td class="px-4 py-3 text-center">{{ i + 1 }}</td>
                       <td
                         class="px-4 py-3 flex flex-wrap justify-center md:justify-start items-center gap-2"
                       >
-                        <div
-                          class="w-8 h-8 rounded-full bg-gray-300 flex justify-center"
-                        >
-                          <i class="bi bi-person-fill"></i>
-                        </div>
                         {{ internal?.full_name }}
                       </td>
                       <td class="px-4 py-3">{{ internal?.role }}</td>
@@ -912,13 +897,13 @@
             <!-- External Researchers Table -->
             <div>
               <h2 class="my-4">ผู้ร่วมโครงการภายนอก</h2>
-              <div class="overflow-x-auto">
-                <table class="w-full border rounded-lg overflow-hidden">
+              <div class="overflow-x-auto font-light text-xl">
+                <table class="min-w-125 w-full border rounded-lg overflow-hidden">
                   <thead class="bg-slate-600 text-white">
                     <tr>
                       <th class="px-4 py-2 text-left w-16">ลำดับ</th>
                       <th class="px-4 py-2 text-left">
-                        ผู้ร่วม (บุคลากรภายนอก)
+                        ผู้ร่วม
                       </th>
                       <th class="px-4 py-2 text-left">ประเภทความรับผิดชอบ</th>
                       <th class="px-4 py-2 text-left">หน่วยงาน</th>
@@ -938,7 +923,7 @@
                       "
                       class="bg-gray-200 border-b border-gray-300"
                     >
-                      <td class="px-4 py-3">{{ i + 1 }}</td>
+                      <td class="px-4 py-3 text-center">{{ i + 1 }}</td>
                       <td class="px-4 py-3">{{ external?.full_name }}</td>
                       <td class="px-4 py-3">{{ external?.role }}</td>
                       <td class="px-4 py-3">
@@ -979,7 +964,7 @@
               <div>
                 <p class="text-[#767676] md:mb-1">งบประมาณ</p>
                 <p class="text-gray-800 font-light">
-                  {{ innovationData?.budget_amount }} บาท
+                  {{ innovationData?.budget_amount | number:'1.0-0' }} บาท
                 </p>
               </div>
 

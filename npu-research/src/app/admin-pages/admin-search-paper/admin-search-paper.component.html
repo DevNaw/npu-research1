@@ -474,13 +474,13 @@
       </div>
 
       <!-- List -->
-      <div class="space-y-2 text-[#394250] px-8 max-h-60 overflow-y-auto">
+      <div class="space-y-2 text-[#394250] xl:px-8 max-h-60 overflow-y-auto">
         <p
           *ngFor="let l of donutLabels; let i = index"
           class="flex justify-between border-b last:border-b-0 pb-1"
         >
-          <span class="font-light text-lg">{{ l }}</span>
-          <span class="font-light text-lg">{{ donutSeries[i] }} งาน</span>
+          <span class="font-light text-sm xl:text-lg wrap-break-word">{{ l }}</span>
+          <span class="font-light text-sm xl:text-lg">{{ donutSeries[i] }} งาน</span>
         </p>
 
         <p *ngIf="donutLabels.length === 0" class="text-center text-gray-500">

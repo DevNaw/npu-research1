@@ -137,7 +137,7 @@
             <div>
               <h2 class="my-6">ผู้ร่วมโครงการภายใน</h2>
               <div class="overflow-x-auto font-light text-xl">
-                <table class="w-full border rounded-lg overflow-hidden">
+                <table class="min-w-125 w-full border rounded-lg overflow-hidden">
                   <thead class="bg-[#394250] text-white">
                     <tr>
                       <th class="p-1 md:p-2 w-16">#</th>
@@ -166,11 +166,6 @@
                       <td
                         class="p-1 md:p-2 flex items-center gap-2 flex-wrap justify-center md:justify-start"
                       >
-                        <div
-                          class="w-8 h-8 rounded-full bg-gray-300 flex justify-center"
-                        >
-                          <i class="bi bi-person-fill"></i>
-                        </div>
                         {{ internal?.full_name }}
                       </td>
                       <td class="p-1 md:p-2">{{ internal?.role }}</td>
@@ -192,7 +187,7 @@
             <div>
               <h2 class="my-6">ผู้ร่วมโครงการภายนอก</h2>
               <div class="overflow-x-auto font-light text-xl">
-                <table class="w-full border rounded-lg overflow-hidden">
+                <table class="min-w-125 w-full border rounded-lg overflow-hidden">
                   <thead class="bg-[#394250] text-white">
                     <tr>
                       <th class="p-1 md:p-2 w-16">#</th>
@@ -256,7 +251,7 @@
               <div>
                 <p class="text-[#767676] md:mb-1">จำนวนงบประมาณ</p>
                 <p class="text-[#394250] font-light text-xl">
-                  {{ researchData?.budget_amount }} บาท
+                  {{ researchData?.budget_amount | number:'1.0-0' }} บาท
                 </p>
               </div>
 
@@ -480,7 +475,7 @@
               <h2 class="md:text-2xl my-6">ผู้ร่วมโครงการภายใน</h2>
               <div class="overflow-x-auto">
                 <table
-                  class="w-full border rounded-lg overflow-hidden font-light text-xl"
+                  class="min-w-125 w-full border rounded-lg overflow-hidden font-light text-xl"
                 >
                   <thead class="bg-[#394250] text-white">
                     <tr>
@@ -509,11 +504,6 @@
                       <td
                         class="px-4 py-3 flex items-center flex-wrap justify-center md:justify-start gap-2"
                       >
-                        <div
-                          class="w-8 h-8 rounded-full bg-gray-300 flex justify-center"
-                        >
-                          <i class="bi bi-person-fill"></i>
-                        </div>
                         {{ member?.full_name }}
                       </td>
                       <td class="px-4 py-3">{{ member?.role }}</td>
@@ -535,7 +525,7 @@
             <div>
               <h2 class="my-6">ผู้ร่วมโครงการภายนอก</h2>
               <div class="overflow-x-auto font-light text-xl">
-                <table class="w-full border rounded-lg overflow-hidden">
+                <table class="min-w-125 w-full border rounded-lg overflow-hidden">
                   <thead class="bg-[#394250] text-white">
                     <tr>
                       <th class="px-4 py-2 w-16">#</th>
@@ -749,7 +739,7 @@
                 </div>
 
                 <div>
-                  <p class="text-[#767676]">ส่ข่ที่เกี่ยวข้อง</p>
+                  <p class="text-[#767676]">สาขาที่เกี่ยวข้อง</p>
                   <p class="font-light text-xl">
                     {{ oecdUI[0]?.children?.[0]?.children?.[0]?.name_th || '-' }}
                   </p>
@@ -758,16 +748,10 @@
 
               <div *ngIf="innovationData?.abstract">
                 <p class="text-[#767676]">บทคัดย่อ</p>
-                <!-- <p class="font-light text-xl">
-                  {{ innovationData?.abstract || '-' }}
-                </p> -->
                 <p class="font-light text-xl" [innerHTML]="safeDescription"></p>
               </div>
               <div *ngIf="innovationData?.abstract_en">
                 <p class="text-[#767676]">Abstract</p>
-                <!-- <p class="font-light text-xl">
-                  {{ innovationData?.abstract_en || '-' }}
-                </p> -->
                 <p class="font-light text-xl" [innerHTML]="safeDescription"></p>
               </div>
               <div>
@@ -794,7 +778,7 @@
             <div>
               <h2 class="my-6">ผู้ร่วมโครงการภายใน</h2>
               <div class="overflow-x-auto font-light text-xl">
-                <table class="w-full border rounded-lg overflow-hidden">
+                <table class="min-w-125 w-full border rounded-lg overflow-hidden">
                   <thead class="bg-slate-600 text-white">
                     <tr>
                       <th class="px-4 py-2 text-left w-16 text-xl">#</th>
@@ -820,11 +804,6 @@
                       <td
                         class="px-4 py-3 flex flex-wrap justify-center md:justify-start items-center gap-2"
                       >
-                        <div
-                          class="w-8 h-8 rounded-full bg-gray-300 flex justify-center"
-                        >
-                          <i class="bi bi-person-fill"></i>
-                        </div>
                         {{ internal?.full_name }}
                       </td>
                       <td class="px-4 py-3">{{ internal?.role }}</td>
@@ -846,7 +825,7 @@
             <div>
               <h2 class="my-6">ผู้ร่วมโครงการภายนอก</h2>
               <div class="overflow-x-auto font-light text-xl">
-                <table class="w-full border rounded-lg overflow-hidden">
+                <table class="min-w-125 w-full border rounded-lg overflow-hidden">
                   <thead class="bg-slate-600 text-white">
                     <tr>
                       <th class="px-4 py-2 w-16">#</th>
@@ -914,7 +893,7 @@
               <div>
                 <p class="font-semibold text-[#767676] md:mb-1">งบประมาณ</p>
                 <p class="text-[#394250] font-light text-xl">
-                  {{ innovationData?.budget_amount }} บาท
+                  {{ innovationData?.budget_amount | number:'1.0-0' }} บาท
                 </p>
               </div>
 
