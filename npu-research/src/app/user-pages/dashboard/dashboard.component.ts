@@ -32,6 +32,14 @@ import {
 } from 'ng-apexcharts';
 import { MainComponent } from '../../shared/layouts/main/main.component';
 import { AuthService } from '../../services/auth.service';
+import { Color, LegendPosition, ScaleType } from '@swimlane/ngx-charts';
+import {
+  AgChartOptions,
+  ModuleRegistry,
+  AllCommunityModule,
+} from 'ag-charts-community';
+
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -119,10 +127,29 @@ export class UserDashboardComponent implements OnInit {
   filteredResearch: ResearchItem[] = [];
   paginatedPublications: ResearchItem[] = [];
 
+  // New Chart Ngx
+  single: any;
+  view: [number, number] = [400, 300];
+  gradient: boolean = true;
+  showLegend: boolean = false;
+  showLabels: boolean = true;
+  isDoughnut: boolean = true;
+  legendPosition: LegendPosition = LegendPosition.Below;
+
+  colorScheme: Color = {
+    name: 'custom',
+    selectable: true,
+    group: ScaleType.Linear,
+    domain: ['#1E3A8A', '#38BDF8', '#06B6D4', '#BAE6FD', '#EAB308', '#F59E0B'],
+  };
+
+  options: AgChartOptions;
+  hasData = false;
+
   constructor(
     private router: Router,
     private service: DashboardService,
-    private authService: AuthService,
+    private authService: AuthService
   ) {
     this.radarChartOptions = {
       series: [
@@ -191,8 +218,8 @@ export class UserDashboardComponent implements OnInit {
         custom: ({ series, seriesIndex, dataPointIndex }) => {
           const fullLabel = this.fullLabels[dataPointIndex]; // ⭐ ตัวจริง
           const value = series[seriesIndex][dataPointIndex];
-      
-          return  `<div style="padding:8px 12px; background:#333; color:#fff; border-radius:6px;">
+
+          return `<div style="padding:8px 12px; background:#333; color:#fff; border-radius:6px;">
         <div style="font-weight:600; margin-bottom:4px;">${fullLabel}</div>
         <hr style="border-color:#555; margin:4px 0;">
         <div style="display:flex; justify-content:space-around; align-items:center; gap:6px;">
@@ -200,7 +227,7 @@ export class UserDashboardComponent implements OnInit {
           <span>จำนวน: ${value}</span>
         </div>
       </div>`;
-        }
+        },
       },
     };
 
@@ -272,8 +299,8 @@ export class UserDashboardComponent implements OnInit {
         custom: ({ series, seriesIndex, dataPointIndex }) => {
           const fullLabelSub = this.fullLabelsSub[dataPointIndex];
           const value = series[seriesIndex][dataPointIndex];
-      
-          return  `<div style="padding:8px 12px; background:#333; color:#fff; border-radius:6px;">
+
+          return `<div style="padding:8px 12px; background:#333; color:#fff; border-radius:6px;">
         <div style="font-weight:600; margin-bottom:4px;">${fullLabelSub}</div>
         <hr style="border-color:#555; margin:4px 0;">
         <div style="display:flex; justify-content:space-around; align-items:center; gap:6px;">
@@ -281,7 +308,36 @@ export class UserDashboardComponent implements OnInit {
           <span>จำนวน: ${value}</span>
         </div>
       </div>`;
-        }
+        },
+      },
+    };
+
+    this.options = {
+      background: {
+        fill: '#394250',  // ← สีพื้นหลัง
+      },
+      data: [],
+      series: [
+        {
+          type: "donut",
+          calloutLabelKey: "faculty",
+          angleKey: "count",
+          innerRadiusRatio: 0.7,
+          calloutLabel: {
+            enabled: true,
+            color: '#ffffff',  // ← สีตัวหนังสือ label
+            formatter: (params: any) => {
+              const total = (this.options.data as any[]).reduce(
+                (sum: number, d: any) => sum + d.count, 0
+              );
+              const percent = ((params.datum.count / total) * 100).toFixed(1);
+              return `${params.datum.faculty} (${percent}%)`;  // ← format label
+            },
+          },
+        },
+      ],
+      legend: {
+        enabled: false,  // ← ปิด legend
       },
     };
   }
@@ -291,11 +347,11 @@ export class UserDashboardComponent implements OnInit {
 
     Promise.all([
       this.loadDashboardData(),
-      new Promise(resolve => setTimeout(resolve, 1000))
+      new Promise((resolve) => setTimeout(resolve, 1000)),
     ]).then(() => {
       MainComponent.hideLoading();
     });
-    
+
     this.updatePagination();
   }
 
@@ -306,7 +362,6 @@ export class UserDashboardComponent implements OnInit {
         if (res?.result === 1 && res?.data) {
           this.dashboardData = res.data;
           this.newsList = res.data.news;
-
 
           this.publications = res.data.researchs;
 
@@ -355,7 +410,6 @@ export class UserDashboardComponent implements OnInit {
   private createBarChart(
     data: { label: string; count: number; label_full: string }[]
   ): ChartOptions {
-
     return {
       series: [
         {
@@ -416,7 +470,7 @@ export class UserDashboardComponent implements OnInit {
         custom: ({ series, seriesIndex, dataPointIndex }) => {
           const fullLabel = data[dataPointIndex]?.label_full ?? '';
           const value = series[seriesIndex][dataPointIndex]; // แก้ตรงนี้
-      
+
           return `<div style="padding:8px 12px; background:#333; color:#fff; border-radius:6px;">
             <div style="font-weight:600; margin-bottom:4px;">${fullLabel}</div>
             <hr style="border-color:#555; margin:4px 0;">
@@ -425,7 +479,7 @@ export class UserDashboardComponent implements OnInit {
               <span>จำนวน: ${value}</span>
             </div>
           </div>`;
-        }
+        },
       },
       yaxis: {
         title: {
@@ -468,29 +522,29 @@ export class UserDashboardComponent implements OnInit {
         position: 'back',
         xaxis: {
           lines: {
-            show: true
-          }
+            show: true,
+          },
         },
         yaxis: {
           lines: {
-            show: true
-          }
+            show: true,
+          },
         },
         row: {
           colors: ['#f3f3f3', 'transparent'],
-          opacity: 0.5
+          opacity: 0.5,
         },
         column: {
           colors: ['#f3f3f3', 'transparent'],
-          opacity: 0.5
-        }
-      }
+          opacity: 0.5,
+        },
+      },
     };
   }
 
   initChartsOECD(): void {
     const raw = this.dashboardData?.radar.child?.raw || [];
-  
+
     const getValue = (item: any) => {
       switch (this.selectedTab) {
         case 'PROJECT':
@@ -503,12 +557,12 @@ export class UserDashboardComponent implements OnInit {
           return 0;
       }
     };
-  
-    const mappedData = raw.map(item => ({
+
+    const mappedData = raw.map((item) => ({
       label: item.name,
       count: getValue(item),
     }));
-  
+
     this.chartsOECD = [
       {
         type: this.selectedTab.toLowerCase() as any,
@@ -522,11 +576,10 @@ export class UserDashboardComponent implements OnInit {
   private createBarChartOECD(
     data: { label: string; count: number }[]
   ): ChartOptions {
+    const shortLabels = data.map((item) => this.truncateText(item.label, 8));
+    const values = data.map((item) => item.count);
 
-  const shortLabels = data.map(item => this.truncateText(item.label, 8));
-  const values = data.map(item => item.count);
-
-  const maxValue = Math.max(...values, 10);
+    const maxValue = Math.max(...values, 10);
 
     return {
       series: [
@@ -580,7 +633,7 @@ export class UserDashboardComponent implements OnInit {
         custom: ({ series, seriesIndex, dataPointIndex }: any) => {
           const fullLabel = data[dataPointIndex]?.label ?? '';
           const value = series[seriesIndex][dataPointIndex];
-      
+
           return `
             <div style="padding:10px 14px; background:#fff; color:#333; border-radius:6px; border:1px solid #e0e0e0; box-shadow:0 2px 8px rgba(0,0,0,0.15);">
               <div style="font-weight:600; margin-bottom:6px;">${fullLabel}</div>
@@ -634,23 +687,23 @@ export class UserDashboardComponent implements OnInit {
         position: 'back',
         xaxis: {
           lines: {
-            show: true
-          }
+            show: true,
+          },
         },
         yaxis: {
           lines: {
-            show: true
-          }
+            show: true,
+          },
         },
         row: {
           colors: ['#f3f3f3', 'transparent'],
-          opacity: 0.5
+          opacity: 0.5,
         },
         column: {
           colors: ['#f3f3f3', 'transparent'],
-          opacity: 0.5
-        }
-      }
+          opacity: 0.5,
+        },
+      },
     };
   }
 
@@ -712,7 +765,7 @@ export class UserDashboardComponent implements OnInit {
       const basePath = this.authService.isAdmin()
         ? '/admin/performance-by-departmaent'
         : '/user/performance-by-departmaent';
-  
+
       this.router.navigate([basePath, this.selectedTab.toLowerCase(), id]);
     } else {
       this.router.navigate([
@@ -736,21 +789,14 @@ export class UserDashboardComponent implements OnInit {
 
   changeTabForChart(tab: ResearchType): void {
     this.selectedTab = tab;
-
-    const tabIndex = 
-      tab === 'PROJECT'
-        ? 0
-        : tab === 'ARTICLE'
-        ? 1
-        : 2;
+    const tabIndex = tab === 'PROJECT' ? 0 : tab === 'ARTICLE' ? 1 : 2;
 
     let values: any;
     let labels: string[] = [];
-  
+
     if (tab === 'PROJECT') {
       labels = this.dashboardData?.radar.major.labels || [];
       values = this.dashboardData?.radar.major.datasets[tabIndex].data || [];
-      
     } else if (tab === 'ARTICLE') {
       labels = this.dashboardData?.radar.major.labels || [];
       values = this.dashboardData?.radar.major.datasets[tabIndex].data || [];
@@ -758,21 +804,20 @@ export class UserDashboardComponent implements OnInit {
       labels = this.dashboardData?.radar.major.labels || [];
       values = this.dashboardData?.radar.major.datasets[tabIndex].data || [];
     }
-  
+
     // ===== RADAR =====
     this.fullLabels = labels;
-    this.radarChartOptions.labels = labels.map(l => this.shortLabel(l));
+    this.radarChartOptions.labels = labels.map((l) => this.shortLabel(l));
     this.radarChartOptions.series = [
       {
         name: 'จำนวนงานวิจัย',
         data: values,
       },
     ];
-  
+
     if (tab === 'PROJECT') {
       labels = this.dashboardData?.radar.sub.labels || [];
       values = this.dashboardData?.radar.sub.datasets[tabIndex].data || [];
-      
     } else if (tab === 'ARTICLE') {
       labels = this.dashboardData?.radar.sub.labels || [];
       values = this.dashboardData?.radar.sub.datasets[tabIndex].data || [];
@@ -780,10 +825,10 @@ export class UserDashboardComponent implements OnInit {
       labels = this.dashboardData?.radar.sub.labels || [];
       values = this.dashboardData?.radar.sub.datasets[tabIndex].data || [];
     }
-  
+
     // ===== RADAR =====
     this.fullLabelsSub = labels;
-    this.radarChartOptionsSub.labels = labels.map(l => this.shortLabel(l));
+    this.radarChartOptionsSub.labels = labels.map((l) => this.shortLabel(l));
     this.radarChartOptionsSub.series = [
       {
         name: 'จำนวนงานวิจัย',
@@ -796,45 +841,55 @@ export class UserDashboardComponent implements OnInit {
       article: [],
       innovation: [],
     };
-    let dataFord = 
+
+    let dataFord =
       tab === 'PROJECT'
         ? ford.project
         : tab === 'ARTICLE'
         ? ford.article
         : ford.innovation;
-  
-    // ===== PIE (CanvasJS) ⭐ สำคัญ =====
+
+    // ===== PIE (Ngx-Charts) =====
     this.loading = true;
 
     setTimeout(() => {
-      this.chartOptions = {
-        ...this.chartOptions,
-        animationEnabled: true,
-        backgroundColor: 'transparent',
-        legend: {
-          fontColor: '#ffffff',
+      this.single = dataFord.map((item) => ({
+        value: item.count,
+        name: item.name,
+        extra: {
+          percent: item.percent,
         },
-      data: [
-        {
-          type: 'doughnut',
-          startAngle: 90,
-          showInLegend: false,
-          indexLabel: '{label}, ({percent}%)',
-          indexLabelFontColor: '#ffffff',
-          dataPoints: dataFord.map((ford, i) => ({
-            label: ford.name,
-            y: ford.count,
-            percent: ford.percent,
-          })),
-        },
-      ],
-      colorSet: 'customColorSet',
-    };
+      }));
 
-    this.initChartsOECD();
-    this.loading = false;
+      this.initChartsOECD();
+      this.loading = false;
     }, 0);
+
+    this.options = {
+      ...this.options,
+      data: dataFord.map((item) => ({
+        count: item.count,
+        faculty: item.name,
+      })),
+    };
+    
+    const total = dataFord.reduce((sum, item) => sum + item.count, 0);
+    this.hasData = total > 0;
   }
+
+  //   labelFormatting = (name: string): string => {
+  //     const item = this.single?.find((d: any) => d.name === name);
+  //     if (!item) return name;
+  //     const short = name.length > 10 ? name.slice(0, 10) + '...' : name;
+  //     const percent = item.extra?.percent ?? '0.0';
+  //     return `${short} (${percent}%)`;
+  //   };
+
+  // tooltipText = (item: any): string => {
+  //   const percent = item.data.extra?.percent ?? '0.0';
+  //   const fullName = item.data.name;
+  //   return `${fullName} (${percent}%)`;
+  // };
 
   SeeMoreDetails(type: ReportType) {
     this.router.navigate(['/performance-by-departmaent', type]);
@@ -901,7 +956,7 @@ export class UserDashboardComponent implements OnInit {
         : type === 'article'
         ? this.dashboardData?.statistic_graph?.graph_article
         : this.dashboardData?.statistic_graph?.graph_innovation;
-  
+
     return data?.reduce((sum, item) => sum + (item.count || 0), 0) || 0;
   }
 
@@ -926,23 +981,27 @@ export class UserDashboardComponent implements OnInit {
     const total = this.totalPages;
     const current = this.currentPage;
     const pages: (number | string)[] = [];
-  
+
     if (total <= 5) {
       return Array.from({ length: total }, (_, i) => i + 1);
     }
-  
+
     pages.push(1);
-  
+
     if (current > 3) pages.push('...');
-  
-    for (let i = Math.max(2, current - 1); i <= Math.min(total - 1, current + 1); i++) {
+
+    for (
+      let i = Math.max(2, current - 1);
+      i <= Math.min(total - 1, current + 1);
+      i++
+    ) {
       pages.push(i);
     }
-  
+
     if (current < total - 2) pages.push('...');
-  
+
     pages.push(total);
-  
+
     return pages;
   }
 }

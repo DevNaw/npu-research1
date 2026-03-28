@@ -18,3 +18,20 @@
   @keyframes l27 {
     100% {transform: rotate(1turn)}
   }
+
+  /* label text สีขาว */
+::ng-deep .pie-label {
+  fill: #ffffff !important;
+  font-size: 12px !important;
+}
+
+::ng-deep .pie-label-line {
+  stroke: #aaaaaa !important;
+}
+
+/* tooltip */
+::ng-deep .ngx-charts-tooltip-content {
+  background: #333 !important;
+  color: #fff !important;
+  border-radius: 6px !important;
+}

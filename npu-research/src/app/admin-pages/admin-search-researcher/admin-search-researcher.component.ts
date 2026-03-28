@@ -7,6 +7,13 @@ import { Researcher } from '../../models/search-researchers.model';
 import { Expertise, Organization } from '../../models/get-researcher.model';
 import { MainComponent } from '../../shared/layouts/main/main.component';
 import { CanvasJS } from '@canvasjs/angular-charts';
+import {
+  AgChartOptions,
+  ModuleRegistry,
+  AllCommunityModule,
+} from "ag-charts-community";
+
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 CanvasJS.addColorSet('customColorSet', [
   '#038FFB',
@@ -71,6 +78,8 @@ export class AdminSearchResearcherComponent {
   selectedMajorId: number | null = null;
   activeDropdown: string | null = null;
 
+  options: AgChartOptions;
+
   constructor(
     private router: Router,
     private authService: AuthService,
@@ -89,6 +98,35 @@ export class AdminSearchResearcherComponent {
           dataPoints: [],
         },
       ],
+    };
+
+    this.options = {
+      background: {
+        fill: '#394250',  // ← สีพื้นหลัง
+      },
+      data: [],
+      series: [
+        {
+          type: "donut",
+          calloutLabelKey: "faculty",
+          angleKey: "count",
+          innerRadiusRatio: 0.6,
+          calloutLabel: {
+            enabled: true,
+            color: '#ffffff',  // ← สีตัวหนังสือ label
+            formatter: (params: any) => {
+              const total = (this.options.data as any[]).reduce(
+                (sum: number, d: any) => sum + d.count, 0
+              );
+              const percent = ((params.datum.count / total) * 100).toFixed(1);
+              return `${params.datum.faculty} (${percent}%)`;  // ← format label
+            },
+          },
+        },
+      ],
+      legend: {
+        enabled: false,  // ← ปิด legend
+      },
     };
   }
 
@@ -151,20 +189,30 @@ export class AdminSearchResearcherComponent {
           '#4CAF50', '#2196F3', '#9C27B0', '#FF5722', '#3F51B5',
         ];
 
+        // const graphData = data.graph.map((g: any, index: number) => ({
+        //   name: g.faculty,
+        //   y: g.count,
+        //   color: colors[index % colors.length],
+        // }));
+      
+        // this.chartOptions = {
+        //   ...this.chartOptions,
+        //   data: [
+        //     {
+        //       ...this.chartOptions.data[0],
+        //       dataPoints: graphData,
+        //     },
+        //   ],
+        // };
+
         const graphData = data.graph.map((g: any, index: number) => ({
-          name: g.faculty,
-          y: g.count,
-          color: colors[index % colors.length],
+          faculty: g.faculty,
+          count: g.count,
         }));
       
-        this.chartOptions = {
-          ...this.chartOptions,
-          data: [
-            {
-              ...this.chartOptions.data[0],
-              dataPoints: graphData,
-            },
-          ],
+        this.options = {
+          ...this.options,
+          data: graphData,
         };
       
         this.donutLabels = data.graph.map((g) => g.faculty);

@@ -15,6 +15,13 @@ import { FundingService } from '../../services/funding.service';
 import Swal from 'sweetalert2';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+import {
+  AgChartOptions,
+  ModuleRegistry,
+  AllCommunityModule,
+} from "ag-charts-community";
+
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 @Component({
   selector: 'app-admin-search-paper',
@@ -99,12 +106,15 @@ export class AdminSearchPaperComponent {
   selectedYear: number | null = null;
   thaiYears: number[] = [];
 
+  options: AgChartOptions;
+
   constructor(
     private router: Router,
     private authService: AuthService,
     private service: SearchService,
     private fundingService: FundingService
   ) {
+    // ไม่เอา
     this.chartOptions = {
       backgroundColor: '#394250',
       colorSet: 'customColorSet',
@@ -118,6 +128,35 @@ export class AdminSearchPaperComponent {
           dataPoints: [],
         },
       ],
+    };
+
+    this.options = {
+      background: {
+        fill: '#394250',  // ← สีพื้นหลัง
+      },
+      data: [],
+      series: [
+        {
+          type: "donut",
+          calloutLabelKey: "faculty",
+          angleKey: "count",
+          innerRadiusRatio: 0.6,
+          calloutLabel: {
+            enabled: true,
+            color: '#ffffff',  // ← สีตัวหนังสือ label
+            formatter: (params: any) => {
+              const total = (this.options.data as any[]).reduce(
+                (sum: number, d: any) => sum + d.count, 0
+              );
+              const percent = ((params.datum.count / total) * 100).toFixed(1);
+              return `${params.datum.faculty} (${percent}%)`;  // ← format label
+            },
+          },
+        },
+      ],
+      legend: {
+        enabled: false,  // ← ปิด legend
+      },
     };
   }
 
@@ -367,20 +406,30 @@ export class AdminSearchPaperComponent {
           '#3F51B5',
         ];
 
+        // const graphData = data.graph.map((g: any, index: number) => ({
+        //   name: g.oecd_name,
+        //   y: g.count,
+        //   color: colors[index % colors.length],
+        // }));
+
+        // this.chartOptions = {
+        //   ...this.chartOptions,
+        //   data: [
+        //     {
+        //       ...this.chartOptions.data[0],
+        //       dataPoints: graphData,
+        //     },
+        //   ],
+        // };
+
         const graphData = data.graph.map((g: any, index: number) => ({
-          name: g.oecd_name,
-          y: g.count,
-          color: colors[index % colors.length],
+          faculty: g.oecd_name,
+          count: g.count,
         }));
 
-        this.chartOptions = {
-          ...this.chartOptions,
-          data: [
-            {
-              ...this.chartOptions.data[0],
-              dataPoints: graphData,
-            },
-          ],
+        this.options = {
+          ...this.options,
+          data: graphData,
         };
 
         this.donutSeries = data.graph.map((g) => g.count);

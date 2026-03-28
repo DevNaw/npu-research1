@@ -1,10 +1,37 @@
 import { Component, ViewChild } from '@angular/core';
-import { BarSummary, ResearchItem, ResearchProfileData } from '../../models/get-profile-by-id.model';
+import {
+  BarSummary,
+  ResearchItem,
+  ResearchProfileData,
+} from '../../models/get-profile-by-id.model';
 import { ProfileService } from '../../services/profile.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ApexNonAxisChartSeries, ApexChart, ApexResponsive, ApexLegend, ApexDataLabels, ApexPlotOptions, ApexAxisChartSeries, ApexYAxis, ApexXAxis, ApexFill, ApexTooltip, ApexStroke, ChartComponent, ApexMarkers } from 'ng-apexcharts';
+import {
+  ApexNonAxisChartSeries,
+  ApexChart,
+  ApexResponsive,
+  ApexLegend,
+  ApexDataLabels,
+  ApexPlotOptions,
+  ApexAxisChartSeries,
+  ApexYAxis,
+  ApexXAxis,
+  ApexFill,
+  ApexTooltip,
+  ApexStroke,
+  ChartComponent,
+  ApexMarkers,
+} from 'ng-apexcharts';
 import { MainComponent } from '../../shared/layouts/main/main.component';
 import { AuthService } from '../../services/auth.service';
+import { Color, LegendPosition, ScaleType } from '@swimlane/ngx-charts';
+import {
+  AgChartOptions,
+  ModuleRegistry,
+  AllCommunityModule,
+} from 'ag-charts-community';
+
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 export type RadarChartOptions = {
   series: ApexAxisChartSeries;
@@ -40,7 +67,7 @@ type ResearchTab = 'project' | 'article' | 'innovation';
   selector: 'app-dashboard',
   standalone: false,
   templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.css'
+  styleUrl: './dashboard.component.css',
 })
 export class DashboardComponent {
   @ViewChild('chart') chart!: ChartComponent;
@@ -76,25 +103,44 @@ export class DashboardComponent {
     innovations: [],
   };
 
-   /* ===== Charts ===== */
-    radarChartOptions!: Partial<RadarChartOptions>;
-    radarChartOptionsSub!: Partial<RadarChartOptions>;
-    barChartOptions!: Partial<BarChartOptions>;
-    barSummary: BarSummary[] = [];
-    donutSummary: any;
+  /* ===== Charts ===== */
+  radarChartOptions!: Partial<RadarChartOptions>;
+  radarChartOptionsSub!: Partial<RadarChartOptions>;
+  barChartOptions!: Partial<BarChartOptions>;
+  barSummary: BarSummary[] = [];
+  donutSummary: any;
 
-      researchList: ResearchItem[] = [];
-      originalData: ResearchItem[] = [];
+  researchList: ResearchItem[] = [];
+  originalData: ResearchItem[] = [];
 
-      totalItems: number = 0;
-      
-        filteredData: ResearchItem[] = [];
+  totalItems: number = 0;
+
+  filteredData: ResearchItem[] = [];
+
+  // ===== Ngx CHART =====
+  single: any;
+  view: [number, number] = [400, 300];
+  gradient: boolean = true;
+  showLegend: boolean = false;
+  showLabels: boolean = true;
+  isDoughnut: boolean = true;
+  legendPosition: LegendPosition = LegendPosition.Below;
+
+  colorScheme: Color = {
+    name: 'custom',
+    selectable: true,
+    group: ScaleType.Linear,
+    domain: ['#1E3A8A', '#38BDF8', '#06B6D4', '#BAE6FD', '#EAB308', '#F59E0B'],
+  };
+
+  options: AgChartOptions;
+  hasData = false;
 
   constructor(
     private service: ProfileService,
     private router: Router,
     private route: ActivatedRoute,
-    private authService: AuthService,
+    private authService: AuthService
   ) {
     this.chartOptions = {
       colorSet: 'customColorSet',
@@ -229,8 +275,8 @@ export class DashboardComponent {
         custom: ({ series, seriesIndex, dataPointIndex }) => {
           const fullLabel = this.fullLabels[dataPointIndex]; // ⭐ ตัวจริง
           const value = series[seriesIndex][dataPointIndex];
-      
-          return  `<div style="padding:8px 12px; background:#333; color:#fff; border-radius:6px;">
+
+          return `<div style="padding:8px 12px; background:#333; color:#fff; border-radius:6px;">
         <div style="font-weight:600; margin-bottom:4px;">${fullLabel}</div>
         <hr style="border-color:#555; margin:4px 0;">
         <div style="display:flex; justify-content:space-around; align-items:center; gap:6px;">
@@ -238,7 +284,7 @@ export class DashboardComponent {
           <span>จำนวน: ${value}</span>
         </div>
       </div>`;
-        }
+        },
       },
     };
 
@@ -311,8 +357,8 @@ export class DashboardComponent {
         custom: ({ series, seriesIndex, dataPointIndex }) => {
           const fullLabelsSub = this.fullLabelsSub[dataPointIndex]; // ⭐ ตัวจริง
           const value = series[seriesIndex][dataPointIndex];
-      
-          return  `<div style="padding:8px 12px; background:#333; color:#fff; border-radius:6px;">
+
+          return `<div style="padding:8px 12px; background:#333; color:#fff; border-radius:6px;">
         <div style="font-weight:600; margin-bottom:4px;">${fullLabelsSub}</div>
         <hr style="border-color:#555; margin:4px 0;">
         <div style="display:flex; justify-content:space-around; align-items:center; gap:6px;">
@@ -320,7 +366,37 @@ export class DashboardComponent {
           <span>จำนวน: ${value}</span>
         </div>
       </div>`;
-        }
+        },
+      },
+    };
+
+    this.options = {
+      background: {
+        fill: '#ffffff', // ← สีพื้นหลัง
+      },
+      data: [],
+      series: [
+        {
+          type: 'donut',
+          calloutLabelKey: 'faculty',
+          angleKey: 'count',
+          innerRadiusRatio: 0.7,
+          calloutLabel: {
+            enabled: true,
+            color: '#394250', // ← สีตัวหนังสือ label
+            formatter: (params: any) => {
+              const total = (this.options.data as any[]).reduce(
+                (sum: number, d: any) => sum + d.count,
+                0
+              );
+              const percent = ((params.datum.count / total) * 100).toFixed(1);
+              return `${params.datum.faculty} (${percent}%)`; // ← format label
+            },
+          },
+        },
+      ],
+      legend: {
+        enabled: false, // ← ปิด legend
       },
     };
   }
@@ -359,30 +435,30 @@ export class DashboardComponent {
     this.selectedTab = tab;
     this.searchText = '';
     this.currentPage = 1;
-  
+
     if (!this.researchData) return;
-  
+
     if (tab === 'project') {
       this.originalData = this.researchData.projects || [];
     }
-  
+
     if (tab === 'article') {
       this.originalData = this.researchData.articles || [];
     }
-  
+
     if (tab === 'innovation') {
       this.originalData = this.researchData.innovations || [];
     }
-  
+
     this.filteredData = [...this.originalData];
     this.totalItems = this.filteredData.length;
-  
+
     this.updateCharts();
-    this.updatePagination(); // 🔥 
+    this.updatePagination(); // 🔥
   }
 
   onSearch() {}
-  
+
   // viewItem(id: number) {
   //   this.router.navigate(['/performance-public', this.selectedTab, id]);
   // }
@@ -392,18 +468,16 @@ export class DashboardComponent {
       const basePath = this.authService.isAdmin()
         ? '/admin/performance-by-departmaent'
         : '/user/performance-by-departmaent';
-  
+
       this.router.navigate([basePath, this.selectedTab, id]);
     } else {
       this.router.navigate(['/performance-public', this.selectedTab, id]);
     }
   }
 
-
   toggle(name: string, event: MouseEvent) {
     event.stopPropagation();
   }
-
 
   changeTabForChart(tab: ResearchTab): void {
     this.selectedTab = tab;
@@ -444,6 +518,47 @@ export class DashboardComponent {
         },
       ],
     };
+
+    // this.single = [
+    //   {
+    //     name: 'โครงการวิจัย',
+    //     value: this.donutSummary.projects_count,
+    //   },
+    //   {
+    //     name: 'บทความ',
+    //     value: this.donutSummary.articles_count
+    //   },
+    //   {
+    //     name: 'นวัตกรรม',
+    //     value: this.donutSummary.innovations_count
+    //   },
+    // ];
+
+    // ===== PIE (Ag-Charts) =====
+    this.options = {
+      ...this.options,
+      data: [
+        {
+          faculty: 'โครงการวิจัย',
+          count: this.donutSummary.projects_count,
+        },
+        {
+          faculty: 'บทความ',
+          count: this.donutSummary.articles_count,
+        },
+        {
+          faculty: 'นวัตกรรม',
+          count: this.donutSummary.innovations_count,
+        },
+      ],
+    };
+    const total =
+      this.donutSummary.projects_count +
+      this.donutSummary.articles_count +
+      this.donutSummary.innovations_count;
+
+    this.hasData = total > 0;
+
     const tabIndex =
       this.selectedTab === 'project'
         ? 0
@@ -453,18 +568,16 @@ export class DashboardComponent {
 
     this.fullLabels = this.radarData?.major?.labels || [];
     this.fullLabelsSub = this.radarData?.sub?.labels || [];
-    
+
     const labels = (this.radarData?.major?.labels || []).map((label: any) =>
       this.shortLabel(label)
     );
 
-    const values = [
-      ...(this.radarData?.major?.datasets[tabIndex]?.data || []),
-    ];
+    const values = [...(this.radarData?.major?.datasets[tabIndex]?.data || [])];
 
-    const labelsSub = 
-      (this.radarData?.sub?.labels || [])
-      .map((label: any) => this.shortLabel(label));
+    const labelsSub = (this.radarData?.sub?.labels || []).map((label: any) =>
+      this.shortLabel(label)
+    );
 
     const valuesSub = [
       ...(this.radarData?.sub?.datasets[tabIndex]?.data || []),
@@ -541,23 +654,27 @@ export class DashboardComponent {
     const total = this.totalPages;
     const current = this.currentPage;
     const pages: (number | string)[] = [];
-  
+
     if (total <= 5) {
       return Array.from({ length: total }, (_, i) => i + 1);
     }
-  
+
     pages.push(1);
-  
+
     if (current > 3) pages.push('...');
-  
-    for (let i = Math.max(2, current - 1); i <= Math.min(total - 1, current + 1); i++) {
+
+    for (
+      let i = Math.max(2, current - 1);
+      i <= Math.min(total - 1, current + 1);
+      i++
+    ) {
       pages.push(i);
     }
-  
+
     if (current < total - 2) pages.push('...');
-  
+
     pages.push(total);
-  
+
     return pages;
   }
 }

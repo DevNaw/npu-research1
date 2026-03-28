@@ -1,4 +1,4 @@
-import { Component, HostListener, ViewChild } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { SearchService } from '../../services/search.service';
@@ -6,6 +6,13 @@ import { Researcher } from '../../models/search-researchers.model';
 import { Expertise, Organization } from '../../models/get-researcher.model';
 import { MainComponent } from '../../shared/layouts/main/main.component';
 import { CanvasJS } from '@canvasjs/angular-charts';
+import {
+  AgChartOptions,
+  ModuleRegistry,
+  AllCommunityModule,
+} from "ag-charts-community";
+
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 CanvasJS.addColorSet('customColorSet', [
   '#038FFB',
@@ -37,7 +44,7 @@ CanvasJS.addColorSet('customColorSet', [
   templateUrl: './user-researchers.component.html',
   styleUrl: './user-researchers.component.css',
 })
-export class UserResearchersComponent {
+export class UserResearchersComponent implements OnInit {
   chartOptions: any;
   isSearched = false;
   researcherName: string = '';
@@ -70,6 +77,10 @@ export class UserResearchersComponent {
   selectedMajorId: number | null = null;
   activeDropdown: string | null = null;
 
+  // new chart
+  options: AgChartOptions;
+  hasData = false;
+
   constructor(
     private router: Router,
     private authService: AuthService,
@@ -88,6 +99,35 @@ export class UserResearchersComponent {
           dataPoints: [],
         },
       ],
+    };
+
+    this.options = {
+      background: {
+        fill: '#394250',  // ← สีพื้นหลัง
+      },
+      data: [],
+      series: [
+        {
+          type: "donut",
+          calloutLabelKey: "faculty",
+          angleKey: "count",
+          innerRadiusRatio: 0.7,
+          calloutLabel: {
+            enabled: true,
+            color: '#ffffff',  // ← สีตัวหนังสือ label
+            formatter: (params: any) => {
+              const total = (this.options.data as any[]).reduce(
+                (sum: number, d: any) => sum + d.count, 0
+              );
+              const percent = ((params.datum.count / total) * 100).toFixed(1);
+              return `${params.datum.faculty} (${percent}%)`;  // ← format label
+            },
+          },
+        },
+      ],
+      legend: {
+        enabled: false,  // ← ปิด legend
+      },
     };
   }
 
@@ -139,8 +179,7 @@ export class UserResearchersComponent {
     this.searchService.searchResearchers(payload).subscribe({
       next: (res) => {
         const data = res.data;
-        console.log(data);
-      
+    
         this.filteredData = data.result;
         this.filteredResearchers = data.result;
 
@@ -151,28 +190,24 @@ export class UserResearchersComponent {
         ];
 
         const graphData = data.graph.map((g: any, index: number) => ({
-          name: g.faculty,
-          y: g.count,
-          color: colors[index % colors.length],
+          faculty: g.faculty,
+          count: g.count,
         }));
-      
-        this.chartOptions = {
-          ...this.chartOptions,
-          data: [
-            {
-              ...this.chartOptions.data[0],
-              dataPoints: graphData,
-            },
-          ],
+
+        this.hasData = graphData.length > 0;
+        
+        this.options = {
+          ...this.options,
+          data: graphData,
         };
+
+        
       
         this.donutLabels = data.graph.map((g) => g.faculty);
         this.donutSeries = data.graph.map((g) => g.count);
         this.totalResearchers = data.total;
-      
         this.currentPage = 1;
         this.updatePagination();
-      
         this.loading = false;
       },
       error: (err) => {

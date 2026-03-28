@@ -67,6 +67,10 @@ import { provideHttpClient } from '@angular/common/http';
 import { OrganizationComponent } from './admin-pages/organization/organization.component';
 import { ManageOecdComponent } from './admin-pages/manage-oecd/manage-oecd.component';
 import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.component';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { OverlayModule } from '@angular/cdk/overlay';
+import { AgChartsModule } from 'ag-charts-angular';
 
 @NgModule({
   declarations: [
@@ -141,6 +145,10 @@ import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.componen
     A11yModule,
     ChartsModule,
     CanvasJSAngularChartsModule,
+    NgxChartsModule,
+    BrowserAnimationsModule,
+    OverlayModule,
+    AgChartsModule,
 ],
   providers: [
     {

@@ -26,8 +26,17 @@ import { EducationInfo } from '../../models/education.model';
 import { MainComponent } from '../../shared/layouts/main/main.component';
 
 import { CanvasJS } from '@canvasjs/angular-charts';
+import { Color, LegendPosition, ScaleType } from '@swimlane/ngx-charts';
 
 CanvasJS.addColorSet('customColorSet', ['#038FFB', '#06E396', '#FEB119']);
+
+import {
+  AgChartOptions,
+  ModuleRegistry,
+  AllCommunityModule,
+} from "ag-charts-community";
+
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 export type BarChartOptions = {
   series: ApexAxisChartSeries;
@@ -208,6 +217,25 @@ export class UserProfileComponent implements OnInit {
   fullLabels: string[] = [];
   fullLabelsSub: string[] = [];
   donutSummary: any;
+
+  // ===== Ngx CHART =====
+  single: any;
+  view: [number, number] = [400, 300];
+  gradient: boolean = true;
+  showLegend: boolean = false;
+  showLabels: boolean = true;
+  isDoughnut: boolean = true;
+  legendPosition: LegendPosition = LegendPosition.Below;
+
+  colorScheme: Color = {
+    name: 'custom',
+    selectable: true,
+    group: ScaleType.Linear,
+    domain: ['#1E3A8A', '#38BDF8', '#06B6D4', '#BAE6FD', '#EAB308', '#F59E0B'],
+  };
+
+  options: AgChartOptions;
+  hasData = false;
 
   constructor(
     private router: Router,
@@ -442,6 +470,36 @@ export class UserProfileComponent implements OnInit {
         },
       },
     };
+
+    // ===== PIE (Ag-Charts) =====
+    this.options = {
+      background: {
+        fill: '#ffffff',  // ← สีพื้นหลัง
+      },
+      data: [],
+      series: [
+        {
+          type: "donut",
+          calloutLabelKey: "faculty",
+          angleKey: "count",
+          innerRadiusRatio: 0.7,
+          calloutLabel: {
+            enabled: true,
+            color: '#394250',  // ← สีตัวหนังสือ label
+            formatter: (params: any) => {
+              const total = (this.options.data as any[]).reduce(
+                (sum: number, d: any) => sum + d.count, 0
+              );
+              const percent = ((params.datum.count / total) * 100).toFixed(1);
+              return `${params.datum.faculty} (${percent}%)`;  // ← format label
+            },
+          },
+        },
+      ],
+      legend: {
+        enabled: false,  // ← ปิด legend
+      },
+    };
   }
 
   shortLabel(fullLabel: any) {
@@ -513,6 +571,49 @@ export class UserProfileComponent implements OnInit {
         },
       ],
     };
+
+    // ===== PIE (Ngx-Charts) =====
+    this.single = [
+      {
+        name: 'โครงการวิจัย',
+        value: this.donutSummary.projects_count,
+      },
+      {
+        name: 'บทความ',
+        value: this.donutSummary.articles_count,
+      },
+      {
+        name: 'นวัตกรรม',
+        value: this.donutSummary.innovations_count,
+      },
+    ];
+
+    // ===== PIE (Ag-Charts) =====
+    this.options = {
+      ...this.options,
+      data: [
+        {
+          faculty: 'โครงการวิจัย',
+          count: this.donutSummary.projects_count,
+        },
+        {
+          faculty: 'บทความ',
+          count: this.donutSummary.articles_count,
+        },
+        {
+          faculty: 'นวัตกรรม',
+          count: this.donutSummary.innovations_count,
+        },
+      ],
+    };
+
+    const total =
+      this.donutSummary.projects_count +
+      this.donutSummary.articles_count +
+      this.donutSummary.innovations_count;
+
+    this.hasData = total > 0;
+
     const tabIndex =
       this.selectedTab === 'project'
         ? 0
@@ -977,23 +1078,27 @@ export class UserProfileComponent implements OnInit {
     const total = this.totalPages;
     const current = this.currentPage;
     const pages: (number | string)[] = [];
-  
+
     if (total <= 5) {
       return Array.from({ length: total }, (_, i) => i + 1);
     }
-  
+
     pages.push(1);
-  
+
     if (current > 3) pages.push('...');
-  
-    for (let i = Math.max(2, current - 1); i <= Math.min(total - 1, current + 1); i++) {
+
+    for (
+      let i = Math.max(2, current - 1);
+      i <= Math.min(total - 1, current + 1);
+      i++
+    ) {
       pages.push(i);
     }
-  
+
     if (current < total - 2) pages.push('...');
-  
+
     pages.push(total);
-  
+
     return pages;
   }
 }

@@ -13,7 +13,13 @@ import {
 } from '../../models/search-get.model';
 import { Funding } from '../../models/funding.model';
 import { FundingService } from '../../services/funding.service';
-import { MatDateRangePicker } from '@angular/material/datepicker';
+import {
+  AgChartOptions,
+  ModuleRegistry,
+  AllCommunityModule,
+} from 'ag-charts-community';
+
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 CanvasJS.addColorSet('customColorSet', [
   '#038FFB', // น้ำเงิน
@@ -126,6 +132,9 @@ export class UserResearchComponent {
   selectedYear: number | null = null;
   thaiYears: number[] = [];
 
+  options: AgChartOptions;
+  hasData = false;
+
   constructor(
     private router: Router,
     private authService: AuthService,
@@ -145,6 +154,40 @@ export class UserResearchComponent {
           dataPoints: [],
         },
       ],
+    };
+
+    this.options = {
+      background: {
+        fill: '#394250',
+      },
+      animation: {
+        enabled: true, // ← เปิด animation
+        duration: 800, // ← ความเร็ว (ms)
+      },
+      data: [],
+      series: [
+        {
+          type: 'donut',
+          calloutLabelKey: 'faculty',
+          angleKey: 'count',
+          innerRadiusRatio: 0.7,
+          calloutLabel: {
+            enabled: true,
+            color: '#ffffff',
+            formatter: (params: any) => {
+              const total = (this.options.data as any[]).reduce(
+                (sum: number, d: any) => sum + d.count,
+                0
+              );
+              const percent = ((params.datum.count / total) * 100).toFixed(1);
+              return `${params.datum.faculty} (${percent}%)`;
+            },
+          },
+        },
+      ],
+      legend: {
+        enabled: false,
+      },
     };
   }
 
@@ -271,9 +314,9 @@ export class UserResearchComponent {
 
   filteredMajor(): ({ major_id: null; name_th: string } | OecdMajor)[] {
     const all = { major_id: null, name_th: 'ทั้งหมด' };
-  
+
     if (!this.searchMajor) return [all, ...this.major];
-  
+
     const keyword = this.searchMajor.toLowerCase();
     return this.major.filter((m) => m.name_th.toLowerCase().includes(keyword));
   }
@@ -369,7 +412,6 @@ export class UserResearchComponent {
     this.service.searchData(payload).subscribe({
       next: (res) => {
         this.isSearched = true;
-
         const data = res.data;
 
         this.searchResults = data.result;
@@ -394,21 +436,32 @@ export class UserResearchComponent {
           '#3F51B5',
         ];
 
+        // const graphData = data.graph.map((g: any, index: number) => ({
+        //   name: g.oecd_name,
+        //   y: g.count,
+        //   color: colors[index % colors.length],
+        // }));
+
+        // this.chartOptions = {
+        //   ...this.chartOptions,
+        //   data: [
+        //     {
+        //       ...this.chartOptions.data[0],
+        //       dataPoints: graphData,
+        //     },
+        //   ],
+        // };
+
         const graphData = data.graph.map((g: any, index: number) => ({
-          name: g.oecd_name,
-          y: g.count,
-          color: colors[index % colors.length],
+          faculty: g.oecd_name,
+          count: g.count,
         }));
 
-        this.chartOptions = {
-          ...this.chartOptions,
-          data: [
-            {
-              ...this.chartOptions.data[0],
-              dataPoints: graphData,
-            },
-          ],
+        this.options = {
+          ...this.options,
+          data: graphData,
         };
+        this.hasData = graphData.length > 0;
 
         this.donutSeries = data.graph.map((g) => g.count);
         this.donutLabels = data.graph.map((g) => g.oecd_name);
@@ -438,9 +491,7 @@ export class UserResearchComponent {
           item.own.name,
         ];
 
-        return fields.some((field) =>
-          field?.toLowerCase().includes(keyword)
-        );
+        return fields.some((field) => field?.toLowerCase().includes(keyword));
       });
     }
 
@@ -505,16 +556,19 @@ export class UserResearchComponent {
     return map[type];
   }
 
-  getTypeLabel(type: 'ARTICLE' | 'PROJECT' | 'INNOVATION', article_type?: string): string {
+  getTypeLabel(
+    type: 'ARTICLE' | 'PROJECT' | 'INNOVATION',
+    article_type?: string
+  ): string {
     if (type === 'ARTICLE') {
       return article_type === 'วารสาร' ? 'วารสาร' : 'บทความ';
     }
-  
+
     const map = {
       PROJECT: 'โครงการวิจัย',
       INNOVATION: 'นวัตกรรม',
     };
-  
+
     return map[type] ?? '-';
   }
 
