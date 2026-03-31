@@ -10,7 +10,7 @@ type ResearchType = 'PROJECT' | 'ARTICLE' | 'INNOVATION';
   selector: 'app-manage-project',
   standalone: false,
   templateUrl: './manage-project.component.html',
-  styleUrl: './manage-project.component.css'
+  styleUrl: './manage-project.component.css',
 })
 export class ManageProjectComponent implements OnInit {
   searchText: string = '';
@@ -18,14 +18,14 @@ export class ManageProjectComponent implements OnInit {
   totalSupport: number = 0;
   selectedTab: ResearchType = 'PROJECT';
   today = new Date();
-  
+
   pageSize = 10;
   currentPage = 1;
-  
+
   researchs: Research[] = [];
   filteredResearch: Research[] = [];
   paginatedPublications: Research[] = [];
-  
+
   constructor(private router: Router, private service: AdminMProjectService) {}
 
   ngOnInit() {
@@ -40,12 +40,12 @@ export class ManageProjectComponent implements OnInit {
     this.service.getProject().subscribe({
       next: (res) => {
         this.researchs = res.data.researchs;
-  
+
         // ✅ สำคัญมาก
         this.filteredResearch = this.researchs.filter(
           (r) => r.research_type === this.selectedTab
         );
-  
+
         this.updatePagination();
       },
       error: (err) => console.error(err),
@@ -54,14 +54,15 @@ export class ManageProjectComponent implements OnInit {
 
   onSearch() {
     const keyword = this.searchText.toLowerCase().trim();
-  
+
     this.filteredResearch = this.researchs
       .filter((r) => r.research_type === this.selectedTab) // filter tab ก่อน
-      .filter((r) =>
-        r.title_th?.toLowerCase().includes(keyword) ||
-        r.title_en?.toLowerCase().includes(keyword)
+      .filter(
+        (r) =>
+          r.title_th?.toLowerCase().includes(keyword) ||
+          r.title_en?.toLowerCase().includes(keyword)
       );
-  
+
     this.currentPage = 1;
   }
 
@@ -91,23 +92,51 @@ export class ManageProjectComponent implements OnInit {
     this.selectedTab = tab;
     this.searchText = '';
     this.currentPage = 1;
-  
+
     this.filteredResearch = this.researchs.filter(
       (r) => r.research_type === tab
     );
   }
 
-      updatePagination(): void {
-        const start = (this.currentPage - 1) * this.pageSize;
-        const end = start + this.pageSize;
-        this.paginatedPublications = this.filteredResearch.slice(start, end);
-      }
+  updatePagination(): void {
+    const start = (this.currentPage - 1) * this.pageSize;
+    const end = start + this.pageSize;
+    this.paginatedPublications = this.filteredResearch.slice(start, end);
+  }
 
-      viewItem(id: number) {
-        this.router.navigate([
-          '/performance-public',
-          this.selectedTab.toLowerCase(),
-          id,
-        ]);
-      }
+  viewItem(id: number) {
+    this.router.navigate([
+      '/performance-public',
+      this.selectedTab.toLowerCase(),
+      id,
+    ]);
+  }
+
+  get visiblePages(): (number | string)[] {
+    const total = this.totalPages;
+    const current = this.currentPage;
+    const pages: (number | string)[] = [];
+
+    if (total <= 3) {
+      return Array.from({ length: total }, (_, i) => i + 1);
+    }
+
+    pages.push(1);
+
+    if (current > 3) pages.push('...');
+
+    for (
+      let i = Math.max(2, current - 1);
+      i <= Math.min(total - 1, current + 1);
+      i++
+    ) {
+      pages.push(i);
+    }
+
+    if (current < total - 2) pages.push('...');
+
+    pages.push(total);
+
+    return pages;
+  }
 }

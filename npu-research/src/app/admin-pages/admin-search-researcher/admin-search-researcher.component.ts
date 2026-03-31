@@ -78,7 +78,9 @@ export class AdminSearchResearcherComponent {
   selectedMajorId: number | null = null;
   activeDropdown: string | null = null;
 
+  // new chart
   options: AgChartOptions;
+  hasData = false;
 
   constructor(
     private router: Router,
@@ -110,7 +112,7 @@ export class AdminSearchResearcherComponent {
           type: "donut",
           calloutLabelKey: "faculty",
           angleKey: "count",
-          innerRadiusRatio: 0.6,
+          innerRadiusRatio: 0.7,
           calloutLabel: {
             enabled: true,
             color: '#ffffff',  // ← สีตัวหนังสือ label
@@ -178,8 +180,7 @@ export class AdminSearchResearcherComponent {
     this.searchService.searchResearchers(payload).subscribe({
       next: (res) => {
         const data = res.data;
-        console.log(data);
-      
+    
         this.filteredData = data.result;
         this.filteredResearchers = data.result;
 
@@ -189,39 +190,25 @@ export class AdminSearchResearcherComponent {
           '#4CAF50', '#2196F3', '#9C27B0', '#FF5722', '#3F51B5',
         ];
 
-        // const graphData = data.graph.map((g: any, index: number) => ({
-        //   name: g.faculty,
-        //   y: g.count,
-        //   color: colors[index % colors.length],
-        // }));
-      
-        // this.chartOptions = {
-        //   ...this.chartOptions,
-        //   data: [
-        //     {
-        //       ...this.chartOptions.data[0],
-        //       dataPoints: graphData,
-        //     },
-        //   ],
-        // };
-
         const graphData = data.graph.map((g: any, index: number) => ({
           faculty: g.faculty,
           count: g.count,
         }));
-      
+
+        this.hasData = graphData.length > 0;
+        
         this.options = {
           ...this.options,
           data: graphData,
         };
+
+        
       
         this.donutLabels = data.graph.map((g) => g.faculty);
         this.donutSeries = data.graph.map((g) => g.count);
         this.totalResearchers = data.total;
-      
         this.currentPage = 1;
         this.updatePagination();
-      
         this.loading = false;
       },
       error: (err) => {

@@ -219,7 +219,7 @@ export class AdminDownloadComponent {
     const current = this.currentPage;
     const pages: (number | string)[] = [];
   
-    if (total <= 5) {
+    if (total <= 3) {
       return Array.from({ length: total }, (_, i) => i + 1);
     }
   

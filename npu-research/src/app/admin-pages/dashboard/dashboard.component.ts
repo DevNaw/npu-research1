@@ -135,6 +135,9 @@ export class DashboardComponent {
 
   options: AgChartOptions;
   hasData = false;
+  hasProjectData = false;
+  hasArticleData = false;
+  hasInnovationData = false;
 
   constructor(
     private service: ProfileService,
@@ -381,6 +384,7 @@ export class DashboardComponent {
           calloutLabelKey: 'faculty',
           angleKey: 'count',
           innerRadiusRatio: 0.7,
+          fills: ['#038FFB', '#06E396', '#FEB119'],
           calloutLabel: {
             enabled: true,
             color: '#394250', // ← สีตัวหนังสือ label
@@ -519,21 +523,6 @@ export class DashboardComponent {
       ],
     };
 
-    // this.single = [
-    //   {
-    //     name: 'โครงการวิจัย',
-    //     value: this.donutSummary.projects_count,
-    //   },
-    //   {
-    //     name: 'บทความ',
-    //     value: this.donutSummary.articles_count
-    //   },
-    //   {
-    //     name: 'นวัตกรรม',
-    //     value: this.donutSummary.innovations_count
-    //   },
-    // ];
-
     // ===== PIE (Ag-Charts) =====
     this.options = {
       ...this.options,
@@ -558,6 +547,10 @@ export class DashboardComponent {
       this.donutSummary.innovations_count;
 
     this.hasData = total > 0;
+
+    this.hasProjectData = (this.donutSummary.projects_count ?? 0) > 0;
+    this.hasArticleData = (this.donutSummary.articles_count ?? 0) > 0;
+    this.hasInnovationData = (this.donutSummary.innovations_count ?? 0) > 0;
 
     const tabIndex =
       this.selectedTab === 'project'
@@ -610,7 +603,7 @@ export class DashboardComponent {
 
   tabs: { key: ResearchTab; label: string; icon: string }[] = [
     { key: 'project', label: 'งานวิจัย', icon: 'bi-journal-text' },
-    { key: 'article', label: 'บทความวิชาการ', icon: 'bi-file-earmark-text' },
+    { key: 'article', label: 'ผลงานตีพิมพ์', icon: 'bi-file-earmark-text' },
     { key: 'innovation', label: 'นวัตกรรมสิ่งประดิษฐ์', icon: 'bi-award' },
   ];
 

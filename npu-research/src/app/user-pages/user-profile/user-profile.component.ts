@@ -34,7 +34,7 @@ import {
   AgChartOptions,
   ModuleRegistry,
   AllCommunityModule,
-} from "ag-charts-community";
+} from 'ag-charts-community';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -236,6 +236,9 @@ export class UserProfileComponent implements OnInit {
 
   options: AgChartOptions;
   hasData = false;
+  hasProjectData = false;
+  hasArticleData = false;
+  hasInnovationData = false;
 
   constructor(
     private router: Router,
@@ -474,30 +477,35 @@ export class UserProfileComponent implements OnInit {
     // ===== PIE (Ag-Charts) =====
     this.options = {
       background: {
-        fill: '#ffffff',  // ← สีพื้นหลัง
+        fill: '#ffffff', // ← สีพื้นหลัง
       },
       data: [],
+      animation: {
+        enabled: true, // ← เปิดการแสดงผลแบบเคลื่อนไหว
+      },
       series: [
         {
-          type: "donut",
-          calloutLabelKey: "faculty",
-          angleKey: "count",
+          type: 'donut',
+          calloutLabelKey: 'faculty',
+          angleKey: 'count',
           innerRadiusRatio: 0.7,
+          fills: ['#038FFB', '#06E396', '#FEB119'],
           calloutLabel: {
             enabled: true,
-            color: '#394250',  // ← สีตัวหนังสือ label
+            color: '#394250', // ← สีตัวหนังสือ label
             formatter: (params: any) => {
               const total = (this.options.data as any[]).reduce(
-                (sum: number, d: any) => sum + d.count, 0
+                (sum: number, d: any) => sum + d.count,
+                0
               );
               const percent = ((params.datum.count / total) * 100).toFixed(1);
-              return `${params.datum.faculty} (${percent}%)`;  // ← format label
+              return `${params.datum.faculty} (${percent}%)`; // ← format label
             },
           },
         },
       ],
       legend: {
-        enabled: false,  // ← ปิด legend
+        enabled: false, // ← ปิด legend
       },
     };
   }
@@ -613,6 +621,10 @@ export class UserProfileComponent implements OnInit {
       this.donutSummary.innovations_count;
 
     this.hasData = total > 0;
+
+    this.hasProjectData = (this.donutSummary.projects_count ?? 0) > 0;
+    this.hasArticleData = (this.donutSummary.articles_count ?? 0) > 0;
+    this.hasInnovationData = (this.donutSummary.innovations_count ?? 0) > 0;
 
     const tabIndex =
       this.selectedTab === 'project'
@@ -963,7 +975,7 @@ export class UserProfileComponent implements OnInit {
 
   tabs: { key: ResearchTab; label: string; icon: string }[] = [
     { key: 'project', label: 'โครงการวิจัย', icon: 'bi-journal-text' },
-    { key: 'article', label: 'บทความวิชาการ', icon: 'bi-file-earmark-text' },
+    { key: 'article', label: 'ผลงานตีพิมพ์', icon: 'bi-file-earmark-text' },
     { key: 'innovation', label: 'นวัตกรรมสิ่งประดิษฐ์', icon: 'bi-award' },
   ];
 
@@ -995,6 +1007,12 @@ export class UserProfileComponent implements OnInit {
 
   saveAvatar() {
     if (!this.selectedFile) return;
+
+    Swal.fire({
+      title: 'กำลังอัปโหลด...',
+      allowOutsideClick: false,
+      didOpen: () => Swal.showLoading(),
+    });
 
     this.service.updateAvatar(this.selectedFile).subscribe({
       next: (res) => {

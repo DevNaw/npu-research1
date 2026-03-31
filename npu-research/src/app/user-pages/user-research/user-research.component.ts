@@ -13,13 +13,12 @@ import {
 } from '../../models/search-get.model';
 import { Funding } from '../../models/funding.model';
 import { FundingService } from '../../services/funding.service';
-import {
-  AgChartOptions,
-  ModuleRegistry,
-  AllCommunityModule,
-} from 'ag-charts-community';
 
-ModuleRegistry.registerModules([AllCommunityModule]);
+// เปลี่ยนเป็น
+import { AgChartOptions, ModuleRegistry, AllCommunityModule } from 'ag-charts-community';
+import { AnimationModule } from 'ag-charts-enterprise';
+
+ModuleRegistry.registerModules([AllCommunityModule, AnimationModule]);
 
 CanvasJS.addColorSet('customColorSet', [
   '#038FFB', // น้ำเงิน
@@ -75,7 +74,6 @@ export class UserResearchComponent {
   subSub: OecdChild[] = [];
   organizations: Organization[] = [];
   selectedOrg: Organization | null = null;
-  chartOptions: any;
   filteredResearchers: ResearchItem[] = [];
   searchResults: ResearchItem[] = [];
   allTableData: ResearchItem[] = [];
@@ -100,22 +98,19 @@ export class UserResearchComponent {
     'วารสาร',
     'นวัตกรรมสิ่งประดิษฐ์',
   ];
+
   selectedFunding:
     | 'แหล่งทุนทั้งหมด'
     | 'แหล่งทุนภายใน'
     | 'แหล่งทุนภายนอก'
     | null = null;
 
-  dateRange: {
-    start: Date | null;
-    end: Date | null;
-  } = {
+  dateRange: { start: Date | null; end: Date | null } = {
     start: null,
     end: null,
   };
 
   selectedFundingSource: Funding | null = null;
-
   selectedType: string | null = null;
   selectedSubType: string | null = null;
   donutLabels: string[] = [];
@@ -141,55 +136,12 @@ export class UserResearchComponent {
     private service: SearchService,
     private fundingService: FundingService
   ) {
-    this.chartOptions = {
-      backgroundColor: '#394250',
-      colorSet: 'customColorSet',
-      animationEnabled: true,
-      data: [
-        {
-          type: 'doughnut',
-          yValueFormatString: '#,##0',
-          indexLabel: '{name} ({y})',
-          indexLabelFontColor: '#ffffff',
-          dataPoints: [],
-        },
-      ],
-    };
-
-    this.options = {
-      background: {
-        fill: '#394250',
-      },
-      animation: {
-        enabled: true, // ← เปิด animation
-        duration: 800, // ← ความเร็ว (ms)
-      },
-      data: [],
-      series: [
-        {
-          type: 'donut',
-          calloutLabelKey: 'faculty',
-          angleKey: 'count',
-          innerRadiusRatio: 0.7,
-          calloutLabel: {
-            enabled: true,
-            color: '#ffffff',
-            formatter: (params: any) => {
-              const total = (this.options.data as any[]).reduce(
-                (sum: number, d: any) => sum + d.count,
-                0
-              );
-              const percent = ((params.datum.count / total) * 100).toFixed(1);
-              return `${params.datum.faculty} (${percent}%)`;
-            },
-          },
-        },
-      ],
-      legend: {
-        enabled: false,
-      },
-    };
+    this.options = this.buildChartOptions([]);
   }
+
+  // ============================================================
+  // Lifecycle
+  // ============================================================
 
   ngOnInit() {
     MainComponent.showLoading();
@@ -200,6 +152,10 @@ export class UserResearchComponent {
       new Promise((resolve) => setTimeout(resolve, 1000)),
     ]).then(() => MainComponent.hideLoading());
   }
+
+  // ============================================================
+  // Data loading
+  // ============================================================
 
   loadSubOrgan(): void {
     this.service.getData().subscribe({
@@ -221,16 +177,53 @@ export class UserResearchComponent {
     });
   }
 
+  // ============================================================
+  // Chart
+  // ============================================================
+
+  /**
+   * สร้าง AgChartOptions ใหม่ทุกครั้ง เพื่อให้ animation trigger ได้ถูกต้อง
+   */
+  private buildChartOptions(
+    graphData: { faculty: string; count: number }[]
+  ): AgChartOptions {
+    return {
+      background: { fill: '#394250' },
+      animation: { enabled: true },
+      data: graphData,
+      series: [
+        {
+          type: 'donut',
+          calloutLabelKey: 'faculty',
+          angleKey: 'count',
+          innerRadiusRatio: 0.7,
+          calloutLabel: {
+            enabled: true,
+            color: '#ffffff',
+            formatter: (params: any) => {
+              const total = (this.options.data as any[]).reduce(
+                (sum: number, d: any) => sum + d.count,
+                0
+              );
+              const percent = ((params.datum.count / total) * 100).toFixed(1);
+              return `${params.datum.faculty} (${percent}%)`;
+            },
+          },
+        },
+      ],
+      legend: { enabled: false },
+    };
+  }
+
+  // ============================================================
+  // Dropdown helpers
+  // ============================================================
+
   displaySelectedType(): string {
-    if (!this.selectedType) {
-      return 'เลือกประเภทผลงาน';
-    }
-
-    if (this.selectedSubType) {
-      return `${this.selectedType} / ${this.selectedSubType}`;
-    }
-
-    return this.selectedType;
+    if (!this.selectedType) return 'เลือกประเภทผลงาน';
+    return this.selectedSubType
+      ? `${this.selectedType} / ${this.selectedSubType}`
+      : this.selectedType;
   }
 
   toggleDropdown(name: string, event: MouseEvent) {
@@ -242,13 +235,15 @@ export class UserResearchComponent {
     return this.activeDropdown === name;
   }
 
-  // ====== Selected =======
+  // ============================================================
+  // Select
+  // ============================================================
+
   selectType(t: string) {
     this.selectedType = t;
     this.selectedSubType = null;
     this.searchType = '';
     this.searchSubType = '';
-
     this.activeDropdown = null;
   }
 
@@ -265,12 +260,7 @@ export class UserResearchComponent {
   }
 
   selectMajor(major: OecdMajor | { major_id: null; name_th: string }) {
-    if (major.major_id === null) {
-      this.selectedMajor = null;
-    } else {
-      this.selectedMajor = major as OecdMajor;
-    }
-
+    this.selectedMajor = major.major_id === null ? null : (major as OecdMajor);
     this.searchMajor = '';
     this.selectedSub = null;
     this.selectedSubSub = null;
@@ -290,7 +280,26 @@ export class UserResearchComponent {
     this.activeDropdown = null;
   }
 
-  // ====== Filter ========
+  selectFundingSource(funding: Funding) {
+    this.selectedFundingSource = funding;
+    this.activeDropdown = null;
+  }
+
+  selectAgency(org: Organization | { id: null; faculty: string }) {
+    this.selectedAgency = org.id === null ? null : (org as Organization);
+    this.searchAgency = '';
+    this.activeDropdown = null;
+  }
+
+  selectYear(year: number) {
+    this.selectedYear = year;
+    this.activeDropdown = null;
+  }
+
+  // ============================================================
+  // Filter lists
+  // ============================================================
+
   filteredType() {
     return this.typeList.filter((t) =>
       t.toLowerCase().includes(this.searchType.toLowerCase())
@@ -306,7 +315,6 @@ export class UserResearchComponent {
 
   filteredOrg(): Organization[] {
     if (!this.searchOrg) return this.organizations;
-
     return this.organizations.filter((o) =>
       o.faculty.toLowerCase().includes(this.searchOrg.toLowerCase())
     );
@@ -314,16 +322,13 @@ export class UserResearchComponent {
 
   filteredMajor(): ({ major_id: null; name_th: string } | OecdMajor)[] {
     const all = { major_id: null, name_th: 'ทั้งหมด' };
-
     if (!this.searchMajor) return [all, ...this.major];
-
     const keyword = this.searchMajor.toLowerCase();
     return this.major.filter((m) => m.name_th.toLowerCase().includes(keyword));
   }
 
   filteredSub() {
     if (!this.searchSub) return this.selectedMajor?.children || [];
-
     const keyword = this.searchSub.toLowerCase();
     return (this.selectedMajor?.children || []).filter((s) =>
       s.name_th.toLowerCase().includes(keyword)
@@ -332,14 +337,24 @@ export class UserResearchComponent {
 
   filteredSubSub() {
     if (!this.searchSubSub) return this.selectedSub?.children || [];
-
     const keyword = this.searchSubSub.toLowerCase();
     return (this.selectedSub?.children || []).filter((ss) =>
       ss.name_th.toLowerCase().includes(keyword)
     );
   }
 
-  // ===== Search =====
+  filteredAgency(): (Organization | { id: null; faculty: string })[] {
+    const all = { id: null, faculty: 'หน่วยงานทั้งหมด' };
+    if (!this.searchAgency) return [all, ...this.organizations];
+    return this.organizations.filter((o) =>
+      o.faculty.toLowerCase().includes(this.searchAgency.toLowerCase())
+    );
+  }
+
+  // ============================================================
+  // Search
+  // ============================================================
+
   search() {
     const payload: SearchResearchRequest = {};
     let oecdId = null;
@@ -379,13 +394,8 @@ export class UserResearchComponent {
       payload.org_id = this.selectedOrg.id;
     }
 
-    if (this.dateRange.start) {
-      payload.date_from = this.dateRange.start;
-    }
-
-    if (this.dateRange.end) {
-      payload.date_to = this.dateRange.end;
-    }
+    if (this.dateRange.start) payload.date_from = this.dateRange.start;
+    if (this.dateRange.end) payload.date_to = this.dateRange.end;
 
     if (this.selectedSubSub?.child_id) {
       oecdId = this.selectedSubSub.child_id;
@@ -395,81 +405,40 @@ export class UserResearchComponent {
       oecdId = this.selectedMajor.major_id;
     }
 
-    if (oecdId) {
-      payload.oecd_id = oecdId;
-    }
+    if (oecdId) payload.oecd_id = oecdId;
 
     if (this.selectedFunding && this.selectedFunding !== 'แหล่งทุนทั้งหมด') {
       payload.funding = this.selectedFunding;
     }
 
-    if (this.selectedYear) {
-      payload.year = this.selectedYear;
-    }
+    if (this.selectedYear) payload.year = this.selectedYear;
 
     this.loading = true;
 
     this.service.searchData(payload).subscribe({
       next: (res) => {
-        this.isSearched = true;
         const data = res.data;
 
+        this.isSearched = true;
         this.searchResults = data.result;
         this.allTableData = [...data.result];
         this.filteredResearchers = data.result;
+        this.totalResearchers = data.total;
+        this.donutSeries = data.graph.map((g: any) => g.count);
+        this.donutLabels = data.graph.map((g: any) => g.oecd_name);
 
-        const colors = [
-          '#038FFB',
-          '#06E396',
-          '#FEB119',
-          '#FF4560',
-          '#775DD0',
-          '#00E396',
-          '#0090FF',
-          '#FF66C4',
-          '#00B8D9',
-          '#FFB800',
-          '#4CAF50',
-          '#2196F3',
-          '#9C27B0',
-          '#FF5722',
-          '#3F51B5',
-        ];
-
-        // const graphData = data.graph.map((g: any, index: number) => ({
-        //   name: g.oecd_name,
-        //   y: g.count,
-        //   color: colors[index % colors.length],
-        // }));
-
-        // this.chartOptions = {
-        //   ...this.chartOptions,
-        //   data: [
-        //     {
-        //       ...this.chartOptions.data[0],
-        //       dataPoints: graphData,
-        //     },
-        //   ],
-        // };
-
-        const graphData = data.graph.map((g: any, index: number) => ({
+        // ✅ สร้าง object ใหม่ทั้งหมดผ่าน buildChartOptions
+        //    เพื่อให้ AG Charts detect การเปลี่ยนแปลงและ trigger animation
+        const graphData = data.graph.map((g: any) => ({
           faculty: g.oecd_name,
           count: g.count,
         }));
 
-        this.options = {
-          ...this.options,
-          data: graphData,
-        };
+        this.options = this.buildChartOptions(graphData);
         this.hasData = graphData.length > 0;
-
-        this.donutSeries = data.graph.map((g) => g.count);
-        this.donutLabels = data.graph.map((g) => g.oecd_name);
-        this.totalResearchers = data.total;
 
         this.currentPage = 1;
         this.updatePagination();
-
         this.loading = false;
       },
     });
@@ -490,7 +459,6 @@ export class UserResearchComponent {
           item.oecd?.[0]?.name_th,
           item.own.name,
         ];
-
         return fields.some((field) => field?.toLowerCase().includes(keyword));
       });
     }
@@ -499,15 +467,9 @@ export class UserResearchComponent {
     this.updatePagination();
   }
 
-  // ====== Other ====
-  get displayRange(): string {
-    if (!this.date_from || !this.date_to) return '';
-
-    const format = (d: Date) =>
-      `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
-
-    return `${format(this.date_from)} - ${format(this.date_to)}`;
-  }
+  // ============================================================
+  // Pagination
+  // ============================================================
 
   get totalItems(): number {
     return this.filteredResearchers.length;
@@ -521,100 +483,6 @@ export class UserResearchComponent {
     return Array.from({ length: this.totalPages }, (_, i) => i + 1);
   }
 
-  formatDateForApi(date: Date): string {
-    const yyyy = date.getFullYear();
-    const mm = String(date.getMonth() + 1).padStart(2, '0');
-    const dd = String(date.getDate()).padStart(2, '0');
-
-    return `${yyyy}-${mm}-${dd}`;
-  }
-
-  formatThaiDate(date: Date): string {
-    const d = new Date(date);
-    const day = d.getDate();
-    const month = d.toLocaleDateString('th-TH', { month: 'long' });
-    const year = d.getFullYear() + 543;
-
-    return `${day} ${month} ${year}`;
-  }
-
-  updatePagination(): void {
-    const start = (this.currentPage - 1) * this.pageSize;
-    const end = start + this.pageSize;
-
-    this.paginationData = this.filteredResearchers.slice(start, end);
-  }
-
-  mapTypeToApi(type: string): 'ARTICLE' | 'PROJECT' | 'INNOVATION' {
-    const map: any = {
-      บทความ: 'ARTICLE',
-      วารสาร: 'ARTICLE',
-      โครงการวิจัย: 'PROJECT',
-      นวัตกรรมสิ่งประดิษฐ์: 'INNOVATION',
-    };
-
-    return map[type];
-  }
-
-  getTypeLabel(
-    type: 'ARTICLE' | 'PROJECT' | 'INNOVATION',
-    article_type?: string
-  ): string {
-    if (type === 'ARTICLE') {
-      return article_type === 'วารสาร' ? 'วารสาร' : 'บทความ';
-    }
-
-    const map = {
-      PROJECT: 'โครงการวิจัย',
-      INNOVATION: 'นวัตกรรม',
-    };
-
-    return map[type] ?? '-';
-  }
-
-  changePage(page: number) {
-    if (page < 1 || page > this.totalPages) return;
-    if (page === this.currentPage) return;
-
-    this.currentPage = page;
-    this.updatePagination();
-  }
-
-  @HostListener('document:click')
-  closeAll() {
-    this.activeDropdown = null;
-  }
-
-  trackById(item: any): number {
-    return item.id;
-  }
-
-  // === Route ===
-  goToResearch(id: number, type: 'ARTICLE' | 'PROJECT' | 'INNOVATION') {
-    const routeMap: any = {
-      PROJECT: 'project',
-      ARTICLE: 'article',
-      INNOVATION: 'innovation',
-    };
-
-    const mappedType = routeMap[type];
-
-    let basePath = '/performance';
-
-    if (this.authService.isLoggedIn()) {
-      basePath = this.authService.isAdmin()
-        ? '/admin/performance-by-departmaent'
-        : '/user/performance-by-departmaent';
-    }
-
-    this.router.navigate([basePath, mappedType, id]);
-  }
-
-  selectFundingSource(fundings: Funding) {
-    this.selectedFundingSource = fundings;
-    this.activeDropdown = null;
-  }
-
   get visiblePages(): (number | string)[] {
     const total = this.totalPages;
     const current = this.currentPage;
@@ -625,7 +493,6 @@ export class UserResearchComponent {
     }
 
     pages.push(1);
-
     if (current > 3) pages.push('...');
 
     for (
@@ -637,45 +504,75 @@ export class UserResearchComponent {
     }
 
     if (current < total - 2) pages.push('...');
-
     pages.push(total);
 
     return pages;
   }
 
-  selectAgency(org: Organization | { id: null; faculty: string }) {
-    if (org.id === null) {
-      this.selectedAgency = null;
-    } else {
-      this.selectedAgency = org as Organization;
-    }
-
-    this.searchAgency = '';
-    this.activeDropdown = null;
-  }
-
-  filteredAgency(): (Organization | { id: null; faculty: string })[] {
-    const all = { id: null, faculty: 'หน่วยงานทั้งหมด' };
-
-    if (!this.searchAgency) return [all, ...this.organizations];
-
-    return this.organizations.filter((o) =>
-      o.faculty.toLowerCase().includes(this.searchAgency.toLowerCase())
+  updatePagination(): void {
+    const start = (this.currentPage - 1) * this.pageSize;
+    this.paginationData = this.filteredResearchers.slice(
+      start,
+      start + this.pageSize
     );
   }
 
-  selectYear(year: number) {
-    this.selectedYear = year;
-    this.activeDropdown = null;
+  changePage(page: number) {
+    if (page < 1 || page > this.totalPages || page === this.currentPage) return;
+    this.currentPage = page;
+    this.updatePagination();
+  }
+
+  // ============================================================
+  // Utilities
+  // ============================================================
+
+  get displayRange(): string {
+    if (!this.date_from || !this.date_to) return '';
+    const format = (d: Date) =>
+      `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
+    return `${format(this.date_from)} - ${format(this.date_to)}`;
+  }
+
+  formatDateForApi(date: Date): string {
+    const yyyy = date.getFullYear();
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const dd = String(date.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+  }
+
+  formatThaiDate(date: Date): string {
+    const d = new Date(date);
+    const day = d.getDate();
+    const month = d.toLocaleDateString('th-TH', { month: 'long' });
+    const year = d.getFullYear() + 543;
+    return `${day} ${month} ${year}`;
+  }
+
+  mapTypeToApi(type: string): 'ARTICLE' | 'PROJECT' | 'INNOVATION' {
+    const map: any = {
+      บทความ: 'ARTICLE',
+      วารสาร: 'ARTICLE',
+      โครงการวิจัย: 'PROJECT',
+      นวัตกรรมสิ่งประดิษฐ์: 'INNOVATION',
+    };
+    return map[type];
+  }
+
+  getTypeLabel(
+    type: 'ARTICLE' | 'PROJECT' | 'INNOVATION',
+    article_type?: string
+  ): string {
+    if (type === 'ARTICLE') {
+      return article_type === 'วารสาร' ? 'วารสาร' : 'บทความ';
+    }
+    const map = { PROJECT: 'โครงการวิจัย', INNOVATION: 'นวัตกรรม' };
+    return map[type] ?? '-';
   }
 
   generateThaiYears() {
     const currentYear = new Date().getFullYear() + 543;
-
-    this.thaiYears = [];
-    for (let i = 0; i < 70; i++) {
-      this.thaiYears.push(currentYear - i);
-    }
+    this.thaiYears = Array.from({ length: 70 }, (_, i) => currentYear - i);
   }
 
   onFundingChange(
@@ -710,5 +607,36 @@ export class UserResearchComponent {
     this.searchResults = [];
     this.currentPage = 1;
     this.updatePagination();
+  }
+
+  // ============================================================
+  // Navigation
+  // ============================================================
+
+  goToResearch(id: number, type: 'ARTICLE' | 'PROJECT' | 'INNOVATION') {
+    const routeMap: any = {
+      PROJECT: 'project',
+      ARTICLE: 'article',
+      INNOVATION: 'innovation',
+    };
+    const mappedType = routeMap[type];
+    let basePath = '/performance';
+
+    if (this.authService.isLoggedIn()) {
+      basePath = this.authService.isAdmin()
+        ? '/admin/performance-by-departmaent'
+        : '/user/performance-by-departmaent';
+    }
+
+    this.router.navigate([basePath, mappedType, id]);
+  }
+
+  trackById(item: any): number {
+    return item.id;
+  }
+
+  @HostListener('document:click')
+  closeAll() {
+    this.activeDropdown = null;
   }
 }

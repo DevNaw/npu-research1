@@ -101,6 +101,7 @@ export interface ResearchInnovationDetail {
   oecd_id: number;
   funding_code: string;
   funding_id: number;
+  volume_no: string;
 }
 export interface InternalMember {
   user_id: number;

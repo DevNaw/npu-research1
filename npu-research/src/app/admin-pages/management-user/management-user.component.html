@@ -10,7 +10,7 @@
       <div class="flex gap-2 font-light text-lg">
         <button
           (click)="openAddModal()"
-          class="flex items-center gap-2 bg-[#118CD9] hover:bg-[#16498C] text-white px-4 py-2 rounded-md cursor-pointer"
+          class="flex items-center gap-2 bg-[#f2e7ac] hover:bg-[#f2cb05] text-[#394250] px-4 py-2 rounded-md cursor-pointer"
         >
           <i class="bi bi-plus-circle"></i>
           <span class="hidden md:inline">เพิ่มผู้ใช้งาน</span>
@@ -113,7 +113,7 @@
             (click)="changePage(+page)"
             class="px-2 md:px-3 py-1 rounded border text-sm transition cursor-pointer"
             [ngClass]="{
-              'bg-[#118CD9] text-white': currentPage === page,
+              'bg-[#f2e7ac] text-[#394250]': currentPage === page,
               'hover:bg-gray-100': currentPage !== page
             }"
           >
@@ -189,7 +189,7 @@
       >
         <button
           (click)="save()"
-          class="px-5 py-2 rounded-lg bg-[#118CD9] hover:bg-[#16498C] text-white shadow cursor-pointer"
+          class="px-5 py-2 rounded-lg bg-[#f2e7ac] hover:bg-[#f2cb05] text-[#394250] shadow cursor-pointer"
         >
           บันทึก
         </button>
@@ -218,16 +218,16 @@
   >
     <!-- Header -->
     <div
-      class="relative px-8 py-7 overflow-hidden bg-linear-to-r from-[#16498c] to-[#118cd9]"
+      class="relative px-8 py-7 overflow-hidden bg-linear-to-r from-[#f2cb05] to-[#f2e7ac]"
     >
       <button
         (click)="closeModal()"
-        class="absolute top-4 right-4 w-8 h-8 rounded-lg flex items-center justify-center text-white cursor-pointer border-0 z-10 bg-[#FFFFFF26] hover:bg-[#FFFFFF33]"
+        class="absolute top-4 right-4 w-8 h-8 rounded-lg flex items-center justify-center text-[#394250] cursor-pointer border-0 z-10 hover:text-white transition"
       >
         ✕
       </button>
-      <h2 class="text-white mb-1">เพิ่มผู้ใช้งาน</h2>
-      <p class="text-lg text-[#FFFFFFA6]">กรอกข้อมูลผู้ใช้งานใหม่ให้ครบถ้วน</p>
+      <h2 class="mb-1">เพิ่มผู้ใช้งาน</h2>
+      <p class="text-lg">กรอกข้อมูลผู้ใช้งานใหม่ให้ครบถ้วน</p>
     </div>
 
     <!-- Body -->
@@ -241,7 +241,7 @@
           <input
             type="text"
             [(ngModel)]="newUser.first_name"
-            class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-base font-light bg-slate-50 focus:outline-none focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-100 transition"
+            class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-base font-light bg-slate-50 focus:outline-none focus:border-[#f2e7ac] focus:bg-white focus:ring-0.5 focus:ring-[#f2e7ac] transition"
             placeholder="ชื่อจริง"
           />
         </div>
@@ -252,7 +252,7 @@
           <input
             type="text"
             [(ngModel)]="newUser.last_name"
-            class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-base font-light bg-slate-50 focus:outline-none focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-100 transition"
+            class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-base font-light bg-slate-50 focus:outline-none focus:border-[#f2e7ac] focus:bg-white focus:ring-0.5 focus:ring-[#f2e7ac] transition"
             placeholder="นามสกุล"
           />
         </div>
@@ -266,7 +266,7 @@
         <input
           type="email"
           [(ngModel)]="newUser.email"
-          class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-base font-light bg-slate-50 focus:outline-none focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-100 transition"
+          class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-base font-light bg-slate-50 focus:outline-none focus:border-[#f2e7ac] focus:bg-white focus:ring-0.5 focus:ring-[#f2e7ac] transition"
           placeholder="example@email.com"
         />
       </div>
@@ -281,7 +281,7 @@
           <button
             type="button"
             (click)="toggle('organization', $event)"
-            class="flex justify-between items-center w-full border border-slate-200 rounded-xl px-4 py-2.5 text-base font-light bg-slate-50 focus:outline-none focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-100 transition appearance-none cursor-pointer"
+            class="flex justify-between items-center w-full border border-slate-200 rounded-xl px-4 py-2.5 text-base font-light bg-slate-50 focus:outline-none focus:border-[#f2e7ac] focus:bg-white focus:ring-0.5 focus:ring-[#f2e7ac]] transition appearance-none cursor-pointer"
           >
             <span class="truncate text-lg font-light">
               {{ selectedOrganization?.faculty || "เลือกหน่วยงาน" }}
@@ -319,7 +319,7 @@
           <input
             type="text"
             [(ngModel)]="newUser.password"
-            class="w-full border border-slate-200 rounded-xl px-4 py-2.5 pr-12 text-base font-light bg-slate-50 focus:outline-none focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-100 transition"
+            class="w-full border border-slate-200 rounded-xl px-4 py-2.5 pr-12 text-base font-light bg-slate-50 focus:outline-none focus:border-[#f2e7ac] focus:bg-white focus:ring-0.5 focus:ring-[#f2e7ac] transition"
             placeholder="กรอกรหัสผ่าน"
           />
         </div>
@@ -338,7 +338,7 @@
       </button>
       <button
         (click)="saveUser()"
-        class="px-5 py-2.5 rounded-xl text-white font-medium text-base cursor-pointer transition bg-linear-to-r from-[#118CD9] to-[#094A73] hover:from-[#0f7ec2] hover:to-[#073a5a]"
+        class="px-5 py-2.5 rounded-xl text-[#394250] font-medium text-base cursor-pointer transition bg-linear-to-r from-[#f2e7ac] to-[#f2cb05] hover:from-[#f2cb05] hover:to-[#f2e7ac]"
       >
         บันทึก
       </button>

@@ -124,6 +124,10 @@ export class NavbarComponent {
     this.router.navigate(['/manual']);
   }
 
+  goToLogin() {
+    this.router.navigate(['/login']);
+  }
+
   isDesktop(): boolean {
     return window.innerWidth >= 768;
   }

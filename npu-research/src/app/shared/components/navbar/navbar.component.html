@@ -16,22 +16,22 @@
             >
             ระบบฐานข้อมูลเพื่องานวิจัยและงานบริการวิชาการ มนพ.
             </h1>
-            <p class="hidden sm:block text-sm sm:text-lg text-gray-600">
+            <p class="hidden sm:block text-sm sm:text-lg text-[#f2cb05]">
               NPU Research & Academic Services Database
             </p>
           </div>
         </div>
 
         <div class="hidden md:flex items-center gap-6">
-          <a
-            routerLink="/login"
-            class="hover:bg-gray-50 px-3 py-2 rounded-md flex items-center justify-center hover:text-blue-400"
+          <button
+          (click)="goToLogin()"
+            class="hover:bg-[#f2cb05] bg-[#f2e7ac] px-3 py-2 rounded-full flex items-center justify-center hover:text-black cursor-pointer transition-colors duration-300"
           >
             <i class="bi bi-box-arrow-in-right text-lg"></i>
             <span class="ml-2 hidden md:inline text-lg text-[#394250] font-light"
               >เข้าสู่ระบบ</span
             >
-          </a>
+        </button>
         </div>
 
         <div class="md:hidden">
@@ -50,14 +50,16 @@
       </div>
     </div>
 
+    <hr>
+
     <div
-      class="flex justify-between items-center flex-wrap bg-linear-to-r from-[#118CD9] to-[#094A73] px-2  shadow-lg/30"
+      class="flex justify-between items-center flex-wrap bg-white text-black px-2  shadow-lg/20"
     >
       <div class="hidden md:flex m-2 ml-10 gap-2">
-        <div class="ml-5 flex flex-wrap items-baseline space-x-1 text-white">
+        <div class="ml-5 flex flex-wrap items-baseline space-x-1">
           <a
             routerLink="/dashboard"
-            class="hover:bg-gray-50 hover:text-[#394250] px-3 py-2 rounded-md text-sm font-light flex items-center justify-center gap-1"
+            class="hover:bg-[#f2cb05] hover:text-[#394250] px-3 py-2 rounded-full text-sm font-light flex items-center justify-center gap-1"
           >
             <i class="bi bi-house-fill text-lg"></i>
             <span class="hidden md:inline text-lg">หน้าหลัก</span>
@@ -65,7 +67,7 @@
 
           <a
             routerLink="/research"
-            class="hover:bg-gray-50 hover:text-[#394250] px-3 py-2 rounded-md text-sm font-light flex items-center justify-center gap-1"
+            class="hover:bg-[#f2cb05] hover:text-[#394250] px-3 py-2 rounded-full text-sm font-light flex items-center justify-center gap-1"
           >
             <i class="bi bi-layers-half text-lg"></i>
             <span class="hidden md:inline text-lg">โครงการวิจัย</span>
@@ -73,17 +75,17 @@
 
           <a
             routerLink="/aticle"
-            class="hover:bg-gray-50 hover:text-[#394250] px-3 py-2 rounded-md text-sm font-light flex items-center justify-center gap-1"
+            class="hover:bg-[#f2cb05] hover:text-[#394250] px-3 py-2 rounded-full text-sm font-light flex items-center justify-center gap-1"
           >
             <i class="bi bi-book-half text-lg"></i>
             <span class="hidden md:inline text-lg"
-              >บทความ/วารสาร</span
+              >ผลงานตีพิมพ์</span
             >
           </a>
 
           <a
             routerLink="/innovation"
-            class="hover:bg-gray-50 hover:text-[#394250] px-3 py-2 rounded-md text-sm font-light flex items-center justify-center gap-1"
+            class="hover:bg-[#f2cb05] hover:text-[#394250] px-3 py-2 rounded-full text-sm font-light flex items-center justify-center gap-1"
           >
             <i class="bi bi-award text-lg"></i>
             <span class="hidden md:inline text-lg"
@@ -93,7 +95,7 @@
 
           <a
             routerLink="/news"
-            class="hover:bg-gray-50 hover:text-[#394250] px-3 py-2 rounded-md text-sm font-light flex items-center justify-center gap-1"
+            class="hover:bg-[#f2cb05] hover:text-[#394250] px-3 py-2 rounded-full text-sm font-light flex items-center justify-center gap-1"
           >
             <i class="bi bi-newspaper text-lg"></i>
             <span class="hidden md:inline text-lg"
@@ -103,7 +105,7 @@
 
           <a
             routerLink="/download"
-            class="hover:bg-gray-50 hover:text-[#394250] px-3 py-2 rounded-md text-sm font-light flex items-center justify-center gap-1"
+            class="hover:bg-[#f2cb05] hover:text-[#394250] px-3 py-2 rounded-full text-sm font-light flex items-center justify-center gap-1"
           >
             <i class="bi bi-cloud-arrow-down-fill text-lg"></i>
             <span class="hidden md:inline text-lg"
@@ -120,7 +122,7 @@
             <button
               type="button"
               (click)="onToggle('report', $event)"
-              class="hover:bg-gray-50 hover:text-[#394250] px-3 py-2 rounded-md text-sm font-light flex items-center justify-center gap-1"
+              class="hover:bg-[#f2cb05] hover:text-[#394250] px-3 py-2 rounded-full text-sm font-light flex items-center justify-center gap-1"
             >
               <i class="bi bi-clipboard2-data-fill text-lg"></i>
               <span class="hidden md:inline text-lg">
@@ -178,7 +180,7 @@
           >
             <button
               (click)="goToManual()"
-              class="hover:bg-gray-50 hover:text-[#394250] px-3 py-2 rounded-md text-sm font-light flex items-center justify-center gap-1 cursor-pointer"
+              class="hover:bg-[#f2cb05] hover:text-[#394250] px-3 py-2 rounded-full text-sm font-light flex items-center justify-center gap-1 cursor-pointer"
             >
               <i class="bi bi-file-earmark-text-fill text-lg"></i>
               <span class="hidden md:inline text-lg"
@@ -193,17 +195,17 @@
       <div
         *ngIf="isMobileMenuOpen"
         (click)="$event.stopPropagation()"
-        class="md:hidden bg-linear-to-r from-[#118CD9] to-[#094A73] px-2 py-4 grid grid-cols-9 gap-1 w-full"
+        class="md:hidden bg-white text-black px-2 py-4 grid grid-cols-9 gap-1 w-full"
       >
         <a
           routerLink="/dashboard"
           (click)="closeAllMobileMenus()"
           class="flex justify-center p-2 hover:bg-yellow-300 rounded relative group"
         >
-          <i class="text-white bi bi-house-fill text-lg"></i>
+          <i class="bi bi-house-fill text-lg"></i>
 
           <span
-            class="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-2xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
+            class="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-xs  bg-gray-100 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
           >
             หน้าหลัก
           </span>
@@ -214,9 +216,9 @@
           (click)="closeAllMobileMenus()"
           class="flex justify-center p-2 hover:bg-yellow-300 rounded relative group"
         >
-          <i class="text-white bi bi-layers-half text-lg"></i>
+          <i class=" bi bi-layers-half text-lg"></i>
           <span
-            class="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-2xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
+            class="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-xs  bg-gray-100 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
           >
             โครงการวิจัย
           </span>
@@ -227,11 +229,11 @@
           (click)="closeAllMobileMenus()"
           class="flex justify-center p-2 hover:bg-yellow-300 rounded relative group"
         >
-          <i class="text-white bi bi-book-half text-lg"></i>
+          <i class=" bi bi-book-half text-lg"></i>
           <span
-            class="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-2xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
+            class="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-xs  bg-gray-100 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
           >
-            บทความ/วารสาร
+            ผลงานตีพิมพ์
           </span>
         </a>
 
@@ -240,9 +242,9 @@
           (click)="closeAllMobileMenus()"
           class="flex justify-center p-2 hover:bg-yellow-300 rounded relative group"
         >
-          <i class="text-white bi bi-award text-lg"></i>
+          <i class=" bi bi-award text-lg"></i>
           <span
-            class="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-2xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
+            class="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-xs  bg-gray-100 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
           >
             นวัตกรรมสิ่งประดิษฐ์
           </span>
@@ -253,9 +255,9 @@
           (click)="closeAllMobileMenus()"
           class="flex justify-center p-2 hover:bg-yellow-300 rounded relative group"
         >
-          <i class="text-white bi bi-newspaper text-lg"></i>
+          <i class=" bi bi-newspaper text-lg"></i>
           <span
-            class="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-2xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
+            class="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-xs  bg-gray-100 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
           >
             ข่าวประชาสัมพันธ์
           </span>
@@ -266,72 +268,22 @@
           (click)="closeAllMobileMenus()"
           class="flex justify-center p-2 hover:bg-yellow-300 rounded relative group"
         >
-          <i class="text-white bi bi-cloud-arrow-down-fill text-lg"></i>
+          <i class=" bi bi-cloud-arrow-down-fill text-lg"></i>
           <span
-            class="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-2xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
+            class="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-xs  bg-gray-100 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
           >
             เอกสารดาว์โหลด
           </span>
         </a>
 
-        <!-- <div class="relative group">
-          <button
-            (click)="toggleMobileSubMenu('report', $event)"
-            class="flex justify-center p-2 hover:bg-yellow-300 rounded relative"
-          >
-            <i class="text-white bi bi-clipboard2-data-fill text-lg"></i
-            ><span
-              class="hidden md:block absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity"
-            >
-              สถิติ/รายงาน
-            </span>
-          </button>
-
-          <div
-            *ngIf="openMobileSubMenu === 'report'"
-            class="absolute top-full left-1/2 -translate-x-[70%] mt-2 w-85 max-w-[90vw] bg-gray-700 text-white rounded-md shadow-lg z-50 font-light"
-          >
-            <a
-              (click)="closeAllMobileMenus()"
-              routerLink="/report-researcher-profile"
-              class="block px-4 py-2 hover:bg-gray-600 text-lg"
-              >รายงานข้อมูลประวัตินักวิจัย</a
-            >
-            <a
-              (click)="closeAllMobileMenus()"
-              routerLink="/report-research"
-              class="block px-4 py-2 hover:bg-gray-600 text-lg"
-              >รายงานข้อมูลผลงานวิจัย</a
-            >
-            <a
-              (click)="closeAllMobileMenus()"
-              routerLink="/report-expertise"
-              class="block px-4 py-2 hover:bg-gray-600 text-lg"
-              >รายงานข้อมูลจำนวนนักวิจัยแยกตามสาขาเชี่ยวชาญ</a
-            >
-            <a
-              (click)="closeAllMobileMenus()"
-              routerLink="/report-institution"
-              class="block px-4 py-2 hover:bg-gray-600 text-lg"
-              >รายงานข้อมูลจำนวนนักวิจัยแยกตามหน่วยงานที่สังกัด</a
-            >
-            <a
-              (click)="closeAllMobileMenus()"
-              routerLink="/report-researcher"
-              class="block px-4 py-2 hover:bg-gray-600 text-lg"
-              >รายงานข้อมูลจำนวนนักวิจัยแยกตามประเภทนักวิจัย</a
-            >
-          </div>
-        </div> -->
-
         <div class="relative group">
           <button
             (click)="goToManual(); closeAllMobileMenus()"
-            class="flex justify-center p-2 hover:bg-yellow-300 rounded relqtive"
+            class="flex justify-center p-2 hover:bg-yellow-300 rounded relqtive cursor-pointer"
           >
-            <i class="text-white bi bi-file-earmark-text-fill text-lg"></i>
+            <i class=" bi bi-file-earmark-text-fill text-lg"></i>
             <span
-              class="hidden md:block absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity"
+              class="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-xs  bg-gray-100 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
             >
               คู่มือการใช้งาน
             </span>
@@ -341,11 +293,11 @@
         <a
           routerLink="/login"
           (click)="closeMobileMenu()"
-          class="flex justify-center p-2 hover:bg-yellow-300 rounded ml-auto text-blue-600 hover:text-blue-500 relative group"
+          class="flex justify-center p-2 hover:bg-yellow-300 rounded ml-auto relative group"
         >
-          <i class="text-white bi bi-box-arrow-in-right text-lg"></i>
+          <i class="text-blue-600 hover:text-white bi bi-box-arrow-in-right text-lg"></i>
           <span
-            class="absolute bottom-full mb-1 right-3 px-2 py-1 text-2xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
+            class="absolute bottom-full mb-1 right-3 px-2 py-1 text-xs  bg-gray-100 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
           >
             เข้าสู่ระบบ
           </span>
@@ -375,7 +327,7 @@
             >
             ระบบฐานข้อมูลเพื่องานวิจัยและงานบริการวิชาการ มนพ.
             </h1>
-            <p class="hidden sm:block  text-sm sm:text-lg text-gray-600">
+            <p class="hidden sm:block  text-sm sm:text-lg text-[#f2cb05]">
               NPU Research & Academic Services Database
             </p>
           </div>
@@ -394,13 +346,13 @@
           </a>
 
           <!-- ออกจากระบบ -->
-          <a
+          <button
             (click)="logout()"
-            class="hidden hover:bg-gray-50 px-3 py-2 rounded-md md:flex items-center justify-center hover:text-red-400"
+            class="hidden px-3 py-2 rounded-full md:flex items-center justify-center hover:bg-red-400  bg-red-300 text-[#394250] cursor-pointer hover:text-white transition-colors duration-300"
           >
             <i class="bi bi-box-arrow-left text-xl"></i>
             <span class="ml-1 hidden lg:inline text-lg"> ออกจากระบบ </span>
-          </a>
+          </button>
         </div>
 
         <div class="md:hidden">
@@ -419,14 +371,16 @@
       </div>
     </div>
 
+    <hr />
+
     <div
-      class="flex justify-between items-center flex-wrap bg-linear-to-r from-[#118CD9] to-[#094A73]  shadow-lg/30 px-2 font-light"
+      class="flex justify-between items-center flex-wrap bg-white  shadow-lg/30 px-2 font-light"
     >
       <div class="hidden md:flex m-2 ml-10 gap-2">
         <div class="ml-5 flex flex-wrap items-baseline space-x-1">
           <a
             routerLink="/user/dashboard"
-            class="hover:bg-gray-50 hover:text-[#394250] px-3 py-2 rounded-md text-sm text-white flex items-center justify-center gap-1"
+            class="hover:bg-[#f2cb05] hover:text-[#394250] px-3 py-2 rounded-full text-sm text-black flex items-center justify-center gap-1 transition-colors duration-300"
           >
             <i class="bi bi-house-fill text-lg"></i>
             <span class="hidden md:inline text-lg">หน้าหลัก</span>
@@ -434,7 +388,7 @@
 
           <a
             routerLink="/user/profile"
-            class="hover:bg-gray-50 hover:text-[#394250] px-3 py-2 rounded-md text-sm text-white flex items-center justify-center gap-1"
+            class="hover:bg-[#f2cb05] hover:text-[#394250] px-3 py-2 rounded-full text-sm text-black flex items-center justify-center gap-1 transition-colors duration-300"
           >
             <i class="bi bi-person-fill text-lg"></i>
             <span class="hidden md:inline text-lg">โปรไฟล์</span>
@@ -448,7 +402,7 @@
           >
             <button
               (click)="onToggle('save', $event)"
-              class="hover:bg-gray-50 hover:text-[#394250] px-3 py-2 rounded-md text-sm text-white flex items-center justify-center gap-1"
+              class="hover:bg-[#f2cb05] hover:text-[#394250] px-3 py-2 rounded-full text-sm text-black flex items-center justify-center gap-1 transition-colors duration-300"
             >
               <i class="bi bi-floppy-fill text-lg"></i>
               <span class="hidden md:inline text-lg"
@@ -458,26 +412,26 @@
 
             <div
               *ngIf="openMenu === 'save'"
-              class="absolute left-0 mt-2 bg-gray-700 text-white rounded-md shadow-lg w-max max-w-[90vw] z-50"
+              class="absolute left-0 mt-2 bg-gray-100 text-black rounded-md shadow-lg w-max max-w-[90vw] z-50"
             >
               <a
               (click)="closeMenu()"
                 routerLink="/user/add-research"
-                class="block px-4 py-2 hover:bg-gray-600 text-lg"
+                class="block px-4 py-2 hover:bg-[#f2cb05] text-lg hover:rounded-md"
               >
                 โครงการวิจัย
               </a>
               <a
               (click)="closeMenu()"
                 routerLink="/user/add-aticle"
-                class="block px-4 py-2 hover:bg-gray-600 text-lg"
+                class="block px-4 py-2 hover:bg-[#f2cb05] text-lg hover:rounded-md"
               >
-                บทความ/วารสาร
+                ผลงานตีพิมพ์
               </a>
               <a
               (click)="closeMenu()"
                 routerLink="/user/add-innovation"
-                class="block px-4 py-2 hover:bg-gray-600 text-lg"
+                class="block px-4 py-2 hover:bg-[#f2cb05] text-lg hover:rounded-md"
               >
                 นวัตกรรมสิ่งประดิษฐ์
               </a>
@@ -486,7 +440,7 @@
 
           <a
             routerLink="/user/research"
-            class="hover:bg-gray-50 hover:text-[#394250] px-3 py-2 rounded-md text-sm text-white flex items-center justify-center gap-1"
+            class="hover:bg-[#f2cb05] hover:text-[#394250] px-3 py-2 rounded-full text-sm text-black flex items-center justify-center gap-1"
           >
             <i class="bi bi-search text-lg"></i>
             <span class="hidden md:inline text-lg"
@@ -496,7 +450,7 @@
 
           <a
             routerLink="/user/researchers"
-            class="hover:bg-gray-50 hover:text-[#394250] px-3 py-2 rounded-md text-sm text-white flex items-center justify-center gap-1"
+            class="hover:bg-[#f2cb05] hover:text-[#394250] px-3 py-2 rounded-full text-sm text-black flex items-center justify-center gap-1"
           >
             <i class="bi bi-people-fill text-lg"></i>
             <span class="hidden md:inline text-lg"
@@ -510,17 +464,17 @@
       <div
         *ngIf="isMobileMenuOpen"
         (click)="$event.stopPropagation()"
-        class="md:hidden bg-linear-to-r from-[#118CD9] to-[#094A73] px-2 py-4 space-x-4 flex w-full items-center"
+        class="md:hidden bg-white px-2 py-4 space-x-4 flex w-full items-center"
       >
         <a
           routerLink="/user/dashboard"
           (click)="closeAllMobileMenus()"
           class="flex justify-center p-2 hover:bg-yellow-300 rounded relative group"
         >
-          <i class="text-white bi bi-house-fill text-xl"></i>
+          <i class="text-black bi bi-house-fill text-xl"></i>
 
           <span
-            class="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-2xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
+            class="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-2xs text-black bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
           >
             หน้าหลัก
           </span>
@@ -531,9 +485,9 @@
           (click)="closeAllMobileMenus()"
           class="flex justify-center p-2 hover:bg-yellow-300 rounded relative group"
         >
-          <i class="text-white bi bi-person-fill text-xl"></i>
+          <i class="text-black bi bi-person-fill text-xl"></i>
           <span
-            class="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-2xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
+            class="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-2xs text-black bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
           >
             โปรไฟล์
           </span>
@@ -545,9 +499,9 @@
           (click)="toggleMobileSubMenu('save', $event)"
             class="flex justify-center p-2 hover:bg-yellow-300 rounded relative"
           >
-            <i class="text-white bi bi-floppy-fill text-xl"></i>
+            <i class="text-black bi bi-floppy-fill text-xl"></i>
             <span
-              class="hidden mb:block absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-xs text-white bg-[#394250] rounded opacity-0 group-hover:opacity-100 transition-opacity"
+              class="hidden mb:block absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-xs text-black bg-[#394250] rounded opacity-0 group-hover:opacity-100 transition-opacity"
             >
               บันทึกข้อมูลผลงาน
             </span>
@@ -555,24 +509,24 @@
 
           <div
           *ngIf="openMobileSubMenu === 'save'"
-            class="absolute top-full left-1/2 mt-2 -translate-x-[50%] w-50 max-w-[90vw] bg-gray-700 text-white rounded-md shadow-lg z-50"
+            class="absolute top-full left-1/2 mt-2 -translate-x-[50%] w-50 max-w-[90vw] bg-gray-100 text-black rounded-md shadow-lg z-50"
           >
             <a
             (click)="closeAllMobileMenus()"
               routerLink="/user/add-research"
-              class="block px-4 py-2 hover:bg-gray-600 text-lg"
+              class="block px-4 py-2 hover:bg-[#f2cb05] text-lg"
               >โครงการวิจัย</a
             >
             <a
               (click)="closeAllMobileMenus()"
               routerLink="/user/add-aticle"
-              class="block px-4 py-2 hover:bg-gray-600 text-lg"
-              >บทความ/วารสาร</a
+              class="block px-4 py-2 hover:bg-[#f2cb05] text-lg"
+              >ผลงานตีพิมพ์</a
             >
             <a
               (click)="closeAllMobileMenus()"
               routerLink="/user/add-innovation"
-              class="block px-4 py-2 hover:bg-gray-600 text-lg"
+              class="block px-4 py-2 hover:bg-[#f2cb05] text-lg"
               >นวัตกรรมสิ่งประดิษฐ์</a
             >
           </div>
@@ -583,9 +537,9 @@
           (click)="closeAllMobileMenus()"
           class="flex justify-center p-2 hover:bg-yellow-300 rounded relative group"
         >
-          <i class="text-white bi bi-search text-xl"></i>
+          <i class="text-black bi bi-search text-xl"></i>
           <span
-            class="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-2xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
+            class="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-2xs text-black bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
           >
             ค้นหางานวิจัย
           </span>
@@ -596,9 +550,9 @@
           (click)="closeAllMobileMenus()"
           class="flex justify-center p-2 hover:bg-yellow-300 rounded relative group"
         >
-          <i class="text-white bi bi-people-fill text-xl"></i>
+          <i class="text-black bi bi-people-fill text-xl"></i>
           <span
-            class="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-2xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
+            class="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-2xs text-black bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
           >
             ค้นหาข้อมูลนักวิจัย
           </span>
@@ -609,9 +563,9 @@
           (click)="closeAllMobileMenus()"
           class="flex justify-center p-2 hover:bg-yellow-300 rounded ml-auto text-red-600 hover:text-red-500 relative group"
         >
-          <i class="text-white bi bi-box-arrow-right text-xl"></i>
+          <i class="text-black bi bi-box-arrow-right text-xl"></i>
           <span
-            class="absolute bottom-full mb-1 right-3 px-2 py-1 text-2xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
+            class="absolute bottom-full mb-1 right-3 px-2 py-1 text-2xs text-black bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
           >
             ออกจากระบบ
           </span>
@@ -641,7 +595,7 @@
             >
             ระบบฐานข้อมูลเพื่องานวิจัยและงานบริการวิชาการ มนพ.
             </h1>
-            <p class="hidden sm:block text-sm sm:text-lg text-gray-600">
+            <p class="hidden sm:block text-sm sm:text-lg text-[#f2cb05]">
               NPU Research & Academic Services Database
             </p>
           </div>
@@ -656,13 +610,13 @@
             <span class="ml-1 hidden lg:inline text-lg font-light">{{ profileData?.full_name }}</span>
           </a>
 
-          <a
+          <button
             (click)="logout()"
-            class="hidden hover:bg-gray-50 px-3 py-2 rounded-md md:flex items-center justify-center hover:text-red-400"
+            class="hidden hover:bg-red-400 bg-red-300 px-3 py-2 rounded-full md:flex items-center justify-center hover:text-white text-gray-600 transition-colors duration-300 cursor-pointer"
           >
             <i class="bi bi-box-arrow-left text-lg"></i>
             <span class="ml-1 hidden lg:inline text-lg font-light">ออกจากระบบ</span>
-          </a>
+          </button>
         </div>
 
         <div class="md:hidden">
@@ -681,14 +635,16 @@
       </div>
     </div>
 
+    <hr />
+
     <div
-      class="flex justify-between items-center flex-wrap bg-linear-to-r from-[#118CD9] to-[#094A73]  shadow-lg/30 px-2"
+      class="flex justify-between items-center flex-wrap bg-white text-black shadow-lg/20 px-2"
     >
       <div class="hidden md:flex m-2 ml-10 gap-2 font-light">
         <div class="ml-5 flex flex-wrap items-baseline space-x-1">
           <a
             routerLink="/admin/dashboard"
-            class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm hover:text-[#394250] text-white flex items-center justify-center gap-1"
+            class="hover:bg-[#f2cb05] px-3 py-2 rounded-full text-sm hover:text-[#394250]  flex items-center justify-center gap-1"
           >
             <i class="bi bi-house-fill text-lg"></i>
             <span class="hidden md:inline text-lg">หน้าหลัก</span>
@@ -696,7 +652,7 @@
 
           <a
             routerLink="/admin/profile"
-            class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm hover:text-[#394250] text-white flex items-center justify-center gap-1"
+            class="hover:bg-[#f2cb05] px-3 py-2 rounded-full text-sm hover:text-[#394250]  flex items-center justify-center gap-1"
           >
             <i class="bi bi-person-fill text-lg"></i>
             <span class="hidden md:inline text-lg">โปรไฟล์</span>
@@ -710,7 +666,7 @@
           >
             <button
               (click)="onToggle('funding', $event)"
-              class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm flex items-center justify-center gap-1 text-white hover:text-[#394250]"
+              class="hover:bg-[#f2cb05] px-3 py-2 rounded-full text-sm flex items-center justify-center gap-1  hover:text-[#394250]"
             >
               <i class="bi bi-gear-fill text-lg"></i>
               <span class="hidden md:inline text-lg"
@@ -720,12 +676,12 @@
 
             <div
               *ngIf="openMenu === 'funding'"
-              class="absolute left-0 mt-2 bg-gray-700 text-white rounded-md shadow-lg w-max max-w-[90vw] z-50 pointer-events-auto"
+              class="absolute left-0 mt-2 bg-gray-200  rounded-md shadow-lg w-max max-w-[90vw] z-50 pointer-events-auto"
             >
               <a
               (click)="closeMenu()"
                 routerLink="/admin/external-funding"
-                class="block px-4 py-2 hover:bg-gray-600 hover:rounded-md text-lg"
+                class="block px-4 py-2 hover:bg-[#f2cb05] hover:rounded-md text-lg"
               >
                 แหล่งทุนภายนอก
               </a>
@@ -741,7 +697,7 @@
               <a
               (click)="closeMenu()"
                 routerLink="/admin/manage-oecd"
-                class="block px-4 py-2 hover:bg-gray-600 hover:rounded-md text-lg"
+                class="block px-4 py-2 hover:bg-[#f2cb05] hover:rounded-md text-lg"
               >
                 การจัดการสาขาวิจัย OECD
               </a>
@@ -749,7 +705,7 @@
               <a
               (click)="closeMenu()"
                 routerLink="/admin/manage-organization"
-                class="block px-4 py-2 hover:bg-gray-600 hover:rounded-md text-lg"
+                class="block px-4 py-2 hover:bg-[#f2cb05] hover:rounded-md text-lg"
               >
                 การจัดการหน่วยงาน
               </a>
@@ -757,7 +713,7 @@
               <a
               (click)="closeMenu()"
                 routerLink="/admin/management-admin"
-                class="block px-4 py-2 hover:bg-gray-600 hover:rounded-md text-lg"
+                class="block px-4 py-2 hover:bg-[#f2cb05] hover:rounded-md text-lg"
               >
                 การจัดการผู้ใช้งานแอดมิน
               </a>
@@ -765,7 +721,7 @@
               <a
               (click)="closeMenu()"
                 routerLink="/admin/management-user"
-                class="block px-4 py-2 hover:bg-gray-600 hover:rounded-md text-lg"
+                class="block px-4 py-2 hover:bg-[#f2cb05] hover:rounded-md text-lg"
               >
               การจัดการผู้ใช้งาน
               </a>
@@ -780,7 +736,7 @@
           >
             <button
               (click)="onToggle('news', $event)"
-              class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm hover:text-[#394250] text-white flex items-center justify-center gap-1"
+              class="hover:bg-[#f2cb05] px-3 py-2 rounded-full text-sm hover:text-[#394250]  flex items-center justify-center gap-1"
             >
               <i class="bi bi-newspaper text-lg"></i>
               <span class="hidden md:inline text-lg"
@@ -790,19 +746,19 @@
 
             <div
               *ngIf="openMenu === 'news'"
-              class="absolute left-0 mt-2 bg-gray-700 text-white rounded-md shadow-lg w-max max-w-[90vw] z-50 pointer-events-auto"
+              class="absolute left-0 mt-2 bg-gray-200 rounded-md shadow-lg w-max max-w-[90vw] z-50 pointer-events-auto"
             >
               <a
               (click)="closeMenu()"
                 routerLink="/admin/news"
-                class="block px-4 py-2 hover:bg-gray-600 hover:rounded-md text-lg"
+                class="block px-4 py-2 hover:bg-[#f2cb05] hover:rounded-md text-lg"
               >
                 ข่าวประชาสัมพันธ์
               </a>
               <a
               (click)="closeMenu()"
                 routerLink="/admin/download"
-                class="block px-4 py-2 hover:bg-gray-600 hover:rounded-md text-lg"
+                class="block px-4 py-2 hover:bg-[#f2cb05] hover:rounded-md text-lg"
               >
                 เอกสารดาวน์โหลด
               </a>
@@ -810,7 +766,7 @@
               <a
               (click)="closeMenu()"
                 routerLink="/admin/admin-manual"
-                class="block px-4 py-2 hover:bg-gray-600 hover:rounded-md text-lg"
+                class="block px-4 py-2 hover:bg-[#f2cb05] hover:rounded-md text-lg"
               >
                 คู่มือการใช้งาน
               </a>
@@ -825,7 +781,7 @@
           >
             <button
               (click)="onToggle('save', $event)"
-              class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm hover:text-[#394250] text-white flex items-center justify-center gap-1"
+              class="hover:bg-[#f2cb05] px-3 py-2 rounded-full text-sm hover:text-[#394250]  flex items-center justify-center gap-1"
             >
               <i class="bi bi-floppy-fill text-lg"></i>
               <span class="hidden md:inline text-lg"
@@ -835,26 +791,26 @@
 
             <div
               *ngIf="openMenu === 'save'"
-              class="absolute left-0 mt-2 bg-gray-700 text-white rounded-md shadow-lg w-max max-w-[90vw] z-50 pointer-events-auto"
+              class="absolute left-0 mt-2 bg-gray-200  rounded-md shadow-lg w-max max-w-[90vw] z-50 pointer-events-auto"
             >
               <a
               (click)="closeMenu()"
                 routerLink="/admin/add-research"
-                class="block px-4 py-2 hover:bg-gray-600 hover:rounded-md text-lg"
+                class="block px-4 py-2 hover:bg-[#f2cb05] hover:rounded-md text-lg"
               >
                 โครงการวิจัย
               </a>
               <a
               (click)="closeMenu()"
                 routerLink="/admin/add-aticle"
-                class="block px-4 py-2 hover:bg-gray-600 hover:rounded-md text-lg"
+                class="block px-4 py-2 hover:bg-[#f2cb05] hover:rounded-md text-lg"
               >
-                บทความ/วารสาร
+              ผลงานตีพิมพ์
               </a>
               <a
               (click)="closeMenu()"
                 routerLink="/admin/add-innovation"
-                class="block px-4 py-2 hover:bg-gray-600 hover:rounded-md text-lg"
+                class="block px-4 py-2 hover:bg-[#f2cb05] hover:rounded-md text-lg"
               >
                 นวัตกรรมสิ่งประดิษฐ์
               </a>
@@ -862,7 +818,7 @@
               <a
               (click)="closeMenu()"
                 routerLink="/admin/manage-project"
-                class="block px-4 py-2 hover:bg-gray-600 hover:rounded-md text-lg"
+                class="block px-4 py-2 hover:bg-[#f2cb05] hover:rounded-md text-lg"
               >
                 การจัดการผลงานวิจัย
               </a>
@@ -871,7 +827,7 @@
 
           <a
             routerLink="/admin/search-paper"
-            class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm hover:text-[#394250] text-white flex items-center justify-center gap-1"
+            class="hover:bg-[#f2cb05] px-3 py-2 rounded-full text-sm hover:text-[#394250]  flex items-center justify-center gap-1"
           >
             <i class="bi bi-search text-lg"></i>
             <span class="hidden md:inline text-lg"
@@ -881,7 +837,7 @@
 
           <a
             routerLink="/admin/search-research"
-            class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm hover:text-[#394250] text-white flex items-center justify-center gap-1"
+            class="hover:bg-[#f2cb05] px-3 py-2 rounded-full text-sm hover:text-[#394250]  flex items-center justify-center gap-1"
           >
             <i class="bi bi-people-fill text-lg"></i>
             <span class="hidden md:inline text-lg"
@@ -890,7 +846,7 @@
           </a>
           <a
             routerLink="/admin/report"
-            class="hover:bg-gray-50 px-3 py-2 rounded-md text-sm hover:text-[#394250] text-white flex items-center justify-center gap-1"
+            class="hover:bg-[#f2cb05] px-3 py-2 rounded-full text-sm hover:text-[#394250]  flex items-center justify-center gap-1"
           >
             <i class="bi bi-file-earmark-text-fill text-lg"></i>
             <span class="hidden md:inline text-lg">รายงาน</span>
@@ -902,16 +858,16 @@
       <div
         *ngIf="isMobileMenuOpen"
         (click)="$event.stopPropagation()"
-        class="md:hidden bg-linear-to-r from-[#118CD9] to-[#094A73] px-2 py-4 space-x-4 grid grid-cols-9 gap-1 w-full"
+        class="md:hidden bg-white px-2 py-4 space-x-4 grid grid-cols-9 gap-1 w-full"
       >
         <a
           routerLink="/admin/dashboard"
           (click)="closeAllMobileMenus()"
           class="flex justify-center p-2 hover:bg-yellow-300 rounded relative group"
         >
-          <i class="text-white bi bi-house-fill text-xl"></i>
+          <i class=" bi bi-house-fill text-xl"></i>
           <span
-            class="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
+            class="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-xs  bg-gray-200 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
           >
             หน้าหลัก
           </span>
@@ -922,9 +878,9 @@
           (click)="closeAllMobileMenus()"
           class="flex justify-center p-2 hover:bg-yellow-300 rounded relative group"
         >
-          <i class="text-white bi bi-person-fill text-xl"></i>
+          <i class=" bi bi-person-fill text-xl"></i>
           <span
-            class="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
+            class="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-xs  bg-gray-200 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
           >
             โปรไฟล์
           </span>
@@ -933,11 +889,11 @@
         <div class="relative group">
           <button
             (click)="toggleMobileSubMenu('funding', $event)"
-            class="flex justify-center p-2 hover:bg-yellow-300 rounded relative"
+            class="flex justify-center p-2 hover:bg-yellow-300 rounded relative cursor-pointer"
           >
-            <i class="text-white bi bi-gear-fill text-xl"></i>
+            <i class=" bi bi-gear-fill text-xl"></i>
             <span
-              class="hidden md:block absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity"
+              class="hidden md:block absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-xs bg-gray-200 rounded opacity-0 group-hover:opacity-100 transition-opacity"
             >
               ข้อมูลพื้นฐาน
             </span>
@@ -945,19 +901,37 @@
 
           <div
             *ngIf="openMobileSubMenu === 'funding'"
-            class="absolute left-1/2 top-full mt-2 bg-gray-700 text-white rounded-md shadow-lg z-50 -translate-x-[40%] w-50 max-w-[90vw]"
+            class="absolute left-1/2 top-full mt-2 bg-gray-200  rounded-md shadow-lg z-50 -translate-x-[40%] w-60 max-w-[90vw]"
           >
             <a
               (click)="closeAllMobileMenus()"
               routerLink="/admin/external-funding"
-              class="block px-4 py-2 hover:bg-gray-600 text-lg"
+              class="block px-4 py-2 hover:bg-[#f2cb05] text-lg hover:rounded-md"
               >แหล่งทุนภายนอก</a
             >
             <a
               (click)="closeAllMobileMenus()"
-              routerLink="/admin/specialization"
-              class="block px-4 py-2 hover:bg-gray-600 text-lg"
-              >สาขาวิชาที่เชี่ยวชาญ</a
+              routerLink="/admin/manage-oecd"
+              class="block px-4 py-2 hover:bg-[#f2cb05] text-lg hover:rounded-md"
+              >การจัดการสาขาวิจัย OECD</a
+            >
+            <a
+              (click)="closeAllMobileMenus()"
+              routerLink="/admin/manage-organization"
+              class="block px-4 py-2 hover:bg-[#f2cb05] text-lg hover:rounded-md"
+              >การจัดการหน่วยงาน</a
+            >
+            <a
+              (click)="closeAllMobileMenus()"
+              routerLink="/admin/management-admin"
+              class="block px-4 py-2 hover:bg-[#f2cb05] text-lg hover:rounded-md"
+              >การจัดการผู้ใช้งานแอดมิน</a
+            >
+            <a
+              (click)="closeAllMobileMenus()"
+              routerLink="/admin/management-user"
+              class="block px-4 py-2 hover:bg-[#f2cb05] text-lg hover:rounded-md"
+              >การจัดการผู้ใช้งาน</a
             >
           </div>
         </div>
@@ -965,11 +939,11 @@
         <div class="relative group">
           <button
             (click)="toggleMobileSubMenu('news', $event)"
-            class="flex justify-center p-2 hover:bg-yellow-300 rounded relative"
+            class="flex justify-center p-2 hover:bg-yellow-300 rounded relative cursor-pointer"
           >
-            <i class="text-white bi bi-newspaper text-xl"></i>
+            <i class=" bi bi-newspaper text-xl"></i>
             <span
-              class="hidden md:block absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity"
+              class="hidden md:block absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-xs  bg-gray-200 rounded opacity-0 group-hover:opacity-100 transition-opacity"
             >
               จัดการข่าว/ประกาศ
             </span>
@@ -977,18 +951,18 @@
 
           <div
             *ngIf="openMobileSubMenu === 'news'"
-            class="absolute top-full left-1/2 -translate-x-[65%] w-50 max-w-[90vw] mt-2 bg-gray-700 text-white rounded-md shadow-lg z-50"
+            class="absolute top-full left-1/2 -translate-x-[65%] w-50 max-w-[90vw] mt-2 bg-gray-200  rounded-md shadow-lg z-50"
           >
             <a
               (click)="closeAllMobileMenus()"
               routerLink="/admin/news"
-              class="block px-4 py-2 hover:bg-gray-600 text-lg"
+              class="block px-4 py-2 hover:bg-[#f2cb05] hover:rounded-md text-lg"
               >ข่าวประชาสัมพันธ์</a
             >
             <a
               (click)="closeAllMobileMenus()"
               routerLink="/admin/download"
-              class="block px-4 py-2 hover:bg-gray-600 text-lg"
+              class="block px-4 py-2 hover:bg-[#f2cb05] hover:rounded-md text-lg"
               >เอกสารดาวน์โหลด</a
             >
           </div>
@@ -997,11 +971,11 @@
         <div class="relative group">
           <button
             (click)="toggleMobileSubMenu('save', $event)"
-            class="flex justify-center p-2 hover:bg-yellow-300 rounded relative"
+            class="flex justify-center p-2 hover:bg-yellow-300 rounded relative cursor-pointer"
           >
-            <i class="text-white bi bi-floppy-fill text-xl"></i>
+            <i class=" bi bi-floppy-fill text-xl"></i>
             <span
-              class="hidden md:block absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity"
+              class="hidden md:block absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-xs  bg-gray-200 rounded opacity-0 group-hover:opacity-100 transition-opacity"
             >
               บันทึกข้อมูลผลงาน
             </span>
@@ -1009,31 +983,31 @@
 
           <div
             *ngIf="openMobileSubMenu === 'save'"
-            class="absolute top-full left-1/2 mt-2 -translate-x-[65%] w-50 max-w-[90vw] bg-gray-700 text-white rounded-md shadow-lgz-50"
+            class="absolute top-full left-1/2 mt-2 -translate-x-[65%] w-50 max-w-[90vw] bg-gray-200  rounded-md shadow-lgz-50"
           >
             <a
               (click)="closeAllMobileMenus()"
               routerLink="/admin/add-research"
-              class="block px-4 py-2 hover:bg-gray-600 text-lg"
+              class="block px-4 py-2 hover:bg-[#f2cb05] text-lg hover:rounded-md"
               >โครงการวิจัย</a
             >
             <a
               (click)="closeAllMobileMenus()"
               routerLink="/admin/add-aticle"
-              class="block px-4 py-2 hover:bg-gray-600 text-lg"
-              >บทความ/วารสาร</a
+              class="block px-4 py-2 hover:bg-[#f2cb05] text-lg hover:rounded-md"
+              >ผลงานตีพิมพ์</a
             >
             <a
               (click)="closeAllMobileMenus()"
               routerLink="/admin/add-innovation"
-              class="block px-4 py-2 hover:bg-gray-600 text-lg"
+              class="block px-4 py-2 hover:bg-[#f2cb05] text-lg hover:rounded-md"
               >นวัตกรรมสิ่งประดิษฐ์</a
             >
 
             <a
               (click)="closeAllMobileMenus()"
               routerLink="/admin/manage-project"
-              class="block px-4 py-2 hover:bg-gray-600 text-lg"
+              class="block px-4 py-2 hover:bg-[#f2cb05] text-lg hover:rounded-md"
               >การจัดการผลงานวิจัย</a
             >
           </div>
@@ -1044,9 +1018,9 @@
           (click)="closeAllMobileMenus()"
           class="flex justify-center p-2 hover:bg-yellow-300 rounded relative group"
         >
-          <i class="text-white bi bi-search text-xl"></i>
+          <i class=" bi bi-search text-xl"></i>
           <span
-            class="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-2xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
+            class="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-xs  bg-gray-200 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
           >
             ค้นหางานวิจัย
           </span>
@@ -1057,9 +1031,9 @@
           (click)="closeAllMobileMenus()"
           class="flex justify-center p-2 hover:bg-yellow-300 rounded relative group"
         >
-          <i class="text-white bi bi-people-fill text-xl"></i>
+          <i class=" bi bi-people-fill text-xl"></i>
           <span
-            class="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-2xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
+            class="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-xs  bg-gray-200 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
           >
             ค้นหาข้อมูลนักวิจัย
           </span>
@@ -1070,9 +1044,9 @@
           (click)="closeAllMobileMenus()"
           class="flex justify-center p-2 hover:bg-yellow-300 rounded relative group"
         >
-          <i class="text-white bi bi-file-earmark-text-fill text-xl"></i>
+          <i class=" bi bi-file-earmark-text-fill text-xl"></i>
           <span
-            class="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-2xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
+            class="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 px-2 py-1 text-xs  bg-gray-200 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
           >
             รายงาน
           </span>
@@ -1082,9 +1056,9 @@
           (click)="onLogout()"
           class="flex justify-center p-2 hover:bg-yellow-300 rounded ml-auto text-red-600 hover:text-red-500 relative group"
         >
-          <i class="text-white bi bi-box-arrow-right text-xl"></i>
+          <i class=" bi bi-box-arrow-right text-xl"></i>
           <span
-            class="absolute bottom-full mb-1 right-3 px-2 py-1 text-2xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
+            class="absolute bottom-full mb-1 right-3 px-2 py-1 text-xs  bg-gray-200 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
           >
             ออกจากระบบ
           </span>

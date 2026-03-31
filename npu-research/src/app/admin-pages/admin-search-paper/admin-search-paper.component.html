@@ -4,7 +4,7 @@
     <!-- Title -->
     <div class="flex flex-col justify-center items-center text-center">
       <div
-        class="w-24 h-24 rounded-full bg-linear-to-b from-sky-200 to-sky-100 flex items-center justify-center mb-4"
+        class="w-24 h-24 rounded-full bg-linear-to-b from-yellow-200 to-yellow-100 flex items-center justify-center mb-4"
       >
         <i class="bi bi-search text-4xl"></i>
       </div>
@@ -83,11 +83,18 @@
         <button
           type="button"
           (click)="toggleDropdown('agency', $event)"
-          class="w-full h-11 border border-gray-300 rounded-full px-6 flex justify-between items-center bg-white hover:border-[#118CD9] transition"
+          class="w-full h-11 border border-gray-300 rounded-full px-6 flex justify-between items-center bg-white hover:border-[#f2e7ac] transition"
         >
-        <span class="truncate" [class.text-gray-400]="selectedAgency === undefined">
-          {{ selectedAgency === undefined ? "หน่วยงานทั้งหมด" : (selectedAgency?.faculty || "หน่วยงานทั้งหมด") }}
-        </span>
+          <span
+            class="truncate"
+            [class.text-gray-400]="selectedAgency === undefined"
+          >
+            {{
+              selectedAgency === undefined
+                ? "หน่วยงานทั้งหมด"
+                : selectedAgency?.faculty || "หน่วยงานทั้งหมด"
+            }}
+          </span>
           <i
             class="bi bi-chevron-down transition-transform duration-200"
             [class.rotate-180]="isOpen('agency')"
@@ -103,15 +110,15 @@
             <input
               [(ngModel)]="searchAgency"
               placeholder="ค้นหาหน่วยงาน..."
-              class="w-full px-3 py-1.5 rounded-lg border border-gray-200 outline-none focus:border-[#118CD9] text-base"
+              class="w-full px-3 py-1.5 rounded-lg border border-gray-200 outline-none focus:border-[#f2e7ac] text-base"
             />
           </div>
           <ul class="max-h-52 overflow-y-auto py-2">
             <li
               *ngFor="let org of filteredAgency()"
               (click)="selectAgency(org)"
-              class="px-4 py-2.5 cursor-pointer hover:bg-blue-50 hover:text-[#118CD9] transition text-base"
-              [class.text-[#118CD9]]="
+              class="px-4 py-2.5 cursor-pointer hover:bg-yellow-50 hover:text-[#394250] transition text-base"
+              [class.text-[#f2cb05]]="
                 org.id === null
                   ? !selectedAgency
                   : selectedAgency?.id === org.id
@@ -132,8 +139,8 @@
       <div
         class="grid grid-cols-12 gap-3 items-center mt-4 mb-4 font-light text-lg"
       >
-      <label
-          class="col-span-12 md:col-span-4 flex items-center gap-3 border border-gray-400 rounded-full px-5 h-12 cursor-pointer hover:border-[#118CD9] transition"
+        <label
+          class="col-span-12 md:col-span-4 flex items-center gap-3 border border-gray-400 rounded-full px-5 h-12 cursor-pointer hover:border-[#f2e7ac] transition"
         >
           <input
             type="radio"
@@ -141,13 +148,13 @@
             value="แหล่งทุนทั้งหมด"
             [(ngModel)]="selectedFunding"
             (ngModelChange)="onFundingChange($event)"
-            class="w-4 h-4 text-[#118CD9] border-gray-300 rounded focus:ring-2 focus:ring-[#118CD9]"
+            class="w-4 h-4 text-[#f2cb05] border-gray-300 rounded focus:ring-2 focus:ring-[#f2e7ac]"
           />
           <span class="text-gray-700"> แหล่งทุนทั้งหมด </span>
         </label>
 
         <label
-          class="col-span-12 md:col-span-4 flex items-center gap-3 border border-gray-400 rounded-full px-5 h-12 cursor-pointer hover:border-[#118CD9] transition"
+          class="col-span-12 md:col-span-4 flex items-center gap-3 border border-gray-400 rounded-full px-5 h-12 cursor-pointer hover:border-[#f2e7ac] transition"
         >
           <input
             type="radio"
@@ -155,14 +162,14 @@
             value="แหล่งทุนภายนอก"
             [(ngModel)]="selectedFunding"
             (ngModelChange)="onFundingChange($event)"
-            class="w-4 h-4 text-[#118CD9] border-gray-300 rounded focus:ring-2 focus:ring-[#118CD9]"
+            class="w-4 h-4 text-[#f2cb05] border-gray-300 rounded focus:ring-2 focus:ring-[#f2e7ac]"
           />
           <span class="text-gray-700"> แหล่งทุนภายนอก </span>
         </label>
 
         <!-- แหล่งเงินทุนภายใน -->
         <label
-          class="col-span-12 md:col-span-4 flex items-center gap-3 border border-gray-400 rounded-full px-5 h-12 cursor-pointer hover:border-[#118CD9] transition"
+          class="col-span-12 md:col-span-4 flex items-center gap-3 border border-gray-400 rounded-full px-5 h-12 cursor-pointer hover:border-[#f2e7ac] transition"
         >
           <input
             type="radio"
@@ -170,7 +177,7 @@
             value="แหล่งทุนภายใน"
             [(ngModel)]="selectedFunding"
             (ngModelChange)="onFundingChange($event)"
-            class="w-4 h-4 text-[#118CD9] border-gray-300 rounded focus:ring-2 focus:ring-[#118CD9]"
+            class="w-4 h-4 text-[#f2cb05] border-gray-300 rounded focus:ring-2 focus:ring-[#f2e7ac]"
           />
           <span class="text-gray-700"> แหล่งทุนภายใน </span>
         </label>
@@ -183,7 +190,7 @@
       >
         <button
           (click)="toggleDropdown('fundingSource', $event)"
-          class="w-full h-12 rounded-full px-6 flex justify-between items-center bg-white border border-gray-200 hover:border-[#118CD9] transition text-gray-700"
+          class="w-full h-12 rounded-full px-6 flex justify-between items-center bg-white border border-gray-200 hover:border-[#f2e7ac] transition text-gray-700"
         >
           <span class="truncate" [class.text-gray-400]="!selectedFundingSource">
             {{ selectedFundingSource?.funding_name || "ชื่อแหล่งทุน" }}
@@ -203,8 +210,8 @@
             <li
               *ngFor="let fs of fundings"
               (click)="selectFundingSource(fs)"
-              class="px-6 py-3 cursor-pointer hover:bg-blue-50 hover:text-[#118CD9] transition text-gray-700 text-base"
-              [class.text-[#118CD9]]="
+              class="px-6 py-3 cursor-pointer hover:bg-yellow-50 hover:text-[#394250] transition text-gray-700 text-base"
+              [class.text-[#f2cb05]]="
                 selectedFundingSource?.funding_id === fs.funding_id
               "
               [class.font-medium]="
@@ -238,7 +245,7 @@
             (click)="picker.open()"
             [value]="displayRange"
             placeholder="ช่วงเวลา"
-            class="block w-full h-12 ps-11 pe-4 text-lg text-gray-800 bg-white border border-gray-300 rounded-full cursor-pointer hover:border-[#118CD9] transition"
+            class="block w-full h-12 ps-11 pe-4 text-lg text-gray-800 bg-white border border-gray-300 rounded-full cursor-pointer hover:border-[#f2e7ac] transition"
           />
 
           <mat-date-range-picker #picker></mat-date-range-picker>
@@ -259,7 +266,7 @@
           <button
             (click)="toggleDropdown('yearPublished', $event)"
             type="button"
-            class="w-full h-12 border border-gray-300 rounded-full px-6 flex justify-between items-center bg-white hover:border-[#118CD9] transition"
+            class="w-full h-12 border border-gray-300 rounded-full px-6 flex justify-between items-center bg-white hover:border-[#f2e7ac] transition"
           >
             <span [class.text-gray-400]="!selectedYear">
               {{ selectedYear || "เลือกปี" }}
@@ -279,8 +286,8 @@
               <li
                 *ngFor="let year of thaiYears"
                 (click)="selectYear(year)"
-                class="px-4 py-2.5 cursor-pointer hover:bg-blue-50 hover:text-[#118CD9] transition"
-                [class.text-[#118CD9]]="selectedYear === year"
+                class="px-4 py-2.5 cursor-pointer hover:bg-yellow-50 hover:text-[#394250] transition"
+                [class.text-[#f2cb05]]="selectedYear === year"
                 [class.font-medium]="selectedYear === year"
               >
                 {{ year }}
@@ -318,7 +325,8 @@
             <span class="truncate text-lg font-light">
               {{
                 selectedMajor === undefined
-                  ? "" : (selectedMajor?.name_th || "ทั้งหมด")
+                  ? ""
+                  : selectedMajor?.name_th || "ทั้งหมด"
               }}
             </span>
             <i class="bi bi-chevron-down"></i>
@@ -333,7 +341,7 @@
               <li
                 *ngFor="let m of filteredMajor()"
                 (click)="selectMajor(m)"
-                class="px-4 py-2 hover:bg-gray-200 cursor-pointer"
+                class="px-4 py-2 hover:bg-[#f2e7ac] hover:rounded-md cursor-pointer"
               >
                 {{ m.name_th }}
               </li>
@@ -361,7 +369,7 @@
               <li
                 *ngFor="let s of filteredSub()"
                 (click)="selectSub(s)"
-                class="px-4 py-2 hover:bg-gray-200 cursor-pointer"
+                class="px-4 py-2 hover:bg-[#f2e7ac] hover:rounded-md cursor-pointer"
               >
                 {{ s.name_th }}
               </li>
@@ -389,7 +397,7 @@
               <li
                 *ngFor="let ss of filteredSubSub()"
                 (click)="selectSubSub(ss)"
-                class="px-4 py-2 hover:bg-gray-200 cursor-pointer"
+                class="px-4 py-2 hover:bg-[#f2e7ac] hover:rounded-md cursor-pointer"
               >
                 {{ ss.name_th }}
               </li>
@@ -411,11 +419,11 @@
 
           <button
             (click)="search()"
-            class="flex items-center justify-center h-14 md:h-full bg-[#118CD9] hover:bg-[#4c7b98] text-white px-4 font-semibold md:px-10 rounded-full transition cursor-pointer"
+            class="flex items-center justify-center h-14 md:h-full bg-[#f2e7ac] hover:bg-[#f2cb05] text-[#394250] px-4 font-semibold md:px-10 rounded-full transition cursor-pointer"
           >
             <span class="hidden md:inline text-xl mr-4">ค้นหา</span>
             <span
-              class="w-10 h-10 rounded-full bg-[#0F4C82] flex items-center justify-center text-white"
+              class="w-10 h-10 rounded-full bg-[#f2cb05] hover:bg-[#f2e7ac] flex items-center justify-center text-[$394250] transition group-hover:bg-[#394250]"
               ><i class="bi bi-arrow-right"></i
             ></span>
           </button>
@@ -423,10 +431,10 @@
       </div>
 
       <!-- ==== Clear Filter ===== -->
-       <div class="flex justify-center mt-6 font-light text-lg">
+      <div class="flex justify-center mt-6 font-light text-lg">
         <button
           (click)="clearFilter()"
-          class="flex items-center justify-center h-full bg-[#118CD9] hover:bg-[#4c7b98] text-white px-4 font-semibold md:px-10 rounded-full transition cursor-pointer"
+          class="flex items-center justify-center h-full bg-[#f2e7ac] hover:bg-[#f2cb05] text-[#394250] px-4 font-semibold md:px-10 rounded-full transition cursor-pointer"
         >
           <span class="font-light md:inline text-lg mr-4">ล้างการตั้งค่า</span>
         </button>
@@ -446,16 +454,6 @@
           สัดส่วนนักวิจัย จำแนกตามสาขาที่เกี่ยวข้อง
         </h2>
       </div>
-
-      <!-- <ng-container
-        *ngIf="chartOptions?.data?.[0]?.dataPoints?.length > 0  && !loading; else noData"
-      >
-        <canvasjs-chart
-          [options]="chartOptions"
-          [styles]="{ width: '100%', height: '300px' }"
-        >
-        </canvasjs-chart>
-      </ng-container> -->
 
       <ng-container *ngIf="(options.data ?? []).length > 0 && !loading">
         <ag-charts
@@ -486,8 +484,12 @@
           *ngFor="let l of donutLabels; let i = index"
           class="flex justify-between border-b last:border-b-0 pb-1"
         >
-          <span class="font-light text-sm xl:text-lg wrap-break-word">{{ l }}</span>
-          <span class="font-light text-sm xl:text-lg">{{ donutSeries[i] }} งาน</span>
+          <span class="font-light text-sm xl:text-lg wrap-break-word">{{
+            l
+          }}</span>
+          <span class="font-light text-sm xl:text-lg"
+            >{{ donutSeries[i] }} งาน</span
+          >
         </p>
 
         <p *ngIf="donutLabels.length === 0" class="text-center text-gray-500">
@@ -506,38 +508,25 @@
 </div>
 
 <!-- ===== TABLE ===== -->
-<div *ngIf="isSearched" class="bg-[#7693A6] md:py-6 md:px-10 text-2xl">
+<div *ngIf="isSearched" class="bg-[#f2e7ac] md:py-6 md:px-10 text-2xl">
   <div class="mx-auto p-6 md:px-6">
     <div
       class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-2 md:mb-4"
     >
-      <h2 class="text-xl md:text-2xl text-white">
+      <h2 class="text-xl md:text-2xl text-[#394250]">
         {{
           selectedType === "โครงการวิจัย"
             ? "โครงการวิจัย"
             : selectedType === "บทความ"
-            ? "บทความ / วารสาร"
+            ? "บทความ"
             : selectedType === "วารสาร"
             ? "วารสาร"
             : selectedType === "นวัตกรรมสิ่งประดิษฐ์"
             ? "นวัตกรรมสิ่งประดิษฐ์"
-            : "โครงการวิจัย / บทความ / วารสาร / นวัตกรรมสิ่งประดิษฐ์"
+            : "โครงการวิจัย / ผลงานตีพิมพ์ / นวัตกรรมสิ่งประดิษฐ์"
         }}
       </h2>
-      
-    </div>
-
-    <div class="flex justify-between mb-4">
-      <div class="flex gap-2 font-light text-lg">
-        <button
-          (click)="exportExcel()"
-          class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md cursor-pointer"
-        >
-          <i class="bi bi-file-earmark-excel"></i> Excel
-        </button></div>
-
-
-      <div class="flex items-center justify-end text-lg text-white">
+      <div class="flex items-center justify-end text-lg text-[#394250]">
         <span class="mr-2">Search:</span>
         <input
           [(ngModel)]="searchText"
@@ -599,7 +588,11 @@
               </td>
               <td class="p-1 md:p-2">{{ r.own?.name }}</td>
               <td class="p-1 md:p-2 text-center">
-                {{ getTypeLabel(r.type) == 'บทความ' ? r.article_type : getTypeLabel(r.type) }}
+                {{
+                  getTypeLabel(r.type) == "บทความ"
+                    ? r.article_type
+                    : getTypeLabel(r.type)
+                }}
               </td>
             </tr>
 
@@ -634,7 +627,7 @@
               (click)="changePage(+page)"
               class="px-2 md:px-3 py-1 rounded border text-sm transition cursor-pointer"
               [ngClass]="{
-                'bg-[#118CD9] text-white': currentPage === page,
+                'bg-[#f2e7ac] text-[#394250]': currentPage === page,
                 'hover:bg-gray-100': currentPage !== page
               }"
             >

@@ -45,7 +45,7 @@
                 สาขาหลัก OECD
                 <button
                   (click)="openAddModal()"
-                  class="bg-[#48D42B] text-white hover:bg-[#0C9509] text-lg rounded-md px-2 cursor-pointer"
+                  class="bg-[#f3e7ac] text-[#394250] hover:bg-[#f2cb05] hover:text-white text-lg rounded-md px-2 cursor-pointer"
                 >
                   <i class="bi bi-plus-circle"></i>
                 </button>
@@ -90,7 +90,7 @@
                           ชื่อสาขาย่อย OECD
                           <button
                             (click)="openAddSubModal(major, mi)"
-                            class="bg-[#48D42B] text-white hover:bg-[#0C9509] text-lg rounded-md px-2 cursor-pointer"
+                            class="bg-[#f3e7ac] text-[#394250] hover:bg-[#f2cb05] hover:text-white text-lg rounded-md px-2 cursor-pointer"
                           >
                             <i class="bi bi-plus-circle"></i>
                           </button>
@@ -140,7 +140,7 @@
                                     ชื่อสาขาที่เกี่ยวข้อง
                                     <button
                                       (click)="openAddChildModal(sub, si)"
-                                      class="text-white bg-[#48D42B] hover:bg-[#0C9509] text-lg rounded-md px-2 cursor-pointer"
+                                      class="bg-[#f3e7ac] text-[#394250] hover:bg-[#f2cb05] hover:text-white text-lg rounded-md px-2 cursor-pointer"
                                     >
                                       <i class="bi bi-plus-circle"></i>
                                     </button>
@@ -287,21 +287,21 @@
   >
     <!-- Header -->
     <div
-      class="relative px-8 py-7 overflow-hidden bg-linear-to-r from-[#16498c] to-[#118cd9]"
+      class="relative px-8 py-7 overflow-hidden bg-linear-to-r from-[#f2cb05] to-[#f2e7ac]"
     >
       <button
         (click)="closeModal()"
-        class="absolute top-4 right-4 w-8 h-8 rounded-lg flex items-center justify-center text-white cursor-pointer border-0 bg-[#4292D2] hover:bg-[#16498c]"
+        class="absolute top-4 right-4 w-8 h-8 rounded-lg flex items-center justify-center text-[#394250] cursor-pointer border-0 hover:text-white"
       >
         ✕
       </button>
 
-      <h2 class="text-2xl text-white">
+      <h2 class="text-2xl">
         {{
           modalMode === "add" ? "เพิ่มสาขาหลัก OECD " : "แก้ไขสาขาหลัก OECD "
         }}
       </h2>
-      <p class="text-lg text-[#FFFFFFA6]">กรอกข้อมูลหน่วยงานให้ครบถ้วน</p>
+      <p class="text-lg">กรอกข้อมูลหน่วยงานให้ครบถ้วน</p>
     </div>
 
     <!-- Body -->
@@ -314,7 +314,7 @@
           type="text"
           [disabled]="true"
           [(ngModel)]="newMajor.code"
-          class="w-full border border-slate-200 rounded-xl px-4 py-3 text-base font-light bg-slate-50 focus:outline-none focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-100 transition"
+          class="w-full border border-slate-200 rounded-xl px-4 py-3 text-base font-light bg-slate-50 focus:outline-none focus:border-[#f2e7ac] focus:bg-white focus:ring-0.5 focus:ring-[#f2e7ac] transition"
           placeholder="เช่น 001"
         />
       </div>
@@ -326,7 +326,7 @@
         <input
           type="text"
           [(ngModel)]="newMajor.name_th"
-          class="w-full border border-slate-200 rounded-xl px-4 py-3 text-base font-light bg-slate-50 focus:outline-none focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-100 transition"
+          class="w-full border border-slate-200 rounded-xl px-4 py-3 text-base font-light bg-slate-50 focus:outline-none focus:border-[#f2e7ac] focus:bg-white focus:ring-0.5 focus:ring-[#f2e7ac] transition"
           placeholder="เช่น คณะวิศวกรรมศาสตร์"
         />
       </div>
@@ -339,7 +339,7 @@
           type="text"
           [disabled]="true"
           [(ngModel)]="newMajor.level"
-          class="w-full border border-slate-200 rounded-xl px-4 py-3 text-base font-light bg-slate-50 focus:outline-none focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-100 transition"
+          class="w-full border border-slate-200 rounded-xl px-4 py-3 text-base font-light bg-slate-50 focus:outline-none focus:border-[#f2e7ac] focus:bg-white focus:ring-0.5 focus:ring-[#f2e7ac] transition"
           placeholder="e.g. Faculty of Engineering"
         />
       </div>
@@ -352,7 +352,7 @@
           type="text"
           [disabled]="true"
           [(ngModel)]="newMajor.sort_order"
-          class="w-full border border-slate-200 rounded-xl px-4 py-3 text-base font-light bg-slate-50 focus:outline-none focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-100 transition"
+          class="w-full border border-slate-200 rounded-xl px-4 py-3 text-base font-light bg-slate-50 focus:outline-none focus:border-[#f2e7ac] focus:bg-white focus:ring-0.5 focus:ring-[#f2e7ac] transition"
           placeholder="เช่น วศ., กท."
         />
       </div>
@@ -372,7 +372,7 @@
         (click)="
           modalMode === 'add' ? saveMajor() : updateMajor(newMajor.major_id)
         "
-        class="px-5 py-2.5 rounded-xl text-white font-medium text-base cursor-pointer transition bg-linear-to-r from-[#118CD9] to-[#094A73] hover:from-[#0f7ec2] hover:to-[#073a5a]"
+        class="px-5 py-2.5 rounded-xl text-[#394250] font-medium text-base cursor-pointer transition bg-linear-to-r from-[#f2e7ac] to-[#f2cb05] hover:from-[#f2cb05] hover:to-[#f2e7ac]"
       >
         บันทึก
       </button>
@@ -391,19 +391,19 @@
   >
     <!-- Header -->
     <div
-      class="relative px-8 py-7 overflow-hidden bg-linear-to-r from-[#16498c] to-[#118cd9]"
+      class="relative px-8 py-7 overflow-hidden bg-linear-to-r from-[#f2cb05] to-[#f2e7ac]"
     >
       <button
         (click)="closeModal()"
-        class="absolute top-4 right-4 w-8 h-8 rounded-lg flex items-center justify-center text-white cursor-pointer border-0 bg-[#4292D2] hover:bg-[#16498c]"
+        class="absolute top-4 right-4 w-8 h-8 rounded-lg flex items-center justify-center text-[#394250] cursor-pointer border-0 hover:text-white"
       >
         ✕
       </button>
 
-      <h2 class="text-2xl text-white">
+      <h2 class="text-2xl">
         {{ modalSub === "add" ? "เพิ่มสาขาย่อย OECD" : "แก้ไขสาขาย่อย OECD" }}
       </h2>
-      <p class="text-lg text-[#FFFFFFA6]">กรอกข้อมูลหน่วยงานให้ครบถ้วน</p>
+      <p class="text-lg">กรอกข้อมูลหน่วยงานให้ครบถ้วน</p>
     </div>
 
     <!-- Body -->
@@ -416,7 +416,7 @@
           type="text"
           [disabled]="true"
           [(ngModel)]="newSub.code"
-          class="w-full border border-slate-200 rounded-xl px-4 py-3 text-base font-light bg-slate-50 focus:outline-none focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-100 transition"
+          class="w-full border border-slate-200 rounded-xl px-4 py-3 text-base font-light bg-slate-50 focus:outline-none focus:border-[#f2e7ac] focus:bg-white focus:ring-0.5 focus:ring-[#f2e7ac] transition"
           placeholder="เช่น 001"
         />
       </div>
@@ -428,7 +428,7 @@
         <input
           type="text"
           [(ngModel)]="newSub.name_th"
-          class="w-full border border-slate-200 rounded-xl px-4 py-3 text-base font-light bg-slate-50 focus:outline-none focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-100 transition"
+          class="w-full border border-slate-200 rounded-xl px-4 py-3 text-base font-light bg-slate-50 focus:outline-none focus:border-[#f2e7ac] focus:bg-white focus:ring-0.5 focus:ring-[#f2e7ac] transition"
           placeholder="เช่น คณะวิศวกรรมศาสตร์"
         />
       </div>
@@ -441,7 +441,7 @@
           type="text"
           [disabled]="true"
           [(ngModel)]="newSub.level"
-          class="w-full border border-slate-200 rounded-xl px-4 py-3 text-base font-light bg-slate-50 focus:outline-none focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-100 transition"
+          class="w-full border border-slate-200 rounded-xl px-4 py-3 text-base font-light bg-slate-50 focus:outline-none focus:border-[#f2e7ac] focus:bg-white focus:ring-0.5 focus:ring-[#f2e7ac] transition"
           placeholder="e.g. Faculty of Engineering"
         />
       </div>
@@ -454,7 +454,7 @@
           type="text"
           [disabled]="true"
           [(ngModel)]="newSub.sort_order"
-          class="w-full border border-slate-200 rounded-xl px-4 py-3 text-base font-light bg-slate-50 focus:outline-none focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-100 transition"
+          class="w-full border border-slate-200 rounded-xl px-4 py-3 text-base font-light bg-slate-50 focus:outline-none focus:border-[#f2e7ac] focus:bg-white focus:ring-0.5 focus:ring-[#f2e7ac] transition"
           placeholder="เช่น วศ., กท."
         />
       </div>
@@ -472,7 +472,7 @@
       </button>
       <button
         (click)="modalSub === 'add' ? saveSub() : updateSub(newSub.sub_id)"
-        class="px-5 py-2.5 rounded-xl text-white font-medium text-base cursor-pointer transition bg-linear-to-r from-[#118CD9] to-[#094A73] hover:from-[#0f7ec2] hover:to-[#073a5a]"
+        class="px-5 py-2.5 rounded-xl text-[#394250] font-medium text-base cursor-pointer transition bg-linear-to-r from-[#f2e7ac] to-[#f2cb05] hover:from-[#f2cb05] hover:to-[#f2e7ac]"
       >
         บันทึก
       </button>
@@ -491,23 +491,23 @@
   >
     <!-- Header -->
     <div
-      class="relative px-8 py-7 overflow-hidden bg-linear-to-r from-[#16498c] to-[#118cd9]"
+      class="relative px-8 py-7 overflow-hidden bg-linear-to-r from-[#f2cb05] to-[#f2e7ac]"
     >
       <button
         (click)="closeModal()"
-        class="absolute top-4 right-4 w-8 h-8 rounded-lg flex items-center justify-center text-white cursor-pointer border-0 bg-[#4292D2] hover:bg-[#16498c]"
+        class="absolute top-4 right-4 w-8 h-8 rounded-lg flex items-center justify-center text-[#394250] cursor-pointer border-0 hover:text-white"
       >
         ✕
       </button>
 
-      <h2 class="text-2xl text-white">
+      <h2 class="text-2xl">
         {{
           modalChild === "add"
             ? "เพิ่มสาขาที่เกี่ยวข้อง"
             : "แก้ไขสาขาที่เกี่ยวข้อง"
         }}
       </h2>
-      <p class="text-lg text-[#FFFFFFA6]">กรอกข้อมูลหน่วยงานให้ครบถ้วน</p>
+      <p class="text-lg">กรอกข้อมูลหน่วยงานให้ครบถ้วน</p>
     </div>
 
     <!-- Body -->
@@ -520,7 +520,7 @@
           type="text"
           [disabled]="true"
           [(ngModel)]="newChild.code"
-          class="w-full border border-slate-200 rounded-xl px-4 py-3 text-base font-light bg-slate-50 focus:outline-none focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-100 transition"
+          class="w-full border border-slate-200 rounded-xl px-4 py-3 text-base font-light bg-slate-50 focus:outline-none focus:border-[#f2e7ac] focus:bg-white focus:ring-0.5 focus:ring-[#f2e7ac] transition"
           placeholder="เช่น 001"
         />
       </div>
@@ -532,7 +532,7 @@
         <input
           type="text"
           [(ngModel)]="newChild.name_th"
-          class="w-full border border-slate-200 rounded-xl px-4 py-3 text-base font-light bg-slate-50 focus:outline-none focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-100 transition"
+          class="w-full border border-slate-200 rounded-xl px-4 py-3 text-base font-light bg-slate-50 focus:outline-none focus:border-[#f2e7ac] focus:bg-white focus:ring-0.5 focus:ring-[#f2e7ac] transition"
           placeholder="เช่น คณะวิศวกรรมศาสตร์"
         />
       </div>
@@ -545,7 +545,7 @@
           type="text"
           [disabled]="true"
           [(ngModel)]="newChild.level"
-          class="w-full border border-slate-200 rounded-xl px-4 py-3 text-base font-light bg-slate-50 focus:outline-none focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-100 transition"
+          class="w-full border border-slate-200 rounded-xl px-4 py-3 text-base font-light bg-slate-50 focus:outline-none focus:border-[#f2e7ac] focus:bg-white focus:ring-0.5 focus:ring-[#f2e7ac] transition"
           placeholder="e.g. Faculty of Engineering"
         />
       </div>
@@ -558,7 +558,7 @@
           type="text"
           [disabled]="true"
           [(ngModel)]="newChild.sort_order"
-          class="w-full border border-slate-200 rounded-xl px-4 py-3 text-base font-light bg-slate-50 focus:outline-none focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-100 transition"
+          class="w-full border border-slate-200 rounded-xl px-4 py-3 text-base font-light bg-slate-50 focus:outline-none focus:border-[#f2e7ac] focus:bg-white focus:ring-0.5 focus:ring-[#f2e7ac] transition"
           placeholder="เช่น วศ., กท."
         />
       </div>
@@ -578,7 +578,7 @@
         (click)="
           modalChild === 'add' ? saveChild() : updateChild(newChild.child_id)
         "
-        class="px-5 py-2.5 rounded-xl text-white font-medium text-base cursor-pointer transition bg-linear-to-r from-[#118CD9] to-[#094A73] hover:from-[#0f7ec2] hover:to-[#073a5a]"
+        class="px-5 py-2.5 rounded-xl text-[#394250] font-medium text-base cursor-pointer transition bg-linear-to-r from-[#f2e7ac] to-[#f2cb05] hover:from-[#f2cb05] hover:to-[#f2e7ac]"
       >
         บันทึก
       </button>

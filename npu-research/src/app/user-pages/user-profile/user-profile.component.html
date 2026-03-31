@@ -6,7 +6,7 @@
     <div class="relative">
       <!-- Avatar -->
       <div
-        class="border-2 border-[#118CD9] rounded-full flex items-center justify-center"
+        class="border-2 border-[#f2e7ac] rounded-full flex items-center justify-center"
       >
         <img
           [src]="
@@ -20,7 +20,7 @@
 
       <!-- ปุ่มเลือกรูป -->
       <button
-        class="absolute bottom-0 right-0 bg-[#118CD9] hover:bg-[#4c7b98] text-white rounded-xl w-8 h-8 md:w-10 md:h-10 flex items-center justify-center shadow cursor-pointer"
+        class="absolute bottom-0 right-0 bg-[#f2e7ac] hover:bg-[#f2cb05] text-[#394250] hover:text-white rounded-xl w-8 h-8 md:w-10 md:h-10 flex items-center justify-center shadow cursor-pointer"
         (click)="fileInput.click()"
       >
         <i class="bi bi-pencil-square"></i>
@@ -50,7 +50,7 @@
   <!-- ปุ่มบันทึก -->
   <div class="mt-4 ml-6" *ngIf="selectedFile">
     <button
-      class="bg-[#118CD9] hover:bg-[#4c7b98] text-white px-4 py-2 rounded-lg shadow font-light text-sm cursor-pointer"
+      class="bg-[#f2e7ac] hover:bg-[#f2cb05] text-[#394250] hover:text-white px-4 py-2 rounded-lg shadow font-light text-sm cursor-pointer"
       (click)="saveAvatar()"
     >
       บันทึก
@@ -98,7 +98,7 @@
         <div *ngIf="isPersonalOpen" class="transition-all duration-300">
           <div class="flex justify-end">
             <button
-              class="bg-[#118CD9] hover:bg-[#4c7b98] text-white rounded-xl w-10 h-10 flex items-center justify-center shadow cursor-pointer"
+              class="bg-[#f2e7ac] hover:bg-[#f2cb05] hover:text-white text-[#394250] rounded-xl w-10 h-10 flex items-center justify-center shadow cursor-pointer"
               (click)="goToEditProfile(); $event.stopPropagation()"
             >
               <i class="bi bi-pencil-square"></i>
@@ -195,7 +195,7 @@
         <div *ngIf="isWorkOpen" class="transition-all duration-300">
           <div class="flex justify-end">
             <button
-              class="bg-[#118CD9] hover:bg-[#4c7b98] text-white rounded-xl w-10 h-10 flex items-center justify-center shadow cursor-pointer"
+              class="bg-[#f2e7ac] hover:bg-[#f2cb05] hover:text-white text-[#394250] rounded-xl w-10 h-10 flex items-center justify-center shadow cursor-pointer"
               (click)="goToEditWork(); $event.stopPropagation()"
             >
               <i class="bi bi-pencil-square"></i>
@@ -285,7 +285,7 @@
 
             <!-- Delete Button -->
             <button
-              class="bg-green-500 hover:bg-green-600 text-white rounded-xl w-10 h-10 flex items-center justify-center shadow cursor-pointer"
+              class="bg-[#f2e7ac] hover:bg-[#f2cb05] hover:text-white text-[#394250] rounded-xl w-10 h-10 flex items-center justify-center shadow cursor-pointer"
               (click)="gotoEditStudy()"
             >
               <i class="bi bi-plus"></i>
@@ -412,36 +412,26 @@
             >
               <div class="flex items-center justify-between md:mb-4">
                 <h3 class="text-2xl">สัดส่วนข้อมูล</h3>
-                <i class="bi bi-pie-chart-fill text-indigo-500 text-xl"></i>
+                <i class="bi bi-pie-chart-fill text-[#f2cb05] text-xl"></i>
               </div>
-
-              <!-- <div>
-                <ng-container
-                  *ngIf="single?.length > 0; else noData"
-                >
-                  <ngx-charts-pie-chart
-                    [view]="view"
-                    [results]="single"
-                    [gradient]="gradient"
-                    [legend]="showLegend"
-                    [labels]="showLabels"
-                    [legendPosition]="legendPosition"
-                    [scheme]="colorScheme"
-                    [doughnut]="isDoughnut"
-                  >
-                  </ngx-charts-pie-chart>
-                </ng-container>
-              </div> -->
 
               <div>
                 <ng-container *ngIf="hasData; else noData">
-                  <ag-charts [options]="options" style="display: block; height: 250px"></ag-charts>
+                  <ag-charts
+                    [options]="options"
+                    style="display: block; height: 250px"
+                  ></ag-charts>
                 </ng-container>
               </div>
 
               <!-- ไม่พบข้อมูล -->
               <ng-template #noData>
-                <div class="text-center text-gray-500 py-16">ไม่พบข้อมูล</div>
+                <div
+                  class="flex flex-col items-center text-center text-gray-500 py-16 h-75"
+                >
+                  <i class="bi bi-folder-x text-4xl mb-2"></i>
+                  ไม่พบข้อมูล
+                </div>
               </ng-template>
             </div>
 
@@ -454,18 +444,32 @@
                 <i class="bi bi-bar-chart-fill text-emerald-500 text-xl"></i>
               </div>
 
-              <apx-chart
-                [series]="barChartOptions.series!"
-                [chart]="barChartOptions.chart!"
-                [plotOptions]="barChartOptions.plotOptions!"
-                [dataLabels]="barChartOptions.dataLabels!"
-                [xaxis]="barChartOptions.xaxis!"
-                [yaxis]="barChartOptions.yaxis!"
-                [legend]="barChartOptions.legend!"
-                [fill]="barChartOptions.fill!"
-                [stroke]="barChartOptions.stroke!"
-                [tooltip]="barChartOptions.tooltip!"
-              ></apx-chart>
+              <div>
+                <ng-container *ngIf="hasData; else noData">
+                  <apx-chart
+                    [series]="barChartOptions.series!"
+                    [chart]="barChartOptions.chart!"
+                    [plotOptions]="barChartOptions.plotOptions!"
+                    [dataLabels]="barChartOptions.dataLabels!"
+                    [xaxis]="barChartOptions.xaxis!"
+                    [yaxis]="barChartOptions.yaxis!"
+                    [legend]="barChartOptions.legend!"
+                    [fill]="barChartOptions.fill!"
+                    [stroke]="barChartOptions.stroke!"
+                    [tooltip]="barChartOptions.tooltip!"
+                  ></apx-chart>
+                </ng-container>
+              </div>
+
+              <!-- ไม่พบข้อมูล -->
+              <ng-template #noData>
+                <div
+                  class="flex flex-col items-center text-center text-gray-500 py-16 h-75"
+                >
+                  <i class="bi bi-folder-x text-4xl mb-2"></i>
+                  ไม่พบข้อมูล
+                </div>
+              </ng-template>
             </div>
 
             <div
@@ -480,29 +484,48 @@
                     selectedTab === "project"
                       ? "โครงการวิจัย"
                       : selectedTab === "article"
-                      ? "บทความ"
-                      : "นวัตกรรม"
+                      ? "ผลงานตีพิมพ์"
+                      : "นวัตกรรมสิ่งประดิษฐ์"
                   }}
                 </h4>
               </div>
 
               <!-- ⭐ สำคัญ: ต้องมี container height -->
               <div class="w-full">
-                <apx-chart
-                  class="w-full h-full text-white"
-                  [series]="radarChartOptions.series!"
-                  [chart]="radarChartOptions.chart!"
-                  [labels]="radarChartOptions.labels!"
-                  [fill]="radarChartOptions.fill!"
-                  [stroke]="radarChartOptions.stroke!"
-                  [markers]="radarChartOptions.markers!"
-                  [xaxis]="radarChartOptions.xaxis!"
-                  [yaxis]="radarChartOptions.yaxis!"
-                  [plotOptions]="radarChartOptions.plotOptions!"
-                  [dataLabels]="radarChartOptions.dataLabels!"
-                  [tooltip]="radarChartOptions.tooltip!"
+                <ng-container
+                  *ngIf="
+                    (selectedTab === 'project' && hasProjectData) ||
+                      (selectedTab === 'article' && hasArticleData) ||
+                      (selectedTab === 'innovation' && hasInnovationData);
+                    else noData
+                  "
                 >
-                </apx-chart>
+                  <apx-chart
+                    class="w-full h-full text-white"
+                    [series]="radarChartOptions.series!"
+                    [chart]="radarChartOptions.chart!"
+                    [labels]="radarChartOptions.labels!"
+                    [fill]="radarChartOptions.fill!"
+                    [stroke]="radarChartOptions.stroke!"
+                    [markers]="radarChartOptions.markers!"
+                    [xaxis]="radarChartOptions.xaxis!"
+                    [yaxis]="radarChartOptions.yaxis!"
+                    [plotOptions]="radarChartOptions.plotOptions!"
+                    [dataLabels]="radarChartOptions.dataLabels!"
+                    [tooltip]="radarChartOptions.tooltip!"
+                  >
+                  </apx-chart>
+                </ng-container>
+
+                <!-- ไม่พบข้อมูล -->
+                <ng-template #noData>
+                  <div
+                    class="flex flex-col items-center text-center text-gray-500 py-16 h-75"
+                  >
+                    <i class="bi bi-folder-x text-4xl mb-2"></i>
+                    ไม่พบข้อมูล
+                  </div>
+                </ng-template>
               </div>
             </div>
 
@@ -518,28 +541,47 @@
                     selectedTab === "project"
                       ? "โครงการวิจัย"
                       : selectedTab === "article"
-                      ? "บทความ"
-                      : "นวัตกรรม"
+                      ? "ผลงานตีพิมพ์"
+                      : "นวัตกรรมสิ่งประดิษฐ์"
                   }}
                 </h4>
               </div>
 
               <div class="-mx-4 -mb-6">
-                <apx-chart
-                  class="w-full h-full text-white"
-                  [series]="radarChartOptionsSub.series!"
-                  [chart]="radarChartOptionsSub.chart!"
-                  [labels]="radarChartOptionsSub.labels!"
-                  [fill]="radarChartOptionsSub.fill!"
-                  [stroke]="radarChartOptionsSub.stroke!"
-                  [markers]="radarChartOptionsSub.markers!"
-                  [xaxis]="radarChartOptionsSub.xaxis!"
-                  [yaxis]="radarChartOptionsSub.yaxis!"
-                  [plotOptions]="radarChartOptionsSub.plotOptions!"
-                  [dataLabels]="radarChartOptionsSub.dataLabels!"
-                  [tooltip]="radarChartOptionsSub.tooltip!"
+                <ng-container
+                  *ngIf="
+                    (selectedTab === 'project' && hasProjectData) ||
+                      (selectedTab === 'article' && hasArticleData) ||
+                      (selectedTab === 'innovation' && hasInnovationData);
+                    else noData
+                  "
                 >
-                </apx-chart>
+                  <apx-chart
+                    class="w-full h-full text-white"
+                    [series]="radarChartOptionsSub.series!"
+                    [chart]="radarChartOptionsSub.chart!"
+                    [labels]="radarChartOptionsSub.labels!"
+                    [fill]="radarChartOptionsSub.fill!"
+                    [stroke]="radarChartOptionsSub.stroke!"
+                    [markers]="radarChartOptionsSub.markers!"
+                    [xaxis]="radarChartOptionsSub.xaxis!"
+                    [yaxis]="radarChartOptionsSub.yaxis!"
+                    [plotOptions]="radarChartOptionsSub.plotOptions!"
+                    [dataLabels]="radarChartOptionsSub.dataLabels!"
+                    [tooltip]="radarChartOptionsSub.tooltip!"
+                  >
+                  </apx-chart>
+                </ng-container>
+
+                <!-- ไม่พบข้อมูล -->
+                <ng-template #noData>
+                  <div
+                    class="flex flex-col items-center text-center text-gray-500 py-16 h-75"
+                  >
+                    <i class="bi bi-folder-x text-4xl mb-2"></i>
+                    ไม่พบข้อมูล
+                  </div>
+                </ng-template>
               </div>
             </div>
           </div>
@@ -552,8 +594,8 @@
                 (click)="changeTab(tab.key)"
                 [ngClass]="
                   selectedTab === tab.key
-                    ? 'bg-[#118CD9] text-[#ffffff] shadow'
-                    : 'text-[#394250] hover:bg-[#118CD9] hover:text-white'
+                    ? 'bg-[#f2e7ac] text-[#394250] shadow'
+                    : 'text-[#394250] hover:bg-[#f2cb05] hover:text-white'
                 "
                 class="flex items-center gap-2 px-2 py-1 md:px-5 md:py-2.5 rounded-xl transition-all duration-200 cursor-pointer"
               >
@@ -681,7 +723,7 @@
                   (click)="changePage(+page)"
                   class="px-2 md:px-3 py-1 rounded border text-sm transition cursor-pointer"
                   [ngClass]="{
-                    'bg-[#118CD9] text-white': currentPage === page,
+                    'bg-[#f2e7ac] text-[#394250]': currentPage === page,
                     'hover:bg-gray-100': currentPage !== page
                   }"
                 >

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { DashboardData, Statistic, TopResearcher } from '../../models/report.model';
+import { DashboardData, Statistic, StatisticResearcher, TopResearcher } from '../../models/report.model';
 import { ReportService } from '../../services/report.service';
 import { MainComponent } from '../../shared/layouts/main/main.component';
 import {
@@ -33,6 +33,7 @@ export class ReportComponent {
   donutSeries: number[] = [];
   donutLabels: string[] = [];
   stat:any = {}
+  statistic_researcher: StatisticResearcher | undefined;
 
   donutChart: ApexChart = {
     type: 'donut',
@@ -100,6 +101,7 @@ export class ReportComponent {
       this.statistic = this.data.statistic;
       this.topResearcher = this.data.top_researcher;
       this.stat = res.data.statistic
+      this.statistic_researcher = this.data.statistic_researcher;
 
       this.prepareDonutChart();
       this.preparePieChart();

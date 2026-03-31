@@ -19,7 +19,7 @@
           type="text"
           [(ngModel)]="workInfo.position"
           name="position"
-          class="w-full rounded-lg font-light text-lg border-gray-300 focus:ring-indigo-500 focus:border-indigo-500"
+          class="w-full rounded-lg font-light text-lg border-gray-300 focus:ring-[#f2e7ac] focus:border-[#f2e7ac]"
         />
       </div>
 
@@ -53,7 +53,7 @@
             <li
               *ngFor="let o of filteredOrganizations()"
               (click)="selectOrganizationOption(o)"
-              class="px-4 py-2 hover:bg-indigo-50 cursor-pointer"
+              class="px-4 py-2 hover:bg-[#f2e7ac] cursor-pointer"
             >
               {{ o.faculty }}
             </li>
@@ -62,7 +62,8 @@
               *ngIf="filteredOrganizations().length === 0"
               class="px-4 py-3 text-center text-gray-400 italic"
             >
-              🔍 ไม่พบข้อมูล
+              <i class="bi bi-x-octagon text-3xl block mb-2"></i>
+              ไม่พบข้อมูล
             </li>
           </ul>
         </div>
@@ -108,7 +109,7 @@
           type="text"
           [(ngModel)]="workInfo!.academic_position"
           name="academicPosition"
-          class="w-full rounded-lg font-light text-lg border-gray-300 focus:ring-indigo-500 focus:border-indigo-500"
+          class="w-full rounded-lg font-light text-lg border-gray-300 focus:ring-[#f2e7ac] focus:border-[#f2e7ac]"
         />
       </div>
 
@@ -119,7 +120,7 @@
           rows="3"
           [(ngModel)]="workInfo!.interest"
           name="interests"
-          class="w-full rounded-lg border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 font-light text-lg"
+          class="w-full rounded-lg border-gray-300 focus:ring-[#f2e7ac] focus:border-[#f2e7ac] font-light text-lg"
         ></textarea>
       </div>
 
@@ -137,14 +138,14 @@
         >
           <span
             *ngFor="let m of selectedMajors; let i = index"
-            class="flex items-center gap-2 px-2 py-1 text-white rounded-full bg-indigo-500"
+            class="flex items-center gap-2 px-2 py-1 text-[#394250] rounded-full bg-[#f2e7ac]"
           >
             {{ m.expertise }}
 
             <button
               type="button"
               (click)="removeMajor(i)"
-              class="text-white/80 hover:text-white text-base cursor-pointer"
+              class="text-red-400 hover:text-white text-base cursor-pointer"
             >
               ✕
             </button>
@@ -172,7 +173,7 @@
             [(ngModel)]="workInfo.work_start_date"
             (change)="calculateYearsOfService()"
             name="startDate"
-            class="w-full rounded-lg font-light text-lg border-gray-300 focus:ring-indigo-500 focus:border-indigo-500"
+            class="w-full rounded-lg font-light text-lg border-gray-300 focus:ring-[#f2e7ac] focus:border-[#f2e7ac]"
           />
         </div>
         <!-- อายุงาน -->
@@ -182,7 +183,7 @@
             type="number"
             [(ngModel)]="workInfo.year_of_service"
             name="year"
-            class="w-20 md:w-50 rounded-lg font-light text-lg border-gray-300 focus:ring-indigo-500 focus:border-indigo-500"
+            class="w-20 md:w-50 rounded-lg font-light text-lg border-gray-300 focus:ring-[#f2e7ac] focus:border-[#f2e7ac]"
           />
           <label class="ml-3">ปี</label>
         </div>
@@ -192,7 +193,7 @@
       <div class="flex justify-center gap-4 pt-4">
         <button
           type="submit"
-          class="px-6 py-2 rounded-xl bg-[#118CD9] text-white hover:bg-[#4c7b98] shadow cursor-pointer"
+          class="px-6 py-2 rounded-xl bg-[#f2e7ac] text-[#394250] hover:bg-[#f2cb05] hover:text-white shadow cursor-pointer"
           (click)="saveWork()"
         >
           บันทึกข้อมูล

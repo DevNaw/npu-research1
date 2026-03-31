@@ -53,6 +53,7 @@ export type ChartOptions = {
   stroke: ApexStroke;
   grid: ApexGrid;
   tooltip?: ApexTooltip;
+  colors?: string[];
 };
 
 export type RadarChartOptions = {
@@ -394,7 +395,7 @@ export class UserDashboardComponent implements OnInit {
       },
       {
         type: 'article',
-        title: 'กราฟสรุปจำนวนบทความวิชาการ',
+        title: 'กราฟสรุปจำนวนผลงานตีพิมพ์',
         subtitle: 'จำแนกตามหน่วยงาน',
         options: this.createBarChart(graph?.graph_article ?? []),
       },
@@ -437,7 +438,7 @@ export class UserDashboardComponent implements OnInit {
       plotOptions: {
         bar: {
           columnWidth: '50%',
-          borderRadius: 6,
+          borderRadius: 2,
           borderRadiusApplication: 'around',
           backgroundBarOpacity: 1,
           backgroundBarRadius: 6,
@@ -475,7 +476,7 @@ export class UserDashboardComponent implements OnInit {
             <div style="font-weight:600; margin-bottom:4px;">${fullLabel}</div>
             <hr style="border-color:#555; margin:4px 0;">
             <div style="display:flex; justify-content:space-around; align-items:center; gap:6px;">
-              <span style="width:10px; height:10px; border-radius:50%; background:#038FFB; display:inline-block;"></span>
+              <span style="width:10px; height:10px; border-radius:50%; background:#f48c06; display:inline-block;"></span>
               <span>จำนวน: ${value}</span>
             </div>
           </div>`;
@@ -502,6 +503,7 @@ export class UserDashboardComponent implements OnInit {
       },
 
       fill: {
+        colors: ['#f48c06'],
         opacity: 1,
         type: 'gradient',
         gradient: {
@@ -582,6 +584,9 @@ export class UserDashboardComponent implements OnInit {
     const maxValue = Math.max(...values, 10);
 
     return {
+      colors: [
+        '#06E396',
+      ],
       series: [
         {
           name: 'จำนวนผลงาน',
@@ -608,7 +613,7 @@ export class UserDashboardComponent implements OnInit {
       plotOptions: {
         bar: {
           columnWidth: '40%',
-          borderRadius: 6,
+          borderRadius: 2,
           borderRadiusApplication: 'around',
           backgroundBarOpacity: 1,
           backgroundBarRadius: 6,
@@ -639,7 +644,7 @@ export class UserDashboardComponent implements OnInit {
               <div style="font-weight:600; margin-bottom:6px;">${fullLabel}</div>
               <hr style="border-color:#eee; margin:4px 0;">
               <div style="display:flex; align-items:center; gap:6px;">
-                <span style="width:10px; height:10px; border-radius:50%; background:#008FFB; display:inline-block;"></span>
+                <span style="width:10px; height:10px; border-radius:50%; background:#f2ae30; display:inline-block;"></span>
                 <span>จำนวนผลงาน: <strong>${value}</strong></span>
               </div>
             </div>
@@ -667,16 +672,17 @@ export class UserDashboardComponent implements OnInit {
       },
 
       fill: {
+        colors: ['#f2ae30'],
         opacity: 1,
         type: 'gradient',
         gradient: {
           shade: 'light',
           type: 'horizontal',
-          shadeIntensity: 0.25,
+          shadeIntensity: 0.4,
           gradientToColors: undefined,
           inverseColors: true,
-          opacityFrom: 0.85,
-          opacityTo: 0.85,
+          opacityFrom: 1,
+          opacityTo: 1,
           stops: [50, 0, 100],
         },
       },

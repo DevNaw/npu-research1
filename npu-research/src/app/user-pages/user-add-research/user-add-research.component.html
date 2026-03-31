@@ -10,7 +10,7 @@
       <span>ไปที่โครงการวิจัยของคุณ</span>
 
       <i
-        class="bi bi-arrow-right-circle-fill text-xl transition-all group-hover:translate-x-1 group-hover:text-[#118CD9]"
+        class="bi bi-arrow-right-circle-fill text-xl transition-all group-hover:translate-x-1 group-hover:text-[#f2cb05]"
       ></i>
     </button>
   </div>
@@ -19,7 +19,7 @@
     class="mt-2 p-3 md:mt-5 mb-5 md:mb-10 mx-auto md:px-20 md:py-10 bg-white rounded-xl shadow-md"
   >
     <div
-      class="mx-auto p-4 md:p-6 mb-4 md:mb-6 flex items-center gap-4 rounded-xl bg-linear-to-r from-[#16498C] to-[#118CD9] text-white shadow"
+      class="mx-auto p-4 md:p-6 mb-4 md:mb-6 flex items-center gap-4 rounded-xl bg-linear-to-r from-[#f2cb05] to-[#f2e7ac] text-[#394250] shadow"
     >
       <i class="bi bi-cloud-arrow-up-fill text-3xl"></i>
 
@@ -40,7 +40,7 @@
         [class.border-red-500]="title.invalid && title.touched"
         [(ngModel)]="projectData.title_th"
         type="text"
-        class="md:col-span-3 w-full text-lg font-light border h-12 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400"
+        class="md:col-span-3 w-full text-lg font-light border h-12 rounded-md px-4 py-2 focus:ring-2 focus:ring-[#f2e7ac]"
         placeholder="ระบุชื่องานวิจัย"
       />
 
@@ -60,7 +60,7 @@
         [class.border-red-500]="title_en.invalid && title_en.touched"
         [(ngModel)]="projectData.title_en"
         type="text"
-        class="md:col-span-3 w-full text-lg font-light border h-12 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400"
+        class="md:col-span-3 w-full text-lg font-light border h-12 rounded-md px-4 py-2 focus:ring-2 focus:ring-[#f2cb05]"
         placeholder="ระบุชื่องานวิจัย"
       />
 
@@ -120,14 +120,14 @@
         <!-- Tag -->
         <span
           *ngFor="let keyword of projectData.keywords; let i = index"
-          class="flex items-center gap-2 px-3 py-1 text-white font-light text-lg rounded-full bg-linear-to-r from-purple-500 to-purple-600 shadow-sm"
+          class="flex items-center gap-2 px-3 py-1 text-[#394250] font-light text-lg rounded-full bg-linear-to-r from-[#f2cb05] to-[#f2e7ac] shadow-sm"
         >
           {{ keyword }}
 
           <button
             type="button"
             (click)="removeKeyword(i)"
-            class="text-white/80 hover:text-white text-base cursor-pointer"
+            class="text-gray-500 hover:text-gray-300 text-base cursor-pointer"
           >
             ✕
           </button>
@@ -163,14 +163,14 @@
       >
         <span
           *ngFor="let keyword of projectData.keywords; let i = index"
-          class="flex items-center gap-2 px-2 py-1 text-white rounded-full bg-indigo-500"
+          class="flex items-center gap-2 px-2 py-1 text-[#394250] rounded-full bg-[#f2cb05] bg-opacity-50 shadow-sm"
         >
           {{ keyword }}
 
           <button
             type="button"
             (click)="removeKeywordEn(i)"
-            class="text-white/80 hover:text-white text-base cursor-pointer"
+            class="text-gray-500 hover:text-gray-300 text-base cursor-pointer"
           >
             ✕
           </button>
@@ -475,7 +475,7 @@
       <div class="flex justify-start mt-2">
         <button
           type="button"
-          class="md:mt-4 p-1 md:px-4 md:py-2 bg-[#118CD9] hover:bg-[#4c7b98] text-white rounded-md cursor-pointer text-lg font-light"
+          class="md:mt-4 p-1 md:px-4 md:py-2 bg-[#f2e7ac] hover:bg-[#f2cb05] text-[#394250] hover:text-white rounded-md cursor-pointer text-lg font-light"
           (click)="addInternalRow()"
         >
           เพิ่มรายการ
@@ -599,7 +599,7 @@
       <div class="flex justify-start mt-2">
         <button
           type="button"
-          class="md:mt-4 p-1 md:p-2 bg-[#118CD9] hover:bg-[#4c7b98] text-white rounded-md cursor-pointer text-lg font-light"
+          class="md:mt-4 p-1 md:p-2 bg-[#f2e7ac] hover:bg-[#f2cb05] text-[#394250] hover:text-white rounded-md cursor-pointer text-lg font-light"
           (click)="addExternalRow()"
         >
           เพิ่มรายการ
@@ -728,7 +728,7 @@
           [class.border-red-500]="budgetAmount.invalid && budgetAmount.touched"
           [(ngModel)]="projectData.budget_amount"
           type="number"
-          class="w-full border text-lg font-light rounded-md h-12 px-4 py-2 focus:ring-2 focus:ring-blue-400"
+          class="w-full border text-lg font-light rounded-md h-12 px-4 py-2 focus:ring-2 focus:ring-[#f2cb05]"
           placeholder="ระบุจำนวนงบประมาณ"
         />
 
@@ -890,7 +890,7 @@
 
           <button
             type="button"
-            class="px-4 py-1 bg-[#118CD9] hover:bg-[#4c7b98] text-white rounded-md cursor-pointer text-lg font-light"
+            class="px-4 py-1 bg-[#f2e7ac] hover:bg-[#f2cb05] text-[#394250] hover:text-white rounded-md cursor-pointer text-lg font-light"
             (click)="reportFileInput.click()"
           >
             เลือกไฟล์
@@ -930,7 +930,7 @@
 
           <button
             type="button"
-            class="px-4 py-1 bg-[#118CD9] hover:bg-[#4c7b98] text-white cursor-pointer rounded-md text-lg font-light"
+            class="px-4 py-1 bg-[#f2e7ac] hover:bg-[#f2cb05] text-[#394250] hover:text-white cursor-pointer rounded-md text-lg font-light"
             (click)="fileInput.click()"
           >
             เลือกไฟล์
@@ -944,7 +944,7 @@
       <button
         type="submit"
         (click)="submit()"
-        class="flex items-center justify-center gap-3 w-72 py-3 bg-[#118CD9] hover:bg-[#4c7b98] text-white text-xl rounded-lg shadow transition duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 cursor-pointer"
+        class="flex items-center justify-center gap-3 w-72 py-3 bg-[#f2e7ac] hover:bg-[#f2cb05] text-[#394250] hover:text-white text-xl rounded-lg shadow transition duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 cursor-pointer"
       >
         <i class="bi bi-floppy2 text-2xl"></i>
         <span>บันทึกข้อมูล</span>

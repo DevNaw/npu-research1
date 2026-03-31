@@ -9,7 +9,7 @@
       <span>ไปที่บทความ/วารสารของคุณ</span>
 
       <i
-        class="bi bi-arrow-right-circle-fill text-xl transition-all group-hover:translate-x-1 group-hover:text-[#118CD9]"
+        class="bi bi-arrow-right-circle-fill text-xl transition-all group-hover:translate-x-1 group-hover:text-[#f2cb05]"
       ></i>
     </button>
   </div>
@@ -18,7 +18,7 @@
     class="mt-2 mb-5 p-2 md:mt-5 md:mb-10 mx-auto md:px-20 md:py-10 bg-white rounded-xl shadow-md"
   >
     <div
-      class="p-4 mx-auto md:px-6 md:py-5 md:mb-6 flex items-center gap-4 rounded-xl bg-linear-to-r from-[#16498C] to-[#118CD9] text-white shadow"
+      class="p-4 mx-auto md:px-6 md:py-5 md:mb-6 flex items-center gap-4 rounded-xl bg-linear-to-r from-[#f2cb05] to-[#f2e7ac] text-[#394250] shadow"
     >
       <i class="bi bi-cloud-arrow-up-fill text-3xl"></i>
       <h2 class="text-2xl md:text-3xl">
@@ -118,14 +118,14 @@
       >
         <span
           *ngFor="let keyword of articleData.keywords; let i = index"
-          class="flex items-center gap-2 px-2 py-1 text-white rounded-full bg-purple-500"
+          class="flex items-center gap-2 px-2 py-1 text-[#394250] rounded-full bg-[#f2cb05]"
         >
           {{ keyword }}
 
           <button
             type="button"
             (click)="removeKeyword(i)"
-            class="text-white/80 hover:text-white text-base cursor-pointer"
+            class="text-gray-500 hover:text-gray-300 text-base cursor-pointer"
           >
             ✕
           </button>
@@ -160,14 +160,14 @@
       >
         <span
           *ngFor="let keyword of articleData.keywords; let i = index"
-          class="flex items-center gap-2 px-2 py-1 text-white rounded-full bg-indigo-500"
+          class="flex items-center gap-2 px-2 py-1 text-[#394250] rounded-full bg-[#f2cb05]"
         >
           {{ keyword }}
 
           <button
             type="button"
             (click)="removeKeywordEn(i)"
-            class="text-white/80 hover:text-white text-base cursor-pointer"
+            class="text-gray-500 hover:text-gray-300 text-base cursor-pointer"
           >
             ✕
           </button>
@@ -886,7 +886,7 @@
       <div class="flex justify-start mt-2">
         <button
           type="button"
-          class="md:mt-4 p-1 md:px-4 md:py-2 bg-[#118CD9] hover:bg-[#4c7b98] text-white text-lg font-light rounded-md cursor-pointer"
+          class="md:mt-4 p-1 md:px-4 md:py-2 bg-[#f2e7ac] hover:bg-[#f2cb05] text-[#394250] hover:text-white text-lg font-light rounded-md cursor-pointer"
           (click)="addInternalRow()"
         >
           เพิ่มรายการ
@@ -1021,7 +1021,7 @@
       <div class="flex justify-start mt-2">
         <button
           type="button"
-          class="md:mt-4 p-1 md:p-2 bg-[#118CD9] hover:bg-[#4c7b98] text-white text-lg font-light rounded-md cursor-pointer"
+          class="md:mt-4 p-1 md:p-2 bg-[#f2e7ac] hover:bg-[#f2cb05] text-[#394250] hover:text-white text-lg font-light rounded-md cursor-pointer"
           (click)="addExternalRow()"
         >
           เพิ่มรายการ
@@ -1116,7 +1116,7 @@
 
         <button
           type="button"
-          class="md:px-4 md:py-2 p-2 bg-[#118CD9] hover:bg-[#4c7b98] text-white rounded-md cursor-pointer text-lg font-light"
+          class="md:px-4 md:py-2 p-2 bg-[#f2e7ac] hover:bg-[#f2cb05] text-[#394250] hover:text-white rounded-md cursor-pointer text-lg font-light"
           (click)="fileInput.click()"
         >
           เลือกไฟล์
@@ -1129,7 +1129,7 @@
       <button
         (click)="submitArticle()"
         type="button"
-        class="flex items-center justify-center gap-3 w-72 text-xl py-3 bg-[#118CD9] hover:bg-[#4c7b98] text-white rounded-lg shadow transition duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 cursor-pointer"
+        class="flex items-center justify-center gap-3 w-72 text-xl py-3 bg-[#f2e7ac] hover:bg-[#f2cb05] text-[#394250] hover:text-white rounded-lg shadow transition duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 cursor-pointer"
       >
         <i
           class="bi"

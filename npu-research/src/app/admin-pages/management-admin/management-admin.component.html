@@ -9,7 +9,7 @@
     <div class="flex justify-between items-center mb-4 mt-2">
       <button
         (click)="openAddModal()"
-        class="flex items-center gap-2 bg-[#118CD9] hover:bg-[#16498C] text-white px-4 py-2 rounded-md text-lg cursor-pointer"
+        class="flex items-center gap-2 bg-[#f2e7ac] hover:bg-[#f2cb05] text-[#394250] px-4 py-2 rounded-md text-lg cursor-pointer"
       >
         <i class="bi bi-plus-circle"></i> เพิ่มแอดมิน
       </button>
@@ -108,7 +108,7 @@
             (click)="changePage(+page)"
             class="px-2 md:px-3 py-1 rounded border text-sm transition cursor-pointer"
             [ngClass]="{
-              'bg-[#118CD9] text-white': currentPage === page,
+              'bg-[#f2e7ac] text-[#394250]': currentPage === page,
               'hover:bg-gray-100': currentPage !== page
             }"
           >
@@ -199,7 +199,7 @@
     >
       <button
         (click)="saveExpertise()"
-        class="w-full sm:w-auto px-4 py-2 rounded-md bg-[#118CD9] hover:bg-[#16498C] text-white cursor-pointer"
+        class="w-full sm:w-auto px-4 py-2 rounded-md bg-[#f2e7ac] hover:bg-[#f2cb05] text-[#394250] cursor-pointer"
       >
         บันทึก
       </button>

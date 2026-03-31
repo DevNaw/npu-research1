@@ -27,7 +27,7 @@
 
         <button
           (click)="openAddModal()"
-          class="flex items-center gap-2 bg-[#118CD9] hover:bg-[#16498C] text-white px-4 py-2 rounded-md cursor-pointer"
+          class="flex items-center gap-2 bg-[#f2e7ac] hover:bg-[#f2cb05] text-[#394250] hover:text-white px-4 py-2 rounded-md cursor-pointer"
         >
           <i class="bi bi-plus-circle"></i> เพิ่มหน่วยงาน
         </button>
@@ -163,7 +163,7 @@
               (click)="changePage(+page)"
               class="px-2 md:px-3 py-1 rounded border text-sm transition cursor-pointer"
               [ngClass]="{
-                'bg-[#118CD9] text-white': currentPage === page,
+                'bg-[#f2e7ac] text-[#394250]': currentPage === page,
                 'hover:bg-gray-100': currentPage !== page
               }"
             >
@@ -204,19 +204,19 @@
   >
     <!-- Header -->
     <div
-      class="relative px-8 py-7 overflow-hidden bg-linear-to-r from-[#16498c] to-[#118cd9]"
+      class="relative px-8 py-7 overflow-hidden bg-linear-to-r from-[#f2cb05] to-[#f2e7ac]"
     >
       <button
         (click)="closeModal()"
-        class="absolute top-4 right-4 w-8 h-8 rounded-lg flex items-center justify-center text-white cursor-pointer border-0 bg-[#4292D2] hover:bg-[#16498c]"
+        class="absolute top-4 right-4 w-8 h-8 rounded-lg flex items-center justify-center text-[#394250] cursor-pointer border-0 hover:text-white"
       >
         ✕
       </button>
 
-      <h2 class="text-2xl text-white">
+      <h2 class="text-2xl">
         {{ modalMode === "add" ? "เพิ่มหน่วยงาน" : "แก้ไขหน่วยงาน" }}
       </h2>
-      <p class="text-lg text-[#FFFFFFA6]">กรอกข้อมูลหน่วยงานให้ครบถ้วน</p>
+      <p class="text-lg">กรอกข้อมูลหน่วยงานให้ครบถ้วน</p>
     </div>
 
     <!-- Body -->
@@ -228,7 +228,7 @@
         <input
           type="text"
           [(ngModel)]="selectedOrganization!.faculty_code"
-          class="w-full border border-slate-200 rounded-xl px-4 py-3 text-base font-light bg-slate-50 focus:outline-none focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-100 transition"
+          class="w-full border border-slate-200 rounded-xl px-4 py-3 text-base font-light bg-slate-50 focus:outline-none focus:border-[#f2e7ac] focus:bg-white focus:ring-0.5 focus:ring-[#f2e7ac] transition"
           placeholder="เช่น ENG, AGT, SCI"
         />
       </div>
@@ -240,7 +240,7 @@
         <input
           type="text"
           [(ngModel)]="selectedOrganization!.faculty"
-          class="w-full border border-slate-200 rounded-xl px-4 py-3 text-base font-light bg-slate-50 focus:outline-none focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-100 transition"
+          class="w-full border border-slate-200 rounded-xl px-4 py-3 text-base font-light bg-slate-50 focus:outline-none focus:border-[#f2e7ac] focus:bg-white focus:ring-0.5 focus:ring-[#f2e7ac] transition"
           placeholder="เช่น คณะวิศวกรรมศาสตร์"
         />
       </div>
@@ -252,7 +252,7 @@
         <input
           type="text"
           [(ngModel)]="selectedOrganization!.faculty_en"
-          class="w-full border border-slate-200 rounded-xl px-4 py-3 text-base font-light bg-slate-50 focus:outline-none focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-100 transition"
+          class="w-full border border-slate-200 rounded-xl px-4 py-3 text-base font-light bg-slate-50 focus:outline-none focus:border-[#f2e7ac] focus:bg-white focus:ring-0.5 focus:ring-[#f2e7ac] transition"
           placeholder="e.g. Faculty of Engineering"
         />
       </div>
@@ -264,7 +264,7 @@
         <input
           type="text"
           [(ngModel)]="selectedOrganization!.faculty_short"
-          class="w-full border border-slate-200 rounded-xl px-4 py-3 text-base font-light bg-slate-50 focus:outline-none focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-100 transition"
+          class="w-full border border-slate-200 rounded-xl px-4 py-3 text-base font-light bg-slate-50 focus:outline-none focus:border-[#f2e7ac] focus:bg-white focus:ring-0.5 focus:ring-[#f2e7ac] transition"
           placeholder="เช่น วศ., กท."
         />
       </div>
@@ -284,7 +284,7 @@
         (click)="
           modalMode === 'add' ? saveOrganization() : updateOrganization()
         "
-        class="px-5 py-2.5 rounded-xl text-white font-medium text-base cursor-pointer transition bg-linear-to-r from-[#118CD9] to-[#094A73] hover:from-[#0f7ec2] hover:to-[#073a5a]"
+        class="px-5 py-2.5 rounded-xl text-[#394250] font-medium text-base cursor-pointer transition bg-linear-to-r from-[#f2e7ac] to-[#f2cb05] hover:from-[#f2cb05] hover:to-[#f2e7ac]"
       >
         {{ modalMode === "add" ? "บันทึก" : "อัปเดต" }}
       </button>

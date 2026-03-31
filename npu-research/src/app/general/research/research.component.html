@@ -4,7 +4,7 @@
   <div
     class="md:mt-6 mb-4 flex flex-col md:gap-3 md:flex-row md:items-center justify-between"
   >
-    <h1 class="text-3xl ml-5 text-[#16498C]">โครงการงานวิจัย</h1>
+    <h1 class="text-3xl ml-5">โครงการงานวิจัย</h1>
     <div class="flex items-center mt-1 justify-end">
       <label class="text-xl mr-2">Search:</label>
       <input
@@ -148,7 +148,7 @@
               (click)="changePage(+page)"
               class="px-2 md:px-3 py-1 rounded border text-sm transition cursor-pointer"
               [ngClass]="{
-                'bg-[#118CD9] text-white': currentPage === page,
+                'bg-[#f2e7ac] text-black': currentPage === page,
                 'hover:bg-gray-100': currentPage !== page
               }"
             >{{ page }}</button>

@@ -9,7 +9,7 @@
       <span>ไปที่นวัตกรรมสิ่งประดิษฐ์ของคุณ</span>
 
       <i
-        class="bi bi-arrow-right-circle-fill text-xl transition-all group-hover:translate-x-1 group-hover:text-[#118CD9]"
+        class="bi bi-arrow-right-circle-fill text-xl transition-all group-hover:translate-x-1 group-hover:text-[#f2cb05]"
       ></i>
     </button>
   </div>
@@ -18,7 +18,7 @@
     class="mb-6 md:mb-10 mx-auto p-2 md:px-20 md:py-10 bg-white rounded-xl shadow-md"
   >
     <div
-      class="mx-auto p-4 md:px-6 md:py-5 md:mb-6 flex items-center gap-4 rounded-xl bg-linear-to-r from-[#16498C] to-[#118CD9] text-white shadow"
+      class="mx-auto p-4 md:px-6 md:py-5 md:mb-6 flex items-center gap-4 rounded-xl bg-linear-to-r from-[#f2cb05] to-[#f2e7ac] text-[#394250] shadow"
     >
       <i class="bi bi-cloud-arrow-up-fill text-3xl"></i>
       <h2 class="text-2xl md:text-3xl">
@@ -119,14 +119,14 @@
       >
         <span
           *ngFor="let keyword of projectData.keywords; let i = index"
-          class="flex items-center gap-2 px-2 py-1 text-white rounded-full bg-purple-500"
+          class="flex items-center gap-2 px-2 py-1 text-[#394250] rounded-full bg-[#f2cb05]"
         >
           {{ keyword }}
 
           <button
             type="button"
             (click)="removeKeyword(i)"
-            class="text-white/80 hover:text-white text-base cursor-pointer"
+            class="text-gray-500 hover:text-gray-300 text-base cursor-pointer"
           >
             ✕
           </button>
@@ -161,14 +161,14 @@
       >
         <span
           *ngFor="let keyword of projectData.keywords; let i = index"
-          class="flex items-center gap-2 px-2 py-1 text-white rounded-full bg-indigo-500"
+          class="flex items-center gap-2 px-2 py-1 text-[#394250] rounded-full bg-[#f2cb05]"
         >
           {{ keyword }}
 
           <button
             type="button"
             (click)="removeKeywordEn(i)"
-            class="text-white/80 hover:text-white text-base cursor-pointer"
+            class="text-gray-500 hover:text-gray-300 text-base cursor-pointer"
           >
             ✕
           </button>
@@ -315,43 +315,173 @@
     </div>
 
     <!-- ประเภทความรับผิดชอบ -->
-    <div class="relative mb-6">
-      <label class="text-start text-2xl block">
-        ประเภทความรับผิดชอบ <span class="text-red-500">*</span>
-      </label>
+    <div class="grid grid-cols-1 md:grid-cols-2 md:gap-6 md:mb-8">
+      <div class="relative mb-6">
+        <label class="text-start text-2xl block">
+          ประเภทความรับผิดชอบ <span class="text-red-500">*</span>
+        </label>
 
-      <button
-        type="button"
-        (click)="toggleDropdown('responsibility', $event)"
-        class="w-full border rounded-md px-3 py-2 flex justify-between items-center text-lg font-light"
-      >
-        {{ projectData.responsibilities || "ประเภทความรับผิดชอบ" }}
-        <i class="bi bi-chevron-down"></i>
-      </button>
-
-      <div
-        *ngIf="activeDropdown === 'responsibility'"
-        class="absolute z-50 mt-1 w-full bg-white border rounded-md shadow text-lg font-light"
-      >
-        <div
-          class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
-          (click)="selectValue('responsibilities', 'หัวหน้าโครงการ')"
+        <button
+          type="button"
+          (click)="toggleDropdown('responsibility', $event)"
+          class="w-full border rounded-md px-3 py-2 flex justify-between items-center text-lg font-light"
         >
-          หัวหน้าโครงการ
+          {{ projectData.responsibilities || "ประเภทความรับผิดชอบ" }}
+          <i class="bi bi-chevron-down"></i>
+        </button>
+
+        <div
+          *ngIf="activeDropdown === 'responsibility'"
+          class="absolute z-50 mt-1 w-full bg-white border rounded-md shadow text-lg font-light"
+        >
+          <div
+            class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
+            (click)="selectValue('responsibilities', 'หัวหน้าโครงการ')"
+          >
+            หัวหน้าโครงการ
+          </div>
+
+          <div
+            class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
+            (click)="selectValue('responsibilities', 'ที่ปรึกษาโครงการ')"
+          >
+            ที่ปรึกษาโครงการ
+          </div>
+
+          <div
+            class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
+            (click)="selectValue('responsibilities', 'ผู้ร่วมวิจัย')"
+          >
+            ผู้ร่วมวิจัย
+          </div>
         </div>
+      </div>
+
+      <!-- ค่าน้ำหนัก/ระดับคุณภาพ -->
+      <div class="relative mb-2">
+        <label class="text-start block">
+          ค่าน้ำหนัก/ระดับคุณภาพ
+          <!-- <span
+            class="relative group cursor-pointer"
+            (click)="toggleTooltip = !toggleTooltip"
+          >
+            <i
+              class="bi bi-info-circle-fill mx-2 text-gray-400 hover:text-indigo-500"
+            ></i>
+
+            <div
+              [class.!block]="toggleTooltip"
+              class="hidden group-hover:block absolute z-50 bottom-full mb-2 max-w-65 w-max p-3 text-sm text-white bg-gray-800 rounded-lg shadow-lg left-1/2 -translate-x-50"
+            >
+              ค่าน้ำหนักแสดงถึงความสำคัญของผลงานนวัตกรรมสิ่งประดิษฐ์
+              โดยมีค่าตั้งแต่ 0.20 ถึง 1.00
+              โดยค่าที่มากจะแสดงถึงความสำคัญมากขึ้น
+              <div
+                class="absolute top-full left-50 border-4 border-transparent border-t-gray-800"
+              ></div>
+            </div>
+          </span> -->
+
+          <!-- Icon trigger -->
+          <span
+            class="relative cursor-pointer"
+            (click)="showWeightModal = true"
+          >
+            <i
+              class="bi bi-info-circle-fill mx-2 text-gray-400 hover:text-indigo-500"
+            ></i>
+          </span>
+
+          <!-- Modal -->
+          <div
+            *ngIf="showWeightModal"
+            class="fixed inset-0 z-50 flex items-start justify-center bg-black/50 px-4 pt-150"
+            (click)="showWeightModal = false"
+          >
+            <div
+              class="bg-white rounded-xl shadow-xl w-full max-w-lg p-6 relative"
+              (click)="$event.stopPropagation()"
+            >
+              <!-- Header -->
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold text-gray-800">
+                  เกณฑ์ค่าน้ำหนักผลงาน
+                </h3>
+                <button
+                  (click)="showWeightModal = false"
+                  class="text-gray-400 hover:text-gray-600 text-xl leading-none"
+                >
+                  &times;
+                </button>
+              </div>
+
+              <!-- Content -->
+              <div class="space-y-3 text-sm text-gray-700 max-h-[40vh] overflow-y-auto pr-1 top-0">
+                <div class="p-3 bg-gray-50 rounded-lg">
+                  <span class="font-semibold text-indigo-600">0.20</span>
+                  หมายถึง บทความวิจัย,
+                  บทความวิชาการฉบับสมบูรณ์ที่ตีพิมพ์ในรายงานสืบเนื่องจากการประชุมวิชาการระดับชาติ
+                  – มีการยื่นจดอนุสิทธิบัตร
+                </div>
+                <div class="p-3 bg-gray-50 rounded-lg">
+                  <span class="font-semibold text-indigo-600">0.40</span>
+                  หมายถึง บทความวิจัย,
+                  บทความวิชาการฉบับสมบูรณ์ที่ตีพิมพ์ในรายงานสืบเนื่องจากการประชุมวิชาการระดับนานาชาติ
+                  – มีการยื่นจดสิทธิบัตร
+                </div>
+                <div class="p-3 bg-gray-50 rounded-lg">
+                  <span class="font-semibold text-indigo-600">0.60</span>
+                  หมายถึง บทความวิจัย,
+                  บทความวิชาการฉบับสมบูรณ์ที่ตีพิมพ์ในรายงานสืบเนื่องจากการประชุมวิชาการระดับนานาชาติ
+                  ที่ได้ตีพิมพ์เผยแพร่ในฐานข้อมูลระดับนานาชาติ ตามประกาศ ก.พ.อ.
+                  – บทความวิจัย,
+                  บทความวิชาการฉบับสมบูรณ์ที่ตีพิมพ์ในวารสารทางวิชาการ
+                  ที่ปรากฏในฐานข้อมูล TCI กลุ่มที่ 2 – มีการจดแจ้งลิขสิทธิ์
+                </div>
+                <div class="p-3 bg-gray-50 rounded-lg">
+                  <span class="font-semibold text-indigo-600">0.80</span>
+                  หมายถึง ผลงานที่ได้รับการจดอนุสิทธิบัตร – บทความวิจัย,
+                  บทความวิชาการที่ตีพิมพ์ในวารสารทางวิชาการระดับนานาชาติที่ไม่อยู่ในฐานข้อมูลตามประกาศ
+                  ก.พ.อ. หรือตีพิมพ์ในวารสารวิชาการที่ปรากฏในฐานข้อมูล TCI
+                  กลุ่มที่ 1
+                </div>
+                <div class="p-3 bg-gray-50 rounded-lg">
+                  <span class="font-semibold text-indigo-600">1.00</span>
+                  หมายถึง บทความวิจัย,
+                  บทความวิชาการฉบับสมบูรณ์ที่ตีพิมพ์ในวารสารทางวิชาการ
+                  ระดับนานาชาติที่ปรากฏในฐานข้อมูลระดับนานาชาติตามประกาศ ก.พ.อ.
+                  – ผลงานวิจัยที่หน่วยงานหรือองค์กรระดับชาติว่าจ้างให้ดำเนินการ
+                  – ผลงานค้นพบพันธุ์พืช พันธุ์สัตว์
+                  ที่ค้นพบใหม่และได้รับการจดทะเบียน – ตำรา, หนังสือ,
+                  งานแปลที่ผ่านการพิจารณาตามหลักเกณฑ์การประเมินตำแหน่งทางวิชาการแต่ไม่ได้นำมาขอรับการประเมินตำแหน่งทางวิชาการ
+                  – ผลงานที่ได้รับการจดสิทธิบัตร –
+                  ผลงานทางวิชาการในลักษณะอื่นที่ได้รับการประเมินผ่านเกณฑ์การขอตำแหน่งทางวิชาการแล้ว
+                </div>
+              </div>
+            </div>
+          </div>
+          <span class="text-red-500">*</span>
+        </label>
+
+        <button
+          (click)="toggleDropdown('quality', $event)"
+          class="w-full border rounded-md px-3 py-2 flex justify-between items-center text-lg font-light"
+        >
+          {{ projectData.volume_no || "ระดับคุณภาพ" }}
+          <i class="bi bi-chevron-down"></i>
+        </button>
 
         <div
-          class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
-          (click)="selectValue('responsibilities', 'ที่ปรึกษาโครงการ')"
+          *ngIf="activeDropdown === 'quality'"
+          class="absolute z-50 mt-1 w-full bg-white border rounded-md shadow text-lg font-light"
         >
-          ที่ปรึกษาโครงการ
-        </div>
-
-        <div
-          class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
-          (click)="selectValue('responsibilities', 'ผู้ร่วมวิจัย')"
-        >
-          ผู้ร่วมวิจัย
+          <div
+            *ngFor="let q of ['0.20', '0.40', '0.60', '0.80', '1.00']"
+            (click)="selectValue('volume_no', q)"
+            class="px-3 py-2 cursor-pointer hover:bg-gray-100"
+          >
+            {{ q }}
+          </div>
         </div>
       </div>
     </div>
@@ -486,7 +616,7 @@
       <div class="flex justify-start mt-2">
         <button
           type="button"
-          class="md:mt-4 p-1 md:px-4 md:py-2 bg-[#118CD9] hover:bg-[#4c7b98] text-white text-lg font-light rounded-md cursor-pointer"
+          class="md:mt-4 p-1 md:px-4 md:py-2 bg-[#f2e7ac] hover:bg-[#f2cb05] text-[#394250] hover:text-white text-lg font-light rounded-md cursor-pointer"
           (click)="addInternalRow()"
         >
           เพิ่มรายการ
@@ -610,7 +740,7 @@
       <div class="flex justify-start mt-2">
         <button
           type="button"
-          class="md:mt-4 p-1 md:p-2 bg-[#118CD9] hover:bg-[#4c7b98] text-white text-lg font-light rounded-md cursor-pointer"
+          class="md:mt-4 p-1 md:p-2 bg-[#f2e7ac] hover:bg-[#f2cb05] text-[#394250] hover:text-white text-lg font-light rounded-md cursor-pointer"
           (click)="addExternalRow()"
         >
           เพิ่มรายการ
@@ -651,9 +781,7 @@
             </div>
             <div
               class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
-              (click)="
-                selectValue('source_funds', 'แหล่งทุนภายนอก');
-              "
+              (click)="selectValue('source_funds', 'แหล่งทุนภายนอก')"
             >
               แหล่งทุนภายนอก
             </div>
@@ -709,7 +837,11 @@
             <div
               *ngFor="let fund of fundings"
               class="px-3 py-2 hover:bg-gray-100 cursor-pointer font-light text-lg"
-              (click)="selectValue('name_funding', fund.funding_name); selectValue('funding_code', fund.funding_code); selectValue('funding_id', fund.id)"
+              (click)="
+                selectValue('name_funding', fund.funding_name);
+                selectValue('funding_code', fund.funding_code);
+                selectValue('funding_id', fund.id)
+              "
             >
               {{ fund.funding_name }}
             </div>
@@ -944,7 +1076,7 @@
 
             <button
               type="button"
-              class="px-4 py-1 bg-[#118CD9] hover:bg-[#4c7b98] text-white text-lg font-light rounded-md cursor-pointer"
+              class="px-4 py-1 bg-[#f2e7ac] hover:bg-[#f2cb05] text-[#394250] hover:text-white text-lg font-light rounded-md cursor-pointer"
               (click)="reportFileInput.click()"
             >
               เลือกไฟล์
@@ -1026,7 +1158,7 @@
           <!-- ปุ่มเลือกไฟล์ -->
           <button
             type="button"
-            class="w-fit px-4 py-1 bg-[#118CD9] hover:bg-[#4c7b98] text-white text-lg font-light rounded-md cursor-pointer"
+            class="w-fit px-4 py-1 bg-[#f2e7ac] hover:bg-[#f2cb05] text-[#394250] hover:text-white text-lg font-light rounded-md cursor-pointer"
             (click)="fileInput.click()"
           >
             เลือกไฟล์
@@ -1039,7 +1171,7 @@
         <button
           (click)="submit()"
           type="submit"
-          class="flex items-center justify-center text-xl gap-3 w-72 py-3 bg-[#118CD9] hover:bg-[#4c7b98] text-white rounded-lg shadow transition duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 cursor-pointer"
+          class="flex items-center justify-center text-xl gap-3 w-72 py-3 bg-[#f2e7ac] hover:bg-[#f2cb05] text-[#394250] hover:text-white rounded-lg shadow transition duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 cursor-pointer"
         >
           <i
             class="bi text-2xl"

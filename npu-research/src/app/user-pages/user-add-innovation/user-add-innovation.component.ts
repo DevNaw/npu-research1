@@ -66,6 +66,7 @@ export const DEFAULT_INNOVATION: ResearchInnovationDetail = {
   oecd_id: 0,
   funding_code: '',
   funding_id: 0,
+  volume_no: '',
 };
 
 @Component({
@@ -75,6 +76,7 @@ export const DEFAULT_INNOVATION: ResearchInnovationDetail = {
   styleUrl: './user-add-innovation.component.css',
 })
 export class UserAddInnovationComponent {
+  toggleTooltip = false;
   isEdit = false;
   activeDropdown: string | null = null;
   activeRowIndex: number | null = null;
@@ -115,6 +117,8 @@ export class UserAddInnovationComponent {
 
   projectData: ResearchInnovationDetail = { ...DEFAULT_INNOVATION };
   keywords: string[] = [];
+
+  showWeightModal = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -246,6 +250,14 @@ export class UserAddInnovationComponent {
     this.activeDropdown = null;
     this.activeRowIndex = null;
   }
+
+  // @HostListener('document: click', ['$event'])
+  // onDocumentClick(event: MouseEvent) {
+  //   const target = event.target as HTMLElement;
+  //   if (!target.closest('.bi-info-circle-fill')) {
+  //     this.toggleTooltip = false;
+  //   }
+  // }
 
   selectValue<K extends keyof ResearchInnovationDetail>(
     field: K,
@@ -486,6 +498,7 @@ export class UserAddInnovationComponent {
     required('patent_number', d.patent_number);
     required('application_number', d.application_number);
     required('examination_url', d.examination_url);
+    required('volume_no', d.volume_no);
 
     if (this.selectedFile) fd.append('full_report', this.selectedFile);
     if (this.selectedImagesFile.length > 0) {
@@ -758,25 +771,22 @@ export class UserAddInnovationComponent {
 
   handleTab(event: KeyboardEvent) {
     if (event.key === 'Tab') {
-      event.preventDefault(); // ❗ หยุดการเปลี่ยน focus
+      event.preventDefault();
   
       const textarea = event.target as HTMLTextAreaElement;
   
       const start = textarea.selectionStart;
       const end = textarea.selectionEnd;
   
-      // ใส่ tab (\t) หรือจะใช้ช่องว่าง 4 ตัวก็ได้
-      const tab = '\t'; // หรือ '    '
+      const tab = '\t';
   
       textarea.value =
         textarea.value.substring(0, start) +
         tab +
         textarea.value.substring(end);
   
-      // อัปเดต cursor
       textarea.selectionStart = textarea.selectionEnd = start + tab.length;
   
-      // sync กับ ngModel
       this.projectData.abstract = textarea.value;
     }
   }

@@ -125,7 +125,7 @@
                 <div class="flex flex-wrap gap-2 my-2">
                   <span
                     *ngFor="let k of researchData?.keywords"
-                    class="px-2 py-1 font-light my-2 text-white rounded bg-[#118CD9]"
+                    class="px-2 py-1 font-light my-2 text-[#394250] rounded bg-[#f2e7ac]"
                   >
                     {{ k.keyword }}
                   </span>
@@ -307,7 +307,7 @@
           <!-- LEFT: TEXT -->
           <div class="flex-1 min-w-0">
             <p class="text-lg md:text-base opacity-70 tracking-wide">
-              บทความวิชาการ / วารสาร / ในประเทศ
+              ผลงานตีพิมพ์
             </p>
 
             <!-- TH -->
@@ -362,7 +362,7 @@
             <!-- ปุ่มบันทึก -->
             <div *ngIf="selectedFile" class="mt-4 text-center">
               <button
-                class="bg-blue-600 text-white px-6 py-2 rounded-lg shadow hover:bg-blue-700 disabled:bg-gray-400"
+                class="bg-[#f2e7ac] text-[#394250] px-6 py-2 rounded-lg shadow hover:bg-[#f2cb05] hover:text-white cursor-pointer disabled:bg-gray-400"
                 [disabled]="!selectedFile"
                 (click)="uploadImage()"
               >
@@ -419,7 +419,7 @@
               <div class="flex flex-wrap gap-2 my-2">
                 <span
                   *ngFor="let k of articleData?.keywords"
-                  class="px-2 py-1 font-light my-2 text-white rounded bg-[#118CD9]"
+                  class="px-2 py-1 font-light my-2 text-[#394250] rounded bg-[#f2e7ac]"
                 >
                   {{ k.keyword }}
                 </span>
@@ -759,7 +759,7 @@
                 <div class="flex flex-wrap gap-2 my-2">
                   <span
                     *ngFor="let k of innovationData?.keywords"
-                    class="px-2 py-1 font-light my-2 text-white rounded bg-[#118CD9]"
+                    class="px-2 py-1 font-light my-2 text-[#394250] rounded bg-[#f2e7ac]"
                   >
                     {{ k.keyword || "-" }}
                   </span>
@@ -943,7 +943,7 @@
                   href="#"
                   class="text-blue-600 hover:underline break-all font-light text-xl"
                 >
-                  https://example.com/innovation-images
+                  {{ innovationData?.img_url }}
                 </a>
               </div>
             </div>

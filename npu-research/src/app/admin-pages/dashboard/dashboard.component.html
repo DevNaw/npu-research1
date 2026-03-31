@@ -4,7 +4,7 @@
   <!-- Heaer -->
   <div class="flex items-center mx-auto md:px-10">
     <div
-      class="border-2 border-[#118CD9] rounded-full items-center flex justify-center mr-4"
+      class="border-2 border-[#f2e7ac] rounded-full items-center flex justify-center mr-4"
     >
       <img
         [src]="
@@ -375,7 +375,10 @@
 
               <!-- ไม่พบข้อมูล -->
               <ng-template #noData>
-                <div class="text-center text-gray-500 py-16">ไม่พบข้อมูล</div>
+                <div class="flex flex-col text-center text-gray-500 py-16">
+                  <i class="bi bi-folder-x text-4xl mb-2"></i>
+                  ไม่พบข้อมูล
+                </div>
               </ng-template>
             </div>
 
@@ -388,6 +391,8 @@
                 <i class="bi bi-bar-chart-fill text-emerald-500 text-xl"></i>
               </div>
 
+              <div>
+                <ng-container *ngIf="hasData; else noData">
               <apx-chart
                 [series]="barChartOptions.series!"
                 [chart]="barChartOptions.chart!"
@@ -400,6 +405,16 @@
                 [stroke]="barChartOptions.stroke!"
                 [tooltip]="barChartOptions.tooltip!"
               ></apx-chart>
+                </ng-container>
+              </div>
+
+              <!-- ไม่พบข้อมูล -->
+              <ng-template #noData>
+                <div class="flex flex-col text-center text-gray-500 py-16">
+                  <i class="bi bi-folder-x text-4xl mb-2"></i>
+                  ไม่พบข้อมูล
+                </div>
+              </ng-template>
             </div>
 
             <div
@@ -414,14 +429,22 @@
                     selectedTab === "project"
                       ? "โครงการวิจัย"
                       : selectedTab === "article"
-                      ? "บทความ"
-                      : "นวัตกรรม"
+                      ? "ผลงานตีพิมพ์"
+                      : "นวัตกรรมสิ่งประดิษฐ์"
                   }}
                 </h4>
               </div>
 
               <!-- ⭐ สำคัญ: ต้องมี container height -->
               <div class="w-full">
+                <ng-container
+                  *ngIf="
+                    (selectedTab === 'project' && hasProjectData) ||
+                      (selectedTab === 'article' && hasArticleData) ||
+                      (selectedTab === 'innovation' && hasInnovationData);
+                    else noData
+                  "
+                >
                 <apx-chart
                   *ngIf="!loading"
                   class="w-full h-full text-white"
@@ -438,6 +461,15 @@
                   [tooltip]="radarChartOptions.tooltip!"
                 >
                 </apx-chart>
+              </ng-container>
+
+              <!-- ไม่พบข้อมูล -->
+              <ng-template #noData>
+                <div class="flex flex-col text-center text-gray-500 py-16">
+                  <i class="bi bi-folder-x text-4xl mb-2"></i>
+                  ไม่พบข้อมูล
+                </div>
+              </ng-template>
               </div>
             </div>
 
@@ -453,13 +485,21 @@
                     selectedTab === "project"
                       ? "โครงการวิจัย"
                       : selectedTab === "article"
-                      ? "บทความ"
-                      : "นวัตกรรม"
+                      ? "ผลงานตีพิมพ์"
+                      : "นวัตกรรมสิ่งประดิษฐ์"
                   }}
                 </h4>
               </div>
 
               <div class="-mx-4 -mb-6">
+                <ng-container
+                  *ngIf="
+                    (selectedTab === 'project' && hasProjectData) ||
+                      (selectedTab === 'article' && hasArticleData) ||
+                      (selectedTab === 'innovation' && hasInnovationData);
+                    else noData
+                  "
+                >
                 <apx-chart
                   *ngIf="!loading"
                   class="w-full h-full text-white"
@@ -476,6 +516,15 @@
                   [tooltip]="radarChartOptionsSub.tooltip!"
                 >
                 </apx-chart>
+              </ng-container>
+
+              <!-- ไม่พบข้อมูล -->
+              <ng-template #noData>
+                <div class="flex flex-col text-center text-gray-500 py-16">
+                  <i class="bi bi-folder-x text-4xl mb-2"></i>
+                  ไม่พบข้อมูล
+                </div>
+              </ng-template>
               </div>
             </div>
           </div>
@@ -488,8 +537,8 @@
                 (click)="changeTab(tab.key)"
                 [ngClass]="
                   selectedTab === tab.key
-                    ? 'bg-[#118CD9] text-[#ffffff] shadow'
-                    : 'text-[#394250] hover:bg-[#118CD9] hover:text-white'
+                    ? 'bg-[#f2e7ac] text-[#394250] shadow'
+                    : 'text-[#394250] hover:bg-[#f2cb05] hover:tex-t-[#394250] transition'
                 "
                 class="flex items-center gap-2 px-2 py-1 md:px-5 md:py-2.5 rounded-xl transition-all duration-200 cursor-pointer"
               >
