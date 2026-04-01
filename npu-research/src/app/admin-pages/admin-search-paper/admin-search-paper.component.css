@@ -5,3 +5,7 @@
   height: 0;
   width: 0;
 }
+
+::ng-deep .ngx-charts text {
+  fill: white !important;
+}

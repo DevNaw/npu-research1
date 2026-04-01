@@ -1,5 +1,5 @@
 <div
-  class="contain-content bg-gray-100 p-5 md:p-6 min-h-screen text-2xl font-medium text-[#394250]"
+  class="contain-content bg-gray-100 p-5 md:p-6 min-h-screen text-xl font-medium text-[#394250]"
 >
   <!-- Heaer -->
   <div class="flex items-center mx-auto md:px-10">
@@ -349,27 +349,18 @@
                 <i class="bi bi-pie-chart-fill text-indigo-500 text-xl"></i>
               </div>
 
-              <!-- <div>
-                <ng-container
-                  *ngIf="single?.length > 0; else noData"
-                >
+              <div style="width: 100%; height: 350px">
+                <ng-container *ngIf="hasData; else noData">
                   <ngx-charts-pie-chart
-                    [view]="view"
                     [results]="single"
-                    [gradient]="gradient"
-                    [legend]="showLegend"
-                    [labels]="showLabels"
-                    [legendPosition]="legendPosition"
                     [scheme]="colorScheme"
-                    [doughnut]="isDoughnut"
+                    [legend]="false"
+                    [labels]="true"
+                    [doughnut]="true"
+                    [tooltipDisabled]="false"
+                    [labelFormatting]="labelFormat"
                   >
                   </ngx-charts-pie-chart>
-                </ng-container>
-              </div> -->
-
-              <div>
-                <ng-container *ngIf="hasData; else noData">
-                  <ag-charts [options]="options" style="display: block; height: 250px"></ag-charts>
                 </ng-container>
               </div>
 
@@ -393,18 +384,18 @@
 
               <div>
                 <ng-container *ngIf="hasData; else noData">
-              <apx-chart
-                [series]="barChartOptions.series!"
-                [chart]="barChartOptions.chart!"
-                [plotOptions]="barChartOptions.plotOptions!"
-                [dataLabels]="barChartOptions.dataLabels!"
-                [xaxis]="barChartOptions.xaxis!"
-                [yaxis]="barChartOptions.yaxis!"
-                [legend]="barChartOptions.legend!"
-                [fill]="barChartOptions.fill!"
-                [stroke]="barChartOptions.stroke!"
-                [tooltip]="barChartOptions.tooltip!"
-              ></apx-chart>
+                  <apx-chart
+                    [series]="barChartOptions.series!"
+                    [chart]="barChartOptions.chart!"
+                    [plotOptions]="barChartOptions.plotOptions!"
+                    [dataLabels]="barChartOptions.dataLabels!"
+                    [xaxis]="barChartOptions.xaxis!"
+                    [yaxis]="barChartOptions.yaxis!"
+                    [legend]="barChartOptions.legend!"
+                    [fill]="barChartOptions.fill!"
+                    [stroke]="barChartOptions.stroke!"
+                    [tooltip]="barChartOptions.tooltip!"
+                  ></apx-chart>
                 </ng-container>
               </div>
 
@@ -420,11 +411,15 @@
             <div
               class="bg-white rounded-xl shadow-md p-4 hover:shadow-lg transition border border-gray-300 mt-6"
             >
-              <div class="flex flex-col items-center justify-between mb-2">
-                <h3 class="text-xl text-center">
-                  ภาพรวมทักษะงานวิจัย (สาขา OECD หลัก)
+              <div
+                class="flex flex-col items-center justify-center mb-2 text-center"
+              >
+                <h3 class="text-xl">
+                  ภาพรวมทักษะงานวิจัย
+                  <span class="block sm:inline">(สาขา OECD หลัก)</span>
                 </h3>
-                <h4 class="text-lg mt-1">
+
+                <h4 class="text-base sm:text-lg mt-1">
                   {{
                     selectedTab === "project"
                       ? "โครงการวิจัย"
@@ -445,42 +440,45 @@
                     else noData
                   "
                 >
-                <apx-chart
-                  *ngIf="!loading"
-                  class="w-full h-full text-white"
-                  [series]="radarChartOptions.series!"
-                  [chart]="radarChartOptions.chart!"
-                  [labels]="radarChartOptions.labels!"
-                  [fill]="radarChartOptions.fill!"
-                  [stroke]="radarChartOptions.stroke!"
-                  [markers]="radarChartOptions.markers!"
-                  [xaxis]="radarChartOptions.xaxis!"
-                  [yaxis]="radarChartOptions.yaxis!"
-                  [plotOptions]="radarChartOptions.plotOptions!"
-                  [dataLabels]="radarChartOptions.dataLabels!"
-                  [tooltip]="radarChartOptions.tooltip!"
-                >
-                </apx-chart>
-              </ng-container>
+                  <apx-chart
+                    *ngIf="!loading"
+                    class="w-full h-full text-white"
+                    [series]="radarChartOptions.series!"
+                    [chart]="radarChartOptions.chart!"
+                    [labels]="radarChartOptions.labels!"
+                    [fill]="radarChartOptions.fill!"
+                    [stroke]="radarChartOptions.stroke!"
+                    [markers]="radarChartOptions.markers!"
+                    [xaxis]="radarChartOptions.xaxis!"
+                    [yaxis]="radarChartOptions.yaxis!"
+                    [plotOptions]="radarChartOptions.plotOptions!"
+                    [dataLabels]="radarChartOptions.dataLabels!"
+                    [tooltip]="radarChartOptions.tooltip!"
+                  >
+                  </apx-chart>
+                </ng-container>
 
-              <!-- ไม่พบข้อมูล -->
-              <ng-template #noData>
-                <div class="flex flex-col text-center text-gray-500 py-16">
-                  <i class="bi bi-folder-x text-4xl mb-2"></i>
-                  ไม่พบข้อมูล
-                </div>
-              </ng-template>
+                <!-- ไม่พบข้อมูล -->
+                <ng-template #noData>
+                  <div class="flex flex-col text-center text-gray-500 py-16">
+                    <i class="bi bi-folder-x text-4xl mb-2"></i>
+                    ไม่พบข้อมูล
+                  </div>
+                </ng-template>
               </div>
             </div>
 
             <div
               class="bg-white rounded-xl shadow-md px-4 pt-4 pb-0 hover:shadow-lg transition border border-gray-300 mt-6"
             >
-              <div class="flex flex-col items-center justify-between mb-1">
+              <div
+                class="flex flex-col items-center justify-center mb-2 text-center"
+              >
                 <h3 class="text-xl">
-                  รายละเอียดทักษะงานวิจัย (สาขา OECD ย่อย)
+                  รายละเอียดทักษะงานวิจัย
+                  <span class="block sm:inline">(สาขา OECD ย่อย)</span>
                 </h3>
-                <h4 class="text-xl mt-1">
+                <h4 class="text-base sm:text-lg mt-1">
                   {{
                     selectedTab === "project"
                       ? "โครงการวิจัย"
@@ -491,7 +489,7 @@
                 </h4>
               </div>
 
-              <div class="-mx-4 -mb-6">
+              <div class="mx-4 mb-6">
                 <ng-container
                   *ngIf="
                     (selectedTab === 'project' && hasProjectData) ||
@@ -500,31 +498,31 @@
                     else noData
                   "
                 >
-                <apx-chart
-                  *ngIf="!loading"
-                  class="w-full h-full text-white"
-                  [series]="radarChartOptionsSub.series!"
-                  [chart]="radarChartOptionsSub.chart!"
-                  [labels]="radarChartOptionsSub.labels!"
-                  [fill]="radarChartOptionsSub.fill!"
-                  [stroke]="radarChartOptionsSub.stroke!"
-                  [markers]="radarChartOptionsSub.markers!"
-                  [xaxis]="radarChartOptionsSub.xaxis!"
-                  [yaxis]="radarChartOptionsSub.yaxis!"
-                  [plotOptions]="radarChartOptionsSub.plotOptions!"
-                  [dataLabels]="radarChartOptionsSub.dataLabels!"
-                  [tooltip]="radarChartOptionsSub.tooltip!"
-                >
-                </apx-chart>
-              </ng-container>
+                  <apx-chart
+                    *ngIf="!loading"
+                    class="w-full h-full text-white"
+                    [series]="radarChartOptionsSub.series!"
+                    [chart]="radarChartOptionsSub.chart!"
+                    [labels]="radarChartOptionsSub.labels!"
+                    [fill]="radarChartOptionsSub.fill!"
+                    [stroke]="radarChartOptionsSub.stroke!"
+                    [markers]="radarChartOptionsSub.markers!"
+                    [xaxis]="radarChartOptionsSub.xaxis!"
+                    [yaxis]="radarChartOptionsSub.yaxis!"
+                    [plotOptions]="radarChartOptionsSub.plotOptions!"
+                    [dataLabels]="radarChartOptionsSub.dataLabels!"
+                    [tooltip]="radarChartOptionsSub.tooltip!"
+                  >
+                  </apx-chart>
+                </ng-container>
 
-              <!-- ไม่พบข้อมูล -->
-              <ng-template #noData>
-                <div class="flex flex-col text-center text-gray-500 py-16">
-                  <i class="bi bi-folder-x text-4xl mb-2"></i>
-                  ไม่พบข้อมูล
-                </div>
-              </ng-template>
+                <!-- ไม่พบข้อมูล -->
+                <ng-template #noData>
+                  <div class="flex flex-col text-center text-gray-500 py-16">
+                    <i class="bi bi-folder-x text-4xl mb-2"></i>
+                    ไม่พบข้อมูล
+                  </div>
+                </ng-template>
               </div>
             </div>
           </div>
@@ -538,7 +536,7 @@
                 [ngClass]="
                   selectedTab === tab.key
                     ? 'bg-[#f2e7ac] text-[#394250] shadow'
-                    : 'text-[#394250] hover:bg-[#f2cb05] hover:tex-t-[#394250] transition'
+                    : 'text-[#394250] hover:bg-[#f2cb05] hover:text-white'
                 "
                 class="flex items-center gap-2 px-2 py-1 md:px-5 md:py-2.5 rounded-xl transition-all duration-200 cursor-pointer"
               >
@@ -549,7 +547,7 @@
 
             <!-- Search -->
             <div
-              class="flex items-center w-full md:w-auto mt-2 md:mt-0 justify-end md:ml-auto text-xl"
+              class="flex items-center w-full md:w-auto mt-2 md:mt-0 justify-end md:ml-auto"
             >
               <span>Search:</span>
               <input

@@ -1,1 +1,19 @@
-<ag-charts [options]="options" style="display: block; height: 400px;"></ag-charts>
+<!-- component.html — ไม่ต้องมี tooltipTemplate -->
+<ngx-charts-pie-chart
+  [results]="data"
+  [scheme]="colorScheme"
+  [legend]="true"
+  [labels]="true"
+  [doughnut]="true"
+  [tooltipDisabled]="false">
+</ngx-charts-pie-chart>
+
+<!-- component.html -->
+<!-- <apx-chart
+  [series]="chartOptions.series"
+  [chart]="chartOptions.chart"
+  [labels]="chartOptions.labels"
+  [colors]="chartOptions.colors"
+  [tooltip]="chartOptions.tooltip"
+  [legend]="chartOptions.legend">
+</apx-chart> -->

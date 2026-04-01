@@ -71,6 +71,9 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { AgChartsModule } from 'ag-charts-angular';
+import { EditProjectsComponent } from './admin-pages/edit-projects/edit-projects.component';
+import { EditArticleComponent } from './admin-pages/edit-article/edit-article.component';
+import { EditInnovationComponent } from './admin-pages/edit-innovation/edit-innovation.component';
 
 @NgModule({
   declarations: [
@@ -126,8 +129,12 @@ import { AgChartsModule } from 'ag-charts-angular';
     OrganizationComponent,
     ManageOecdComponent,
     PrivacyPolicyComponent,
+    EditProjectsComponent,
+    EditArticleComponent,
+    EditInnovationComponent,
   ],
   imports: [
+    BrowserAnimationsModule,
     BrowserModule,
     AppRoutingModule,
     NgApexchartsModule,
@@ -140,13 +147,11 @@ import { AgChartsModule } from 'ag-charts-angular';
     AppRoutingModule,
     NgxEditorModule,
     HttpClientModule,
-    RouterModule,
     RouterModule.forRoot([]),
     A11yModule,
     ChartsModule,
     CanvasJSAngularChartsModule,
     NgxChartsModule,
-    BrowserAnimationsModule,
     OverlayModule,
     AgChartsModule,
 ],

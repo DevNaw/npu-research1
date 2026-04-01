@@ -1,42 +1,11 @@
-import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { SearchService } from '../../services/search.service';
 import { Researcher } from '../../models/search-researchers.model';
 import { Expertise, Organization } from '../../models/get-researcher.model';
 import { MainComponent } from '../../shared/layouts/main/main.component';
-import { CanvasJS } from '@canvasjs/angular-charts';
-import {
-  AgChartOptions,
-  ModuleRegistry,
-  AllCommunityModule,
-} from "ag-charts-community";
-
-ModuleRegistry.registerModules([AllCommunityModule]);
-
-CanvasJS.addColorSet('customColorSet', [
-  '#038FFB',
-  '#06E396',
-  '#FEB119',
-  '#FF4560',
-  '#775DD0',
-  '#00E396',
-  '#0090FF',
-  '#FF66C4',
-  '#00B8D9',
-  '#FFB800',
-  '#4CAF50',
-  '#2196F3',
-  '#9C27B0',
-  '#FF5722',
-  '#3F51B5',
-  '#8BC34A',
-  '#FFC107',
-  '#E91E63',
-  '#673AB7',
-  '#03A9F4',
-  '#CDDC39',
-]);
+import { Color, LegendPosition, ScaleType } from '@swimlane/ngx-charts';
 
 @Component({
   selector: 'app-user-researchers',
@@ -45,91 +14,69 @@ CanvasJS.addColorSet('customColorSet', [
   styleUrl: './user-researchers.component.css',
 })
 export class UserResearchersComponent implements OnInit {
-  chartOptions: any;
   isSearched = false;
-  researcherName: string = '';
-
+  researcherName = '';
   searchMajor = '';
   selectedMajor = '';
   searchText = '';
 
+  // ── Table / Pagination ─────────────────────────────────────
   filteredData: Researcher[] = [];
+  filteredResearchers: Researcher[] = [];
   paginationData: Researcher[] = [];
-
   pageSize = 10;
   currentPage = 1;
 
   loading = false;
   error: string | null = null;
 
-  /** ===== DONUT CHART ===== */
-  donutLabels: string[] = [];
-  donutSeries: number[] = [];
-  totalResearchers = 0;
-
-  filteredResearchers: Researcher[] = [];
-  researchers: Researcher[] = [];
+  // ── Agency / Expertise ─────────────────────────────────────
   organizations: Organization[] = [];
   expertises: Expertise[] = [];
-  searchFaculitie: string = '';
+  searchFaculitie = '';
   selectedFaculty: string | null = null;
   selectedFacultyId: number | null = null;
   selectedMajorId: number | null = null;
   activeDropdown: string | null = null;
 
-  // new chart
-  options: AgChartOptions;
+  // ── Chart ──────────────────────────────────────────────────
+  donutLabels: string[] = [];
+  donutSeries: number[] = [];
+  totalResearchers = 0;
+  single: { name: string; value: number }[] = [];
   hasData = false;
+  legendPosition: LegendPosition = LegendPosition.Below;
+
+  colorScheme: Color = {
+    name: 'horizon',
+    selectable: true,
+    group: ScaleType.Ordinal,
+    domain: [
+      '#FF6B6B', '#4ECDC4', '#FFD93D', '#1A73E8', '#6C5CE7',
+      '#00B894', '#FDCB6E', '#E17055', '#0984E3', '#A29BFE',
+      '#00CEC9', '#FAB1A0', '#2D3436', '#E84393', '#636E72',
+      '#55EFC4', '#FD79A8', '#74B9FF', '#81ECEC', '#FFEAA7',
+      '#D63031', '#00A8FF', '#9C88FF', '#44BD32', '#FBC531',
+    ],
+  };
+
+  labelFormat = (name: string): string => {
+    const item = this.single.find((d) => d.name === name);
+    if (!item) return name;
+    const total = this.single.reduce((sum, d) => sum + d.value, 0);
+    const percent = total > 0 ? ((item.value / total) * 100).toFixed(1) : '0';
+    return `${name}\n${percent}%`;
+  };
 
   constructor(
     private router: Router,
     private authService: AuthService,
     private searchService: SearchService
-  ) {
-    this.chartOptions = {
-      backgroundColor: '#394250',
-      colorSet: 'customColorSet',
-      animationEnabled: true,
-      data: [
-        {
-          type: 'doughnut',
-          yValueFormatString: '#,##0',
-          indexLabel: '{name} ({y})',
-          indexLabelFontColor: '#ffffff',
-          dataPoints: [],
-        },
-      ],
-    };
+  ) {}
 
-    this.options = {
-      background: {
-        fill: '#394250',  // ← สีพื้นหลัง
-      },
-      data: [],
-      series: [
-        {
-          type: "donut",
-          calloutLabelKey: "faculty",
-          angleKey: "count",
-          innerRadiusRatio: 0.7,
-          calloutLabel: {
-            enabled: true,
-            color: '#ffffff',  // ← สีตัวหนังสือ label
-            formatter: (params: any) => {
-              const total = (this.options.data as any[]).reduce(
-                (sum: number, d: any) => sum + d.count, 0
-              );
-              const percent = ((params.datum.count / total) * 100).toFixed(1);
-              return `${params.datum.faculty} (${percent}%)`;  // ← format label
-            },
-          },
-        },
-      ],
-      legend: {
-        enabled: false,  // ← ปิด legend
-      },
-    };
-  }
+  // ============================================================
+  // Lifecycle
+  // ============================================================
 
   ngOnInit() {
     MainComponent.showLoading();
@@ -139,6 +86,10 @@ export class UserResearchersComponent implements OnInit {
     ]).then(() => MainComponent.hideLoading());
   }
 
+  // ============================================================
+  // Data loading
+  // ============================================================
+
   loadResearch() {
     this.loading = true;
     this.error = null;
@@ -147,7 +98,6 @@ export class UserResearchersComponent implements OnInit {
       next: (res) => {
         this.organizations = res.data.organizations;
         this.expertises = res.data.expertises;
-
         this.loading = false;
       },
       error: (err) => {
@@ -157,112 +107,39 @@ export class UserResearchersComponent implements OnInit {
     });
   }
 
-  /** ===== SEARCH ===== */
+  // ============================================================
+  // Search
+  // ============================================================
+
   search() {
     this.isSearched = true;
     this.loading = true;
 
     const payload: any = {};
 
-    if (this.selectedFacultyId) {
-      payload.org_id = this.selectedFacultyId;
-    }
-
-    if (this.selectedMajorId) {
-      payload.expertise_id = this.selectedMajorId;
-    }
-
-    if (this.researcherName?.trim()) {
-      payload.q = this.researcherName.trim();
-    }
+    if (this.selectedFacultyId) payload.org_id = this.selectedFacultyId;
+    if (this.selectedMajorId) payload.expertise_id = this.selectedMajorId;
+    if (this.researcherName?.trim()) payload.q = this.researcherName.trim();
 
     this.searchService.searchResearchers(payload).subscribe({
       next: (res) => {
         const data = res.data;
-    
         this.filteredData = data.result;
         this.filteredResearchers = data.result;
-
-        const colors = [
-          '#038FFB', '#06E396', '#FEB119', '#FF4560', '#775DD0',
-          '#00E396', '#0090FF', '#FF66C4', '#00B8D9', '#FFB800',
-          '#4CAF50', '#2196F3', '#9C27B0', '#FF5722', '#3F51B5',
-        ];
-
-        const graphData = data.graph.map((g: any, index: number) => ({
-          faculty: g.faculty,
-          count: g.count,
-        }));
-
-        this.hasData = graphData.length > 0;
-        
-        this.options = {
-          ...this.options,
-          data: graphData,
-        };
-
-        
-      
-        this.donutLabels = data.graph.map((g) => g.faculty);
-        this.donutSeries = data.graph.map((g) => g.count);
+        this.donutLabels = data.graph.map((g: any) => g.faculty);
+        this.donutSeries = data.graph.map((g: any) => g.count);
         this.totalResearchers = data.total;
+        this.single = data.graph.map((g: any) => ({ name: g.faculty, value: g.count }));
+        this.hasData = data.graph.length > 0;
         this.currentPage = 1;
         this.updatePagination();
         this.loading = false;
       },
       error: (err) => {
         console.error('ค้นหาล้มเหลว', err);
-        console.log('error body:', err.error);
         this.loading = false;
       },
     });
-  }
-
-  toggleDropdown(name: string, event: MouseEvent) {
-    event.stopPropagation();
-    this.activeDropdown = this.activeDropdown === name ? null : name;
-  }
-  @HostListener('document:click')
-  closeAll() {
-    this.activeDropdown = null;
-  }
-
-  selectFaculities(org: Organization | { id: null; faculty: string }) {
-    if (org.id === null) {
-      this.selectedFaculty = null;
-      this.selectedFacultyId = null;
-    } else {
-      this.selectedFaculty = org.faculty;
-      this.selectedFacultyId = org.id;
-    }
-
-    this.searchFaculitie = '';
-    this.activeDropdown = null;
-  }
-
-  filteredFaculties(): (Organization | { id: null; faculty: string })[] {
-    const all = { id: null, faculty: 'หน่วยงานทั้งหมด' };
-
-    if (!this.searchFaculitie) return [all, ...this.organizations];
-
-    return this.organizations.filter((org) =>
-      org.faculty.toLowerCase().includes(this.searchFaculitie.toLowerCase())
-    );
-  }
-
-  selectMajor(exper: Expertise) {
-    this.selectedMajor = exper.name_th;
-    this.selectedMajorId = exper.expertise_id;
-    this.activeDropdown = null;
-    this.searchMajor = '';
-  }
-
-  filteredMajor(): Expertise[] {
-    if (!this.searchMajor) return this.expertises;
-
-    return this.expertises.filter((exper) =>
-      exper.name_th.toLowerCase().includes(this.searchMajor.toLowerCase())
-    );
   }
 
   onSearch(): void {
@@ -289,30 +166,65 @@ export class UserResearchersComponent implements OnInit {
     this.updatePagination();
   }
 
-  updatePagination(): void {
-    const start = (this.currentPage - 1) * this.pageSize;
-    const end = start + this.pageSize;
+  // ============================================================
+  // Dropdown helpers
+  // ============================================================
 
-    this.paginationData = this.filteredData.slice(start, end);
+  toggleDropdown(name: string, event: MouseEvent) {
+    event.stopPropagation();
+    this.activeDropdown = this.activeDropdown === name ? null : name;
   }
 
-  goToUserProfile(userId: number) {
-    if (!this.authService.isLoggedIn()) {
-      this.router.navigate(['/login']);
-      return;
+  @HostListener('document:click')
+  closeAll() {
+    this.activeDropdown = null;
+  }
+
+  // ============================================================
+  // Select
+  // ============================================================
+
+  selectFaculities(org: Organization | { id: null; faculty: string }) {
+    if (org.id === null) {
+      this.selectedFaculty = null;
+      this.selectedFacultyId = null;
+    } else {
+      this.selectedFaculty = org.faculty;
+      this.selectedFacultyId = org.id;
     }
-
-    const base = this.authService.isAdmin() ? 'admin' : 'user';
-    this.router.navigate(['/', base, 'profile-public', userId]);
+    this.searchFaculitie = '';
+    this.activeDropdown = null;
   }
 
-  changePage(page: number) {
-    if (page < 1 || page > this.totalPages) return;
-    if (page === this.currentPage) return;
-
-    this.currentPage = page;
-    this.updatePagination();
+  selectMajor(exper: Expertise) {
+    this.selectedMajor = exper.name_th;
+    this.selectedMajorId = exper.expertise_id;
+    this.activeDropdown = null;
+    this.searchMajor = '';
   }
+
+  // ============================================================
+  // Filter lists
+  // ============================================================
+
+  filteredFaculties(): (Organization | { id: null; faculty: string })[] {
+    const all = { id: null, faculty: 'หน่วยงานทั้งหมด' };
+    if (!this.searchFaculitie) return [all, ...this.organizations];
+    return this.organizations.filter((org) =>
+      org.faculty.toLowerCase().includes(this.searchFaculitie.toLowerCase())
+    );
+  }
+
+  filteredMajor(): Expertise[] {
+    if (!this.searchMajor) return this.expertises;
+    return this.expertises.filter((exper) =>
+      exper.name_th.toLowerCase().includes(this.searchMajor.toLowerCase())
+    );
+  }
+
+  // ============================================================
+  // Pagination
+  // ============================================================
 
   get totalPages(): number {
     return Math.ceil(this.filteredData.length / this.pageSize);
@@ -322,31 +234,48 @@ export class UserResearchersComponent implements OnInit {
     return this.filteredData.length;
   }
 
-  get pages(): number[] {
-    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
-  }
-
   get visiblePages(): (number | string)[] {
     const total = this.totalPages;
     const current = this.currentPage;
-    const pages: (number | string)[] = [];
-  
+
     if (total <= 5) {
       return Array.from({ length: total }, (_, i) => i + 1);
     }
-  
-    pages.push(1);
-  
+
+    const pages: (number | string)[] = [1];
     if (current > 3) pages.push('...');
-  
+
     for (let i = Math.max(2, current - 1); i <= Math.min(total - 1, current + 1); i++) {
       pages.push(i);
     }
-  
+
     if (current < total - 2) pages.push('...');
-  
     pages.push(total);
-  
+
     return pages;
+  }
+
+  updatePagination(): void {
+    const start = (this.currentPage - 1) * this.pageSize;
+    this.paginationData = this.filteredData.slice(start, start + this.pageSize);
+  }
+
+  changePage(page: number) {
+    if (page < 1 || page > this.totalPages || page === this.currentPage) return;
+    this.currentPage = page;
+    this.updatePagination();
+  }
+
+  // ============================================================
+  // Navigation
+  // ============================================================
+
+  goToUserProfile(userId: number) {
+    if (!this.authService.isLoggedIn()) {
+      this.router.navigate(['/login']);
+      return;
+    }
+    const base = this.authService.isAdmin() ? 'admin' : 'user';
+    this.router.navigate(['/', base, 'profile-public', userId]);
   }
 }

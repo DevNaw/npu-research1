@@ -217,4 +217,8 @@ export class ResearchService {
   deleteImage(id: number) {
     return this.http.delete(`${this.baseUrl}/innovation/${id}/image`);
   }
+
+  adminUpdateArticle(id: number, data: any) {
+    return this.http.post(`${this.baseUrl}/m/research/${id}/update-article`, data);
+  }
 }

@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import {
   BarSummary,
   ResearchItem,
@@ -7,9 +7,7 @@ import {
 import { ProfileService } from '../../services/profile.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-  ApexNonAxisChartSeries,
   ApexChart,
-  ApexResponsive,
   ApexLegend,
   ApexDataLabels,
   ApexPlotOptions,
@@ -25,13 +23,6 @@ import {
 import { MainComponent } from '../../shared/layouts/main/main.component';
 import { AuthService } from '../../services/auth.service';
 import { Color, LegendPosition, ScaleType } from '@swimlane/ngx-charts';
-import {
-  AgChartOptions,
-  ModuleRegistry,
-  AllCommunityModule,
-} from 'ag-charts-community';
-
-ModuleRegistry.registerModules([AllCommunityModule]);
 
 export type RadarChartOptions = {
   series: ApexAxisChartSeries;
@@ -69,39 +60,26 @@ type ResearchTab = 'project' | 'article' | 'innovation';
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit {
   @ViewChild('chart') chart!: ChartComponent;
-  chartOptions: any;
+
   fullLabels: string[] = [];
   fullLabelsSub: string[] = [];
   radarData: any;
-
   loading = false;
 
   profileDataById: ResearchProfileData | null = null;
   isPersonalOpen = true;
   isWorkOpen = false;
   isEducation = false;
-  isTraining = false;
-  isAddress = false;
-  isOwner = false;
-  trainings: any[] = [];
+
   selectedTab: ResearchTab = 'project';
   searchText = '';
   paginationData: ResearchItem[] = [];
   currentPage = 1;
   pageSize = 10;
-  isModalOpen = false;
-  isEditMode = false;
-  searchEducationLevel = '';
-  searchMajors = '';
-  searchQualifications = '';
 
-  researchData: any = {
-    projects: [],
-    articles: [],
-    innovations: [],
-  };
+  researchData: any = { projects: [], articles: [], innovations: [] };
 
   /* ===== Charts ===== */
   radarChartOptions!: Partial<RadarChartOptions>;
@@ -110,34 +88,38 @@ export class DashboardComponent {
   barSummary: BarSummary[] = [];
   donutSummary: any;
 
-  researchList: ResearchItem[] = [];
   originalData: ResearchItem[] = [];
-
-  totalItems: number = 0;
-
   filteredData: ResearchItem[] = [];
+  totalItems = 0;
 
-  // ===== Ngx CHART =====
-  single: any;
-  view: [number, number] = [400, 300];
-  gradient: boolean = true;
-  showLegend: boolean = false;
-  showLabels: boolean = true;
-  isDoughnut: boolean = true;
+  // ===== ngx-charts =====
+  single: { name: string; value: number }[] = [];
   legendPosition: LegendPosition = LegendPosition.Below;
-
-  colorScheme: Color = {
-    name: 'custom',
-    selectable: true,
-    group: ScaleType.Linear,
-    domain: ['#1E3A8A', '#38BDF8', '#06B6D4', '#BAE6FD', '#EAB308', '#F59E0B'],
-  };
-
-  options: AgChartOptions;
   hasData = false;
   hasProjectData = false;
   hasArticleData = false;
   hasInnovationData = false;
+
+  colorScheme: Color = {
+    name: 'horizon',
+    selectable: true,
+    group: ScaleType.Ordinal,
+    domain: ['#038FFB', '#06E396', '#FEB119'],
+  };
+
+  labelFormat = (name: string): string => {
+    const item = this.single.find((d) => d.name === name);
+    if (!item) return name;
+    const total = this.single.reduce((sum, d) => sum + d.value, 0);
+    const percent = total > 0 ? ((item.value / total) * 100).toFixed(1) : '0';
+    return `${name}\n${percent}%`;
+  };
+
+  tabs: { key: ResearchTab; label: string; icon: string }[] = [
+    { key: 'project', label: 'งานวิจัย', icon: 'bi-journal-text' },
+    { key: 'article', label: 'ผลงานตีพิมพ์', icon: 'bi-file-earmark-text' },
+    { key: 'innovation', label: 'นวัตกรรมสิ่งประดิษฐ์', icon: 'bi-award' },
+  ];
 
   constructor(
     private service: ProfileService,
@@ -145,277 +127,110 @@ export class DashboardComponent {
     private route: ActivatedRoute,
     private authService: AuthService
   ) {
-    this.chartOptions = {
-      colorSet: 'customColorSet',
-      animationEnabled: true,
-      data: [
-        {
-          type: 'doughnut',
-          yValueFormatString: '#,##0',
-          indexLabel: '{name} ({y})',
-          dataPoints: [],
-        },
-      ],
-    };
-
-    this.barChartOptions = {
-      series: [
-        {
-          name: 'โครงการวิจัย',
-          data: [4, 6, 10],
-        },
-        {
-          name: 'บทความ',
-          data: [6, 3, 1],
-        },
-        {
-          name: 'นวัตกรรม',
-          data: [3, 1, 6],
-        },
-      ],
-      chart: {
-        type: 'bar',
-        height: 200,
-      },
-      plotOptions: {
-        bar: {
-          horizontal: false,
-          columnWidth: '55%',
-          borderRadius: 6,
-        },
-      },
-      dataLabels: {
-        enabled: false,
-      },
-      stroke: {
-        show: true,
-        width: 2,
-        colors: ['transparent'],
-      },
-      xaxis: {
-        categories: ['2023', '2024', '2025'],
-      },
-      yaxis: {
-        title: {},
-      },
-      fill: {
-        opacity: 1,
-      },
-      tooltip: {
-        y: {
-          formatter: (val) => `${val} ผลงาน`,
-        },
-      },
-      legend: {
-        show: true,
-      },
-    };
-
-    this.radarChartOptions = {
-      series: [
-        {
-          name: 'จำนวนงานวิจัย',
-          data: [],
-        },
-      ],
-      chart: {
-        type: 'radar',
-        height: 300,
-        width: '100%',
-        toolbar: { show: false },
-        foreColor: '#394250',
-      },
-      labels: [],
-      fill: {
-        opacity: 0.3,
-      },
-      stroke: {
-        width: 2,
-        colors: ['#038FFB'],
-      },
-      markers: {
-        size: 4,
-        colors: ['#038FFB'],
-        strokeColors: '#394250',
-      },
-      dataLabels: {
-        enabled: true,
-        style: {
-          colors: ['#394250'],
-        },
-      },
-
-      plotOptions: {
-        radar: {
-          size: 120,
-          polygons: {
-            strokeColors: '#e5e7eb',
-            fill: {
-              colors: ['transparent'],
-            },
-          },
-        },
-      },
-
-      yaxis: {
-        labels: {
-          style: {
-            colors: '#394250',
-          },
-        },
-      },
-
-      xaxis: {
-        labels: {
-          style: {
-            colors: '#394250',
-          },
-        },
-      },
-
-      tooltip: {
-        theme: 'dark',
-        custom: ({ series, seriesIndex, dataPointIndex }) => {
-          const fullLabel = this.fullLabels[dataPointIndex]; // ⭐ ตัวจริง
-          const value = series[seriesIndex][dataPointIndex];
-
-          return `<div style="padding:8px 12px; background:#333; color:#fff; border-radius:6px;">
-        <div style="font-weight:600; margin-bottom:4px;">${fullLabel}</div>
-        <hr style="border-color:#555; margin:4px 0;">
-        <div style="display:flex; justify-content:space-around; align-items:center; gap:6px;">
-          <span style="width:10px; height:10px; border-radius:50%; background:#038FFB; display:inline-block;"></span>
-          <span>จำนวน: ${value}</span>
-        </div>
-      </div>`;
-        },
-      },
-    };
-
-    this.radarChartOptionsSub = {
-      series: [
-        {
-          name: 'จำนวนงานวิจัย',
-          data: [],
-          color: '#FF4560',
-        },
-      ],
-      chart: {
-        type: 'radar',
-        height: 300,
-        width: '100%',
-        toolbar: { show: false },
-        foreColor: '#394250',
-      },
-      labels: [],
-      fill: {
-        opacity: 0.3,
-        colors: ['#FF4560'],
-      },
-      stroke: {
-        width: 2,
-        colors: ['#FF4560'],
-      },
-      markers: {
-        size: 4,
-        colors: ['#FF4560'],
-        strokeColors: '#ffffff',
-      },
-      dataLabels: {
-        enabled: true,
-        style: {
-          colors: ['#394250'],
-        },
-      },
-
-      plotOptions: {
-        radar: {
-          size: 120,
-          polygons: {
-            strokeColors: '#e5e7eb',
-            fill: {
-              colors: ['transparent'],
-            },
-          },
-        },
-      },
-
-      yaxis: {
-        labels: {
-          style: {
-            colors: '#394250',
-          },
-        },
-      },
-
-      xaxis: {
-        labels: {
-          style: {
-            colors: '#394250',
-          },
-        },
-      },
-
-      tooltip: {
-        theme: 'dark',
-        custom: ({ series, seriesIndex, dataPointIndex }) => {
-          const fullLabelsSub = this.fullLabelsSub[dataPointIndex]; // ⭐ ตัวจริง
-          const value = series[seriesIndex][dataPointIndex];
-
-          return `<div style="padding:8px 12px; background:#333; color:#fff; border-radius:6px;">
-        <div style="font-weight:600; margin-bottom:4px;">${fullLabelsSub}</div>
-        <hr style="border-color:#555; margin:4px 0;">
-        <div style="display:flex; justify-content:space-around; align-items:center; gap:6px;">
-          <span style="width:10px; height:10px; border-radius:50%; background:#FF4560; display:inline-block;"></span>
-          <span>จำนวน: ${value}</span>
-        </div>
-      </div>`;
-        },
-      },
-    };
-
-    this.options = {
-      background: {
-        fill: '#ffffff', // ← สีพื้นหลัง
-      },
-      data: [],
-      series: [
-        {
-          type: 'donut',
-          calloutLabelKey: 'faculty',
-          angleKey: 'count',
-          innerRadiusRatio: 0.7,
-          fills: ['#038FFB', '#06E396', '#FEB119'],
-          calloutLabel: {
-            enabled: true,
-            color: '#394250', // ← สีตัวหนังสือ label
-            formatter: (params: any) => {
-              const total = (this.options.data as any[]).reduce(
-                (sum: number, d: any) => sum + d.count,
-                0
-              );
-              const percent = ((params.datum.count / total) * 100).toFixed(1);
-              return `${params.datum.faculty} (${percent}%)`; // ← format label
-            },
-          },
-        },
-      ],
-      legend: {
-        enabled: false, // ← ปิด legend
-      },
-    };
+    this.initCharts();
   }
 
   ngOnInit() {
     MainComponent.showLoading();
     this.route.paramMap.subscribe((params) => {
       const id = params.get('id');
-
       if (id) {
         this.loading = true;
         this.loadDataById(+id);
       }
       MainComponent.hideLoading();
     });
+  }
+
+  private initCharts(): void {
+    const radarBase = {
+      chart: {
+        type: 'radar' as const,
+        height: 300,
+        width: '100%',
+        toolbar: { show: false },
+        foreColor: '#394250',
+      },
+      labels: [] as string[],
+      fill: { opacity: 0.3 },
+      dataLabels: { enabled: true, style: { colors: ['#394250'] } },
+      plotOptions: {
+        radar: {
+          size: 120,
+          polygons: {
+            strokeColors: '#e5e7eb',
+            fill: { colors: ['transparent'] },
+          },
+        },
+      },
+      yaxis: { labels: { style: { colors: '#394250' } } },
+      xaxis: { labels: { style: { colors: '#394250' } } },
+    };
+
+    this.barChartOptions = {
+      series: [
+        { name: 'โครงการวิจัย', data: [] },
+        { name: 'บทความ', data: [] },
+        { name: 'นวัตกรรม', data: [] },
+      ],
+      chart: { type: 'bar', height: 200 },
+      plotOptions: {
+        bar: { horizontal: false, columnWidth: '55%', borderRadius: 6 },
+      },
+      dataLabels: { enabled: false },
+      stroke: { show: true, width: 2, colors: ['transparent'] },
+      xaxis: { categories: [] },
+      yaxis: { title: {} },
+      fill: { opacity: 1 },
+      tooltip: { y: { formatter: (val) => `${val} ผลงาน` } },
+      legend: { show: true },
+    };
+
+    this.radarChartOptions = {
+      ...radarBase,
+      series: [{ name: 'จำนวนงานวิจัย', data: [] as number[] }],
+      stroke: { width: 2, colors: ['#038FFB'] },
+      markers: { size: 4, colors: ['#038FFB'], strokeColors: '#394250' },
+      tooltip: {
+        theme: 'dark',
+        custom: ({ series, seriesIndex, dataPointIndex }: any) =>
+          this.tooltipTemplate(
+            this.fullLabels[dataPointIndex],
+            series[seriesIndex][dataPointIndex],
+            '#038FFB'
+          ),
+      },
+    };
+
+    this.radarChartOptionsSub = {
+      ...radarBase,
+      series: [
+        { name: 'จำนวนงานวิจัย', data: [] as number[], color: '#FF4560' },
+      ],
+      fill: { opacity: 0.3, colors: ['#FF4560'] },
+      stroke: { width: 2, colors: ['#FF4560'] },
+      markers: { size: 4, colors: ['#FF4560'], strokeColors: '#ffffff' },
+      tooltip: {
+        theme: 'dark',
+        custom: ({ series, seriesIndex, dataPointIndex }: any) =>
+          this.tooltipTemplate(
+            this.fullLabelsSub[dataPointIndex],
+            series[seriesIndex][dataPointIndex],
+            '#FF4560'
+          ),
+      },
+    };
+  }
+
+  private tooltipTemplate(label: string, value: number, color: string): string {
+    return `<div style="padding:8px 12px; background:#333; color:#fff; border-radius:6px;">
+      <div style="font-weight:600; margin-bottom:4px;">${label}</div>
+      <hr style="border-color:#555; margin:4px 0;">
+      <div style="display:flex; align-items:center; gap:6px;">
+        <span style="width:10px; height:10px; border-radius:50%; background:${color}; display:inline-block;"></span>
+        <span>จำนวน: ${value}</span>
+      </div>
+    </div>`;
   }
 
   loadDataById(id: number) {
@@ -426,7 +241,6 @@ export class DashboardComponent {
         this.donutSummary = res.data.donut;
         this.researchData = res.data.researchs;
         this.radarData = res.data.radar;
-
         this.loading = false;
         this.changeTab('project');
         this.updateCharts();
@@ -435,6 +249,74 @@ export class DashboardComponent {
     });
   }
 
+  updateCharts(): void {
+    if (!this.barSummary.length) return;
+
+    const sorted = [...this.barSummary].sort((a, b) => a.year - b.year);
+    const years = sorted.map((i) => i.year.toString());
+
+    // ===== BAR =====
+    this.barChartOptions = {
+      ...this.barChartOptions,
+      series: [
+        { name: 'โครงการวิจัย', data: sorted.map((i) => i.project_count) },
+        { name: 'บทความ', data: sorted.map((i) => i.article_count) },
+        { name: 'นวัตกรรม', data: sorted.map((i) => i.innovation_count) },
+      ],
+      xaxis: { categories: years },
+    };
+
+    // ===== PIE (ngx-charts) =====
+    this.single = [
+      { name: 'โครงการวิจัย', value: this.donutSummary.projects_count },
+      { name: 'บทความ', value: this.donutSummary.articles_count },
+      { name: 'นวัตกรรม', value: this.donutSummary.innovations_count },
+    ];
+
+    const total = this.single.reduce((sum, d) => sum + d.value, 0);
+    this.hasData = total > 0;
+    this.hasProjectData = this.donutSummary.projects_count > 0;
+    this.hasArticleData = this.donutSummary.articles_count > 0;
+    this.hasInnovationData = this.donutSummary.innovations_count > 0;
+
+    // ===== RADAR =====
+    const tabIndex =
+      this.selectedTab === 'project'
+        ? 0
+        : this.selectedTab === 'article'
+        ? 1
+        : 2;
+    const tabLabel =
+      this.tabs.find((t) => t.key === this.selectedTab)?.label || '';
+
+    this.fullLabels = this.radarData?.major?.labels || [];
+    this.fullLabelsSub = this.radarData?.sub?.labels || [];
+
+    const labels = this.fullLabels.map((l: string) => this.shortLabel(l));
+    const labelsSub = this.fullLabelsSub.map((l: string) => this.shortLabel(l));
+    const values = [
+      ...(this.radarData?.major?.datasets[tabIndex]?.data || []),
+    ] as number[];
+    const valuesSub = [
+      ...(this.radarData?.sub?.datasets[tabIndex]?.data || []),
+    ] as number[];
+
+    this.radarChartOptions = {
+      ...this.radarChartOptions,
+      series: [{ name: tabLabel, data: values }],
+      labels,
+      xaxis: { categories: labels },
+    };
+
+    this.radarChartOptionsSub = {
+      ...this.radarChartOptionsSub,
+      series: [{ name: tabLabel, data: valuesSub }],
+      labels: labelsSub,
+      xaxis: { categories: labelsSub },
+    };
+  }
+
+  // ── Tab / Pagination ─────────────────────────────────────────
   changeTab(tab: ResearchTab): void {
     this.selectedTab = tab;
     this.searchText = '';
@@ -442,195 +324,37 @@ export class DashboardComponent {
 
     if (!this.researchData) return;
 
-    if (tab === 'project') {
-      this.originalData = this.researchData.projects || [];
-    }
-
-    if (tab === 'article') {
-      this.originalData = this.researchData.articles || [];
-    }
-
-    if (tab === 'innovation') {
-      this.originalData = this.researchData.innovations || [];
-    }
+    this.originalData =
+      tab === 'project'
+        ? this.researchData.projects || []
+        : tab === 'article'
+        ? this.researchData.articles || []
+        : this.researchData.innovations || [];
 
     this.filteredData = [...this.originalData];
     this.totalItems = this.filteredData.length;
-
     this.updateCharts();
-    this.updatePagination(); // 🔥
+    this.updatePagination();
   }
 
-  onSearch() {}
-
-  // viewItem(id: number) {
-  //   this.router.navigate(['/performance-public', this.selectedTab, id]);
-  // }
-
-  viewItem(id: number) {
-    if (this.authService.isLoggedIn()) {
-      const basePath = this.authService.isAdmin()
-        ? '/admin/performance-by-departmaent'
-        : '/user/performance-by-departmaent';
-
-      this.router.navigate([basePath, this.selectedTab, id]);
-    } else {
-      this.router.navigate(['/performance-public', this.selectedTab, id]);
-    }
+  onSearch(): void {
+    const keyword = this.searchText.toLowerCase().trim();
+    this.filteredData = !keyword
+      ? [...this.originalData]
+      : this.originalData.filter((item) =>
+          item.title_th?.toLowerCase().includes(keyword)
+        );
+    this.currentPage = 1;
+    this.updatePagination();
   }
-
-  toggle(name: string, event: MouseEvent) {
-    event.stopPropagation();
-  }
-
-  changeTabForChart(tab: ResearchTab): void {
-    this.selectedTab = tab;
-    this.updateCharts();
-  }
-
-  updateCharts(): void {
-    if (!this.barSummary.length) return;
-
-    const sorted = [...this.barSummary].sort((a, b) => a.year - b.year);
-
-    const years = sorted.map((i) => i.year.toString());
-    const projectData = sorted.map((i) => i.project_count);
-    const articleData = sorted.map((i) => i.article_count);
-    const innovationData = sorted.map((i) => i.innovation_count);
-
-    // ===== BAR =====
-    this.barChartOptions = {
-      ...this.barChartOptions,
-      series: [
-        { name: 'โครงการวิจัย', data: projectData },
-        { name: 'บทความ', data: articleData },
-        { name: 'นวัตกรรม', data: innovationData },
-      ],
-      xaxis: { categories: years },
-    };
-
-    this.chartOptions = {
-      ...this.chartOptions,
-      data: [
-        {
-          ...this.chartOptions.data[0],
-          dataPoints: [
-            { name: 'โครงการวิจัย', y: this.donutSummary.projects_count },
-            { name: 'บทความ', y: this.donutSummary.articles_count },
-            { name: 'นวัตกรรม', y: this.donutSummary.innovations_count },
-          ],
-        },
-      ],
-    };
-
-    // ===== PIE (Ag-Charts) =====
-    this.options = {
-      ...this.options,
-      data: [
-        {
-          faculty: 'โครงการวิจัย',
-          count: this.donutSummary.projects_count,
-        },
-        {
-          faculty: 'บทความ',
-          count: this.donutSummary.articles_count,
-        },
-        {
-          faculty: 'นวัตกรรม',
-          count: this.donutSummary.innovations_count,
-        },
-      ],
-    };
-    const total =
-      this.donutSummary.projects_count +
-      this.donutSummary.articles_count +
-      this.donutSummary.innovations_count;
-
-    this.hasData = total > 0;
-
-    this.hasProjectData = (this.donutSummary.projects_count ?? 0) > 0;
-    this.hasArticleData = (this.donutSummary.articles_count ?? 0) > 0;
-    this.hasInnovationData = (this.donutSummary.innovations_count ?? 0) > 0;
-
-    const tabIndex =
-      this.selectedTab === 'project'
-        ? 0
-        : this.selectedTab === 'article'
-        ? 1
-        : 2;
-
-    this.fullLabels = this.radarData?.major?.labels || [];
-    this.fullLabelsSub = this.radarData?.sub?.labels || [];
-
-    const labels = (this.radarData?.major?.labels || []).map((label: any) =>
-      this.shortLabel(label)
-    );
-
-    const values = [...(this.radarData?.major?.datasets[tabIndex]?.data || [])];
-
-    const labelsSub = (this.radarData?.sub?.labels || []).map((label: any) =>
-      this.shortLabel(label)
-    );
-
-    const valuesSub = [
-      ...(this.radarData?.sub?.datasets[tabIndex]?.data || []),
-    ];
-
-    this.radarChartOptions = {
-      ...this.radarChartOptions,
-      series: [
-        {
-          name: this.tabs.find((t) => t.key === this.selectedTab)?.label || '',
-          data: values,
-        },
-      ],
-      labels: labels,
-      xaxis: { categories: labels },
-    };
-
-    this.radarChartOptionsSub = {
-      ...this.radarChartOptionsSub,
-      series: [
-        {
-          name: this.tabs.find((t) => t.key === this.selectedTab)?.label || '',
-          data: valuesSub,
-        },
-      ],
-      labels: labelsSub,
-      xaxis: { categories: labelsSub },
-    };
-  }
-
-  tabs: { key: ResearchTab; label: string; icon: string }[] = [
-    { key: 'project', label: 'งานวิจัย', icon: 'bi-journal-text' },
-    { key: 'article', label: 'ผลงานตีพิมพ์', icon: 'bi-file-earmark-text' },
-    { key: 'innovation', label: 'นวัตกรรมสิ่งประดิษฐ์', icon: 'bi-award' },
-  ];
 
   updatePagination(): void {
     const start = (this.currentPage - 1) * this.pageSize;
-    const end = start + this.pageSize;
-    this.paginationData = this.filteredData.slice(start, end);
-  }
-
-  getChartInstance(chart: any) {
-    this.chart = chart;
-  }
-
-  shortLabel(fullLabel: any) {
-    const maxLength = 12;
-    const shortLabel =
-      fullLabel.length > maxLength
-        ? fullLabel.slice(0, maxLength) + '...'
-        : fullLabel;
-
-    return shortLabel;
+    this.paginationData = this.filteredData.slice(start, start + this.pageSize);
   }
 
   changePage(page: number) {
-    if (page < 1 || page > this.totalPages) return;
-    if (page === this.currentPage) return;
-
+    if (page < 1 || page > this.totalPages || page === this.currentPage) return;
     this.currentPage = page;
     this.updatePagination();
   }
@@ -638,7 +362,6 @@ export class DashboardComponent {
   get totalPages(): number {
     return Math.ceil(this.filteredData.length / this.pageSize);
   }
-
   get pages(): number[] {
     return Array.from({ length: this.totalPages }, (_, i) => i + 1);
   }
@@ -646,28 +369,36 @@ export class DashboardComponent {
   get visiblePages(): (number | string)[] {
     const total = this.totalPages;
     const current = this.currentPage;
-    const pages: (number | string)[] = [];
+    if (total <= 5) return Array.from({ length: total }, (_, i) => i + 1);
 
-    if (total <= 5) {
-      return Array.from({ length: total }, (_, i) => i + 1);
-    }
-
-    pages.push(1);
-
+    const pages: (number | string)[] = [1];
     if (current > 3) pages.push('...');
-
     for (
       let i = Math.max(2, current - 1);
       i <= Math.min(total - 1, current + 1);
       i++
-    ) {
+    )
       pages.push(i);
-    }
-
     if (current < total - 2) pages.push('...');
-
     pages.push(total);
-
     return pages;
+  }
+
+  // ── Helpers ──────────────────────────────────────────────────
+  viewItem(id: number) {
+    if (this.authService.isLoggedIn()) {
+      const base = this.authService.isAdmin()
+        ? '/admin/performance-by-departmaent'
+        : '/user/performance-by-departmaent';
+      this.router.navigate([base, this.selectedTab, id]);
+    } else {
+      this.router.navigate(['/performance-public', this.selectedTab, id]);
+    }
+  }
+
+  shortLabel(fullLabel: string, maxLength = 12): string {
+    return fullLabel.length > maxLength
+      ? fullLabel.slice(0, maxLength) + '...'
+      : fullLabel;
   }
 }

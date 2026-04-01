@@ -24,7 +24,7 @@
       <i class="bi bi-cloud-arrow-up-fill text-3xl"></i>
 
       <h2 class="text-2xl sm:text-3xl">
-        {{ isEdit ? "แก้ไขผลงานโครงการวิจัย" : "เพิ่มผลงานโครงการวิจัยใหม่" }}
+        แก้ไขผลงานโครงการวิจัย
       </h2>
     </div>
 
@@ -306,12 +306,12 @@
     </div>
 
     <!-- ประเภทความรับผิดชอบของผู้ลงผลงาน -->
-    <div class="relative mb-6">
+    <div class="relative mb-6 pointer-events-none opacity-70">
       <label class="text-start">
         ประเภทความรับผิดชอบ <span class="text-red-500">*</span>
       </label>
 
-      <button
+      <!-- <button
         type="button"
         (click)="toggleDropdown('responsibility', $event)"
         class="w-full border rounded-md px-3 py-2 flex justify-between items-center text-lg font-light"
@@ -342,7 +342,16 @@
         >
           ผู้ร่วมวิจัย
         </div>
-      </div>
+      </div> -->
+      <input
+        name="title_th"
+        required
+        #title="ngModel"
+        [(ngModel)]="projectData.responsibilities"
+        type="text"
+        class="md:col-span-3 w-full text-lg font-light border h-12 rounded-md px-4 py-2 focus:ring-2 focus:ring-[#f2e7ac]"
+        placeholder="ระบุชื่องานวิจัย"
+      />
     </div>
 
     <!-- ผู้ร่วมโครงการ -->

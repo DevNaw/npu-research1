@@ -1,0 +1,6 @@
+
+/* ใน styles.scss (global) ไม่ใช่ component styles */
+.chart-container {
+    position: relative;
+    overflow: visible !important; /* ❗ อย่าให้เป็น hidden */
+  }

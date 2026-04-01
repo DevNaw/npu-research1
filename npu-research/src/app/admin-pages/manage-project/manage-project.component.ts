@@ -139,4 +139,27 @@ export class ManageProjectComponent implements OnInit {
 
     return pages;
   }
+
+  editItem(id: number) {
+    this.router.navigate([
+      '/admin',
+      `edit-${this.selectedTab.toLowerCase()}s`,
+      id,
+    ]);
+  }
+
+  deleteItem(id: number) {
+    if (!confirm('คุณแน่ใจหรือไม่ว่าต้องการลบรายการนี้?')) return;
+
+    this.service.deleteProject(id).subscribe({
+      next: () => {
+        alert('ลบรายการสำเร็จ');
+        this.loadData();
+      },
+      error: (err) => {
+        console.error(err);
+        alert('เกิดข้อผิดพลาดในการลบรายการ');
+      },
+    });
+  }
 }

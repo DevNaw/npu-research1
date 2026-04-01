@@ -251,14 +251,6 @@ export class UserAddInnovationComponent {
     this.activeRowIndex = null;
   }
 
-  // @HostListener('document: click', ['$event'])
-  // onDocumentClick(event: MouseEvent) {
-  //   const target = event.target as HTMLElement;
-  //   if (!target.closest('.bi-info-circle-fill')) {
-  //     this.toggleTooltip = false;
-  //   }
-  // }
-
   selectValue<K extends keyof ResearchInnovationDetail>(
     field: K,
     value: ResearchInnovationDetail[K]

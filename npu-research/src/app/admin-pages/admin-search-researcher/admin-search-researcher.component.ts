@@ -6,38 +6,8 @@ import { SearchService } from '../../services/search.service';
 import { Researcher } from '../../models/search-researchers.model';
 import { Expertise, Organization } from '../../models/get-researcher.model';
 import { MainComponent } from '../../shared/layouts/main/main.component';
-import { CanvasJS } from '@canvasjs/angular-charts';
-import {
-  AgChartOptions,
-  ModuleRegistry,
-  AllCommunityModule,
-} from "ag-charts-community";
+import { Color, LegendPosition, ScaleType } from '@swimlane/ngx-charts';
 
-ModuleRegistry.registerModules([AllCommunityModule]);
-
-CanvasJS.addColorSet('customColorSet', [
-  '#038FFB',
-  '#06E396',
-  '#FEB119',
-  '#FF4560',
-  '#775DD0',
-  '#00E396',
-  '#0090FF',
-  '#FF66C4',
-  '#00B8D9',
-  '#FFB800',
-  '#4CAF50',
-  '#2196F3',
-  '#9C27B0',
-  '#FF5722',
-  '#3F51B5',
-  '#8BC34A',
-  '#FFC107',
-  '#E91E63',
-  '#673AB7',
-  '#03A9F4',
-  '#CDDC39',
-]);
 
 @Component({
   selector: 'app-admin-search-researcher',
@@ -78,59 +48,36 @@ export class AdminSearchResearcherComponent {
   selectedMajorId: number | null = null;
   activeDropdown: string | null = null;
 
-  // new chart
-  options: AgChartOptions;
-  hasData = false;
+  single: { name: string; value: number }[] = [];
+    hasData = false;
+    legendPosition: LegendPosition = LegendPosition.Below;
+  
+    colorScheme: Color = {
+      name: 'horizon',
+      selectable: true,
+      group: ScaleType.Ordinal,
+      domain: [
+        '#FF6B6B', '#4ECDC4', '#FFD93D', '#1A73E8', '#6C5CE7',
+        '#00B894', '#FDCB6E', '#E17055', '#0984E3', '#A29BFE',
+        '#00CEC9', '#FAB1A0', '#2D3436', '#E84393', '#636E72',
+        '#55EFC4', '#FD79A8', '#74B9FF', '#81ECEC', '#FFEAA7',
+        '#D63031', '#00A8FF', '#9C88FF', '#44BD32', '#FBC531',
+      ],
+    };
+  
+    labelFormat = (name: string): string => {
+      const item = this.single.find((d) => d.name === name);
+      if (!item) return name;
+      const total = this.single.reduce((sum, d) => sum + d.value, 0);
+      const percent = total > 0 ? ((item.value / total) * 100).toFixed(1) : '0';
+      return `${name}\n${percent}%`;
+    };
 
   constructor(
     private router: Router,
     private authService: AuthService,
     private searchService: SearchService
-  ) {
-    this.chartOptions = {
-      backgroundColor: '#394250',
-      colorSet: 'customColorSet',
-      animationEnabled: true,
-      data: [
-        {
-          type: 'doughnut',
-          yValueFormatString: '#,##0',
-          indexLabel: '{name} ({y})',
-          indexLabelFontColor: '#ffffff',
-          dataPoints: [],
-        },
-      ],
-    };
-
-    this.options = {
-      background: {
-        fill: '#394250',  // ← สีพื้นหลัง
-      },
-      data: [],
-      series: [
-        {
-          type: "donut",
-          calloutLabelKey: "faculty",
-          angleKey: "count",
-          innerRadiusRatio: 0.7,
-          calloutLabel: {
-            enabled: true,
-            color: '#ffffff',  // ← สีตัวหนังสือ label
-            formatter: (params: any) => {
-              const total = (this.options.data as any[]).reduce(
-                (sum: number, d: any) => sum + d.count, 0
-              );
-              const percent = ((params.datum.count / total) * 100).toFixed(1);
-              return `${params.datum.faculty} (${percent}%)`;  // ← format label
-            },
-          },
-        },
-      ],
-      legend: {
-        enabled: false,  // ← ปิด legend
-      },
-    };
-  }
+  ) {}
 
   ngOnInit() {
     MainComponent.showLoading();
@@ -183,30 +130,11 @@ export class AdminSearchResearcherComponent {
     
         this.filteredData = data.result;
         this.filteredResearchers = data.result;
-
-        const colors = [
-          '#038FFB', '#06E396', '#FEB119', '#FF4560', '#775DD0',
-          '#00E396', '#0090FF', '#FF66C4', '#00B8D9', '#FFB800',
-          '#4CAF50', '#2196F3', '#9C27B0', '#FF5722', '#3F51B5',
-        ];
-
-        const graphData = data.graph.map((g: any, index: number) => ({
-          faculty: g.faculty,
-          count: g.count,
-        }));
-
-        this.hasData = graphData.length > 0;
-        
-        this.options = {
-          ...this.options,
-          data: graphData,
-        };
-
-        
-      
         this.donutLabels = data.graph.map((g) => g.faculty);
         this.donutSeries = data.graph.map((g) => g.count);
         this.totalResearchers = data.total;
+        this.single = data.graph.map((g) => ({ name: g.faculty, value: g.count }));
+        this.hasData = data.graph.length > 0;
         this.currentPage = 1;
         this.updatePagination();
         this.loading = false;

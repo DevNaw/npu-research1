@@ -93,7 +93,7 @@ body {
 }
 
 
-.NgxEditor__Content h1 {
+/* .NgxEditor__Content h1 {
   font-size: 2rem !important;
   font-weight: bold !important;
 }
@@ -123,7 +123,7 @@ body {
 
 .NgxEditor__Content li {
   margin: 0.25rem 0 !important;
-}
+} */
 
 .swal-title-lg {
   font-size: 30px !important;
@@ -271,23 +271,4 @@ body {
   font-family: "Prompt", sans-serif;
   font-weight: 900;
   font-style: italic;
-}
-
-/* ====== Ngx Chart Tooltip Fix ====== */
-.ngx-charts-tooltip-content {
-  z-index: 9999 !important;
-  position: fixed !important;
-  pointer-events: none !important;
-}
-
-.chart-tooltip {
-  visibility: visible !important;
-  opacity: 1 !important;
-  display: block !important;
-}
-
-/* แก้ปัญหา Tailwind reset ทำให้ tooltip หาย */
-.ngx-charts-tooltip-content *,
-.chart-tooltip * {
-  visibility: visible !important;
 }

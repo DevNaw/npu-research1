@@ -50,6 +50,9 @@ import { ManageProjectComponent } from './admin-pages/manage-project/manage-proj
 import { OrganizationComponent } from './admin-pages/organization/organization.component';
 import { ManageOecdComponent } from './admin-pages/manage-oecd/manage-oecd.component';
 import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.component';
+import { EditProjectsComponent } from './admin-pages/edit-projects/edit-projects.component';
+import { EditArticleComponent } from './admin-pages/edit-article/edit-article.component';
+import { EditInnovationComponent } from './admin-pages/edit-innovation/edit-innovation.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -180,8 +183,11 @@ const routes: Routes = [
       { path: 'management-admin', component: ManagementAdminComponent },
       { path: 'admin-manual', component: AdminManualComponent },
       { path: 'manage-project', component: ManageProjectComponent },
-      {  path: 'manage-organization', component: OrganizationComponent },
+      { path: 'manage-organization', component: OrganizationComponent },
       { path: 'manage-oecd', component: ManageOecdComponent },
+      { path: 'edit-projects/:id', component: EditProjectsComponent },
+      { path: 'edit-articles/:id', component: EditArticleComponent },
+      { path: 'edit-innovations/:id', component: EditInnovationComponent },
     ],
   },
 ];
