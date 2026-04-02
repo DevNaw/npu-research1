@@ -1,193 +1,169 @@
+import { Component, HostListener } from '@angular/core';
+import { ResearchProjectData } from '../../../models/researchs-detai.model';
+import { Child, Major, Sub } from '../../../models/subject.model';
+import { Researcher } from '../../../models/researchers.model';
 import {
-  Component,
-  ElementRef,
-  HostListener,
-  QueryList,
-  ViewChildren,
-} from '@angular/core';
+  ExternalMemberRow,
+  InternalMemberRow,
+} from '../../../models/member.model';
+import { Funding } from '../../../models/funding.model';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ResearchService } from '../../../services/research.service';
+import { FundingService } from '../../../services/funding.service';
+import { MainComponent } from '../../../shared/layouts/main/main.component';
 import Swal from 'sweetalert2';
-import { ResearchService } from '../../services/research.service';
-import { Major, Sub, Child } from '../../models/subject.model';
-import { Researcher } from '../../models/researchers.model';
-import { Article } from '../../models/aticle.model';
-import { MainComponent } from '../../shared/layouts/main/main.component';
 
-interface InternalMemberRow {
-  id: number;
-  researcher_id: number | null;
-  name: string;
-  responsibilities: string;
-}
+const FIRST_AUTHOR = 'หัวหน้าโครงการ';
 
-interface ExternalMemberRow {
-  name: string;
-  organization: string;
-  responsibilities: string;
-}
-
-const FIRST_AUTHOR = 'First Author (ผู้ประพันธ์อันดับแรก)';
-
-const DEFAULT_ARTICLE: Article = {
+const DEFAULT_RESEARCH: ResearchProjectData = {
   id: 0,
-  lang_type: '',
   title_th: '',
   title_en: '',
   abstract: '',
   abstract_en: '',
   keywords: [],
   year: '',
+  status: '',
   published_date: '',
   call_other: null,
-  image: null,
-  db_type: '',
-  country: '',
-  article_file: null,
-  journal_name: '',
-  pre_location: '',
-  pages: '',
-  year_published: 0,
-  volume: '',
-  volume_no: '',
-  is_cooperation: '',
-  doi: '',
-  subject_area_id: 0,
+  image: '',
+  source_funds: '',
+  name_funding: '',
+  budget_amount: '',
+  year_received_budget: 0,
+  research_area: '',
+  usable_area: '',
+  start_date: '',
+  end_date: '',
   responsibilities: '',
+  subject_area_id: 0,
   internal_members: [{ user_id: 0, role: '', no: '' }],
   external_members: [{ full_name: '', role: '', organization: '', no: '' }],
-  article_type: '',
-  major_id: null,
-  sub_id: null,
+  full_report: null,
+  contract_file: null,
   oecd_id: 0,
-  article_type_code: '',
-  con_type: '',
-  article_published: '',
+  funding_code: '',
+  funding_id: null,
 };
-
 @Component({
-  selector: 'app-user-add-aticle',
+  selector: 'app-add-project',
   standalone: false,
-  templateUrl: './user-add-aticle.component.html',
-  styleUrl: './user-add-aticle.component.css',
+  templateUrl: './add-project.component.html',
+  styleUrl: './add-project.component.css',
 })
-export class UserAddAticleComponent {
-  @ViewChildren('subItem') subItems!: QueryList<ElementRef>;
-
-  isEdit = false;
+export class AddProjectComponent {
+  activeDropdown: string | null = null;
+  activeRowIndex: number | null = null;
+  activeMajor: Major | null = null;
   oecdList: Major[] = [];
-  selectedSub: Sub | null = null;
   selectedMajor: Major | null = null;
+  selectedSub: Sub | null = null;
+  selectedSubSub: Child | null = null;
   searchMajor = '';
   searchSub = '';
-  thaiYears: number[] = [];
-  searchSubSub = '';
-  selectedSubSub: Child | null = null;
-  activeDropdown: string | null = null;
   researchers: Researcher[] = [];
   filteredResearchers: Researcher[] = [];
-  activeRowIndex: number | null = null;
+  searchResearcher = '';
   internalRow: InternalMemberRow[] = [
     { id: 0, researcher_id: null, name: '', responsibilities: '' },
   ];
   externalRow: ExternalMemberRow[] = [
     { name: '', organization: '', responsibilities: '' },
   ];
-
   selectedFileName = '';
   selectedFile: File | null = null;
-  submitted = false;
-  articleData: Article = { ...DEFAULT_ARTICLE };
+  selectedContractFile: File | null = null;
+  selectedContractFileName = '';
+  projectData: ResearchProjectData = { ...DEFAULT_RESEARCH };
   researchId?: number;
-  activeMajor: Major | null = null;
-  searchResearcher = '';
-  type: 'th' | 'en' = 'th';
-  keywords: string[] = [];
-  
+  fundings: Funding[] = [];
+  abstractType: string = '';
   keywordInput = '';
   keywordInputEn = '';
+  searchSubSub = '';
+  thaiYears: number[] = [];
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private researchService: ResearchService
+    private service: ResearchService,
+    private fundingService: FundingService
   ) {}
 
-  ngOnInit() {
-    this.resetForm();
-
+  ngOnInit(): void {
     MainComponent.showLoading();
-    this.loadSubjectAreas();
+    this.loadSubjectArea();
     this.loadResearchersData();
+    this.loadFundings();
     this.generateThaiYears();
 
-    this.route.paramMap.subscribe((params) => {
-      const id = params.get('id');
-
-      if (id) {
-        this.isEdit = true;
-        this.articleData.id = +id;
-        this.loadAticleData(this.articleData.id);
-      } else {
-        this.isEdit = false;
-        // this.resetForm();
-      }
-      MainComponent.hideLoading();
-    });
+    MainComponent.hideLoading();
   }
 
-  loadSubjectAreas(): void {
-    this.researchService.getSubjectArea().subscribe({
+  // =========== Load Data ==========
+  loadSubjectArea(): void {
+    this.service.getSubjectArea().subscribe({
       next: (res) => {
         this.oecdList = res.data.oecd;
       },
       error: (err) => {
-        console.error('Failed to load subject areas:', err);
+        console.error('Failed to load Subject Area:', err);
+      },
+    });
+  }
+
+  loadFundings(): void {
+    this.fundingService.getFundings().subscribe({
+      next: (res) => {
+        this.fundings = res.data.fundings;
+      },
+      error: (err) => {
+        console.error('Failed to load fundings:', err);
       },
     });
   }
 
   loadResearchersData(): void {
-    this.researchService.getResearchers().subscribe({
+    this.service.getResearchers().subscribe({
       next: (res) => {
         this.researchers = res.data.$researchers ?? [];
         this.filteredResearchers = this.researchers;
       },
-      error: (err) => console.error('Failed to load researchers:', err),
+      error: (err) => {
+        console.error('Failed to load researchers:', err);
+      },
     });
   }
 
-  loadAticleData(id: number): void {
-    this.researchService.getArticleById(id).subscribe({
+  loadProjectData(id: number): void {
+    this.service.getProjectById(id).subscribe({
       next: (res) => {
-        const data = res.data.researchArticle;
+        const data = res.data.projectDetail;
         const oecd = data.oecd?.[0];
-
-        this.type =  data.lang_type as 'th' | 'en';
-
         if (oecd) {
           this.selectedMajor = {
             major_id: oecd.major_id,
             name_th: oecd.name_th,
             children: [oecd.children],
           };
-
           this.selectedSub = oecd.children;
           this.selectedSubSub = oecd.children?.children;
         }
 
-        this.articleData = {
-          ...this.articleData,
+        this.projectData = {
+          ...this.projectData,
           ...data,
-          keywords: (data.keywords || []).map((k: any) => k.keyword),
+          keywords: data.keywords?.map((k: any) => k.keyword) ?? [],
         };
 
         if (data.abstract) {
-          this.articleData.lang_type = 'th';
+          this.abstractType = 'th';
         } else if (data.abstract_en) {
-          this.articleData.lang_type = 'en';
+          this.abstractType = 'en';
         }
 
-        this.selectedFileName = data.articleFile?.file_name ?? '';
+        this.selectedFileName = data.full_report?.file_name ?? '';
+        this.selectedContractFileName = data.contract_file?.file_name ?? '';
 
         if (data.internal_members?.length) {
           this.internalRow = data.internal_members.map(
@@ -211,7 +187,9 @@ export class UserAddAticleComponent {
           );
         }
       },
-      error: (err) => console.error('Failed to load article:', err),
+      error: (err) => {
+        console.error('Failed to load article:', err);
+      },
     });
   }
 
@@ -238,35 +216,46 @@ export class UserAddAticleComponent {
     }
   }
 
-  @HostListener('document:click')
+  @HostListener('document: click')
   closeAll(): void {
     this.activeDropdown = null;
     this.activeMajor = null;
     this.activeRowIndex = null;
   }
 
-  selectValue<K extends keyof Article>(field: K, value: Article[K]): void {
+  selectValue<K extends keyof ResearchProjectData>(
+    field: K,
+    value: ResearchProjectData[K]
+  ): void {
     if (
       field === 'responsibilities' &&
       value === FIRST_AUTHOR &&
       this.isFirstAuthorTaken()
     )
       return;
-    this.articleData[field] = value;
+
+    this.projectData[field] = value;
     this.activeDropdown = null;
   }
 
-  selectSub(sub: Sub): void {
+  selectSub(sub: any): void {
     this.selectedSub = sub;
-    this.selectedSubSub = null;
-    this.articleData.subject_area_id = sub.sub_id;
+    this.projectData.subject_area_id = sub.sub_id;
 
-    this.selectedMajor =
-      this.oecdList.find((m) =>
-        m.children.some((c) => c.sub_id === sub.sub_id)
-      ) ?? null;
+    const major = this.oecdList.find((m) =>
+      m.children.some((c) => c.sub_id === sub.sub_id)
+    );
+
+    if (major) {
+      this.selectedMajor = major;
+      this.activeMajor = major;
+    }
 
     this.activeDropdown = null;
+
+    setTimeout(() => {
+      this.scrollToSelectedSub();
+    });
   }
 
   selectMajor(m: Major) {
@@ -276,20 +265,53 @@ export class UserAddAticleComponent {
     this.searchSub = '';
     this.searchSubSub = '';
 
-    this.articleData.subject_area_id = 0;
+    this.projectData.subject_area_id = 0;
     this.activeDropdown = null;
   }
 
-  selectSubSub(subSub: Child) {
+  selectRowResponsibility(row: any, value: string) {
+    if (value === FIRST_AUTHOR && this.isFirstAuthorTaken(row)) {
+      return;
+    }
+
+    row.responsibilities = value;
+    this.activeDropdown = null;
+  }
+
+  selectResearcher(r: Researcher, row: InternalMemberRow): void {
+    if (this.isResearcherAlreadySelected(r.user_id, row)) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'เลือกซ้ำไม่ได้',
+        text: 'ผู้ร่วมโครงการคนนี้ถูกเลือกแล้ว',
+        confirmButtonColor: '#3085d6',
+      });
+      return;
+    }
+
+    row.name = r.full_name;
+    row.researcher_id = r.user_id;
+
+    this.activeRowIndex = null;
+  }
+
+  toggleMajor(major: Major, event: Event): void {
+    event.stopPropagation();
+
+    this.activeMajor =
+      this.activeMajor?.major_id === major.major_id ? null : major;
+  }
+
+  selectSubSub(subSub: any) {
     this.selectedSubSub = subSub;
-    this.articleData.subject_area_id = subSub.child_id;
+    this.projectData.subject_area_id = subSub.child_id;
 
     this.activeDropdown = null;
   }
 
-  // -------- First Author Guard -------------------------------------------------------
   isFirstAuthorTaken(excludeRow?: any): boolean {
-    if (this.articleData.responsibilities === FIRST_AUTHOR) return true;
+    if (this.projectData.responsibilities === FIRST_AUTHOR) return true;
+
     return [...this.internalRow, ...this.externalRow].some(
       (row) => row !== excludeRow && row.responsibilities === FIRST_AUTHOR
     );
@@ -316,24 +338,14 @@ export class UserAddAticleComponent {
     });
   }
 
-  removeExternalRow(index: number) {
+  removeExternalRow(index: number): void {
     this.externalRow.splice(index, 1);
-  }
-
-  selectRowResponsibility(row: any, value: string): void {
-    if (value === FIRST_AUTHOR && this.isFirstAuthorTaken(row)) {
-      return;
-    }
-
-    row.responsibilities = value;
-    this.activeDropdown = null;
   }
 
   trackById(index: number) {
     return index;
   }
 
-  // ----- Researcher Search -------------------------------------------------------
   onFocus(index: InternalMemberRow): void {
     this.activeRowIndex = index.id;
     this.filteredResearchers = this.researchers;
@@ -347,22 +359,6 @@ export class UserAddAticleComponent {
       : this.researchers;
   }
 
-  selectResearcher(r: Researcher, row: InternalMemberRow): void {
-    if (this.isResearcherAlreadySelected(r.user_id, row)) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'เลือกซ้ำไม่ได้',
-        text: 'ผู้ร่วมโครงการคนนี้ถูกเลือกแล้ว',
-        confirmButtonColor: '#3085d6',
-      });
-      return;
-    }
-    row.name = r.full_name;
-    row.researcher_id = r.user_id;
-    this.activeRowIndex = null;
-  }
-
-  // -----File -------------------------------------------------------
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
 
@@ -377,16 +373,37 @@ export class UserAddAticleComponent {
   removeFile() {
     this.selectedFile = null;
     this.selectedFileName = '';
-    this.articleData.article_file = null;
+    this.projectData.full_report = null;
   }
 
-  // ----- Submit -------------------------------------------------------
-  submitArticle() {
+  removeFileI() {
+    this.selectedContractFile = null;
+    this.selectedContractFileName = '';
+    this.projectData.contract_file = null;
+  }
+
+  onContractFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+
+      this.selectedContractFile = file;
+      this.selectedContractFileName = this.selectedContractFile.name;
+    }
+  }
+
+  removeContractFile() {
+    this.selectedContractFile = null;
+    this.selectedContractFileName = '';
+    this.projectData.contract_file = null;
+  }
+
+  submit() {
     if (!this.validateForm()) {
       return;
     }
     const formData = this.buildFormData();
-    console.log('formData', formData);
 
     Swal.fire({
       title: 'กำลังบันทึก...',
@@ -394,63 +411,44 @@ export class UserAddAticleComponent {
       didOpen: () => Swal.showLoading(),
     });
 
-    const request$ = this.isEdit
-      ? this.researchService.updateArticle(this.articleData.id, formData)
-      : this.researchService.createArticle(formData);
-
-    request$.subscribe({
+    this.service.adminCreateProject(formData).subscribe({
       next: (res: any) => {
         Swal.fire({
           icon: 'success',
-          title: this.isEdit ? 'อัพเดทสำเร็จ' : 'บันทึกสำเร็จ',
+          title: 'บันทึกสำเร็จ',
           showConfirmButton: false,
           timer: 1000,
         });
-        if (this.isEdit) {
-          setTimeout(() => {
-            this.router
-              .navigate(['/performance/article', this.articleData.id])
-              .then(() => {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              });
-          }, 1000);
-        } else {
-          this.router.navigate(['/performance/article', res.data.research_id]);
-          this.resetForm();
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+        this.router.navigate(['/admin/performance-by-departmaent', 'project', res.data.project_id]);
+        this.resetForm();
       },
       error: (err) => {
         console.error(err);
         Swal.fire({
           icon: 'error',
-          title: this.isEdit ? 'อัพเดทไม่สำเร็จ' : 'บันทึกไม่สำเร็จ',
+          title: 'บันทึกไม่สำเร็จ',
         });
       },
     });
   }
 
-  private buildFormData(): FormData {
+  buildFormData(): FormData {
     const fd = new FormData();
-    const d = this.articleData;
-    const subSub = this.selectedSubSub?.child_id ?? '';
-    let article_type_code = '';
+    const d = this.projectData;
+    let funding_code = '';
 
-    const required = (key: string, val: any) => fd.append(key, val ?? '');
+    const required = (key: string, val: any) =>
+      fd.append(key, val !== null && val !== undefined ? String(val) : '');
 
     const optional = (key: string, val: any) => {
       if (val !== null && val !== undefined && val !== '') {
         fd.append(key, val);
       }
     };
+    const subSub = this.selectedSubSub?.child_id ?? '';
 
-    required('lang_type', this.type);
-    if (this.type === 'th') {
-      optional('title_th', d.title_th);
-    } else {
-      optional('title_en', d.title_en);
-    }
-
+    required('title_th', d.title_th);
+    required('title_en', d.title_en);
     optional('abstract', d.abstract);
     optional('abstract_en', d.abstract_en);
 
@@ -458,54 +456,52 @@ export class UserAddAticleComponent {
       fd.append(`keywords[${i}]`, k);
     });
 
-    if (d.article_type === 'วารสาร') {
-      required('article_published', d.article_published);
-    }
-    
     required('published_date', d.published_date);
-    required('article_type', d.article_type);
-    required('journal_name', d.journal_name);
-    optional('pages', d.pages);
-    required('year_published', d.year_published);
-    required('volume', d.volume);
-    required('volume_no', d.volume_no);
-
-    const isJournal = ['วารสาร', 'Journal'].includes(d.article_type);
-
-    if (isJournal) {
-      required('doi', d.doi);
-    } else {
-      optional('doi', d.doi);
-    }
-    required('is_cooperation', d.is_cooperation);
-    optional('db_type', d.db_type);
+    required('source_funds', d.source_funds);
+    required('name_funding', d.name_funding);
+    required('budget_amount', d.budget_amount);
+    required('year_received_budget', d.year_received_budget);
+    optional('research_area', d.research_area);
+    optional('usable_area', d.usable_area);
     optional('responsibilities', d.responsibilities);
-    optional('pre_location', d.pre_location);
-    optional('con_type', d.con_type);
+    required('status', d.status);
 
     if (d.subject_area_id > 0)
       fd.append('subject_area_id', String(d.subject_area_id));
-    if (this.selectedFile) fd.append('article_file', this.selectedFile);
+    if (this.selectedFile) fd.append('full_report', this.selectedFile);
+    if (this.selectedContractFile)
+      fd.append('contract_file', this.selectedContractFile);
 
-    if (d.db_type === 'Scopus') {
-      article_type_code = '01';
-    } else if (d.db_type === 'TCI') {
-      article_type_code = '02';
-    } else if (d.con_type === 'การประชุมวิชาการนานาชาติ') {
-      article_type_code = '03';
-    } else if (d.con_type === 'การประชุมวิชาการ') {
-      article_type_code = '04';
+    if (d?.source_funds === 'แหล่งทุนภายใน') {
+      funding_code = '01';
+    } else if (d?.source_funds === 'แหล่งทุนภายนอก') {
+      const selectedFund = this.fundings?.find(
+        (f) => f?.funding_name === d?.name_funding
+      );
+
+      funding_code = selectedFund?.funding_code ?? '';
+    } else {
+      funding_code = '99';
     }
 
     required('oecd_id', subSub);
-    optional('article_type_code', d.article_type_code);
+    optional('funding_code', d.funding_code);
+    optional('funding_id', d.funding_id);
 
-    this.internalRow
+    const sortedRows = [...this.internalRow].sort((a, b) => {
+      const aFirst = a.responsibilities?.includes('หัวหน้าโครงการ') ? 0 : 1;
+      const bFirst = b.responsibilities?.includes('หัวหน้าโครงการ') ? 0 : 1;
+      return aFirst - bFirst;
+    });
+
+    sortedRows
       .filter((r) => r.researcher_id)
       .forEach((r, i) => {
+        const no = r.responsibilities?.includes('หัวหน้าโครงการ') ? 0 : i + 1;
+
         fd.append(`internal_members[${i}][user_id]`, String(r.researcher_id));
         fd.append(`internal_members[${i}][role]`, r.responsibilities ?? '');
-        fd.append(`internal_members[${i}][no]`, String(i + 1));
+        fd.append(`internal_members[${i}][no]`, String(no));
       });
 
     this.externalRow
@@ -520,22 +516,22 @@ export class UserAddAticleComponent {
     return fd;
   }
 
-  private resetForm(): void {
-    this.articleData = { ...DEFAULT_ARTICLE };
+  resetForm(): void {
+    this.projectData = { ...DEFAULT_RESEARCH };
     this.internalRow = [
       { id: 0, researcher_id: null, name: '', responsibilities: '' },
     ];
     this.externalRow = [{ name: '', organization: '', responsibilities: '' }];
     this.selectedFile = null;
     this.selectedFileName = '';
-    this.selectedMajor = null;
+    this.selectedContractFile = null;
+    (this.selectedContractFileName = ''), (this.selectedMajor = null);
     this.selectedSub = null;
     this.searchMajor = '';
-    this.searchSub = '';
-    this.keywordInput = '';
-    this.keywordInputEn = '';
-    this.articleData.lang_type = 'th';
-    this.articleData.keywords = [];
+  }
+
+  goToResearchDetail() {
+    this.router.navigate(['/user/profile']);
   }
 
   isResearcherAlreadySelected(
@@ -557,18 +553,15 @@ export class UserAddAticleComponent {
   }
 
   validateForm(): boolean {
-    const d = this.articleData;
+    const d = this.projectData;
 
     if (
-      !d.lang_type||
-      (d.lang_type === 'th' && !d.title_th) ||
-      (d.lang_type === 'en' && !d.title_en) ||
-      !d.article_type ||
-      !d.journal_name ||
-      !d.year_published ||
-      !d.volume ||
-      !d.volume_no ||
-      !d.doi
+      !d.title_th ||
+      !d.title_en ||
+      !d.source_funds ||
+      !d.name_funding ||
+      !d.budget_amount ||
+      !d.year_received_budget
     ) {
       Swal.fire({
         icon: 'warning',
@@ -591,6 +584,7 @@ export class UserAddAticleComponent {
       return false;
     }
 
+    // ✅ external member
     const invalidExternal = this.externalRow.some(
       (r) => (r.name && !r.responsibilities) || (r.responsibilities && !r.name)
     );
@@ -612,19 +606,19 @@ export class UserAddAticleComponent {
       event.preventDefault();
 
       if (type === 'th') {
-        if (this.articleData.keywords.length >= 5) return;
+        if (this.projectData.keywords.length >= 5) return;
 
         if (this.keywordInput.trim()) {
-          this.articleData.keywords.push(this.keywordInput.trim());
+          this.projectData.keywords.push(this.keywordInput.trim());
           this.keywordInput = '';
         }
       }
 
       if (type === 'en') {
-        if (this.articleData.keywords.length >= 5) return;
+        if (this.projectData.keywords.length >= 5) return;
 
         if (this.keywordInputEn.trim()) {
-          this.articleData.keywords.push(this.keywordInputEn.trim());
+          this.projectData.keywords.push(this.keywordInputEn.trim());
           this.keywordInputEn = '';
         }
       }
@@ -632,41 +626,28 @@ export class UserAddAticleComponent {
   }
 
   removeKeyword(i: number) {
-    this.articleData.keywords.splice(i, 1);
+    this.projectData.keywords.splice(i, 1);
   }
 
   removeKeywordEn(i: number) {
-    this.articleData.keywords.splice(i, 1);
+    this.projectData.keywords.splice(i, 1);
   }
 
-  generateThaiYears() {
-    const currentYear = new Date().getFullYear() + 543;
+  scrollToSelectedSub() {
+    if (!this.selectedSub) return;
 
-    this.thaiYears = [];
-    for (let i = 0; i < 70; i++) {
-      this.thaiYears.push(currentYear - i);
-    }
-  }
+    setTimeout(() => {
+      const element = document.querySelector(
+        `[data-id="${this.selectedSub?.sub_id}"]`
+      ) as HTMLElement;
 
-  selectYear(year: number) {
-    this.articleData.year_published = year;
-    this.activeDropdown = null;
-  }
-
-  filteredSubSubs() {
-    if (!this.selectedSub) return [];
-
-    return (this.selectedSub.children || []).filter((ss: Child) =>
-      (ss.name_th || '')
-        .toLowerCase()
-        .includes((this.searchSubSub || '').toLowerCase())
-    );
-  }
-
-  filteredMajors() {
-    return this.oecdList.filter((m) =>
-      m.name_th.toLowerCase().includes(this.searchMajor.toLowerCase())
-    );
+      if (element) {
+        element.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+        });
+      }
+    }, 200);
   }
 
   filteredSubs() {
@@ -679,44 +660,61 @@ export class UserAddAticleComponent {
     );
   }
 
+  filteredSubSubs() {
+    if (!this.selectedSub) return [];
+
+    return (this.selectedSub.children || []).filter((ss: Child) =>
+      (ss.name_th || '')
+        .toLowerCase()
+        .includes((this.searchSubSub || '').toLowerCase())
+    );
+  }
+
+  generateThaiYears() {
+    const currentYear = new Date().getFullYear() + 543;
+
+    this.thaiYears = [];
+    for (let i = 0; i < 70; i++) {
+      this.thaiYears.push(currentYear - i);
+    }
+  }
+
+  selectYear(year: number) {
+    this.projectData.year_received_budget = year;
+    this.activeDropdown = null;
+  }
+
   onAbstractTypeChange(type: 'th' | 'en') {
-    this.articleData.lang_type = type;
-  
+    this.abstractType = type;
+
     if (type === 'en') {
-      // 👇 reset ตอนเลือก EN
       this.keywordInputEn = '';
-      this.articleData.keywords = [];
-      this.articleData.abstract_en = '';
+      this.projectData.keywords = [];
+      this.projectData.abstract_en = '';
     } else {
-      // 👇 reset ตอนเลือก TH
       this.keywordInput = '';
-      this.articleData.keywords = [];
-      this.articleData.abstract = '';
+      this.projectData.keywords = [];
+      this.projectData.abstract = '';
     }
   }
 
   handleTab(event: KeyboardEvent) {
     if (event.key === 'Tab') {
-      event.preventDefault(); // ❗ หยุดการเปลี่ยน focus
-  
+      event.preventDefault();
+
       const textarea = event.target as HTMLTextAreaElement;
-  
       const start = textarea.selectionStart;
       const end = textarea.selectionEnd;
-  
-      // ใส่ tab (\t) หรือจะใช้ช่องว่าง 4 ตัวก็ได้
-      const tab = '\t'; // หรือ '    '
-  
+      const tab = '\t';
+
       textarea.value =
         textarea.value.substring(0, start) +
         tab +
         textarea.value.substring(end);
-  
-      // อัปเดต cursor
+
       textarea.selectionStart = textarea.selectionEnd = start + tab.length;
-  
-      // sync กับ ngModel
-      this.articleData.abstract = textarea.value;
+
+      this.projectData.abstract = textarea.value;
     }
   }
 }

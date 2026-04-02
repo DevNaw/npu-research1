@@ -65,7 +65,7 @@ export const DEFAULT_INNOVATION: ResearchInnovationDetail = {
   innovation_images: [],
   oecd_id: 0,
   funding_code: '',
-  funding_id: 0,
+  funding_id: null,
   volume_no: '',
 };
 
@@ -225,23 +225,20 @@ export class UserAddInnovationComponent {
 
   toggleDropdown(type: string, event: Event): void {
     event.stopPropagation();
-  
+
     this.activeDropdown = this.activeDropdown === type ? null : type;
-  
+
     if (this.activeDropdown && this.selectedSub) {
       this.activeMajor =
         this.oecdList.find((m) =>
-          (m.children || []).some(
-            (c) => c.sub_id === this.selectedSub?.sub_id
-          )
+          (m.children || []).some((c) => c.sub_id === this.selectedSub?.sub_id)
         ) ?? null;
 
-        this.selectedMajor = this.activeMajor;
-        this.selectedSub =
-          this.activeMajor?.children.find(
-            (c) => c.sub_id === this.selectedSub?.sub_id
-          ) ?? null;
-  
+      this.selectedMajor = this.activeMajor;
+      this.selectedSub =
+        this.activeMajor?.children.find(
+          (c) => c.sub_id === this.selectedSub?.sub_id
+        ) ?? null;
     }
   }
 
@@ -269,14 +266,14 @@ export class UserAddInnovationComponent {
   selectSub(sub: Sub) {
     this.selectedSub = sub;
     this.projectData.subject_area_id = sub.sub_id;
-  
+
     this.activeDropdown = null;
   }
 
   selectSubSub(subSub: Child) {
     this.selectedSubSub = subSub;
     this.projectData.subject_area_id = subSub.child_id;
-  
+
     this.activeDropdown = null;
   }
 
@@ -284,7 +281,7 @@ export class UserAddInnovationComponent {
     this.selectedMajor = m;
     this.selectedSub = null;
     this.selectedSubSub = null;
-  
+
     this.projectData.subject_area_id = 0;
     this.activeDropdown = null;
   }
@@ -501,15 +498,12 @@ export class UserAddInnovationComponent {
 
     if (d?.source_funds === 'แหล่งทุนภายใน') {
       funding_code = '01';
-    
     } else if (d?.source_funds === 'แหล่งทุนภายนอก') {
-    
       const selectedFund = this.fundings?.find(
         (f) => f?.funding_name === d?.name_funding
       );
-    
+
       funding_code = selectedFund?.funding_code ?? '';
-    
     } else {
       funding_code = '99';
     }
@@ -747,7 +741,7 @@ export class UserAddInnovationComponent {
 
   onAbstractTypeChange(type: 'th' | 'en') {
     this.abstractType = type;
-  
+
     if (type === 'en') {
       // 👇 reset ตอนเลือก EN
       this.keywordInputEn = '';
@@ -764,21 +758,21 @@ export class UserAddInnovationComponent {
   handleTab(event: KeyboardEvent) {
     if (event.key === 'Tab') {
       event.preventDefault();
-  
+
       const textarea = event.target as HTMLTextAreaElement;
-  
+
       const start = textarea.selectionStart;
       const end = textarea.selectionEnd;
-  
+
       const tab = '\t';
-  
+
       textarea.value =
         textarea.value.substring(0, start) +
         tab +
         textarea.value.substring(end);
-  
+
       textarea.selectionStart = textarea.selectionEnd = start + tab.length;
-  
+
       this.projectData.abstract = textarea.value;
     }
   }

@@ -100,7 +100,7 @@ export interface ResearchInnovationDetail {
   innovation_images: InnovationImage[];
   oecd_id: number;
   funding_code: string;
-  funding_id: number;
+  funding_id: number | null;
   volume_no: string;
 }
 export interface InternalMember {

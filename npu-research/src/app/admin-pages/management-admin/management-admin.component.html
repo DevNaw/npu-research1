@@ -9,7 +9,7 @@
     <div class="flex justify-between items-center mb-4 mt-2">
       <button
         (click)="openAddModal()"
-        class="flex items-center gap-2 bg-[#f2e7ac] hover:bg-[#f2cb05] text-[#394250] px-4 py-2 rounded-md text-lg cursor-pointer"
+        class="flex items-center gap-2 bg-[#f2e7ac] hover:bg-[#f2cb05] text-[#394250] hover:text-[#f2f2f2] px-4 py-2 rounded-md text-lg cursor-pointer"
       >
         <i class="bi bi-plus-circle"></i> เพิ่มแอดมิน
       </button>
@@ -139,75 +139,81 @@
 <!-- Modal Edit Password -->
 <div
   *ngIf="showModal"
-  class="fixed inset-0 z-50 text-2xl flex items-center justify-center bg-black/50 px-4 text-[#394250] font-medium"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 text-[#394250]"
   (click)="closeModal()"
 >
   <div
-    class="bg-white rounded-xl w-full max-w-lg p-2 md:p-6 max-h-[90vh] h-140 overflow-y-auto"
+    class="bg-white rounded-2xl w-full max-w-lg shadow-xl overflow-hidden"
     (click)="$event.stopPropagation()"
   >
-    <!-- Title -->
-    <h2 class="mb-2 md:mb-4 text-center text-3xl md:text-left">เพิ่มแอดมิน</h2>
-
-    <!-- ชื่อ -->
-    <div class="mb-2 md:mb-4">
-      <label class="block mb-1">ชื่อ</label>
-      <input
-        type="text"
-        [(ngModel)]="adminsData!.first_name"
-        class="w-full border rounded-md px-3 py-2 focus:ring focus:ring-blue-200 text-xl font-light"
-        placeholder="กรอกชื่อ"
-      />
+    <!-- Header -->
+    <div class="bg-linear-to-r from-[#f2cb05] to-[#f2e7ac] px-6 py-4 flex items-center gap-3">
+      <i class="bi bi-person-plus-fill text-2xl"></i>
+      <h2 class="text-2xl font-medium">เพิ่มแอดมิน</h2>
     </div>
 
-    <!-- นามสกุล -->
-    <div class="mb-2 md:mb-4">
-      <label class="block mb-1">นามสกุล</label>
-      <input
-        type="text"
-        [(ngModel)]="adminsData!.last_name"
-        class="w-full border rounded-md px-3 py-2 focus:ring focus:ring-blue-200 text-xl font-light"
-        placeholder="กรอกนามสกุล"
-      />
+    <!-- Body -->
+    <div class="p-6 space-y-4">
+
+      <!-- ชื่อ -->
+      <div>
+        <label class="block text-lg font-medium mb-1">ชื่อ</label>
+        <input
+          type="text"
+          [(ngModel)]="adminsData!.first_name"
+          class="w-full border border-gray-300 rounded-lg px-4 py-2 text-lg font-light focus:outline-none focus:ring-2 focus:ring-[#f2cb05]"
+          placeholder="กรอกชื่อ"
+        />
+      </div>
+
+      <!-- นามสกุล -->
+      <div>
+        <label class="block text-lg font-medium mb-1">นามสกุล</label>
+        <input
+          type="text"
+          [(ngModel)]="adminsData!.last_name"
+          class="w-full border border-gray-300 rounded-lg px-4 py-2 text-lg font-light focus:outline-none focus:ring-2 focus:ring-[#f2cb05]"
+          placeholder="กรอกนามสกุล"
+        />
+      </div>
+
+      <!-- อีเมล -->
+      <div>
+        <label class="block text-lg font-medium mb-1">อีเมล</label>
+        <input
+          type="email"
+          [(ngModel)]="adminsData!.email"
+          class="w-full border border-gray-300 rounded-lg px-4 py-2 text-lg font-light focus:outline-none focus:ring-2 focus:ring-[#f2cb05]"
+          placeholder="กรอกอีเมล"
+        />
+      </div>
+
+      <!-- รหัสผ่าน -->
+      <div>
+        <label class="block text-lg font-medium mb-1">รหัสผ่าน</label>
+        <input
+          type="password"
+          [(ngModel)]="adminsData!.password"
+          class="w-full border border-gray-300 rounded-lg px-4 py-2 text-lg font-light focus:outline-none focus:ring-2 focus:ring-[#f2cb05]"
+          placeholder="กรอกรหัสผ่าน"
+        />
+      </div>
     </div>
 
-    <!-- อีเมล -->
-    <div class="mb-2 md:mb-4">
-      <label class="block mb-1">อีเมล</label>
-      <input
-        type="text"
-        [(ngModel)]="adminsData!.email"
-        class="w-full border rounded-md px-3 py-2 focus:ring focus:ring-blue-200 text-xl font-light"
-        placeholder="กรอกอีเมล"
-      />
-    </div>
-
-    <!-- รหัสผ่าน -->
-    <div class="mb-2 md:mb-4">
-      <label class="block mb-1">รหัสผ่าน</label>
-      <input
-        type="text"
-        [(ngModel)]="adminsData!.password"
-        class="w-full border rounded-md px-3 py-2 focus:ring focus:ring-blue-200 text-xl font-light"
-        placeholder="กรอกรหัสผ่าน"
-      />
-    </div>
-
-    <!-- Buttons -->
-    <div
-      class="flex flex-col sm:flex-row justify-center gap-2 font-medium text-xl"
-    >
-      <button
-        (click)="saveExpertise()"
-        class="w-full sm:w-auto px-4 py-2 rounded-md bg-[#f2e7ac] hover:bg-[#f2cb05] text-[#394250] cursor-pointer"
-      >
-        บันทึก
-      </button>
+    <!-- Footer -->
+    <div class="px-6 py-4 bg-gray-50 border-t flex justify-end gap-3">
       <button
         (click)="closeModal()"
-        class="w-full sm:w-auto px-4 py-2 rounded-md border hover:bg-gray-100 cursor-pointer"
+        class="px-5 py-2 rounded-lg border border-gray-300 hover:bg-gray-100 text-lg cursor-pointer transition"
       >
         ยกเลิก
+      </button>
+      <button
+        (click)="saveExpertise()"
+        class="px-5 py-2 rounded-lg bg-[#f2e7ac] hover:bg-[#f2cb05] text-[#394250] hover:text-[#f2f2f2] text-lg font-medium cursor-pointer transition flex items-center gap-2"
+      >
+        <i class="bi bi-check-circle"></i>
+        บันทึก
       </button>
     </div>
   </div>
@@ -215,76 +221,81 @@
 
 <div
   *ngIf="showModalEdit"
-  class="fixed inset-0 z-50 font-medium text-2xl flex items-center justify-center bg-black/50 px-4 text-[#394250]"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 text-[#394250]"
   (click)="closeModal()"
 >
   <div
-    class="bg-white rounded-xl w-full max-w-lg p-2 md:p-6 max-h-[90vh] h-130 overflow-y-auto"
+    class="bg-white rounded-2xl w-full max-w-lg shadow-xl overflow-hidden"
     (click)="$event.stopPropagation()"
   >
-    <!-- Title -->
-    <h2 class="mb-2 md:mb-4 text-center text-3xl md:text-left">
-      แก้ไขข้อมูลแอดมิน
-    </h2>
-
-    <!-- ชื่อ -->
-    <div class="mb-2 md:mb-4">
-      <label class="block mb-1">ชื่อ</label>
-      <input
-        type="text"
-        [(ngModel)]="updateAdmin!.first_name"
-        class="w-full border rounded-md px-3 py-2 focus:ring focus:ring-blue-200 text-xl font-light"
-        placeholder="กรอกชื่อ"
-      />
+    <!-- Header -->
+    <div class="bg-linear-to-r from-[#f2cb05] to-[#f2e7ac] px-6 py-4 flex items-center gap-3">
+      <i class="bi bi-pencil-square text-2xl"></i>
+      <h2 class="text-2xl font-medium">แก้ไขข้อมูลแอดมิน</h2>
     </div>
 
-    <!-- นามสกุล -->
-    <div class="mb-2 md:mb-4">
-      <label class="block mb-1">นามสกุล</label>
-      <input
-        type="text"
-        [(ngModel)]="updateAdmin!.last_name"
-        class="w-full border rounded-md px-3 py-2 focus:ring focus:ring-blue-200 text-xl font-light"
-        placeholder="กรอกนามสกุล"
-      />
+    <!-- Body -->
+    <div class="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
+
+      <!-- ชื่อ -->
+      <div>
+        <label class="block text-lg font-medium mb-1">ชื่อ</label>
+        <input
+          type="text"
+          [(ngModel)]="updateAdmin!.first_name"
+          class="w-full border border-gray-300 rounded-lg px-4 py-2 text-lg font-light focus:outline-none focus:ring-2 focus:ring-[#f2cb05]"
+          placeholder="กรอกชื่อ"
+        />
+      </div>
+
+      <!-- นามสกุล -->
+      <div>
+        <label class="block text-lg font-medium mb-1">นามสกุล</label>
+        <input
+          type="text"
+          [(ngModel)]="updateAdmin!.last_name"
+          class="w-full border border-gray-300 rounded-lg px-4 py-2 text-lg font-light focus:outline-none focus:ring-2 focus:ring-[#f2cb05]"
+          placeholder="กรอกนามสกุล"
+        />
+      </div>
+
+      <!-- อีเมล -->
+      <div>
+        <label class="block text-lg font-medium mb-1">อีเมล</label>
+        <input
+          type="email"
+          [(ngModel)]="updateAdmin!.email"
+          class="w-full border border-gray-300 rounded-lg px-4 py-2 text-lg font-light focus:outline-none focus:ring-2 focus:ring-[#f2cb05]"
+          placeholder="กรอกอีเมล"
+        />
+      </div>
+
+      <!-- รหัสผ่าน -->
+      <div>
+        <label class="block text-lg font-medium mb-1">รหัสผ่านใหม่</label>
+        <input
+          type="password"
+          [(ngModel)]="updateAdmin!.password"
+          class="w-full border border-gray-300 rounded-lg px-4 py-2 text-lg font-light focus:outline-none focus:ring-2 focus:ring-[#f2cb05]"
+          placeholder="กรอกรหัสผ่านใหม่"
+        />
+      </div>
     </div>
 
-    <!-- อีเมล -->
-    <div class="mb-2 md:mb-4">
-      <label class="block mb-1">อีเมล</label>
-      <input
-        type="text"
-        [(ngModel)]="updateAdmin!.email"
-        class="w-full border rounded-md px-3 py-2 focus:ring focus:ring-blue-200 text-xl font-light"
-        placeholder="กรอกอีเมล"
-      />
-    </div>
-    <!-- PASSWORD -->
-    <div class="mb-2 md:mb-4">
-      <label class="block mb-1">รหัสผ่านใหม่</label>
-      <input
-        type="text"
-        [(ngModel)]="updateAdmin!.password"
-        class="w-full border rounded-md px-3 py-2 focus:ring focus:ring-blue-200 text-xl font-light"
-        placeholder="กรอกรหัสผ่านใหม่"
-      />
-    </div>
-
-    <!-- Buttons -->
-    <div
-      class="flex flex-col sm:flex-row justify-center gap-2 font-medium text-xl"
-    >
-      <button
-        (click)="updateExpertise()"
-        class="w-full sm:w-auto px-4 py-2 rounded-md bg-[#118CD9] hover:bg-[#16498C] text-white cursor-pointer"
-      >
-        อัปเดต
-      </button>
+    <!-- Footer -->
+    <div class="px-6 py-4 bg-gray-50 border-t flex justify-end gap-3">
       <button
         (click)="closeModal()"
-        class="w-full sm:w-auto px-4 py-2 rounded-md border hover:bg-gray-100 cursor-pointer"
+        class="px-5 py-2 rounded-lg border border-gray-300 hover:bg-gray-100 text-lg cursor-pointer transition"
       >
         ยกเลิก
+      </button>
+      <button
+        (click)="updateExpertise()"
+        class="px-5 py-2 rounded-lg bg-[#f2e7ac] hover:bg-[#f2cb05] text-[#394250] hover:text-[#f2f2f2] text-lg font-medium cursor-pointer transition flex items-center gap-2"
+      >
+        <i class="bi bi-check-circle"></i>
+        อัปเดต
       </button>
     </div>
   </div>

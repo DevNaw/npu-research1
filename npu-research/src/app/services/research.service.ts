@@ -133,9 +133,7 @@ export class ResearchService {
 
   // Subject Area
   getSubjectArea() {
-    return this.http.get<OecdResponse>(
-      `${this.baseUrl}/research/oecd`
-    );
+    return this.http.get<OecdResponse>(`${this.baseUrl}/research/oecd`);
   }
 
   // ดึงรายชื่อนักวิจัย
@@ -165,7 +163,10 @@ export class ResearchService {
   }
 
   updateArticle(id: number, data: any) {
-    return this.http.post(`${this.baseUrl}/research/${id}/update-article`, data);
+    return this.http.post(
+      `${this.baseUrl}/research/${id}/update-article`,
+      data
+    );
   }
 
   // ====================== Project =======================
@@ -180,7 +181,10 @@ export class ResearchService {
   }
 
   updateProject(id: number, data: any) {
-    return this.http.post(`${this.baseUrl}/research/${id}/update-project`, data);
+    return this.http.post(
+      `${this.baseUrl}/research/${id}/update-project`,
+      data
+    );
   }
 
   getProjects(id: number): Observable<any> {
@@ -198,11 +202,16 @@ export class ResearchService {
   }
 
   updateInnovation(id: number, data: any) {
-    return this.http.post(`${this.baseUrl}/research/${id}/update-innovation`, data);
+    return this.http.post(
+      `${this.baseUrl}/research/${id}/update-innovation`,
+      data
+    );
   }
 
   getInnovationById(id: number): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/research/${id}/innovation-for-update`);
+    return this.http.get<any>(
+      `${this.baseUrl}/research/${id}/innovation-for-update`
+    );
   }
 
   getInnovations(id: number): Observable<any> {
@@ -211,14 +220,46 @@ export class ResearchService {
 
   // Public
   getInnovationsPublic(id: number): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/public/research/${id}/innovation`);
+    return this.http.get<any>(
+      `${this.baseUrl}/public/research/${id}/innovation`
+    );
   }
 
   deleteImage(id: number) {
     return this.http.delete(`${this.baseUrl}/innovation/${id}/image`);
   }
 
+  // =========== Admin Update Article, Project, Innovation =============
   adminUpdateArticle(id: number, data: any) {
-    return this.http.post(`${this.baseUrl}/m/research/${id}/update-article`, data);
+    return this.http.post(
+      `${this.baseUrl}/m/research/${id}/update-article`,
+      data
+    );
+  }
+
+  adminUpdateProject(id: number, data: any) {
+    return this.http.post(
+      `${this.baseUrl}/m/research/${id}/update-project`,
+      data
+    );
+  }
+
+  adminUpdateInnovation(id: number, data: any) {
+    return this.http.post(
+      `${this.baseUrl}/m/research/${id}/update-innovation`,
+      data
+    );
+  }
+
+  adminCreateArticle(data: any) {
+    return this.http.post(`${this.baseUrl}/m/research/create-article`, data);
+  }
+
+  adminCreateProject(data: any) {
+    return this.http.post(`${this.baseUrl}/m/research/create-project`, data);
+  }
+
+  adminCreateInnovation(data: any) {
+    return this.http.post(`${this.baseUrl}/m/research/create-innovation`, data);
   }
 }

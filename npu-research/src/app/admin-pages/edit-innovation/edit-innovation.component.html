@@ -2,16 +2,15 @@
   class="contain-content bg-gray-100 p-5 md:px-10 text-2xl font-medium text-[#394250]"
 >
   <!-- Back -->
-  <div class="flex justify-end mb-4 mx-auto md:mt-6">
+  <div class="flex justify-start mb-4 mx-auto md:mt-6">
     <button
         (click)="goToResearchDetail()"
       class="flex items-center gap-2 text-gray-600 text-lg group transition-colors cursor-pointer"
     >
-      <span>ไปที่นวัตกรรมสิ่งประดิษฐ์ของคุณ</span>
-
-      <i
-        class="bi bi-arrow-right-circle-fill text-xl transition-all group-hover:translate-x-1 group-hover:text-[#f2cb05]"
+    <i
+        class="bi bi-arrow-left-circle-fill text-xl transition-all group-hover:translate-x-1 group-hover:text-[#f2cb05]"
       ></i>
+      <span>ไปที่หน้าการจัดการ</span>
     </button>
   </div>
 
@@ -23,11 +22,7 @@
     >
       <i class="bi bi-cloud-arrow-up-fill text-3xl"></i>
       <h2 class="text-2xl md:text-3xl">
-        {{
-          isEdit
-            ? "แก้ไขข้อมูลนวัตกรรมสิ่งประดิษฐ์"
-            : "เพิ่มข้อมูลนวัตกรรมสิ่งประดิษฐ์"
-        }}
+        แก้ไขข้อมูลนวัตกรรมสิ่งประดิษฐ์
       </h2>
     </div>
 
@@ -317,7 +312,7 @@
 
     <!-- ประเภทความรับผิดชอบ -->
     <div class="grid grid-cols-1 md:grid-cols-2 md:gap-6 md:mb-8">
-      <div class="relative mb-6">
+      <div class="relative mb-6 pointer-events-none opacity-70">
         <label class="text-start text-2xl block">
           ประเภทความรับผิดชอบ <span class="text-red-500">*</span>
         </label>
@@ -362,28 +357,7 @@
       <div class="relative mb-2">
         <label class="text-start block">
           ค่าน้ำหนัก/ระดับคุณภาพ
-          <!-- <span
-            class="relative group cursor-pointer"
-            (click)="toggleTooltip = !toggleTooltip"
-          >
-            <i
-              class="bi bi-info-circle-fill mx-2 text-gray-400 hover:text-indigo-500"
-            ></i>
 
-            <div
-              [class.!block]="toggleTooltip"
-              class="hidden group-hover:block absolute z-50 bottom-full mb-2 max-w-65 w-max p-3 text-sm text-white bg-gray-800 rounded-lg shadow-lg left-1/2 -translate-x-50"
-            >
-              ค่าน้ำหนักแสดงถึงความสำคัญของผลงานนวัตกรรมสิ่งประดิษฐ์
-              โดยมีค่าตั้งแต่ 0.20 ถึง 1.00
-              โดยค่าที่มากจะแสดงถึงความสำคัญมากขึ้น
-              <div
-                class="absolute top-full left-50 border-4 border-transparent border-t-gray-800"
-              ></div>
-            </div>
-          </span> -->
-
-          <!-- Icon trigger -->
           <span
             class="relative cursor-pointer"
             (click)="showWeightModal = true"

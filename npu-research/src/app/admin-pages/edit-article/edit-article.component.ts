@@ -353,7 +353,7 @@ export class EditArticleComponent {
       Swal.fire({
         icon: 'warning',
         title: 'เลือกซ้ำไม่ได้',
-        text: 'ผู้ร่วมโครงการคนนี้ถูกเลือกแล้ว Optionแล้ว',
+        text: 'ผู้ร่วมโครงการคนนี้ถูกเลือกแล้ว',
         confirmButtonColor: '#3085d6',
       });
       return;
@@ -387,7 +387,6 @@ export class EditArticleComponent {
       return;
     }
     const formData = this.buildFormData();
-    console.log('formData', formData);
 
     Swal.fire({
       title: 'กำลังบันทึก...',
@@ -507,13 +506,6 @@ export class EditArticleComponent {
       return aFirst - bFirst;
     });
 
-    // this.internalRow
-    //   .filter((r) => r.researcher_id)
-    //   .forEach((r, i) => {
-    //     fd.append(`internal_members[${i}][user_id]`, String(r.researcher_id));
-    //     fd.append(`internal_members[${i}][role]`, r.responsibilities ?? '');
-    //     fd.append(`internal_members[${i}][no]`, String(i + 1));
-    //   });
     sortedRows
       .filter((r) => r.researcher_id)
       .forEach((r, i) => {

@@ -7,11 +7,11 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
-import { ResearchService } from '../../services/research.service';
-import { Major, Sub, Child } from '../../models/subject.model';
-import { Researcher } from '../../models/researchers.model';
-import { Article } from '../../models/aticle.model';
-import { MainComponent } from '../../shared/layouts/main/main.component';
+import { ResearchService } from '../../../services/research.service';
+import { Child, Major, Sub } from '../../../models/subject.model';
+import { Researcher } from '../../../models/researchers.model';
+import { Article } from '../../../models/aticle.model';
+import { MainComponent } from '../../../shared/layouts/main/main.component';
 
 interface InternalMemberRow {
   id: number;
@@ -65,15 +65,14 @@ const DEFAULT_ARTICLE: Article = {
 };
 
 @Component({
-  selector: 'app-user-add-aticle',
+  selector: 'app-add-article',
   standalone: false,
-  templateUrl: './user-add-aticle.component.html',
-  styleUrl: './user-add-aticle.component.css',
+  templateUrl: './add-article.component.html',
+  styleUrl: './add-article.component.css'
 })
-export class UserAddAticleComponent {
-  @ViewChildren('subItem') subItems!: QueryList<ElementRef>;
-
-  isEdit = false;
+export class AddArticleComponent {
+@ViewChildren('subItem') subItems!: QueryList<ElementRef>;
+showWeightModal = false;
   oecdList: Major[] = [];
   selectedSub: Sub | null = null;
   selectedMajor: Major | null = null;
@@ -120,19 +119,7 @@ export class UserAddAticleComponent {
     this.loadResearchersData();
     this.generateThaiYears();
 
-    this.route.paramMap.subscribe((params) => {
-      const id = params.get('id');
-
-      if (id) {
-        this.isEdit = true;
-        this.articleData.id = +id;
-        this.loadAticleData(this.articleData.id);
-      } else {
-        this.isEdit = false;
-        // this.resetForm();
-      }
-      MainComponent.hideLoading();
-    });
+    MainComponent.hideLoading();
   }
 
   loadSubjectAreas(): void {
@@ -386,7 +373,6 @@ export class UserAddAticleComponent {
       return;
     }
     const formData = this.buildFormData();
-    console.log('formData', formData);
 
     Swal.fire({
       title: 'กำลังบันทึก...',
@@ -394,37 +380,22 @@ export class UserAddAticleComponent {
       didOpen: () => Swal.showLoading(),
     });
 
-    const request$ = this.isEdit
-      ? this.researchService.updateArticle(this.articleData.id, formData)
-      : this.researchService.createArticle(formData);
-
-    request$.subscribe({
+    this.researchService.adminCreateArticle(formData).subscribe({
       next: (res: any) => {
         Swal.fire({
           icon: 'success',
-          title: this.isEdit ? 'อัพเดทสำเร็จ' : 'บันทึกสำเร็จ',
+          title: 'บันทึกสำเร็จ',
           showConfirmButton: false,
           timer: 1000,
         });
-        if (this.isEdit) {
-          setTimeout(() => {
-            this.router
-              .navigate(['/performance/article', this.articleData.id])
-              .then(() => {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              });
-          }, 1000);
-        } else {
-          this.router.navigate(['/performance/article', res.data.research_id]);
-          this.resetForm();
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+        this.router.navigate(['/admin/performance-by-departmaent', 'article', res.data.research_id]);
+        this.resetForm();
       },
       error: (err) => {
         console.error(err);
         Swal.fire({
           icon: 'error',
-          title: this.isEdit ? 'อัพเดทไม่สำเร็จ' : 'บันทึกไม่สำเร็จ',
+          title: 'บันทึกไม่สำเร็จ',
         });
       },
     });
@@ -500,12 +471,20 @@ export class UserAddAticleComponent {
     required('oecd_id', subSub);
     optional('article_type_code', d.article_type_code);
 
-    this.internalRow
+    const sortedRows = [...this.internalRow].sort((a, b) => {
+      const aFirst = a.responsibilities?.includes('First') ? 0 : 1;
+      const bFirst = b.responsibilities?.includes('First') ? 0 : 1;
+      return aFirst - bFirst;
+    });
+
+    sortedRows
       .filter((r) => r.researcher_id)
       .forEach((r, i) => {
+        const no = r.responsibilities?.includes('First') ? 0 : i + 1;
+
         fd.append(`internal_members[${i}][user_id]`, String(r.researcher_id));
         fd.append(`internal_members[${i}][role]`, r.responsibilities ?? '');
-        fd.append(`internal_members[${i}][no]`, String(i + 1));
+        fd.append(`internal_members[${i}][no]`, String(no));
       });
 
     this.externalRow

@@ -154,69 +154,79 @@
   
   <!-- ===== Modal ===== -->
   <div
-    *ngIf="showModal"
-    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-2 md:px-4 text-[#394250] font-medium text-2xl"
-    (click)="closeModal()"
+  *ngIf="showModal"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 text-[#394250]"
+  (click)="closeModal()"
+>
+  <div
+    class="bg-white rounded-2xl w-full max-w-lg shadow-xl overflow-hidden"
+    (click)="$event.stopPropagation()"
   >
-    <div
-      class="bg-white rounded-xl w-full max-w-lg p-3 md:p-6 max-h-[90vh] overflow-y-auto"
-      (click)="$event.stopPropagation()"
-    >
-      <!-- Title -->
-      <h2 class="text-3xl mb-4 text-center md:text-left">
+    <!-- Header -->
+    <div class="bg-linear-to-r from-[#f2cb05] to-[#f2e7ac] px-6 py-4 flex items-center gap-3">
+      <i class="bi bi-{{ modalMode === 'add' ? 'file-earmark-plus-fill' : 'file-earmark-text-fill' }} text-2xl"></i>
+      <h2 class="text-2xl font-medium">
         {{ modalMode === 'add' ? 'เพิ่มเอกสาร' : 'แก้ไขเอกสาร' }}
       </h2>
-  
-      <!-- ชื่อสาขา -->
-      <div class="mb-2 md:mb-4">
-        <label class="block mb-1 text-2xl">ชื่อเอกสาร</label>
+    </div>
+
+    <!-- Body -->
+    <div class="p-6 space-y-4">
+
+      <!-- ชื่อเอกสาร -->
+      <div>
+        <label class="block text-lg font-medium mb-1">ชื่อเอกสาร</label>
         <input
           type="text"
           [(ngModel)]="newDocument.doc_name"
-          class="w-full border rounded-md px-3 text-xl font-light py-2 focus:ring focus:ring-blue-200"
+          class="w-full border border-gray-300 rounded-lg px-4 py-2 text-lg font-light focus:outline-none focus:ring-2 focus:ring-[#f2cb05]"
           placeholder="กรอกชื่อเอกสาร"
         />
       </div>
-  
-      <!-- รายละเอียด -->
-      <div class="mb-2 md:mb-4">
-        <label class="block mb-1 text-2xl">ไฟล์เอกสาร</label>
 
-        <div *ngIf="modalMode === 'edit' && newDocument.file_url" class="mb-2 text-xl font-regular">
-          <p class="text-gray-600">ไฟล์ปัจจุบัน:</p>
-          <a
+      <!-- ไฟล์เอกสาร -->
+      <div>
+        <label class="block text-lg font-medium mb-1">ไฟล์เอกสาร</label>
+
+        <div
+          *ngIf="modalMode === 'edit' && newDocument.file_url"
+          class="mb-2 p-3 bg-gray-50 rounded-lg border border-gray-200 flex items-center gap-2 text-lg"
+        >
+          <i class="bi bi-paperclip text-gray-400"></i>
+          <span class="text-gray-500 text-sm">ไฟล์ปัจจุบัน:</span>
+          <a 
             [href]="newDocument.file_url"
             target="_blank"
-            class="text-[#118CD9] hover:text-[#16498C] underline"
+            class="text-[#118CD9] hover:text-[#16498C] underline truncate text-lg font-light"
           >
             {{ newDocument.file_url.split('/').pop() }}
           </a>
         </div>
-        
+
         <input
           type="file"
           (change)="onFileChange($event)"
-          class="file-input w-full border rounded-md px-3 py-2 text-xl focus:ring focus:ring-blue-200 font-light"
+          class="w-full border border-gray-300 rounded-lg px-4 py-2 text-lg font-light focus:outline-none focus:ring-2 focus:ring-[#f2cb05] cursor-pointer"
         />
       </div>
-      
-  
-      <!-- Buttons -->
-      <div class="flex  justify-center gap-2 text-xl">
-        <button
-          (click)="modalMode === 'add' ? saveDocument() : updateDocument()"
-          class="px-4 py-2 rounded-md bg-[#f2e7ac] hover:bg-[#f2cb05] text-[#394250] hover:text-white cursor-pointer"
-        >
-          {{ modalMode === 'add' ? 'บันทึก' : 'อัปเดต' }}
-        </button>
+    </div>
 
-        <button
-          (click)="closeModal()"
-          class="px-4 py-2 rounded-md border hover:bg-gray-100 cursor-pointer"
-        >
-          ยกเลิก
-        </button>
-      </div>
+    <!-- Footer -->
+    <div class="px-6 py-4 bg-gray-50 border-t flex justify-end gap-3">
+      <button
+        (click)="closeModal()"
+        class="px-5 py-2 rounded-lg border border-gray-300 hover:bg-gray-100 text-lg cursor-pointer transition"
+      >
+        ยกเลิก
+      </button>
+      <button
+        (click)="modalMode === 'add' ? saveDocument() : updateDocument()"
+        class="px-5 py-2 rounded-lg bg-[#f2e7ac] hover:bg-[#f2cb05] text-[#394250] hover:text-[#f2f2f2] text-lg font-medium cursor-pointer transition flex items-center gap-2"
+      >
+        <i class="bi bi-{{ modalMode === 'add' ? 'floppy2' : 'check-circle' }}"></i>
+        {{ modalMode === 'add' ? 'บันทึก' : 'อัปเดต' }}
+      </button>
     </div>
   </div>
+</div>
   

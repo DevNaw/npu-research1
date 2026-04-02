@@ -74,6 +74,9 @@ import { AgChartsModule } from 'ag-charts-angular';
 import { EditProjectsComponent } from './admin-pages/edit-projects/edit-projects.component';
 import { EditArticleComponent } from './admin-pages/edit-article/edit-article.component';
 import { EditInnovationComponent } from './admin-pages/edit-innovation/edit-innovation.component';
+import { AddProjectComponent } from './admin-pages/add-projects/add-project/add-project.component';
+import { AddArticleComponent } from './admin-pages/add-projects/add-article/add-article.component';
+import { AddInnovationComponent } from './admin-pages/add-projects/add-innovation/add-innovation.component';
 
 @NgModule({
   declarations: [
@@ -132,6 +135,9 @@ import { EditInnovationComponent } from './admin-pages/edit-innovation/edit-inno
     EditProjectsComponent,
     EditArticleComponent,
     EditInnovationComponent,
+    AddProjectComponent,
+    AddArticleComponent,
+    AddInnovationComponent,
   ],
   imports: [
     BrowserAnimationsModule,

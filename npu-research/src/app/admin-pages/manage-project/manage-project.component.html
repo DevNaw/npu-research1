@@ -6,6 +6,45 @@
   </div>
 
   <div class="bg-white rounded-xl p-2 md:p-6 shadow text-[#394250]">
+    <div class="relative text-sm lg:text-lg">
+      <button
+        (click)="toggleAddMenu($event)"
+        class="flex items-center gap-2 px-4 py-2 bg-[#f2cb05] hover:bg-[#e0b800] text-[#394250] hover:text-[#f2f2f2] rounded-md cursor-pointer"
+      >
+        <i class="bi bi-plus-circle"></i>
+        เพิ่มผลงาน
+        <i class="bi bi-chevron-down text-sm"></i>
+      </button>
+    
+      <div
+        *ngIf="showAddMenu"
+        (click)="$event.stopPropagation()"
+        class="absolute z-50 mt-1 w-52 bg-white border rounded-md shadow-lg"
+      >
+        <div
+          (click)="navigateTo('/admin/project/create')"
+          class="flex items-center gap-2 px-4 py-3 hover:bg-gray-100 hover:rounded-md cursor-pointer"
+        >
+          <i class="bi bi-flask text-[#394250]"></i>
+          เพิ่มโครงการวิจัย
+        </div>
+        <div
+          (click)="navigateTo('/admin/article/create')"
+          class="flex items-center gap-2 px-4 py-3 hover:bg-gray-100 hover:rounded-md cursor-pointer"
+        >
+          <i class="bi bi-file-earmark-text text-[#394250]"></i>
+          เพิ่มผลงานตีพิมพ์
+        </div>
+        <div
+          (click)="navigateTo('/admin/innovation-create')"
+          class="flex items-center gap-2 px-4 py-3 hover:bg-gray-100 hover:rounded-md cursor-pointer"
+        >
+          <i class="bi bi-award text-[#394250]"></i>
+          เพิ่มนวัตกรรมสิ่งประดิษฐ์
+        </div>
+      </div>
+    </div>
+
     <div class="flex flex-wrap items-center gap-2 md:gap-4 mt-6 mb-4">
       <div class="flex flex-wrap gap-2 md:gap-3">
         <button
@@ -29,7 +68,7 @@
           "
           class="px-2 md:px-4 py-2 rounded-lg cursor-pointer text-sm md:text-lg"
         >
-          บทความ
+          ผลงานตีพิมพ์
         </button>
 
         <button
@@ -91,7 +130,7 @@
         </thead>
         <tbody>
           <tr
-            *ngFor="let p of paginatedReseacrchs; let i = index"
+            *ngFor="let p of paginatedResearchs; let i = index"
             class="border-b border-gray-300 hover:bg-gray-50"
           >
             <td class="p-2 text-center">
@@ -101,14 +140,12 @@
             <td class="p-2">
               <a
                 class="text-[#16498C] hover:underline cursor-pointer wrap-break-word whitespace-normal"
-               
-                href="/performance/{{ selectedTab.toLowerCase() }}/{{ p.research_id }}"
-                routerLink="/performance/{{ selectedTab.toLowerCase() }}/{{ p.research_id }}"
+                (click)="goToResearchDetail(p.research_id)"
                 title="{{ p.title_th }}"
               >
-                {{ p.title_th || p.title_en || '-' }}
-            </a>
-            
+                {{ p.title_th || p.title_en || "-" }}
+              </a>
+
               <div class="text-sm text-gray-500 mt-1 hidden md:block">
                 <i class="bi bi-calendar-event"></i>
                 {{ p.published_date | date : "dd MMM YYYY" : "" : "th-TH" }}
@@ -117,24 +154,26 @@
             <td class="p-2 leading-relaxed">
               <div>
                 <span class="font-medium">ประเภท:</span>
-                {{ p.funding.source_funds || '-' }}
+                {{ p.funding.source_funds || "-" }}
               </div>
               <div>
                 <span class="font-medium">ชื่อ:</span>
-                {{ p.funding.funding_name || '-' }}
+                {{ p.funding.funding_name || "-" }}
               </div>
             </td>
-            <td class="p-2">{{ p.own[0]?.full_name }}</td>
+            <td class="p-2">{{ p.own[0].full_name }}</td>
             <td class="p-2 text-center">{{ p.year }}</td>
             <td class="p-2 text-center space-x-2">
-              <button
-              (click)="editItem(p.research_id)"
-              >
-                <i class="bi bi-pencil-square text-lg text-[#16498C] hover:text-[#118CD9] cursor-pointer"></i>
+              <button (click)="editItem(p.research_id)">
+                <i
+                  class="bi bi-pencil-square text-lg text-[#16498C] hover:text-[#118CD9] cursor-pointer"
+                ></i>
               </button>
-              
-              <button>
-                <i class="bi bi-trash3 text-lg text-red-500 hover:text-red-700 cursor-pointer"></i>
+
+              <button (click)="deleteItem(p.research_id)">
+                <i
+                  class="bi bi-trash3 text-lg text-red-500 hover:text-red-700 cursor-pointer"
+                ></i>
               </button>
             </td>
           </tr>
@@ -151,16 +190,19 @@
     </div>
 
     <!-- Pagination -->
-    <div class="flex flex-col md:flex-row md:justify-end md:items-center mt-4 gap-2 font-light">
+    <div
+      class="flex flex-col md:flex-row md:justify-end md:items-center mt-4 gap-2 font-light"
+    >
       <div class="flex items-center justify-end space-x-1">
-    
         <!-- Prev -->
         <button
           (click)="changePage(currentPage - 1)"
           [disabled]="currentPage === 1"
           class="px-2 md:px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
-        >‹</button>
-    
+        >
+          ‹
+        </button>
+
         <!-- Pages -->
         <ng-container *ngFor="let page of visiblePages">
           <!-- ปุ่มตัวเลข -->
@@ -172,22 +214,26 @@
               'bg-[#f2e7ac] text-[#394250]': currentPage === page,
               'hover:bg-gray-100': currentPage !== page
             }"
-          >{{ page }}</button>
-    
+          >
+            {{ page }}
+          </button>
+
           <!-- จุด ... -->
           <span
             *ngIf="page === '...'"
             class="px-2 py-1 text-sm text-gray-400 select-none"
-          >...</span>
+            >...</span
+          >
         </ng-container>
-    
+
         <!-- Next -->
         <button
           (click)="changePage(currentPage + 1)"
           [disabled]="currentPage === totalPages"
           class="px-2 md:px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
-        >›</button>
-    
+        >
+          ›
+        </button>
       </div>
     </div>
   </div>

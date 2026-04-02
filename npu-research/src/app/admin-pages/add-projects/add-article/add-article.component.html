@@ -4,13 +4,12 @@
   <!-- Back -->
   <div class="flex justify-start md:mb-4 mx-auto md:mt-6">
     <button
-      (click)="goToResearchDetail()"
       class="flex items-center gap-2 text-gray-600 text-lg group transition-colors cursor-pointer"
     >
-      <i
+    <i
         class="bi bi-arrow-left-circle-fill text-xl transition-all group-hover:translate-x-1 group-hover:text-[#f2cb05]"
       ></i>
-      <span>ไปที่หน้าการจัดการ</span>
+      <span>ไปที่การจัดการ</span>
     </button>
   </div>
 
@@ -21,7 +20,9 @@
       class="p-4 mx-auto md:px-6 md:py-5 md:mb-6 flex items-center gap-4 rounded-xl bg-linear-to-r from-[#f2cb05] to-[#f2e7ac] text-[#394250] shadow"
     >
       <i class="bi bi-cloud-arrow-up-fill text-3xl"></i>
-      <h2 class="text-2xl md:text-3xl">แก้ไขข้อมูลผลงานตีพิมพ์</h2>
+      <h2 class="text-2xl md:text-3xl">
+        เพิ่มข้อมูลผลงานตีพิมพ์
+      </h2>
     </div>
 
     <!-- ================== Form Body ===================== -->
@@ -52,8 +53,7 @@
       </div>
     </div>
 
-    <div
-      *ngIf="type === 'th'"
+    <div *ngIf="type === 'th'"
       class="grid grid-cols-1 md:grid-cols-1 md:gap-2 mb-2 mt-2 md:mb-6 md:mt-5"
     >
       <label class="md:col-span-1 text-start">
@@ -74,8 +74,7 @@
       </div>
     </div>
 
-    <div
-      *ngIf="type === 'en'"
+    <div *ngIf="type === 'en'"
       class="grid grid-cols-1 md:grid-cols-1 md:gap-2 mb-2 mt-2 md:mb-6 md:mt-5"
     >
       <label class="md:col-span-1 text-start">
@@ -176,7 +175,8 @@
         <input
           [(ngModel)]="keywordInputEn"
           (keydown)="addKeyword($event, 'en')"
-          class="flex-1 min-w-30 outline-none font-light text-lg"
+          class="flex-1 outline-none font-light text-lg min-w-30"
+          [style.width]="(keywordInputEn.length || 1) + 'ch'"
           placeholder="Enter keyword"
         />
       </div>
@@ -440,7 +440,9 @@
 
       <!-- หน้าที่ตีพิมพ์ -->
       <div class="mb-2">
-        <label class="md:col-span-1 text-start"> หน้าที่ตีพิมพ์ </label>
+        <label class="md:col-span-1 text-start">
+          หน้าที่ตีพิมพ์
+        </label>
         <input
           name="pages"
           #pages="ngModel"
@@ -460,8 +462,10 @@
       </div>
 
       <!-- วันที่เผยแพร่ -->
-      <div *ngIf="articleData.article_type === 'วารสาร'" class="mb-2">
-        <label class="md:col-span-1 text-start"> วันที่เผยแพร่ </label>
+      <div  *ngIf="articleData.article_type === 'วารสาร'" class="mb-2">
+        <label class="md:col-span-1 text-start">
+          วันที่เผยแพร่
+        </label>
         <input
           name="article_published"
           #pages="ngModel"
@@ -661,7 +665,6 @@
         </label>
 
         <button
-          [disabled]="true"
           (click)="toggleDropdown('responsibility', $event)"
           class="w-full border rounded-md px-3 py-2 flex justify-between items-center text-lg font-light"
         >
@@ -714,8 +717,6 @@
       <div class="relative mb-2">
         <label class="text-start block">
           ค่าน้ำหนัก/ระดับคุณภาพ
-
-          <!-- Icon trigger -->
           <span
             class="relative cursor-pointer"
             (click)="showWeightModal = true"
@@ -728,7 +729,7 @@
           <!-- Modal -->
           <div
             *ngIf="showWeightModal"
-            class="fixed inset-0 z-50 flex items-start justify-center bg-black/50 px-4 pt-350"
+            class="fixed inset-0 z-50 flex items-start justify-center bg-black/50 px-4 pt-300"
             (click)="showWeightModal = false"
           >
             <div
@@ -749,9 +750,7 @@
               </div>
 
               <!-- Content -->
-              <div
-                class="space-y-3 text-sm text-gray-700 max-h-[40vh] overflow-y-auto pr-1 top-0"
-              >
+              <div class="space-y-3 text-sm text-gray-700 max-h-[40vh] overflow-y-auto pr-1 top-0">
                 <div class="p-3 bg-gray-50 rounded-lg">
                   <span class="font-semibold text-indigo-600">0.20</span>
                   หมายถึง บทความวิจัย,
@@ -795,6 +794,7 @@
               </div>
             </div>
           </div>
+
           <span class="text-red-500">*</span>
         </label>
 
@@ -1210,10 +1210,9 @@
         class="flex items-center justify-center gap-3 w-72 text-xl py-3 bg-[#f2e7ac] hover:bg-[#f2cb05] text-[#394250] hover:text-white rounded-lg shadow transition duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 cursor-pointer"
       >
         <i
-          class="bi"
-          [ngClass]="isEdit ? 'bi-pencil-square' : 'bi-floppy2'"
+          class="bi bi-floppy2'"
         ></i>
-        <span>{{ isEdit ? "อัปเดตข้อมูล" : "บันทึกข้อมูล" }}</span>
+        <span>บันทึกข้อมูล</span>
       </button>
     </div>
   </div>

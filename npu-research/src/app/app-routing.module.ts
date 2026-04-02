@@ -53,6 +53,9 @@ import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.componen
 import { EditProjectsComponent } from './admin-pages/edit-projects/edit-projects.component';
 import { EditArticleComponent } from './admin-pages/edit-article/edit-article.component';
 import { EditInnovationComponent } from './admin-pages/edit-innovation/edit-innovation.component';
+import { AddProjectComponent } from './admin-pages/add-projects/add-project/add-project.component';
+import { AddArticleComponent } from './admin-pages/add-projects/add-article/add-article.component';
+import { AddInnovationComponent } from './admin-pages/add-projects/add-innovation/add-innovation.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -188,6 +191,9 @@ const routes: Routes = [
       { path: 'edit-projects/:id', component: EditProjectsComponent },
       { path: 'edit-articles/:id', component: EditArticleComponent },
       { path: 'edit-innovations/:id', component: EditInnovationComponent },
+      { path: 'project/create', component: AddProjectComponent },
+      { path: 'article/create', component: AddArticleComponent },
+      { path: 'innovation-create', component: AddInnovationComponent },
     ],
   },
 ];

@@ -20,4 +20,8 @@ export class AdminMProjectService {
   deleteProject(id: number) {
     return this.http.delete(`${this.baseUrl}/research/${id}`);
   }
+  
+  adminDelete(id: number) {
+    return this.http.delete(`${this.baseUrl}/m/research/${id}/delete-by-adm`);
+  }
 }

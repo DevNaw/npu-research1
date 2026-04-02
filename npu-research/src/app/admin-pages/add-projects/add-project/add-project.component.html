@@ -8,9 +8,10 @@
       class="flex items-center gap-2 font-medium group transition-colors cursor-pointer"
     >
     <i
-    class="bi bi-arrow-left-circle-fill text-xl transition-all group-hover:translate-x-1 group-hover:text-[#f2cb05]"
-  ></i>
-  <span>ไปที่หน้าการจัดการ</span>
+        class="bi bi-arrow-left-circle-fill text-xl transition-all group-hover:translate-x-1 group-hover:text-[#f2cb05]"
+      ></i>
+
+      <span>ไปที่หน้าการจัดการ</span>
     </button>
   </div>
 
@@ -22,7 +23,9 @@
     >
       <i class="bi bi-cloud-arrow-up-fill text-3xl"></i>
 
-      <h2 class="text-2xl sm:text-3xl">แก้ไขผลงานโครงการวิจัย</h2>
+      <h2 class="text-2xl sm:text-3xl">
+        เพิ่มผลงานโครงการวิจัยใหม่
+      </h2>
     </div>
 
     <!-- ชื่องานวิจัย -->
@@ -307,14 +310,39 @@
       <label class="text-start">
         ประเภทความรับผิดชอบ <span class="text-red-500">*</span>
       </label>
-      <input
-        name="responsibilities"
-        required
-        [(ngModel)]="projectData.responsibilities"
-        type="text"
-        class="md:col-span-3 w-full text-lg font-light border h-12 rounded-md px-4 py-2 focus:ring-2 focus:ring-[#f2e7ac]"
-        placeholder="ประเภทความรับผิดชอบ"
-      />
+
+      <button
+        type="button"
+        (click)="toggleDropdown('responsibility', $event)"
+        class="w-full border rounded-md px-3 py-2 flex justify-between items-center text-lg font-light"
+      >
+        {{ projectData.responsibilities || "เลือก" }}
+        <i class="bi bi-chevron-down"></i>
+      </button>
+
+      <div
+        *ngIf="activeDropdown === 'responsibility'"
+        class="absolute z-50 mt-1 w-full bg-white border rounded-md shadow text-lg font-light"
+      >
+        <div
+          class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
+          (click)="selectValue('responsibilities', 'หัวหน้าโครงการ')"
+        >
+          หัวหน้าโครงการ
+        </div>
+        <div
+          class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
+          (click)="selectValue('responsibilities', 'ที่ปรึกษาโครงการ')"
+        >
+          ที่ปรึกษาโครงการ
+        </div>
+        <div
+          class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
+          (click)="selectValue('responsibilities', 'ผู้ร่วมวิจัย')"
+        >
+          ผู้ร่วมวิจัย
+        </div>
+      </div>
     </div>
 
     <!-- ผู้ร่วมโครงการ -->
@@ -668,11 +696,7 @@
           <div
             *ngFor="let fund of fundings"
             class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
-            (click)="
-              selectValue('name_funding', fund.funding_name);
-              selectValue('funding_code', fund.funding_code);
-              selectValue('funding_id', fund.id)
-            "
+            (click)="selectValue('name_funding', fund.funding_name); selectValue('funding_code', fund.funding_code); selectValue('funding_id', fund.id)"
           >
             {{ fund.funding_name }}
           </div>

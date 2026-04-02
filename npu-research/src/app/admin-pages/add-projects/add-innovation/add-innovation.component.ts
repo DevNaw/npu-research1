@@ -1,24 +1,17 @@
-import {
-  Component,
-  ElementRef,
-  HostListener,
-  QueryList,
-  ViewChildren,
-} from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, HostListener } from '@angular/core';
 import Swal from 'sweetalert2';
-import { Major, Sub, Child } from '../../models/subject.model';
-import { ResearchService } from '../../services/research.service';
-import { Researcher } from '../../models/researchers.model';
-import { ResearchInnovationDetail } from '../../models/innovation.model';
 import {
   ExternalMemberRow,
   InternalMemberRow,
-} from '../../models/member.model';
-import { Funding } from '../../models/funding.model';
-import { FundingService } from '../../services/funding.service';
-import { MainComponent } from '../../shared/layouts/main/main.component';
-
+} from '../../../models/member.model';
+import { Researcher } from '../../../models/researchers.model';
+import { Child, Major, Sub } from '../../../models/subject.model';
+import { FundingService } from '../../../services/funding.service';
+import { ResearchService } from '../../../services/research.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ResearchInnovationDetail } from '../../../models/innovation.model';
+import { MainComponent } from '../../../shared/layouts/main/main.component';
+import { Funding } from '../../../models/funding.model';
 const FIRST_AUTHOR = 'หัวหน้าโครงการ';
 
 export const DEFAULT_INNOVATION: ResearchInnovationDetail = {
@@ -70,14 +63,13 @@ export const DEFAULT_INNOVATION: ResearchInnovationDetail = {
 };
 
 @Component({
-  selector: 'app-edit-innovation',
+  selector: 'app-add-innovation',
   standalone: false,
-  templateUrl: './edit-innovation.component.html',
-  styleUrl: './edit-innovation.component.css',
+  templateUrl: './add-innovation.component.html',
+  styleUrl: './add-innovation.component.css',
 })
-export class EditInnovationComponent {
+export class AddInnovationComponent {
   toggleTooltip = false;
-  isEdit = false;
   activeDropdown: string | null = null;
   activeRowIndex: number | null = null;
 
@@ -135,18 +127,7 @@ export class EditInnovationComponent {
     this.loadFundings();
     this.generateThaiYears();
 
-    this.route.paramMap.subscribe((params) => {
-      const id = params.get('id');
-
-      if (id) {
-        this.isEdit = true;
-        this.projectData.research_id = +id;
-        this.loadProjectData(this.projectData.research_id);
-      } else {
-        this.isEdit = false;
-        MainComponent.hideLoading();
-      }
-    });
+    MainComponent.hideLoading();
   }
 
   loadSubjectArea(): void {
@@ -213,27 +194,6 @@ export class EditInnovationComponent {
         }
 
         this.selectedFileName = data.full_report?.file_name ?? '';
-        if (data.internal_members?.length) {
-          this.internalRow = data.internal_members.map(
-            (m: any, index: number) => ({
-              id: index,
-              researcher_id: m.user_id,
-              name: m.full_name ?? '',
-              responsibilities: m.role ?? '',
-            })
-          );
-        }
-
-        if (data.external_members?.length) {
-          this.externalRow = data.external_members.map(
-            (m: any, index: number) => ({
-              id: index + 1,
-              name: m.full_name ?? '',
-              organization: m.organization ?? '',
-              responsibilities: m.role ?? '',
-            })
-          );
-        }
 
         MainComponent.hideLoading();
       },
@@ -417,30 +377,37 @@ export class EditInnovationComponent {
     this.selectedImagesFile.splice(index, 1);
   }
 
-  submit(): void {
-    if (!this.validateForm()) return;
-  
+  submit() {
+    if (!this.validateForm()) {
+      return;
+    }
+
+    const formData = this.buildFormData();
+
     Swal.fire({
       title: 'กำลังบันทึก...',
       allowOutsideClick: false,
       didOpen: () => Swal.showLoading(),
     });
-  
-    this.service.adminUpdateInnovation(this.projectData.research_id, this.buildFormData()).subscribe({
-      next: () => {
+
+    this.service.adminCreateInnovation(formData).subscribe({
+      next: (res: any) => {
         Swal.fire({
           icon: 'success',
-          title: 'อัพเดทสำเร็จ',
+          title: 'บันทึกสำเร็จ',
           showConfirmButton: false,
           timer: 1000,
-        }).then(() => {
-          window.location.reload();
-          window.scrollTo(0, 0);
         });
+
+          this.router.navigate(['/admin/performance-by-departmaent', 'innovation', res.data.research_id]);
+          this.resetForm();
       },
       error: (err) => {
         console.error(err);
-        Swal.fire({ icon: 'error', title: 'อัพเดทไม่สำเร็จ' });
+        Swal.fire({
+          icon: 'error',
+          title: 'บันทึกไม่สำเร็จ',
+        });
       },
     });
   }
@@ -476,7 +443,7 @@ export class EditInnovationComponent {
     required('name_funding', d.name_funding);
     required('budget_amount', d.budget_amount);
     required('year_received_budget', d.year_received_budget);
-    required('responsibilities', d.responsibilities);
+    optional('responsibilities', d.responsibilities);
     required('patent_number', d.patent_number);
     required('application_number', d.application_number);
     required('examination_url', d.examination_url);
@@ -544,6 +511,10 @@ export class EditInnovationComponent {
     this.selectedImagesFile = [];
     this.selectedSub = null;
     this.searchMajor = '';
+  }
+
+  goToResearchDetail() {
+    this.router.navigate(['/user/profile']);
   }
 
   get hasImages(): boolean {
@@ -740,10 +711,12 @@ export class EditInnovationComponent {
     this.abstractType = type;
 
     if (type === 'en') {
+      // 👇 reset ตอนเลือก EN
       this.keywordInputEn = '';
       this.projectData.keywords = [];
       this.projectData.abstract_en = '';
     } else {
+      // 👇 reset ตอนเลือก TH
       this.keywordInput = '';
       this.projectData.keywords = [];
       this.projectData.abstract = '';
@@ -770,9 +743,5 @@ export class EditInnovationComponent {
 
       this.projectData.abstract = textarea.value;
     }
-  }
-
-  goToResearchDetail() {
-    this.router.navigate(['/admin/manage-project']);
   }
 }

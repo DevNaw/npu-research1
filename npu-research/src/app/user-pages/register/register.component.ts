@@ -12,6 +12,8 @@ import { Organization } from '../../models/expertise.model';
   styleUrl: './register.component.css',
 })
 export class RegisterComponent {
+  showPassword = false;
+  showConfirmPassword = false;
   openDropdown: string | null = null;
   majorInput: string = '';
   searchOrganization = '';
@@ -117,7 +119,7 @@ export class RegisterComponent {
   addMajor(event: KeyboardEvent) {
     if (event.key === 'Enter') {
       event.preventDefault();
-      
+
       const value = this.majorInput.trim();
       if (value && !this.registerData.expertises.includes(value)) {
         this.registerData.expertises.push(value);

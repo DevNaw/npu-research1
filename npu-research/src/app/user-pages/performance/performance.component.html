@@ -17,7 +17,6 @@
           <p class="text-sm md:text-base opacity-70 tracking-wide">
             โครงการวิจัย
           </p>
-
           <!-- TH -->
           <h1
             class="text-lg md:text-2xl font-semibold mt-1 leading-relaxed wrap-break-word"
@@ -136,21 +135,21 @@
                 <div>
                   <p class="text-[#767676]">สาขาของงานวิจัย</p>
                   <p class="font-light my-2">
-                    {{ oecdUI[0]?.name_th || "-" }}
+                    {{ oecdUI[0].name_th || "-" }}
                   </p>
                 </div>
 
                 <div>
                   <p class="text-[#767676]">สาขาย่อย</p>
                   <p class="font-light my-2">
-                    {{ oecdUI[0]?.children?.[0]?.name_th || '-' }}
+                    {{ oecdUI[0].children[0].name_th || '-' }}
                   </p>
                 </div>
 
                 <div>
                   <p class="text-[#767676]">สาขาที่เกี่ยวข้อง</p>
                   <p class="font-light my-2">
-                    {{ oecdUI[0]?.children?.[0]?.children?.[0]?.name_th || '-' }}
+                    {{ oecdUI[0].children[0].children[0].name_th || '-' }}
                   </p>
                 </div>
               </div>
@@ -883,21 +882,21 @@
                 <div>
                   <p class="text-[#767676]">สาขาของนวัตกรรมสิ่งประดิษฐ์</p>
                   <p class="font-light">
-                    {{ oecdUI[0]?.name_th || "-" }}
+                    {{ oecdUI[0].name_th || "-" }}
                   </p>
                 </div>
 
                 <div>
                   <p class="text-[#767676]">สาขาย่อย</p>
                   <p class="font-light">
-                    {{ oecdUI[0]?.children?.[0]?.name_th || '-' }}
+                    {{ oecdUI[0].children[0].name_th || '-' }}
                   </p>
                 </div>
 
                 <div>
                   <p class="text-[#767676]">สาขาที่เกี่ยวข้อง</p>
                   <p class="font-light">
-                    {{ oecdUI[0]?.children?.[0]?.children?.[0]?.name_th || '-' }}
+                    {{ oecdUI[0].children[0].children[0].name_th || '-' }}
                   </p>
                 </div>
               </div>

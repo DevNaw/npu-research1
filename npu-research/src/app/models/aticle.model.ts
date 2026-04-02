@@ -66,7 +66,7 @@ export interface ArticleSubjectArea {
     doi: string;
     subject_area_id: number;
     subject_area?: ArticleSubjectArea[];
-    responsibilities: string;
+    responsibilities: string | null;
     internal_members: InternalMember[];
     external_members: ExternalMember[];
     article_type: string;

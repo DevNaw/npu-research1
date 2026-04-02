@@ -361,28 +361,7 @@
       <div class="relative mb-2">
         <label class="text-start block">
           ค่าน้ำหนัก/ระดับคุณภาพ
-          <!-- <span
-            class="relative group cursor-pointer"
-            (click)="toggleTooltip = !toggleTooltip"
-          >
-            <i
-              class="bi bi-info-circle-fill mx-2 text-gray-400 hover:text-indigo-500"
-            ></i>
 
-            <div
-              [class.!block]="toggleTooltip"
-              class="hidden group-hover:block absolute z-50 bottom-full mb-2 max-w-65 w-max p-3 text-sm text-white bg-gray-800 rounded-lg shadow-lg left-1/2 -translate-x-50"
-            >
-              ค่าน้ำหนักแสดงถึงความสำคัญของผลงานนวัตกรรมสิ่งประดิษฐ์
-              โดยมีค่าตั้งแต่ 0.20 ถึง 1.00
-              โดยค่าที่มากจะแสดงถึงความสำคัญมากขึ้น
-              <div
-                class="absolute top-full left-50 border-4 border-transparent border-t-gray-800"
-              ></div>
-            </div>
-          </span> -->
-
-          <!-- Icon trigger -->
           <span
             class="relative cursor-pointer"
             (click)="showWeightModal = true"
@@ -395,7 +374,7 @@
           <!-- Modal -->
           <div
             *ngIf="showWeightModal"
-            class="fixed inset-0 z-50 flex items-start justify-center bg-black/50 px-4 pt-150"
+            class="fixed inset-0 z-50 flex items-start justify-center bg-black/50 px-4 pt-190"
             (click)="showWeightModal = false"
           >
             <div
