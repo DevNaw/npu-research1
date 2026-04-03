@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiBaseUrl: 'https://research-api.cscons.org/api',
+  apiBaseUrl: 'https://api-myresearch-rdi.npu.ac.th/api',
 } as const;
