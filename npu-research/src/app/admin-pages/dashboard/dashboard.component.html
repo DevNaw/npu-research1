@@ -352,6 +352,7 @@
               <div style="width: 100%; height: 350px">
                 <ng-container *ngIf="hasData; else noData">
                   <ngx-charts-pie-chart
+                    [view]="chartView"
                     [results]="single"
                     [scheme]="colorScheme"
                     [legend]="false"
@@ -359,6 +360,7 @@
                     [doughnut]="true"
                     [tooltipDisabled]="false"
                     [labelFormatting]="labelFormat"
+                    (select)="onChartSelect($event)"
                   >
                   </ngx-charts-pie-chart>
                 </ng-container>

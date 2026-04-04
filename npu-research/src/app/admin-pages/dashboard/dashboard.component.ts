@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import {
   BarSummary,
   ResearchItem,
@@ -23,6 +23,7 @@ import {
 import { MainComponent } from '../../shared/layouts/main/main.component';
 import { AuthService } from '../../services/auth.service';
 import { Color, LegendPosition, ScaleType } from '@swimlane/ngx-charts';
+import Swal from 'sweetalert2';
 
 export type RadarChartOptions = {
   series: ApexAxisChartSeries;
@@ -121,6 +122,8 @@ export class DashboardComponent implements OnInit {
     { key: 'innovation', label: 'นวัตกรรมสิ่งประดิษฐ์', icon: 'bi-award' },
   ];
 
+  chartView: [number, number] = [300, 300];
+
   constructor(
     private service: ProfileService,
     private router: Router,
@@ -131,6 +134,7 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.setChartView();
     MainComponent.showLoading();
     this.route.paramMap.subscribe((params) => {
       const id = params.get('id');
@@ -400,5 +404,49 @@ export class DashboardComponent implements OnInit {
     return fullLabel.length > maxLength
       ? fullLabel.slice(0, maxLength) + '...'
       : fullLabel;
+  }
+
+  @HostListener('window:resize')
+  setChartView(): void {
+    const w = window.innerWidth;
+    if (w < 640) {
+      this.chartView = [w - 40, 260];
+    } else if (w < 1024) {
+      this.chartView = [420, 320];
+    } else {
+      this.chartView = [0, 350];
+    }
+  }
+
+  onChartSelect(event: any): void {
+    const item = this.single.find((d) => d.name === event.name);
+    if (!item) return;
+
+    const total = this.single.reduce((sum, d) => sum + d.value, 0);
+    const percent = total > 0 ? ((item.value / total) * 100).toFixed(1) : '0';
+
+    const colorMap: Record<string, string> = {
+      โครงการวิจัย: '#038FFB',
+      บทความ: '#06E396',
+      นวัตกรรม: '#FEB119',
+    };
+    const color = colorMap[item.name] ?? '#394250';
+
+    Swal.fire({
+      title: item.name,
+      html: `
+      <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
+        <p style="font-size:1.5rem; font-weight:600; margin:0;">
+          ${item.value} ผลงาน
+        </p>
+        <p style="color:#888; font-size:0.9rem; margin:0;">
+          ${percent}%
+        </p>
+      </div>
+    `,
+      confirmButtonColor: '#f2cb05',
+      confirmButtonText: 'ปิด',
+      width: 300,
+    });
   }
 }

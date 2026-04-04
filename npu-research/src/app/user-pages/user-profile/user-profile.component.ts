@@ -191,6 +191,8 @@ export class UserProfileComponent implements OnInit {
   fullLabelsSub: string[] = [];
   donutSummary: any;
 
+  chartView: [number, number] = [300, 300];
+
   // ===== ngx-charts =====
   single: { name: string; value: number }[] = [];
   legendPosition: LegendPosition = LegendPosition.Below;
@@ -230,6 +232,7 @@ export class UserProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.setChartView();
     MainComponent.showLoading();
     Promise.all([
       this.loadData(),
@@ -723,31 +726,6 @@ export class UserProfileComponent implements OnInit {
     return `${d.getDate()}/${d.getMonth() + 1}/${year}`;
   }
 
-  // deleteProject(id: number) {
-  //   Swal.fire({
-  //     title: 'ต้องการลบข้อมูลใช่ไหม?',
-  //     text: 'ข้อมูลจะไม่สามารถกู้คืนได้',
-  //     icon: 'warning',
-  //     showCancelButton: true,
-  //     confirmButtonText: 'ใช่',
-  //     cancelButtonText: 'ไม่',
-  //   }).then((result) => {
-  //     if (!result.isConfirmed) return;
-  //     this.service.deleteProject(id).subscribe({
-  //       next: () => {
-  //         this.loadData();
-  //         Swal.fire({
-  //           icon: 'success',
-  //           title: 'ลบข้อมูลสำเร็จ',
-  //           timer: 1500,
-  //           showConfirmButton: false,
-  //         });
-  //       },
-  //       error: (err) => console.error(err),
-  //     });
-  //   });
-  // }
-
   deleteProject(id: number) {
     Swal.fire({
       title: 'ต้องการลบข้อมูลใช่ไหม?',
@@ -758,21 +736,69 @@ export class UserProfileComponent implements OnInit {
       cancelButtonText: 'ไม่',
     }).then((result) => {
       if (!result.isConfirmed) return;
-  
+
       this.service.deleteProject(id).subscribe({
         next: () => {
           this.loadData();
-          Swal.fire({ icon: 'success', title: 'ลบข้อมูลสำเร็จ', timer: 1500, showConfirmButton: false });
+          Swal.fire({
+            icon: 'success',
+            title: 'ลบข้อมูลสำเร็จ',
+            timer: 1500,
+            showConfirmButton: false,
+          });
         },
         error: (err) => {
-          // ดู error จริงจาก backend
-          console.log('Status:', err.status);
-          console.log('Error body:', err.error);
-          console.log('Message:', err.error?.message);
-  
-          Swal.fire('ผิดพลาด', err.error?.message || 'ไม่สามารถลบข้อมูลได้', 'error');
+          Swal.fire(
+            'ผิดพลาด',
+            err.error?.message || 'ไม่สามารถลบข้อมูลได้',
+            'error'
+          );
         },
       });
+    });
+  }
+
+  @HostListener('window:resize')
+  setChartView(): void {
+    const w = window.innerWidth;
+    if (w < 640) {
+      this.chartView = [w - 40, 260];
+    } else if (w < 1024) {
+      this.chartView = [420, 320];
+    } else {
+      this.chartView = [0, 350];
+    }
+  }
+
+  onChartSelect(event: any): void {
+    const item = this.single.find((d) => d.name === event.name);
+    if (!item) return;
+
+    const total = this.single.reduce((sum, d) => sum + d.value, 0);
+    const percent = total > 0 ? ((item.value / total) * 100).toFixed(1) : '0';
+
+    const colorMap: Record<string, string> = {
+      โครงการวิจัย: '#038FFB',
+      บทความ: '#06E396',
+      นวัตกรรม: '#FEB119',
+    };
+    const color = colorMap[item.name] ?? '#394250';
+
+    Swal.fire({
+      title: item.name,
+      html: `
+      <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
+        <p style="font-size:1.5rem; font-weight:600; margin:0;">
+          ${item.value} ผลงาน
+        </p>
+        <p style="color:#888; font-size:0.9rem; margin:0;">
+          ${percent}%
+        </p>
+      </div>
+    `,
+      confirmButtonColor: '#f2cb05',
+      confirmButtonText: 'ปิด',
+      width: 300,
     });
   }
 }

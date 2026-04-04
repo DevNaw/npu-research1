@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { DataPerformanceItem } from '../../models/dashboard.model';
@@ -80,6 +80,8 @@ export class UserDashboardComponent implements OnInit {
   fullLabels: string[] = [];
   fullLabelsSub: string[] = [];
 
+  chartView: [number, number] = [300, 300];
+
   charts: {
     type: ReportType;
     title: string;
@@ -155,6 +157,7 @@ export class UserDashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.setChartView();
     MainComponent.showLoading();
     Promise.all([
       this.loadDashboardData(),
@@ -685,6 +688,83 @@ export class UserDashboardComponent implements OnInit {
       title: 'Your work has been saved',
       showConfirmButton: false,
       timer: 1500,
+    });
+  }
+
+  @HostListener('window:resize')
+  setChartView(): void {
+    const w = window.innerWidth;
+    if (w < 640) {
+      this.chartView = [w - 40, 260];
+    } else if (w < 1024) {
+      this.chartView = [420, 320];
+    } else {
+      this.chartView = [0, 350];
+    }
+  }
+
+  onChartSelect(event: any): void {
+    const item = this.single.find((d) => d.name === event.name);
+    if (!item) return;
+  
+    const total = this.single.reduce((sum, d) => sum + d.value, 0);
+    const percent = total > 0 ? ((item.value / total) * 100).toFixed(1) : '0';
+  
+    const colorMap: Record<string, string> = {
+      โครงการวิจัย: '#038FFB',
+      บทความ: '#06E396',
+      นวัตกรรม: '#FEB119',
+    };
+  
+    const color = colorMap[item.name] ?? '#394250';
+  
+    Swal.fire({
+      title: item.name,
+      html: `
+        <div style="
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 8px;
+          padding: 8px 0 4px;
+        ">
+          <div style="
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+          ">
+            <span style="
+              font-size: 2.2rem;
+              font-weight: 700;
+              color: ${color};
+              line-height: 1;
+            ">${item.value}</span>
+            <span style="
+              font-size: 1rem;
+              font-weight: 500;
+              color: #555;
+            ">ผลงาน</span>
+          </div>
+          <div style="
+            background: #f5f5f5;
+            border-radius: 20px;
+            padding: 3px 14px;
+          ">
+            <span style="
+              font-size: 0.9rem;
+              color: #888;
+              font-weight: 500;
+            ">${percent}%</span>
+          </div>
+        </div>
+      `,
+      confirmButtonColor: '#f2cb05',
+      confirmButtonText: 'ปิด',
+      width: 320,
+      customClass: {
+        title: 'swal-title-custom',
+        confirmButton: 'swal-confirm-custom',
+      },
     });
   }
 }

@@ -7,7 +7,7 @@ import { Researcher } from '../../models/search-researchers.model';
 import { Expertise, Organization } from '../../models/get-researcher.model';
 import { MainComponent } from '../../shared/layouts/main/main.component';
 import { Color, LegendPosition, ScaleType } from '@swimlane/ngx-charts';
-
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-admin-search-researcher',
@@ -49,29 +49,51 @@ export class AdminSearchResearcherComponent {
   activeDropdown: string | null = null;
 
   single: { name: string; value: number }[] = [];
-    hasData = false;
-    legendPosition: LegendPosition = LegendPosition.Below;
-  
-    colorScheme: Color = {
-      name: 'horizon',
-      selectable: true,
-      group: ScaleType.Ordinal,
-      domain: [
-        '#FF6B6B', '#4ECDC4', '#FFD93D', '#1A73E8', '#6C5CE7',
-        '#00B894', '#FDCB6E', '#E17055', '#0984E3', '#A29BFE',
-        '#00CEC9', '#FAB1A0', '#2D3436', '#E84393', '#636E72',
-        '#55EFC4', '#FD79A8', '#74B9FF', '#81ECEC', '#FFEAA7',
-        '#D63031', '#00A8FF', '#9C88FF', '#44BD32', '#FBC531',
-      ],
-    };
-  
-    labelFormat = (name: string): string => {
-      const item = this.single.find((d) => d.name === name);
-      if (!item) return name;
-      const total = this.single.reduce((sum, d) => sum + d.value, 0);
-      const percent = total > 0 ? ((item.value / total) * 100).toFixed(1) : '0';
-      return `${name}\n${percent}%`;
-    };
+  hasData = false;
+  legendPosition: LegendPosition = LegendPosition.Below;
+
+  colorScheme: Color = {
+    name: 'horizon',
+    selectable: true,
+    group: ScaleType.Ordinal,
+    domain: [
+      '#FF6B6B',
+      '#4ECDC4',
+      '#FFD93D',
+      '#1A73E8',
+      '#6C5CE7',
+      '#00B894',
+      '#FDCB6E',
+      '#E17055',
+      '#0984E3',
+      '#A29BFE',
+      '#00CEC9',
+      '#FAB1A0',
+      '#2D3436',
+      '#E84393',
+      '#636E72',
+      '#55EFC4',
+      '#FD79A8',
+      '#74B9FF',
+      '#81ECEC',
+      '#FFEAA7',
+      '#D63031',
+      '#00A8FF',
+      '#9C88FF',
+      '#44BD32',
+      '#FBC531',
+    ],
+  };
+
+  labelFormat = (name: string): string => {
+    const item = this.single.find((d) => d.name === name);
+    if (!item) return name;
+    const total = this.single.reduce((sum, d) => sum + d.value, 0);
+    const percent = total > 0 ? ((item.value / total) * 100).toFixed(1) : '0';
+    return `${name}\n${percent}%`;
+  };
+
+  chartView: [number, number] = [300, 300];
 
   constructor(
     private router: Router,
@@ -80,6 +102,7 @@ export class AdminSearchResearcherComponent {
   ) {}
 
   ngOnInit() {
+    this.setChartView();
     MainComponent.showLoading();
     Promise.all([
       this.loadResearch(),
@@ -127,13 +150,16 @@ export class AdminSearchResearcherComponent {
     this.searchService.searchResearchers(payload).subscribe({
       next: (res) => {
         const data = res.data;
-    
+
         this.filteredData = data.result;
         this.filteredResearchers = data.result;
         this.donutLabels = data.graph.map((g) => g.faculty);
         this.donutSeries = data.graph.map((g) => g.count);
         this.totalResearchers = data.total;
-        this.single = data.graph.map((g) => ({ name: g.faculty, value: g.count }));
+        this.single = data.graph.map((g) => ({
+          name: g.faculty,
+          value: g.count,
+        }));
         this.hasData = data.graph.length > 0;
         this.currentPage = 1;
         this.updatePagination();
@@ -259,23 +285,99 @@ export class AdminSearchResearcherComponent {
     const total = this.totalPages;
     const current = this.currentPage;
     const pages: (number | string)[] = [];
-  
+
     if (total <= 5) {
       return Array.from({ length: total }, (_, i) => i + 1);
     }
-  
+
     pages.push(1);
-  
+
     if (current > 3) pages.push('...');
-  
-    for (let i = Math.max(2, current - 1); i <= Math.min(total - 1, current + 1); i++) {
+
+    for (
+      let i = Math.max(2, current - 1);
+      i <= Math.min(total - 1, current + 1);
+      i++
+    ) {
       pages.push(i);
     }
-  
+
     if (current < total - 2) pages.push('...');
-  
+
     pages.push(total);
-  
+
     return pages;
+  }
+
+  @HostListener('window:resize')
+  setChartView(): void {
+    const w = window.innerWidth;
+    if (w < 640) {
+      this.chartView = [w - 40, 260];
+    } else if (w < 1024) {
+      this.chartView = [420, 320];
+    } else {
+      this.chartView = [0, 350];
+    }
+  }
+
+  onChartSelect(event: any): void {
+    const item = this.single.find((d) => d.name === event.name);
+    if (!item) return;
+
+    const total = this.single.reduce((sum, d) => sum + d.value, 0);
+    const percent = total > 0 ? ((item.value / total) * 100).toFixed(1) : '0';
+
+    // ดึงสีจาก colorScheme.domain ตาม index เดียวกับใน chart
+    const index = this.single.indexOf(item);
+    const color =
+      this.colorScheme.domain[index % this.colorScheme.domain.length];
+
+    Swal.fire({
+      title: item.name,
+      html: `
+        <div style="
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 12px;
+          padding: 8px 0 4px;
+        ">
+          <div style="
+            width: 48px;
+            height: 5px;
+            border-radius: 99px;
+            background: ${color};
+          "></div>
+  
+          <div style="display: flex; align-items: baseline; gap: 6px;">
+            <span style="
+              font-size: 2.4rem;
+              font-weight: 700;
+              color: ${color};
+              line-height: 1;
+            ">${item.value}</span>
+            <span style="
+              font-size: 1rem;
+              font-weight: 500;
+              color: #555;
+            ">ผลงาน</span>
+          </div>
+  
+          <div style="
+            background: #f5f5f5;
+            border-radius: 20px;
+            padding: 4px 16px;
+          ">
+            <span style="font-size: 0.875rem; color: #888; font-weight: 500;">
+              ${percent}% ของทั้งหมด
+            </span>
+          </div>
+        </div>
+      `,
+      confirmButtonColor: '#f2cb05',
+      confirmButtonText: 'ปิด',
+      width: 320,
+    });
   }
 }

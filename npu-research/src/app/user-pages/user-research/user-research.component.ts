@@ -13,6 +13,7 @@ import {
 import { Funding } from '../../models/funding.model';
 import { FundingService } from '../../services/funding.service';
 import { Color, LegendPosition, ScaleType } from '@swimlane/ngx-charts';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-user-research',
@@ -133,6 +134,8 @@ export class UserResearchComponent {
     ],
   };
 
+  chartView: [number, number] = [300, 300];
+
   labelFormat = (name: string): string => {
     const item = this.single.find((d) => d.name === name);
     if (!item) return name;
@@ -153,6 +156,7 @@ export class UserResearchComponent {
   // ============================================================
 
   ngOnInit() {
+    this.setChartView();
     MainComponent.showLoading();
     Promise.all([
       this.loadSubOrgan(),
@@ -550,5 +554,77 @@ export class UserResearchComponent {
   @HostListener('document:click')
   closeAll() {
     this.activeDropdown = null;
+  }
+
+  @HostListener('window:resize')
+  setChartView(): void {
+    const w = window.innerWidth;
+    if (w < 640) {
+      this.chartView = [w - 40, 260];
+    } else if (w < 1024) {
+      this.chartView = [420, 320];
+    } else {
+      this.chartView = [0, 350];
+    }
+  }
+
+  onChartSelect(event: any): void {
+    const item = this.single.find((d) => d.name === event.name);
+    if (!item) return;
+
+    const total = this.single.reduce((sum, d) => sum + d.value, 0);
+    const percent = total > 0 ? ((item.value / total) * 100).toFixed(1) : '0';
+
+    // ดึงสีจาก colorScheme.domain ตาม index จริง
+    const index = this.single.indexOf(item);
+    const color =
+      this.colorScheme.domain[index % this.colorScheme.domain.length];
+
+    Swal.fire({
+      title: item.name,
+      html: `
+          <div style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 0 4px;
+          ">
+            <div style="
+              width: 48px;
+              height: 5px;
+              border-radius: 99px;
+              background: ${color};
+            "></div>
+    
+            <div style="display: flex; align-items: baseline; gap: 6px;">
+              <span style="
+                font-size: 2.4rem;
+                font-weight: 700;
+                color: ${color};
+                line-height: 1;
+              ">${item.value}</span>
+              <span style="
+                font-size: 1rem;
+                font-weight: 500;
+                color: #555;
+              ">ผลงาน</span>
+            </div>
+    
+            <div style="
+              background: #f5f5f5;
+              border-radius: 20px;
+              padding: 4px 16px;
+            ">
+              <span style="font-size: 0.875rem; color: #888; font-weight: 500;">
+                ${percent}% ของทั้งหมด
+              </span>
+            </div>
+          </div>
+        `,
+      confirmButtonColor: '#f2cb05',
+      confirmButtonText: 'ปิด',
+      width: 320,
+    });
   }
 }
