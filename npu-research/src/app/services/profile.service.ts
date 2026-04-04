@@ -32,7 +32,21 @@ export class ProfileService {
 
   constructor(private http: HttpClient) {}
 
-  // ✅ ดึงข้อมูลโปรไฟล์
+  // ===== Helper =====
+  private spoof(method: 'PUT' | 'PATCH' | 'DELETE', data?: any): FormData {
+    const fd = new FormData();
+    fd.append('_method', method);
+
+    if (data) {
+      Object.entries(data).forEach(([key, value]) => {
+        fd.append(key, value as string);
+      });
+    }
+
+    return fd;
+  }
+
+  // ======= ดึงข้อมูลโปรไฟล์ =======
   getProfile() {
     return this.http.get<UserProfileResponse>(this.baseUrl);
   }
@@ -43,19 +57,19 @@ export class ProfileService {
     );
   }
 
-  // ✅ อัปเดตข้อมูลโปรไฟล์
+  // ======= อัปเดตข้อมูลโปรไฟล์ ===========
   updateProfile(data: UpdateProfilePayload) {
-    return this.http.put<{ message: string; user: UserProfile }>(
+    return this.http.post<{ message: string; user: UserProfile }>(
       this.baseUrl,
-      data
+      this.spoof('PUT', data)
     );
   }
 
-  // ✅ อัปเดตรูปโปรไฟล์
+  // ======= อัปเดตรูปโปรไฟล์ =======
   updateAvatar(file: File) {
     const formData = new FormData();
     formData.append('avatar_img', file);
-  
+
     return this.http.post<{ message: string; avatar_url: string }>(
       `${this.baseUrl}/avatar`,
       formData
@@ -63,29 +77,29 @@ export class ProfileService {
   }
 
   getGeneralInfo(): Observable<GeneralInfoResponse> {
-    return this.http.get<GeneralInfoResponse>(`${this.api}/user/infomation/general-for-update`);
+    return this.http.get<GeneralInfoResponse>(
+      `${this.api}/user/infomation/general-for-update`
+    );
   }
-  
+
   updateGeneral(data: any) {
-    return this.http.patch(`${this.api}/user/infomation/general`, data);
+    return this.http.post(`${this.api}/user/infomation/general`, (this.spoof('PATCH', data)));
   }
 
   updateEducation(data: any) {
-    return this.http.patch(`${this.api}/user/infomation/education`, data);
+    return this.http.post(`${this.api}/user/infomation/education`, (this.spoof('PATCH', data)));
   }
 
   updateWork(data: any) {
-    return this.http.patch(`${this.api}/user/infomation/work`, data);
+    return this.http.post(`${this.api}/user/infomation/work`, (this.spoof('PATCH', data)));
   }
 
   getProjectList(): Observable<ResearchListResponse> {
-    return this.http.get<ResearchListResponse>(
-      `${this.api}/research/lists`
-    );
+    return this.http.get<ResearchListResponse>(`${this.api}/research/lists`);
   }
 
   // Delete Project
   deleteProject(id: number) {
-    return this.http.delete(`${this.api}/research/${id}/delete`);
+    return this.http.post(`${this.api}/research/${id}/delete`, this.spoof('DELETE'));
   }
 }

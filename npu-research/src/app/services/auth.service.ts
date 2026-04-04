@@ -14,11 +14,19 @@ export class AuthService {
   private USER_KEY = 'use';
 
   constructor(private http: HttpClient) {}
+  // ===== Helper =====
+  private spoof(method: 'PUT' | 'PATCH' | 'DELETE', data?: any): FormData {
+    const fd = new FormData();
+    fd.append('_method', method);
 
-  // private setSession(token: string, user: any) {
-  //   localStorage.setItem(this.TOKEN_KEY, token);
-  //   localStorage.setItem(this.USER_KEY, JSON.stringify(user));
-  // }
+    if (data) {
+      Object.entries(data).forEach(([key, value]) => {
+        fd.append(key, value as string);
+      });
+    }
+
+    return fd;
+  }
 
   private setSession(token: string, user: any) {
     if (!token || !user) return;
@@ -45,37 +53,6 @@ export class AuthService {
       return null;
     }
   }
-
-  // getUserFromStorage(): any {
-  //   const user = localStorage.getItem(this.USER_KEY);
-  //   if (!user) return null;
-  
-  //   try {
-  //     return JSON.parse(user);
-  //   } catch (e) {
-  //     console.warn('Invalid user in storage, clearing...');
-  //     localStorage.removeItem(this.USER_KEY);
-  //     localStorage.removeItem(this.TOKEN_KEY);
-  //     return null;
-  //   }
-  // }
-
-  // ===== login =====
-  // login(username: string, password: string) {
-  //   return this.http
-  //     .post<any>(`${this.baseUrl}/users/login`, { username, password })
-  //     .pipe(
-  //       tap((res) => {
-  //         // 🔥 ปรับตาม response จริงของ backend
-  //         const token = res?.data?.token;
-  //         const user = res?.data?.user;
-
-  //         if (token && user) {
-  //           this.setSession(token, user);
-  //         }
-  //       })
-  //     );
-  // }
 
   login(username: string, password: string) {
     return this.http
@@ -177,18 +154,20 @@ export class AuthService {
 
   // Delete User
   deleteUser() {
-    return this.http.delete(`${this.baseUrl}/v1/extreme/user-account/delete`);
+    return this.http.post(
+      `${this.baseUrl}/v1/extreme/user-account/delete`,
+      this.spoof('DELETE')
+    );
   }
 
   // Change Password
   changePassword(oldPassword: string, newPassword: string) {
-    return this.http.put(
+    return this.http.post(
       `${this.baseUrl}/v1/extreme/user-account/change-password`,
-      {
+      this.spoof('PATCH', {
         oldPassword,
         newPassword,
-      }
+      })
     );
   }
-
 }

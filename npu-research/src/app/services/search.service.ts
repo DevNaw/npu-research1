@@ -18,22 +18,36 @@ export class SearchService {
 
   constructor(private http: HttpClient) {}
 
+  // ===== Helper =====
+  private spoof(method: 'PUT' | 'PATCH' | 'DELETE', data?: any): FormData {
+    const fd = new FormData();
+    fd.append('_method', method);
+
+    if (data) {
+      Object.entries(data).forEach(([key, value]) => {
+        fd.append(key, value as string);
+      });
+    }
+
+    return fd;
+  }
+
   getData(): Observable<OecdResponse> {
     return this.http.get<OecdResponse>(`${this.apiUrl}/search/innit`);
   }
 
   searchData(data: SearchResearchRequest) {
-    return this.http.put<SummaryBySubjectResponse>(
+    return this.http.post<SummaryBySubjectResponse>(
       `${this.apiUrl}/search/research`,
-      data
+      this.spoof('PUT', data)
     );
   }
 
   // ค้นหานักวิจัย
   searchResearchers(data: any) {
-    return this.http.put<ResearcherSearchResponse>(
+    return this.http.post<ResearcherSearchResponse>(
       `${this.apiUrl}/search/researcher`,
-      data
+      this.spoof('PUT', data)
     );
   }
 

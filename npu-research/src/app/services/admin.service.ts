@@ -32,12 +32,26 @@ export class AdminService {
 
   constructor(private http: HttpClient) {}
 
-  // ✅ ดึงผู้ใช้ทั้งหมด
+  // ===== Helper =====
+  private spoof(method: 'PUT' | 'PATCH' | 'DELETE', data?: any): FormData {
+    const fd = new FormData();
+    fd.append('_method', method);
+
+    if (data) {
+      Object.entries(data).forEach(([key, value]) => {
+        fd.append(key, value as string);
+      });
+    }
+
+    return fd;
+  }
+
+  // ======= ดึงผู้ใช้ทั้งหมด ========
   getUsers() {
     return this.http.get<AdminUser[]>(this.baseUrl);
   }
 
-  // ✅ สร้าง admin
+  // ========= สร้าง admin =========
   createAdmin(data: CreateAdminPayload) {
     return this.http.post<{ message: string; user: AdminUser }>(
       this.baseUrl,
@@ -45,18 +59,16 @@ export class AdminService {
     );
   }
 
-  // ✅ อัปเดต
+  // ========= อัปเดต ============
   updateUser(id: number, data: UpdateAdminPayload) {
-    return this.http.put<{ message: string; user: AdminUser }>(
+    return this.http.post<{ message: string; user: AdminUser }>(
       `${this.baseUrl}/${id}`,
-      data
+      this.spoof('PATCH', data)
     );
   }
 
-  // ✅ ลบ
+  // ============= ลบ ============
   deleteUser(id: number) {
-    return this.http.delete<{ message: string }>(
-      `${this.baseUrl}/${id}`
-    );
+    return this.http.post<{ message: string }>(`${this.baseUrl}/${id}`, this.spoof('DELETE'));
   }
 }

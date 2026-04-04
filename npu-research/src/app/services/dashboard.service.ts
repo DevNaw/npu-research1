@@ -14,7 +14,4 @@ export class DashboardService {
     getDashboardData(): Observable<DashboardResponse> {
     return this.http.get<DashboardResponse>(`${this.baseUrl}/public/dashboard/get-data`);
   }
-  //   getDashboardData(): Observable<DashboardResponse> {
-  //   return this.http.get<DashboardResponse>(`${this.baseUrl}/dashboard/get-data`);
-  // }
 }

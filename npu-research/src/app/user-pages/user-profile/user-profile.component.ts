@@ -723,6 +723,31 @@ export class UserProfileComponent implements OnInit {
     return `${d.getDate()}/${d.getMonth() + 1}/${year}`;
   }
 
+  // deleteProject(id: number) {
+  //   Swal.fire({
+  //     title: 'ต้องการลบข้อมูลใช่ไหม?',
+  //     text: 'ข้อมูลจะไม่สามารถกู้คืนได้',
+  //     icon: 'warning',
+  //     showCancelButton: true,
+  //     confirmButtonText: 'ใช่',
+  //     cancelButtonText: 'ไม่',
+  //   }).then((result) => {
+  //     if (!result.isConfirmed) return;
+  //     this.service.deleteProject(id).subscribe({
+  //       next: () => {
+  //         this.loadData();
+  //         Swal.fire({
+  //           icon: 'success',
+  //           title: 'ลบข้อมูลสำเร็จ',
+  //           timer: 1500,
+  //           showConfirmButton: false,
+  //         });
+  //       },
+  //       error: (err) => console.error(err),
+  //     });
+  //   });
+  // }
+
   deleteProject(id: number) {
     Swal.fire({
       title: 'ต้องการลบข้อมูลใช่ไหม?',
@@ -733,17 +758,20 @@ export class UserProfileComponent implements OnInit {
       cancelButtonText: 'ไม่',
     }).then((result) => {
       if (!result.isConfirmed) return;
+  
       this.service.deleteProject(id).subscribe({
         next: () => {
           this.loadData();
-          Swal.fire({
-            icon: 'success',
-            title: 'ลบข้อมูลสำเร็จ',
-            timer: 1500,
-            showConfirmButton: false,
-          });
+          Swal.fire({ icon: 'success', title: 'ลบข้อมูลสำเร็จ', timer: 1500, showConfirmButton: false });
         },
-        error: (err) => console.error(err),
+        error: (err) => {
+          // ดู error จริงจาก backend
+          console.log('Status:', err.status);
+          console.log('Error body:', err.error);
+          console.log('Message:', err.error?.message);
+  
+          Swal.fire('ผิดพลาด', err.error?.message || 'ไม่สามารถลบข้อมูลได้', 'error');
+        },
       });
     });
   }

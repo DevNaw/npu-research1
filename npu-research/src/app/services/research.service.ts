@@ -24,7 +24,21 @@ export class ResearchService {
 
   constructor(private http: HttpClient) {}
 
-  // ✅ สร้าง research ทุกประเภท
+  // ===== Helper =====
+  private spoof(method: 'PUT' | 'PATCH' | 'DELETE', data?: any): FormData {
+    const fd = new FormData();
+    fd.append('_method', method);
+
+    if (data) {
+      Object.entries(data).forEach(([key, value]) => {
+        fd.append(key, value as string);
+      });
+    }
+
+    return fd;
+  }
+
+  // ======= สร้าง research ทุกประเภท ======
   createResearch(data: any) {
     return this.http.post(`${this.baseUrl}/research/add-project`, data);
   }
@@ -226,7 +240,7 @@ export class ResearchService {
   }
 
   deleteImage(id: number) {
-    return this.http.delete(`${this.baseUrl}/innovation/${id}/image`);
+    return this.http.post(`${this.baseUrl}/innovation/${id}/image`, this.spoof('DELETE'));
   }
 
   // =========== Admin Update Article, Project, Innovation =============

@@ -11,6 +11,20 @@ export class AdminFundingService {
 
     constructor(private http: HttpClient) {}
 
+     // ===== Helper =====
+  private spoof(method: 'PUT' | 'PATCH' | 'DELETE', data?: any): FormData {
+    const fd = new FormData();
+    fd.append('_method', method);
+
+    if (data) {
+      Object.entries(data).forEach(([key, value]) => {
+        fd.append(key, value as string);
+      });
+    }
+
+    return fd;
+  }
+
     getFunding() {
     return this.http.get<FundingResponse>(`${this.baseUrl}/m/external-fundings/list`);
   }
@@ -20,10 +34,10 @@ export class AdminFundingService {
   }
 
   updateFunding(id: number, data: any) {
-    return this.http.patch(`${this.baseUrl}/m/external-fundings/${id}/update`, data);
+    return this.http.post(`${this.baseUrl}/m/external-fundings/${id}/update`, this.spoof('PATCH', data));
   }
 
   deleteFunding(id: number) {
-    return this.http.delete(`${this.baseUrl}/m/external-fundings/${id}/delete`);
+    return this.http.post(`${this.baseUrl}/m/external-fundings/${id}/delete`, this.spoof('DELETE'));
   }
 }

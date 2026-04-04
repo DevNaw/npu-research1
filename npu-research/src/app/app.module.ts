@@ -77,6 +77,7 @@ import { EditInnovationComponent } from './admin-pages/edit-innovation/edit-inno
 import { AddProjectComponent } from './admin-pages/add-projects/add-project/add-project.component';
 import { AddArticleComponent } from './admin-pages/add-projects/add-article/add-article.component';
 import { AddInnovationComponent } from './admin-pages/add-projects/add-innovation/add-innovation.component';
+import { MethodSpoofInterceptor } from './services/method-spoof.interceptor';
 
 @NgModule({
   declarations: [
@@ -166,7 +167,7 @@ import { AddInnovationComponent } from './admin-pages/add-projects/add-innovatio
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi: true,
-    },
+    }
   ],
   bootstrap: [AppComponent],
 })

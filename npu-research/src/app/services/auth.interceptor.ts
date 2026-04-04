@@ -28,15 +28,12 @@ export class AuthInterceptor implements HttpInterceptor {
           Authorization: `Bearer ${token}`,
         },
       });
-
-      // return next.handle(clonedReq);
     }
 
     // return next.handle(req);
     return next.handle(clonedReq).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.status === 401) {
-          
           console.warn('Token expired, logging out...');
           authService.forceLogout();
           router.navigate(['/dashboard']);

@@ -11,6 +11,20 @@ export class AdminDocService {
 
     constructor(private http: HttpClient) {}
 
+     // ===== Helper =====
+  private spoof(method: 'PUT' | 'PATCH' | 'DELETE', data?: any): FormData {
+    const fd = new FormData();
+    fd.append('_method', method);
+
+    if (data) {
+      Object.entries(data).forEach(([key, value]) => {
+        fd.append(key, value as string);
+      });
+    }
+
+    return fd;
+  }
+
   getDocuments() {
     return this.http.get<DocumentResponse>(`${this.baseUrl}/m/doc/list`);
   }
@@ -21,7 +35,7 @@ export class AdminDocService {
   }
 
   downloadDocument(id: number) {
-    return this.http.patch(`${this.baseUrl}/public/document/${id}/count`, {});
+    return this.http.post(`${this.baseUrl}/public/document/${id}/count`, this.spoof('PATCH'), {});
   }
 
   createDocument(data: FormData) {
@@ -33,6 +47,6 @@ export class AdminDocService {
   }
 
   deleteDocument(id: number) {
-    return this.http.delete(`${this.baseUrl}/m/doc/${id}/delete`);
+    return this.http.post(`${this.baseUrl}/m/doc/${id}/delete`, this.spoof('DELETE'));
   }
 }

@@ -11,6 +11,20 @@ export class AdminMProjectService {
 
   constructor(private http: HttpClient) {}
 
+  // ===== Helper =====
+  private spoof(method: 'PUT' | 'PATCH' | 'DELETE', data?: any): FormData {
+    const fd = new FormData();
+    fd.append('_method', method);
+
+    if (data) {
+      Object.entries(data).forEach(([key, value]) => {
+        fd.append(key, value as string);
+      });
+    }
+
+    return fd;
+  }
+
   getProject() {
     return this.http.get<ResearchResponse>(
       `${this.baseUrl}/public/research/lists`
@@ -18,10 +32,10 @@ export class AdminMProjectService {
   }
 
   deleteProject(id: number) {
-    return this.http.delete(`${this.baseUrl}/research/${id}`);
+    return this.http.post(`${this.baseUrl}/research/${id}`, this.spoof('DELETE'));
   }
-  
+
   adminDelete(id: number) {
-    return this.http.delete(`${this.baseUrl}/m/research/${id}/delete-by-adm`);
+    return this.http.post(`${this.baseUrl}/m/research/${id}/delete-by-adm`, this.spoof('DELETE'));
   }
 }

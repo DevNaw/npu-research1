@@ -11,6 +11,20 @@ export class ManualService {
 
   constructor(private http: HttpClient) {}
 
+  // ===== Helper =====
+  private spoof(method: 'PUT' | 'PATCH' | 'DELETE', data?: any): FormData {
+    const fd = new FormData();
+    fd.append('_method', method);
+
+    if (data) {
+      Object.entries(data).forEach(([key, value]) => {
+        fd.append(key, value as string);
+      });
+    }
+
+    return fd;
+  }
+
   getDocuments() {
     return this.http.get<ManualResponse>(`${this.apiUrl}/m/manual/list`);
   }
@@ -20,7 +34,7 @@ export class ManualService {
   }
 
   downloadDocument(id: number) {
-    return this.http.patch(`${this.apiUrl}/public/manual/${id}/count`, {});
+    return this.http.post(`${this.apiUrl}/public/manual/${id}/count`, this.spoof('PATCH'), {});
   }
 
   createDocument(formData: FormData) {
@@ -32,6 +46,6 @@ export class ManualService {
   }
 
   deleteDocument(id: number) {
-    return this.http.delete(`${this.apiUrl}/m/manual/${id}/delete`);
+    return this.http.post(`${this.apiUrl}/m/manual/${id}/delete`, this.spoof('DELETE'));
   }
 }

@@ -12,6 +12,20 @@ export class OrgService {
 
   constructor(private http: HttpClient) { }
 
+  // ===== Helper =====
+  private spoof(method: 'PUT' | 'PATCH' | 'DELETE', data?: any): FormData {
+    const fd = new FormData();
+    fd.append('_method', method);
+
+    if (data) {
+      Object.entries(data).forEach(([key, value]) => {
+        fd.append(key, value as string);
+      });
+    }
+
+    return fd;
+  }
+
   getOrganizations(): Observable<OrganizationResponse> {
     return this.http.get<OrganizationResponse>(
       `${this.baseUrl}/m/organizations/list`
@@ -22,10 +36,10 @@ export class OrgService {
   }
 
   updateOrganization(id: number, data: any) {
-    return this.http.patch(`${this.baseUrl}/m/organizations/${id}/update`, data);
+    return this.http.post(`${this.baseUrl}/m/organizations/${id}/update`, this.spoof('PATCH', data));
   }
 
   deleteOrganization(id: number) {
-    return this.http.delete(`${this.baseUrl}/m/organizations/${id}/delete`);
+    return this.http.post(`${this.baseUrl}/m/organizations/${id}/delete`, this.spoof('DELETE'));
   }
 }

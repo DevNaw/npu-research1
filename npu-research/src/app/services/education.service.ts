@@ -16,12 +16,26 @@ export class EducationService {
         private http: HttpClient,
     ) {}
 
+    // ===== Helper =====
+  private spoof(method: 'PUT' | 'PATCH' | 'DELETE', data?: any): FormData {
+    const fd = new FormData();
+    fd.append('_method', method);
+
+    if (data) {
+      Object.entries(data).forEach(([key, value]) => {
+        fd.append(key, value as string);
+      });
+    }
+
+    return fd;
+  }
+
     getEducation(): Observable<EducationResponse> {
         return this.http.get<EducationResponse>(`${this.apiUrl}/user/infomation/education-for-update`);
       }
 
       updateEducation(data: any) {
-        return this.http.patch(`${this.apiUrl}/user/infomation/education`, data);
+        return this.http.post(`${this.apiUrl}/user/infomation/education`, this.spoof('PATCH', data));
       }
 
       getEducationNew(): Observable<EducationResponseNew> {
@@ -31,7 +45,7 @@ export class EducationService {
       }
 
       updateEducationNew(id: number, data: any) {
-        return this.http.patch(`${this.apiUrl}/user/infomation/update-education/${id}`, data);
+        return this.http.post(`${this.apiUrl}/user/infomation/update-education/${id}`, this.spoof('PATCH', data));
       }
 
       createEducation(data: any) {
@@ -39,6 +53,6 @@ export class EducationService {
       }
 
       deleteEducation(id: number) {
-        return this.http.delete(`${this.apiUrl}/user/infomation/delete-education/${id}`);
+        return this.http.post(`${this.apiUrl}/user/infomation/delete-education/${id}`, this.spoof('DELETE'));
       }
 }
