@@ -55,7 +55,8 @@ export class ReportComponent {
     },
     labels: [],
     legend: {
-      position: 'right',
+      show: true,
+      position: 'bottom',
     },
     dataLabels: {
       enabled: true,

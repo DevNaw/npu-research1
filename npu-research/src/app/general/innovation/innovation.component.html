@@ -62,7 +62,7 @@
                 (click)="viewDetails(innovation.research_id)"
                 class="leading-relaxed wrap-break-word whitespace-normal font-light text-[#16498C] hover:underline cursor-pointer truncate max-w-125"
               >
-                {{ innovation.title_th }}
+                {{ (innovation.title_th && innovation.title_th !== '-') ? innovation.title_th : (innovation.title_en || '-') }}
               </div>
 
               <div

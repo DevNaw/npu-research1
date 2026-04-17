@@ -599,7 +599,7 @@
                 (click)="goToResearch(r.id, r.type)"
                 class="p-1 md:p-2 cursor-pointer text-[#0F4C82] hover:underline"
               >
-                {{ r.title_th || r.title_en }}
+              {{ (r.title_th && r.title_th !== '-') ? r.title_th : (r.title_en || '-') }}
               </td>
               <td>
                 <strong>ประเภท : </strong>{{ r.funding.source_funds || "-" }}

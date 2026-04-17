@@ -65,7 +65,7 @@
                 title="{{ r.title_th }}"
                 class="leading-relaxed wrap-break-word whitespace-normal text-[#16498C] hover:underline cursor-pointer"
               >
-                {{ r?.title_th }}
+              {{ (r.title_th && r.title_th !== '-') ? r.title_th : (r.title_en || '-') }}
               </div>
 
               <div

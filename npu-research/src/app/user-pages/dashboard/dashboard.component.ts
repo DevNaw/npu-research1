@@ -140,12 +140,25 @@ export class UserDashboardComponent implements OnInit {
     ],
   };
 
+  // labelFormat = (name: string): string => {
+  //   const item = this.single.find((d) => d.name === name);
+  //   if (!item) return name;
+  //   const total = this.single.reduce((sum, d) => sum + d.value, 0);
+  //   const percent = total > 0 ? ((item.value / total) * 100).toFixed(1) : '0';
+  //   return `${name}\n${percent}%`;
+  // };
   labelFormat = (name: string): string => {
     const item = this.single.find((d) => d.name === name);
     if (!item) return name;
+  
     const total = this.single.reduce((sum, d) => sum + d.value, 0);
     const percent = total > 0 ? ((item.value / total) * 100).toFixed(1) : '0';
-    return `${name}\n${percent}%`;
+  
+    const isMobile = window.innerWidth < 640;
+    const maxLen = isMobile ? 4 : 6;
+    const shortName = name.length > maxLen ? name.slice(0, maxLen) + '…' : name;
+  
+    return `${shortName} ${percent}%`;
   };
 
   constructor(
@@ -691,17 +704,29 @@ export class UserDashboardComponent implements OnInit {
     });
   }
 
+  // @HostListener('window:resize')
+  // setChartView(): void {
+  //   const w = window.innerWidth;
+  //   if (w < 640) {
+  //     this.chartView = [w - 40, 260];
+  //   } else if (w < 1024) {
+  //     this.chartView = [420, 320];
+  //   } else {
+  //     this.chartView = [0, 350];
+  //   }
+  // }
   @HostListener('window:resize')
-  setChartView(): void {
-    const w = window.innerWidth;
-    if (w < 640) {
-      this.chartView = [w - 40, 260];
-    } else if (w < 1024) {
-      this.chartView = [420, 320];
-    } else {
-      this.chartView = [0, 350];
-    }
+setChartView(): void {
+  const w = window.innerWidth;
+  if (w < 640) {
+    // มือถือ: เล็กลง ให้มีพื้นที่ label รอบๆ
+    this.chartView = [w - 120, 240];
+  } else if (w < 1024) {
+    this.chartView = [380, 300];
+  } else {
+    this.chartView = [0, 350];
   }
+}
 
   onChartSelect(event: any): void {
     const item = this.single.find((d) => d.name === event.name);

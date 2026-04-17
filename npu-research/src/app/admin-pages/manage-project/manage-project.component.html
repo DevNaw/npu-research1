@@ -141,9 +141,9 @@
               <a
                 class="text-[#16498C] hover:underline cursor-pointer wrap-break-word whitespace-normal"
                 (click)="goToResearchDetail(p.research_id)"
-                title="{{ p.title_th }}"
+                title="{{ p.title_th || p.title_en }}"
               >
-                {{ p.title_th || p.title_en || "-" }}
+              {{ (p.title_th && p.title_th !== '-') ? p.title_th : (p.title_en || '-') }}
               </a>
 
               <div class="text-sm text-gray-500 mt-1 hidden md:block">
