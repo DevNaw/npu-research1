@@ -459,7 +459,7 @@ export class UserAddAticleComponent {
     });
 
     if (d.article_type === 'วารสาร') {
-      required('article_published', d.article_published);
+      optional('article_published', d.article_published);
     }
     
     required('published_date', d.published_date);
