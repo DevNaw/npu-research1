@@ -350,4 +350,16 @@ export class PerformanceDetailByDepartmentComponent {
   
     return this.sanitizer.bypassSecurityTrustHtml(html);
   }
+
+  get majorName(): string {
+    return this.oecdUI?.[0]?.name_th ?? '-';
+  }
+  
+  get subName(): string {
+    return this.oecdUI?.[0]?.children?.[0]?.name_th ?? '-';
+  }
+  
+  get childName(): string {
+    return this.oecdUI?.[0]?.children?.[0]?.children?.[0]?.name_th ?? '-';
+  }
 }

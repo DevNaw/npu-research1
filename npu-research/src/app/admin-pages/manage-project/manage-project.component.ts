@@ -187,14 +187,23 @@ export class ManageProjectComponent implements OnInit {
     });
   }
 
-  goToResearchDetail(id: number) {
-    this.router.navigate([
-      '/admin/performance-by-departmaent',
-      this.researchs
-        .find((r) => r.research_id === id)
-        ?.research_type.toLowerCase(),
-      id,
-    ]);
+  // goToResearchDetail(id: number) {
+  //   this.router.navigate([
+  //     '/admin/performance-by-departmaent',
+  //     this.researchs
+  //       .find((r) => r.research_id === id)
+  //       ?.research_type.toLowerCase(),
+  //     id,
+  //   ]);
+  // }
+
+  goToResearchDetail(event: MouseEvent, p: Research): void {
+    const url = `/admin/performance-by-departmaent/${p.research_type.toLowerCase()}/${p.research_id}`;
+    if (event.ctrlKey || event.metaKey) {
+      window.open(url, '_blank');
+    } else {
+      this.router.navigate([url]);
+    }
   }
 
   toggleAddMenu(event: MouseEvent) {
