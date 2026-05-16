@@ -1,1021 +1,622 @@
-<!-- research-detail -->
-<div
-  class="min-h-screen bg-gray-100 p-5 md:p-10 font-medium text-[#394250] text-xl md:text-2xl"
->
-  <div>
-    <!-- ===== Reseach ===== -->
-    <div
-      *ngIf="type === 'project'"
-      class="mx-auto bg-white rounded-2xl shadow-lg overflow-hidden"
-    >
-      <!-- Header -->
-      <div
-        class="bg-[#394250] text-white px-4 md:px-8 py-4 md:py-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4"
-      >
-        <!-- LEFT: TEXT -->
-        <div class="flex-1 min-w-0">
-          <p class="text-lg md:text-base opacity-70 tracking-wide">
-            โครงการวิจัย
-          </p>
+<div class="min-h-screen bg-linear-to-br from-slate-50 via-gray-50 to-slate-100 px-5 py-6 md:px-10 md:py-8 text-[#394250] font-medium">
 
-          <!-- TH -->
-          <h1
-            class="text-lg md:text-2xl font-semibold mt-1 leading-relaxed wrap-break-word"
-          >
-            {{ researchData?.title_th }}
-          </h1>
+  <!-- ===== Research Project ===== -->
+  <div *ngIf="type === 'project'" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
 
-          <!-- Divider -->
-          <div class="w-full h-0.5 bg-white/40 my-2"></div>
+    <!-- Header -->
+    <div class="flex items-start gap-4 bg-linear-to-r from-[#f2cb05] to-[#f2e7ac] px-6 py-5">
+      <div class="w-11 h-11 rounded-xl bg-white/30 flex items-center justify-center text-[#394250] text-xl shrink-0 mt-0.5">
+        <i class="bi bi-journal-richtext"></i>
+      </div>
+      <div class="flex-1 min-w-0">
+        <p class="text-xs font-semibold uppercase tracking-widest text-[#394250]/60 mb-1">โครงการวิจัย</p>
+        <h1 class="text-lg font-semibold text-[#394250] leading-relaxed">{{ researchData?.title_th }}</h1>
+        <div class="w-full h-px bg-[#394250]/20 my-2"></div>
+        <h2 class="text-sm font-light text-[#394250]/70 italic leading-relaxed">{{ researchData?.title_en || '-' }}</h2>
+      </div>
+    </div>
 
-          <!-- EN -->
-          <h2
-            class="text-sm md:text-lg opacity-80 italic leading-relaxed wrap-break-word"
-          >
-            {{ researchData?.title_en || "-" }}
-          </h2>
+    <!-- Content -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 p-6 md:p-10">
+
+      <!-- Left: Cover Image -->
+      <div class="md:col-span-1">
+        <div class="rounded-xl overflow-hidden border border-gray-100 h-72 w-full bg-gray-50 flex items-center justify-center cursor-pointer">
+          <ng-container *ngIf="previewImage || researchData?.img_url; else noImage">
+            <img [src]="previewImage || researchData?.img_url" (error)="onImageError($event)" class="w-full h-full object-cover" />
+          </ng-container>
+          <ng-template #noImage>
+            <img src="/assets/research.png" class="w-full h-full object-contain opacity-60 p-4" />
+          </ng-template>
+          <input #fileInput type="file" accept="image/*" class="hidden" (change)="onFileSelected($event)" />
         </div>
       </div>
 
-      <!-- Content -->
-      <div class="grid grid-cols-1 md:grid-cols-4 md:gap-3 p-4 md:p-8">
-        <!-- Left: Cover Image -->
-        <div class="md:col-span-1">
-          <div
-            class="rounded-xl flex items-center justify-center h-90 w-full bg-white overflow-hidden cursor-pointer relative"
-          >
-            <!-- ถ้ามีรูป -->
-            <ng-container
-              *ngIf="previewImage || researchData?.img_url; else noImage"
-            >
-              <img
-                [src]="previewImage || researchData?.img_url"
-                (error)="onImageError($event)"
-                class="w-full h-full object-cover rounded-xl"
-              />
-            </ng-container>
+      <!-- Right: Details -->
+      <div class="md:col-span-3 space-y-8">
 
-            <ng-template #noImage>
-              <div class="text-center text-gray-500">
-                <img
-                  src="/assets/research.png"
-                  class="w-full h-80 mx-auto opacity-70"
-                />
-              </div>
-            </ng-template>
-
-            <!-- input ซ่อนไว้ -->
-            <input
-              #fileInput
-              type="file"
-              accept="image/*"
-              class="hidden"
-              (change)="onFileSelected($event)"
-            />
+        <!-- Basic Info -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">รหัสโครงการวิจัย</p>
+            <p class="text-sm font-light text-[#394250]">{{ researchData?.research_code || '-' }}</p>
+          </div>
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">สาขาของงานวิจัย</p>
+            <p class="text-sm font-light text-[#394250]">{{ oecdUI[0].name_th || '-' }}</p>
+          </div>
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">สาขาย่อย</p>
+            <p class="text-sm font-light text-[#394250]">{{ oecdUI[0].children[0].name_th || '-' }}</p>
+          </div>
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">สาขาที่เกี่ยวข้อง</p>
+            <p class="text-sm font-light text-[#394250]">{{ oecdUI[0].children[0].children[0].name_th || '-' }}</p>
           </div>
         </div>
 
-        <!-- Right: Details -->
-        <div class="md:col-span-3 space-y-6">
-          <!-- Research Fields -->
-          <div class="space-y-2">
-            <div class="grid grid-cols-1 gap-2 md:gap-4">
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4">
-                <div>
-                  <p class="text-[#767676]">รหัสโครงการวิจัย</p>
-                  <p class="font-light text-xl">
-                    {{ researchData?.research_code || "-" }}
-                  </p>
-                </div>
+        <!-- Abstract -->
+        <div *ngIf="researchData?.abstract">
+          <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-2">บทคัดย่อ</p>
+          <p class="text-sm font-light text-[#394250] leading-relaxed" [innerHTML]="safeDescription"></p>
+        </div>
+        <div *ngIf="researchData?.abstract_en">
+          <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-2">Abstract</p>
+          <p class="text-sm font-light text-[#394250] leading-relaxed" [innerHTML]="safeDescription"></p>
+        </div>
 
-                <div>
-                  <p class="text-[#767676]">สาขาของงานวิจัย</p>
-                  <p class="font-light text-xl">
-                    {{ oecdUI[0].name_th || "-" }}
-                  </p>
-                </div>
+        <!-- Keywords -->
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-2">Keyword</p>
+          <div class="flex flex-wrap gap-2">
+            <span *ngFor="let k of researchData?.keywords"
+              class="px-3 py-1 text-sm font-light text-[#394250] rounded-full bg-[#f2e7ac]">
+              {{ k.keyword }}
+            </span>
+          </div>
+        </div>
 
-                <div>
-                  <p class="text-[#767676]">สาขาย่อย</p>
-                  <p class="font-light text-xl">
-                    {{ oecdUI[0].children[0].name_th || '-' }}
-                  </p>
-                </div>
+        <!-- Internal Members Table -->
+        <div>
+          <div class="flex items-center gap-3 text-xs font-semibold uppercase tracking-widest text-gray-400 before:flex-1 before:h-px before:bg-gray-100 after:flex-1 after:h-px after:bg-gray-100 mb-4">
+            ผู้ร่วมโครงการภายใน
+          </div>
+          <div class="overflow-x-auto rounded-xl border border-gray-100">
+            <table class="min-w-full w-full border-collapse text-sm font-light">
+              <thead>
+                <tr class="bg-[#394250] text-white">
+                  <th class="px-4 py-3 text-center font-medium w-12">#</th>
+                  <th class="px-4 py-3 text-left font-medium">ผู้ร่วม</th>
+                  <th class="px-4 py-3 text-left font-medium">ประเภทความรับผิดชอบ</th>
+                </tr>
+              </thead>
+              <tbody *ngIf="(researchData?.internal_members?.length ?? 0) > 0; else noData">
+                <tr *ngFor="let internal of researchData?.internal_members; let i = index"
+                  class="border-b border-gray-100 hover:bg-amber-50/40 transition-colors">
+                  <td class="px-4 py-3 text-center">{{ i + 1 }}</td>
+                  <td class="px-4 py-3">{{ internal?.full_name }}</td>
+                  <td class="px-4 py-3">{{ internal?.role }}</td>
+                </tr>
+              </tbody>
+              <ng-template #noData>
+                <tr><td colspan="3" class="text-center py-6 text-gray-400">ไม่พบข้อมูล</td></tr>
+              </ng-template>
+            </table>
+          </div>
+        </div>
 
-                <div>
-                  <p class="text-[#767676]">สาขาที่เกี่ยวข้อง</p>
-                  <p class="font-light text-xl">
-                    {{ oecdUI[0].children[0].children[0].name_th || '-' }}
-                  </p>
-                </div>
-              </div>
+        <!-- External Members Table -->
+        <div>
+          <div class="flex items-center gap-3 text-xs font-semibold uppercase tracking-widest text-gray-400 before:flex-1 before:h-px before:bg-gray-100 after:flex-1 after:h-px after:bg-gray-100 mb-4">
+            ผู้ร่วมโครงการภายนอก
+          </div>
+          <div class="overflow-x-auto rounded-xl border border-gray-100">
+            <table class="min-w-full w-full border-collapse text-sm font-light">
+              <thead>
+                <tr class="bg-[#394250] text-white">
+                  <th class="px-4 py-3 text-center font-medium w-12">#</th>
+                  <th class="px-4 py-3 text-left font-medium">ผู้ร่วม</th>
+                  <th class="px-4 py-3 text-left font-medium">ประเภทความรับผิดชอบ</th>
+                  <th class="px-4 py-3 text-left font-medium">หน่วยงาน</th>
+                </tr>
+              </thead>
+              <tbody *ngIf="(researchData?.external_members?.length ?? 0) > 0; else noDataExternal">
+                <tr *ngFor="let external of researchData?.external_members; let i = index"
+                  class="border-b border-gray-100 hover:bg-amber-50/40 transition-colors">
+                  <td class="px-4 py-3 text-center">{{ i + 1 }}</td>
+                  <td class="px-4 py-3">{{ external?.full_name }}</td>
+                  <td class="px-4 py-3">{{ external?.role }}</td>
+                  <td class="px-4 py-3">{{ external?.organization }}</td>
+                </tr>
+              </tbody>
+              <ng-template #noDataExternal>
+                <tr><td colspan="4" class="text-center py-6 text-gray-400">ไม่พบข้อมูล</td></tr>
+              </ng-template>
+            </table>
+          </div>
+        </div>
 
-              <div *ngIf="researchData?.abstract">
-                <p class="text-[#767676]">บทคัดย่อ</p>
-                <p class="font-light text-xl leading-relaxed" [innerHTML]="safeDescription"></p>
-              </div>
-
-              <div *ngIf="researchData?.abstract_en">
-                <p class="text-[#767676]">Abstract</p>
-                <p class="font-light text-xl leading-relaxed" [innerHTML]="safeDescription"></p>
-              </div>
-
-              <div>
-                <p class="text-[#767676]">Keyword</p>
-                <div class="flex flex-wrap gap-2 my-2">
-                  <span
-                    *ngFor="let k of researchData?.keywords"
-                    class="px-2 py-1 font-light my-2 text-[#394250] rounded bg-[#f2e7ac]"
-                  >
-                    {{ k.keyword }}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Internal Researchers Table -->
+        <!-- Funding Info -->
+        <div>
+          <div class="flex items-center gap-3 text-xs font-semibold uppercase tracking-widest text-gray-400 before:flex-1 before:h-px before:bg-gray-100 after:flex-1 after:h-px after:bg-gray-100 mb-4">
+            ข้อมูลแหล่งทุน
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
             <div>
-              <h2 class="my-6">ผู้ร่วมโครงการภายใน</h2>
-              <div class="overflow-x-auto font-light text-xl">
-                <table class="min-w-125 w-full border rounded-lg overflow-hidden">
-                  <thead class="bg-[#394250] text-white">
-                    <tr>
-                      <th class="p-1 md:p-2 w-16">#</th>
-                      <th class="p-1 md:p-2 text-left">ผู้ร่วม</th>
-                      <th class="p-1 md:p-2 text-left">ประเภทความรับผิดชอบ</th>
-                    </tr>
-                  </thead>
-
-                  <tbody
-                    class="divide-y"
-                    *ngIf="
-                      (researchData?.internal_members?.length ?? 0) > 0;
-                      else noData
-                    "
-                  >
-                    <tr
-                      *ngFor="
-                        let internal of researchData?.internal_members;
-                        let i = index
-                      "
-                      class="bg-gray-200 border-b border-gray-300"
-                    >
-                      <td class="p-1 md:p-2 font-medium text-center">
-                        {{ i + 1 }}
-                      </td>
-                      <td
-                        class="p-1 md:p-2 flex items-center gap-2 flex-wrap justify-center md:justify-start"
-                      >
-                        {{ internal?.full_name }}
-                      </td>
-                      <td class="p-1 md:p-2">{{ internal?.role }}</td>
-                    </tr>
-                  </tbody>
-
-                  <ng-template #noData>
-                    <tr>
-                      <td colspan="3" class="text-center py-4 text-gray-500">
-                        ไม่พบข้อมูล
-                      </td>
-                    </tr>
-                  </ng-template>
-                </table>
-              </div>
+              <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">ที่มาแหล่งทุน</p>
+              <p class="text-sm font-light">{{ researchData?.source_funds }}</p>
             </div>
-
-            <!-- External Researchers Table -->
             <div>
-              <h2 class="my-6">ผู้ร่วมโครงการภายนอก</h2>
-              <div class="overflow-x-auto font-light text-xl">
-                <table class="min-w-125 w-full border rounded-lg overflow-hidden">
-                  <thead class="bg-[#394250] text-white">
-                    <tr>
-                      <th class="p-1 md:p-2 w-16">#</th>
-                      <th class="p-1 md:p-2 text-left">ผู้ร่วม</th>
-                      <th class="p-1 md:p-2 text-left">ประเภทความรับผิดชอบ</th>
-                      <th class="p-1 md:p-2 text-left">หน่วยงาน</th>
-                    </tr>
-                  </thead>
-                  <tbody
-                    class="divide-y"
-                    *ngIf="
-                      (researchData?.external_members?.length ?? 0) > 0;
-                      else noDataExternal
-                    "
-                  >
-                    <tr
-                      *ngFor="
-                        let external of researchData?.external_members;
-                        let i = index
-                      "
-                      class="bg-gray-200 border-b border-gray-300"
-                    >
-                      <td class="p-1 md:p-2 font-medium text-center">
-                        {{ i + 1 }}
-                      </td>
-                      <td class="p-1 md:p-2">{{ external?.full_name }}</td>
-                      <td class="p-1 md:p-2">{{ external?.role }}</td>
-                      <td class="p-1 md:p-2">{{ external?.organization }}</td>
-                    </tr>
-                  </tbody>
-                </table>
-
-                <ng-template #noDataExternal>
-                  <tr>
-                    <td colspan="3" class="text-center py-4 text-gray-500">
-                      ไม่พบข้อมูล
-                    </td>
-                  </tr>
-                </ng-template>
-              </div>
+              <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">ชื่อแหล่งทุน</p>
+              <p class="text-sm font-light">{{ researchData?.name_funding }}</p>
             </div>
-
-            <!-- Funding Source -->
-            <div
-              class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-x-10 md:gap-y-6"
-            >
-              <div>
-                <p class="text-[#767676] md:mb-1">ที่มาแหล่งทุน</p>
-                <p class="text-[#394250] font-light text-xl">
-                  {{ researchData?.source_funds }}
-                </p>
-              </div>
-
-              <div>
-                <p class="text-[#767676] md:mb-1">ชื่อแหล่งทุน</p>
-                <p class="text-[#394250] font-light text-xl">
-                  {{ researchData?.name_funding }}
-                </p>
-              </div>
-
-              <div>
-                <p class="text-[#767676] md:mb-1">จำนวนงบประมาณ</p>
-                <p class="text-[#394250] font-light text-xl">
-                  {{ researchData?.budget_amount | number:'1.0-0' }} บาท
-                </p>
-              </div>
-
-              <div>
-                <p class="text-[#767676] md:mb-1">ปีที่ได้รับทุน</p>
-                <p class="text-[#394250] font-light text-xl">
-                  {{ researchData?.year_received_budget }}
-                </p>
-              </div>
-
-              <div>
-                <p class="text-[#767676] md:mb-1">สถานะดำเนินการ</p>
-                <span
-                class="inline-block px-3 py-1 rounded-full font-light"
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">จำนวนงบประมาณ</p>
+              <p class="text-sm font-light">{{ researchData?.budget_amount | number:'1.0-0' }} บาท</p>
+            </div>
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">ปีที่ได้รับทุน</p>
+              <p class="text-sm font-light">{{ researchData?.year_received_budget }}</p>
+            </div>
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">สถานะดำเนินการ</p>
+              <span class="inline-block px-3 py-1 rounded-full text-sm font-light"
                 [ngClass]="{
                   'bg-green-100 text-green-700': researchData?.status === 'เสร็จสิ้น',
                   'bg-yellow-100 text-yellow-700': researchData?.status === 'อยู่ระหว่างดำเนินการ',
                   'bg-gray-100 text-gray-500': !researchData?.status
-                }"
-              >
-                {{ researchData?.status || "-" }}
+                }">
+                {{ researchData?.status || '-' }}
               </span>
-              </div>
-
-              <div>
-                <p class="text-[#767676] md:mb-1">พื้นที่วิจัย</p>
-                <p class="text-[#394250] font-light text-xl">
-                  {{ researchData?.research_area }}
-                </p>
-              </div>
-
-              <div>
-                <p class="text-[#767676] md:mb-1">พื้นที่ใช้ประโยชน์</p>
-                <p class="text-[#394250] font-light text-xl">
-                  {{ researchData?.research_area }}
-                </p>
-              </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ===== Acticle ===== -->
-    <div *ngIf="type === 'article'">
-      <div
-        class="mx-auto bg-white rounded-2xl shadow-lg overflow-hidden font-medium text-2xl"
-      >
-        <!-- Header -->
-        <div
-          class="bg-[#394250] text-white px-4 md:px-8 py-4 md:py-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4"
-        >
-          <!-- LEFT: TEXT -->
-          <div class="flex-1 min-w-0">
-            <p class="text-lg md:text-base opacity-70 tracking-wide">
-              ผลงานตีพิมพ์
-            </p>
-
-            <!-- TH -->
-            <h1
-              *ngIf="articleData?.lang_type === 'th'"
-              class="text-lg md:text-2xl font-semibold mt-1 leading-relaxed wrap-break-word"
-            >
-              {{ articleData?.title_th }}
-            </h1>
-
-            <h1
-              *ngIf="articleData?.lang_type === 'en'"
-              class="text-lg md:text-2xl font-semibold mt-1 leading-relaxed wrap-break-word"
-            >
-              {{ articleData?.title_en }}
-            </h1>
-
-            <!-- Divider -->
-            <div class="w-full h-0.5 bg-white/40 my-2"></div>
-          </div>
-        </div>
-
-        <!-- Content -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-8 p-4 md:p-8">
-          <!-- Left: Cover Image -->
-          <div class="md:col-span-1">
-            <div
-              class="rounded-xl flex items-center justify-center h-90 w-full bg-white overflow-hidden cursor-pointer relative"
-            >
-              <!-- ถ้ามีรูป -->
-              <ng-container
-                *ngIf="previewImage || articleData?.img_url; else noImage"
-              >
-                <img
-                  [src]="previewImage || articleData?.img_url"
-                  (error)="onImageError($event)"
-                  class="w-full h-80 mb-3 object-cover rounded-xl"
-                />
-              </ng-container>
-
-              <!-- ถ้าไม่มีรูป -->
-              <ng-template #noImage>
-                <div class="text-center text-gray-500">
-                  <img
-                    src="/assets/research.png"
-                    class="w-full h-80 mx-auto opacity-70"
-                  />
-                </div>
-              </ng-template>
-            </div>
-
-            <!-- ปุ่มบันทึก -->
-            <div *ngIf="selectedFile" class="mt-4 text-center">
-              <button
-                class="bg-[#f2e7ac] text-[#394250] px-6 py-2 rounded-lg shadow hover:bg-[#f2cb05] hover:text-white cursor-pointer disabled:bg-gray-400"
-                [disabled]="!selectedFile"
-                (click)="uploadImage()"
-              >
-                บันทึกรูปภาพ
-              </button>
-            </div>
-          </div>
-
-          <!-- Right: Details -->
-          <div class="md:col-span-3 space-y-6">
-            <!-- Research Fields -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4">
-              <div>
-                <p class="text-[#767676]">รหัสบทความ</p>
-                <p class="text-[#394250] font-light text-xl">
-                  {{ articleData?.research_code || "-" }}
-                </p>
-              </div>
-
-              <div>
-                <p class="text-[#767676]">สาขาของบทความ</p>
-                <p class="text-[#394250] font-light text-xl">
-                  {{ oecdUI[0].name_th || "-" }}
-                </p>
-              </div>
-
-              <div>
-                <p class="text-[#767676]">สาขาย่อย</p>
-                <p class="text-[#394250] font-light text-xl">
-                  {{ oecdUI[0].children[0].name_th || '-' }}
-                </p>
-              </div>
-
-              <div>
-                <p class="text-[#767676]">สาขาที่เกี่ยวข้อง</p>
-                <p class="text-[#394250] font-light text-xl">
-                  {{ oecdUI[0].children[0].children[0].name_th || '-' }}
-                </p>
-              </div>
-            </div>
-
-            <div *ngIf="articleData?.lang_type === 'th'">
-              <p class="text-[#767676]">บทคัดย่อ</p>
-              <p class="font-light text-xl" [innerHTML]="safeDescription"></p>
-            </div>
-
-            <div *ngIf="articleData?.lang_type === 'en'">
-              <p class="text-[#767676]">Abstract</p>
-              <p class="font-light text-xl" [innerHTML]="safeDescription"></p>
-            </div>
-
             <div>
-              <p class="text-[#767676]">keywords</p>
-              <div class="flex flex-wrap gap-2 my-2">
-                <span
-                  *ngFor="let k of articleData?.keywords"
-                  class="px-2 py-1 font-light my-2 text-[#394250] rounded bg-[#f2e7ac]"
-                >
-                  {{ k.keyword }}
-                </span>
-              </div>
+              <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">พื้นที่วิจัย</p>
+              <p class="text-sm font-light">{{ researchData?.research_area }}</p>
             </div>
-
-            <div class="grid grid-cols-2 gap-2 md:gap-4">
-              <div>
-                <p class="text-[#767676]">ประเภท</p>
-                <p class="text-[#394250] font-light text-xl">
-                  {{ articleData?.article_type }}
-                </p>
-              </div>
-
-              <div *ngIf="articleData?.article_type === 'Journal'">
-                <p class="text-[#767676]">ชื่องานวิจัย</p>
-                <p class="text-[#394250] font-light text-xl">
-                  {{ articleData?.journal_name }}
-                </p>
-              </div>
-
-              <div *ngIf="articleData?.article_type === 'Conference'">
-                <p class="text-[#767676]">ชื่อการประชุมวิชาการ</p>
-                <p class="text-[#394250] font-light text-xl">
-                  {{ articleData?.journal_name }}
-                </p>
-              </div>
-
-              <div *ngIf="articleData?.article_type === 'Journal'">
-                <p class="text-[#767676]">ประเทศ</p>
-                <p class="text-[#394250] font-light text-xl">
-                  {{ articleData?.country }}
-                </p>
-              </div>
-
-              <div *ngIf="articleData?.article_type === 'Journal'">
-                <p class="text-[#767676]">ประเภทฐานข้อมูล</p>
-                <p class="text-[#394250] font-light text-xl">
-                  {{ articleData?.db_type }}
-                </p>
-              </div>
-
-              <div class="">
-                <p class="text-[#767676] mb-1">ค่าน้ำหนัก/ระดับคุณภาพ</p>
-                <p class="text-[#394250] font-light text-xl">
-                  {{ articleData?.volume_no }}
-                </p>
-              </div>
-            </div>
-
-            <!-- Internal Researchers Table -->
             <div>
-              <h2 class="md:text-2xl my-6">ผู้ร่วมโครงการภายใน</h2>
-              <div class="overflow-x-auto">
-                <table
-                  class="min-w-125 w-full border rounded-lg overflow-hidden font-light text-xl"
-                >
-                  <thead class="bg-[#394250] text-white">
-                    <tr>
-                      <th class="px-4 py-2 text-left w-16">#</th>
-                      <th class="px-4 py-2 text-left">ผู้ร่วม</th>
-                      <th class="px-4 py-2 text-left">ประเภทความรับผิดชอบ</th>
-                    </tr>
-                  </thead>
-                  <tbody
-                    class="divide-y"
-                    *ngIf="
-                      (articleData?.internal_members?.length ?? 0) > 0;
-                      else noData
-                    "
-                  >
-                    <tr
-                      *ngFor="
-                        let member of articleData?.internal_members;
-                        let i = index
-                      "
-                      class="bg-gray-200 border-b border-gray-300"
-                    >
-                      <td class="px-4 py-3 font-medium text-center">
-                        {{ i + 1 }}
-                      </td>
-                      <td
-                        class="px-4 py-3 flex items-center flex-wrap justify-center md:justify-start gap-2"
-                      >
-                        {{ member?.full_name }}
-                      </td>
-                      <td class="px-4 py-3">{{ member?.role }}</td>
-                    </tr>
-                  </tbody>
-
-                  <ng-template #noData>
-                    <tr>
-                      <td colspan="3" class="text-center py-4 text-gray-500">
-                        ไม่พบข้อมูล
-                      </td>
-                    </tr>
-                  </ng-template>
-                </table>
-              </div>
-            </div>
-
-            <!-- External Researchers Table -->
-            <div>
-              <h2 class="my-6">ผู้ร่วมโครงการภายนอก</h2>
-              <div class="overflow-x-auto font-light text-xl">
-                <table class="min-w-125 w-full border rounded-lg overflow-hidden">
-                  <thead class="bg-[#394250] text-white">
-                    <tr>
-                      <th class="px-4 py-2 w-16">#</th>
-                      <th class="px-4 py-2 text-left">ผู้ร่วม</th>
-                      <th class="px-4 py-2 text-left">ประเภทความรับผิดชอบ</th>
-                      <th class="px-4 py-2 text-left">หน่วยงาน</th>
-                    </tr>
-                  </thead>
-                  <tbody
-                    class="divide-y"
-                    *ngIf="
-                      (articleData?.external_members?.length ?? 0) > 0;
-                      else noDataExternal
-                    "
-                  >
-                    <tr
-                      *ngFor="
-                        let external of articleData?.external_members;
-                        let i = index
-                      "
-                      class="bg-gray-200 border-b border-gray-300"
-                    >
-                      <td class="px-4 py-3 font-medium text-center">
-                        {{ i + 1 }}
-                      </td>
-                      <td class="px-4 py-3">{{ external.full_name }}</td>
-                      <td class="px-4 py-3">{{ external.role }}</td>
-                      <td class="px-4 py-3">{{ external.organization }}</td>
-                    </tr>
-                  </tbody>
-                </table>
-
-                <ng-template #noDataExternal>
-                  <tr>
-                    <td colspan="3" class="text-center py-4 text-gray-500">
-                      ไม่พบข้อมูล
-                    </td>
-                  </tr>
-                </ng-template>
-              </div>
-            </div>
-
-            <!-- Funding Source -->
-            <div
-              class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-x-10 md:gap-y-6"
-            >
-              <div>
-                <p class="text-[#767676] md:mb-1">ฉบับที่/เล่มที่</p>
-                <p class="text-[#394250] font-light text-xl">
-                  {{ articleData?.volume }}
-                </p>
-              </div>
-              <div>
-                <p class="text-[#767676] md:mb-1">หน้าที่ตีพิมพ์</p>
-                <p class="text-[#394250] font-light text-xl">
-                  {{ articleData?.pages }}
-                </p>
-              </div>
-              <div>
-                <p class="text-[#767676] md:mb-1">ปีที่ตีพิมพ์</p>
-                <p class="text-[#394250] font-light text-xl">
-                  {{ articleData?.year_published }}
-                </p>
-              </div>
-
-              <div>
-                <p class="text-[#767676] md:mb-1">
-                  ความร่วมมือกับหน่วยงานอื่นๆ
-                </p>
-                <p class="text-[#394250] font-light text-xl">
-                  {{ articleData?.is_cooperation === "yes" ? "มี" : "ไม่มี" }}
-                </p>
-              </div>
-
-              <div *ngIf="articleData?.article_type === 'Conference'">
-                <p class="text-[#767676] md:mb-1">สถานที่นำเสนอ</p>
-                <p class="text-[#394250] font-light text-xl">
-                  {{ articleData?.pre_location || "-" }}
-                </p>
-              </div>
-
-              <div>
-                <p class="text-[#767676] md:mb-1">เว็บไซต์อ้างอิง/การเผยแพร่</p>
-                <a
-                  href="#"
-                  class="text-blue-600 hover:underline break-all font-light text-xl"
-                >
-                  {{ articleData?.doi }}
-                </a>
-              </div>
+              <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">พื้นที่ใช้ประโยชน์</p>
+              <p class="text-sm font-light">{{ researchData?.research_area }}</p>
             </div>
           </div>
         </div>
-      </div>
-    </div>
 
-    <!-- ===== Innovation ===== -->
-    <div *ngIf="type === 'innovation'">
-      <div
-        class="mx-auto bg-white rounded-2xl shadow-lg overflow-hidden font-medium text-2xl"
-      >
-        <!-- Header -->
-        <div
-          class="bg-[#394250] text-white px-4 md:px-8 py-4 md:py-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4"
-        >
-          <!-- LEFT: TEXT -->
-          <div class="flex-1 min-w-0">
-            <p class="text-lg md:text-base opacity-70 tracking-wide">
-              นวัตกรรมสิ่งประดิษฐ์
-            </p>
-
-            <!-- TH -->
-            <h1
-              class="text-lg md:text-2xl font-semibold mt-1 leading-relaxed wrap-break-word"
-            >
-              {{ innovationData?.title_th }}
-            </h1>
-
-            <!-- Divider -->
-            <div class="w-full h-0.5 bg-white/40 my-2"></div>
-
-            <!-- EN -->
-            <h2
-              class="text-sm md:text-lg opacity-80 italic leading-relaxed wrap-break-word"
-            >
-              {{ innovationData?.title_en || "-" }}
-            </h2>
-          </div>
-        </div>
-
-        <!-- Content -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 p-4 md:p-8">
-          <!-- Left: Cover Image -->
-          <div class="md:col-span-1">
-            <div
-              class="bg-white rounded-xl flex items-center justify-center h-90 overflow-hidden cursor-pointer relative"
-            >
-              <!-- ถ้ามีรูป -->
-              <ng-container
-                *ngIf="previewImage || innovationData?.img_url; else noImage"
-              >
-                <img
-                  [src]="previewImage || innovationData?.img_url"
-                  (error)="onImageError($event)"
-                  class="w-full h-full object-cover rounded-xl"
-                />
-              </ng-container>
-
-              <!-- ถ้าไม่มีรูป -->
-              <ng-template #noImage>
-                <div class="text-center text-gray-500">
-                  <img
-                    src="/assets/research.png"
-                    class="w-full h-80 mx-auto mb-3 opacity-70"
-                  />
-                </div>
-              </ng-template>
-            </div>
-
-            <!-- Gelleries Images -->
-            <div class="md:col-span-1 mt-5">
-              <label class="font-bold text-gray-600">Gallery</label>
-
-              <div class="grid grid-cols-3 gap-2 mt-5">
-                <img
-                  *ngFor="let img of galleryImages"
-                  [src]="img"
-                  (click)="openImage(img)"
-                  class="rounded-lg shadow h-40 object-cover hover:scale-105 transition cursor-pointer"
-                />
-              </div>
-            </div>
-
-            <!-- Lightbox -->
-            <div
-              *ngIf="selectedImage"
-              class="fixed inset-0 bg-black/70 flex items-center justify-center z-50"
-              (click)="closeImage()"
-            >
-              <img
-                [src]="selectedImage"
-                class="max-h-[90vh] max-w-[90vw] rounded-lg shadow-xl"
-              />
-            </div>
-          </div>
-
-          <!-- Right: Details -->
-          <div class="md:col-span-3 space-y-6">
-            <!-- Research Fields -->
-            <div class="grid grid-cols-1 gap-4">
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4">
-                <div>
-                  <p class="text-[#767676]">รหัสนวัตกรรม</p>
-                  <p class="font-light text-xl">
-                    {{ innovationData?.research_code || "-" }}
-                  </p>
-                </div>
-
-                <div>
-                  <p class="text-[#767676]">สาขาของนวัตกรรมสิ่งประดิษฐ์</p>
-                  <p class="font-light text-xl">
-                    {{ oecdUI[0].name_th || "-" }}
-                  </p>
-                </div>
-
-                <div>
-                  <p class="text-[#767676]">สาขาย่อย</p>
-                  <p class="font-light text-xl">
-                    {{ oecdUI[0].children[0].name_th || '-' }}
-                  </p>
-                </div>
-
-                <div>
-                  <p class="text-[#767676]">สาขาที่เกี่ยวข้อง</p>
-                  <p class="font-light text-xl">
-                    {{ oecdUI[0].children[0].children[0].name_th || '-' }}
-                  </p>
-                </div>
-              </div>
-
-              <div *ngIf="innovationData?.abstract">
-                <p class="text-[#767676]">บทคัดย่อ</p>
-                <p class="font-light text-xl" [innerHTML]="safeDescription"></p>
-              </div>
-              <div *ngIf="innovationData?.abstract_en">
-                <p class="text-[#767676]">Abstract</p>
-                <p class="font-light text-xl" [innerHTML]="safeDescription"></p>
-              </div>
-              <div>
-                <p class="text-[#767676]">keywords</p>
-                <div class="flex flex-wrap gap-2 my-2">
-                  <span
-                    *ngFor="let k of innovationData?.keywords"
-                    class="px-2 py-1 font-light my-2 text-[#394250] rounded bg-[#f2e7ac]"
-                  >
-                    {{ k.keyword || "-" }}
-                  </span>
-                </div>
-              </div>
-
-              <div>
-                <p class="text-[#767676] mb-1">หลักการและเหตุผล</p>
-                <p class="eading-relaxed font-light text-xl">
-                  {{ innovationData?.principle }}
-                </p>
-              </div>
-            </div>
-
-            <!-- Internal Researchers Table -->
-            <div>
-              <h2 class="my-6">ผู้ร่วมโครงการภายใน</h2>
-              <div class="overflow-x-auto font-light text-xl">
-                <table class="min-w-125 w-full border rounded-lg overflow-hidden">
-                  <thead class="bg-slate-600 text-white">
-                    <tr>
-                      <th class="px-4 py-2 text-left w-16 text-xl">#</th>
-                      <th class="px-4 py-2 text-left">ผู้ร่วม</th>
-                      <th class="px-4 py-2 text-left">ประเภทความรับผิดชอบ</th>
-                    </tr>
-                  </thead>
-                  <tbody
-                    class="divide-y"
-                    *ngIf="
-                      innovationData!.internal_members.length > 0;
-                      else noData
-                    "
-                  >
-                    <tr
-                      *ngFor="
-                        let internal of innovationData?.internal_members;
-                        let i = index
-                      "
-                      class="bg-gray-200 border-b border-gray-300"
-                    >
-                      <td class="px-4 py-3 font-medium text-xl">{{ i + 1 }}</td>
-                      <td
-                        class="px-4 py-3 flex flex-wrap justify-center md:justify-start items-center gap-2"
-                      >
-                        {{ internal?.full_name }}
-                      </td>
-                      <td class="px-4 py-3">{{ internal?.role }}</td>
-                    </tr>
-                  </tbody>
-
-                  <ng-template #noData>
-                    <tr>
-                      <td colspan="3" class="text-center py-4 text-gray-500">
-                        ไม่พบข้อมูล
-                      </td>
-                    </tr>
-                  </ng-template>
-                </table>
-              </div>
-            </div>
-
-            <!-- External Researchers Table -->
-            <div>
-              <h2 class="my-6">ผู้ร่วมโครงการภายนอก</h2>
-              <div class="overflow-x-auto font-light text-xl">
-                <table class="min-w-125 w-full border rounded-lg overflow-hidden">
-                  <thead class="bg-slate-600 text-white">
-                    <tr>
-                      <th class="px-4 py-2 w-16">#</th>
-                      <th class="px-4 py-2 text-left">
-                        ผู้ร่วม (บุคลากรภายนอก)
-                      </th>
-                      <th class="px-4 py-2 text-left">ประเภทความรับผิดชอบ</th>
-                      <th class="px-4 py-2 text-left">หน่วยงาน</th>
-                    </tr>
-                  </thead>
-                  <tbody
-                    class="divide-y"
-                    *ngIf="
-                      innovationData!.external_members.length > 0;
-                      else noDataEx
-                    "
-                  >
-                    <tr
-                      *ngFor="
-                        let external of innovationData?.external_members;
-                        let i = index
-                      "
-                      class="bg-gray-200 border-b border-gray-300"
-                    >
-                      <td class="px-4 py-3">{{ i + 1 }}</td>
-                      <td class="px-4 py-3">{{ external?.full_name }}</td>
-                      <td class="px-4 py-3">{{ external?.role }}</td>
-                      <td class="px-4 py-3">
-                        {{ external?.organization || "-" }}
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-
-                <ng-template #noDataEx>
-                  <tr>
-                    <td colspan="3" class="text-center py-4 text-gray-500">
-                      ไม่พบข้อมูล
-                    </td>
-                  </tr>
-                </ng-template>
-              </div>
-            </div>
-
-            <!-- Funding Source -->
-            <div
-              class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-x-10 md:gap-y-6"
-            >
-              <div>
-                <p class="font-semibold text-[#767676] md:mb-1">
-                  ที่มาแหล่งทุน
-                </p>
-                <p class="text-[#394250] font-light text-xl">
-                  {{ innovationData?.source_funds }}
-                </p>
-              </div>
-
-              <div>
-                <p class="font-semibold text-[#767676] md:mb-1">ชื่อแหล่งทุน</p>
-                <p class="text-[#394250] font-light text-xl">
-                  {{ innovationData?.name_funding }}
-                </p>
-              </div>
-
-              <div>
-                <p class="font-semibold text-[#767676] md:mb-1">งบประมาณ</p>
-                <p class="text-[#394250] font-light text-xl">
-                  {{ innovationData?.budget_amount | number:'1.0-0' }} บาท
-                </p>
-              </div>
-
-              <div>
-                <p class="font-semibold text-[#767676] md:mb-1">
-                  ปีที่เสร็จสิ้น
-                </p>
-                <p class="text-[#394250] font-light text-xl">
-                  {{ innovationData?.year }}
-                </p>
-              </div>
-
-              <div>
-                <p class="font-semibold text-[#767676] md:mb-1">
-                  ความร่วมมือกับหน่วยงานอื่นๆ
-                </p>
-                <p class="text-[#394250] font-light text-xl">
-                  {{ innovationData?.call_other }}
-                </p>
-              </div>
-
-              <div>
-                <p class="font-semibold text-[#767676] md:mb-1">
-                  เลขที่ คำขอ/สิทธิบัตร
-                </p>
-                <p class="text-[#394250] font-light text-xl">
-                  {{ innovationData?.patent_number }}
-                </p>
-              </div>
-
-              <div>
-                <p class="font-semibold text-[#767676] md:mb-1">
-                  เว็บไซต์ตรวจสิทธิบัตร
-                </p>
-                <p
-                  class="text-blue-600 hover:underline break-all font-light text-xl"
-                >
-                  {{ innovationData?.examination_url }}
-                </p>
-              </div>
-
-              <div class="md:col-span-2">
-                <p class="font-semibold text-[#767676] md:mb-1">
-                  ไฟล์ภาพนวัตกรรมสิ่งประดิษฐ์
-                </p>
-                <a
-                  href="#"
-                  class="text-blue-600 hover:underline break-all font-light text-xl"
-                >
-                  {{ innovationData?.img_url }}
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="grid grid-cols-1 mt-6 bg-gray-300 rounded-xl overflow-hidden">
-      <!-- ข้อมูลผู้ติดต่อ -->
-      <div class="mt-8">
-        <div
-          class="bg-linear-to-r from-gray-100 to-gray-200 rounded-t-2xl shadow-md px-12 py-10"
-        >
-          <div
-            class="grid grid-cols-1 md:grid-cols-3 gap-10 text-center items-center"
-          >
-            <!-- Owner -->
-            <div class="space-y-2">
-              <div class="flex justify-center mb-2">
-                <div
-                  class="w-12 h-12 rounded-full bg-purple-500 text-white flex items-center justify-center text-xl"
-                >
-                  <i class="bi bi-person"></i>
-                </div>
-              </div>
-
-              <p class="text-gray-500 text-lg">เจ้าของผลงาน</p>
-              <p class="text-gray-900 text-xl font-medium">
-                {{ owner?.full_name || "ไม่ระบุ" }}
-              </p>
-            </div>
-
-            <!-- Organization -->
-            <div
-              class="space-y-2 border-y md:border-y-0 md:border-x border-gray-300 px-6"
-            >
-              <div class="flex justify-center mb-2">
-                <div
-                  class="w-12 h-12 rounded-full bg-blue-500 text-white flex items-center justify-center text-xl"
-                >
-                  <i class="bi bi-building"></i>
-                </div>
-              </div>
-
-              <p class="text-gray-500 text-lg">หน่วยงาน</p>
-              <p class="text-gray-900 text-xl font-medium">
-                {{ owner?.organization || "ไม่ระบุ" }}
-              </p>
-            </div>
-
-            <!-- Contact -->
-            <div class="space-y-3">
-              <div class="flex justify-center mb-2">
-                <div
-                  class="w-12 h-12 rounded-full bg-green-500 text-white flex items-center justify-center text-xl"
-                >
-                  <i class="bi bi-envelope"></i>
-                </div>
-              </div>
-
-              <p class="text-gray-900 text-lg">
-                {{ owner?.email || "ไม่ระบุ" }}
-              </p>
-
-              <p class="text-gray-700 text-lg">
-                โทรศัพท์: {{ owner?.phone || "ไม่ระบุ" }}
-              </p>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </div>
+
+  <!-- ===== Article ===== -->
+  <div *ngIf="type === 'article'" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+
+    <!-- Header -->
+    <div class="flex items-start gap-4 bg-linear-to-r from-[#f2cb05] to-[#f2e7ac] px-6 py-5">
+      <div class="w-11 h-11 rounded-xl bg-white/30 flex items-center justify-center text-[#394250] text-xl shrink-0 mt-0.5">
+        <i class="bi bi-file-earmark-text"></i>
+      </div>
+      <div class="flex-1 min-w-0">
+        <p class="text-xs font-semibold uppercase tracking-widest text-[#394250]/60 mb-1">ผลงานตีพิมพ์</p>
+        <h1 *ngIf="articleData?.lang_type === 'th'" class="text-lg font-semibold text-[#394250] leading-relaxed">{{ articleData?.title_th }}</h1>
+        <h1 *ngIf="articleData?.lang_type === 'en'" class="text-lg font-semibold text-[#394250] leading-relaxed">{{ articleData?.title_en }}</h1>
+        <div class="w-full h-px bg-[#394250]/20 my-2"></div>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 p-6 md:p-10">
+
+      <!-- Left: Cover Image -->
+      <div class="md:col-span-1">
+        <div class="rounded-xl overflow-hidden border border-gray-100 h-72 w-full bg-gray-50 flex items-center justify-center">
+          <ng-container *ngIf="previewImage || articleData?.img_url; else noImage">
+            <img [src]="previewImage || articleData?.img_url" (error)="onImageError($event)" class="w-full h-full object-cover" />
+          </ng-container>
+          <ng-template #noImage>
+            <img src="/assets/research.png" class="w-full h-full object-contain opacity-60 p-4" />
+          </ng-template>
+        </div>
+        <div *ngIf="selectedFile" class="mt-3 text-center">
+          <button (click)="uploadImage()"
+            class="inline-flex items-center gap-2 px-6 py-2 bg-linear-to-r from-[#f2cb05] to-[#e0b800] text-[#394250] font-semibold text-sm rounded-xl shadow-md cursor-pointer">
+            <i class="bi bi-floppy2"></i> บันทึกรูปภาพ
+          </button>
+        </div>
+      </div>
+
+      <!-- Right: Details -->
+      <div class="md:col-span-3 space-y-8">
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">รหัสบทความ</p>
+            <p class="text-sm font-light">{{ articleData?.research_code || '-' }}</p>
+          </div>
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">สาขาของบทความ</p>
+            <p class="text-sm font-light">{{ oecdUI[0].name_th || '-' }}</p>
+          </div>
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">สาขาย่อย</p>
+            <p class="text-sm font-light">{{ oecdUI[0].children[0].name_th || '-' }}</p>
+          </div>
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">สาขาที่เกี่ยวข้อง</p>
+            <p class="text-sm font-light">{{ oecdUI[0].children[0].children[0].name_th || '-' }}</p>
+          </div>
+        </div>
+
+        <div *ngIf="articleData?.lang_type === 'th'">
+          <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-2">บทคัดย่อ</p>
+          <p class="text-sm font-light leading-relaxed" [innerHTML]="safeDescription"></p>
+        </div>
+        <div *ngIf="articleData?.lang_type === 'en'">
+          <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-2">Abstract</p>
+          <p class="text-sm font-light leading-relaxed" [innerHTML]="safeDescription"></p>
+        </div>
+
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-2">Keywords</p>
+          <div class="flex flex-wrap gap-2">
+            <span *ngFor="let k of articleData?.keywords"
+              class="px-3 py-1 text-sm font-light text-[#394250] rounded-full bg-[#f2e7ac]">{{ k.keyword }}</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">ประเภท</p>
+            <p class="text-sm font-light">{{ articleData?.article_type }}</p>
+          </div>
+          <div *ngIf="articleData?.article_type === 'Journal'">
+            <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">ชื่องานวิจัย</p>
+            <p class="text-sm font-light">{{ articleData?.journal_name }}</p>
+          </div>
+          <div *ngIf="articleData?.article_type === 'Conference'">
+            <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">ชื่อการประชุมวิชาการ</p>
+            <p class="text-sm font-light">{{ articleData?.journal_name }}</p>
+          </div>
+          <div *ngIf="articleData?.article_type === 'Journal'">
+            <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">ประเทศ</p>
+            <p class="text-sm font-light">{{ articleData?.country }}</p>
+          </div>
+          <div *ngIf="articleData?.article_type === 'Journal'">
+            <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">ประเภทฐานข้อมูล</p>
+            <p class="text-sm font-light">{{ articleData?.db_type }}</p>
+          </div>
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">ค่าน้ำหนัก/ระดับคุณภาพ</p>
+            <p class="text-sm font-light">{{ articleData?.volume_no }}</p>
+          </div>
+        </div>
+
+        <!-- Internal Members -->
+        <div>
+          <div class="flex items-center gap-3 text-xs font-semibold uppercase tracking-widest text-gray-400 before:flex-1 before:h-px before:bg-gray-100 after:flex-1 after:h-px after:bg-gray-100 mb-4">
+            ผู้ร่วมโครงการภายใน
+          </div>
+          <div class="overflow-x-auto rounded-xl border border-gray-100">
+            <table class="min-w-full w-full border-collapse text-sm font-light">
+              <thead>
+                <tr class="bg-[#394250] text-white">
+                  <th class="px-4 py-3 text-center font-medium w-12">#</th>
+                  <th class="px-4 py-3 text-left font-medium">ผู้ร่วม</th>
+                  <th class="px-4 py-3 text-left font-medium">ประเภทความรับผิดชอบ</th>
+                </tr>
+              </thead>
+              <tbody *ngIf="(articleData?.internal_members?.length ?? 0) > 0; else noData">
+                <tr *ngFor="let member of articleData?.internal_members; let i = index"
+                  class="border-b border-gray-100 hover:bg-amber-50/40 transition-colors">
+                  <td class="px-4 py-3 text-center">{{ i + 1 }}</td>
+                  <td class="px-4 py-3">{{ member?.full_name }}</td>
+                  <td class="px-4 py-3">{{ member?.role }}</td>
+                </tr>
+              </tbody>
+              <ng-template #noData>
+                <tr><td colspan="3" class="text-center py-6 text-gray-400">ไม่พบข้อมูล</td></tr>
+              </ng-template>
+            </table>
+          </div>
+        </div>
+
+        <!-- External Members -->
+        <div>
+          <div class="flex items-center gap-3 text-xs font-semibold uppercase tracking-widest text-gray-400 before:flex-1 before:h-px before:bg-gray-100 after:flex-1 after:h-px after:bg-gray-100 mb-4">
+            ผู้ร่วมโครงการภายนอก
+          </div>
+          <div class="overflow-x-auto rounded-xl border border-gray-100">
+            <table class="min-w-full w-full border-collapse text-sm font-light">
+              <thead>
+                <tr class="bg-[#394250] text-white">
+                  <th class="px-4 py-3 text-center font-medium w-12">#</th>
+                  <th class="px-4 py-3 text-left font-medium">ผู้ร่วม</th>
+                  <th class="px-4 py-3 text-left font-medium">ประเภทความรับผิดชอบ</th>
+                  <th class="px-4 py-3 text-left font-medium">หน่วยงาน</th>
+                </tr>
+              </thead>
+              <tbody *ngIf="(articleData?.external_members?.length ?? 0) > 0; else noDataExternal">
+                <tr *ngFor="let external of articleData?.external_members; let i = index"
+                  class="border-b border-gray-100 hover:bg-amber-50/40 transition-colors">
+                  <td class="px-4 py-3 text-center">{{ i + 1 }}</td>
+                  <td class="px-4 py-3">{{ external.full_name }}</td>
+                  <td class="px-4 py-3">{{ external.role }}</td>
+                  <td class="px-4 py-3">{{ external.organization }}</td>
+                </tr>
+              </tbody>
+              <ng-template #noDataExternal>
+                <tr><td colspan="4" class="text-center py-6 text-gray-400">ไม่พบข้อมูล</td></tr>
+              </ng-template>
+            </table>
+          </div>
+        </div>
+
+        <!-- Publication Info -->
+        <div>
+          <div class="flex items-center gap-3 text-xs font-semibold uppercase tracking-widest text-gray-400 before:flex-1 before:h-px before:bg-gray-100 after:flex-1 after:h-px after:bg-gray-100 mb-4">
+            ข้อมูลการตีพิมพ์
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">ฉบับที่/เล่มที่</p>
+              <p class="text-sm font-light">{{ articleData?.volume }}</p>
+            </div>
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">หน้าที่ตีพิมพ์</p>
+              <p class="text-sm font-light">{{ articleData?.pages }}</p>
+            </div>
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">ปีที่ตีพิมพ์</p>
+              <p class="text-sm font-light">{{ articleData?.year_published }}</p>
+            </div>
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">ความร่วมมือกับหน่วยงานอื่นๆ</p>
+              <p class="text-sm font-light">{{ articleData?.is_cooperation === 'yes' ? 'มี' : 'ไม่มี' }}</p>
+            </div>
+            <div *ngIf="articleData?.article_type === 'Conference'">
+              <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">สถานที่นำเสนอ</p>
+              <p class="text-sm font-light">{{ articleData?.pre_location || '-' }}</p>
+            </div>
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">เว็บไซต์อ้างอิง/การเผยแพร่</p>
+              <a href="#" class="text-sm font-light text-blue-600 hover:underline break-all">{{ articleData?.doi }}</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Innovation ===== -->
+  <div *ngIf="type === 'innovation'" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+
+    <!-- Header -->
+    <div class="flex items-start gap-4 bg-linear-to-r from-[#f2cb05] to-[#f2e7ac] px-6 py-5">
+      <div class="w-11 h-11 rounded-xl bg-white/30 flex items-center justify-center text-[#394250] text-xl shrink-0 mt-0.5">
+        <i class="bi bi-lightbulb"></i>
+      </div>
+      <div class="flex-1 min-w-0">
+        <p class="text-xs font-semibold uppercase tracking-widest text-[#394250]/60 mb-1">นวัตกรรมสิ่งประดิษฐ์</p>
+        <h1 class="text-lg font-semibold text-[#394250] leading-relaxed">{{ innovationData?.title_th }}</h1>
+        <div class="w-full h-px bg-[#394250]/20 my-2"></div>
+        <h2 class="text-sm font-light text-[#394250]/70 italic">{{ innovationData?.title_en || '-' }}</h2>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 p-6 md:p-10">
+
+      <!-- Left: Cover + Gallery -->
+      <div class="md:col-span-1 space-y-4">
+        <div class="rounded-xl overflow-hidden border border-gray-100 h-72 w-full bg-gray-50 flex items-center justify-center">
+          <ng-container *ngIf="previewImage || innovationData?.img_url; else noImage">
+            <img [src]="previewImage || innovationData?.img_url" (error)="onImageError($event)" class="w-full h-full object-cover" />
+          </ng-container>
+          <ng-template #noImage>
+            <img src="/assets/research.png" class="w-full h-full object-contain opacity-60 p-4" />
+          </ng-template>
+        </div>
+
+        <!-- Gallery -->
+        <div *ngIf="galleryImages?.length">
+          <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-2">Gallery</p>
+          <div class="grid grid-cols-3 gap-2">
+            <img *ngFor="let img of galleryImages" [src]="img" (click)="openImage(img)"
+              class="rounded-lg h-20 w-full object-cover hover:scale-105 transition cursor-pointer border border-gray-100" />
+          </div>
+        </div>
+
+        <!-- Lightbox -->
+        <div *ngIf="selectedImage" class="fixed inset-0 bg-black/70 flex items-center justify-center z-50" (click)="closeImage()">
+          <img [src]="selectedImage" class="max-h-[90vh] max-w-[90vw] rounded-xl shadow-2xl" />
+        </div>
+      </div>
+
+      <!-- Right: Details -->
+      <div class="md:col-span-3 space-y-8">
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">รหัสนวัตกรรม</p>
+            <p class="text-sm font-light">{{ innovationData?.research_code || '-' }}</p>
+          </div>
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">สาขาของนวัตกรรมสิ่งประดิษฐ์</p>
+            <p class="text-sm font-light">{{ oecdUI[0].name_th || '-' }}</p>
+          </div>
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">สาขาย่อย</p>
+            <p class="text-sm font-light">{{ oecdUI[0].children[0].name_th || '-' }}</p>
+          </div>
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">สาขาที่เกี่ยวข้อง</p>
+            <p class="text-sm font-light">{{ oecdUI[0].children[0].children[0].name_th || '-' }}</p>
+          </div>
+        </div>
+
+        <div *ngIf="innovationData?.abstract">
+          <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-2">บทคัดย่อ</p>
+          <p class="text-sm font-light leading-relaxed" [innerHTML]="safeDescription"></p>
+        </div>
+        <div *ngIf="innovationData?.abstract_en">
+          <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-2">Abstract</p>
+          <p class="text-sm font-light leading-relaxed" [innerHTML]="safeDescription"></p>
+        </div>
+
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-2">Keywords</p>
+          <div class="flex flex-wrap gap-2">
+            <span *ngFor="let k of innovationData?.keywords"
+              class="px-3 py-1 text-sm font-light text-[#394250] rounded-full bg-[#f2e7ac]">{{ k.keyword || '-' }}</span>
+          </div>
+        </div>
+
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">หลักการและเหตุผล</p>
+          <p class="text-sm font-light leading-relaxed">{{ innovationData?.principle }}</p>
+        </div>
+
+        <!-- Internal Members -->
+        <div>
+          <div class="flex items-center gap-3 text-xs font-semibold uppercase tracking-widest text-gray-400 before:flex-1 before:h-px before:bg-gray-100 after:flex-1 after:h-px after:bg-gray-100 mb-4">
+            ผู้ร่วมโครงการภายใน
+          </div>
+          <div class="overflow-x-auto rounded-xl border border-gray-100">
+            <table class="min-w-full w-full border-collapse text-sm font-light">
+              <thead>
+                <tr class="bg-[#394250] text-white">
+                  <th class="px-4 py-3 text-center font-medium w-12">#</th>
+                  <th class="px-4 py-3 text-left font-medium">ผู้ร่วม</th>
+                  <th class="px-4 py-3 text-left font-medium">ประเภทความรับผิดชอบ</th>
+                </tr>
+              </thead>
+              <tbody *ngIf="innovationData!.internal_members.length > 0; else noData">
+                <tr *ngFor="let internal of innovationData?.internal_members; let i = index"
+                  class="border-b border-gray-100 hover:bg-amber-50/40 transition-colors">
+                  <td class="px-4 py-3 text-center">{{ i + 1 }}</td>
+                  <td class="px-4 py-3">{{ internal?.full_name }}</td>
+                  <td class="px-4 py-3">{{ internal?.role }}</td>
+                </tr>
+              </tbody>
+              <ng-template #noData>
+                <tr><td colspan="3" class="text-center py-6 text-gray-400">ไม่พบข้อมูล</td></tr>
+              </ng-template>
+            </table>
+          </div>
+        </div>
+
+        <!-- External Members -->
+        <div>
+          <div class="flex items-center gap-3 text-xs font-semibold uppercase tracking-widest text-gray-400 before:flex-1 before:h-px before:bg-gray-100 after:flex-1 after:h-px after:bg-gray-100 mb-4">
+            ผู้ร่วมโครงการภายนอก
+          </div>
+          <div class="overflow-x-auto rounded-xl border border-gray-100">
+            <table class="min-w-full w-full border-collapse text-sm font-light">
+              <thead>
+                <tr class="bg-[#394250] text-white">
+                  <th class="px-4 py-3 text-center font-medium w-12">#</th>
+                  <th class="px-4 py-3 text-left font-medium">ผู้ร่วม (บุคลากรภายนอก)</th>
+                  <th class="px-4 py-3 text-left font-medium">ประเภทความรับผิดชอบ</th>
+                  <th class="px-4 py-3 text-left font-medium">หน่วยงาน</th>
+                </tr>
+              </thead>
+              <tbody *ngIf="innovationData!.external_members.length > 0; else noDataEx">
+                <tr *ngFor="let external of innovationData?.external_members; let i = index"
+                  class="border-b border-gray-100 hover:bg-amber-50/40 transition-colors">
+                  <td class="px-4 py-3 text-center">{{ i + 1 }}</td>
+                  <td class="px-4 py-3">{{ external?.full_name }}</td>
+                  <td class="px-4 py-3">{{ external?.role }}</td>
+                  <td class="px-4 py-3">{{ external?.organization || '-' }}</td>
+                </tr>
+              </tbody>
+              <ng-template #noDataEx>
+                <tr><td colspan="4" class="text-center py-6 text-gray-400">ไม่พบข้อมูล</td></tr>
+              </ng-template>
+            </table>
+          </div>
+        </div>
+
+        <!-- Patent & Funding -->
+        <div>
+          <div class="flex items-center gap-3 text-xs font-semibold uppercase tracking-widest text-gray-400 before:flex-1 before:h-px before:bg-gray-100 after:flex-1 after:h-px after:bg-gray-100 mb-4">
+            ข้อมูลแหล่งทุนและสิทธิบัตร
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">ที่มาแหล่งทุน</p>
+              <p class="text-sm font-light">{{ innovationData?.source_funds }}</p>
+            </div>
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">ชื่อแหล่งทุน</p>
+              <p class="text-sm font-light">{{ innovationData?.name_funding }}</p>
+            </div>
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">งบประมาณ</p>
+              <p class="text-sm font-light">{{ innovationData?.budget_amount | number:'1.0-0' }} บาท</p>
+            </div>
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">ปีที่เสร็จสิ้น</p>
+              <p class="text-sm font-light">{{ innovationData?.year }}</p>
+            </div>
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">ความร่วมมือกับหน่วยงานอื่นๆ</p>
+              <p class="text-sm font-light">{{ innovationData?.call_other }}</p>
+            </div>
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">เลขที่ คำขอ/สิทธิบัตร</p>
+              <p class="text-sm font-light">{{ innovationData?.patent_number }}</p>
+            </div>
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">เว็บไซต์ตรวจสิทธิบัตร</p>
+              <p class="text-sm font-light text-blue-600 hover:underline break-all">{{ innovationData?.examination_url }}</p>
+            </div>
+            <div class="md:col-span-2">
+              <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">ไฟล์ภาพนวัตกรรมสิ่งประดิษฐ์</p>
+              <a href="#" class="text-sm font-light text-blue-600 hover:underline break-all">{{ innovationData?.img_url }}</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Contact Card ===== -->
+  <div class="mt-6 bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+    <div class="flex items-center gap-4 bg-linear-to-r from-[#f2cb05] to-[#f2e7ac] px-6 py-4">
+      <div class="w-9 h-9 rounded-xl bg-white/30 flex items-center justify-center text-[#394250] text-base shrink-0">
+        <i class="bi bi-person-lines-fill"></i>
+      </div>
+      <p class="text-sm font-semibold text-[#394250]">ข้อมูลผู้ติดต่อ</p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-0 divide-y md:divide-y-0 md:divide-x divide-gray-100 px-6 py-8">
+
+      <!-- Owner -->
+      <div class="flex flex-col items-center text-center px-6 pb-6 md:pb-0">
+        <div class="w-12 h-12 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center text-xl mb-3">
+          <i class="bi bi-person"></i>
+        </div>
+        <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">เจ้าของผลงาน</p>
+        <p class="text-sm font-medium text-[#394250]">{{ owner?.full_name || 'ไม่ระบุ' }}</p>
+      </div>
+
+      <!-- Organization -->
+      <div class="flex flex-col items-center text-center px-6 py-6 md:py-0">
+        <div class="w-12 h-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xl mb-3">
+          <i class="bi bi-building"></i>
+        </div>
+        <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">หน่วยงาน</p>
+        <p class="text-sm font-medium text-[#394250]">{{ owner?.organization || 'ไม่ระบุ' }}</p>
+      </div>
+
+      <!-- Contact -->
+      <div class="flex flex-col items-center text-center px-6 pt-6 md:pt-0">
+        <div class="w-12 h-12 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-xl mb-3">
+          <i class="bi bi-envelope"></i>
+        </div>
+        <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">ติดต่อ</p>
+        <p class="text-sm font-light text-[#394250]">{{ owner?.email || 'ไม่ระบุ' }}</p>
+        <p class="text-sm font-light text-gray-500 mt-1">โทร: {{ owner?.phone || 'ไม่ระบุ' }}</p>
+      </div>
+
+    </div>
+  </div>
+
 </div>

@@ -367,6 +367,7 @@ export class AdminSearchPaperComponent {
     if (this.selectedYear) payload.year = this.selectedYear;
 
     this.loading = true;
+    this.isSearched = false;
 
     this.service.searchData(payload).subscribe({
       next: (res) => {
@@ -385,6 +386,11 @@ export class AdminSearchPaperComponent {
         this.currentPage = 1;
         this.updatePagination();
         this.loading = false;
+      },
+      error: (err) => {                                          // ← เพิ่ม error handler
+        console.error('Search failed:', err);
+        this.loading = false;                                    // ← ป้องกัน loading ค้าง
+        Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถค้นหาข้อมูลได้', 'error');
       },
     });
   }

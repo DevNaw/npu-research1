@@ -360,6 +360,7 @@ export class UserResearchComponent {
     if (this.selectedYear) payload.year = this.selectedYear;
 
     this.loading = true;
+    this.isSearched = false;
 
     this.service.searchData(payload).subscribe({
       next: (res) => {
@@ -378,6 +379,11 @@ export class UserResearchComponent {
         this.currentPage = 1;
         this.updatePagination();
         this.loading = false;
+      },
+      error: (err) => {                                          // ← เพิ่มทั้งบล็อก
+        console.error('Search failed:', err);
+        this.loading = false;
+        Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถค้นหาข้อมูลได้', 'error');
       },
     });
   }

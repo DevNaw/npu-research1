@@ -122,6 +122,9 @@ export class UserDashboardComponent implements OnInit {
   legendPosition: LegendPosition = LegendPosition.Below;
   hasData = false;
 
+  otherMajor: { label: string; value: number } | null = null;
+otherSub: { label: string; value: number } | null = null;  // ← เพิ่มบรรทัดนี้
+
   colorScheme: Color = {
     name: 'horizon',
     selectable: true,
@@ -140,13 +143,6 @@ export class UserDashboardComponent implements OnInit {
     ],
   };
 
-  // labelFormat = (name: string): string => {
-  //   const item = this.single.find((d) => d.name === name);
-  //   if (!item) return name;
-  //   const total = this.single.reduce((sum, d) => sum + d.value, 0);
-  //   const percent = total > 0 ? ((item.value / total) * 100).toFixed(1) : '0';
-  //   return `${name}\n${percent}%`;
-  // };
   labelFormat = (name: string): string => {
     const item = this.single.find((d) => d.name === name);
     if (!item) return name;
@@ -488,30 +484,158 @@ export class UserDashboardComponent implements OnInit {
     };
   }
 
+  // changeTabForChart(tab: ResearchType): void {
+  //   this.selectedTab = tab;
+  //   const tabIndex = tab === 'PROJECT' ? 0 : tab === 'ARTICLE' ? 1 : 2;
+
+  //   // ===== RADAR หลัก =====
+  //   const majorLabels = this.dashboardData?.radar.major.labels || [];
+  //   const majorValues =
+  //     this.dashboardData?.radar.major.datasets[tabIndex]?.data || [];
+  //   this.fullLabels = majorLabels;
+  //   this.radarChartOptions.labels = majorLabels.map((l) => this.shortLabel(l));
+  //   this.radarChartOptions.series = [
+  //     { name: 'จำนวนงานวิจัย', data: majorValues as number[] },
+  //   ];
+
+  //   // ===== RADAR ย่อย =====
+  //   const subLabels = this.dashboardData?.radar.sub.labels || [];
+  //   const subValues =
+  //     this.dashboardData?.radar.sub.datasets[tabIndex]?.data || [];
+  //   this.fullLabelsSub = subLabels;
+  //   this.radarChartOptionsSub.labels = subLabels.map((l) => this.shortLabel(l));
+  //   this.radarChartOptionsSub.series = [
+  //     { name: 'จำนวนงานวิจัย', data: subValues as number[] },
+  //   ];
+
+  //   // ===== PIE (ngx-charts) =====
+  //   const ford = this.dashboardData?.ford || {
+  //     project: [],
+  //     article: [],
+  //     innovation: [],
+  //   };
+  //   const dataFord =
+  //     tab === 'PROJECT'
+  //       ? ford.project
+  //       : tab === 'ARTICLE'
+  //       ? ford.article
+  //       : ford.innovation;
+
+  //   this.loading = true;
+  //   setTimeout(() => {
+  //     this.single = dataFord.map((item) => ({
+  //       name: item.name,
+  //       value: item.count,
+  //       extra: { percent: item.percent },
+  //     }));
+  //     this.initChartsOECD();
+  //     this.loading = false;
+  //   }, 0);
+
+  //   this.hasData = dataFord.reduce((sum, item) => sum + item.count, 0) > 0;
+  // }
+
+  // changeTabForChart(tab: ResearchType): void {
+  //   this.selectedTab = tab;
+  //   const tabIndex = tab === 'PROJECT' ? 0 : tab === 'ARTICLE' ? 1 : 2;
+  
+  //   // ===== RADAR หลัก — กรอง "อื่นๆ" ออก =====
+  //   const majorLabels = this.dashboardData?.radar.major.labels || [];
+  //   const majorValues = (this.dashboardData?.radar.major.datasets[tabIndex]?.data ?? []) as number[];
+  
+  //   const majorPairs = majorLabels.map((label, i) => ({
+  //     label,
+  //     value: majorValues[i] ?? 0,
+  //   }));
+  
+  //   const majorFiltered = majorPairs.filter(p => !p.label.includes('อื่น'));
+  //   this.otherMajor = majorPairs.find(p => p.label.includes('อื่น')) ?? null;
+  
+  //   this.fullLabels = majorFiltered.map(p => p.label);
+  //   this.radarChartOptions = {
+  //     ...this.radarChartOptions,
+  //     labels: majorFiltered.map(p => this.shortLabel(p.label)),
+  //     series: [{ name: 'จำนวนงานวิจัย', data: majorFiltered.map(p => p.value) }],
+  //   };
+  
+  //   // ===== RADAR ย่อย — กรอง "อื่นๆ" ออก =====
+  //   const subLabels = this.dashboardData?.radar.sub.labels || [];
+  //   const subValues = (this.dashboardData?.radar.sub.datasets[tabIndex]?.data ?? []) as number[];
+  
+  //   const subPairs = subLabels.map((label, i) => ({
+  //     label,
+  //     value: subValues[i] ?? 0,
+  //   }));
+  
+  //   const subFiltered = subPairs.filter(p => !p.label.includes('อื่น'));
+  //   this.otherSub = subPairs.find(p => p.label.includes('อื่น')) ?? null;
+  
+  //   this.fullLabelsSub = subFiltered.map(p => p.label);
+  //   this.radarChartOptionsSub = {
+  //     ...this.radarChartOptionsSub,
+  //     labels: subFiltered.map(p => this.shortLabel(p.label)),
+  //     series: [{ name: 'จำนวนงานวิจัย', data: subFiltered.map(p => p.value) }],
+  //   };
+  
+  //   // ===== PIE (ngx-charts) =====
+  //   const ford = this.dashboardData?.ford || {
+  //     project: [],
+  //     article: [],
+  //     innovation: [],
+  //   };
+  //   const dataFord =
+  //     tab === 'PROJECT'
+  //       ? ford.project
+  //       : tab === 'ARTICLE'
+  //       ? ford.article
+  //       : ford.innovation;
+  
+  //   this.loading = true;
+  //   setTimeout(() => {
+  //     this.single = dataFord.map((item) => ({
+  //       name: item.name,
+  //       value: item.count,
+  //       extra: { percent: item.percent },
+  //     }));
+  //     this.initChartsOECD();
+  //     this.loading = false;
+  //   }, 0);
+  
+  //   this.hasData = dataFord.reduce((sum, item) => sum + item.count, 0) > 0;
+  // }
+
   changeTabForChart(tab: ResearchType): void {
     this.selectedTab = tab;
     const tabIndex = tab === 'PROJECT' ? 0 : tab === 'ARTICLE' ? 1 : 2;
-
-    // ===== RADAR หลัก =====
+  
+    // ===== RADAR หลัก — กรอง "อื่นๆ" ออก =====
     const majorLabels = this.dashboardData?.radar.major.labels || [];
-    const majorValues =
-      this.dashboardData?.radar.major.datasets[tabIndex]?.data || [];
-    this.fullLabels = majorLabels;
-    this.radarChartOptions.labels = majorLabels.map((l) => this.shortLabel(l));
-    this.radarChartOptions.series = [
-      { name: 'จำนวนงานวิจัย', data: majorValues as number[] },
-    ];
-
-    // ===== RADAR ย่อย =====
+    const majorValues = (this.dashboardData?.radar.major.datasets[tabIndex]?.data ?? []) as number[];
+  
+    const majorPairs = majorLabels.map((label, i) => ({
+      label,
+      value: majorValues[i] ?? 0,
+    }));
+  
+    const majorFiltered = majorPairs.filter(p => !p.label.includes('อื่น'));
+    this.otherMajor = majorPairs.find(p => p.label.includes('อื่น')) ?? null;
+  
+    this.fullLabels = majorFiltered.map(p => p.label);
+    this.radarChartOptions = {
+      ...this.radarChartOptions,
+      labels: majorFiltered.map(p => this.shortLabel(p.label)),
+      series: [{ name: 'จำนวนงานวิจัย', data: majorFiltered.map(p => p.value) }],
+    };
+  
+    // ===== RADAR ย่อย — เหมือนเดิม =====
     const subLabels = this.dashboardData?.radar.sub.labels || [];
-    const subValues =
-      this.dashboardData?.radar.sub.datasets[tabIndex]?.data || [];
+    const subValues = this.dashboardData?.radar.sub.datasets[tabIndex]?.data || [];
     this.fullLabelsSub = subLabels;
     this.radarChartOptionsSub.labels = subLabels.map((l) => this.shortLabel(l));
     this.radarChartOptionsSub.series = [
       { name: 'จำนวนงานวิจัย', data: subValues as number[] },
     ];
-
+  
     // ===== PIE (ngx-charts) =====
     const ford = this.dashboardData?.ford || {
       project: [],
@@ -524,7 +648,7 @@ export class UserDashboardComponent implements OnInit {
         : tab === 'ARTICLE'
         ? ford.article
         : ford.innovation;
-
+  
     this.loading = true;
     setTimeout(() => {
       this.single = dataFord.map((item) => ({
@@ -535,7 +659,7 @@ export class UserDashboardComponent implements OnInit {
       this.initChartsOECD();
       this.loading = false;
     }, 0);
-
+  
     this.hasData = dataFord.reduce((sum, item) => sum + item.count, 0) > 0;
   }
 

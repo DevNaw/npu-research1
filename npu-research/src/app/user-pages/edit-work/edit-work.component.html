@@ -1,212 +1,178 @@
-<div class="bg-gray-100 min-h-screen p-5 md:p-10 text-2xl font-medium">
-  <div class="mx-auto bg-white rounded-2xl shadow-lg p-4 md:p-8 space-y-8">
+<div class="min-h-screen bg-linear-to-br from-slate-50 via-gray-50 to-slate-100 px-5 py-6 md:px-10 md:py-8 text-[#394250] font-medium">
+
+  <!-- Card -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+
     <!-- Header -->
-    <div class="flex items-center gap-3">
-      <div class="text-black text-3xl">
+    <div class="flex items-center gap-4 bg-linear-to-r from-[#f2cb05] to-[#f2e7ac] px-6 py-5">
+      <div class="w-11 h-11 rounded-xl bg-white/30 flex items-center justify-center text-[#394250] text-xl shrink-0">
         <i class="bi bi-briefcase-fill"></i>
       </div>
-      <h1 class="text-3xl text-[#394250]">แก้ไขข้อมูลการทำงาน</h1>
+      <div>
+        <h1 class="text-xl font-semibold text-[#394250]">แก้ไขข้อมูลนักวิจัย</h1>
+        <p class="text-sm text-[#394250]/70 font-light">ข้อมูลการทำงาน</p>
+      </div>
     </div>
 
-    <hr />
+    <!-- Form Body -->
+    <form class="px-6 py-8 md:px-10 space-y-6">
 
-    <!-- Form -->
-    <form class="space-y-3 md:space-y-6">
-      <!-- ตำแหน่ง -->
+      <!-- ===== Section: ตำแหน่ง ===== -->
+      <div class="flex items-center gap-3 text-xs font-semibold uppercase tracking-widest text-gray-400 before:flex-1 before:h-px before:bg-gray-100 after:flex-1 after:h-px after:bg-gray-100">
+        ตำแหน่งและสังกัด
+      </div>
+
+      <!-- ตำแหน่งทางการบริหาร -->
       <div>
-        <label class="block text-gray-700 mb-1">ตำแหน่งทางการบริหาร</label>
+        <label class="block text-sm font-semibold text-gray-600 mb-1.5">ตำแหน่งทางการบริหาร</label>
         <input
           type="text"
           [(ngModel)]="workInfo.position"
           name="position"
-          class="w-full rounded-lg font-light text-lg border-gray-300 focus:ring-[#f2e7ac] focus:border-[#f2e7ac]"
-        />
+          class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm font-light focus:outline-none focus:ring-2 focus:ring-[#f2cb05]/30 focus:border-[#f2cb05] transition-all"
+          placeholder="ระบุตำแหน่งทางการบริหาร" />
       </div>
 
-      <!-- สังกัด -->
-      <div class="relative">
-        <label class="block text-gray-700 mb-1">สังกัด</label>
-
-        <div
-          (click)="toggle('organization', $event)"
-          class="min-h-10.5 border rounded-md px-3 py-2 flex justify-between items-center font-light text-lg cursor-pointer"
-        >
-          <span>
-            {{ workInfo?.organization?.faculty || "คลิกเพื่อเลือก" }}
-          </span>
-          <i class="bi bi-caret-down-fill text-gray-400"></i>
-        </div>
-
-        <div
-          *ngIf="openDropdown === 'organization'"
-          (click)="$event.stopPropagation()"
-          class="absolute z-50 w-full bg-white border rounded-md mt-1 shadow font-light text-lg"
-        >
-          <input
-            [(ngModel)]="searchOrganization"
-            name="searchOrganization"
-            placeholder="ค้นหา..."
-            class="w-full px-3 py-2 border-b font-light text-lg outline-none"
-          />
-
-          <ul class="max-h-48 overflow-y-auto font-light text-lg">
-            <li
-              *ngFor="let o of filteredOrganizations()"
-              (click)="selectOrganizationOption(o)"
-              class="px-4 py-2 hover:bg-[#f2e7ac] cursor-pointer"
-            >
-              {{ o.faculty }}
-            </li>
-
-            <li
-              *ngIf="filteredOrganizations().length === 0"
-              class="px-4 py-3 text-center text-gray-400 italic"
-            >
-              <i class="bi bi-x-octagon text-3xl block mb-2"></i>
-              ไม่พบข้อมูล
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- ประเภท -->
-      <div>
-        <label class="block text-gray-700 mb-1">ประเภท</label>
-
-        <div class="relative md:col-span-3">
-          <button
-            (click)="toggle('type', $event)"
-            class="w-full border rounded-md px-3 py-2 flex justify-between items-center bg-white font-light text-lg"
-          >
-            <span class="truncate">{{
-              workInfo!.type || "เลือกประเภท"
-            }}</span>
-            <i class="bi bi-chevron-down"></i>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- สังกัด -->
+        <div class="relative">
+          <label class="block text-sm font-semibold text-gray-600 mb-1.5">สังกัด</label>
+          <button type="button"
+            (click)="toggle('organization', $event)"
+            class="w-full border border-gray-200 rounded-xl px-4 py-2.5 flex justify-between items-center bg-white text-sm font-light hover:border-[#f2cb05] focus:outline-none focus:ring-2 focus:ring-[#f2cb05]/30 transition-all">
+            <span>{{ workInfo?.organization?.faculty || 'เลือกสังกัด' }}</span>
+            <i class="bi bi-chevron-down text-gray-400 text-xs ml-2"></i>
           </button>
+          <div *ngIf="openDropdown === 'organization'" (click)="$event.stopPropagation()"
+            class="absolute z-50 w-full bg-white border border-gray-200 rounded-xl mt-1 shadow-lg text-sm font-light overflow-hidden">
+            <input [(ngModel)]="searchOrganization" name="searchOrganization" placeholder="ค้นหา..."
+              class="w-full px-4 py-2.5 border-b border-gray-100 outline-none text-sm" />
+            <ul class="max-h-48 overflow-y-auto">
+              <li *ngFor="let o of filteredOrganizations()" (click)="selectOrganizationOption(o)"
+                class="px-4 py-2.5 hover:bg-amber-50 cursor-pointer transition-colors">{{ o.faculty }}</li>
+              <li *ngIf="filteredOrganizations().length === 0"
+                class="px-4 py-2.5 text-gray-400 text-center">ไม่พบข้อมูล</li>
+            </ul>
+          </div>
+        </div>
 
-          <div
-            *ngIf="openDropdown === 'type'"
-            (click)="$event.stopPropagation()"
-            class="absolute z-50 mt-1 w-full bg-white border rounded-md shadow font-light text-lg"
-          >
-            <div
-              *ngFor="let t of typeOptions"
-              (click)="selectType(t)"
-              class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
-            >
-              {{ t }}
-            </div>
+        <!-- ประเภท -->
+        <div class="relative">
+          <label class="block text-sm font-semibold text-gray-600 mb-1.5">ประเภท</label>
+          <button type="button"
+            (click)="toggle('type', $event)"
+            class="w-full border border-gray-200 rounded-xl px-4 py-2.5 flex justify-between items-center bg-white text-sm font-light hover:border-[#f2cb05] focus:outline-none focus:ring-2 focus:ring-[#f2cb05]/30 transition-all">
+            <span>{{ workInfo.type || 'เลือกประเภท' }}</span>
+            <i class="bi bi-chevron-down text-gray-400 text-xs ml-2"></i>
+          </button>
+          <div *ngIf="openDropdown === 'type'" (click)="$event.stopPropagation()"
+            class="absolute z-50 w-full bg-white border border-gray-200 rounded-xl mt-1 shadow-lg text-sm font-light overflow-hidden">
+            <ul class="max-h-48 overflow-y-auto">
+              <li *ngFor="let t of typeOptions" (click)="selectType(t)"
+                class="px-4 py-2.5 hover:bg-amber-50 cursor-pointer transition-colors">{{ t }}</li>
+            </ul>
           </div>
         </div>
       </div>
 
+      <!-- ===== Section: วิชาการ ===== -->
+      <div class="flex items-center gap-3 text-xs font-semibold uppercase tracking-widest text-gray-400 before:flex-1 before:h-px before:bg-gray-100 after:flex-1 after:h-px after:bg-gray-100">
+        ข้อมูลทางวิชาการ
+      </div>
+
       <!-- ตำแหน่งทางวิชาการ -->
       <div>
-        <label class="block text-gray-700 mb-1">
-          ตำแหน่งทางวิชาการ
-        </label>
+        <label class="block text-sm font-semibold text-gray-600 mb-1.5">ตำแหน่งทางวิชาการ</label>
         <input
           type="text"
-          [(ngModel)]="workInfo!.academic_position"
+          [(ngModel)]="workInfo.academic_position"
           name="academicPosition"
-          class="w-full rounded-lg font-light text-lg border-gray-300 focus:ring-[#f2e7ac] focus:border-[#f2e7ac]"
-        />
+          class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm font-light focus:outline-none focus:ring-2 focus:ring-[#f2cb05]/30 focus:border-[#f2cb05] transition-all"
+          placeholder="ระบุตำแหน่งทางวิชาการ" />
       </div>
 
       <!-- ความสนใจ -->
       <div>
-        <label class="block text-gray-700 mb-1">ความสนใจ</label>
+        <label class="block text-sm font-semibold text-gray-600 mb-1.5">ความสนใจ</label>
         <textarea
           rows="3"
-          [(ngModel)]="workInfo!.interest"
+          [(ngModel)]="workInfo.interest"
           name="interests"
-          class="w-full rounded-lg border-gray-300 focus:ring-[#f2e7ac] focus:border-[#f2e7ac] font-light text-lg"
-        ></textarea>
+          class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm font-light focus:outline-none focus:ring-2 focus:ring-[#f2cb05]/30 focus:border-[#f2cb05] transition-all resize-none"
+          placeholder="ระบุความสนใจ"></textarea>
       </div>
 
       <!-- สาขาที่เชี่ยวชาญ -->
       <div>
-        <div class="flex items-center">
-          <label class="block text-xl text-gray-700 mb-1">
-            สาขาที่เชี่ยวชาญ
-          </label>
-          <p class="text-lg text-red-600 mb-1 ml-3">*</p>
-        </div>
-
-        <div
-          class="flex flex-wrap items-center gap-2 border rounded-md px-2 py-2 min-h-12 text-lg font-light mt-2 mb-6"
-        >
+        <label class="block text-sm font-semibold text-gray-600 mb-1.5">
+          สาขาที่เชี่ยวชาญ <span class="text-red-500 ml-1">*</span>
+        </label>
+        <div class="flex flex-wrap items-center gap-2 border border-gray-200 rounded-xl px-4 py-2.5 min-h-11.5 focus-within:ring-2 focus-within:ring-[#f2cb05]/30 focus-within:border-[#f2cb05] transition-all">
           <span
             *ngFor="let m of selectedMajors; let i = index"
-            class="flex items-center gap-2 px-2 py-1 text-[#394250] rounded-full bg-[#f2e7ac]"
-          >
+            class="inline-flex items-center gap-1.5 px-3 py-1 bg-[#f2e7ac] text-[#394250] text-sm rounded-full">
             {{ m.expertise }}
-
-            <button
-              type="button"
-              (click)="removeMajor(i)"
-              class="text-red-400 hover:text-white text-base cursor-pointer"
-            >
-              ✕
-            </button>
+            <button type="button" (click)="removeMajor(i)"
+              class="text-[#394250]/50 hover:text-red-500 transition-colors cursor-pointer text-xs">✕</button>
           </span>
-
           <input
             name="majorInput"
             [(ngModel)]="majorInput"
             (keydown)="addMajor($event)"
             [attr.size]="majorInput.length || 1"
-            class="outline-none font-light text-lg min-w-37.5"
-            placeholder="พิมพ์แล้วกด Enter..."
-          />
+            class="outline-none text-sm font-light flex-1 min-w-35 bg-transparent"
+            placeholder="พิมพ์แล้วกด Enter..." />
         </div>
       </div>
 
-      <!-- วันที่เริ่มงาน -->
-      <div class="grid grid-cols-2 gap-5">
+      <!-- ===== Section: วันที่ ===== -->
+      <div class="flex items-center gap-3 text-xs font-semibold uppercase tracking-widest text-gray-400 before:flex-1 before:h-px before:bg-gray-100 after:flex-1 after:h-px after:bg-gray-100">
+        ระยะเวลาการทำงาน
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- วันที่เริ่มงาน -->
         <div>
-          <label class="block text-gray-700 mb-1"
-            >วันที่เริ่มงาน</label
-          >
+          <label class="block text-sm font-semibold text-gray-600 mb-1.5">วันที่เริ่มงาน</label>
           <input
             type="date"
             [(ngModel)]="workInfo.work_start_date"
             (change)="calculateYearsOfService()"
             name="startDate"
-            class="w-full rounded-lg font-light text-lg border-gray-300 focus:ring-[#f2e7ac] focus:border-[#f2e7ac]"
-          />
+            class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm font-light focus:outline-none focus:ring-2 focus:ring-[#f2cb05]/30 focus:border-[#f2cb05] transition-all" />
         </div>
+
         <!-- อายุงาน -->
         <div>
-          <label class="block text-gray-700 mb-1">อายุงาน</label>
-          <input
-            type="number"
-            [(ngModel)]="workInfo.year_of_service"
-            name="year"
-            class="w-20 md:w-50 rounded-lg font-light text-lg border-gray-300 focus:ring-[#f2e7ac] focus:border-[#f2e7ac]"
-          />
-          <label class="ml-3">ปี</label>
+          <label class="block text-sm font-semibold text-gray-600 mb-1.5">อายุงาน</label>
+          <div class="flex items-center gap-3">
+            <input
+              type="number"
+              [(ngModel)]="workInfo.year_of_service"
+              name="year"
+              class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm font-light focus:outline-none focus:ring-2 focus:ring-[#f2cb05]/30 focus:border-[#f2cb05] transition-all text-center" />
+            <span class="text-sm text-gray-500 shrink-0">ปี</span>
+          </div>
         </div>
       </div>
 
-      <!-- Buttons -->
-      <div class="flex justify-center gap-4 pt-4">
+      <!-- ===== Buttons ===== -->
+      <div class="flex justify-center gap-3 pt-4 border-t border-gray-100">
         <button
           type="submit"
-          class="px-6 py-2 rounded-xl bg-[#f2e7ac] text-[#394250] hover:bg-[#f2cb05] hover:text-white shadow cursor-pointer"
           (click)="saveWork()"
-        >
+          class="inline-flex items-center gap-3 px-10 py-3.5 bg-linear-to-r from-[#f2cb05] to-[#e0b800] hover:from-[#e0b800] hover:to-[#f2cb05] text-[#394250] font-semibold text-base rounded-2xl shadow-lg shadow-yellow-200 hover:shadow-xl hover:-translate-y-0.5 transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#f2cb05]/50">
+          <i class="bi bi-floppy2 text-lg"></i>
           บันทึกข้อมูล
         </button>
-
         <button
           type="button"
-          class="px-6 py-2 rounded-xl bg-gray-200 hover:bg-gray-300 cursor-pointer"
           (click)="goBack()"
-        >
+          class="px-8 py-3.5 rounded-2xl border border-gray-200 text-gray-600 hover:bg-gray-50 text-base font-medium cursor-pointer transition-all">
           ยกเลิก
         </button>
       </div>
+
     </form>
   </div>
 </div>
