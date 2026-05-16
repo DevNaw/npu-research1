@@ -371,6 +371,21 @@
               >
               </apx-chart>
             </ng-container>
+
+            <!-- แสดง อื่นๆ ด้านล่างกราฟ -->
+            <div
+              *ngIf="otherSub"
+              class="mt-3 flex items-center justify-center gap-2 text-sm text-gray-500 border-t border-gray-100 pt-3"
+            >
+              <span
+                class="w-3 h-3 rounded-full bg-[#FF4560] inline-block"
+              ></span>
+              <span>{{ otherSub.label }}</span>
+              <span class="font-semibold text-[#394250]">{{
+                otherSub.value
+              }}</span>
+              <span>รายการ</span>
+            </div>
           </div>
         </div>
 

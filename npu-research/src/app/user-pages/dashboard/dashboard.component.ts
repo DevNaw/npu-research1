@@ -123,7 +123,7 @@ export class UserDashboardComponent implements OnInit {
   hasData = false;
 
   otherMajor: { label: string; value: number } | null = null;
-otherSub: { label: string; value: number } | null = null;  // ← เพิ่มบรรทัดนี้
+  otherSub: { label: string; value: number } | null = null; // ← เพิ่มบรรทัดนี้
 
   colorScheme: Color = {
     name: 'horizon',
@@ -146,14 +146,14 @@ otherSub: { label: string; value: number } | null = null;  // ← เพิ่�
   labelFormat = (name: string): string => {
     const item = this.single.find((d) => d.name === name);
     if (!item) return name;
-  
+
     const total = this.single.reduce((sum, d) => sum + d.value, 0);
     const percent = total > 0 ? ((item.value / total) * 100).toFixed(1) : '0';
-  
+
     const isMobile = window.innerWidth < 640;
     const maxLen = isMobile ? 4 : 6;
     const shortName = name.length > maxLen ? name.slice(0, maxLen) + '…' : name;
-  
+
     return `${shortName} ${percent}%`;
   };
 
@@ -535,107 +535,60 @@ otherSub: { label: string; value: number } | null = null;  // ← เพิ่�
   //   this.hasData = dataFord.reduce((sum, item) => sum + item.count, 0) > 0;
   // }
 
-  // changeTabForChart(tab: ResearchType): void {
-  //   this.selectedTab = tab;
-  //   const tabIndex = tab === 'PROJECT' ? 0 : tab === 'ARTICLE' ? 1 : 2;
-  
-  //   // ===== RADAR หลัก — กรอง "อื่นๆ" ออก =====
-  //   const majorLabels = this.dashboardData?.radar.major.labels || [];
-  //   const majorValues = (this.dashboardData?.radar.major.datasets[tabIndex]?.data ?? []) as number[];
-  
-  //   const majorPairs = majorLabels.map((label, i) => ({
-  //     label,
-  //     value: majorValues[i] ?? 0,
-  //   }));
-  
-  //   const majorFiltered = majorPairs.filter(p => !p.label.includes('อื่น'));
-  //   this.otherMajor = majorPairs.find(p => p.label.includes('อื่น')) ?? null;
-  
-  //   this.fullLabels = majorFiltered.map(p => p.label);
-  //   this.radarChartOptions = {
-  //     ...this.radarChartOptions,
-  //     labels: majorFiltered.map(p => this.shortLabel(p.label)),
-  //     series: [{ name: 'จำนวนงานวิจัย', data: majorFiltered.map(p => p.value) }],
-  //   };
-  
-  //   // ===== RADAR ย่อย — กรอง "อื่นๆ" ออก =====
-  //   const subLabels = this.dashboardData?.radar.sub.labels || [];
-  //   const subValues = (this.dashboardData?.radar.sub.datasets[tabIndex]?.data ?? []) as number[];
-  
-  //   const subPairs = subLabels.map((label, i) => ({
-  //     label,
-  //     value: subValues[i] ?? 0,
-  //   }));
-  
-  //   const subFiltered = subPairs.filter(p => !p.label.includes('อื่น'));
-  //   this.otherSub = subPairs.find(p => p.label.includes('อื่น')) ?? null;
-  
-  //   this.fullLabelsSub = subFiltered.map(p => p.label);
-  //   this.radarChartOptionsSub = {
-  //     ...this.radarChartOptionsSub,
-  //     labels: subFiltered.map(p => this.shortLabel(p.label)),
-  //     series: [{ name: 'จำนวนงานวิจัย', data: subFiltered.map(p => p.value) }],
-  //   };
-  
-  //   // ===== PIE (ngx-charts) =====
-  //   const ford = this.dashboardData?.ford || {
-  //     project: [],
-  //     article: [],
-  //     innovation: [],
-  //   };
-  //   const dataFord =
-  //     tab === 'PROJECT'
-  //       ? ford.project
-  //       : tab === 'ARTICLE'
-  //       ? ford.article
-  //       : ford.innovation;
-  
-  //   this.loading = true;
-  //   setTimeout(() => {
-  //     this.single = dataFord.map((item) => ({
-  //       name: item.name,
-  //       value: item.count,
-  //       extra: { percent: item.percent },
-  //     }));
-  //     this.initChartsOECD();
-  //     this.loading = false;
-  //   }, 0);
-  
-  //   this.hasData = dataFord.reduce((sum, item) => sum + item.count, 0) > 0;
-  // }
 
   changeTabForChart(tab: ResearchType): void {
     this.selectedTab = tab;
     const tabIndex = tab === 'PROJECT' ? 0 : tab === 'ARTICLE' ? 1 : 2;
-  
+
     // ===== RADAR หลัก — กรอง "อื่นๆ" ออก =====
     const majorLabels = this.dashboardData?.radar.major.labels || [];
-    const majorValues = (this.dashboardData?.radar.major.datasets[tabIndex]?.data ?? []) as number[];
-  
+    const majorValues = (this.dashboardData?.radar.major.datasets[tabIndex]
+      ?.data ?? []) as number[];
+
     const majorPairs = majorLabels.map((label, i) => ({
       label,
       value: majorValues[i] ?? 0,
     }));
-  
-    const majorFiltered = majorPairs.filter(p => !p.label.includes('อื่น'));
-    this.otherMajor = majorPairs.find(p => p.label.includes('อื่น')) ?? null;
-  
-    this.fullLabels = majorFiltered.map(p => p.label);
+
+    const majorFiltered = majorPairs.filter((p) => p.label.trim() !== 'อื่นๆ');
+    this.otherMajor =
+      majorPairs.find((p) => p.label.trim() === 'อื่นๆ') ?? null;
+
+    this.fullLabels = majorFiltered.map((p) => p.label);
     this.radarChartOptions = {
       ...this.radarChartOptions,
-      labels: majorFiltered.map(p => this.shortLabel(p.label)),
-      series: [{ name: 'จำนวนงานวิจัย', data: majorFiltered.map(p => p.value) }],
+      labels: majorFiltered.map((p) => this.shortLabel(p.label)),
+      series: [
+        { name: 'จำนวนงานวิจัย', data: majorFiltered.map((p) => p.value) },
+      ],
     };
-  
-    // ===== RADAR ย่อย — เหมือนเดิม =====
+
+    // ===== RADAR ย่อย — กรอง "อื่นๆ" ออก =====
     const subLabels = this.dashboardData?.radar.sub.labels || [];
-    const subValues = this.dashboardData?.radar.sub.datasets[tabIndex]?.data || [];
-    this.fullLabelsSub = subLabels;
-    this.radarChartOptionsSub.labels = subLabels.map((l) => this.shortLabel(l));
-    this.radarChartOptionsSub.series = [
-      { name: 'จำนวนงานวิจัย', data: subValues as number[] },
-    ];
-  
+    const subValues =
+      this.dashboardData?.radar.sub.datasets[tabIndex]?.data || [];
+
+    const subPairs = subLabels.map((label, i) => ({
+      label,
+      value: (subValues as number[])[i] ?? 0,
+    }));
+
+    // ✅ เปลี่ยนจาก .includes('อื่น') เป็น === 'อื่นๆ'
+    const subFiltered = subPairs.filter((p) => p.label.trim() !== 'อื่นๆ');
+    this.otherSub = subPairs.find((p) => p.label.trim() === 'อื่นๆ') ?? null;
+
+    this.fullLabelsSub = subFiltered.map((p) => p.label);
+    this.radarChartOptionsSub = {
+      ...this.radarChartOptionsSub,
+      labels: subFiltered.map((p) => this.shortLabel(p.label)),
+      series: [
+        { name: 'จำนวนงานวิจัย', data: subFiltered.map((p) => p.value) },
+      ],
+    };
+
+    console.log('subFiltered:', subFiltered);
+    console.log('otherSub:', this.otherSub);
+
     // ===== PIE (ngx-charts) =====
     const ford = this.dashboardData?.ford || {
       project: [],
@@ -648,7 +601,7 @@ otherSub: { label: string; value: number } | null = null;  // ← เพิ่�
         : tab === 'ARTICLE'
         ? ford.article
         : ford.innovation;
-  
+
     this.loading = true;
     setTimeout(() => {
       this.single = dataFord.map((item) => ({
@@ -659,7 +612,7 @@ otherSub: { label: string; value: number } | null = null;  // ← เพิ่�
       this.initChartsOECD();
       this.loading = false;
     }, 0);
-  
+
     this.hasData = dataFord.reduce((sum, item) => sum + item.count, 0) > 0;
   }
 
@@ -828,45 +781,34 @@ otherSub: { label: string; value: number } | null = null;  // ← เพิ่�
     });
   }
 
-  // @HostListener('window:resize')
-  // setChartView(): void {
-  //   const w = window.innerWidth;
-  //   if (w < 640) {
-  //     this.chartView = [w - 40, 260];
-  //   } else if (w < 1024) {
-  //     this.chartView = [420, 320];
-  //   } else {
-  //     this.chartView = [0, 350];
-  //   }
-  // }
   @HostListener('window:resize')
-setChartView(): void {
-  const w = window.innerWidth;
-  if (w < 640) {
-    // มือถือ: เล็กลง ให้มีพื้นที่ label รอบๆ
-    this.chartView = [w - 120, 240];
-  } else if (w < 1024) {
-    this.chartView = [380, 300];
-  } else {
-    this.chartView = [0, 350];
+  setChartView(): void {
+    const w = window.innerWidth;
+    if (w < 640) {
+      // มือถือ: เล็กลง ให้มีพื้นที่ label รอบๆ
+      this.chartView = [w - 120, 240];
+    } else if (w < 1024) {
+      this.chartView = [380, 300];
+    } else {
+      this.chartView = [0, 350];
+    }
   }
-}
 
   onChartSelect(event: any): void {
     const item = this.single.find((d) => d.name === event.name);
     if (!item) return;
-  
+
     const total = this.single.reduce((sum, d) => sum + d.value, 0);
     const percent = total > 0 ? ((item.value / total) * 100).toFixed(1) : '0';
-  
+
     const colorMap: Record<string, string> = {
       โครงการวิจัย: '#038FFB',
       บทความ: '#06E396',
       นวัตกรรม: '#FEB119',
     };
-  
+
     const color = colorMap[item.name] ?? '#394250';
-  
+
     Swal.fire({
       title: item.name,
       html: `
