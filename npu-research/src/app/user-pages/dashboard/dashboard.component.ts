@@ -586,9 +586,6 @@ export class UserDashboardComponent implements OnInit {
       ],
     };
 
-    console.log('subFiltered:', subFiltered);
-    console.log('otherSub:', this.otherSub);
-
     // ===== PIE (ngx-charts) =====
     const ford = this.dashboardData?.ford || {
       project: [],

@@ -220,7 +220,7 @@ export class PerformanceDetailByDepartmentComponent {
         break;
 
       case 'project':
-        this.researchData = res.data.projectDetail; console.log(this.researchData);
+        this.researchData = res.data.projectDetail;
         this.ownerProject = res.data.owner;
         this.oecdUI = this.mapOecdApiToUI(this.researchData?.oecd || []);
         this.safeDescription = this.formatAbstract(
