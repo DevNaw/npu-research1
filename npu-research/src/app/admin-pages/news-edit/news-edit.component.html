@@ -1,176 +1,202 @@
-<div class="mx-auto bg-gray-100 p-5 md:p-10 text-2xl font-medium text-[#394250]">
-  <!-- Header -->
-  <div class="bg-white rounded-lg">
-    <div
-      class="bg-gray-700 text-white px-6 py-4 flex items-center gap-3 rounded-t-lg border"
+<div class="min-h-screen bg-slate-50 px-4 py-6 md:px-10 md:py-8 text-[#394250]">
+
+  <!-- Page Header -->
+  <div class="flex justify-start mb-4">
+    <button
+      type="button"
+      (click)="goBack()"
+      class="flex items-center gap-2 text-sm md:text-base text-gray-500 hover:text-[#394250] transition-colors cursor-pointer group"
     >
-      <i class="bi bi-plus-circle text-xl"></i>
-      <h2 class="text-2xl md:text-3xl">
-        {{ isEdit ? "แก้ไขข่าวประชาสัมพันธ์" : "เพิ่มข่าวประชาสัมพันธ์" }}
-      </h2>
+    <span class="w-7 h-7 rounded-full bg-[#F2CB05] flex items-center justify-center text-[#394250] group-hover:bg-[#e0b800] transition-colors">
+      <i class="bi bi-arrow-left text-sm"></i>
+    </span>
+      <span>ย้อนกลับ</span>
+    </button>
+  </div>
+
+  <!-- Main Card -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+
+    <!-- Yellow Banner -->
+    <div class="bg-linear-to-r from-[#F2CB05] via-[#F2D742] to-[#F2E7AC] px-6 md:px-10 py-6 md:py-7">
+      <div class="flex items-center gap-4">
+        <div class="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-white/95 flex items-center justify-center shadow-md shrink-0">
+          <i class="bi bi-megaphone-fill text-[#394250] text-2xl md:text-3xl"></i>
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2 flex-wrap">
+            <h1 class="text-xl md:text-2xl lg:text-3xl font-bold text-[#394250] leading-snug">
+              {{ isEdit ? "แก้ไขข่าวประชาสัมพันธ์" : "เพิ่มข่าวประชาสัมพันธ์" }}
+            </h1>
+            <span *ngIf="isEdit" class="text-[10px] md:text-xs font-semibold px-2.5 py-0.5 rounded-full bg-white/70 text-[#394250] border border-white/50">
+              Edit mode
+            </span>
+          </div>
+          <p class="text-sm md:text-base text-[#394250]/70 mt-0.5">
+            {{ isEdit ? "ตรวจสอบและแก้ไขข้อมูลข่าวประชาสัมพันธ์" : "กรอกข้อมูลข่าวและรูปภาพประกอบ" }}
+          </p>
+        </div>
+      </div>
     </div>
 
-    <form
-      *ngIf="newsForm"
-      [formGroup]="newsForm"
-      (ngSubmit)="submit()"
-      class="p-3 md:p-6 space-y-3 md:space-y-6"
-    >
-      <!-- Body -->
-      <div class="p-3 md:p-6 space-y-3 md:space-y-6">
-        <!-- หัวข้อข่าว -->
-        <div>
-          <label class="block mb-1">
-            หัวข้อข่าว <span class="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
-            formControlName="title"
-            placeholder="หัวข้อข่าว"
-            class="w-full border rounded-md px-3 text-xl font-light py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
-          />
+    <!-- Form Body -->
+    <form *ngIf="newsForm" [formGroup]="newsForm" (ngSubmit)="submit()">
+      <div class="p-6 md:px-10 md:py-8">
+
+        <!-- SECTION: ข้อมูลข่าว -->
+        <div class="flex items-center gap-4 mb-5">
+          <div class="flex-1 h-px bg-gray-200"></div>
+          <span class="text-sm text-gray-400 tracking-wider whitespace-nowrap">ข้อมูลข่าวประชาสัมพันธ์</span>
+          <div class="flex-1 h-px bg-gray-200"></div>
         </div>
 
-        <!-- วันที่ประกาศ + วันที่สิ้นสุด -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="space-y-5 mb-8">
+          <!-- หัวข้อข่าว -->
           <div>
-            <label class="block mb-1">
-              วันที่ประกาศ <span class="text-red-500">*</span>
+            <label class="block text-sm font-medium text-[#394250] mb-2">
+              หัวข้อข่าว <span class="text-red-500">*</span>
             </label>
-            <div class="relative">
+            <input
+              type="text"
+              formControlName="title"
+              placeholder="หัวข้อข่าว"
+              class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm font-light bg-white outline-none focus:border-[#F2CB05] focus:ring-2 focus:ring-[#F2CB05]/20 transition"
+            />
+            <p *ngIf="newsForm.get('title')?.invalid && newsForm.get('title')?.touched"
+               class="text-red-500 text-xs mt-1.5 flex items-center gap-1">
+              <i class="bi bi-exclamation-circle"></i> กรุณากรอกหัวข้อข่าว
+            </p>
+          </div>
+
+          <!-- วันที่ -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-[#394250] mb-2">
+                วันที่ประกาศ <span class="text-red-500">*</span>
+              </label>
               <input
                 type="date"
                 formControlName="publishedAt"
-                class="w-full text-xl font-light border rounded-md px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+                class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm font-light bg-white outline-none focus:border-[#F2CB05] focus:ring-2 focus:ring-[#F2CB05]/20 transition"
               />
-            </div>
-          </div>
-
-          <div>
-            <label class="block mb-1">
-              วันที่สิ้นสุด <span class="text-red-500">*</span>
-            </label>
-            <input
-              type="date"
-              formControlName="expiresAt"
-              class="w-full border text-xl font-light rounded-md px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
-            />
-          </div>
-        </div>
-
-        <!-- รายละเอียดข่าว -->
-        <div>
-          <label class="block mb-1 text-gray-700">
-            รายละเอียดข่าว <span class="text-red-500">*</span>
-          </label>
-
-          <div class="NgxEditor__Wrapper text-xl font-light">
-            <ngx-editor-menu [editor]="editor" [toolbar]="toolbar">
-            </ngx-editor-menu>
-            <ngx-editor
-              [editor]="editor"
-              formControlName="description"
-              [disabled]="false"
-              [placeholder]="'รายละเอียดข่าว...'"
-            ></ngx-editor>
-          </div>
-        </div>
-
-        <!-- รูปภาพหลัก -->
-        <div>
-          <label class="block mb-2">
-            รูปภาพข่าว <span class="text-red-500">*</span>
-          </label>
-
-          <label
-            class="flex flex-col items-center justify-center w-full border-2 border-dashed border-blue-300 rounded-md cursor-pointer hover:bg-blue-50 relative overflow-hidden"
-            [ngClass]="{ 'h-52': !coverPreview }"
-          >
-            <!-- กรณีไม่มีรูป -->
-            <div *ngIf="!coverPreview" class="text-center text-xl font-light">
-              <i class="bi bi-image text-5xl text-gray-400"></i>
-              <p class="mt-2 text-gray-600">คลิกเพื่อเลือกรูปภาพ</p>
-              <p class="text-xl text-gray-500">
-                รองรับไฟล์: รูปภาพ (ขนาดไม่เกิน 10MB)
+              <p *ngIf="newsForm.get('publishedAt')?.invalid && newsForm.get('publishedAt')?.touched"
+                 class="text-red-500 text-xs mt-1.5 flex items-center gap-1">
+                <i class="bi bi-exclamation-circle"></i> กรุณาเลือกวันที่ประกาศ
               </p>
             </div>
-
-            <!-- กรณีมีรูป -->
-            <img
-              *ngIf="coverPreview"
-              [src]="coverPreview"
-              class="w-full h-auto rounded-md"
-            />
-
-            <input
-              type="file"
-              class="hidden"
-              (change)="onCoverChange($event)"
-              accept="image/*"
-            />
-          </label>
-        </div>
-
-        <!-- แกลลอรี่ -->
-        <div>
-          <label class="block mb-2 text-xl font-light">
-            แกลลอรี่ <span class="text-red-500">*</span>
-          </label>
-
-          <label
-            class="w-full border-2 border-dashed border-blue-300 rounded-md cursor-pointer hover:bg-blue-50 p-4 block"
-            [ngClass]="{
-              'h-44 flex flex-col items-center justify-center':
-                galleryPreview.length === 0
-            }"
-          >
-            <!-- กรณีไม่มีรูป -->
-            <div *ngIf="galleryPreview.length === 0" class="text-center text-xl font-light">
-              <i class="bi bi-images text-5xl text-gray-400"></i>
-              <p class="mt-2 text-gray-600">คลิกเพื่อเลือกรูปภาพ</p>
-            </div>
-
-            <!-- กรณีมีรูป -->
-            <div
-              *ngIf="galleryPreview.length > 0"
-              class="grid grid-cols-2 md:grid-cols-4 gap-3"
-            >
-              <img
-                *ngFor="let img of galleryPreview"
-                [src]="img"
-                class="w-full h-32 object-cover rounded-md border"
+            <div>
+              <label class="block text-sm font-medium text-[#394250] mb-2">
+                วันที่สิ้นสุด <span class="text-red-500">*</span>
+              </label>
+              <input
+                type="date"
+                formControlName="expiresAt"
+                class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm font-light bg-white outline-none focus:border-[#F2CB05] focus:ring-2 focus:ring-[#F2CB05]/20 transition"
               />
+              <p *ngIf="newsForm.get('expiresAt')?.invalid && newsForm.get('expiresAt')?.touched"
+                 class="text-red-500 text-xs mt-1.5 flex items-center gap-1">
+                <i class="bi bi-exclamation-circle"></i> กรุณาเลือกวันที่สิ้นสุด
+              </p>
             </div>
-
-            <input
-              type="file"
-              multiple
-              class="hidden"
-              (change)="onGalleryChange($event)"
-              accept="image/*"
-            />
-          </label>
+          </div>
         </div>
 
-        <!-- ปุ่มล่าง -->
-        <div class="flex justify-end gap-3 pt-4 text-xl font-medium">
+        <!-- SECTION: รายละเอียดข่าว -->
+        <div class="flex items-center gap-4 mb-5">
+          <div class="flex-1 h-px bg-gray-200"></div>
+          <span class="text-sm text-gray-400 tracking-wider whitespace-nowrap">รายละเอียดข่าว</span>
+          <div class="flex-1 h-px bg-gray-200"></div>
+        </div>
+
+        <div class="mb-8">
+          <label class="block text-sm font-medium text-[#394250] mb-2">
+            รายละเอียดข่าว <span class="text-red-500">*</span>
+          </label>
+          <div class="border border-gray-200 rounded-xl overflow-hidden focus-within:border-[#F2CB05] focus-within:ring-2 focus-within:ring-[#F2CB05]/20 transition">
+            <div class="NgxEditor__Wrapper text-sm font-light">
+              <ngx-editor-menu [editor]="editor" [toolbar]="toolbar"></ngx-editor-menu>
+              <ngx-editor
+                [editor]="editor"
+                formControlName="description"
+                [disabled]="false"
+                [placeholder]="'รายละเอียดข่าว...'"
+              ></ngx-editor>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION: รูปภาพ -->
+        <div class="flex items-center gap-4 mb-5">
+          <div class="flex-1 h-px bg-gray-200"></div>
+          <span class="text-sm text-gray-400 tracking-wider whitespace-nowrap">รูปภาพประกอบ</span>
+          <div class="flex-1 h-px bg-gray-200"></div>
+        </div>
+
+        <div class="space-y-5 mb-8">
+          <!-- รูปภาพหลัก -->
+          <div>
+            <label class="block text-sm font-medium text-[#394250] mb-2">
+              รูปภาพข่าว (หลัก) <span class="text-red-500">*</span>
+            </label>
+            <label
+              class="flex flex-col items-center justify-center w-full border-2 border-dashed border-gray-200 rounded-xl cursor-pointer hover:border-[#F2CB05] hover:bg-[#F2E7AC]/10 transition-colors relative overflow-hidden"
+              [ngClass]="{ 'h-52': !coverPreview }"
+            >
+              <div *ngIf="!coverPreview" class="text-center py-8">
+                <div class="w-14 h-14 rounded-2xl bg-gray-100 flex items-center justify-center mx-auto mb-3">
+                  <i class="bi bi-image text-3xl text-gray-400"></i>
+                </div>
+                <p class="text-sm font-medium text-gray-600">คลิกเพื่อเลือกรูปภาพ</p>
+                <p class="text-xs text-gray-400 mt-1">รองรับไฟล์รูปภาพ ขนาดไม่เกิน 10MB</p>
+              </div>
+              <img *ngIf="coverPreview" [src]="coverPreview" class="w-full h-auto rounded-xl" />
+              <input type="file" class="hidden" (change)="onCoverChange($event)" accept="image/*" />
+            </label>
+          </div>
+
+          <!-- แกลลอรี่ -->
+          <div>
+            <label class="block text-sm font-medium text-[#394250] mb-2">
+              แกลลอรี่ <span class="text-red-500">*</span>
+            </label>
+            <label
+              class="w-full border-2 border-dashed border-gray-200 rounded-xl cursor-pointer hover:border-[#F2CB05] hover:bg-[#F2E7AC]/10 transition-colors block"
+              [ngClass]="{ 'flex flex-col items-center justify-center h-44': galleryPreview.length === 0 }"
+            >
+              <div *ngIf="galleryPreview.length === 0" class="text-center">
+                <div class="w-14 h-14 rounded-2xl bg-gray-100 flex items-center justify-center mx-auto mb-3">
+                  <i class="bi bi-images text-3xl text-gray-400"></i>
+                </div>
+                <p class="text-sm font-medium text-gray-600">คลิกเพื่อเลือกรูปภาพหลายรูป</p>
+                <p class="text-xs text-gray-400 mt-1">สามารถเลือกได้หลายไฟล์พร้อมกัน</p>
+              </div>
+              <div *ngIf="galleryPreview.length > 0" class="p-4 grid grid-cols-2 md:grid-cols-4 gap-3">
+                <img *ngFor="let img of galleryPreview" [src]="img"
+                     class="w-full h-32 object-cover rounded-xl border border-gray-100 shadow-sm" />
+              </div>
+              <input type="file" multiple class="hidden" (change)="onGalleryChange($event)" accept="image/*" />
+            </label>
+          </div>
+        </div>
+
+        <!-- Submit -->
+        <div class="flex flex-col sm:flex-row justify-end gap-3 pt-6 border-t border-gray-100">
           <button
             type="button"
             (click)="goBack()"
-            class="px-2 md:px-4 py-2 rounded-md bg-gray-300 hover:bg-gray-400 text-gray-800 flex items-center gap-2 cursor-pointer"
+            class="px-6 py-3 rounded-xl border border-gray-200 bg-white text-gray-600 font-medium text-sm hover:bg-gray-50 cursor-pointer transition"
           >
-            <i class="bi bi-x-circle"></i>
             ยกเลิก
           </button>
-
           <button
             type="submit"
-            class="px-2 md:px-4 py-2 rounded-md bg-[#f2e7ac] hover:bg-[#f2cb05] text-[#394250] hover:text-white flex items-center gap-2 shadow cursor-pointer"
+            class="flex items-center justify-center gap-2 px-8 py-3 bg-linear-to-r from-[#F2CB05] to-[#e0b800] hover:from-[#e0b800] hover:to-[#F2CB05] text-[#394250] text-sm font-semibold rounded-xl shadow-sm transition-all cursor-pointer"
           >
-            <i class="bi bi-floppy"></i>
-            บันทึก
+            <i class="bi" [ngClass]="isEdit ? 'bi-pencil-square' : 'bi-check-circle-fill'"></i>
+            <span>{{ isEdit ? "อัปเดตข้อมูล" : "บันทึกข้อมูล" }}</span>
           </button>
         </div>
+
       </div>
     </form>
   </div>
