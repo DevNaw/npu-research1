@@ -1,106 +1,159 @@
-<footer class="bg-gray-900 text-gray-200 pt-10 px-4 font-medium text-2xl">
-  <!-- Top -->
-  <div class="mx-auto px-6">
+<footer class="relative bg-linear-to-br from-[#394250] via-[#2a323d] to-[#1f2630] text-gray-200 font-medium overflow-hidden">
+  <!-- Decorative top accent line -->
+  <div class="h-1 w-full bg-linear-to-r from-[#F2CB05] via-[#F2E7AC] to-[#F2CB05]"></div>
+
+  <!-- Decorative blob -->
+  <div class="absolute -top-20 -right-20 w-80 h-80 rounded-full bg-[#F2CB05]/5 blur-3xl pointer-events-none"></div>
+  <div class="absolute -bottom-20 -left-20 w-80 h-80 rounded-full bg-[#F2CB05]/5 blur-3xl pointer-events-none"></div>
+
+  <!-- ===== Top Section ===== -->
+  <div class="relative max-w-7xl mx-auto px-6 lg:px-8 pt-12 pb-8">
     <!-- Logo + Name -->
-    <div class="flex items-center gap-2 mb-2">
-      <img src="assets/logoNPU.png" alt="logo" class="h-12 w-auto shrink-0 sm:h-18" />
-      <div>
-        <h1 class="text-lg leading-none sm:text-base md:text-xl font-medium">
+    <div class="flex items-start gap-4 mb-8">
+      <div class="shrink-0 p-2 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10">
+        <img src="assets/logoNPU.png" alt="NPU Logo" class="h-14 w-auto sm:h-16" />
+      </div>
+      <div class="flex-1">
+        <h1 class="text-base sm:text-lg md:text-xl font-semibold text-white leading-tight">
           ระบบฐานข้อมูลเพื่องานวิจัยและงานบริการวิชาการ มนพ.
         </h1>
-        <p class="text-xs sm:text-sm md:text-xl text-gray-400">
+        <p class="text-xs sm:text-sm md:text-base text-[#F2CB05] mt-1 font-medium">
           NPU Research & Academic Service Database
         </p>
       </div>
     </div>
 
-    <hr class="border-gray-700 my-4" />
-
-    <!-- Content -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
-      <!-- About -->
+    <!-- ===== Content Grid ===== -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12 pt-8 border-t border-white/10">
+      <!-- About + Social -->
       <div class="space-y-6">
-        <p class="text-lg leading-relaxed text-gray-300">
-          “เป็นระบบช่วยในการจัดการงานวิจัยและส่งเสริมองค์ความรู้
-          เพื่อนำไปสู่การใช้ประโยชน์ในชุมชน สังคม และประเทศชาติ”
-        </p>
+        <div class="relative pl-4 border-l-2 border-[#F2CB05]">
+          <p class="text-sm md:text-base leading-relaxed text-gray-300 italic">
+            "เป็นระบบช่วยในการจัดการงานวิจัยและส่งเสริมองค์ความรู้
+            เพื่อนำไปสู่การใช้ประโยชน์ในชุมชน สังคม และประเทศชาติ"
+          </p>
+        </div>
 
-        <!-- Social -->
-        <div class="flex items-center gap-5">
-          <a class="text-gray-400 text-2xl hover:text-blue-600 transition hover:scale-110">
-            <i class="bi bi-facebook"></i>
-          </a>
-          <a class="text-gray-400 text-2xl hover:text-pink-500 transition hover:scale-110">
-            <i class="bi bi-instagram"></i>
-          </a>
-          <a class="text-gray-400 text-2xl hover:text-green-500 transition hover:scale-110">
-            <i class="bi bi-line"></i>
-          </a>
-          <a class="text-gray-400 text-2xl hover:text-red-600 transition hover:scale-110">
-            <i class="bi bi-youtube"></i>
-          </a>
+        <!-- Social Icons -->
+        <div>
+          <p class="text-xs uppercase tracking-widest text-gray-400 mb-3 font-semibold">Follow Us</p>
+          <div class="flex items-center gap-2">
+            <a class="group w-10 h-10 rounded-full bg-white/5 hover:bg-blue-600 border border-white/10 hover:border-blue-600 flex items-center justify-center text-gray-300 hover:text-white transition-all duration-300 hover:-translate-y-1 cursor-pointer">
+              <i class="bi bi-facebook text-base"></i>
+            </a>
+            <a class="group w-10 h-10 rounded-full bg-white/5 hover:bg-linear-to-br hover:from-purple-500 hover:via-pink-500 hover:to-orange-400 border border-white/10 hover:border-transparent flex items-center justify-center text-gray-300 hover:text-white transition-all duration-300 hover:-translate-y-1 cursor-pointer">
+              <i class="bi bi-instagram text-base"></i>
+            </a>
+            <a class="group w-10 h-10 rounded-full bg-white/5 hover:bg-green-500 border border-white/10 hover:border-green-500 flex items-center justify-center text-gray-300 hover:text-white transition-all duration-300 hover:-translate-y-1 cursor-pointer">
+              <i class="bi bi-line text-base"></i>
+            </a>
+            <a class="group w-10 h-10 rounded-full bg-white/5 hover:bg-red-600 border border-white/10 hover:border-red-600 flex items-center justify-center text-gray-300 hover:text-white transition-all duration-300 hover:-translate-y-1 cursor-pointer">
+              <i class="bi bi-youtube text-base"></i>
+            </a>
+          </div>
         </div>
       </div>
 
       <!-- Contact -->
-      <div>
-        <h2 class="text-2xl mb-4">ติดต่อเรา</h2>
+      <div class="space-y-4">
+        <div class="flex items-center gap-2 mb-4">
+          <div class="w-8 h-8 rounded-lg bg-[#F2CB05]/20 flex items-center justify-center">
+            <i class="bi bi-geo-alt-fill text-[#F2CB05]"></i>
+          </div>
+          <h2 class="text-base font-semibold text-white uppercase tracking-wider">ติดต่อเรา</h2>
+        </div>
 
-        <p class="text-lg text-gray-300">
-          สำนักงานอธิการบดี มหาวิทยาลัยนครพนม
-        </p>
-        <p class="text-lg text-gray-300">
-          103 หมู่ที่ 3 ถนนชยางกูร ตำบลขามเฒ่า อำเภอเมือง
-        </p>
-        <p class="text-lg text-gray-300 mb-4">
-          จังหวัดนครพนม 48000
-        </p>
+        <div class="space-y-2 text-sm md:text-base text-gray-300 leading-relaxed">
+          <p class="font-medium text-white">สำนักงานอธิการบดี มหาวิทยาลัยนครพนม</p>
+          <p>103 หมู่ที่ 3 ถนนชยางกูร</p>
+          <p>ตำบลขามเฒ่า อำเภอเมือง</p>
+          <p>จังหวัดนครพนม 48000</p>
+        </div>
 
-        <div class="space-y-2 text-lg">
-          <p class="flex items-center gap-2">
-            <i class="bi bi-telephone"></i> 0 4253 2477
-          </p>
-          <p class="flex items-center gap-2">
-            <i class="bi bi-envelope"></i> saraban&#64;npu.ac.th
-          </p>
+        <div class="space-y-2 pt-3 border-t border-white/10">
+          <a class="group flex items-center gap-3 text-sm md:text-base text-gray-300 hover:text-[#F2CB05] transition-colors cursor-pointer">
+            <div class="w-8 h-8 rounded-lg bg-white/5 group-hover:bg-[#F2CB05]/20 flex items-center justify-center transition-colors">
+              <i class="bi bi-telephone-fill text-sm group-hover:text-[#F2CB05]"></i>
+            </div>
+            <span>0 4253 2477</span>
+          </a>
+          <a class="group flex items-center gap-3 text-sm md:text-base text-gray-300 hover:text-[#F2CB05] transition-colors cursor-pointer">
+            <div class="w-8 h-8 rounded-lg bg-white/5 group-hover:bg-[#F2CB05]/20 flex items-center justify-center transition-colors">
+              <i class="bi bi-envelope-fill text-sm group-hover:text-[#F2CB05]"></i>
+            </div>
+            <span>saraban&#64;npu.ac.th</span>
+          </a>
         </div>
       </div>
 
-      <!-- Info -->
-      <div>
-        <h2 class="text-2xl mb-4">ข้อมูลติดต่อ</h2>
+      <!-- Info + Policy -->
+      <div class="space-y-4">
+        <div class="flex items-center gap-2 mb-4">
+          <div class="w-8 h-8 rounded-lg bg-[#F2CB05]/20 flex items-center justify-center">
+            <i class="bi bi-info-circle-fill text-[#F2CB05]"></i>
+          </div>
+          <h2 class="text-base font-semibold text-white uppercase tracking-wider">ข้อมูลติดต่อ</h2>
+        </div>
 
-        <ul class="space-y-2 text-lg text-gray-300">
-          <li>งานบริหารงานวิจัย: 012-345678</li>
-          <li>งานการเงิน การคลังและพัสดุ: 012-345678</li>
-          <li>งานบริหารทั่วไป: 012-345678</li>
+        <ul class="space-y-3 text-sm md:text-base text-gray-300">
+          <li class="flex items-start gap-3">
+            <span class="w-1.5 h-1.5 rounded-full bg-[#F2CB05] mt-2 shrink-0"></span>
+            <div class="flex-1 flex flex-wrap justify-between gap-2">
+              <span>งานบริหารงานวิจัย</span>
+              <span class="text-white font-medium">012-345678</span>
+            </div>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="w-1.5 h-1.5 rounded-full bg-[#F2CB05] mt-2 shrink-0"></span>
+            <div class="flex-1 flex flex-wrap justify-between gap-2">
+              <span>งานการเงิน การคลังและพัสดุ</span>
+              <span class="text-white font-medium">012-345678</span>
+            </div>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="w-1.5 h-1.5 rounded-full bg-[#F2CB05] mt-2 shrink-0"></span>
+            <div class="flex-1 flex flex-wrap justify-between gap-2">
+              <span>งานบริหารทั่วไป</span>
+              <span class="text-white font-medium">012-345678</span>
+            </div>
+          </li>
         </ul>
 
-        <!-- Policy -->
-         <div>
+        <!-- Policy Links -->
+        <div class="pt-4 border-t border-white/10 space-y-2">
           <div
-          class="mt-4 items-center
-                 text-lg text-gray-300
-                 hover:text-yellow-400 transition cursor-pointer" (click)="openLink()"
-        >
-          <span>นโยบายความเป็นส่วนตัว</span>
+            (click)="openLink()"
+            class="group flex items-center gap-2 text-sm text-gray-300 hover:text-[#F2CB05] transition-colors cursor-pointer"
+          >
+            <i class="bi bi-shield-lock-fill text-xs"></i>
+            <span class="group-hover:underline underline-offset-2">นโยบายความเป็นส่วนตัว</span>
+            <i class="bi bi-arrow-up-right text-xs opacity-0 group-hover:opacity-100 transition-opacity"></i>
+          </div>
+          <div
+            (click)="openCookie()"
+            class="group flex items-center gap-2 text-sm text-gray-300 hover:text-[#F2CB05] transition-colors cursor-pointer"
+          >
+            <i class="bi bi-cookie text-xs"></i>
+            <span class="group-hover:underline underline-offset-2">Cookies & Storage Policy</span>
+            <i class="bi bi-arrow-up-right text-xs opacity-0 group-hover:opacity-100 transition-opacity"></i>
+          </div>
         </div>
-
-        <div
-          class="mt-2 items-center
-                 text-lg text-gray-300
-                 hover:text-yellow-400 transition cursor-pointer" (click)="openCookie()"
-        >
-          <span>Cookies & Storage Policy</span>
-        </div>
-         </div>
-        
       </div>
     </div>
   </div>
 
-  <!-- Bottom -->
-  <div class="border-t border-gray-700 mt-10 py-4 text-center text-sm text-gray-400">
-    Copyright &copy; 2026 NPU Research & Academic Service Database. All rights reserved.
+  <!-- ===== Bottom Bar ===== -->
+  <div class="relative border-t border-white/10 bg-black/20 backdrop-blur-sm">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <p class="text-xs sm:text-sm text-gray-400 text-center sm:text-left">
+        Copyright &copy; 2026
+        <span class="text-[#F2CB05] font-medium">NPU Research & Academic Service Database</span>.
+        All rights reserved.
+      </p>
+      <div class="flex items-center gap-2 text-xs text-gray-500">
+        <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+        <span>System Online</span>
+      </div>
+    </div>
   </div>
 </footer>

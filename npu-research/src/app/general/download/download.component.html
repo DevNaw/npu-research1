@@ -1,114 +1,140 @@
-<div
-  class="contain-content bg-gray-100 p-5 md:px-10 text-xl md:text-2xl text-[#394250] font-medium"
->
-  <div class="mx-auto md:py-6">
-    <!-- Title -->
-    <h1 class="text-3xl md:ml-5 mb-2">เอกสารดาวน์โหลด</h1>
+<div class="bg-linear-to-br from-slate-50 via-gray-50 to-slate-100 min-h-screen p-5 md:px-10 md:py-8 text-[#394250] font-medium">
+
+  <!-- ===== Header ===== -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 md:p-6 mb-6">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <!-- Title -->
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-xl bg-linear-to-br from-[#F2CB05] to-[#e0b800] flex items-center justify-center shadow-sm">
+          <i class="bi bi-cloud-arrow-down-fill text-white text-xl"></i>
+        </div>
+        <div>
+          <h1 class="text-xl md:text-2xl font-semibold text-black">เอกสารดาวน์โหลด</h1>
+          <p class="text-sm text-gray-500">เอกสารและแบบฟอร์มที่เกี่ยวข้อง</p>
+        </div>
+      </div>
+
+      <!-- Total Count Badge -->
+      <div class="flex items-center gap-2 px-4 py-2 bg-[#F2E7AC]/40 rounded-full text-sm">
+        <i class="bi bi-file-earmark-text text-[#F2CB05]"></i>
+        <span>ทั้งหมด <span class="font-semibold text-[#394250]">{{ filteredDocument.length || 0 }}</span> ไฟล์</span>
+      </div>
+    </div>
   </div>
 
-  <div
-    class="mb-10 mx-auto p-2 md:px-6 md:py-6 bg-white rounded-xl font-light text-lg"
-  >
-    <div class="mx-auto">
-      <!-- Table -->
-      <div class="overflow-x-auto bg-white shadow">
-        <table class="w-full min-w-225 table-auto">
-          <colgroup>
-            <col class="w-[5%]" />
-            <col class="w-[70%]" />
-            <col class="w-[25%]" />
-          </colgroup>
-          <thead class="bg-[#394250] text-white">
-            <tr>
-              <th class="p-1 md:p-2 text-center">#</th>
-              <th class="p-1 md:p-2 text-start">เอกสาร</th>
-              <th class="p-1 md:p-2 text-center">จำนวนครั้งดาวน์โหลด</th>
-            </tr>
-          </thead>
+  <!-- ===== Table Card ===== -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 md:p-6">
+    <div class="overflow-x-auto rounded-xl border border-gray-200 font-light">
+      <table class="w-full text-sm md:text-base min-w-225 table-auto">
+        <colgroup>
+          <col class="w-[5%]" />
+          <col class="w-[70%]" />
+          <col class="w-[25%]" />
+        </colgroup>
 
-          <tbody>
-            <tr
-              *ngFor="let doc of paginatedDocument; let i = index"
-              class="border-b border-gray-300 bg-gray-200 hover:bg-gray-50 transition"
-            >
-              <!-- Index -->
-              <td class="text-center text-gray-700">
-                {{ i + 1 }}
-              </td>
+        <!-- Header -->
+        <thead class="bg-linear-to-r from-[#394250] to-[#2a323d] text-white">
+          <tr>
+            <th class="p-3 text-center text-xs uppercase tracking-wider font-semibold">#</th>
+            <th class="p-3 text-left text-xs uppercase tracking-wider font-semibold">เอกสาร</th>
+            <th class="p-3 text-center text-xs uppercase tracking-wider font-semibold">จำนวนครั้งดาวน์โหลด</th>
+          </tr>
+        </thead>
 
-              <!-- Document -->
-              <td class="p-1 md:p-2">
+        <!-- Body -->
+        <tbody class="bg-white">
+          <tr
+            *ngFor="let doc of paginatedDocument; let i = index"
+            class="border-b border-gray-100 hover:bg-yellow-50/50 transition-colors group"
+          >
+            <!-- Index -->
+            <td class="p-3 text-center text-gray-500">
+              {{ i + 1 }}
+            </td>
+
+            <!-- Document -->
+            <td class="p-3">
+              <div class="flex items-center gap-3">
+                <!-- File icon -->
+                <div class="w-10 h-10 rounded-lg bg-blue-50 group-hover:bg-blue-100 flex items-center justify-center shrink-0 transition-colors">
+                  <i class="bi bi-file-earmark-text-fill text-blue-500 text-lg"></i>
+                </div>
+
+                <!-- File name + download link -->
                 <a
                   (click)="downloadFile(doc.docId, doc.file_url)"
                   target="_blank"
-                  class="text-[#16498C] hover:underline cursor-pointer font-regular"
+                  class="text-[#16498C] hover:underline cursor-pointer font-medium flex items-center gap-2 group/link"
                 >
-                  {{ doc.doc_name }}
+                  <span>{{ doc.doc_name }}</span>
+                  <i class="bi bi-download text-sm text-gray-400 group-hover/link:text-[#16498C] transition-colors"></i>
                 </a>
-              </td>
+              </div>
+            </td>
 
-              <!-- Download Count -->
-              <td class="p-1 md:p-2 text-center text-gray-700">
-                {{ doc.download_count | number }}
-              </td>
-            </tr>
+            <!-- Download Count -->
+            <td class="p-3 text-center">
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full text-xs font-medium">
+                <i class="bi bi-download"></i>
+                {{ doc.download_count | number }} ครั้ง
+              </span>
+            </td>
+          </tr>
 
-            <!-- No search result -->
-            <tr *ngIf="filteredDocument.length === 0">
-              <td colspan="3" class="text-center py-10 text-[#394250]">
-                <i class="bi bi-folder-x text-3xl block mb-2"></i>
-                ไม่พบเอกสาร
-              </td>
-            </tr>
-          </tbody>
-        </table>
+          <!-- No result -->
+          <tr *ngIf="filteredDocument.length === 0">
+            <td colspan="3" class="text-center py-12 text-gray-400">
+              <i class="bi bi-folder-x text-4xl block mb-2"></i>
+              <span class="text-sm">ไม่พบเอกสาร</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ===== Pagination ===== -->
+    <div class="flex flex-col md:flex-row md:justify-between md:items-center mt-4 gap-3 font-light">
+      <!-- Info -->
+      <div class="text-sm text-gray-500">
+        <span>หน้า <span class="text-[#394250] font-medium">{{ currentPage }}</span> จาก <span class="text-[#394250] font-medium">{{ totalPages }}</span></span>
       </div>
 
-      <div
-        class="flex flex-col md:flex-row md:justify-end md:items-center mt-4 gap-2 font-light"
-      >
-        <div class="flex items-center justify-end space-x-1">
-          <!-- Prev -->
+      <!-- Pagination Buttons -->
+      <div class="flex items-center justify-end space-x-1">
+        <button
+          (click)="changePage(currentPage - 1)"
+          [disabled]="currentPage === 1"
+          class="px-3 py-1.5 rounded-lg border border-gray-200 text-sm disabled:opacity-40 hover:bg-gray-50 cursor-pointer transition-colors"
+        >
+          <i class="bi bi-chevron-left"></i>
+        </button>
+
+        <ng-container *ngFor="let page of visiblePages">
           <button
-            (click)="changePage(currentPage - 1)"
-            [disabled]="currentPage === 1"
-            class="px-2 md:px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
+            *ngIf="page !== '...'"
+            (click)="changePage(+page)"
+            class="min-w-9 px-3 py-1.5 rounded-lg border text-sm transition-all cursor-pointer"
+            [ngClass]="{
+              'bg-[#F2CB05] text-white border-[#F2CB05] shadow-sm': currentPage === page,
+              'border-gray-200 hover:bg-gray-50 text-gray-700': currentPage !== page
+            }"
           >
-            ‹
+            {{ page }}
           </button>
 
-          <!-- Pages -->
-          <ng-container *ngFor="let page of visiblePages">
-            <!-- ปุ่มตัวเลข -->
-            <button
-              *ngIf="page !== '...'"
-              (click)="changePage(+page)"
-              class="px-2 md:px-3 py-1 rounded border text-sm transition cursor-pointer"
-              [ngClass]="{
-                'bg-[#f2e7ac] text-black': currentPage === page,
-                'hover:bg-gray-100': currentPage !== page
-              }"
-            >
-              {{ page }}
-            </button>
+          <span
+            *ngIf="page === '...'"
+            class="px-2 py-1 text-sm text-gray-400 select-none"
+          >...</span>
+        </ng-container>
 
-            <!-- จุด ... -->
-            <span
-              *ngIf="page === '...'"
-              class="px-2 py-1 text-sm text-gray-400 select-none"
-              >...</span
-            >
-          </ng-container>
-
-          <!-- Next -->
-          <button
-            (click)="changePage(currentPage + 1)"
-            [disabled]="currentPage === totalPages"
-            class="px-2 md:px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
-          >
-            ›
-          </button>
-        </div>
+        <button
+          (click)="changePage(currentPage + 1)"
+          [disabled]="currentPage === totalPages"
+          class="px-3 py-1.5 rounded-lg border border-gray-200 text-sm disabled:opacity-40 hover:bg-gray-50 cursor-pointer transition-colors"
+        >
+          <i class="bi bi-chevron-right"></i>
+        </button>
       </div>
     </div>
   </div>

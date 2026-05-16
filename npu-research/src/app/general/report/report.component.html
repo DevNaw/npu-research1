@@ -1,227 +1,459 @@
-<div class="p-6 space-y-6 bg-gray-50 min-h-screen text-2xl font-medium">
-  <!-- ===== Stat Cards ===== -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-    <div class="bg-white rounded-xl p-5 shadow items-center">
-      <p class="text-[#0F4C82]">นักวิจัยทั้งหมด</p>
-      <h3 class="text-2xl font-bold flex justify-end mr-6">
-        {{ statistic?.total_researcher }}
-      </h3>
-
-      <!-- <span class="text-green-500 text-sm">+12%</span> -->
+<div
+  class="bg-linear-to-br from-slate-50 via-gray-50 to-slate-100 min-h-screen text-[#394250] font-medium"
+>
+  <div class="mx-auto p-5 md:px-10 md:py-10 space-y-6 md:space-y-8">
+    <!-- ===== Page Header ===== -->
+    <div
+      class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 pb-2"
+    >
+      <div class="flex items-center gap-3">
+        <div
+          class="w-11 h-11 rounded-xl bg-linear-to-br from-[#F2CB05] to-[#e0b800] flex items-center justify-center shadow-sm"
+        >
+          <i class="bi bi-bar-chart-line-fill text-white text-xl"></i>
+        </div>
+        <div>
+          <h1 class="text-xl md:text-2xl font-semibold text-black">
+            ภาพรวมข้อมูลนักวิจัย
+          </h1>
+          <p class="text-sm text-gray-500">สถิติและผลงานวิชาการในระบบ</p>
+        </div>
+      </div>
     </div>
 
-    <div class="bg-white rounded-xl p-5 shadow items-center">
-      <p class="text-[#0F4C82]">โครงการวิจัยทั้งหมด</p>
-      <h3 class="text-2xl font-bold flex justify-end mr-6">
-        {{ statistic?.total_project }}
-      </h3>
+    <!-- ===== Stat Cards ===== -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-5">
+      <!-- นักวิจัย -->
+      <div
+        class="group relative overflow-hidden bg-white rounded-2xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 hover:-translate-y-1"
+      >
+        <div
+          class="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-[#F2CB05] to-[#F2E7AC]"
+        ></div>
+        <div
+          class="absolute -right-6 -top-6 w-24 h-24 rounded-full bg-[#F2E7AC]/30 group-hover:scale-150 transition-transform duration-500"
+        ></div>
+        <div class="relative">
+          <div class="flex items-start justify-between mb-6">
+            <div
+              class="w-14 h-14 rounded-xl bg-linear-to-br from-[#F2CB05] to-[#e0b800] flex items-center justify-center shadow-md shadow-yellow-200 group-hover:scale-110 transition-transform"
+            >
+              <i class="bi bi-people text-2xl text-white"></i>
+            </div>
+            <span
+              class="text-[10px] text-gray-400 uppercase tracking-widest font-semibold"
+              >Researchers</span
+            >
+          </div>
+          <p class="text-sm text-gray-500 mb-1">นักวิจัยทั้งหมด</p>
+          <h2 class="text-4xl font-bold text-black tabular-nums">
+            {{ statistic?.total_researcher || 0 }}
+          </h2>
+          <p class="text-xs text-gray-400 mt-2">จำนวนทั้งหมด</p>
+        </div>
+      </div>
 
-      <!-- <span class="text-green-500 text-sm">+8%</span> -->
+      <!-- โครงการวิจัย -->
+      <div
+        class="group relative overflow-hidden bg-white rounded-2xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 hover:-translate-y-1"
+      >
+        <div
+          class="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-blue-400 to-blue-200"
+        ></div>
+        <div
+          class="absolute -right-6 -top-6 w-24 h-24 rounded-full bg-blue-100/40 group-hover:scale-150 transition-transform duration-500"
+        ></div>
+        <div class="relative">
+          <div class="flex items-start justify-between mb-6">
+            <div
+              class="w-14 h-14 rounded-xl bg-linear-to-br from-blue-500 to-blue-400 flex items-center justify-center shadow-md shadow-blue-200 group-hover:scale-110 transition-transform"
+            >
+              <i class="bi bi-flask text-2xl text-white"></i>
+            </div>
+            <span
+              class="text-[10px] text-gray-400 uppercase tracking-widest font-semibold"
+              >Projects</span
+            >
+          </div>
+          <p class="text-sm text-gray-500 mb-1">โครงการวิจัยทั้งหมด</p>
+          <h2 class="text-4xl font-bold text-black tabular-nums">
+            {{ statistic?.total_project || 0 }}
+          </h2>
+          <p class="text-xs text-gray-400 mt-2">จำนวนทั้งหมด</p>
+        </div>
+      </div>
+
+      <!-- บทความ/วารสาร -->
+      <div
+        class="group relative overflow-hidden bg-white rounded-2xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 hover:-translate-y-1"
+      >
+        <div
+          class="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-emerald-400 to-teal-300"
+        ></div>
+        <div
+          class="absolute -right-6 -top-6 w-24 h-24 rounded-full bg-emerald-100/40 group-hover:scale-150 transition-transform duration-500"
+        ></div>
+        <div class="relative">
+          <div class="flex items-start justify-between mb-6">
+            <div
+              class="w-14 h-14 rounded-xl bg-linear-to-br from-emerald-500 to-teal-400 flex items-center justify-center shadow-md shadow-emerald-200 group-hover:scale-110 transition-transform"
+            >
+              <i class="bi bi-file-earmark-text text-2xl text-white"></i>
+            </div>
+            <span
+              class="text-[10px] text-gray-400 uppercase tracking-widest font-semibold"
+              >Articles</span
+            >
+          </div>
+          <p class="text-sm text-gray-500 mb-1">บทความ/วารสารทั้งหมด</p>
+          <h2 class="text-4xl font-bold text-black tabular-nums">
+            {{ statistic?.total_article || 0 }}
+          </h2>
+          <p class="text-xs text-gray-400 mt-2">จำนวนทั้งหมด</p>
+        </div>
+      </div>
+
+      <!-- นวัตกรรม -->
+      <div
+        class="group relative overflow-hidden bg-white rounded-2xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 hover:-translate-y-1"
+      >
+        <div
+          class="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-purple-400 to-pink-300"
+        ></div>
+        <div
+          class="absolute -right-6 -top-6 w-24 h-24 rounded-full bg-purple-100/40 group-hover:scale-150 transition-transform duration-500"
+        ></div>
+        <div class="relative">
+          <div class="flex items-start justify-between mb-6">
+            <div
+              class="w-14 h-14 rounded-xl bg-linear-to-br from-purple-500 to-pink-400 flex items-center justify-center shadow-md shadow-purple-200 group-hover:scale-110 transition-transform"
+            >
+              <i class="bi bi-award text-2xl text-white"></i>
+            </div>
+            <span
+              class="text-[10px] text-gray-400 uppercase tracking-widest font-semibold"
+              >Innovations</span
+            >
+          </div>
+          <p class="text-sm text-gray-500 mb-1">นวัตกรรมทั้งหมด</p>
+          <h2 class="text-4xl font-bold text-black tabular-nums">
+            {{ statistic?.total_innovation || 0 }}
+          </h2>
+          <p class="text-xs text-gray-400 mt-2">จำนวนทั้งหมด</p>
+        </div>
+      </div>
     </div>
 
-    <div class="bg-white rounded-xl p-5 shadow items-center">
-      <p class="text-[#0F4C82]">บทความ/วารสารทั้งหมด</p>
-      <h3 class="text-3xl font-bold flex justify-end mr-6">
-        {{ statistic?.total_article }}
-      </h3>
+    <!-- ===== Charts ===== -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+      <!-- Donut chart (White card) -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <div class="flex items-center gap-3 mb-5">
+          <div
+            class="w-9 h-9 rounded-lg bg-[#F2E7AC]/50 flex items-center justify-center"
+          >
+            <i class="bi bi-pie-chart-fill text-[#F2CB05] text-lg"></i>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold text-black">
+              ผลงานแยกตามหน่วยงาน
+            </h3>
+            <p class="text-xs text-gray-500">
+              สัดส่วนผลงานวิชาการในแต่ละหน่วยงาน
+            </p>
+          </div>
+        </div>
 
-      <!-- <span class="text-green-500 text-sm">+24%</span> -->
+        <ng-container>
+          <apx-chart class="text-white"
+            *ngIf="donutSeries.length > 0; else noDataDonut"
+            [series]="donutSeries"
+            [labels]="donutLabels"
+            [chart]="donutChart"
+            [legend]="donutLegend"
+          ></apx-chart>
+        </ng-container>
+
+        <ng-template #noDataDonut>
+          <div
+            class="flex flex-col items-center justify-center py-16 text-gray-400 gap-2"
+          >
+            <i class="bi bi-folder-x text-4xl"></i>
+            <p class="text-sm">ไม่พบข้อมูล</p>
+          </div>
+        </ng-template>
+      </div>
+
+      <!-- Pie chart -->
+      <div
+        class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 text-white"
+      >
+        <div class="flex items-center gap-3 mb-5">
+          <div
+            class="w-9 h-9 rounded-lg bg-[#F2E7AC]/50 flex items-center justify-center"
+          >
+            <i class="bi bi-pie-chart-fill text-[#F2CB05] text-lg"></i>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold text-black">ผลงานแยกตามสาขา</h3>
+            <p class="text-xs text-gray-500">สัดส่วนตามสาขาที่เกี่ยวข้อง</p>
+          </div>
+        </div>
+
+        <ng-container
+          *ngIf="(pieChartOptions.series?.length ?? 0) > 0; else noDataPie"
+        >
+          <apx-chart
+            [series]="pieChartOptions.series!"
+            [chart]="pieChartOptions.chart!"
+            [labels]="pieChartOptions.labels!"
+            [legend]="pieChartOptions.legend!"
+            [dataLabels]="pieChartOptions.dataLabels!"
+            [responsive]="pieChartOptions.responsive!"
+          ></apx-chart>
+        </ng-container>
+
+        <ng-template #noDataPie>
+          <div
+            class="flex flex-col items-center justify-center py-16 text-gray-400 gap-2"
+          >
+            <i class="bi bi-folder-x text-4xl"></i>
+            <p class="text-sm">ไม่พบข้อมูล</p>
+          </div>
+        </ng-template>
+      </div>
     </div>
 
-    <div class="bg-white rounded-xl p-5 shadow items-center">
-      <p class="text-[#0F4C82]">นวัตกรรมทั้งหมด</p>
-      <h3 class="text-3xl font-bold flex justify-end mr-6">
-        {{ statistic?.total_innovation }}
-      </h3>
+    <!-- ===== Top Researchers ===== -->
+    <div
+      class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden"
+    >
+      <div
+        class="bg-linear-to-r from-[#EBEFF2] to-[#f5f7fa] px-5 py-4 md:px-8 md:py-5 border-b border-gray-200 flex items-center gap-3"
+      >
+        <div
+          class="w-10 h-10 rounded-xl bg-linear-to-br from-[#F2CB05] to-[#e0b800] flex items-center justify-center shadow-sm"
+        >
+          <i class="bi bi-trophy-fill text-white text-lg"></i>
+        </div>
+        <div>
+          <h3 class="text-lg md:text-xl font-semibold text-[#394250]">
+            Top Researchers
+          </h3>
+          <p class="text-sm text-gray-500">นักวิจัยที่มีผลงานสูงสุด</p>
+        </div>
+      </div>
 
-      <!-- <span class="text-green-500 text-sm">+15%</span> -->
-    </div>
-  </div>
+      <!-- Has Data -->
+      <div
+        *ngIf="topResearcher.length; else noResearcher"
+        class="divide-y divide-gray-100"
+      >
+        <div
+          *ngFor="let r of topResearcher; let i = index"
+          class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 px-5 py-4 md:px-8 hover:bg-yellow-50/30 transition-colors"
+        >
+          <!-- Avatar + ชื่อ -->
+          <div class="flex items-center gap-4 min-w-0">
+            <div class="relative shrink-0">
+              <img
+                [src]="r.avatar_url || '/assets/default_profile.png'"
+                class="w-12 h-12 rounded-full object-cover border-2 border-gray-100"
+              />
+              <span
+                class="absolute -top-1 -left-1 w-5 h-5 rounded-full text-[10px] font-bold flex items-center justify-center shadow-sm"
+                [ngClass]="{
+                  'bg-yellow-400 text-white': i === 0,
+                  'bg-gray-300 text-gray-700': i === 1,
+                  'bg-orange-400 text-white': i === 2,
+                  'bg-[#F2CB05] text-[#394250]': i > 2
+                }"
+              >
+                {{ i + 1 }}
+              </span>
+              <!-- Crown icon สำหรับอันดับ 1 -->
+              <i
+                *ngIf="i === 0"
+                class="bi bi-crown-fill absolute -top-3 -right-1 text-yellow-400 text-xs drop-shadow"
+              ></i>
+            </div>
+            <div class="min-w-0">
+              <p class="text-base font-semibold text-[#394250] truncate">
+                {{ r.full_name }}
+              </p>
+              <p class="text-sm text-gray-400 truncate">{{ r.organization }}</p>
+            </div>
+          </div>
 
-  <!-- ===== Charts ===== -->
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-    <div class="bg-white rounded-xl p-6 shadow">
-      <h3 class=" mb-4">ผลงานวิชาการแบ่งตามหน่วยงาน</h3>
-      <ng-container>
-        <apx-chart class="text-white"
-          *ngIf="donutSeries.length > 0; else noData"
-          [series]="donutSeries"
-          [labels]="donutLabels"
-          [chart]="donutChart"
-          [legend]="donutLegend"
-        ></apx-chart>
-      </ng-container>
+          <!-- Stats -->
+          <div class="flex gap-4 pl-16 md:pl-0">
+            <div class="text-center px-3 py-2 rounded-xl bg-blue-50 min-w-16">
+              <p class="text-lg font-bold text-blue-600 tabular-nums">
+                {{ r.project_count }}
+              </p>
+              <p class="text-xs text-gray-400">Projects</p>
+            </div>
+            <div
+              class="text-center px-3 py-2 rounded-xl bg-emerald-50 min-w-16"
+            >
+              <p class="text-lg font-bold text-emerald-600 tabular-nums">
+                {{ r.article_count }}
+              </p>
+              <p class="text-xs text-gray-400">Articles</p>
+            </div>
+            <div class="text-center px-3 py-2 rounded-xl bg-purple-50 min-w-16">
+              <p class="text-lg font-bold text-purple-600 tabular-nums">
+                {{ r.innovation_count }}
+              </p>
+              <p class="text-xs text-gray-400">Innovations</p>
+            </div>
+          </div>
+        </div>
+      </div>
 
-      <ng-template #noData>
-        <div class="text-center text-white py-16">ไม่พบข้อมูล</div>
+      <!-- No Data -->
+      <ng-template #noResearcher>
+        <div
+          class="flex flex-col items-center justify-center py-12 text-gray-400 gap-2"
+        >
+          <i class="bi bi-folder-x text-4xl"></i>
+          <p class="text-sm">ยังไม่มีข้อมูลนักวิจัย</p>
+        </div>
       </ng-template>
     </div>
 
-    <div class="bg-white rounded-xl p-6 shadow">
-      <h3 class=" mb-4">ผลงานวิชาการแบ่งตามสาขาที่เกี่ยวข้อง</h3>
-      <apx-chart
-        class="text-white"
-        [series]="pieChartOptions.series!"
-        [chart]="pieChartOptions.chart!"
-        [labels]="pieChartOptions.labels!"
-        [legend]="pieChartOptions.legend!"
-        [dataLabels]="pieChartOptions.dataLabels!"
-        [responsive]="pieChartOptions.responsive!"
-      ></apx-chart>
+    <!-- ===== Bottom Section ===== -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+      <!-- Publication Participation Rate -->
+      <div
+        class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-5"
+      >
+        <div class="flex items-center gap-3 pb-4 border-b border-gray-100">
+          <div
+            class="w-10 h-10 rounded-xl bg-linear-to-br from-[#F2CB05] to-[#e0b800] flex items-center justify-center shadow-sm"
+          >
+            <i class="bi bi-graph-up-arrow text-white text-lg"></i>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold text-black">
+              Publication Participation Rate
+            </h3>
+            <p class="text-xs text-gray-500">อัตราการมีส่วนร่วมในการตีพิมพ์</p>
+          </div>
+        </div>
+
+        <div>
+          <div class="flex justify-between items-center mb-2">
+            <p class="text-sm font-medium text-gray-700">
+              Total Researches With Publications
+            </p>
+            <span
+              class="text-sm font-semibold text-[#394250] bg-[#F2E7AC]/40 px-3 py-1 rounded-full"
+            >
+              {{ statistic_researcher?.total_researcher_with_output || 0 }} /
+              {{ statistic?.total_researcher || 0 }}
+            </span>
+          </div>
+          <div class="w-full bg-gray-100 rounded-full h-3 overflow-hidden">
+            <div
+              class="h-3 rounded-full bg-linear-to-r from-[#F2CB05] to-[#e0b800] transition-all duration-700"
+              [style.width.%]="
+                (statistic?.total_researcher ?? 0) > 0
+                  ? ((statistic_researcher?.total_researcher_with_output ?? 0) /
+                      (statistic?.total_researcher ?? 1)) *
+                    100
+                  : 0
+              "
+            ></div>
+          </div>
+          <div class="flex justify-end mt-1">
+            <span class="text-xs text-gray-400">
+              {{
+                (statistic?.total_researcher ?? 0) > 0
+                  ? (((statistic_researcher?.total_researcher_with_output ??
+                      0) /
+                      (statistic?.total_researcher ?? 1)) *
+                      100 | number : "1.1-1")
+                  : 0
+              }}%
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Weight -->
+      <div
+        class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-5"
+      >
+        <div class="flex items-center gap-3 pb-4 border-b border-gray-100">
+          <div
+            class="w-10 h-10 rounded-xl bg-linear-to-br from-[#F2CB05] to-[#e0b800] flex items-center justify-center shadow-sm"
+          >
+            <i class="bi bi-bar-chart-line-fill text-white text-lg"></i>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold text-black">Weight</h3>
+            <p class="text-xs text-gray-500">คะแนนน้ำหนักผลงานในระบบ</p>
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          <div
+            class="flex justify-between items-center p-4 rounded-xl bg-linear-to-r from-blue-50 to-indigo-50 border border-blue-100"
+          >
+            <div>
+              <p class="text-sm font-semibold text-gray-700">
+                Total Article Weight
+              </p>
+              <p class="text-xs text-gray-500 mt-0.5">
+                คะแนนน้ำหนักผลงานตีพิมพ์ทั้งหมด
+              </p>
+            </div>
+            <div class="text-right">
+              <p class="text-xl font-bold text-blue-600 tabular-nums">
+                {{ statistic_researcher?.total_volume_article || 0 }}
+              </p>
+              <p class="text-xs text-gray-400">volumes</p>
+            </div>
+          </div>
+
+          <div
+            class="flex justify-between items-center p-4 rounded-xl bg-linear-to-r from-purple-50 to-pink-50 border border-purple-100"
+          >
+            <div>
+              <p class="text-sm font-semibold text-gray-700">
+                Total Innovation Weight
+              </p>
+              <p class="text-xs text-gray-500 mt-0.5">
+                คะแนนน้ำหนักนวัตกรรมทั้งหมด
+              </p>
+            </div>
+            <div class="text-right">
+              <p class="text-xl font-bold text-purple-600 tabular-nums">
+                {{ statistic_researcher?.total_volume_innovation || 0 }}
+              </p>
+              <p class="text-xs text-gray-400">volumes</p>
+            </div>
+          </div>
+
+          <div
+            class="flex justify-between items-center p-4 rounded-xl bg-linear-to-r from-[#F2E7AC]/40 to-yellow-50 border border-yellow-200"
+          >
+            <div>
+              <p class="text-sm font-semibold text-gray-700">Total Weight</p>
+              <p class="text-xs text-gray-500 mt-0.5">
+                คะแนนน้ำหนักทั้งหมดในระบบ
+              </p>
+            </div>
+            <div class="text-right">
+              <p class="text-xl font-bold text-[#394250] tabular-nums">
+                {{ statistic_researcher?.total_volume || 0 }}
+              </p>
+              <p class="text-xs text-gray-400">volumes</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-
-  <!-- ===== Top Researchers ===== -->
-  <div class="bg-white rounded-xl shadow p-6">
-    <div class="flex justify-between mb-4">
-      <h3 class="font-semibold">Top Researchers</h3>
-    </div>
-  
-    <div *ngFor="let r of topResearcher"
-      class="py-3 border-b last:border-0 font-light md:flex md:justify-between">
-  
-      <!-- บนสุด: avatar + ชื่อ + หน่วยงาน -->
-      <div class="flex items-center gap-3 mb-2">
-        <img
-          [src]="r.avatar_url || '/assets/default_profile.png'"
-          class="w-10 h-10 rounded-full shrink-0"
-        />
-        <div class="min-w-0">
-          <p class="text-xl truncate">{{ r.full_name }}</p>
-          <p class="text-lg text-gray-400 truncate">{{ r.organization }}</p>
-        </div>
-      </div>
-  
-      <!-- ล่าง: สถิติ -->
-      <div class="flex gap-4 pl-13 text-sm">
-        <div class="text-center">
-          <p class="text-xl font-medium">{{ r.project_count }}</p>
-          <p class="text-gray-400 text-base">Projects</p>
-        </div>
-        <div class="text-center">
-          <p class="text-xl font-medium">{{ r.article_count }}</p>
-          <p class="text-gray-400 text-base">Articles</p>
-        </div>
-        <div class="text-center">
-          <p class="text-xl font-medium">{{ r.innovation_count }}</p>
-          <p class="text-gray-400 text-base">Innovations</p>
-        </div>
-      </div>
-  
-    </div>
-  </div>
-
-  <!-- ===== Bottom Section ===== -->
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
-    <!-- Active Research Projects -->
-    <div class="bg-white rounded-xl shadow p-6">
-      <div class="flex justify-between mb-4">
-        <h3 class="font-semibold">Publication Participation Rate</h3>
-      </div>
-  
-      <div class="mb-4">
-        <div class="flex justify-between text-lg mb-1">
-          <p class="font-medium">Total Researches With Publications.</p>
-          <span class="text-gray-400">
-            {{ statistic_researcher?.total_researcher_with_output }} / {{ statistic?.total_researcher }}
-          </span>
-        </div>
-      
-        <div class="w-full bg-gray-200 rounded-full h-4">
-          <div
-            class="h-4 rounded-full bg-[#ffba08]"
-            [style.width.%]="(statistic?.total_researcher ?? 0) > 0
-              ? ((statistic_researcher?.total_researcher_with_output ?? 0) / (statistic?.total_researcher ?? 1)) * 100
-              : 0"
-          ></div>
-        </div>
-      </div>
-
-      <!-- <div class="mb-4">
-        <div class="flex justify-between text-sm mb-1">
-          <p class="font-medium">Total Research</p>
-          <span class="text-gray-400">{{ stat?.total_project }}</span>
-        </div>
-  
-        <div class="w-full bg-gray-200 rounded-full h-2">
-          <div
-            class="h-2 rounded-full bg-red-500"
-            [style.width.%]="(stat?.total_project / stat?.total_research) * 100"
-          ></div>
-        </div>
-      </div> -->
-<!-- 
-      <div class="mb-4">
-        <div class="flex justify-between text-sm mb-1">
-          <p class="font-medium">Total Article</p>
-          <span class="text-gray-400">{{ stat?.total_article }}</span>
-        </div>
-  
-        <div class="w-full bg-gray-200 rounded-full h-2">
-          <div
-            class="h-2 rounded-full bg-green-500"
-            [style.width.%]="(stat?.total_article / stat?.total_research) * 100"
-          ></div>
-        </div>
-
-      </div> -->
-      <!-- <div class="mb-4">
-        <div class="flex justify-between text-sm mb-1">
-          <p class="font-medium">Total Innovation</p>
-          <span class="text-gray-400">{{ stat?.total_innovation }}</span>
-        </div>
-  
-        <div class="w-full bg-gray-200 rounded-full h-2">
-          <div
-            class="h-2 rounded-full bg-violet-500"
-            [style.width.%]="(stat?.total_innovation / stat?.total_research) * 100"
-          ></div>
-        </div>
-      </div> -->
-    </div>
-  
-  
-      <!-- Recent Innovations -->
-  <div class="bg-white rounded-xl shadow p-6">
-    <div class="flex justify-between mb-4">
-      <h3 class="font-semibold">Weight</h3>
-    </div>
-
-    <div class="flex justify-between items-center p-4 rounded-lg mb-3 bg-indigo-50">
-      <div>
-      <p class="font-medium">Total Article Weight</p>
-      <p class="text-sm text-gray-600">
-        คะแนนน้ำหนักผลงานตีพิมพ์ทั้งหมด
-      </p></div>
-      <p class="text-2xl text-gray-400 mt-1">
-        {{ statistic_researcher?.total_volume_article }} volumes
-      </p>
-    </div>
-
-    <div class="flex justify-between items-center p-4 rounded-lg mb-3 bg-indigo-50">
-      <div>
-      <p class="font-medium">Total Innovation Weight</p>
-      <p class="text-sm text-gray-600">
-        คะแนนน้ำหนักนวัตกรรมทั้งหมด
-      </p>
-    </div>
-      <p class="text-2xl text-gray-400 mt-1">
-        {{ statistic_researcher?.total_volume_innovation }} volumes
-      </p>
-    </div>
-
-    <div class="flex justify-between items-center p-4 rounded-lg mb-3 bg-indigo-50">
-      <div>
-      <p class="font-medium">Total Weight</p>
-      <p class="text-sm text-gray-600">
-        คะแนนน้ำหนักทั้งหมดในระบบ
-      </p></div>
-      <p class="text-2xl text-gray-400 mt-1">
-        {{ statistic_researcher?.total_volume }} volumes
-      </p>
-    </div>
-  </div>
-
-</div>
 </div>

@@ -1,70 +1,73 @@
-<div
-  class="bg-gray-100 min-h-screen p-5 md:px-10 text-2xl font-medium text-[#394250]"
->
-  <div class="mx-auto md:p-6">
-    <div class="flex flex-col justify-center items-center text-center">
-      <div
-        class="w-24 h-24 rounded-full bg-linear-to-b from-yellow-200 to-yellow-100 flex items-center justify-center mb-4"
-      >
-        <i class="bi bi-search text-4xl"></i>
-      </div>
+<div class="bg-linear-to-br from-slate-50 via-gray-50 to-slate-100 min-h-screen text-[#394250] font-medium">
+  <div class="mx-auto p-5 md:px-10 md:py-10 space-y-6 md:space-y-10">
 
-      <h1 class="text-4xl">ค้นหานักวิจัย</h1>
+    <!-- ===== Header ===== -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-gray-200">
+      <div class="space-y-1">
+        <div class="inline-flex items-center gap-2 px-3 py-1 bg-[#F2E7AC]/40 rounded-full text-xs md:text-sm text-[#394250]">
+          <span class="w-2 h-2 rounded-full bg-[#F2CB05] animate-pulse"></span>
+          ระบบค้นหา
+        </div>
+        <h1 class="text-xl md:text-2xl lg:text-3xl text-black font-semibold leading-tight">
+          ค้นหานักวิจัย
+        </h1>
+      </div>
     </div>
 
-    <!-- ตัวกรอง -->
-    <div class="max-w-3xl mx-auto mt-4 md:mt-10 md:mb-6">
-      <div class="grid grid-cols-12 gap-1 items-center">
-        <!-- Label -->
-        <label class="col-span-12 text-xl md:text-2xl md:col-span-2">
-          ตัวกรอง
-        </label>
+    <!-- ===== Search Card ===== -->
+    <div class="bg-white p-5 md:p-8 rounded-2xl shadow-sm border border-gray-100 space-y-5">
 
-        <!-- Dropdown -->
-        <div class="col-span-12 md:col-span-10 relative font-light text-lg">
+      <!-- Section header -->
+      <div class="flex items-center gap-3 pb-4 border-b border-gray-100">
+        <div class="w-11 h-11 rounded-xl bg-linear-to-br from-[#F2CB05] to-[#e0b800] flex items-center justify-center shadow-sm">
+          <i class="bi bi-search text-white text-xl"></i>
+        </div>
+        <div>
+          <h2 class="text-xl md:text-2xl font-semibold text-black">ค้นหานักวิจัย</h2>
+          <p class="text-sm text-gray-500">ค้นหาจากชื่อหรือหน่วยงาน</p>
+        </div>
+      </div>
+
+      <!-- ตัวกรอง -->
+      <div class="flex flex-col md:flex-row md:items-center gap-3">
+        <label class="text-base md:text-lg text-gray-600 md:w-24 shrink-0">ตัวกรอง</label>
+
+        <div class="flex-1 relative font-light text-base">
           <button
             type="button"
             (click)="toggleDropdown('faculties', $event)"
-            class="w-full h-11 border border-gray-300 rounded-full px-6 flex justify-between items-center bg-white"
+            class="w-full h-11 border border-gray-200 rounded-full px-5 flex justify-between items-center bg-gray-50 hover:border-[#F2CB05] transition-colors"
           >
-            <span
-              class="truncate"
-              [class.text-gray-400]="selectedFaculty === undefined"
-            >
+            <span class="truncate" [class.text-gray-400]="selectedFaculty === undefined">
               {{
                 selectedFaculty === undefined
                   ? "เลือกหน่วยงาน"
                   : selectedFaculty || "หน่วยงานทั้งหมด"
               }}
             </span>
-            <i class="bi bi-chevron-down"></i>
+            <i class="bi bi-chevron-down text-gray-400"></i>
           </button>
 
           <!-- Dropdown panel -->
           <div
             *ngIf="activeDropdown === 'faculties'"
-            class="absolute z-50 w-full bg-white border rounded-md mt-1 shadow"
+            class="absolute z-50 w-full bg-white border border-gray-200 rounded-xl mt-1 shadow-lg overflow-hidden"
             (click)="$event.stopPropagation()"
           >
             <input
               [(ngModel)]="searchFaculitie"
               placeholder="ค้นหา..."
-              class="w-full px-3 py-2 border-b outline-none"
+              class="w-full px-4 py-2 border-b border-gray-100 outline-none text-sm focus:ring-2 focus:ring-[#F2CB05]/30"
             />
-
             <ul class="max-h-48 overflow-y-auto">
               <li
                 *ngFor="let f of filteredFaculties()"
                 (click)="selectFaculities(f)"
-                class="px-4 py-2 hover:bg-yellow-50 cursor-pointer"
+                class="px-4 py-2 hover:bg-[#F2E7AC]/30 cursor-pointer text-sm transition-colors"
               >
                 {{ f.faculty }}
               </li>
-
-              <li
-                *ngIf="filteredFaculties().length === 0"
-                class="px-4 py-2 text-gray-400 text-center"
-              >
+              <li *ngIf="filteredFaculties().length === 0" class="px-4 py-2 text-gray-400 text-center text-sm">
                 ไม่พบข้อมูล
               </li>
             </ul>
@@ -72,97 +75,45 @@
         </div>
       </div>
 
-      <!-- สายงาน -->
-      <!-- <div class="grid grid-cols-1 md:grid-cols-1 gap-2 items-center mt-5 font-light text-lg">
-        <div class="md:col-span-3 relative">
-          <button
-            type="button"
-            (click)="toggleDropdown('major', $event)"
-            class="w-full h-11 border border-gray-300 rounded-full px-6 flex justify-between items-center bg-white"
-          >
-            <span class="truncate">
-              {{ selectedMajor || "เลือกสาขาวิชาที่เชี่ยวชาญ" }}
-            </span>
-            <i class="bi bi-chevron-down"></i>
-          </button>
-
-          <div
-            *ngIf="activeDropdown === 'major'"
-            class="absolute z-50 w-full bg-white border rounded-md mt-1 shadow"
-            (click)="$event.stopPropagation()"
-          >
-            <input
-              [(ngModel)]="searchMajor"
-              placeholder="ค้นหา..."
-              class="w-full px-3 py-2 border-b outline-none"
-            />
-
-            <ul class="max-h-48 overflow-y-auto">
-              <li
-                *ngFor="let m of filteredMajor()"
-                (click)="selectMajor(m)"
-                class="px-4 py-2 hover:bg-yellow-50 cursor-pointer"
-              >
-                {{ m.name_th }}
-              </li>
-
-              <li
-                *ngIf="filteredMajor().length === 0"
-                class="px-4 py-2 text-gray-400 text-center"
-              >
-                ไม่พบข้อมูล
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div> -->
-
-      <!-- ===== Search Box ===== -->
-      <div class="flex justify-center mt-6">
-        <div
-          class="w-full max-w-3xl h-16 flex items-center border-2 border-gray-300 rounded-full overflow-hidden bg-white"
+      <!-- Search Box -->
+      <div class="flex items-center border-2 border-gray-200 rounded-full overflow-hidden bg-white h-14 focus-within:border-[#F2CB05] transition-colors">
+        <input
+          [(ngModel)]="researcherName"
+          (keyup.enter)="search()"
+          type="text"
+          placeholder="พิมพ์คำค้นหา ชื่อนักวิจัย"
+          class="flex-1 px-6 md:px-8 text-base md:text-lg outline-none border-none bg-transparent"
+        />
+        <button
+          (click)="search()"
+          class="flex items-center gap-2 h-10 bg-[#F2E7AC]/60 hover:bg-[#F2CB05] text-[#394250] font-semibold px-5 md:px-8 rounded-full mx-2 transition-all duration-200 cursor-pointer"
         >
-          <!-- Input -->
-          <input
-            [(ngModel)]="researcherName"
-            (keyup.enter)="search()"
-            type="text"
-            placeholder="พิมพ์คำค้นหา ชื่อนักวิจัย"
-            class="flex-1 px-6 border-none md:px-8 text-lg md:text-xl outline-none"
-          />
-
-          <!-- Button -->
-          <button
-            (click)="search()"
-            class="flex items-center justify-center h-14 md:h-full bg-[#f2e7ac] hover:bg-[#f2cb05] text-[#394250] font-semibold px-4 md:px-10 rounded-full transition cursor-pointer"
-          >
-            <!-- text: โชว์เฉพาะจอใหญ่ -->
-            <span class="hidden md:inline text-2xl mr-4">ค้นหา</span>
-
-            <!-- icon -->
-            <span
-              class="w-10 h-10 rounded-full bg-[#f2cb05] flex items-center justify-center text-[#394250] text-lg"
-            >
-              <i class="bi bi-arrow-right"></i>
-            </span>
-          </button>
-        </div>
+          <span class="hidden md:inline text-base">ค้นหา</span>
+          <span class="w-8 h-8 rounded-full bg-[#F2CB05] flex items-center justify-center text-[#394250]">
+            <i class="bi bi-arrow-right"></i>
+          </span>
+        </button>
       </div>
     </div>
 
-    <!-- ===== DONUT CHART ===== -->
-    <div
-      *ngIf="isSearched"
-      class="mx-auto mt-4 md:mt-8 grid grid-cols-1 xl:grid-cols-2 gap-6"
-    >
-      <div class="bg-[#394250] text-white rounded-xl shadow p-6">
-        <div class="flex items-center gap-2 mb-4">
-          <i class="bi bi-pie-chart-fill text-xl"></i>
-          <h2 class="text-xl md:text-2xl">สัดส่วนนักวิจัย จำแนกตามหน่วยงาน</h2>
+    <!-- ===== DONUT CHART (แสดงเมื่อค้นหาแล้ว) ===== -->
+    <div *ngIf="isSearched" class="grid grid-cols-1 xl:grid-cols-2 gap-5">
+
+      <!-- Chart -->
+      <div class="relative overflow-hidden bg-linear-to-br from-[#394250] to-[#2a323d] text-white rounded-2xl shadow-sm p-6">
+        <div class="absolute -right-10 -bottom-10 w-40 h-40 rounded-full bg-[#F2CB05]/10 blur-2xl"></div>
+        <div class="relative flex items-center gap-3 mb-5">
+          <div class="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center">
+            <i class="bi bi-pie-chart-fill text-[#F2CB05] text-lg"></i>
+          </div>
+          <div>
+            <h2 class="text-lg md:text-xl font-semibold">สัดส่วนนักวิจัย</h2>
+            <p class="text-xs text-gray-300">จำแนกตามหน่วยงาน</p>
+          </div>
         </div>
 
-        <div class="w-full h-87.5 flex-1 flex items-center justify-center">
-          <ng-container *ngIf="hasData; else noData">
+        <div class="relative w-full flex items-center justify-center" style="height: 280px;">
+          <ng-container *ngIf="hasData; else noDataChart">
             <ngx-charts-pie-chart
               [view]="chartView"
               [results]="single"
@@ -176,172 +127,190 @@
             >
             </ngx-charts-pie-chart>
           </ng-container>
-
-          <ng-template #noData>
-            <p class="text-white text-center">ไม่พบข้อมูล</p>
+          <ng-template #noDataChart>
+            <div class="flex flex-col items-center gap-2 text-gray-400">
+              <i class="bi bi-pie-chart text-4xl"></i>
+              <p class="text-sm">ไม่พบข้อมูล</p>
+            </div>
           </ng-template>
         </div>
       </div>
 
-      <div class="bg-white rounded-xl shadow p-6 flex flex-col justify-between">
-        <div class="flex items-center gap-2 mb-4">
-          <i class="bi bi-pie-chart-fill text-xl"></i>
-          <h2 class="text-xl md:text-2xl">สัดส่วนนักวิจัย จำแนกตามหน่วยงาน</h2>
+      <!-- Legend -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col justify-between">
+        <div class="flex items-center gap-3 mb-5">
+          <div class="w-9 h-9 rounded-lg bg-[#F2E7AC]/50 flex items-center justify-center">
+            <i class="bi bi-list-ul text-[#F2CB05] text-lg"></i>
+          </div>
+          <div>
+            <h2 class="text-lg md:text-xl font-semibold">รายละเอียดหน่วยงาน</h2>
+            <p class="text-xs text-gray-500">จำแนกตามหน่วยงาน</p>
+          </div>
         </div>
 
-        <div class="space-y-1 max-h-60 overflow-y-auto">
-          <p
+        <div class="space-y-2 max-h-52 overflow-y-auto pr-1">
+          <div
             *ngFor="let l of donutLabels; let i = index"
-            class="flex justify-between md:px-8"
+            class="flex justify-between items-center px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors"
           >
-            <span class="font-light text-sm xl:text-lg wrap-break-word">{{
-              l
-            }}</span
-            ><span class="font-light text-sm xl:text-lg"
-              >{{ donutSeries[i] }} คน</span
-            >
-          </p>
+            <div class="flex items-center gap-3 min-w-0">
+              <span class="w-6 h-6 rounded-full bg-[#F2E7AC]/60 text-[#394250] text-xs font-semibold flex items-center justify-center shrink-0">
+                {{ i + 1 }}
+              </span>
+              <span class="text-sm font-light text-gray-700 wrap-break-word">{{ l }}</span>
+            </div>
+            <span class="text-sm font-medium text-[#394250] bg-white px-2 py-0.5 rounded-full border border-gray-200 shrink-0 ml-2">
+              {{ donutSeries[i] }} คน
+            </span>
+          </div>
 
-          <p *ngIf="donutLabels.length === 0" class="text-center text-gray-500">
+          <p *ngIf="donutLabels.length === 0" class="text-center text-gray-400 py-4 text-sm">
+            <i class="bi bi-folder-x text-2xl block mb-2"></i>
             ไม่พบข้อมูล
           </p>
         </div>
 
-        <div class="pt-4 border-t mt-2">
-          <p class="text-3xl text-center text-[#394250]">
-            รวมทั้งหมด {{ totalResearchers }} คน
-          </p>
+        <div class="pt-4 border-t border-gray-100 mt-3">
+          <div class="flex items-center justify-center gap-2">
+            <span class="text-sm text-gray-500">รวมทั้งหมด</span>
+            <span class="text-2xl font-bold text-[#394250]">{{ totalResearchers }}</span>
+            <span class="text-sm text-gray-500">คน</span>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</div>
 
-<!-- ===== TABLE ===== -->
-<div *ngIf="isSearched" class="bg-[#f2e7ac] md:py-6 md:px-10">
-  <div class="mx-auto p-6 md:px-6">
-    <div
-      class="flex flex-col md:flex-row md:justify-between md:items-center gap-2 md:gap-4 mb-2 md:mb-4"
-    >
-      <h2 class="text-2xl xl:text-3xl text-[#394250]">รายชื่อนักวิจัย</h2>
+    <!-- ===== TABLE (แสดงเมื่อค้นหาแล้ว) ===== -->
+    <div *ngIf="isSearched" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
 
-      <div class="flex items-center justify-end font-medium text-[#394250]">
-        <span class="text-xl mr-2">Search:</span>
-        <input
-          type="text"
-          [(ngModel)]="searchText"
-          (input)="onSearch()"
-          class="border h-10 rounded text-lg font-light bg-white px-3 py-2 w-40 md:w-64 text-black"
-          placeholder="ค้นหา..."
-        />
+      <!-- Table header bar -->
+      <div class="bg-linear-to-r from-[#EBEFF2] to-[#f5f7fa] px-5 py-4 md:px-8 md:py-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-gray-200">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-linear-to-br from-[#F2CB05] to-[#e0b800] flex items-center justify-center shadow-sm">
+            <i class="bi bi-people-fill text-white text-lg"></i>
+          </div>
+          <div>
+            <h2 class="text-lg md:text-xl font-semibold text-[#394250]">รายชื่อนักวิจัย</h2>
+            <p class="text-sm text-gray-500">ผลการค้นหาทั้งหมด</p>
+          </div>
+        </div>
+
+        <div class="relative w-full sm:w-auto">
+          <i class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+          <input
+            type="text"
+            [(ngModel)]="searchText"
+            (input)="onSearch()"
+            class="w-full sm:w-56 pl-9 pr-3 py-2 text-sm border border-gray-300 rounded-lg font-light focus:outline-none focus:ring-2 focus:ring-[#F2CB05]/30 focus:border-[#F2CB05] transition-all bg-white"
+            placeholder="ค้นหา..."
+          />
+        </div>
       </div>
-    </div>
 
-    <!-- Card -->
-    <div class="bg-white rounded-xl shadow p-4 md:p-8 text-lg">
-      <div class="overflow-x-auto">
-        <table class="w-full min-w-225 border-gray-300">
-          <thead class="bg-[#394250] text-white border-b-2 border-gray-300">
+      <!-- Table -->
+      <div class="overflow-x-auto font-light">
+        <table class="w-full text-sm md:text-base min-w-175">
+          <thead class="bg-linear-to-r from-[#394250] to-[#2a323d] text-white">
             <tr>
-              <th class="p-1 md:p-2 text-center">#</th>
-              <th class="p-1 md:p-2 text-center">img</th>
-              <th class="p-1 md:p-2 text-left">ชื่อ - นามสกุล</th>
-              <th class="p-1 md:p-2 text-center">สาขาวิชาที่เชี่ยวชาญ</th>
-              <th class="p-1 md:p-2 text-center">หน่วยงาน</th>
-              <th class="p-1 md:p-2 text-center">ตำแหน่ง</th>
+              <th class="p-3 text-center text-xs uppercase tracking-wider font-semibold w-[5%]">#</th>
+              <th class="p-3 text-center text-xs uppercase tracking-wider font-semibold w-[8%]">รูป</th>
+              <th class="p-3 text-left text-xs uppercase tracking-wider font-semibold w-[25%]">ชื่อ - นามสกุล</th>
+              <th class="p-3 text-center text-xs uppercase tracking-wider font-semibold w-[22%]">สาขาที่เชี่ยวชาญ</th>
+              <th class="p-3 text-center text-xs uppercase tracking-wider font-semibold w-[22%]">หน่วยงาน</th>
+              <th class="p-3 text-center text-xs uppercase tracking-wider font-semibold w-[18%]">ตำแหน่ง</th>
             </tr>
           </thead>
 
-          <tbody>
+          <tbody class="bg-white">
             <tr
               *ngFor="let r of paginationData; let i = index"
-              class="hover:bg-gray-50 bg-gray-200 border-b border-gray-300 text-lg font-light"
+              class="border-b border-gray-100 hover:bg-yellow-50/40 transition-colors"
             >
-              <td class="p-1 md:p-2 text-center">
+              <td class="p-3 text-center text-gray-500">
                 {{ (currentPage - 1) * pageSize + i + 1 }}
               </td>
 
-              <td class="p-1 md:p-2 text-center">
-                <div
-                  class="mx-auto w-16 h-16 rounded-full flex items-center justify-center"
-                >
+              <td class="p-3 text-center">
+                <div class="mx-auto w-10 h-10 rounded-full overflow-hidden border border-gray-200">
                   <img
                     [src]="r.avatar ?? '/assets/default_profile.png'"
-                    alt="logo"
-                    class="w-12 h-12 rounded-full object-contain"
+                    alt="avatar"
+                    class="w-full h-full object-cover"
                   />
                 </div>
               </td>
 
               <td
                 (click)="goToUserProfile(r.id)"
-                class="p-1 md:p-2 cursor-pointer text-[#0F4C82] hover:underline"
+                class="p-3 text-[#185FA5] hover:underline cursor-pointer font-medium"
               >
                 {{ r.name }}
               </td>
-              <td class="p-1 md:p-2 text-center">{{ r.expertises || "-" }}</td>
-              <td class="p-1 md:p-2 text-center">
-                {{ r.organization || "-" }}
+
+              <td class="p-3 text-center text-gray-600">{{ r.expertises || "-" }}</td>
+
+              <td class="p-3 text-center text-gray-600">{{ r.organization || "-" }}</td>
+
+              <td class="p-3 text-center">
+                <span class="inline-block px-2 py-1 bg-[#F2E7AC]/40 rounded-md text-xs text-[#394250] font-medium">
+                  {{ r.position || "-" }}
+                </span>
               </td>
-              <td class="p-1 md:p-2 text-center">{{ r.position }}</td>
             </tr>
 
             <tr *ngIf="paginationData.length === 0">
-              <td colspan="7" class="p-6 text-center text-gray-500">
-                <i class="bi bi-folder-x text-3xl block mb-2"></i>
-                ไม่พบข้อมูล
+              <td colspan="6" class="p-10 text-center text-gray-400">
+                <i class="bi bi-folder-x text-4xl block mb-2"></i>
+                <span class="text-sm">ไม่พบข้อมูล</span>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <div
-        class="flex flex-col md:flex-row md:justify-end md:items-center mt-4 gap-2 font-light"
-      >
+      <!-- Pagination -->
+      <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-3 px-5 py-4 md:px-8 border-t border-gray-100 font-light">
+        <div class="text-sm text-gray-500">
+          แสดง {{ paginationData.length }} จาก {{ totalResearchers }} รายการ
+        </div>
+
         <div class="flex items-center justify-end space-x-1">
-          <!-- Prev -->
           <button
             (click)="changePage(currentPage - 1)"
             [disabled]="currentPage === 1"
-            class="px-2 md:px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
+            class="px-3 py-1.5 rounded-lg border border-gray-200 text-sm disabled:opacity-40 hover:bg-gray-50 cursor-pointer transition-colors"
           >
-            ‹
+            <i class="bi bi-chevron-left"></i>
           </button>
 
-          <!-- Pages -->
           <ng-container *ngFor="let page of visiblePages">
-            <!-- ปุ่มตัวเลข -->
             <button
               *ngIf="page !== '...'"
               (click)="changePage(+page)"
-              class="px-2 md:px-3 py-1 rounded border text-sm transition cursor-pointer"
+              class="min-w-9 px-3 py-1.5 rounded-lg border text-sm transition-all cursor-pointer"
               [ngClass]="{
-                'bg-[#f2e7ac] text-[#394250]': currentPage === page,
-                'hover:bg-gray-100': currentPage !== page
+                'bg-[#F2CB05] text-white border-[#F2CB05] shadow-sm': currentPage === page,
+                'border-gray-200 hover:bg-gray-50 text-gray-700': currentPage !== page
               }"
             >
               {{ page }}
             </button>
-
-            <!-- จุด ... -->
             <span
               *ngIf="page === '...'"
               class="px-2 py-1 text-sm text-gray-400 select-none"
-              >...</span
-            >
+            >...</span>
           </ng-container>
 
-          <!-- Next -->
           <button
             (click)="changePage(currentPage + 1)"
             [disabled]="currentPage === totalPages"
-            class="px-2 md:px-3 py-1 rounded border text-sm disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
+            class="px-3 py-1.5 rounded-lg border border-gray-200 text-sm disabled:opacity-40 hover:bg-gray-50 cursor-pointer transition-colors"
           >
-            ›
+            <i class="bi bi-chevron-right"></i>
           </button>
         </div>
       </div>
     </div>
+
   </div>
 </div>

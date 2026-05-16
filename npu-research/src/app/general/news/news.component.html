@@ -1,68 +1,119 @@
-<div
-  class="contain-content bg-gray-100 p-5 md:px-10 text-xl md:text-2xl text-[#394250] font-medium"
->
-  <div class="mx-auto md:py-6">
-    <h1 class="text-3xl md:ml-5 mb-2">ข่าวประชาสัมพันธ์</h1>
-  </div>
+<div class="bg-linear-to-br from-slate-50 via-gray-50 to-slate-100 min-h-screen p-5 md:px-10 md:py-8 text-[#394250] font-medium">
 
-  <div class="mb-10 mx-auto p-2 md:px-2 md:py-8 bg-white rounded-xl font-regular text-lg">
-    <div class="mx-auto md:px-6">
-      <!-- NEWS GRID -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div
-          *ngFor="let news of newsList;"
-          class="bg-white rounded-xl shadow hover:shadow-lg transition duration-300 hover:scale-105"
-        >
-          <!-- Image -->
-          <img
-            [src]="news?.news_cover"
-            alt=""
-            class="h-48 w-full object-cover rounded-t-xl"
-          />
-
-          <!-- Content -->
-          <div class="p-4 space-y-2">
-            <h3 class="text-xl text-[#394250] line-clamp-2">
-              {{ news.title }}
-            </h3>
-
-            <p class="text-sm text-[#394250] font-light">
-              วันที่
-              {{
-                news?.published_date
-                  | date : "d MMMM yyyy" : "" : "th-TH"
-              }}
-            </p>
-
-            <div class="flex justify-end" *ngIf="newsList.length">
-              <div class="mt-4 flex justify-end">
-                <button
-                  (click)="goToNewsDetail(news.news_id)"
-                  class="flex items-center gap-2 px-5 py-2 rounded-full border border-gray-300 text-black text-sm font-regular bg-[#f2e7ac] hover:bg-[#f2cb05] hover:text-gray-500 transition-all duration-300 cursor-pointer"
-                >
-                  อ่านเพิ่มเติม
-                  <i class="bi bi-arrow-right-circle-fill text-xl"></i>
-                </button>
-              </div>
-            </div>
-          </div>
+  <!-- ===== Header ===== -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 md:p-6 mb-6">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <!-- Title -->
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-xl bg-linear-to-br from-[#F2CB05] to-[#e0b800] flex items-center justify-center shadow-sm">
+          <i class="bi bi-megaphone-fill text-white text-xl"></i>
+        </div>
+        <div>
+          <h1 class="text-xl md:text-2xl font-semibold text-black">ข่าวประชาสัมพันธ์</h1>
+          <p class="text-sm text-gray-500">ข่าวสารและประกาศล่าสุดจากระบบ</p>
         </div>
       </div>
 
-      <!-- PAGINATION -->
-      <!-- <div class="flex justify-center mt-10 space-x-2">
-              <button
-                *ngFor="let page of totalPages"
-                (click)="changePage(page)"
-                class="px-3 py-1 rounded-md border"
-                [ngClass]="{
-                  'bg-[#FACC15] text-white': currentPage === page,
-                  'hover:bg-gray-100': currentPage !== page
-                }"
-              >
-                {{ page }}
-              </button>
-            </div> -->
+      <!-- Total Count Badge -->
+      <div class="flex items-center gap-2 px-4 py-2 bg-[#F2E7AC]/40 rounded-full text-sm">
+        <i class="bi bi-newspaper text-[#F2CB05]"></i>
+        <span>ทั้งหมด <span class="font-semibold text-[#394250]">{{ newsList.length || 0 }}</span> ข่าว</span>
+      </div>
     </div>
+  </div>
+
+  <!-- ===== News Grid ===== -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 md:p-6">
+    <!-- News Cards -->
+    <div *ngIf="newsList.length; else noNews" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+      <div
+        *ngFor="let news of newsList"
+        class="group bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col overflow-hidden cursor-pointer"
+        (click)="goToNewsDetail(news.news_id)"
+      >
+        <!-- Image -->
+        <div class="relative aspect-video w-full overflow-hidden bg-gray-100">
+          <img
+            [src]="news?.news_cover"
+            alt=""
+            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+          />
+          <!-- Overlay on hover -->
+          <div class="absolute inset-0 bg-linear-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+
+          <!-- "ข่าวล่าสุด" badge (optional - แสดงตลอด) -->
+          <div class="absolute top-3 left-3 px-2.5 py-1 bg-white/90 backdrop-blur-sm rounded-full text-xs text-[#394250] font-medium shadow-sm">
+            <i class="bi bi-newspaper text-[#F2CB05] mr-1"></i>
+            ข่าวสาร
+          </div>
+        </div>
+
+        <!-- Content -->
+        <div class="p-4 flex flex-col flex-1">
+          <h3 class="text-base font-semibold text-[#394250] line-clamp-2 leading-snug mb-2 group-hover:text-[#F2CB05] transition-colors">
+            {{ news.title }}
+          </h3>
+
+          <p class="text-xs text-gray-500 flex items-center gap-1.5 flex-1">
+            <i class="bi bi-calendar3"></i>
+            {{ news?.published_date | date : "d MMMM yyyy" : "" : "th-TH" }}
+          </p>
+
+          <!-- Read more -->
+          <div class="mt-3 pt-3 border-t border-gray-100 flex justify-end">
+            <span class="flex items-center gap-1.5 text-sm text-[#394250] group-hover:text-[#F2CB05] transition-colors font-medium">
+              อ่านเพิ่มเติม
+              <i class="bi bi-arrow-right-circle-fill text-base group-hover:translate-x-0.5 transition-transform"></i>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- No News -->
+    <ng-template #noNews>
+      <div class="flex flex-col items-center justify-center py-16 text-gray-400">
+        <i class="bi bi-folder-x text-5xl mb-3"></i>
+        <span class="text-sm">ยังไม่มีข่าวประชาสัมพันธ์</span>
+      </div>
+    </ng-template>
+
+    <!-- ===== PAGINATION (เผื่อต้องใช้) ===== -->
+    <!--
+    <div class="flex flex-col md:flex-row md:justify-between md:items-center mt-6 gap-3 font-light pt-4 border-t border-gray-100">
+      <div class="text-sm text-gray-500">
+        แสดง <span class="text-[#394250] font-medium">{{ newsList.length }}</span> ข่าว
+      </div>
+
+      <div class="flex items-center justify-end space-x-1">
+        <button
+          (click)="changePage(currentPage - 1)"
+          [disabled]="currentPage === 1"
+          class="px-3 py-1.5 rounded-lg border border-gray-200 text-sm disabled:opacity-40 hover:bg-gray-50 cursor-pointer transition-colors"
+        >
+          <i class="bi bi-chevron-left"></i>
+        </button>
+
+        <button
+          *ngFor="let page of totalPages"
+          (click)="changePage(page)"
+          class="min-w-[36px] px-3 py-1.5 rounded-lg border text-sm transition-all cursor-pointer"
+          [ngClass]="{
+            'bg-[#F2CB05] text-white border-[#F2CB05] shadow-sm': currentPage === page,
+            'border-gray-200 hover:bg-gray-50 text-gray-700': currentPage !== page
+          }"
+        >
+          {{ page }}
+        </button>
+
+        <button
+          (click)="changePage(currentPage + 1)"
+          class="px-3 py-1.5 rounded-lg border border-gray-200 text-sm disabled:opacity-40 hover:bg-gray-50 cursor-pointer transition-colors"
+        >
+          <i class="bi bi-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+    -->
   </div>
 </div>

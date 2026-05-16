@@ -16,6 +16,9 @@ export class NewsDetailComponent implements OnInit {
   newsDetail?: News;
   safeDescription!: SafeHtml;
 
+  // ===== Lightbox =====
+  selectedImage: string | null = null;
+
   constructor(
     private route: ActivatedRoute,
     private service: NewsService,
@@ -67,5 +70,18 @@ export class NewsDetailComponent implements OnInit {
     );
 
     return html;
+  }
+
+  // ===== Lightbox Methods =====
+  openImage(url: string) {
+    if (!url) return;
+    this.selectedImage = url;
+    // ป้องกัน scroll ของ body ขณะ lightbox เปิด
+    document.body.style.overflow = 'hidden';
+  }
+
+  closeImage() {
+    this.selectedImage = null;
+    document.body.style.overflow = '';
   }
 }

@@ -1,100 +1,138 @@
-<div
-  class="contain-content bg-gray-100 p-5 md:px-10 text-2xl md:text-2xl text-[#394250] font-medium"
->
-  <div class="mx-auto md:py-6 font-medium text-3xl">
-    <h1 class="leading-snug">
-      <span class="">
-        {{ reportType ? titles[reportType].main : "" }}
-      </span>
-      <span class="block md:inline">
-        {{ reportType ? titles[reportType].sub : "" }}
-      </span>
-    </h1>
+<div class="bg-linear-to-br from-slate-50 via-gray-50 to-slate-100 min-h-screen p-5 md:px-10 md:py-8 text-[#394250] font-medium">
+
+  <!-- ===== Header ===== -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 md:p-6 mb-6">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <!-- Title -->
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-xl bg-linear-to-br from-[#F2CB05] to-[#e0b800] flex items-center justify-center shadow-sm">
+          <i class="bi bi-bar-chart-line-fill text-white text-xl"></i>
+        </div>
+        <div>
+          <h1 class="text-xl md:text-2xl font-semibold text-black leading-tight">
+            {{ reportType ? titles[reportType].main : "" }}
+            <span class="block md:inline text-base md:text-xl text-gray-500 md:ml-1 font-normal">
+              {{ reportType ? titles[reportType].sub : "" }}
+            </span>
+          </h1>
+          <p class="text-sm text-gray-500 mt-0.5">รายงานสรุปข้อมูลแยกตามหน่วยงาน</p>
+        </div>
+      </div>
+
+      <!-- Total Count Badge -->
+      <div class="flex items-center gap-2 px-4 py-2 bg-[#F2E7AC]/40 rounded-full text-sm">
+        <i class="bi bi-building text-[#F2CB05]"></i>
+        <span>รวมทั้งหมด <span class="font-semibold text-[#394250]">{{ totalDepartment | number }}</span> รายการ</span>
+      </div>
+    </div>
   </div>
 
-  <div
-    class="mx-auto px-2 md:px-6 py-2 md:py-6 bg-white rounded-xl md:mb-10 mt-2 font-light text-lg"
-  >
-    <div class="overflow-x-auto">
-      <table class="min-w-full border-collapse">
-        <thead class="bg-[#394250] text-white px-4">
+  <!-- ===== Table Card ===== -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 md:p-6">
+    <div class="overflow-x-auto rounded-xl border border-gray-200 font-light">
+      <table class="min-w-full text-sm md:text-base border-collapse">
+        <!-- Header -->
+        <thead class="bg-linear-to-r from-[#394250] to-[#2a323d] text-white">
           <tr>
-            <th class="text-start px-4 py-">#</th>
-            <th class="text-start px-4 py-2">ชื่อหน่วยงาน</th>
-            <th class="px-4 py-2">จำนวน</th>
+            <th class="px-4 py-3 text-center text-xs uppercase tracking-wider font-semibold w-16">#</th>
+            <th class="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold">ชื่อหน่วยงาน</th>
+            <th class="px-4 py-3 text-center text-xs uppercase tracking-wider font-semibold w-32">จำนวน</th>
           </tr>
         </thead>
 
-        <tbody class="bg-gray-200 border-b border-gray-300">
-          <!-- data -->
-          <tr *ngFor="let d of paginatedDepartment; let i = index">
-            <td class="px-4 py-2">
+        <tbody class="bg-white">
+          <!-- Data Rows -->
+          <tr
+            *ngFor="let d of paginatedDepartment; let i = index"
+            class="border-b border-gray-100 hover:bg-yellow-50/50 transition-colors"
+          >
+            <td class="px-4 py-3 text-center text-gray-500">
               {{ (currentPage - 1) * pageSize + i + 1 }}
             </td>
 
-            <td class="px-4 py-2">
-              <div
-                class="text-[#394250] truncate hover:underline cursor-pointer"
-              >
-                {{ d.label_full || d.label }}
+            <td class="px-4 py-3">
+              <div class="flex items-center gap-2.5">
+                <div class="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center shrink-0">
+                  <i class="bi bi-building text-blue-500 text-sm"></i>
+                </div>
+                <div class="text-[#394250] hover:underline cursor-pointer truncate font-medium">
+                  {{ d.label_full || d.label }}
+                </div>
               </div>
             </td>
 
-            <td class="text-center px-4 py-2">
-              {{ d.count }}
+            <td class="px-4 py-3 text-center">
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full text-xs font-semibold">
+                {{ d.count | number }}
+              </span>
             </td>
           </tr>
 
-          <!-- empty -->
+          <!-- Empty -->
           <tr *ngIf="filteredDocuments.length === 0">
-            <td colspan="3" class="text-center p-4 text-gray-500">
-              ไม่พบข้อมูล
+            <td colspan="3" class="text-center py-12 text-gray-400">
+              <i class="bi bi-folder-x text-4xl block mb-2"></i>
+              <span class="text-sm">ไม่พบข้อมูล</span>
             </td>
-          </tr>
-
-          <!-- total -->
-          <tr class="bg-gray-100 font-semibold">
-            <td colspan="2" class="text-right p-3">รวมทั้งหมด</td>
-            <td class="text-center p-3">{{ totalDepartment }}</td>
           </tr>
         </tbody>
+
+        <!-- Total Footer -->
+        <tfoot *ngIf="filteredDocuments.length > 0">
+          <tr class="bg-linear-to-r from-[#F2E7AC]/40 to-[#F2CB05]/20 border-t-2 border-[#F2CB05]/30">
+            <td colspan="2" class="px-4 py-3.5 text-right font-semibold text-[#394250]">
+              <span class="inline-flex items-center gap-2">
+                <i class="bi bi-calculator-fill text-[#F2CB05]"></i>
+                รวมทั้งหมด
+              </span>
+            </td>
+            <td class="px-4 py-3.5 text-center">
+              <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#394250] text-white rounded-full text-sm font-bold">
+                {{ totalDepartment | number }}
+              </span>
+            </td>
+          </tr>
+        </tfoot>
       </table>
     </div>
 
-    <div
-      class="flex flex-col mt-2 md:mt-4 md:gap-2 md:flex-row md:justify-between md:items-center font-light text-sm"
-    >
-      <p>หน้า {{ currentPage }} จาก {{ totalPages }}</p>
-      <p>
-        แสดง {{ paginatedDepartment.length }} รายการ จาก
-        {{ filteredDocuments.length }} รายการ
-      </p>
+    <!-- ===== Pagination ===== -->
+    <div class="flex flex-col md:flex-row md:justify-between md:items-center mt-4 gap-3 font-light">
+      <!-- Info -->
+      <div class="flex flex-col md:flex-row md:items-center gap-1 md:gap-4 text-sm text-gray-500">
+        <span>หน้า <span class="text-[#394250] font-medium">{{ currentPage }}</span> จาก <span class="text-[#394250] font-medium">{{ totalPages }}</span></span>
+        <span class="hidden md:inline text-gray-300">|</span>
+        <span>แสดง <span class="text-[#394250] font-medium">{{ paginatedDepartment.length }}</span> จาก <span class="text-[#394250] font-medium">{{ filteredDocuments.length }}</span> รายการ</span>
+      </div>
 
-      <div class="flex justify-end space-x-1 font-light text-sm">
+      <!-- Pagination Buttons -->
+      <div class="flex items-center justify-end space-x-1">
         <button
           (click)="changePage(currentPage - 1)"
           [disabled]="currentPage === 1"
-          class="px-2 md:px-3 py-1 rounded border disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
+          class="px-3 py-1.5 rounded-lg border border-gray-200 text-sm disabled:opacity-40 hover:bg-gray-50 cursor-pointer transition-colors"
         >
-          ‹
+          <i class="bi bi-chevron-left"></i>
         </button>
+
         <button
           *ngFor="let page of pages"
           (click)="changePage(page)"
-          class="px-2 md:px-3 py-1 rounded border disabled:opacity-40 hover:bg-gray-100 cursor-pointer"
+          class="min-w-9 px-3 py-1.5 rounded-lg border text-sm transition-all cursor-pointer"
           [ngClass]="{
-            'bg-[#f2e7ac] text-black': currentPage === page,
-            'hover:bg-gray-100': currentPage !== page
+            'bg-[#F2CB05] text-white border-[#F2CB05] shadow-sm': currentPage === page,
+            'border-gray-200 hover:bg-gray-50 text-gray-700': currentPage !== page
           }"
         >
           {{ page }}
         </button>
+
         <button
           (click)="changePage(currentPage + 1)"
           [disabled]="currentPage === totalPages"
-          class="px-2 md:px-3 py-1 rounded border disabled:opacity-40 hover:bg-gray-100"
+          class="px-3 py-1.5 rounded-lg border border-gray-200 text-sm disabled:opacity-40 hover:bg-gray-50 cursor-pointer transition-colors"
         >
-          ›
+          <i class="bi bi-chevron-right"></i>
         </button>
       </div>
     </div>
