@@ -331,7 +331,7 @@
                     <li *ngIf="filteredResearchers.length === 0" class="px-3 py-2 text-gray-400 text-center">ไม่พบข้อมูล</li>
                   </ul>
                 </td>
-                <td class="px-2 py-2 relative">
+                <td class="px-2 py-2">
                   <button (click)="toggleDropdown('internal-' + i, $event)"
                           class="flex justify-between items-center bg-white w-full rounded-lg border border-gray-200 px-3 py-2 text-sm font-light hover:border-[#F2CB05] transition cursor-pointer">
                     <span class="truncate" [class.text-gray-400]="!row.responsibilities">{{ row.responsibilities || 'เลือกประเภท' }}</span>
@@ -390,7 +390,7 @@
                          class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm font-light bg-white outline-none focus:border-[#F2CB05] focus:ring-1 focus:ring-[#F2CB05]/20 transition"
                          placeholder="ระบุชื่อ" />
                 </td>
-                <td class="px-2 py-2 relative">
+                <td class="px-2 py-2">
                   <button (click)="toggleDropdown('external-' + i, $event)"
                           class="flex justify-between items-center bg-white w-full rounded-lg border border-gray-200 px-3 py-2 text-sm font-light hover:border-[#F2CB05] transition cursor-pointer">
                     <span class="truncate" [class.text-gray-400]="!item.responsibilities">{{ item.responsibilities || 'เลือกประเภท' }}</span>
