@@ -1,29 +1,45 @@
-<div class="bg-linear-to-br from-slate-50 via-gray-50 to-slate-100 min-h-screen p-5 md:px-10 md:py-8 text-[#394250] font-medium">
-
+<div
+  class="bg-linear-to-br from-slate-50 via-gray-50 to-slate-100 min-h-screen p-5 md:px-10 md:py-8 text-[#394250] font-medium"
+>
   <!-- ===== Page Header ===== -->
-  <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-6">
+  <div
+    class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-6"
+  >
     <div class="flex items-center gap-3">
-      <div class="w-11 h-11 rounded-xl bg-linear-to-br from-[#F2CB05] to-[#e0b800] flex items-center justify-center shadow-sm">
+      <div
+        class="w-11 h-11 rounded-xl bg-linear-to-br from-[#F2CB05] to-[#e0b800] flex items-center justify-center shadow-sm"
+      >
         <i class="bi bi-trophy-fill text-white text-xl"></i>
       </div>
       <div>
-        <h1 class="text-xl md:text-2xl font-semibold text-black">การจัดการผลงาน</h1>
-        <p class="text-sm text-gray-500">เพิ่ม แก้ไข และจัดการผลงานวิจัยในระบบ</p>
+        <h1 class="text-xl md:text-2xl font-semibold text-black">
+          การจัดการผลงาน
+        </h1>
+        <p class="text-sm text-gray-500">
+          เพิ่ม แก้ไข และจัดการผลงานวิจัยในระบบ
+        </p>
       </div>
     </div>
 
-    <div class="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-full text-sm shadow-sm">
+    <div
+      class="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-full text-sm shadow-sm"
+    >
       <i class="bi bi-trophy text-[#F2CB05]"></i>
       <span class="text-gray-500">ทั้งหมด</span>
-      <span class="font-semibold text-[#394250]">{{ filteredResearch.length }}</span>
+      <span class="font-semibold text-[#394250]">{{
+        filteredResearch.length
+      }}</span>
       <span class="text-gray-500">รายการ</span>
     </div>
   </div>
 
   <!-- ===== Action Bar Card ===== -->
-  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 md:p-5 mb-5">
-    <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-3">
-
+  <div
+    class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 md:p-5 mb-5"
+  >
+    <div
+      class="flex flex-col md:flex-row md:justify-between md:items-center gap-3"
+    >
       <!-- Add Button with Dropdown -->
       <div class="relative">
         <button
@@ -68,33 +84,41 @@
       </div>
 
       <!-- Tabs + Search -->
-      <div class="flex flex-col md:flex-row md:items-center gap-3 w-full md:w-auto">
+      <div
+        class="flex flex-col md:flex-row md:items-center gap-3 w-full md:w-auto"
+      >
         <!-- Tabs -->
         <div class="flex gap-1.5">
           <button
             (click)="changeTab('PROJECT')"
             class="px-3 py-1.5 rounded-lg text-sm font-medium transition-all cursor-pointer"
-            [ngClass]="selectedTab === 'PROJECT'
-              ? 'bg-[#F2CB05] text-white shadow-sm'
-              : 'text-[#394250] hover:bg-yellow-50 border border-gray-200'"
+            [ngClass]="
+              selectedTab === 'PROJECT'
+                ? 'bg-[#F2CB05] text-white shadow-sm'
+                : 'text-[#394250] hover:bg-yellow-50 border border-gray-200'
+            "
           >
             <i class="bi bi-flask mr-1"></i>โครงการวิจัย
           </button>
           <button
             (click)="changeTab('ARTICLE')"
             class="px-3 py-1.5 rounded-lg text-sm font-medium transition-all cursor-pointer"
-            [ngClass]="selectedTab === 'ARTICLE'
-              ? 'bg-[#F2CB05] text-white shadow-sm'
-              : 'text-[#394250] hover:bg-yellow-50 border border-gray-200'"
+            [ngClass]="
+              selectedTab === 'ARTICLE'
+                ? 'bg-[#F2CB05] text-white shadow-sm'
+                : 'text-[#394250] hover:bg-yellow-50 border border-gray-200'
+            "
           >
             <i class="bi bi-file-earmark-text mr-1"></i>ผลงานตีพิมพ์
           </button>
           <button
             (click)="changeTab('INNOVATION')"
             class="px-3 py-1.5 rounded-lg text-sm font-medium transition-all cursor-pointer whitespace-nowrap"
-            [ngClass]="selectedTab === 'INNOVATION'
-              ? 'bg-[#F2CB05] text-white shadow-sm'
-              : 'text-[#394250] hover:bg-yellow-50 border border-gray-200'"
+            [ngClass]="
+              selectedTab === 'INNOVATION'
+                ? 'bg-[#F2CB05] text-white shadow-sm'
+                : 'text-[#394250] hover:bg-yellow-50 border border-gray-200'
+            "
           >
             <i class="bi bi-award mr-1"></i>นวัตกรรมสิ่งประดิษฐ์
           </button>
@@ -102,7 +126,9 @@
 
         <!-- Search -->
         <div class="relative w-full md:w-auto">
-          <i class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+          <i
+            class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"
+          ></i>
           <input
             type="text"
             [(ngModel)]="searchText"
@@ -115,8 +141,66 @@
     </div>
   </div>
 
+  <!-- ===== 🔄 LOADING STATE ===== -->
+  <div
+    *ngIf="loading"
+    class="bg-white rounded-2xl shadow-sm border border-gray-100 p-10 md:p-16"
+  >
+    <div class="flex flex-col items-center justify-center gap-6">
+      <!-- Animated Spinner -->
+      <div class="relative w-24 h-24">
+        <div
+          class="absolute inset-0 rounded-full border-4 border-gray-100"
+        ></div>
+        <div
+          class="absolute inset-0 rounded-full border-4 border-[#F2CB05] border-t-transparent animate-spin"
+        ></div>
+        <div class="absolute inset-0 flex items-center justify-center">
+          <div
+            class="w-10 h-10 rounded-full bg-linear-to-br from-[#F2CB05] to-[#e0b800] flex items-center justify-center shadow-md animate-pulse"
+          >
+            <i class="bi bi-trophy-fill text-white text-lg"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Text -->
+      <div class="text-center space-y-1">
+        <p class="text-lg md:text-xl font-semibold text-[#394250]">
+          กำลังโหลดข้อมูลผลงาน
+        </p>
+        <p class="text-sm text-gray-500">โปรดรอสักครู่ ระบบกำลังประมวลผล...</p>
+      </div>
+
+      <!-- Animated Dots -->
+      <div class="flex gap-2 mt-2">
+        <span
+          class="w-2.5 h-2.5 rounded-full bg-[#F2CB05] animate-bounce"
+          style="animation-delay: 0ms"
+        ></span>
+        <span
+          class="w-2.5 h-2.5 rounded-full bg-[#F2CB05] animate-bounce"
+          style="animation-delay: 150ms"
+        ></span>
+        <span
+          class="w-2.5 h-2.5 rounded-full bg-[#F2CB05] animate-bounce"
+          style="animation-delay: 300ms"
+        ></span>
+      </div>
+
+      <!-- Hint -->
+      <p class="text-xs text-gray-400 mt-3 text-center max-w-md">
+        <i class="bi bi-info-circle mr-1"></i>
+        เนื่องจากข้อมูลมีปริมาณมาก อาจใช้เวลาสักครู่ ขอบคุณสำหรับความอดทน
+      </p>
+    </div>
+  </div>
+
   <!-- ===== Main Table Card ===== -->
-  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+  <div
+    *ngIf="!loading"
+    class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden"
+  >
     <div class="overflow-x-auto font-light">
       <table class="w-full text-sm min-w-225 table-fixed">
         <colgroup>
@@ -131,15 +215,45 @@
 
         <thead class="bg-linear-to-r from-[#394250] to-[#2a323d] text-white">
           <tr>
-            <th class="p-3 text-center text-xs uppercase tracking-wider font-semibold">#</th>
-            <th class="p-3 text-center text-xs uppercase tracking-wider font-semibold">รหัส</th>
-            <th class="p-3 text-left text-xs uppercase tracking-wider font-semibold">ชื่อผลงาน</th>
-            <th class="p-3 text-center text-xs uppercase tracking-wider font-semibold">แหล่งทุน</th>
-            <th class="p-3 text-left text-xs uppercase tracking-wider font-semibold">
-              {{ selectedTab === 'ARTICLE' ? 'ผู้ประพันธ์อันดับแรก' : 'หัวหน้าโครงการ' }}
+            <th
+              class="p-3 text-center text-xs uppercase tracking-wider font-semibold"
+            >
+              #
             </th>
-            <th class="p-3 text-center text-xs uppercase tracking-wider font-semibold">ปี</th>
-            <th class="p-3 text-center text-xs uppercase tracking-wider font-semibold">Action</th>
+            <th
+              class="p-3 text-center text-xs uppercase tracking-wider font-semibold"
+            >
+              รหัส
+            </th>
+            <th
+              class="p-3 text-left text-xs uppercase tracking-wider font-semibold"
+            >
+              ชื่อผลงาน
+            </th>
+            <th
+              class="p-3 text-center text-xs uppercase tracking-wider font-semibold"
+            >
+              แหล่งทุน
+            </th>
+            <th
+              class="p-3 text-left text-xs uppercase tracking-wider font-semibold"
+            >
+              {{
+                selectedTab === "ARTICLE"
+                  ? "ผู้ประพันธ์อันดับแรก"
+                  : "หัวหน้าโครงการ"
+              }}
+            </th>
+            <th
+              class="p-3 text-center text-xs uppercase tracking-wider font-semibold"
+            >
+              ปี
+            </th>
+            <th
+              class="p-3 text-center text-xs uppercase tracking-wider font-semibold"
+            >
+              Action
+            </th>
           </tr>
         </thead>
 
@@ -159,13 +273,23 @@
             <td class="p-3">
               <!-- ใช้ routerLink เพื่อรองรับคลิกขวา → เปิดแท็บใหม่ -->
               <a
-                [routerLink]="['/admin/performance-by-departmaent', p.research_type.toLowerCase(), p.research_id]"
+                [routerLink]="[
+                  '/admin/performance-by-departmaent',
+                  p.research_type.toLowerCase(),
+                  p.research_id
+                ]"
                 class="font-medium text-[#16498C] hover:underline cursor-pointer line-clamp-2 whitespace-normal leading-snug"
                 title="{{ p.title_th || p.title_en }}"
               >
-                {{ (p.title_th && p.title_th !== '-') ? p.title_th : (p.title_en || '-') }}
+                {{
+                  p.title_th && p.title_th !== "-"
+                    ? p.title_th
+                    : p.title_en || "-"
+                }}
               </a>
-              <div class="text-xs text-gray-400 mt-1 hidden md:flex items-center gap-1">
+              <div
+                class="text-xs text-gray-400 mt-1 hidden md:flex items-center gap-1"
+              >
                 <i class="bi bi-calendar-event"></i>
                 {{ p.published_date | date : "dd MMM YYYY" : "" : "th-TH" }}
               </div>
@@ -173,8 +297,14 @@
 
             <td class="p-3">
               <div class="text-xs leading-relaxed text-gray-600">
-                <div><span class="font-medium text-gray-700">ประเภท:</span> {{ p.funding.source_funds || "-" }}</div>
-                <div><span class="font-medium text-gray-700">ชื่อ:</span> {{ p.funding.funding_name || "-" }}</div>
+                <div>
+                  <span class="font-medium text-gray-700">ประเภท:</span>
+                  {{ p.funding.source_funds || "-" }}
+                </div>
+                <div>
+                  <span class="font-medium text-gray-700">ชื่อ:</span>
+                  {{ p.funding.funding_name || "-" }}
+                </div>
               </div>
             </td>
 
@@ -186,7 +316,11 @@
               <div class="flex justify-center items-center gap-1.5">
                 <!-- ใช้ routerLink เพื่อรองรับคลิกขวา → เปิดแท็บใหม่ -->
                 <a
-                  [routerLink]="['/admin', 'edit-' + selectedTab.toLowerCase() + 's', p.research_id]"
+                  [routerLink]="[
+                    '/admin',
+                    'edit-' + selectedTab.toLowerCase() + 's',
+                    p.research_id
+                  ]"
                   class="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-600 transition-colors cursor-pointer"
                   title="แก้ไข"
                 >
@@ -214,9 +348,13 @@
     </div>
 
     <!-- Pagination -->
-    <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-3 px-5 py-4 md:px-6 border-t border-gray-100 font-light">
+    <div
+      class="flex flex-col md:flex-row md:justify-between md:items-center gap-3 px-5 py-4 md:px-6 border-t border-gray-100 font-light"
+    >
       <div class="text-sm text-gray-500">
-        หน้า <span class="text-[#394250] font-medium">{{ currentPage }}</span> จาก <span class="text-[#394250] font-medium">{{ totalPages }}</span>
+        หน้า
+        <span class="text-[#394250] font-medium">{{ currentPage }}</span> จาก
+        <span class="text-[#394250] font-medium">{{ totalPages }}</span>
       </div>
 
       <div class="flex items-center justify-end space-x-1">
@@ -234,11 +372,19 @@
             (click)="changePage(+page)"
             class="min-w-9 px-3 py-1.5 rounded-lg border text-sm transition-all cursor-pointer"
             [ngClass]="{
-              'bg-[#F2CB05] text-white border-[#F2CB05] shadow-sm': currentPage === page,
-              'border-gray-200 hover:bg-gray-50 text-gray-700': currentPage !== page
+              'bg-[#F2CB05] text-white border-[#F2CB05] shadow-sm':
+                currentPage === page,
+              'border-gray-200 hover:bg-gray-50 text-gray-700':
+                currentPage !== page
             }"
-          >{{ page }}</button>
-          <span *ngIf="page === '...'" class="px-2 py-1 text-sm text-gray-400 select-none">...</span>
+          >
+            {{ page }}
+          </button>
+          <span
+            *ngIf="page === '...'"
+            class="px-2 py-1 text-sm text-gray-400 select-none"
+            >...</span
+          >
         </ng-container>
 
         <button
@@ -251,5 +397,4 @@
       </div>
     </div>
   </div>
-
 </div>

@@ -27,6 +27,7 @@ export class ManageProjectComponent implements OnInit {
   researchs: Research[] = [];
   filteredResearch: Research[] = [];
   paginatedPublications: Research[] = [];
+  loading = false;
 
   constructor(private router: Router, private service: AdminMProjectService) {}
 
@@ -39,15 +40,18 @@ export class ManageProjectComponent implements OnInit {
   }
 
   loadData(): void {
+    this.loading = true;
     this.service.getProject().subscribe({
       next: (res) => {
         this.researchs = res.data.researchs;
         this.applyFilter();
         MainComponent.hideLoading();
+        this.loading = false;
       },
       error: (err) => {
         console.error(err);
         MainComponent.hideLoading();
+        this.loading = false;
       },
     });
   }

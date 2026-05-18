@@ -1,38 +1,47 @@
-<div class="min-h-screen bg-slate-50 px-4 py-6 md:px-10 md:py-8 font-sarabun text-[#394250]">
-
-  <!-- Back -->
-  <div class="flex justify-end mb-4">
-    <button
-      (click)="goToResearchDetail()"
-      class="flex items-center gap-2 text-sm md:text-base text-gray-500 hover:text-[#394250] transition-colors cursor-pointer group"
-    >
-      <span>ไปที่หน้าการจัดการ</span>
-      <span class="w-7 h-7 rounded-full bg-[#F2CB05] flex items-center justify-center text-[#394250] group-hover:bg-[#e0b800] transition-colors">
-        <i class="bi bi-arrow-right text-sm"></i>
-      </span>
-    </button>
-  </div>
+<div
+  class="min-h-screen bg-slate-50 px-4 py-6 md:px-10 md:py-8 font-sarabun text-[#394250]"
+>
 
   <!-- Main Card -->
-  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-
+  <div
+    class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden"
+  >
     <!-- Yellow Banner -->
-    <div class="bg-linear-to-r from-[#F2CB05] via-[#F2D742] to-[#F2E7AC] px-6 md:px-10 py-6 md:py-7">
+    <div
+      class="bg-linear-to-r from-[#F2CB05] via-[#F2D742] to-[#F2E7AC] px-6 md:px-10 py-6 md:py-7"
+    >
       <div class="flex items-center gap-4">
-        <div class="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-white/95 flex items-center justify-center shadow-md shrink-0">
-          <i class="bi bi-lightbulb-fill text-[#394250] text-2xl md:text-3xl"></i>
+        <div
+          class="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-white/95 flex items-center justify-center shadow-md shrink-0"
+        >
+          <i
+            class="bi bi-lightbulb-fill text-[#394250] text-2xl md:text-3xl"
+          ></i>
         </div>
         <div class="flex-1 min-w-0">
           <div class="flex items-center gap-2 flex-wrap">
-            <h1 class="text-xl md:text-2xl lg:text-3xl font-bold text-[#394250] leading-snug">
-              {{ isEdit ? "แก้ไขข้อมูลนวัตกรรมสิ่งประดิษฐ์" : "เพิ่มข้อมูลนวัตกรรมสิ่งประดิษฐ์" }}
+            <h1
+              class="text-xl md:text-2xl lg:text-3xl font-bold text-[#394250] leading-snug"
+            >
+              {{
+                isEdit
+                  ? "แก้ไขข้อมูลนวัตกรรมสิ่งประดิษฐ์"
+                  : "เพิ่มข้อมูลนวัตกรรมสิ่งประดิษฐ์"
+              }}
             </h1>
-            <span *ngIf="isEdit" class="text-[10px] md:text-xs font-semibold px-2.5 py-0.5 rounded-full bg-white/70 text-[#394250] border border-white/50">
+            <span
+              *ngIf="isEdit"
+              class="text-[10px] md:text-xs font-semibold px-2.5 py-0.5 rounded-full bg-white/70 text-[#394250] border border-white/50"
+            >
               Edit mode
             </span>
           </div>
           <p class="text-sm md:text-base text-[#394250]/70 mt-0.5">
-            {{ isEdit ? "ตรวจสอบและแก้ไขข้อมูลนวัตกรรมสิ่งประดิษฐ์" : "กรอกข้อมูลนวัตกรรมสิ่งประดิษฐ์" }}
+            {{
+              isEdit
+                ? "ตรวจสอบและแก้ไขข้อมูลนวัตกรรมสิ่งประดิษฐ์"
+                : "กรอกข้อมูลนวัตกรรมสิ่งประดิษฐ์"
+            }}
           </p>
         </div>
       </div>
@@ -40,11 +49,12 @@
 
     <!-- Form Body -->
     <div class="p-6 md:px-10 md:py-8">
-
       <!-- SECTION: ชื่อนวัตกรรม -->
       <div class="flex items-center gap-4 mb-5">
         <div class="flex-1 h-px bg-gray-200"></div>
-        <span class="text-sm text-gray-400 tracking-wider whitespace-nowrap">ชื่อนวัตกรรมสิ่งประดิษฐ์</span>
+        <span class="text-sm text-gray-400 tracking-wider whitespace-nowrap"
+          >ชื่อนวัตกรรมสิ่งประดิษฐ์</span
+        >
         <div class="flex-1 h-px bg-gray-200"></div>
       </div>
 
@@ -53,51 +63,82 @@
           ชื่อนวัตกรรมสิ่งประดิษฐ์ <span class="text-red-500">*</span>
         </label>
         <input
-          name="title_th" required #title="ngModel"
-          [(ngModel)]="projectData.title_th" type="text"
+          name="title_th"
+          required
+          #title="ngModel"
+          [(ngModel)]="projectData.title_th"
+          type="text"
           [class.border-red-500]="title.invalid && title.touched"
           class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm font-light bg-white outline-none focus:border-[#F2CB05] focus:ring-2 focus:ring-[#F2CB05]/20 transition"
           placeholder="ระบุชื่อนวัตกรรมสิ่งประดิษฐ์"
         />
-        <p *ngIf="title.invalid && title.touched" class="text-red-500 text-xs mt-1.5 flex items-center gap-1">
-          <i class="bi bi-exclamation-circle"></i> กรุณากรอกชื่อนวัตกรรมสิ่งประดิษฐ์
+        <p
+          *ngIf="title.invalid && title.touched"
+          class="text-red-500 text-xs mt-1.5 flex items-center gap-1"
+        >
+          <i class="bi bi-exclamation-circle"></i>
+          กรุณากรอกชื่อนวัตกรรมสิ่งประดิษฐ์
         </p>
       </div>
 
       <div class="mb-8">
         <label class="block text-sm font-medium text-[#394250] mb-2">
-          ชื่อนวัตกรรมสิ่งประดิษฐ์ (ภาษาอังกฤษ) <span class="text-red-500">*</span>
+          ชื่อนวัตกรรมสิ่งประดิษฐ์ (ภาษาอังกฤษ)
+          <span class="text-red-500">*</span>
         </label>
         <input
-          name="title_en" required #title_en="ngModel"
-          [(ngModel)]="projectData.title_en" type="text"
+          name="title_en"
+          required
+          #title_en="ngModel"
+          [(ngModel)]="projectData.title_en"
+          type="text"
           [class.border-red-500]="title_en.invalid && title_en.touched"
           class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm font-light bg-white outline-none focus:border-[#F2CB05] focus:ring-2 focus:ring-[#F2CB05]/20 transition"
           placeholder="ระบุชื่อนวัตกรรมสิ่งประดิษฐ์ภาษาอังกฤษ"
         />
-        <p *ngIf="title_en.invalid && title_en.touched" class="text-red-500 text-xs mt-1.5 flex items-center gap-1">
-          <i class="bi bi-exclamation-circle"></i> กรุณากรอกชื่อนวัตกรรมสิ่งประดิษฐ์ภาษาอังกฤษ
+        <p
+          *ngIf="title_en.invalid && title_en.touched"
+          class="text-red-500 text-xs mt-1.5 flex items-center gap-1"
+        >
+          <i class="bi bi-exclamation-circle"></i>
+          กรุณากรอกชื่อนวัตกรรมสิ่งประดิษฐ์ภาษาอังกฤษ
         </p>
       </div>
 
       <!-- SECTION: บทคัดย่อ -->
       <div class="flex items-center gap-4 mb-5">
         <div class="flex-1 h-px bg-gray-200"></div>
-        <span class="text-sm text-gray-400 tracking-wider whitespace-nowrap">บทคัดย่อ / ABSTRACT</span>
+        <span class="text-sm text-gray-400 tracking-wider whitespace-nowrap"
+          >บทคัดย่อ / ABSTRACT</span
+        >
         <div class="flex-1 h-px bg-gray-200"></div>
       </div>
 
       <div class="flex gap-6 mb-5">
-        <label class="flex items-center gap-2 cursor-pointer text-sm text-[#394250]">
-          <input type="radio" name="abstract_type" value="th"
-                 class="accent-[#F2CB05] w-4 h-4 cursor-pointer"
-                 [(ngModel)]="abstractType" (ngModelChange)="onAbstractTypeChange($event)" />
+        <label
+          class="flex items-center gap-2 cursor-pointer text-sm text-[#394250]"
+        >
+          <input
+            type="radio"
+            name="abstract_type"
+            value="th"
+            class="accent-[#F2CB05] w-4 h-4 cursor-pointer"
+            [(ngModel)]="abstractType"
+            (ngModelChange)="onAbstractTypeChange($event)"
+          />
           ภาษาไทย
         </label>
-        <label class="flex items-center gap-2 cursor-pointer text-sm text-[#394250]">
-          <input type="radio" name="abstract_type" value="en"
-                 class="accent-[#F2CB05] w-4 h-4 cursor-pointer"
-                 [(ngModel)]="abstractType" (ngModelChange)="onAbstractTypeChange($event)" />
+        <label
+          class="flex items-center gap-2 cursor-pointer text-sm text-[#394250]"
+        >
+          <input
+            type="radio"
+            name="abstract_type"
+            value="en"
+            class="accent-[#F2CB05] w-4 h-4 cursor-pointer"
+            [(ngModel)]="abstractType"
+            (ngModelChange)="onAbstractTypeChange($event)"
+          />
           ภาษาอังกฤษ
         </label>
       </div>
@@ -108,7 +149,9 @@
             บทคัดย่อ <span class="text-red-500">*</span>
           </label>
           <textarea
-            name="abstract" [(ngModel)]="projectData.abstract" (keydown)="handleTab($event)"
+            name="abstract"
+            [(ngModel)]="projectData.abstract"
+            (keydown)="handleTab($event)"
             rows="6"
             class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm font-light bg-white outline-none resize-y focus:border-[#F2CB05] focus:ring-2 focus:ring-[#F2CB05]/20 transition"
             placeholder="ระบุบทคัดย่อ"
@@ -116,18 +159,33 @@
         </div>
         <div>
           <label class="block text-sm font-medium text-[#394250] mb-2">
-            คำสำคัญ <span class="text-gray-400 font-normal text-xs ml-1">(ไม่เกิน 5 คำ)</span>
+            คำสำคัญ
+            <span class="text-gray-400 font-normal text-xs ml-1"
+              >(ไม่เกิน 5 คำ)</span
+            >
           </label>
-          <div class="flex flex-wrap items-center gap-2 border border-gray-200 rounded-xl px-3 py-2.5 min-h-12 bg-white focus-within:border-[#F2CB05] focus-within:ring-2 focus-within:ring-[#F2CB05]/20 transition">
-            <span *ngFor="let keyword of projectData.keywords; let i = index"
-                  class="flex items-center gap-2 px-3 py-1 rounded-full text-[#394250] text-xs font-medium bg-linear-to-r from-[#F2E7AC]/70 to-[#F2CB05]/50 border border-[#F2CB05]/30">
+          <div
+            class="flex flex-wrap items-center gap-2 border border-gray-200 rounded-xl px-3 py-2.5 min-h-12 bg-white focus-within:border-[#F2CB05] focus-within:ring-2 focus-within:ring-[#F2CB05]/20 transition"
+          >
+            <span
+              *ngFor="let keyword of projectData.keywords; let i = index"
+              class="flex items-center gap-2 px-3 py-1 rounded-full text-[#394250] text-xs font-medium bg-linear-to-r from-[#F2E7AC]/70 to-[#F2CB05]/50 border border-[#F2CB05]/30"
+            >
               {{ keyword }}
-              <button type="button" (click)="removeKeyword(i)"
-                      class="text-gray-500 hover:text-red-500 text-xs cursor-pointer leading-none transition-colors">✕</button>
+              <button
+                type="button"
+                (click)="removeKeyword(i)"
+                class="text-gray-500 hover:text-red-500 text-xs cursor-pointer leading-none transition-colors"
+              >
+                ✕
+              </button>
             </span>
-            <input [(ngModel)]="keywordInput" (keydown)="addKeyword($event, 'th')"
-                   class="flex-1 outline-none text-sm font-light min-w-32 bg-transparent text-[#394250]"
-                   placeholder="พิมพ์แล้วกด Enter" />
+            <input
+              [(ngModel)]="keywordInput"
+              (keydown)="addKeyword($event, 'th')"
+              class="flex-1 outline-none text-sm font-light min-w-32 bg-transparent text-[#394250]"
+              placeholder="พิมพ์แล้วกด Enter"
+            />
           </div>
         </div>
       </div>
@@ -138,7 +196,9 @@
             Abstract <span class="text-red-500">*</span>
           </label>
           <textarea
-            name="abstract_en" [(ngModel)]="projectData.abstract_en" (keydown)="handleTab($event)"
+            name="abstract_en"
+            [(ngModel)]="projectData.abstract_en"
+            (keydown)="handleTab($event)"
             rows="6"
             class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm font-light bg-white outline-none resize-y focus:border-[#F2CB05] focus:ring-2 focus:ring-[#F2CB05]/20 transition"
             placeholder="Enter abstract"
@@ -146,18 +206,33 @@
         </div>
         <div>
           <label class="block text-sm font-medium text-[#394250] mb-2">
-            Keywords <span class="text-gray-400 font-normal text-xs ml-1">(no more than 5)</span>
+            Keywords
+            <span class="text-gray-400 font-normal text-xs ml-1"
+              >(no more than 5)</span
+            >
           </label>
-          <div class="flex flex-wrap items-center gap-2 border border-gray-200 rounded-xl px-3 py-2.5 min-h-12 bg-white focus-within:border-[#F2CB05] focus-within:ring-2 focus-within:ring-[#F2CB05]/20 transition">
-            <span *ngFor="let keyword of projectData.keywords; let i = index"
-                  class="flex items-center gap-2 px-3 py-1 rounded-full text-[#394250] text-xs font-medium bg-linear-to-r from-[#F2E7AC]/70 to-[#F2CB05]/50 border border-[#F2CB05]/30">
+          <div
+            class="flex flex-wrap items-center gap-2 border border-gray-200 rounded-xl px-3 py-2.5 min-h-12 bg-white focus-within:border-[#F2CB05] focus-within:ring-2 focus-within:ring-[#F2CB05]/20 transition"
+          >
+            <span
+              *ngFor="let keyword of projectData.keywords; let i = index"
+              class="flex items-center gap-2 px-3 py-1 rounded-full text-[#394250] text-xs font-medium bg-linear-to-r from-[#F2E7AC]/70 to-[#F2CB05]/50 border border-[#F2CB05]/30"
+            >
               {{ keyword }}
-              <button type="button" (click)="removeKeywordEn(i)"
-                      class="text-gray-500 hover:text-red-500 text-xs cursor-pointer leading-none transition-colors">✕</button>
+              <button
+                type="button"
+                (click)="removeKeywordEn(i)"
+                class="text-gray-500 hover:text-red-500 text-xs cursor-pointer leading-none transition-colors"
+              >
+                ✕
+              </button>
             </span>
-            <input [(ngModel)]="keywordInputEn" (keydown)="addKeyword($event, 'en')"
-                   class="flex-1 outline-none text-sm font-light min-w-32 bg-transparent text-[#394250]"
-                   placeholder="Enter keyword and press Enter" />
+            <input
+              [(ngModel)]="keywordInputEn"
+              (keydown)="addKeyword($event, 'en')"
+              class="flex-1 outline-none text-sm font-light min-w-32 bg-transparent text-[#394250]"
+              placeholder="Enter keyword and press Enter"
+            />
           </div>
         </div>
       </div>
@@ -165,7 +240,9 @@
       <!-- SECTION: สาขา (OECD) -->
       <div class="flex items-center gap-4 mb-5">
         <div class="flex-1 h-px bg-gray-200"></div>
-        <span class="text-sm text-gray-400 tracking-wider whitespace-nowrap">สาขาของนวัตกรรม (OECD)</span>
+        <span class="text-sm text-gray-400 tracking-wider whitespace-nowrap"
+          >สาขาของนวัตกรรม (OECD)</span
+        >
         <div class="flex-1 h-px bg-gray-200"></div>
       </div>
 
@@ -175,17 +252,34 @@
           <label class="block text-sm font-medium text-[#394250] mb-2">
             สาขาหลัก <span class="text-red-500">*</span>
           </label>
-          <button (click)="toggleDropdown('major', $event)" type="button"
-                  class="w-full border border-gray-200 rounded-xl px-4 py-3 flex justify-between items-center bg-white hover:border-[#F2CB05] text-sm font-light transition cursor-pointer">
-            <span class="truncate" [class.text-gray-400]="!selectedMajor?.name_th">{{ selectedMajor?.name_th || 'เลือกสาขาหลัก' }}</span>
-            <i class="bi bi-chevron-down text-sm text-gray-400 transition-transform duration-200" [class.rotate-180]="activeDropdown === 'major'"></i>
+          <button
+            (click)="toggleDropdown('major', $event)"
+            type="button"
+            class="w-full border border-gray-200 rounded-xl px-4 py-3 flex justify-between items-center bg-white hover:border-[#F2CB05] text-sm font-light transition cursor-pointer"
+          >
+            <span
+              class="truncate"
+              [class.text-gray-400]="!selectedMajor?.name_th"
+              >{{ selectedMajor?.name_th || "เลือกสาขาหลัก" }}</span
+            >
+            <i
+              class="bi bi-chevron-down text-sm text-gray-400 transition-transform duration-200"
+              [class.rotate-180]="activeDropdown === 'major'"
+            ></i>
           </button>
-          <div *ngIf="activeDropdown === 'major'"
-               class="absolute z-50 w-full bg-white border border-gray-200 rounded-xl mt-1 shadow-lg text-sm font-light overflow-hidden"
-               (click)="$event.stopPropagation()">
+          <div
+            *ngIf="activeDropdown === 'major'"
+            class="absolute z-50 w-full bg-white border border-gray-200 rounded-xl mt-1 shadow-lg text-sm font-light overflow-hidden"
+            (click)="$event.stopPropagation()"
+          >
             <ul class="max-h-72 overflow-y-auto py-1">
-              <li *ngFor="let m of filteredMajors()" (click)="selectMajor(m)"
-                  class="px-4 py-2 hover:bg-[#F2E7AC]/30 cursor-pointer transition-colors">{{ m.name_th }}</li>
+              <li
+                *ngFor="let m of filteredMajors()"
+                (click)="selectMajor(m)"
+                class="px-4 py-2 hover:bg-[#F2E7AC]/30 cursor-pointer transition-colors"
+              >
+                {{ m.name_th }}
+              </li>
             </ul>
           </div>
         </div>
@@ -195,17 +289,35 @@
           <label class="block text-sm font-medium text-[#394250] mb-2">
             สาขาย่อย <span class="text-red-500">*</span>
           </label>
-          <button (click)="toggleDropdown('sub', $event)" [disabled]="!selectedMajor" type="button"
-                  class="w-full border border-gray-200 rounded-xl px-4 py-3 flex justify-between items-center bg-white hover:border-[#F2CB05] text-sm font-light transition cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-gray-50">
-            <span class="truncate" [class.text-gray-400]="!selectedSub?.name_th">{{ selectedSub?.name_th || 'เลือกสาขาย่อย' }}</span>
-            <i class="bi bi-chevron-down text-sm text-gray-400 transition-transform duration-200" [class.rotate-180]="activeDropdown === 'sub'"></i>
+          <button
+            (click)="toggleDropdown('sub', $event)"
+            [disabled]="!selectedMajor"
+            type="button"
+            class="w-full border border-gray-200 rounded-xl px-4 py-3 flex justify-between items-center bg-white hover:border-[#F2CB05] text-sm font-light transition cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-gray-50"
+          >
+            <span
+              class="truncate"
+              [class.text-gray-400]="!selectedSub?.name_th"
+              >{{ selectedSub?.name_th || "เลือกสาขาย่อย" }}</span
+            >
+            <i
+              class="bi bi-chevron-down text-sm text-gray-400 transition-transform duration-200"
+              [class.rotate-180]="activeDropdown === 'sub'"
+            ></i>
           </button>
-          <div *ngIf="activeDropdown === 'sub'"
-               class="absolute z-50 w-full bg-white border border-gray-200 rounded-xl mt-1 shadow-lg text-sm font-light overflow-hidden"
-               (click)="$event.stopPropagation()">
+          <div
+            *ngIf="activeDropdown === 'sub'"
+            class="absolute z-50 w-full bg-white border border-gray-200 rounded-xl mt-1 shadow-lg text-sm font-light overflow-hidden"
+            (click)="$event.stopPropagation()"
+          >
             <ul class="max-h-72 overflow-y-auto py-1">
-              <li *ngFor="let s of filteredSubs()" (click)="selectSub(s)"
-                  class="px-4 py-2 hover:bg-[#F2E7AC]/30 cursor-pointer transition-colors">{{ s.name_th }}</li>
+              <li
+                *ngFor="let s of filteredSubs()"
+                (click)="selectSub(s)"
+                class="px-4 py-2 hover:bg-[#F2E7AC]/30 cursor-pointer transition-colors"
+              >
+                {{ s.name_th }}
+              </li>
             </ul>
           </div>
         </div>
@@ -215,17 +327,35 @@
           <label class="block text-sm font-medium text-[#394250] mb-2">
             สาขาที่เกี่ยวข้อง <span class="text-red-500">*</span>
           </label>
-          <button (click)="toggleDropdown('subSub', $event)" [disabled]="!selectedSub" type="button"
-                  class="w-full border border-gray-200 rounded-xl px-4 py-3 flex justify-between items-center bg-white hover:border-[#F2CB05] text-sm font-light transition cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-gray-50">
-            <span class="truncate" [class.text-gray-400]="!selectedSubSub?.name_th">{{ selectedSubSub?.name_th || 'เลือกสาขาที่เกี่ยวข้อง' }}</span>
-            <i class="bi bi-chevron-down text-sm text-gray-400 transition-transform duration-200" [class.rotate-180]="activeDropdown === 'subSub'"></i>
+          <button
+            (click)="toggleDropdown('subSub', $event)"
+            [disabled]="!selectedSub"
+            type="button"
+            class="w-full border border-gray-200 rounded-xl px-4 py-3 flex justify-between items-center bg-white hover:border-[#F2CB05] text-sm font-light transition cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-gray-50"
+          >
+            <span
+              class="truncate"
+              [class.text-gray-400]="!selectedSubSub?.name_th"
+              >{{ selectedSubSub?.name_th || "เลือกสาขาที่เกี่ยวข้อง" }}</span
+            >
+            <i
+              class="bi bi-chevron-down text-sm text-gray-400 transition-transform duration-200"
+              [class.rotate-180]="activeDropdown === 'subSub'"
+            ></i>
           </button>
-          <div *ngIf="activeDropdown === 'subSub'"
-               class="absolute z-50 w-full bg-white border border-gray-200 rounded-xl mt-1 shadow-lg text-sm font-light overflow-hidden"
-               (click)="$event.stopPropagation()">
+          <div
+            *ngIf="activeDropdown === 'subSub'"
+            class="absolute z-50 w-full bg-white border border-gray-200 rounded-xl mt-1 shadow-lg text-sm font-light overflow-hidden"
+            (click)="$event.stopPropagation()"
+          >
             <ul class="max-h-72 overflow-y-auto py-1">
-              <li *ngFor="let ss of filteredSubSubs()" (click)="selectSubSub(ss)"
-                  class="px-4 py-2 hover:bg-[#F2E7AC]/30 cursor-pointer transition-colors">{{ ss.name_th }}</li>
+              <li
+                *ngFor="let ss of filteredSubSubs()"
+                (click)="selectSubSub(ss)"
+                class="px-4 py-2 hover:bg-[#F2E7AC]/30 cursor-pointer transition-colors"
+              >
+                {{ ss.name_th }}
+              </li>
             </ul>
           </div>
         </div>
@@ -234,13 +364,16 @@
       <!-- SECTION: หลักการและเหตุผล -->
       <div class="flex items-center gap-4 mb-5">
         <div class="flex-1 h-px bg-gray-200"></div>
-        <span class="text-sm text-gray-400 tracking-wider whitespace-nowrap">หลักการและเหตุผล</span>
+        <span class="text-sm text-gray-400 tracking-wider whitespace-nowrap"
+          >หลักการและเหตุผล</span
+        >
         <div class="flex-1 h-px bg-gray-200"></div>
       </div>
 
       <div class="mb-8">
         <textarea
-          [(ngModel)]="projectData.principle" name="attention"
+          [(ngModel)]="projectData.principle"
+          name="attention"
           rows="4"
           class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm font-light bg-white outline-none resize-y focus:border-[#F2CB05] focus:ring-2 focus:ring-[#F2CB05]/20 transition"
           placeholder="ระบุหลักการและเหตุผล"
@@ -250,7 +383,9 @@
       <!-- SECTION: ความรับผิดชอบและคุณภาพ -->
       <div class="flex items-center gap-4 mb-5">
         <div class="flex-1 h-px bg-gray-200"></div>
-        <span class="text-sm text-gray-400 tracking-wider whitespace-nowrap">ความรับผิดชอบและคุณภาพ</span>
+        <span class="text-sm text-gray-400 tracking-wider whitespace-nowrap"
+          >ความรับผิดชอบและคุณภาพ</span
+        >
         <div class="flex-1 h-px bg-gray-200"></div>
       </div>
 
@@ -259,33 +394,59 @@
         <div>
           <label class="block text-sm font-medium text-[#394250] mb-2">
             ประเภทความรับผิดชอบ <span class="text-red-500">*</span>
-            <span class="ml-1.5 text-[10px] font-medium px-2 py-0.5 rounded-full bg-[#F2E7AC]/60 text-[#394250]">Auto</span>
+            <span
+              class="ml-1.5 text-[10px] font-medium px-2 py-0.5 rounded-full bg-[#F2E7AC]/60 text-[#394250]"
+              >Auto</span
+            >
           </label>
-          <div class="flex items-center gap-2 w-full border border-gray-200 rounded-xl px-4 py-3 bg-gray-50 text-gray-400 text-sm font-light opacity-80 pointer-events-none">
+          <div
+            class="flex items-center gap-2 w-full border border-gray-200 rounded-xl px-4 py-3 bg-gray-50 text-gray-400 text-sm font-light opacity-80 pointer-events-none"
+          >
             <i class="bi bi-lock-fill text-sm"></i>
-            <span class="flex-1 truncate">{{ projectData.responsibilities || "ประเภทความรับผิดชอบ" }}</span>
+            <span class="flex-1 truncate">{{
+              projectData.responsibilities || "ประเภทความรับผิดชอบ"
+            }}</span>
           </div>
         </div>
 
         <!-- ค่าน้ำหนัก -->
         <div class="relative">
-          <label class="text-sm font-medium text-[#394250] mb-2 flex items-center gap-1">
+          <label
+            class="text-sm font-medium text-[#394250] mb-2 flex items-center gap-1"
+          >
             ค่าน้ำหนัก / ระดับคุณภาพ <span class="text-red-500">*</span>
-            <button type="button" (click)="showWeightModal = true"
-                    class="ml-1 text-gray-400 hover:text-[#F2CB05] cursor-pointer transition-colors">
+            <button
+              type="button"
+              (click)="showWeightModal = true"
+              class="ml-1 text-gray-400 hover:text-[#F2CB05] cursor-pointer transition-colors"
+            >
               <i class="bi bi-info-circle-fill"></i>
             </button>
           </label>
-          <button (click)="toggleDropdown('quality', $event)" type="button"
-                  class="w-full border border-gray-200 rounded-xl px-4 py-3 flex justify-between items-center bg-white hover:border-[#F2CB05] text-sm font-light transition cursor-pointer">
-            <span [class.text-gray-400]="!projectData.volume_no">{{ projectData.volume_no || "เลือกระดับคุณภาพ" }}</span>
-            <i class="bi bi-chevron-down text-sm text-gray-400 transition-transform duration-200" [class.rotate-180]="activeDropdown === 'quality'"></i>
+          <button
+            (click)="toggleDropdown('quality', $event)"
+            type="button"
+            class="w-full border border-gray-200 rounded-xl px-4 py-3 flex justify-between items-center bg-white hover:border-[#F2CB05] text-sm font-light transition cursor-pointer"
+          >
+            <span [class.text-gray-400]="!projectData.volume_no">{{
+              projectData.volume_no || "เลือกระดับคุณภาพ"
+            }}</span>
+            <i
+              class="bi bi-chevron-down text-sm text-gray-400 transition-transform duration-200"
+              [class.rotate-180]="activeDropdown === 'quality'"
+            ></i>
           </button>
-          <div *ngIf="activeDropdown === 'quality'"
-               class="absolute z-50 mt-1 w-full bg-white border border-gray-200 rounded-xl shadow-lg text-sm font-light overflow-hidden">
-            <div *ngFor="let q of ['0.20', '0.40', '0.60', '0.80', '1.00']"
-                 (click)="selectValue('volume_no', q)"
-                 class="px-4 py-2.5 cursor-pointer hover:bg-[#F2E7AC]/30 transition-colors">{{ q }}</div>
+          <div
+            *ngIf="activeDropdown === 'quality'"
+            class="absolute z-50 mt-1 w-full bg-white border border-gray-200 rounded-xl shadow-lg text-sm font-light overflow-hidden"
+          >
+            <div
+              *ngFor="let q of ['0.20', '0.40', '0.60', '0.80', '1.00']"
+              (click)="selectValue('volume_no', q)"
+              class="px-4 py-2.5 cursor-pointer hover:bg-[#F2E7AC]/30 transition-colors"
+            >
+              {{ q }}
+            </div>
           </div>
         </div>
       </div>
@@ -293,64 +454,142 @@
       <!-- SECTION: ผู้ร่วมโครงการ -->
       <div class="flex items-center gap-4 mb-5">
         <div class="flex-1 h-px bg-gray-200"></div>
-        <span class="text-sm text-gray-400 tracking-wider whitespace-nowrap">ผู้ร่วมโครงการอื่นๆ</span>
+        <span class="text-sm text-gray-400 tracking-wider whitespace-nowrap"
+          >ผู้ร่วมโครงการอื่นๆ</span
+        >
         <div class="flex-1 h-px bg-gray-200"></div>
       </div>
 
       <div class="mb-8">
         <!-- Internal -->
-        <label class="flex items-center gap-2 text-sm font-medium text-[#394250] mb-2.5">
+        <label
+          class="flex items-center gap-2 text-sm font-medium text-[#394250] mb-2.5"
+        >
           <i class="bi bi-building text-blue-500"></i> ผู้ร่วมโครงการภายใน
         </label>
         <div class="overflow-x-auto rounded-xl border border-gray-200">
           <table class="w-full table-fixed min-w-140 text-sm font-light">
             <colgroup>
-              <col class="w-[8%]" /><col class="w-[30%]" /><col class="w-[46%]" /><col class="w-[16%]" />
+              <col class="w-[8%]" />
+              <col class="w-[30%]" />
+              <col class="w-[46%]" />
+              <col class="w-[16%]" />
             </colgroup>
             <thead>
               <tr class="bg-linear-to-r from-[#394250] to-[#2a323d] text-white">
-                <th class="px-3 py-2.5 text-center text-xs uppercase tracking-wider font-semibold">#</th>
-                <th class="px-3 py-2.5 text-center text-xs uppercase tracking-wider font-semibold">ระบุชื่อ</th>
-                <th class="px-3 py-2.5 text-center text-xs uppercase tracking-wider font-semibold">ประเภทความรับผิดชอบ</th>
-                <th class="px-3 py-2.5 text-center text-xs uppercase tracking-wider font-semibold">Action</th>
+                <th
+                  class="px-3 py-2.5 text-center text-xs uppercase tracking-wider font-semibold"
+                >
+                  #
+                </th>
+                <th
+                  class="px-3 py-2.5 text-center text-xs uppercase tracking-wider font-semibold"
+                >
+                  ระบุชื่อ
+                </th>
+                <th
+                  class="px-3 py-2.5 text-center text-xs uppercase tracking-wider font-semibold"
+                >
+                  ประเภทความรับผิดชอบ
+                </th>
+                <th
+                  class="px-3 py-2.5 text-center text-xs uppercase tracking-wider font-semibold"
+                >
+                  Action
+                </th>
               </tr>
             </thead>
             <tbody class="bg-white">
-              <tr *ngFor="let row of internalRow; let i = index; trackBy: trackById"
-                  class="border-b border-gray-100 hover:bg-yellow-50/40 transition-colors last:border-0">
+              <tr
+                *ngFor="
+                  let row of internalRow;
+                  let i = index;
+                  trackBy: trackById
+                "
+                class="border-b border-gray-100 hover:bg-yellow-50/40 transition-colors last:border-0"
+              >
                 <td class="px-3 py-2 text-center text-gray-500">{{ i + 1 }}</td>
                 <td class="px-2 py-2 relative">
-                  <input type="text" [(ngModel)]="row.name"
-                         (focus)="onFocus(row)" (click)="$event.stopPropagation()" (ngModelChange)="onSearch($event)"
-                         class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm font-light bg-white outline-none focus:border-[#F2CB05] focus:ring-1 focus:ring-[#F2CB05]/20 transition"
-                         placeholder="ระบุชื่อผู้ร่วมโครงการ" />
-                  <ul *ngIf="activeRowIndex === row.id" (click)="$event.stopPropagation()"
-                      class="absolute z-50 bg-white border border-gray-200 rounded-xl p-1 shadow-lg max-h-48 overflow-y-auto text-sm font-light w-full left-0 mt-1 top-full">
-                    <li *ngFor="let r of getAvailableResearchers(row)" (click)="selectResearcher(r, row)"
-                        class="px-3 py-1.5 hover:bg-[#F2E7AC]/30 cursor-pointer rounded-lg transition-colors">{{ r.full_name }}</li>
-                    <li *ngIf="filteredResearchers.length === 0" class="px-3 py-2 text-gray-400 text-center">ไม่พบข้อมูล</li>
+                  <input
+                    type="text"
+                    [(ngModel)]="row.name"
+                    (focus)="onFocus(row)"
+                    (click)="$event.stopPropagation()"
+                    (ngModelChange)="onSearch($event)"
+                    class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm font-light bg-white outline-none focus:border-[#F2CB05] focus:ring-1 focus:ring-[#F2CB05]/20 transition"
+                    placeholder="ระบุชื่อผู้ร่วมโครงการ"
+                  />
+                  <ul
+                    *ngIf="activeRowIndex === row.id"
+                    (click)="$event.stopPropagation()"
+                    class="absolute z-50 bg-white border border-gray-200 rounded-xl p-1 shadow-lg max-h-48 overflow-y-auto text-sm font-light w-full left-0 mt-1 top-full"
+                  >
+                    <li
+                      *ngFor="let r of getAvailableResearchers(row)"
+                      (click)="selectResearcher(r, row)"
+                      class="px-3 py-1.5 hover:bg-[#F2E7AC]/30 cursor-pointer rounded-lg transition-colors"
+                    >
+                      {{ r.full_name }}
+                    </li>
+                    <li
+                      *ngIf="filteredResearchers.length === 0"
+                      class="px-3 py-2 text-gray-400 text-center"
+                    >
+                      ไม่พบข้อมูล
+                    </li>
                   </ul>
                 </td>
                 <td class="px-2 py-2">
-                  <button (click)="toggleDropdown('internal-' + i, $event)"
-                          class="flex justify-between items-center bg-white w-full rounded-lg border border-gray-200 px-3 py-2 text-sm font-light hover:border-[#F2CB05] transition cursor-pointer">
-                    <span class="truncate" [class.text-gray-400]="!row.responsibilities">{{ row.responsibilities || 'เลือกประเภท' }}</span>
-                    <i class="bi bi-chevron-down text-xs text-gray-400 shrink-0 ml-1 transition-transform duration-200" [class.rotate-180]="activeDropdown === 'internal-' + i"></i>
+                  <button
+                    (click)="toggleDropdown('internal-' + i, $event)"
+                    class="flex justify-between items-center bg-white w-full rounded-lg border border-gray-200 px-3 py-2 text-sm font-light hover:border-[#F2CB05] transition cursor-pointer"
+                  >
+                    <span
+                      class="truncate"
+                      [class.text-gray-400]="!row.responsibilities"
+                      >{{ row.responsibilities || "เลือกประเภท" }}</span
+                    >
+                    <i
+                      class="bi bi-chevron-down text-xs text-gray-400 shrink-0 ml-1 transition-transform duration-200"
+                      [class.rotate-180]="activeDropdown === 'internal-' + i"
+                    ></i>
                   </button>
-                  <div *ngIf="activeDropdown === 'internal-' + i"
-                       class="absolute z-50 bg-white border border-gray-200 rounded-xl shadow-lg text-sm font-light left-1/2 -translate-x-1/2 w-72 mt-1 overflow-hidden">
-                    <div (click)="!isFirstAuthorTaken(row) && selectRowResponsibility(row, 'หัวหน้าโครงการ')"
-                         [class.opacity-50]="isFirstAuthorTaken(row)" [class.pointer-events-none]="isFirstAuthorTaken(row)"
-                         class="px-4 py-2 hover:bg-[#F2E7AC]/30 cursor-pointer transition-colors">หัวหน้าโครงการ</div>
-                    <div (click)="selectRowResponsibility(row, 'ที่ปรึกษาโครงการ')"
-                         class="px-4 py-2 hover:bg-[#F2E7AC]/30 cursor-pointer transition-colors">ที่ปรึกษาโครงการ</div>
-                    <div (click)="selectRowResponsibility(row, 'ผู้ร่วมวิจัย')"
-                         class="px-4 py-2 hover:bg-[#F2E7AC]/30 cursor-pointer transition-colors">ผู้ร่วมวิจัย</div>
+                  <div
+                    *ngIf="activeDropdown === 'internal-' + i"
+                    class="absolute z-50 bg-white border border-gray-200 rounded-xl shadow-lg text-sm font-light left-1/2 -translate-x-1/2 w-72 mt-1 overflow-hidden"
+                  >
+                    <div
+                      (click)="
+                        !isFirstAuthorTaken(row) &&
+                          selectRowResponsibility(row, 'หัวหน้าโครงการ')
+                      "
+                      [class.opacity-50]="isFirstAuthorTaken(row)"
+                      [class.pointer-events-none]="isFirstAuthorTaken(row)"
+                      class="px-4 py-2 hover:bg-[#F2E7AC]/30 cursor-pointer transition-colors"
+                    >
+                      หัวหน้าโครงการ
+                    </div>
+                    <div
+                      (click)="selectRowResponsibility(row, 'ที่ปรึกษาโครงการ')"
+                      class="px-4 py-2 hover:bg-[#F2E7AC]/30 cursor-pointer transition-colors"
+                    >
+                      ที่ปรึกษาโครงการ
+                    </div>
+                    <div
+                      (click)="selectRowResponsibility(row, 'ผู้ร่วมวิจัย')"
+                      class="px-4 py-2 hover:bg-[#F2E7AC]/30 cursor-pointer transition-colors"
+                    >
+                      ผู้ร่วมวิจัย
+                    </div>
                   </div>
                 </td>
                 <td class="px-2 py-2 text-center">
-                  <button *ngIf="internalRow.length > 1" type="button" (click)="removeInternalRow(i)"
-                          class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 transition-colors cursor-pointer">
+                  <button
+                    *ngIf="internalRow.length > 1"
+                    type="button"
+                    (click)="removeInternalRow(i)"
+                    class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 transition-colors cursor-pointer"
+                  >
                     <i class="bi bi-trash3-fill text-sm"></i>
                   </button>
                 </td>
@@ -358,63 +597,137 @@
             </tbody>
           </table>
         </div>
-        <button type="button" (click)="addInternalRow()"
-                class="mt-3 inline-flex items-center gap-1.5 px-4 py-2 bg-linear-to-r from-[#F2CB05] to-[#e0b800] hover:from-[#e0b800] hover:to-[#F2CB05] text-[#394250] rounded-lg text-sm font-semibold transition-all cursor-pointer shadow-sm">
+        <button
+          type="button"
+          (click)="addInternalRow()"
+          class="mt-3 inline-flex items-center gap-1.5 px-4 py-2 bg-linear-to-r from-[#F2CB05] to-[#e0b800] hover:from-[#e0b800] hover:to-[#F2CB05] text-[#394250] rounded-lg text-sm font-semibold transition-all cursor-pointer shadow-sm"
+        >
           <i class="bi bi-plus-lg text-sm"></i> เพิ่มรายการ
         </button>
 
         <!-- External -->
-        <label class="flex items-center gap-2 text-sm font-medium text-[#394250] mt-6 mb-2.5">
+        <label
+          class="flex items-center gap-2 text-sm font-medium text-[#394250] mt-6 mb-2.5"
+        >
           <i class="bi bi-globe2 text-purple-500"></i> ผู้ร่วมโครงการภายนอก
         </label>
         <div class="overflow-x-auto rounded-xl border border-gray-200">
           <table class="w-full table-fixed min-w-170 text-sm font-light">
             <colgroup>
-              <col class="w-[6%]" /><col class="w-[22%]" /><col class="w-[30%]" /><col class="w-[26%]" /><col class="w-[16%]" />
+              <col class="w-[6%]" />
+              <col class="w-[22%]" />
+              <col class="w-[30%]" />
+              <col class="w-[26%]" />
+              <col class="w-[16%]" />
             </colgroup>
             <thead>
               <tr class="bg-linear-to-r from-[#394250] to-[#2a323d] text-white">
-                <th class="px-3 py-2.5 text-center text-xs uppercase tracking-wider font-semibold">#</th>
-                <th class="px-3 py-2.5 text-center text-xs uppercase tracking-wider font-semibold">ระบุชื่อ</th>
-                <th class="px-3 py-2.5 text-center text-xs uppercase tracking-wider font-semibold">ประเภทความรับผิดชอบ</th>
-                <th class="px-3 py-2.5 text-center text-xs uppercase tracking-wider font-semibold">หน่วยงาน</th>
-                <th class="px-3 py-2.5 text-center text-xs uppercase tracking-wider font-semibold">Action</th>
+                <th
+                  class="px-3 py-2.5 text-center text-xs uppercase tracking-wider font-semibold"
+                >
+                  #
+                </th>
+                <th
+                  class="px-3 py-2.5 text-center text-xs uppercase tracking-wider font-semibold"
+                >
+                  ระบุชื่อ
+                </th>
+                <th
+                  class="px-3 py-2.5 text-center text-xs uppercase tracking-wider font-semibold"
+                >
+                  ประเภทความรับผิดชอบ
+                </th>
+                <th
+                  class="px-3 py-2.5 text-center text-xs uppercase tracking-wider font-semibold"
+                >
+                  หน่วยงาน
+                </th>
+                <th
+                  class="px-3 py-2.5 text-center text-xs uppercase tracking-wider font-semibold"
+                >
+                  Action
+                </th>
               </tr>
             </thead>
             <tbody class="bg-white">
-              <tr *ngFor="let item of externalRow; let i = index; trackBy: trackById"
-                  class="border-b border-gray-100 hover:bg-yellow-50/40 transition-colors last:border-0">
+              <tr
+                *ngFor="
+                  let item of externalRow;
+                  let i = index;
+                  trackBy: trackById
+                "
+                class="border-b border-gray-100 hover:bg-yellow-50/40 transition-colors last:border-0"
+              >
                 <td class="px-3 py-2 text-center text-gray-500">{{ i + 1 }}</td>
                 <td class="px-2 py-2">
-                  <input type="text" [(ngModel)]="item.name"
-                         class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm font-light bg-white outline-none focus:border-[#F2CB05] focus:ring-1 focus:ring-[#F2CB05]/20 transition"
-                         placeholder="ระบุชื่อ" />
+                  <input
+                    type="text"
+                    [(ngModel)]="item.name"
+                    class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm font-light bg-white outline-none focus:border-[#F2CB05] focus:ring-1 focus:ring-[#F2CB05]/20 transition"
+                    placeholder="ระบุชื่อ"
+                  />
                 </td>
                 <td class="px-2 py-2">
-                  <button (click)="toggleDropdown('external-' + i, $event)"
-                          class="flex justify-between items-center bg-white w-full rounded-lg border border-gray-200 px-3 py-2 text-sm font-light hover:border-[#F2CB05] transition cursor-pointer">
-                    <span class="truncate" [class.text-gray-400]="!item.responsibilities">{{ item.responsibilities || 'เลือกประเภท' }}</span>
-                    <i class="bi bi-chevron-down text-xs text-gray-400 shrink-0 ml-1 transition-transform duration-200" [class.rotate-180]="activeDropdown === 'external-' + i"></i>
+                  <button
+                    (click)="toggleDropdown('external-' + i, $event)"
+                    class="flex justify-between items-center bg-white w-full rounded-lg border border-gray-200 px-3 py-2 text-sm font-light hover:border-[#F2CB05] transition cursor-pointer"
+                  >
+                    <span
+                      class="truncate"
+                      [class.text-gray-400]="!item.responsibilities"
+                      >{{ item.responsibilities || "เลือกประเภท" }}</span
+                    >
+                    <i
+                      class="bi bi-chevron-down text-xs text-gray-400 shrink-0 ml-1 transition-transform duration-200"
+                      [class.rotate-180]="activeDropdown === 'external-' + i"
+                    ></i>
                   </button>
-                  <div *ngIf="activeDropdown === 'external-' + i"
-                       class="absolute z-50 bg-white border border-gray-200 rounded-xl shadow-lg text-sm font-light left-1/2 -translate-x-1/2 w-72 mt-1 overflow-hidden">
-                    <div (click)="!isFirstAuthorTaken(item) && selectRowResponsibility(item, 'หัวหน้าโครงการ')"
-                         [class.opacity-50]="isFirstAuthorTaken(item)" [class.pointer-events-none]="isFirstAuthorTaken(item)"
-                         class="px-4 py-2 hover:bg-[#F2E7AC]/30 cursor-pointer transition-colors">หัวหน้าโครงการ</div>
-                    <div (click)="selectRowResponsibility(item, 'ที่ปรึกษาโครงการ')"
-                         class="px-4 py-2 hover:bg-[#F2E7AC]/30 cursor-pointer transition-colors">ที่ปรึกษาโครงการ</div>
-                    <div (click)="selectRowResponsibility(item, 'ผู้ร่วมวิจัย')"
-                         class="px-4 py-2 hover:bg-[#F2E7AC]/30 cursor-pointer transition-colors">ผู้ร่วมวิจัย</div>
+                  <div
+                    *ngIf="activeDropdown === 'external-' + i"
+                    class="absolute z-50 bg-white border border-gray-200 rounded-xl shadow-lg text-sm font-light left-1/2 -translate-x-1/2 w-72 mt-1 overflow-hidden"
+                  >
+                    <div
+                      (click)="
+                        !isFirstAuthorTaken(item) &&
+                          selectRowResponsibility(item, 'หัวหน้าโครงการ')
+                      "
+                      [class.opacity-50]="isFirstAuthorTaken(item)"
+                      [class.pointer-events-none]="isFirstAuthorTaken(item)"
+                      class="px-4 py-2 hover:bg-[#F2E7AC]/30 cursor-pointer transition-colors"
+                    >
+                      หัวหน้าโครงการ
+                    </div>
+                    <div
+                      (click)="
+                        selectRowResponsibility(item, 'ที่ปรึกษาโครงการ')
+                      "
+                      class="px-4 py-2 hover:bg-[#F2E7AC]/30 cursor-pointer transition-colors"
+                    >
+                      ที่ปรึกษาโครงการ
+                    </div>
+                    <div
+                      (click)="selectRowResponsibility(item, 'ผู้ร่วมวิจัย')"
+                      class="px-4 py-2 hover:bg-[#F2E7AC]/30 cursor-pointer transition-colors"
+                    >
+                      ผู้ร่วมวิจัย
+                    </div>
                   </div>
                 </td>
                 <td class="px-2 py-2">
-                  <input type="text" [(ngModel)]="item.organization"
-                         class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm font-light bg-white outline-none focus:border-[#F2CB05] focus:ring-1 focus:ring-[#F2CB05]/20 transition"
-                         placeholder="ระบุหน่วยงาน" />
+                  <input
+                    type="text"
+                    [(ngModel)]="item.organization"
+                    class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm font-light bg-white outline-none focus:border-[#F2CB05] focus:ring-1 focus:ring-[#F2CB05]/20 transition"
+                    placeholder="ระบุหน่วยงาน"
+                  />
                 </td>
                 <td class="px-2 py-2 text-center">
-                  <button *ngIf="externalRow.length > 1" type="button" (click)="removeExternalRow(i)"
-                          class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 transition-colors cursor-pointer">
+                  <button
+                    *ngIf="externalRow.length > 1"
+                    type="button"
+                    (click)="removeExternalRow(i)"
+                    class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 transition-colors cursor-pointer"
+                  >
                     <i class="bi bi-trash3-fill text-sm"></i>
                   </button>
                 </td>
@@ -422,8 +735,11 @@
             </tbody>
           </table>
         </div>
-        <button type="button" (click)="addExternalRow()"
-                class="mt-3 inline-flex items-center gap-1.5 px-4 py-2 bg-linear-to-r from-[#F2CB05] to-[#e0b800] hover:from-[#e0b800] hover:to-[#F2CB05] text-[#394250] rounded-lg text-sm font-semibold transition-all cursor-pointer shadow-sm">
+        <button
+          type="button"
+          (click)="addExternalRow()"
+          class="mt-3 inline-flex items-center gap-1.5 px-4 py-2 bg-linear-to-r from-[#F2CB05] to-[#e0b800] hover:from-[#e0b800] hover:to-[#F2CB05] text-[#394250] rounded-lg text-sm font-semibold transition-all cursor-pointer shadow-sm"
+        >
           <i class="bi bi-plus-lg text-sm"></i> เพิ่มรายการ
         </button>
       </div>
@@ -431,7 +747,9 @@
       <!-- SECTION: แหล่งเงินทุน -->
       <div class="flex items-center gap-4 mb-5">
         <div class="flex-1 h-px bg-gray-200"></div>
-        <span class="text-sm text-gray-400 tracking-wider whitespace-nowrap">แหล่งเงินทุน</span>
+        <span class="text-sm text-gray-400 tracking-wider whitespace-nowrap"
+          >แหล่งเงินทุน</span
+        >
         <div class="flex-1 h-px bg-gray-200"></div>
       </div>
 
@@ -441,50 +759,108 @@
           <label class="block text-sm font-medium text-[#394250] mb-2">
             แหล่งทุน <span class="text-red-500">*</span>
           </label>
-          <button type="button" (click)="toggleDropdown('funding', $event)"
-                  class="w-full border border-gray-200 rounded-xl px-4 py-3 flex justify-between items-center bg-white hover:border-[#F2CB05] text-sm font-light transition cursor-pointer">
-            <span class="flex-1 truncate text-left" [class.text-gray-400]="!projectData.source_funds">
+          <button
+            type="button"
+            (click)="toggleDropdown('funding', $event)"
+            class="w-full border border-gray-200 rounded-xl px-4 py-3 flex justify-between items-center bg-white hover:border-[#F2CB05] text-sm font-light transition cursor-pointer"
+          >
+            <span
+              class="flex-1 truncate text-left"
+              [class.text-gray-400]="!projectData.source_funds"
+            >
               {{ projectData.source_funds || "เลือกแหล่งทุน" }}
             </span>
-            <i class="bi bi-chevron-down text-sm text-gray-400 transition-transform duration-200" [class.rotate-180]="activeDropdown === 'funding'"></i>
+            <i
+              class="bi bi-chevron-down text-sm text-gray-400 transition-transform duration-200"
+              [class.rotate-180]="activeDropdown === 'funding'"
+            ></i>
           </button>
-          <div *ngIf="activeDropdown === 'funding'"
-               class="absolute z-50 mt-1 w-full bg-white border border-gray-200 rounded-xl shadow-lg text-sm font-light overflow-hidden">
-            <div (click)="selectValue('source_funds', 'แหล่งทุนภายใน'); selectValue('funding_code', '01')"
-                 class="px-4 py-2.5 hover:bg-[#F2E7AC]/30 cursor-pointer transition-colors">แหล่งทุนภายใน</div>
-            <div (click)="selectValue('source_funds', 'แหล่งทุนภายนอก')"
-                 class="px-4 py-2.5 hover:bg-[#F2E7AC]/30 cursor-pointer transition-colors">แหล่งทุนภายนอก</div>
-            <div (click)="selectValue('source_funds', 'แหล่งทุนอื่น'); selectValue('funding_code', '99')"
-                 class="px-4 py-2.5 hover:bg-[#F2E7AC]/30 cursor-pointer transition-colors">แหล่งทุนอื่น</div>
+          <div
+            *ngIf="activeDropdown === 'funding'"
+            class="absolute z-50 mt-1 w-full bg-white border border-gray-200 rounded-xl shadow-lg text-sm font-light overflow-hidden"
+          >
+            <div
+              (click)="
+                selectValue('source_funds', 'แหล่งทุนภายใน');
+                selectValue('funding_code', '01')
+              "
+              class="px-4 py-2.5 hover:bg-[#F2E7AC]/30 cursor-pointer transition-colors"
+            >
+              แหล่งทุนภายใน
+            </div>
+            <div
+              (click)="selectValue('source_funds', 'แหล่งทุนภายนอก')"
+              class="px-4 py-2.5 hover:bg-[#F2E7AC]/30 cursor-pointer transition-colors"
+            >
+              แหล่งทุนภายนอก
+            </div>
+            <div
+              (click)="
+                selectValue('source_funds', 'แหล่งทุนอื่น');
+                selectValue('funding_code', '99')
+              "
+              class="px-4 py-2.5 hover:bg-[#F2E7AC]/30 cursor-pointer transition-colors"
+            >
+              แหล่งทุนอื่น
+            </div>
           </div>
         </div>
 
         <!-- ชื่อแหล่งทุน - ภายใน / อื่น -->
-        <div *ngIf="projectData.source_funds === 'แหล่งทุนภายใน' || projectData.source_funds === 'แหล่งทุนอื่น'">
+        <div
+          *ngIf="
+            projectData.source_funds === 'แหล่งทุนภายใน' ||
+            projectData.source_funds === 'แหล่งทุนอื่น'
+          "
+        >
           <label class="block text-sm font-medium text-[#394250] mb-2">
             ชื่อแหล่งทุน <span class="text-red-500">*</span>
           </label>
-          <input type="text" [(ngModel)]="projectData.name_funding"
-                 class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm font-light bg-white outline-none focus:border-[#F2CB05] focus:ring-2 focus:ring-[#F2CB05]/20 transition"
-                 placeholder="กรอกชื่อแหล่งทุน" />
+          <input
+            type="text"
+            [(ngModel)]="projectData.name_funding"
+            class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm font-light bg-white outline-none focus:border-[#F2CB05] focus:ring-2 focus:ring-[#F2CB05]/20 transition"
+            placeholder="กรอกชื่อแหล่งทุน"
+          />
         </div>
 
         <!-- ชื่อแหล่งทุน - ภายนอก (dropdown) -->
-        <div *ngIf="projectData.source_funds === 'แหล่งทุนภายนอก'" class="relative">
+        <div
+          *ngIf="projectData.source_funds === 'แหล่งทุนภายนอก'"
+          class="relative"
+        >
           <label class="block text-sm font-medium text-[#394250] mb-2">
             ชื่อแหล่งทุน <span class="text-red-500">*</span>
           </label>
-          <button type="button" (click)="toggleDropdown('fundName', $event)"
-                  class="w-full border border-gray-200 rounded-xl px-4 py-3 flex justify-between items-center bg-white hover:border-[#F2CB05] text-sm font-light transition cursor-pointer">
-            <span class="truncate" [class.text-gray-400]="!projectData.name_funding">{{ projectData.name_funding || "เลือกชื่อแหล่งทุน" }}</span>
-            <i class="bi bi-chevron-down text-sm text-gray-400 transition-transform duration-200" [class.rotate-180]="activeDropdown === 'fundName'"></i>
+          <button
+            type="button"
+            (click)="toggleDropdown('fundName', $event)"
+            class="w-full border border-gray-200 rounded-xl px-4 py-3 flex justify-between items-center bg-white hover:border-[#F2CB05] text-sm font-light transition cursor-pointer"
+          >
+            <span
+              class="truncate"
+              [class.text-gray-400]="!projectData.name_funding"
+              >{{ projectData.name_funding || "เลือกชื่อแหล่งทุน" }}</span
+            >
+            <i
+              class="bi bi-chevron-down text-sm text-gray-400 transition-transform duration-200"
+              [class.rotate-180]="activeDropdown === 'fundName'"
+            ></i>
           </button>
-          <div *ngIf="activeDropdown === 'fundName'"
-               class="absolute left-0 top-full mt-1 w-full bg-white border border-gray-200 rounded-xl shadow-lg z-50 overflow-hidden">
+          <div
+            *ngIf="activeDropdown === 'fundName'"
+            class="absolute left-0 top-full mt-1 w-full bg-white border border-gray-200 rounded-xl shadow-lg z-50 overflow-hidden"
+          >
             <ul class="max-h-60 overflow-y-auto py-1">
-              <li *ngFor="let fund of fundings"
-                  (click)="selectValue('name_funding', fund.funding_name); selectValue('funding_code', fund.funding_code); selectValue('funding_id', fund.id)"
-                  class="px-4 py-2.5 hover:bg-[#F2E7AC]/30 cursor-pointer text-sm font-light transition-colors">
+              <li
+                *ngFor="let fund of fundings"
+                (click)="
+                  selectValue('name_funding', fund.funding_name);
+                  selectValue('funding_code', fund.funding_code);
+                  selectValue('funding_id', fund.id)
+                "
+                class="px-4 py-2.5 hover:bg-[#F2E7AC]/30 cursor-pointer text-sm font-light transition-colors"
+              >
                 {{ fund.funding_name }}
               </li>
             </ul>
@@ -496,12 +872,22 @@
           <label class="block text-sm font-medium text-[#394250] mb-2">
             จำนวนงบประมาณ <span class="text-red-500">*</span>
           </label>
-          <input name="budget_amount" required #budgetAmount="ngModel"
-                 [(ngModel)]="projectData.budget_amount" type="text"
-                 [class.border-red-500]="budgetAmount.invalid && budgetAmount.touched"
-                 class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm font-light bg-white outline-none focus:border-[#F2CB05] focus:ring-2 focus:ring-[#F2CB05]/20 transition"
-                 placeholder="ระบุจำนวนงบประมาณ" />
-          <p *ngIf="budgetAmount.invalid && budgetAmount.touched" class="text-red-500 text-xs mt-1.5 flex items-center gap-1">
+          <input
+            name="budget_amount"
+            required
+            #budgetAmount="ngModel"
+            [(ngModel)]="projectData.budget_amount"
+            type="text"
+            [class.border-red-500]="
+              budgetAmount.invalid && budgetAmount.touched
+            "
+            class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm font-light bg-white outline-none focus:border-[#F2CB05] focus:ring-2 focus:ring-[#F2CB05]/20 transition"
+            placeholder="ระบุจำนวนงบประมาณ"
+          />
+          <p
+            *ngIf="budgetAmount.invalid && budgetAmount.touched"
+            class="text-red-500 text-xs mt-1.5 flex items-center gap-1"
+          >
             <i class="bi bi-exclamation-circle"></i> กรุณากรอกจำนวนงบประมาณ
           </p>
         </div>
@@ -511,23 +897,48 @@
           <label class="block text-sm font-medium text-[#394250] mb-2">
             ปีที่ได้รับทุน (พ.ศ.) <span class="text-red-500">*</span>
           </label>
-          <button (click)="toggleDropdown('year', $event)" type="button"
-                  [class.border-red-500]="yearReceivedBudget.invalid && yearReceivedBudget.touched"
-                  class="w-full border border-gray-200 rounded-xl px-4 py-3 flex justify-between items-center bg-white hover:border-[#F2CB05] text-sm font-light transition cursor-pointer">
-            <span [class.text-gray-400]="!projectData.year_received_budget">{{ projectData.year_received_budget || "เลือกปี" }}</span>
-            <i class="bi bi-chevron-down text-sm text-gray-400 transition-transform duration-200" [class.rotate-180]="activeDropdown === 'year'"></i>
+          <button
+            (click)="toggleDropdown('year', $event)"
+            type="button"
+            [class.border-red-500]="
+              yearReceivedBudget.invalid && yearReceivedBudget.touched
+            "
+            class="w-full border border-gray-200 rounded-xl px-4 py-3 flex justify-between items-center bg-white hover:border-[#F2CB05] text-sm font-light transition cursor-pointer"
+          >
+            <span [class.text-gray-400]="!projectData.year_received_budget">{{
+              projectData.year_received_budget || "เลือกปี"
+            }}</span>
+            <i
+              class="bi bi-chevron-down text-sm text-gray-400 transition-transform duration-200"
+              [class.rotate-180]="activeDropdown === 'year'"
+            ></i>
           </button>
-          <div *ngIf="activeDropdown === 'year'"
-               class="absolute z-50 w-full bg-white border border-gray-200 rounded-xl mt-1 shadow-lg text-sm font-light overflow-hidden"
-               (click)="$event.stopPropagation()">
+          <div
+            *ngIf="activeDropdown === 'year'"
+            class="absolute z-50 w-full bg-white border border-gray-200 rounded-xl mt-1 shadow-lg text-sm font-light overflow-hidden"
+            (click)="$event.stopPropagation()"
+          >
             <ul class="max-h-60 overflow-y-auto py-1">
-              <li *ngFor="let year of thaiYears" (click)="selectYear(year)"
-                  class="px-4 py-2 hover:bg-[#F2E7AC]/30 cursor-pointer transition-colors">{{ year }}</li>
+              <li
+                *ngFor="let year of thaiYears"
+                (click)="selectYear(year)"
+                class="px-4 py-2 hover:bg-[#F2E7AC]/30 cursor-pointer transition-colors"
+              >
+                {{ year }}
+              </li>
             </ul>
           </div>
-          <input type="hidden" name="year_received_budget" required
-                 [(ngModel)]="projectData.year_received_budget" #yearReceivedBudget="ngModel" />
-          <p *ngIf="yearReceivedBudget.invalid && yearReceivedBudget.touched" class="text-red-500 text-xs mt-1.5 flex items-center gap-1">
+          <input
+            type="hidden"
+            name="year_received_budget"
+            required
+            [(ngModel)]="projectData.year_received_budget"
+            #yearReceivedBudget="ngModel"
+          />
+          <p
+            *ngIf="yearReceivedBudget.invalid && yearReceivedBudget.touched"
+            class="text-red-500 text-xs mt-1.5 flex items-center gap-1"
+          >
             <i class="bi bi-exclamation-circle"></i> กรุณาเลือกปีที่ได้รับทุน
           </p>
         </div>
@@ -536,17 +947,25 @@
       <!-- SECTION: ข้อมูลเพิ่มเติม -->
       <div class="flex items-center gap-4 mb-5">
         <div class="flex-1 h-px bg-gray-200"></div>
-        <span class="text-sm text-gray-400 tracking-wider whitespace-nowrap">ข้อมูลเพิ่มเติม</span>
+        <span class="text-sm text-gray-400 tracking-wider whitespace-nowrap"
+          >ข้อมูลเพิ่มเติม</span
+        >
         <div class="flex-1 h-px bg-gray-200"></div>
       </div>
 
       <div class="space-y-5 mb-8">
         <!-- ความร่วมมือ -->
         <div>
-          <label class="block text-sm font-medium text-[#394250] mb-2">ความร่วมมือกับหน่วยงานอื่นๆ</label>
-          <textarea [(ngModel)]="projectData.call_other" name="call_other" rows="3"
-                    class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm font-light bg-white outline-none resize-y focus:border-[#F2CB05] focus:ring-2 focus:ring-[#F2CB05]/20 transition"
-                    placeholder="ระบุความร่วมมือกับหน่วยงานอื่นๆ"></textarea>
+          <label class="block text-sm font-medium text-[#394250] mb-2"
+            >ความร่วมมือกับหน่วยงานอื่นๆ</label
+          >
+          <textarea
+            [(ngModel)]="projectData.call_other"
+            name="call_other"
+            rows="3"
+            class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm font-light bg-white outline-none resize-y focus:border-[#F2CB05] focus:ring-2 focus:ring-[#F2CB05]/20 transition"
+            placeholder="ระบุความร่วมมือกับหน่วยงานอื่นๆ"
+          ></textarea>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -555,12 +974,22 @@
             <label class="block text-sm font-medium text-[#394250] mb-2">
               เลขที่สิทธิบัตร <span class="text-red-500">*</span>
             </label>
-            <input name="patent_number" required #patentNumber="ngModel"
-                   [(ngModel)]="projectData.patent_number" type="text"
-                   [class.border-red-500]="patentNumber.invalid && patentNumber.touched"
-                   class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm font-light bg-white outline-none focus:border-[#F2CB05] focus:ring-2 focus:ring-[#F2CB05]/20 transition"
-                   placeholder="ระบุเลขที่สิทธิบัตร" />
-            <p *ngIf="patentNumber.invalid && patentNumber.touched" class="text-red-500 text-xs mt-1.5 flex items-center gap-1">
+            <input
+              name="patent_number"
+              required
+              #patentNumber="ngModel"
+              [(ngModel)]="projectData.patent_number"
+              type="text"
+              [class.border-red-500]="
+                patentNumber.invalid && patentNumber.touched
+              "
+              class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm font-light bg-white outline-none focus:border-[#F2CB05] focus:ring-2 focus:ring-[#F2CB05]/20 transition"
+              placeholder="ระบุเลขที่สิทธิบัตร"
+            />
+            <p
+              *ngIf="patentNumber.invalid && patentNumber.touched"
+              class="text-red-500 text-xs mt-1.5 flex items-center gap-1"
+            >
               <i class="bi bi-exclamation-circle"></i> กรุณากรอกเลขที่สิทธิบัตร
             </p>
           </div>
@@ -570,13 +999,24 @@
             <label class="block text-sm font-medium text-[#394250] mb-2">
               เลขที่คำขอสิทธิบัตร <span class="text-red-500">*</span>
             </label>
-            <input name="application_number" required #applicationNumber="ngModel"
-                   [(ngModel)]="projectData.application_number" type="text"
-                   [class.border-red-500]="applicationNumber.invalid && applicationNumber.touched"
-                   class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm font-light bg-white outline-none focus:border-[#F2CB05] focus:ring-2 focus:ring-[#F2CB05]/20 transition"
-                   placeholder="ระบุเลขที่คำขอสิทธิบัตร" />
-            <p *ngIf="applicationNumber.invalid && applicationNumber.touched" class="text-red-500 text-xs mt-1.5 flex items-center gap-1">
-              <i class="bi bi-exclamation-circle"></i> กรุณากรอกเลขที่คำขอสิทธิบัตร
+            <input
+              name="application_number"
+              required
+              #applicationNumber="ngModel"
+              [(ngModel)]="projectData.application_number"
+              type="text"
+              [class.border-red-500]="
+                applicationNumber.invalid && applicationNumber.touched
+              "
+              class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm font-light bg-white outline-none focus:border-[#F2CB05] focus:ring-2 focus:ring-[#F2CB05]/20 transition"
+              placeholder="ระบุเลขที่คำขอสิทธิบัตร"
+            />
+            <p
+              *ngIf="applicationNumber.invalid && applicationNumber.touched"
+              class="text-red-500 text-xs mt-1.5 flex items-center gap-1"
+            >
+              <i class="bi bi-exclamation-circle"></i>
+              กรุณากรอกเลขที่คำขอสิทธิบัตร
             </p>
           </div>
         </div>
@@ -586,13 +1026,24 @@
           <label class="block text-sm font-medium text-[#394250] mb-2">
             เว็บไซต์ตรวจสิทธิบัตร <span class="text-red-500">*</span>
           </label>
-          <input name="examination_url" required #examinationUrl="ngModel"
-                 [(ngModel)]="projectData.examination_url" type="text"
-                 [class.border-red-500]="examinationUrl.invalid && examinationUrl.touched"
-                 class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm font-light bg-white outline-none focus:border-[#F2CB05] focus:ring-2 focus:ring-[#F2CB05]/20 transition"
-                 placeholder="ระบุเว็บไซต์ตรวจสิทธิบัตร" />
-          <p *ngIf="examinationUrl.invalid && examinationUrl.touched" class="text-red-500 text-xs mt-1.5 flex items-center gap-1">
-            <i class="bi bi-exclamation-circle"></i> กรุณากรอกเว็บไซต์ตรวจสิทธิบัตร
+          <input
+            name="examination_url"
+            required
+            #examinationUrl="ngModel"
+            [(ngModel)]="projectData.examination_url"
+            type="text"
+            [class.border-red-500]="
+              examinationUrl.invalid && examinationUrl.touched
+            "
+            class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm font-light bg-white outline-none focus:border-[#F2CB05] focus:ring-2 focus:ring-[#F2CB05]/20 transition"
+            placeholder="ระบุเว็บไซต์ตรวจสิทธิบัตร"
+          />
+          <p
+            *ngIf="examinationUrl.invalid && examinationUrl.touched"
+            class="text-red-500 text-xs mt-1.5 flex items-center gap-1"
+          >
+            <i class="bi bi-exclamation-circle"></i>
+            กรุณากรอกเว็บไซต์ตรวจสิทธิบัตร
           </p>
         </div>
       </div>
@@ -600,146 +1051,288 @@
       <!-- SECTION: ไฟล์แนบ -->
       <div class="flex items-center gap-4 mb-5">
         <div class="flex-1 h-px bg-gray-200"></div>
-        <span class="text-sm text-gray-400 tracking-wider whitespace-nowrap">ไฟล์แนบ</span>
+        <span class="text-sm text-gray-400 tracking-wider whitespace-nowrap"
+          >ไฟล์แนบ</span
+        >
         <div class="flex-1 h-px bg-gray-200"></div>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         <!-- ไฟล์รายงานฉบับสมบูรณ์ -->
         <div>
-          <label class="block text-sm font-medium text-[#394250] mb-2">ไฟล์รายงานฉบับสมบูรณ์ (PDF)</label>
-          <input #reportFileInput type="file" accept="application/pdf" class="hidden" (change)="onFileSelected($event)" />
-          <div class="flex items-center gap-3 border-2 border-dashed border-gray-200 rounded-xl px-4 py-3 bg-white hover:border-[#F2CB05] transition-colors">
-            <i class="bi bi-file-earmark-pdf-fill text-red-500 text-2xl shrink-0"></i>
+          <label class="block text-sm font-medium text-[#394250] mb-2"
+            >ไฟล์รายงานฉบับสมบูรณ์ (PDF)</label
+          >
+          <input
+            #reportFileInput
+            type="file"
+            accept="application/pdf"
+            class="hidden"
+            (change)="onFileSelected($event)"
+          />
+          <div
+            class="flex items-center gap-3 border-2 border-dashed border-gray-200 rounded-xl px-4 py-3 bg-white hover:border-[#F2CB05] transition-colors"
+          >
+            <i
+              class="bi bi-file-earmark-pdf-fill text-red-500 text-2xl shrink-0"
+            ></i>
             <div class="flex-1 min-w-0">
-              <p class="text-xs text-gray-500 mb-0.5">{{ selectedFile || projectData.full_report ? 'ไฟล์ที่เลือก' : 'ยังไม่ได้เลือกไฟล์' }}</p>
-              <p class="text-sm font-medium text-[#394250] truncate">{{ selectedFileName || projectData.full_report?.file_name || 'PDF, สูงสุด 10MB' }}</p>
+              <p class="text-xs text-gray-500 mb-0.5">
+                {{
+                  selectedFile || projectData.full_report
+                    ? "ไฟล์ที่เลือก"
+                    : "ยังไม่ได้เลือกไฟล์"
+                }}
+              </p>
+              <p class="text-sm font-medium text-[#394250] truncate">
+                {{
+                  selectedFileName ||
+                    projectData.full_report?.file_name ||
+                    "PDF, สูงสุด 10MB"
+                }}
+              </p>
             </div>
-            <button *ngIf="selectedFile || projectData.full_report?.file_name" type="button" (click)="removeFile()"
-                    class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 transition-colors cursor-pointer">
+            <button
+              *ngIf="selectedFile || projectData.full_report?.file_name"
+              type="button"
+              (click)="removeFile()"
+              class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 transition-colors cursor-pointer"
+            >
               <i class="bi bi-x-lg text-sm"></i>
             </button>
-            <button type="button" (click)="reportFileInput.click()"
-                    class="px-3 py-1.5 bg-linear-to-r from-[#F2CB05] to-[#e0b800] hover:from-[#e0b800] hover:to-[#F2CB05] text-[#394250] rounded-lg text-xs font-semibold transition-all cursor-pointer whitespace-nowrap shadow-sm">
-              {{ selectedFile || projectData.full_report ? 'เปลี่ยน' : 'เลือกไฟล์' }}
+            <button
+              type="button"
+              (click)="reportFileInput.click()"
+              class="px-3 py-1.5 bg-linear-to-r from-[#F2CB05] to-[#e0b800] hover:from-[#e0b800] hover:to-[#F2CB05] text-[#394250] rounded-lg text-xs font-semibold transition-all cursor-pointer whitespace-nowrap shadow-sm"
+            >
+              {{
+                selectedFile || projectData.full_report
+                  ? "เปลี่ยน"
+                  : "เลือกไฟล์"
+              }}
             </button>
           </div>
         </div>
 
         <!-- ไฟล์รูปนวัตกรรม -->
         <div>
-          <label class="block text-sm font-medium text-[#394250] mb-2">ไฟล์รูปนวัตกรรมสิ่งประดิษฐ์</label>
-          <input #fileInput type="file" accept="image/*" class="hidden" multiple (change)="onImageFileSelected($event)" />
+          <label class="block text-sm font-medium text-[#394250] mb-2"
+            >ไฟล์รูปนวัตกรรมสิ่งประดิษฐ์</label
+          >
+          <input
+            #fileInput
+            type="file"
+            accept="image/*"
+            class="hidden"
+            multiple
+            (change)="onImageFileSelected($event)"
+          />
 
-          <div class="border-2 border-dashed border-gray-200 rounded-xl px-4 py-3 bg-white hover:border-[#F2CB05] transition-colors space-y-2 min-h-16">
+          <div
+            class="border-2 border-dashed border-gray-200 rounded-xl px-4 py-3 bg-white hover:border-[#F2CB05] transition-colors space-y-2 min-h-16"
+          >
             <!-- รูปจาก DB -->
-            <div *ngFor="let img of projectData.innovation_images" class="flex items-center gap-3">
-              <img [src]="img.get_url" class="w-10 h-10 object-cover rounded-lg border border-gray-200 shrink-0" />
-              <span class="text-sm text-gray-700 flex-1 truncate">{{ img.file_name }}</span>
-              <button type="button" (click)="deleteImage(img.file_id)"
-                      class="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-red-50 hover:bg-red-100 text-red-500 transition-colors cursor-pointer">
+            <div
+              *ngFor="let img of projectData.innovation_images"
+              class="flex items-center gap-3"
+            >
+              <img
+                [src]="img.get_url"
+                class="w-10 h-10 object-cover rounded-lg border border-gray-200 shrink-0"
+              />
+              <span class="text-sm text-gray-700 flex-1 truncate">{{
+                img.file_name
+              }}</span>
+              <button
+                type="button"
+                (click)="deleteImage(img.file_id)"
+                class="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-red-50 hover:bg-red-100 text-red-500 transition-colors cursor-pointer"
+              >
                 <i class="bi bi-trash text-xs"></i>
               </button>
             </div>
 
             <!-- รูปใหม่ -->
-            <div *ngFor="let file of selectedImagesFile; let i = index" class="flex items-center gap-3">
-              <img [src]="imagePreviews[i]" class="w-10 h-10 object-cover rounded-lg border border-gray-200 shrink-0" />
-              <span class="text-sm text-gray-600 flex-1 truncate">{{ file.name }}</span>
-              <button type="button" (click)="removeImageFile(i)"
-                      class="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-red-50 hover:bg-red-100 text-red-500 transition-colors cursor-pointer">
+            <div
+              *ngFor="let file of selectedImagesFile; let i = index"
+              class="flex items-center gap-3"
+            >
+              <img
+                [src]="imagePreviews[i]"
+                class="w-10 h-10 object-cover rounded-lg border border-gray-200 shrink-0"
+              />
+              <span class="text-sm text-gray-600 flex-1 truncate">{{
+                file.name
+              }}</span>
+              <button
+                type="button"
+                (click)="removeImageFile(i)"
+                class="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-red-50 hover:bg-red-100 text-red-500 transition-colors cursor-pointer"
+              >
                 <i class="bi bi-trash text-xs"></i>
               </button>
             </div>
 
             <!-- ไม่มีรูป -->
-            <p *ngIf="!projectData.innovation_images.length && !selectedImagesFile.length"
-               class="text-xs text-gray-400 text-center py-2">ยังไม่ได้เลือกรูป</p>
+            <p
+              *ngIf="
+                !projectData.innovation_images.length &&
+                !selectedImagesFile.length
+              "
+              class="text-xs text-gray-400 text-center py-2"
+            >
+              ยังไม่ได้เลือกรูป
+            </p>
           </div>
 
-          <button type="button" (click)="fileInput.click()"
-                  class="mt-2 inline-flex items-center gap-1.5 px-4 py-2 bg-linear-to-r from-[#F2CB05] to-[#e0b800] hover:from-[#e0b800] hover:to-[#F2CB05] text-[#394250] rounded-lg text-xs font-semibold transition-all cursor-pointer shadow-sm">
+          <button
+            type="button"
+            (click)="fileInput.click()"
+            class="mt-2 inline-flex items-center gap-1.5 px-4 py-2 bg-linear-to-r from-[#F2CB05] to-[#e0b800] hover:from-[#e0b800] hover:to-[#F2CB05] text-[#394250] rounded-lg text-xs font-semibold transition-all cursor-pointer shadow-sm"
+          >
             <i class="bi bi-image text-sm"></i> เลือกรูปภาพ
           </button>
         </div>
       </div>
 
       <!-- Submit -->
-      <div class="flex flex-col sm:flex-row justify-end gap-3 pt-6 border-t border-gray-100">
-        <button type="button" (click)="goToResearchDetail()"
-                class="px-6 py-3 rounded-xl border border-gray-200 bg-white text-gray-600 font-medium text-sm hover:bg-gray-50 cursor-pointer transition">
+      <div
+        class="flex flex-col sm:flex-row justify-end gap-3 pt-6 border-t border-gray-100"
+      >
+        <button
+          type="button"
+          (click)="goToResearchDetail()"
+          class="px-6 py-3 rounded-xl border border-gray-200 bg-white text-gray-600 font-medium text-sm hover:bg-gray-50 cursor-pointer transition"
+        >
           ยกเลิก
         </button>
-        <button (click)="submit()" type="button"
-                class="flex items-center justify-center gap-2 px-8 py-3 bg-linear-to-r from-[#F2CB05] to-[#e0b800] hover:from-[#e0b800] hover:to-[#F2CB05] text-[#394250] text-sm font-semibold rounded-xl shadow-sm transition-all cursor-pointer">
-          <i class="bi" [ngClass]="isEdit ? 'bi-pencil-square' : 'bi-check-circle-fill'"></i>
+        <button
+          (click)="submit()"
+          type="button"
+          class="flex items-center justify-center gap-2 px-8 py-3 bg-linear-to-r from-[#F2CB05] to-[#e0b800] hover:from-[#e0b800] hover:to-[#F2CB05] text-[#394250] text-sm font-semibold rounded-xl shadow-sm transition-all cursor-pointer"
+        >
+          <i
+            class="bi"
+            [ngClass]="isEdit ? 'bi-pencil-square' : 'bi-check-circle-fill'"
+          ></i>
           <span>{{ isEdit ? "อัปเดตข้อมูล" : "บันทึกข้อมูล" }}</span>
         </button>
       </div>
-
     </div>
   </div>
 </div>
 
 <!-- Weight Modal -->
-<div *ngIf="showWeightModal" (click)="showWeightModal = false"
-     class="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/60 backdrop-blur-sm">
-  <div class="bg-white rounded-2xl w-full max-w-xl overflow-hidden shadow-2xl" (click)="$event.stopPropagation()">
+<div
+  *ngIf="showWeightModal"
+  (click)="showWeightModal = false"
+  class="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/60 backdrop-blur-sm"
+>
+  <div
+    class="bg-white rounded-2xl w-full max-w-xl overflow-hidden shadow-2xl"
+    (click)="$event.stopPropagation()"
+  >
     <div class="relative px-6 py-5 bg-linear-to-r from-[#F2CB05] to-[#F2E7AC]">
-      <button (click)="showWeightModal = false"
-              class="absolute top-3 right-3 w-9 h-9 rounded-lg flex items-center justify-center text-[#394250] hover:bg-white/30 cursor-pointer transition-colors">
+      <button
+        (click)="showWeightModal = false"
+        class="absolute top-3 right-3 w-9 h-9 rounded-lg flex items-center justify-center text-[#394250] hover:bg-white/30 cursor-pointer transition-colors"
+      >
         <i class="bi bi-x-lg text-lg"></i>
       </button>
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-white/40 flex items-center justify-center">
+        <div
+          class="w-10 h-10 rounded-xl bg-white/40 flex items-center justify-center"
+        >
           <i class="bi bi-info-circle-fill text-[#394250] text-xl"></i>
         </div>
         <div>
-          <h2 class="text-lg font-semibold text-[#394250]">เกณฑ์ค่าน้ำหนักผลงาน</h2>
-          <p class="text-sm text-[#394250]/70">รายละเอียดเกณฑ์การให้คะแนนผลงานวิจัย</p>
+          <h2 class="text-lg font-semibold text-[#394250]">
+            เกณฑ์ค่าน้ำหนักผลงาน
+          </h2>
+          <p class="text-sm text-[#394250]/70">
+            รายละเอียดเกณฑ์การให้คะแนนผลงานวิจัย
+          </p>
         </div>
       </div>
     </div>
-    <div class="px-6 py-5 space-y-3 text-sm text-gray-700 font-light max-h-[60vh] overflow-y-auto">
+    <div
+      class="px-6 py-5 space-y-3 text-sm text-gray-700 font-light max-h-[60vh] overflow-y-auto"
+    >
       <div class="p-4 bg-gray-50 rounded-xl border border-gray-100">
         <div class="flex items-center gap-2 mb-1.5">
           <span class="text-xl font-bold text-[#F2CB05]">0.20</span>
-          <span class="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 font-medium">ระดับ 1</span>
+          <span
+            class="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 font-medium"
+            >ระดับ 1</span
+          >
         </div>
-        <p class="leading-relaxed">บทความวิจัย/บทความวิชาการฉบับสมบูรณ์ที่ตีพิมพ์ในรายงานสืบเนื่องจากการประชุมวิชาการระดับชาติ • มีการยื่นจดอนุสิทธิบัตร</p>
+        <p class="leading-relaxed">
+          บทความวิจัย/บทความวิชาการฉบับสมบูรณ์ที่ตีพิมพ์ในรายงานสืบเนื่องจากการประชุมวิชาการระดับชาติ
+          • มีการยื่นจดอนุสิทธิบัตร
+        </p>
       </div>
       <div class="p-4 bg-gray-50 rounded-xl border border-gray-100">
         <div class="flex items-center gap-2 mb-1.5">
           <span class="text-xl font-bold text-[#F2CB05]">0.40</span>
-          <span class="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 font-medium">ระดับ 2</span>
+          <span
+            class="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 font-medium"
+            >ระดับ 2</span
+          >
         </div>
-        <p class="leading-relaxed">บทความวิจัย/บทความวิชาการฉบับสมบูรณ์ที่ตีพิมพ์ในรายงานสืบเนื่องจากการประชุมวิชาการระดับนานาชาติ • มีการยื่นจดสิทธิบัตร</p>
+        <p class="leading-relaxed">
+          บทความวิจัย/บทความวิชาการฉบับสมบูรณ์ที่ตีพิมพ์ในรายงานสืบเนื่องจากการประชุมวิชาการระดับนานาชาติ
+          • มีการยื่นจดสิทธิบัตร
+        </p>
       </div>
       <div class="p-4 bg-gray-50 rounded-xl border border-gray-100">
         <div class="flex items-center gap-2 mb-1.5">
           <span class="text-xl font-bold text-[#F2CB05]">0.60</span>
-          <span class="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 font-medium">ระดับ 3</span>
+          <span
+            class="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 font-medium"
+            >ระดับ 3</span
+          >
         </div>
-        <p class="leading-relaxed">บทความที่ตีพิมพ์ในประชุมวิชาการระดับนานาชาติ ในฐานข้อมูลตามประกาศ ก.พ.อ. • บทความในวารสาร TCI กลุ่มที่ 2 • มีการจดแจ้งลิขสิทธิ์</p>
+        <p class="leading-relaxed">
+          บทความที่ตีพิมพ์ในประชุมวิชาการระดับนานาชาติ ในฐานข้อมูลตามประกาศ
+          ก.พ.อ. • บทความในวารสาร TCI กลุ่มที่ 2 • มีการจดแจ้งลิขสิทธิ์
+        </p>
       </div>
       <div class="p-4 bg-gray-50 rounded-xl border border-gray-100">
         <div class="flex items-center gap-2 mb-1.5">
           <span class="text-xl font-bold text-[#F2CB05]">0.80</span>
-          <span class="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 font-medium">ระดับ 4</span>
+          <span
+            class="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 font-medium"
+            >ระดับ 4</span
+          >
         </div>
-        <p class="leading-relaxed">ผลงานที่ได้รับการจดอนุสิทธิบัตร • บทความในวารสารระดับนานาชาติที่ไม่อยู่ในฐานข้อมูล ก.พ.อ. หรือ TCI กลุ่มที่ 1</p>
+        <p class="leading-relaxed">
+          ผลงานที่ได้รับการจดอนุสิทธิบัตร •
+          บทความในวารสารระดับนานาชาติที่ไม่อยู่ในฐานข้อมูล ก.พ.อ. หรือ TCI
+          กลุ่มที่ 1
+        </p>
       </div>
       <div class="p-4 bg-[#F2E7AC]/30 rounded-xl border border-[#F2CB05]/30">
         <div class="flex items-center gap-2 mb-1.5">
           <span class="text-xl font-bold text-[#F2CB05]">1.00</span>
-          <span class="text-xs px-2 py-0.5 rounded-full bg-[#F2CB05] text-[#394250] font-semibold">สูงสุด</span>
+          <span
+            class="text-xs px-2 py-0.5 rounded-full bg-[#F2CB05] text-[#394250] font-semibold"
+            >สูงสุด</span
+          >
         </div>
-        <p class="leading-relaxed">บทความในวารสารระดับนานาชาติในฐานข้อมูลตามประกาศ ก.พ.อ. • ผลงานวิจัยที่หน่วยงานหรือองค์กรระดับชาติว่าจ้าง • ค้นพบพันธุ์พืช/พันธุ์สัตว์ใหม่และจดทะเบียน • ตำรา/หนังสือ/งานแปลที่ผ่านเกณฑ์ตำแหน่งวิชาการ • ผลงานที่ได้รับการจดสิทธิบัตร</p>
+        <p class="leading-relaxed">
+          บทความในวารสารระดับนานาชาติในฐานข้อมูลตามประกาศ ก.พ.อ. •
+          ผลงานวิจัยที่หน่วยงานหรือองค์กรระดับชาติว่าจ้าง •
+          ค้นพบพันธุ์พืช/พันธุ์สัตว์ใหม่และจดทะเบียน •
+          ตำรา/หนังสือ/งานแปลที่ผ่านเกณฑ์ตำแหน่งวิชาการ •
+          ผลงานที่ได้รับการจดสิทธิบัตร
+        </p>
       </div>
     </div>
     <div class="px-6 py-4 flex justify-end border-t border-gray-100 bg-gray-50">
-      <button (click)="showWeightModal = false"
-              class="px-5 py-2.5 rounded-xl bg-[#394250] hover:bg-[#2a323d] text-white font-medium text-sm transition-colors cursor-pointer flex items-center gap-2">
+      <button
+        (click)="showWeightModal = false"
+        class="px-5 py-2.5 rounded-xl bg-[#394250] hover:bg-[#2a323d] text-white font-medium text-sm transition-colors cursor-pointer flex items-center gap-2"
+      >
         <i class="bi bi-check-lg"></i> เข้าใจแล้ว
       </button>
     </div>

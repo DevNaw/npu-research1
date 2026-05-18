@@ -19,18 +19,53 @@ export class WorkService {
 
     if (data) {
       Object.entries(data).forEach(([key, value]) => {
-        fd.append(key, value as string);
+        this.appendField(fd, key, value);
       });
     }
 
     return fd;
   }
 
+  private appendField(fd: FormData, key: string, value: any): void {
+    if (value === null || value === undefined) return;
+
+    if (Array.isArray(value)) {
+      // array → expertises[]=a, expertises[]=b
+      value.forEach((item) => this.appendField(fd, `${key}[]`, item));
+      return;
+    }
+
+    if (value instanceof File || value instanceof Blob) {
+      fd.append(key, value);
+      return;
+    }
+
+    if (value instanceof Date) {
+      fd.append(key, value.toISOString());
+      return;
+    }
+
+    if (typeof value === 'object') {
+      // nested object → organization[id]=1, organization[faculty]=...
+      Object.entries(value).forEach(([k, v]) =>
+        this.appendField(fd, `${key}[${k}]`, v)
+      );
+      return;
+    }
+
+    fd.append(key, String(value));
+  }
+
   getWorkInfo(): Observable<WorkResponse> {
-    return this.http.get<WorkResponse>(`${this.apiUrl}/user/infomation/work-for-update`);
+    return this.http.get<WorkResponse>(
+      `${this.apiUrl}/user/infomation/work-for-update`
+    );
   }
 
   updateWork(data: any) {
-    return this.http.post(`${this.apiUrl}/user/infomation/work`, this.spoof('PATCH', data));
+    return this.http.post(
+      `${this.apiUrl}/user/infomation/work`,
+      this.spoof('PATCH', data)
+    );
   }
 }
