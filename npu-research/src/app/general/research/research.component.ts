@@ -14,6 +14,7 @@ export class ResearchComponent implements OnInit {
   pageSize = 10;
   currentPage = 1;
   searchText = '';
+  isLoading = true; // 👈 เริ่มต้น true เพื่อให้ตารางพร้อมแสดง loader ทันทีที่ MainComponent หาย
 
   research: Project[] = [];
   filteredReseacrchs: Project[] = [];
@@ -26,46 +27,37 @@ export class ResearchComponent implements OnInit {
 
   ngOnInit(): void {
     MainComponent.showLoading();
-    Promise.all([
-      this.getDataResearch(),
-      new Promise((resolve) => setTimeout(resolve, 1000)),
-    ]).then(() => MainComponent.hideLoading());
+
+    setTimeout(() => {
+      MainComponent.hideLoading();
+      this.getDataResearch();
+    }, 1000);
   }
 
-  getDataResearch() {
-    this.researchService.getDataResearchPublic().subscribe({
-      next: (res) => {
-        this.research = res.data.projects;
-        this.filteredReseacrchs = [...this.research];
-        this.updatePagination();
-      },
-      error: (err) => {
-        console.error('โหลดข้อมูลล้มเหลว', err);
-      },
+  getDataResearch(): Promise<void> {
+    this.isLoading = true;
+    return new Promise((resolve) => {
+      this.researchService.getDataResearchPublic().subscribe({
+        next: (res) => {
+          this.research = res.data.projects;
+          this.filteredReseacrchs = [...this.research];
+          this.updatePagination();
+          this.isLoading = false; // ปิด animation ก่อน resolve
+          resolve();
+        },
+        error: (err) => {
+          console.error('โหลดข้อมูลล้มเหลว', err);
+          this.isLoading = false;
+          resolve();
+        },
+      });
     });
   }
 
   // ===== SEARCH =====
-  // onSearch(): void {
-  //   const keyword = this.searchText.toLowerCase().trim();
-
-  //   this.filteredReseacrchs = this.research.filter((r) => {
-  //     return (
-  //       r.title_th?.toLowerCase().includes(keyword) ||
-  //       r.research_code?.toLowerCase().includes(keyword) ||
-  //       r.funding?.source_funds?.toLowerCase().includes(keyword) ||
-  //       r.oecd[0]?.name_th?.toLowerCase().includes(keyword) ||
-  //       this.mapResearchers(r.own).toLowerCase().includes(keyword)
-  //     );
-  //   });
-
-  //   this.currentPage = 1;
-  //   this.updatePagination();
-  // }
-
   onSearch(): void {
     const keyword = this.searchText.toLowerCase().trim();
-  
+
     this.filteredReseacrchs = this.research.filter((r) => {
       const fields = [
         r.title_th,
@@ -74,12 +66,10 @@ export class ResearchComponent implements OnInit {
         r.oecd?.[0]?.name_th,
         this.mapResearchers(r.own),
       ];
-  
-      return fields.some((field) =>
-        field?.toLowerCase().includes(keyword)
-      );
+
+      return fields.some((field) => field?.toLowerCase().includes(keyword));
     });
-  
+
     this.currentPage = 1;
     this.updatePagination();
   }

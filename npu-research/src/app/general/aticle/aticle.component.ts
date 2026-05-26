@@ -14,6 +14,7 @@ export class AticleComponent implements OnInit {
   pageSize = 10;
   currentPage = 1;
   searchText = '';
+  isLoading = true; // 👈 เริ่มต้น true เพื่อให้ตารางพร้อมแสดง loader ทันที
 
   articles: Article[] = [];
   filteredArticles: Article[] = [];
@@ -25,22 +26,38 @@ export class AticleComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // ===== Step 1: แสดง MainComponent loading (เปิดหน้า) =====
     MainComponent.showLoading();
-    Promise.all([
-      this.getDatArticle(),
-      new Promise((resolve) => setTimeout(resolve, 1000)),
-    ]).then(() => MainComponent.hideLoading());
+
+    // ===== Step 2: รอ 1 วินาทีให้หน้าเปิดเสร็จ แล้วซ่อน MainComponent =====
+    setTimeout(() => {
+      MainComponent.hideLoading();
+
+      // ===== Step 3: เริ่มโหลดข้อมูลในตาราง (แสดง animation ในตาราง) =====
+      this.getDatArticle();
+    }, 1000);
   }
 
-  getDatArticle() {
-    this.researchService.getDataArticlePublic().subscribe({
-      next: (res) => {
-        this.articles = res.data.articles;
-        console.log(this.articles);
+  // 👈 ปรับให้คืนค่าเป็น Promise และจัดการ isLoading
+  getDatArticle(): Promise<void> {
+    this.isLoading = true; // เปิด animation ในตาราง
+    return new Promise((resolve) => {
+      this.researchService.getDataArticlePublic().subscribe({
+        next: (res) => {
+          this.articles = res.data.articles;
+          console.log(this.articles);
 
-        this.filteredArticles = [...this.articles];
-        this.updatePagination();
-      },
+          this.filteredArticles = [...this.articles];
+          this.updatePagination();
+          this.isLoading = false; // ปิด animation ก่อน resolve
+          resolve();
+        },
+        error: (err) => {
+          console.error('โหลดข้อมูลล้มเหลว', err);
+          this.isLoading = false;
+          resolve();
+        },
+      });
     });
   }
 
@@ -55,11 +72,9 @@ export class AticleComponent implements OnInit {
         a.funding?.source_funds,
         a.oecd?.[0]?.name_th,
         this.mapOwners(a.own),
-    ];
+      ];
 
-      return fields.some((field) =>
-        field?.toLowerCase().includes(keyword)
-      );
+      return fields.some((field) => field?.toLowerCase().includes(keyword));
     });
 
     this.currentPage = 1;

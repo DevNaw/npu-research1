@@ -14,6 +14,7 @@ export class InnovationComponent implements OnInit {
   pageSize = 10;
   currentPage = 1;
   searchText = '';
+  isLoading = true; // 👈 เริ่มต้น true เพื่อให้ตารางพร้อมแสดง loader ทันที
 
   innovations: Innovation[] = [];
   filteredInnovations: Innovation[] = [];
@@ -25,40 +26,54 @@ export class InnovationComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // ===== Step 1: แสดง MainComponent loading (เปิดหน้า) =====
     MainComponent.showLoading();
-    Promise.all([
-      this.getDataInnovation(),
-      new Promise((resolve) => setTimeout(resolve, 1000)),
-    ]).then(() => MainComponent.hideLoading());
+
+    // ===== Step 2: รอ 1 วินาทีให้หน้าเปิดเสร็จ แล้วซ่อน MainComponent =====
+    setTimeout(() => {
+      MainComponent.hideLoading();
+
+      // ===== Step 3: เริ่มโหลดข้อมูลในตาราง (แสดง animation ในตาราง) =====
+      this.getDataInnovation();
+    }, 1000);
   }
 
-  getDataInnovation() {
-    this.researchService.getDataInnovationPublic().subscribe({
-      next: (res) => {
-        this.innovations = res.data.innovations;
-        this.filteredInnovations = [...this.innovations];
-        this.updatePagination();
-      },
-      error: (err) => {
-        console.error('โหลดข้อมูลล้มเหลว', err);
-      },
+  // 👈 ปรับให้คืนค่าเป็น Promise และจัดการ isLoading
+  getDataInnovation(): Promise<void> {
+    this.isLoading = true;
+    return new Promise((resolve) => {
+      this.researchService.getDataInnovationPublic().subscribe({
+        next: (res) => {
+          this.innovations = res.data.innovations;
+          this.filteredInnovations = [...this.innovations];
+          this.updatePagination();
+          this.isLoading = false;
+          resolve();
+        },
+        error: (err) => {
+          console.error('โหลดข้อมูลล้มเหลว', err);
+          this.isLoading = false;
+          resolve();
+        },
+      });
     });
   }
 
+  // ===== SEARCH (แก้บั๊กแล้ว) =====
   onSearch(): void {
     const keyword = this.searchText.toLowerCase().trim();
 
     this.filteredInnovations = this.innovations.filter((i) => {
-      const title = [
+      const fields = [
         i.title_th,
         i.title_en,
         i.research_code,
         i.funding?.source_funds,
         i.oecd?.[0]?.name_th,
         this.mapInnovation(i.own),
-      ]
+      ];
 
-      return title.includes(keyword);
+      return fields.some((field) => field?.toLowerCase().includes(keyword));
     });
 
     this.currentPage = 1;
@@ -91,6 +106,10 @@ export class InnovationComponent implements OnInit {
   }
 
   viewDetails(id: number): void {
+    if (!id) {
+      console.error('Innovation ID undefined');
+      return;
+    }
     this.router.navigate(['/performance-public/innovation', id]);
   }
 

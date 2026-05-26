@@ -454,9 +454,17 @@ export class EditArticleComponent {
     optional('abstract', d.abstract);
     optional('abstract_en', d.abstract_en);
 
-    d.keywords.forEach((k, i) => {
-      fd.append(`keywords[${i}]`, k);
-    });
+    // d.keywords.forEach((k, i) => {
+    //   fd.append(`keywords[${i}]`, k);
+    // });
+
+    if (d.keywords.length === 0) {
+      fd.append('keywords[0]', '-');
+    } else {
+      d.keywords.forEach((k, i) => {
+        fd.append(`keywords[${i}]`, k);
+      });
+    }
 
     if (d.article_type === 'วารสาร') {
       optional('article_published', d.article_published);
