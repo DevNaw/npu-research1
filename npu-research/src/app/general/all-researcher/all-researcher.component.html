@@ -1,0 +1,213 @@
+<div class="bg-linear-to-br from-slate-50 via-gray-50 to-slate-100 min-h-screen p-5 md:px-10 md:py-8 text-[#394250] font-medium">
+    <!-- Header card -->
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-xl bg-[#F2CB05] flex items-center justify-center shadow-sm">
+            <i class="bi bi-people-fill text-white text-2xl"></i>
+          </div>
+          <div>
+            <h1 class="text-xl md:text-2xl font-bold text-gray-800">นักวิจัย</h1>
+            <p class="text-sm text-gray-500">รายชื่อนักวิจัยทั้งหมดในระบบ</p>
+          </div>
+        </div>
+  
+        <div class="relative w-full md:w-80">
+          <i class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+          <input
+          type="text"
+          [(ngModel)]="keyword"
+          (ngModelChange)="onSearch()"
+          (keyup.enter)="onSearch()"
+          placeholder="ค้นหานักวิจัย..."
+          class="w-full pl-9 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#F2CB05]/50 focus:border-[#F2CB05] transition"
+        />
+        </div>
+      </div>
+    </div>
+  
+    <!-- Faculty graph summary -->
+    <div *ngIf="graph.length" class="flex flex-wrap gap-2 mb-6">
+      <span
+        *ngFor="let g of graph"
+        class="inline-flex items-center gap-2 px-3 py-1.5 bg-white border border-gray-200 rounded-full text-xs text-gray-600 shadow-sm"
+      >
+        <i class="bi bi-building text-[#16498C]"></i>
+        {{ g.faculty || "ไม่ระบุสาขา" }}
+        <span class="font-semibold text-[#F2CB05] bg-[#F2CB05]/10 px-2 py-0.5 rounded-full">
+          {{ g.count }}
+        </span>
+      </span>
+    </div>
+  
+    <!-- Table card -->
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 md:p-6">
+      <div class="overflow-x-auto rounded-xl border border-gray-200 font-light">
+        <table class="w-full text-sm md:text-base min-w-225 table-auto">
+          <colgroup>
+            <col class="w-[5%]" />
+            <col class="w-[30%]" />
+            <col class="w-[20%]" />
+            <col class="w-[20%]" />
+            <col class="w-[25%]" />
+          </colgroup>
+  
+          <!-- Header -->
+          <thead class="bg-linear-to-r from-[#394250] to-[#2a323d] text-white">
+            <tr>
+              <th class="p-3 text-center text-xs uppercase tracking-wider font-semibold">ลำดับ</th>
+              <th class="p-3 text-left text-xs uppercase tracking-wider font-semibold">ชื่อนักวิจัย</th>
+              <th class="p-3 text-left text-xs uppercase tracking-wider font-semibold">ตำแหน่ง</th>
+              <th class="p-3 text-left text-xs uppercase tracking-wider font-semibold">สังกัด</th>
+              <th class="p-3 text-left text-xs uppercase tracking-wider font-semibold">ความเชี่ยวชาญ</th>
+            </tr>
+          </thead>
+  
+          <!-- Body -->
+          <tbody class="bg-white">
+            <!-- 🔄 Loading Animation -->
+            <tr *ngIf="loading">
+              <td colspan="5" class="py-20">
+                <div class="flex flex-col items-center justify-center gap-5">
+                  <div class="relative w-20 h-20">
+                    <div class="absolute inset-0 rounded-full border-4 border-gray-100"></div>
+                    <div
+                      class="absolute inset-0 rounded-full border-4 border-transparent border-t-[#F2CB05] border-r-[#F2CB05] animate-spin"
+                    ></div>
+                    <div
+                      class="absolute inset-2 rounded-full border-4 border-transparent border-b-[#394250] border-l-[#394250]"
+                      style="animation: spin 1.2s linear infinite reverse"
+                    ></div>
+                    <div class="absolute inset-0 flex items-center justify-center">
+                      <i class="bi bi-people text-[#F2CB05] text-xl animate-pulse"></i>
+                    </div>
+                  </div>
+  
+                  <div class="flex flex-col items-center gap-2">
+                    <div class="flex items-center gap-1 text-[#394250] font-medium">
+                      <span>กำลังโหลดข้อมูล</span>
+                      <span class="inline-flex gap-0.5">
+                        <span class="w-1.5 h-1.5 bg-[#F2CB05] rounded-full animate-bounce" style="animation-delay: 0ms"></span>
+                        <span class="w-1.5 h-1.5 bg-[#F2CB05] rounded-full animate-bounce" style="animation-delay: 150ms"></span>
+                        <span class="w-1.5 h-1.5 bg-[#F2CB05] rounded-full animate-bounce" style="animation-delay: 300ms"></span>
+                      </span>
+                    </div>
+                    <p class="text-xs text-gray-400 font-light">
+                      โปรดรอสักครู่ ระบบกำลังดึงข้อมูลนักวิจัย
+                    </p>
+                  </div>
+                </div>
+              </td>
+            </tr>
+  
+            <!-- 📋 Data Rows -->
+            <ng-container *ngIf="!loading">
+              <tr
+                *ngFor="let r of researchers; let i = index; trackBy: trackById"
+                (click)="openResearcher(r)"
+                class="border-b border-gray-100 hover:bg-yellow-50/50 transition-colors cursor-pointer"
+              >
+                <!-- Index -->
+                <td class="p-3 text-center text-gray-500">
+                  {{ i + 1 }}
+                </td>
+  
+                <!-- Name -->
+                <td class="p-3">
+                  <div class="flex items-center gap-3">
+                    <img
+                      *ngIf="r.avatar"
+                      [src]="r.avatar"
+                      [alt]="r.name"
+                      class="w-10 h-10 rounded-full object-cover border border-gray-200 shrink-0"
+                    />
+                    <span
+                      title="{{ r.name }}"
+                      class="leading-relaxed wrap-break-word whitespace-normal text-[#16498C] hover:underline font-medium"
+                    >
+                      {{ r.name }}
+                    </span>
+                  </div>
+                </td>
+  
+                <!-- Position -->
+                <td class="p-3">
+                  <div class="leading-relaxed wrap-break-word whitespace-normal text-[#394250] text-sm">
+                    {{ r.position || "-" }}
+                  </div>
+                </td>
+  
+                <!-- Organization -->
+                <td class="p-3">
+                  <div class="leading-relaxed wrap-break-word whitespace-normal text-[#394250] text-sm">
+                    {{ r.organization || "-" }}
+                  </div>
+                </td>
+  
+                <!-- Expertises -->
+                <td class="p-3">
+                  <div class="leading-relaxed wrap-break-word whitespace-normal text-gray-500 text-sm">
+                    {{ r.expertises || "-" }}
+                  </div>
+                </td>
+              </tr>
+  
+              <!-- No result -->
+              <tr *ngIf="researchers.length === 0">
+                <td colspan="5" class="text-center py-12 text-gray-400">
+                  <i class="bi bi-folder-x text-4xl block mb-2"></i>
+                  <span class="text-sm">ไม่พบนักวิจัยที่ค้นหา</span>
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+  
+      <!-- Pagination footer -->
+      <div
+        *ngIf="!loading && researchers.length > 0"
+        class="flex flex-col sm:flex-row items-center justify-between gap-4 mt-4"
+      >
+        <div class="text-sm text-gray-500">
+          หน้า <span class="font-semibold text-gray-700">{{ page }}</span> จาก
+          <span class="font-semibold text-gray-700">{{ totalPages }}</span>
+          <span class="mx-1">|</span>
+          แสดง <span class="font-semibold text-gray-700">{{ toIndex - fromIndex + 1 }}</span>
+          จาก <span class="font-semibold text-gray-700">{{ total }}</span> รายการ
+        </div>
+  
+        <div class="flex items-center gap-1">
+          <button
+            (click)="prev()"
+            [disabled]="page === 1"
+            class="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-200 text-gray-500 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition"
+          >
+            <i class="bi bi-chevron-left text-xs"></i>
+          </button>
+  
+          <button
+            *ngFor="let p of pageList"
+            (click)="goTo(p)"
+            [disabled]="p === '...'"
+            [ngClass]="
+              p === page
+                ? 'bg-[#F2CB05] text-white border-[#F2CB05]'
+                : 'text-gray-600 border-gray-200 hover:bg-gray-50'
+            "
+            class="min-w-9 h-9 px-2 flex items-center justify-center rounded-lg border text-sm font-medium transition"
+          >
+            {{ p }}
+          </button>
+  
+          <button
+            (click)="next()"
+            [disabled]="page === totalPages"
+            class="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-200 text-gray-500 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition"
+          >
+            <i class="bi bi-chevron-right text-xs"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>

@@ -56,6 +56,7 @@ import { EditInnovationComponent } from './admin-pages/edit-innovation/edit-inno
 import { AddProjectComponent } from './admin-pages/add-projects/add-project/add-project.component';
 import { AddArticleComponent } from './admin-pages/add-projects/add-article/add-article.component';
 import { AddInnovationComponent } from './admin-pages/add-projects/add-innovation/add-innovation.component';
+import { AllResearcherComponent } from './general/all-researcher/all-researcher.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -104,6 +105,7 @@ const routes: Routes = [
       { path: 'performance/:type/:id', component: PerformanceComponent },
       { path: 'performance-public/:type/:id', component: PerformancePublicComponent },
       { path: 'privacy-policy', component: PrivacyPolicyComponent },
+      { path: 'all-researcher', component: AllResearcherComponent },
     ],
   },
   /* ================= USER ================= */

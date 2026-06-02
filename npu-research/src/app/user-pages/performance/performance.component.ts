@@ -274,18 +274,19 @@ export class PerformanceComponent {
     img.src = '/assets/default_image.png';
   }
 
-  openPDF() {
+  get pdfUrl(): string | null {
     const map: any = {
       project: this.researchData?.full_report?.get_url,
       article: this.articleData?.article_file?.get_url,
       innovation: this.innovationData?.full_report?.get_url,
     };
-
-    const getUrl = map[this.type];
-
-    if (!getUrl) return;
-
-    this.http.post<any>(getUrl, {}).subscribe({
+    return map[this.type] || null;
+  }
+  
+  openPDF() {
+    if (!this.pdfUrl) return;
+  
+    this.http.post<any>(this.pdfUrl, {}).subscribe({
       next: (res) => {
         const signedUrl = res?.data?.url;
         if (signedUrl) window.open(signedUrl, '_blank');

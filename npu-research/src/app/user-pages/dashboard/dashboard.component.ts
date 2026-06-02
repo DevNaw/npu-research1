@@ -484,58 +484,6 @@ export class UserDashboardComponent implements OnInit {
     };
   }
 
-  // changeTabForChart(tab: ResearchType): void {
-  //   this.selectedTab = tab;
-  //   const tabIndex = tab === 'PROJECT' ? 0 : tab === 'ARTICLE' ? 1 : 2;
-
-  //   // ===== RADAR หลัก =====
-  //   const majorLabels = this.dashboardData?.radar.major.labels || [];
-  //   const majorValues =
-  //     this.dashboardData?.radar.major.datasets[tabIndex]?.data || [];
-  //   this.fullLabels = majorLabels;
-  //   this.radarChartOptions.labels = majorLabels.map((l) => this.shortLabel(l));
-  //   this.radarChartOptions.series = [
-  //     { name: 'จำนวนงานวิจัย', data: majorValues as number[] },
-  //   ];
-
-  //   // ===== RADAR ย่อย =====
-  //   const subLabels = this.dashboardData?.radar.sub.labels || [];
-  //   const subValues =
-  //     this.dashboardData?.radar.sub.datasets[tabIndex]?.data || [];
-  //   this.fullLabelsSub = subLabels;
-  //   this.radarChartOptionsSub.labels = subLabels.map((l) => this.shortLabel(l));
-  //   this.radarChartOptionsSub.series = [
-  //     { name: 'จำนวนงานวิจัย', data: subValues as number[] },
-  //   ];
-
-  //   // ===== PIE (ngx-charts) =====
-  //   const ford = this.dashboardData?.ford || {
-  //     project: [],
-  //     article: [],
-  //     innovation: [],
-  //   };
-  //   const dataFord =
-  //     tab === 'PROJECT'
-  //       ? ford.project
-  //       : tab === 'ARTICLE'
-  //       ? ford.article
-  //       : ford.innovation;
-
-  //   this.loading = true;
-  //   setTimeout(() => {
-  //     this.single = dataFord.map((item) => ({
-  //       name: item.name,
-  //       value: item.count,
-  //       extra: { percent: item.percent },
-  //     }));
-  //     this.initChartsOECD();
-  //     this.loading = false;
-  //   }, 0);
-
-  //   this.hasData = dataFord.reduce((sum, item) => sum + item.count, 0) > 0;
-  // }
-
-
   changeTabForChart(tab: ResearchType): void {
     this.selectedTab = tab;
     const tabIndex = tab === 'PROJECT' ? 0 : tab === 'ARTICLE' ? 1 : 2;
@@ -854,5 +802,21 @@ export class UserDashboardComponent implements OnInit {
         confirmButton: 'swal-confirm-custom',
       },
     });
+  }
+
+  routerToArticle(){
+    this.router.navigate(['/aticle']);
+  }
+
+  routerToProject(){
+    this.router.navigate(['/research']);
+  }
+
+  routerToInnovation(){
+    this.router.navigate(['/innovation']);
+  }
+
+  routerToResearchers(){
+    this.router.navigate(['/all-researcher']);
   }
 }

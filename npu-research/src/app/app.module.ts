@@ -78,6 +78,7 @@ import { AddProjectComponent } from './admin-pages/add-projects/add-project/add-
 import { AddArticleComponent } from './admin-pages/add-projects/add-article/add-article.component';
 import { AddInnovationComponent } from './admin-pages/add-projects/add-innovation/add-innovation.component';
 import { MethodSpoofInterceptor } from './services/method-spoof.interceptor';
+import { AllResearcherComponent } from './general/all-researcher/all-researcher.component';
 
 @NgModule({
   declarations: [
@@ -139,6 +140,7 @@ import { MethodSpoofInterceptor } from './services/method-spoof.interceptor';
     AddProjectComponent,
     AddArticleComponent,
     AddInnovationComponent,
+    AllResearcherComponent,
   ],
   imports: [
     BrowserAnimationsModule,

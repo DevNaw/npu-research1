@@ -33,6 +33,7 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-5">
       <!-- Card 1: โครงการวิจัย -->
       <div
+      (click)="routerToProject()"
         class="group relative overflow-hidden bg-white rounded-2xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 hover:-translate-y-1"
       >
         <div
@@ -63,6 +64,7 @@
 
       <!-- Card 2: ผลงานตีพิมพ์ -->
       <div
+      (click)="routerToArticle()"
         class="group relative overflow-hidden bg-white rounded-2xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 hover:-translate-y-1"
       >
         <div
@@ -93,6 +95,7 @@
 
       <!-- Card 3: นวัตกรรมสิ่งประดิษฐ์ -->
       <div
+      (click)="routerToInnovation()"
         class="group relative overflow-hidden bg-white rounded-2xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 hover:-translate-y-1"
       >
         <div
@@ -123,6 +126,7 @@
 
       <!-- Card 4: จำนวนนักวิจัย -->
       <div
+      (click)="routerToResearchers()"
         class="group relative overflow-hidden bg-white rounded-2xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 hover:-translate-y-1"
       >
         <div
