@@ -47,6 +47,7 @@ const DEFAULT_ARTICLE: Article = {
   pre_location: '',
   pages: '',
   year_published: 0,
+  year_published_ad: 0,
   volume: '',
   volume_no: '',
   is_cooperation: '',
@@ -68,17 +69,18 @@ const DEFAULT_ARTICLE: Article = {
   selector: 'app-add-article',
   standalone: false,
   templateUrl: './add-article.component.html',
-  styleUrl: './add-article.component.css'
+  styleUrl: './add-article.component.css',
 })
 export class AddArticleComponent {
-@ViewChildren('subItem') subItems!: QueryList<ElementRef>;
-showWeightModal = false;
+  @ViewChildren('subItem') subItems!: QueryList<ElementRef>;
+  showWeightModal = false;
   oecdList: Major[] = [];
   selectedSub: Sub | null = null;
   selectedMajor: Major | null = null;
   searchMajor = '';
   searchSub = '';
   thaiYears: number[] = [];
+  gregorianYears: number[] = [];
   searchSubSub = '';
   selectedSubSub: Child | null = null;
   activeDropdown: string | null = null;
@@ -101,7 +103,7 @@ showWeightModal = false;
   searchResearcher = '';
   type: 'th' | 'en' = 'th';
   keywords: string[] = [];
-  
+
   keywordInput = '';
   keywordInputEn = '';
 
@@ -149,7 +151,7 @@ showWeightModal = false;
         const data = res.data.researchArticle;
         const oecd = data.oecd?.[0];
 
-        this.type =  data.lang_type as 'th' | 'en';
+        this.type = data.lang_type as 'th' | 'en';
 
         if (oecd) {
           this.selectedMajor = {
@@ -388,7 +390,11 @@ showWeightModal = false;
           showConfirmButton: false,
           timer: 1000,
         });
-        this.router.navigate(['/admin/performance-by-departmaent', 'article', res.data.research_id]);
+        this.router.navigate([
+          '/admin/performance-by-departmaent',
+          'article',
+          res.data.research_id,
+        ]);
         this.resetForm();
       },
       error: (err) => {
@@ -432,12 +438,17 @@ showWeightModal = false;
     if (d.article_type === 'วารสาร') {
       required('article_published', d.article_published);
     }
-    
+
     required('published_date', d.published_date);
     required('article_type', d.article_type);
     required('journal_name', d.journal_name);
     optional('pages', d.pages);
-    required('year_published', d.year_published);
+    // required('year_published', d.year_published);
+    if (this.type === 'en') {
+      required('year_published_ad', d.year_published_ad);
+    } else {
+      required('year_published', d.year_published);
+    }
     required('volume', d.volume);
     required('volume_no', d.volume_no);
 
@@ -539,12 +550,12 @@ showWeightModal = false;
     const d = this.articleData;
 
     if (
-      !d.lang_type||
+      !d.lang_type ||
       (d.lang_type === 'th' && !d.title_th) ||
       (d.lang_type === 'en' && !d.title_en) ||
       !d.article_type ||
       !d.journal_name ||
-      !d.year_published ||
+      (this.type === 'en' ? !d.year_published_ad : !d.year_published) ||
       !d.volume ||
       !d.volume_no ||
       !d.doi
@@ -618,17 +629,36 @@ showWeightModal = false;
     this.articleData.keywords.splice(i, 1);
   }
 
+  // generateThaiYears() {
+  //   const currentYear = new Date().getFullYear() + 543;
+
+  //   this.thaiYears = [];
+  //   for (let i = 0; i < 70; i++) {
+  //     this.thaiYears.push(currentYear - i);
+  //   }
+  // }
   generateThaiYears() {
     const currentYear = new Date().getFullYear() + 543;
 
     this.thaiYears = [];
+    this.gregorianYears = [];
     for (let i = 0; i < 70; i++) {
       this.thaiYears.push(currentYear - i);
+      this.gregorianYears.push(currentYear - i - 543);
     }
   }
 
+  // selectYear(year: number) {
+  //   this.articleData.year_published = year;
+  //   this.activeDropdown = null;
+  // }
   selectYear(year: number) {
     this.articleData.year_published = year;
+    this.activeDropdown = null;
+  }
+
+  selectYearAD(yearAD: number) {
+    this.articleData.year_published_ad = yearAD;
     this.activeDropdown = null;
   }
 
@@ -658,42 +688,58 @@ showWeightModal = false;
     );
   }
 
+  // onAbstractTypeChange(type: 'th' | 'en') {
+  //   this.articleData.lang_type = type;
+
+  //   if (type === 'en') {
+  //     // 👇 reset ตอนเลือก EN
+  //     this.keywordInputEn = '';
+  //     this.articleData.keywords = [];
+  //     this.articleData.abstract_en = '';
+  //   } else {
+  //     // 👇 reset ตอนเลือก TH
+  //     this.keywordInput = '';
+  //     this.articleData.keywords = [];
+  //     this.articleData.abstract = '';
+  //   }
+  // }
+
   onAbstractTypeChange(type: 'th' | 'en') {
     this.articleData.lang_type = type;
   
     if (type === 'en') {
-      // 👇 reset ตอนเลือก EN
       this.keywordInputEn = '';
       this.articleData.keywords = [];
       this.articleData.abstract_en = '';
+      this.articleData.year_published = 0;      // ← เคลียร์ พ.ศ.
     } else {
-      // 👇 reset ตอนเลือก TH
       this.keywordInput = '';
       this.articleData.keywords = [];
       this.articleData.abstract = '';
+      this.articleData.year_published_ad = 0;   // ← เคลียร์ ค.ศ.
     }
   }
 
   handleTab(event: KeyboardEvent) {
     if (event.key === 'Tab') {
       event.preventDefault(); // ❗ หยุดการเปลี่ยน focus
-  
+
       const textarea = event.target as HTMLTextAreaElement;
-  
+
       const start = textarea.selectionStart;
       const end = textarea.selectionEnd;
-  
+
       // ใส่ tab (\t) หรือจะใช้ช่องว่าง 4 ตัวก็ได้
       const tab = '\t'; // หรือ '    '
-  
+
       textarea.value =
         textarea.value.substring(0, start) +
         tab +
         textarea.value.substring(end);
-  
+
       // อัปเดต cursor
       textarea.selectionStart = textarea.selectionEnd = start + tab.length;
-  
+
       // sync กับ ngModel
       this.articleData.abstract = textarea.value;
     }

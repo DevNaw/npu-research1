@@ -47,6 +47,7 @@ const DEFAULT_ARTICLE: Article = {
   pre_location: '',
   pages: '',
   year_published: 0,
+  year_published_ad: 0,
   volume: '',
   volume_no: '',
   is_cooperation: '',
@@ -80,6 +81,7 @@ export class UserAddAticleComponent {
   searchMajor = '';
   searchSub = '';
   thaiYears: number[] = [];
+  gregorianYears: number[] = []; 
   searchSubSub = '';
   selectedSubSub: Child | null = null;
   activeDropdown: string | null = null;
@@ -466,7 +468,11 @@ export class UserAddAticleComponent {
     required('article_type', d.article_type);
     required('journal_name', d.journal_name);
     optional('pages', d.pages);
-    required('year_published', d.year_published);
+    if (this.type === 'en') {
+      required('year_published_ad', d.year_published_ad);
+    } else {
+      required('year_published', d.year_published);
+    }
     required('volume', d.volume);
     required('volume_no', d.volume_no);
 
@@ -565,7 +571,7 @@ export class UserAddAticleComponent {
       (d.lang_type === 'en' && !d.title_en) ||
       !d.article_type ||
       !d.journal_name ||
-      !d.year_published ||
+      (this.type === 'en' ? !d.year_published_ad : !d.year_published) ||
       !d.volume ||
       !d.volume_no ||
       !d.doi
@@ -641,15 +647,22 @@ export class UserAddAticleComponent {
 
   generateThaiYears() {
     const currentYear = new Date().getFullYear() + 543;
-
+  
     this.thaiYears = [];
+    this.gregorianYears = [];
     for (let i = 0; i < 70; i++) {
       this.thaiYears.push(currentYear - i);
+      this.gregorianYears.push(currentYear - i - 543);
     }
   }
 
   selectYear(year: number) {
     this.articleData.year_published = year;
+    this.activeDropdown = null;
+  }
+  
+  selectYearAD(yearAD: number) {
+    this.articleData.year_published_ad = yearAD;
     this.activeDropdown = null;
   }
 
@@ -683,15 +696,15 @@ export class UserAddAticleComponent {
     this.articleData.lang_type = type;
   
     if (type === 'en') {
-      // 👇 reset ตอนเลือก EN
       this.keywordInputEn = '';
       this.articleData.keywords = [];
       this.articleData.abstract_en = '';
+      this.articleData.year_published = 0;      // ← เพิ่ม
     } else {
-      // 👇 reset ตอนเลือก TH
       this.keywordInput = '';
       this.articleData.keywords = [];
       this.articleData.abstract = '';
+      this.articleData.year_published_ad = 0;   // ← เพิ่ม
     }
   }
 

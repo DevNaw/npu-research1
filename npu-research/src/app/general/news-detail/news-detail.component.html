@@ -16,13 +16,33 @@
     <!-- ===== Main Card ===== -->
     <article class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
 
-      <!-- Cover Image (จำกัดความสูง ไม่ให้ใหญ่เกิน) -->
-      <div *ngIf="newsDetail?.news_cover" class="w-full bg-gray-100 flex justify-center cursor-pointer" (click)="openImage(newsDetail?.news_cover || '')">
-        <img
-          [src]="newsDetail?.news_cover"
-          alt="news-cover"
-          class="max-w-full max-h-125 h-auto object-contain hover:opacity-95 transition-opacity"
-        />
+      <!-- Cover Image: blur backdrop เติมช่องว่าง + ภาพจริงแสดงเต็มสัดส่วน -->
+      <div
+        *ngIf="newsDetail?.news_cover"
+        class="relative w-full overflow-hidden cursor-pointer group"
+        (click)="openImage(newsDetail?.news_cover || '')"
+      >
+        <!-- พื้นหลังเบลอ (ภาพเดียวกัน) เติมช่องว่างซ้าย-ขวาให้ดูสวมพอดี -->
+        <div
+          class="absolute inset-0 bg-center bg-cover scale-110 blur-2xl opacity-50"
+          [style.background-image]="'url(' + newsDetail?.news_cover + ')'"
+        ></div>
+        <div class="absolute inset-0 bg-gray-900/10"></div>
+
+        <!-- ภาพจริง: สัดส่วนจริง ไม่ถูกบีบ -->
+        <div class="relative flex justify-center py-4 md:py-6">
+          <img
+            [src]="newsDetail?.news_cover"
+            alt="news-cover"
+            class="max-w-full max-h-[70vh] w-auto h-auto object-contain rounded-lg shadow-lg group-hover:scale-[1.02] transition-transform duration-300"
+          />
+        </div>
+
+        <!-- Zoom hint -->
+        <div class="absolute bottom-3 right-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/40 backdrop-blur-sm text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity">
+          <i class="bi bi-zoom-in"></i>
+          <span>คลิกเพื่อดูขนาดเต็ม</span>
+        </div>
       </div>
 
       <!-- Content -->

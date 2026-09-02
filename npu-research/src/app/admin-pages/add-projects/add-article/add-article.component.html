@@ -484,64 +484,107 @@
         </div>
       </div>
 
-      <!-- ปีที่ตีพิมพ์ -->
-      <div class="mb-2">
-        <label class="text-start">
-          ปีที่ตีพิมพ์ (พ.ศ.) <span class="text-red-500">*</span>
-        </label>
+      <!-- ปีที่ตีพิมพ์ (พ.ศ.) — เฉพาะไทย -->
+<div *ngIf="type === 'th'" class="mb-2">
+  <label class="text-start">
+    ปีที่ตีพิมพ์ (พ.ศ.) <span class="text-red-500">*</span>
+  </label>
 
-        <div class="relative">
-          <!-- BUTTON -->
-          <button
-            (click)="toggleDropdown('yearPublished', $event)"
-            type="button"
-            class="w-full h-12 border rounded-md px-4 flex justify-between items-center bg-white text-lg font-light"
-            [class.border-red-500]="
-              yearPublished.invalid && yearPublished.touched
-            "
-          >
-            <span>
-              {{ articleData.year_published || "เลือกปี" }}
-            </span>
-            <i class="bi bi-chevron-down"></i>
-          </button>
+  <div class="relative">
+    <button
+      (click)="toggleDropdown('yearPublished', $event)"
+      type="button"
+      class="w-full h-12 border rounded-md px-4 flex justify-between items-center bg-white text-lg font-light"
+      [class.border-red-500]="yearPublished.invalid && yearPublished.touched"
+    >
+      <span>{{ articleData.year_published || "เลือกปี" }}</span>
+      <i class="bi bi-chevron-down"></i>
+    </button>
 
-          <!-- DROPDOWN -->
-          <div
-            *ngIf="activeDropdown === 'yearPublished'"
-            class="absolute z-50 w-full bg-white border rounded-md mt-1 shadow text-lg font-light"
-            (click)="$event.stopPropagation()"
-          >
-            <ul class="max-h-60 overflow-y-auto">
-              <li
-                *ngFor="let year of thaiYears"
-                (click)="selectYear(year)"
-                class="px-4 py-2 hover:bg-gray-200 cursor-pointer"
-                [class.bg-blue-100]="articleData.year_published === year"
-              >
-                {{ year }}
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- ✅ ใช้ hidden input สำหรับ validation -->
-        <input
-          type="hidden"
-          name="year_published"
-          required
-          [(ngModel)]="articleData.year_published"
-          #yearPublished="ngModel"
-        />
-
-        <!-- ERROR -->
-        <div
-          *ngIf="yearPublished.invalid && yearPublished.touched"
-          class="text-red-500 text-sm"
+    <div
+      *ngIf="activeDropdown === 'yearPublished'"
+      class="absolute z-50 w-full bg-white border rounded-md mt-1 shadow text-lg font-light"
+      (click)="$event.stopPropagation()"
+    >
+      <ul class="max-h-60 overflow-y-auto">
+        <li
+          *ngFor="let year of thaiYears"
+          (click)="selectYear(year)"
+          class="px-4 py-2 hover:bg-gray-200 cursor-pointer"
+          [class.bg-blue-100]="articleData.year_published === year"
         >
-          กรุณาเลือกปีที่ตีพิมพ์
-        </div>
-      </div>
+          {{ year }}
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <input
+    type="hidden"
+    name="year_published"
+    [required]="type === 'th'"
+    [(ngModel)]="articleData.year_published"
+    #yearPublished="ngModel"
+  />
+
+  <div
+    *ngIf="yearPublished.invalid && yearPublished.touched"
+    class="text-red-500 text-sm"
+  >
+    กรุณาเลือกปีที่ตีพิมพ์
+  </div>
+</div>
+
+<!-- ปีที่ตีพิมพ์ (ค.ศ.) — เฉพาะอังกฤษ -->
+<div *ngIf="type === 'en'" class="mb-2">
+  <label class="text-start">
+    ปีที่ตีพิมพ์ (ค.ศ.) <span class="text-red-500">*</span>
+  </label>
+
+  <div class="relative">
+    <button
+      (click)="toggleDropdown('yearPublishedAD', $event)"
+      type="button"
+      class="w-full h-12 border rounded-md px-4 flex justify-between items-center bg-white text-lg font-light"
+      [class.border-red-500]="yearPublishedAD.invalid && yearPublishedAD.touched"
+    >
+      <span>{{ articleData.year_published_ad || "เลือกปี" }}</span>
+      <i class="bi bi-chevron-down"></i>
+    </button>
+
+    <div
+      *ngIf="activeDropdown === 'yearPublishedAD'"
+      class="absolute z-50 w-full bg-white border rounded-md mt-1 shadow text-lg font-light"
+      (click)="$event.stopPropagation()"
+    >
+      <ul class="max-h-60 overflow-y-auto">
+        <li
+          *ngFor="let year of gregorianYears"
+          (click)="selectYearAD(year)"
+          class="px-4 py-2 hover:bg-gray-200 cursor-pointer"
+          [class.bg-blue-100]="articleData.year_published_ad === year"
+        >
+          {{ year }}
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <input
+    type="hidden"
+    name="year_published_ad"
+    [required]="type === 'en'"
+    [(ngModel)]="articleData.year_published_ad"
+    #yearPublishedAD="ngModel"
+  />
+
+  <div
+    *ngIf="yearPublishedAD.invalid && yearPublishedAD.touched"
+    class="text-red-500 text-sm"
+  >
+    กรุณาเลือกปีที่ตีพิมพ์
+  </div>
+</div>
     </div>
 
     <!-- สาขาของบทความ/วารสาร -->

@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild, NgZone } from '@angular/core';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { DataPerformanceItem } from '../../models/dashboard.model';
@@ -12,6 +12,11 @@ import {
   ResearchItem,
   ResearchSection,
   ResearchType,
+  FacultyOverviewItem,
+  FacultyOverviewResponse,
+  FacultyOecdData,
+  FacultyOecdItem,
+  FacultyOecdResponse,
 } from '../../models/dashboard-main.model';
 import {
   ApexAxisChartSeries,
@@ -75,6 +80,7 @@ registerLocaleData(localeTh);
 export class UserDashboardComponent implements OnInit {
   @ViewChild('chart') chart: ChartComponent | undefined;
 
+  // ── Skills Overview (OECD/FORD) radars ──────────────────────
   radarChartOptions!: Partial<RadarChartOptions>;
   radarChartOptionsSub!: Partial<RadarChartOptions>;
   fullLabels: string[] = [];
@@ -102,7 +108,6 @@ export class UserDashboardComponent implements OnInit {
   currentPage = 1;
   searchText = '';
   selectedTab: ResearchType = 'PROJECT';
-  reportType: ReportType = 'project';
 
   loading = false;
   error: string | null = null;
@@ -117,13 +122,13 @@ export class UserDashboardComponent implements OnInit {
   filteredResearch: ResearchItem[] = [];
   paginatedPublications: ResearchItem[] = [];
 
-  // ngx-charts
+  // ngx-charts (FORD pie)
   single: { name: string; value: number; extra: { percent: number } }[] = [];
   legendPosition: LegendPosition = LegendPosition.Below;
   hasData = false;
 
   otherMajor: { label: string; value: number } | null = null;
-  otherSub: { label: string; value: number } | null = null; // ← เพิ่มบรรทัดนี้
+  otherSub: { label: string; value: number } | null = null;
 
   colorScheme: Color = {
     name: 'horizon',
@@ -143,6 +148,22 @@ export class UserDashboardComponent implements OnInit {
     ],
   };
 
+  // ── Faculty overview (bar ซ้าย + radar ขวา) ──────────────────
+  facultyTab: ReportType = 'project';
+  facultyOverviewItems: FacultyOverviewItem[] = [];
+  facultyOverviewTotal = 0;
+  facultyBarChart!: ChartOptions;
+  facultyRadarChart!: Partial<RadarChartOptions>;
+  facultyFullLabels: string[] = [];
+  hasFacultyData = false;
+
+  // ── OECD ของคณะที่เลือก (radar ขวา) ─────────────────────────
+  selectedFacultyOecd: FacultyOecdData | null = null;
+  facultyOecdRadar!: Partial<RadarChartOptions>;
+  facultyOecdFullLabels: string[] = [];
+  hasFacultyOecd = false;
+  loadingOecd = false;
+
   labelFormat = (name: string): string => {
     const item = this.single.find((d) => d.name === name);
     if (!item) return name;
@@ -160,9 +181,11 @@ export class UserDashboardComponent implements OnInit {
   constructor(
     private router: Router,
     private service: DashboardService,
-    private authService: AuthService
+    private authService: AuthService,
+    private zone: NgZone
   ) {
     this.initRadarCharts();
+    this.initEmptyFacultyCharts();
   }
 
   ngOnInit(): void {
@@ -176,6 +199,7 @@ export class UserDashboardComponent implements OnInit {
     this.updatePagination();
   }
 
+  // ── Skills Overview radars init ──────────────────────────────
   private initRadarCharts(): void {
     const baseTooltip = (fullLabels: () => string[]) => ({
       theme: 'dark' as const,
@@ -268,6 +292,7 @@ export class UserDashboardComponent implements OnInit {
           this.updatePagination();
           this.initCharts();
           this.initChartsOECD();
+          this.initFacultyCharts();
           this.changeTabForChart(this.selectedTab);
           this.loading = false;
         }
@@ -279,6 +304,7 @@ export class UserDashboardComponent implements OnInit {
     });
   }
 
+  // ── Charts Overview (bar ตามหน่วยงาน) ────────────────────────
   initCharts(): void {
     const graph = this.dashboardData?.statistic_graph;
     this.charts = [
@@ -382,6 +408,7 @@ export class UserDashboardComponent implements OnInit {
     };
   }
 
+  // ── Top 10 OECD (bar) ────────────────────────────────────────
   initChartsOECD(): void {
     const raw = this.dashboardData?.radar.child?.raw || [];
     const mappedData = raw.map((item) => ({
@@ -484,11 +511,12 @@ export class UserDashboardComponent implements OnInit {
     };
   }
 
+  // ── Skills Overview tab (radar major/sub + FORD pie + top10) ─
   changeTabForChart(tab: ResearchType): void {
     this.selectedTab = tab;
     const tabIndex = tab === 'PROJECT' ? 0 : tab === 'ARTICLE' ? 1 : 2;
 
-    // ===== RADAR หลัก — กรอง "อื่นๆ" ออก =====
+    // RADAR หลัก — กรอง "อื่นๆ" ออก
     const majorLabels = this.dashboardData?.radar.major.labels || [];
     const majorValues = (this.dashboardData?.radar.major.datasets[tabIndex]
       ?.data ?? []) as number[];
@@ -511,7 +539,7 @@ export class UserDashboardComponent implements OnInit {
       ],
     };
 
-    // ===== RADAR ย่อย — กรอง "อื่นๆ" ออก =====
+    // RADAR ย่อย — กรอง "อื่นๆ" ออก
     const subLabels = this.dashboardData?.radar.sub.labels || [];
     const subValues =
       this.dashboardData?.radar.sub.datasets[tabIndex]?.data || [];
@@ -521,7 +549,6 @@ export class UserDashboardComponent implements OnInit {
       value: (subValues as number[])[i] ?? 0,
     }));
 
-    // ✅ เปลี่ยนจาก .includes('อื่น') เป็น === 'อื่นๆ'
     const subFiltered = subPairs.filter((p) => p.label.trim() !== 'อื่นๆ');
     this.otherSub = subPairs.find((p) => p.label.trim() === 'อื่นๆ') ?? null;
 
@@ -534,7 +561,7 @@ export class UserDashboardComponent implements OnInit {
       ],
     };
 
-    // ===== PIE (ngx-charts) =====
+    // PIE (ngx-charts / FORD)
     const ford = this.dashboardData?.ford || {
       project: [],
       article: [],
@@ -561,7 +588,7 @@ export class UserDashboardComponent implements OnInit {
     this.hasData = dataFord.reduce((sum, item) => sum + item.count, 0) > 0;
   }
 
-  // ── Navigation ──────────────────────────────────────────────
+  // ── Navigation ───────────────────────────────────────────────
   goToResearch() {
     this.router.navigateByUrl('/research');
   }
@@ -599,7 +626,20 @@ export class UserDashboardComponent implements OnInit {
     }
   }
 
-  // ── Tab / Pagination ─────────────────────────────────────────
+  routerToArticle() {
+    this.router.navigate(['/aticle']);
+  }
+  routerToProject() {
+    this.router.navigate(['/research']);
+  }
+  routerToInnovation() {
+    this.router.navigate(['/innovation']);
+  }
+  routerToResearchers() {
+    this.router.navigate(['/all-researcher']);
+  }
+
+  // ── Publications Table: tab / search / pagination ────────────
   changeTab(tab: ResearchType): void {
     this.selectedTab = tab;
     this.searchText = '';
@@ -641,9 +681,6 @@ export class UserDashboardComponent implements OnInit {
 
   get totalPages(): number {
     return Math.ceil(this.filteredResearch.length / this.pageSize);
-  }
-  get pages(): number[] {
-    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
   }
 
   get visiblePages(): (number | string)[] {
@@ -696,41 +733,10 @@ export class UserDashboardComponent implements OnInit {
       : text;
   }
 
-  formatThaiDate(date: Date): string {
-    const d = new Date(date);
-    return `${d.getDate()} ${d.toLocaleDateString('th-TH', {
-      month: 'long',
-    })} ${d.getFullYear() + 543}`;
-  }
-
-  getLastUpdatedText(): string {
-    const now = new Date();
-    const date = now.toLocaleDateString('th-TH', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-    });
-    const time = now.toLocaleTimeString('th-TH', {
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-    return `ข้อมูล ณ วันที่ ${date} เวลา ${time} น.`;
-  }
-
-  sweet() {
-    Swal.fire({
-      icon: 'success',
-      title: 'Your work has been saved',
-      showConfirmButton: false,
-      timer: 1500,
-    });
-  }
-
   @HostListener('window:resize')
   setChartView(): void {
     const w = window.innerWidth;
     if (w < 640) {
-      // มือถือ: เล็กลง ให้มีพื้นที่ label รอบๆ
       this.chartView = [w - 120, 240];
     } else if (w < 1024) {
       this.chartView = [380, 300];
@@ -757,40 +763,13 @@ export class UserDashboardComponent implements OnInit {
     Swal.fire({
       title: item.name,
       html: `
-        <div style="
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 8px;
-          padding: 8px 0 4px;
-        ">
-          <div style="
-            display: flex;
-            align-items: baseline;
-            gap: 6px;
-          ">
-            <span style="
-              font-size: 2.2rem;
-              font-weight: 700;
-              color: ${color};
-              line-height: 1;
-            ">${item.value}</span>
-            <span style="
-              font-size: 1rem;
-              font-weight: 500;
-              color: #555;
-            ">ผลงาน</span>
+        <div style="display:flex; flex-direction:column; align-items:center; gap:8px; padding:8px 0 4px;">
+          <div style="display:flex; align-items:baseline; gap:6px;">
+            <span style="font-size:2.2rem; font-weight:700; color:${color}; line-height:1;">${item.value}</span>
+            <span style="font-size:1rem; font-weight:500; color:#555;">ผลงาน</span>
           </div>
-          <div style="
-            background: #f5f5f5;
-            border-radius: 20px;
-            padding: 3px 14px;
-          ">
-            <span style="
-              font-size: 0.9rem;
-              color: #888;
-              font-weight: 500;
-            ">${percent}%</span>
+          <div style="background:#f5f5f5; border-radius:20px; padding:3px 14px;">
+            <span style="font-size:0.9rem; color:#888; font-weight:500;">${percent}%</span>
           </div>
         </div>
       `,
@@ -804,19 +783,289 @@ export class UserDashboardComponent implements OnInit {
     });
   }
 
-  routerToArticle(){
-    this.router.navigate(['/aticle']);
+  // ============================================================
+  // Faculty overview (bar ซ้าย + radar ขวา + OECD ของคณะ)
+  // ============================================================
+
+  private toApiType(t: ReportType): 'PROJECT' | 'ARTICLE' | 'INNOVATION' {
+    return t === 'project'
+      ? 'PROJECT'
+      : t === 'article'
+      ? 'ARTICLE'
+      : 'INNOVATION';
   }
 
-  routerToProject(){
-    this.router.navigate(['/research']);
+  /** ค่าเริ่มต้นกัน undefined ก่อน API กลับมา */
+  private initEmptyFacultyCharts(): void {
+    const empty = [{ label: '', label_full: '', count: 0 }];
+    this.facultyBarChart = this.createFacultyBarChart(empty);
+    this.facultyRadarChart = this.createFacultyRadarChart(empty);
   }
 
-  routerToInnovation(){
-    this.router.navigate(['/innovation']);
+  /** เรียกครั้งเดียวหลังโหลด dashboardData */
+  initFacultyCharts(): void {
+    this.changeFacultyTab(this.facultyTab);
   }
 
-  routerToResearchers(){
-    this.router.navigate(['/all-researcher']);
+  /** สลับ tab: ยิง API ภาพรวมคณะ + เคลียร์ OECD ที่เลือก */
+  changeFacultyTab(type: ReportType): void {
+    this.facultyTab = type;
+    this.clearFacultyOecd();
+
+    this.service.getFacultyBreakdown(this.toApiType(type)).subscribe({
+      next: (res: FacultyOverviewResponse) => {
+        if (res?.result === 1 && res?.data) {
+          const items = [...(res.data.items ?? [])]
+            .filter((d) => (d.count ?? 0) > 0)
+            .sort((a, b) => b.count - a.count);
+
+          this.facultyOverviewItems = items;
+          this.facultyOverviewTotal = res.data.total ?? 0;
+
+          const chartData = items.map((d) => ({
+            label: d.faculty_short || d.faculty_name,
+            label_full: d.faculty_name,
+            count: d.count,
+          }));
+
+          this.hasFacultyData = chartData.length > 0;
+          this.facultyBarChart = this.createFacultyBarChart(chartData);
+          this.facultyRadarChart = this.createFacultyRadarChart(chartData);
+        } else {
+          this.hasFacultyData = false;
+        }
+      },
+      error: (err) => {
+        console.error('Faculty overview load error:', err);
+        this.hasFacultyData = false;
+      },
+    });
+  }
+
+  getFacultyTotal(): number {
+    return this.facultyOverviewTotal;
+  }
+
+  /** กราฟแท่งแนวนอน (ฝั่งซ้าย) — คลิกแท่งเพื่อโหลด OECD ของคณะ */
+  private createFacultyBarChart(
+    data: { label: string; count: number; label_full: string }[]
+  ): ChartOptions {
+    const height = Math.max(320, data.length * 42);
+
+    return {
+      colors: ['#F2CB05'],
+      series: [{ name: 'จำนวนผลงาน', data: data.map((d) => d.count) }],
+      annotations: { points: [] },
+      chart: {
+        type: 'bar',
+        height,
+        stacked: false,
+        animations: { enabled: false },
+        zoom: { enabled: false },
+        toolbar: { show: true },
+        events: {
+          dataPointSelection: (_e: any, _ctx: any, cfg: any) => {
+            const item = this.facultyOverviewItems[cfg.dataPointIndex];
+            if (item) this.selectFacultyOecd(item);
+          },
+        },
+      },
+      plotOptions: {
+        bar: {
+          horizontal: true,
+          barHeight: '55%',
+          borderRadius: 4,
+          borderRadiusApplication: 'end',
+          distributed: false,
+        } as any,
+      },
+      dataLabels: {
+        enabled: true,
+        style: { fontSize: '12px', colors: ['#394250'] },
+        offsetX: 24,
+      },
+      xaxis: {
+        categories: data.map((d) => d.label_full || d.label),
+        labels: { style: { fontSize: '12px' } },
+        axisBorder: { show: true, color: '#000' },
+        axisTicks: { show: true, color: '#000' },
+      },
+      yaxis: {
+        labels: { style: { fontSize: '12px', colors: '#394250' } as any },
+      },
+      tooltip: {
+        theme: 'dark',
+        custom: ({ series, seriesIndex, dataPointIndex }: any) => {
+          const fullLabel = data[dataPointIndex]?.label_full ?? '';
+          const value = series[seriesIndex][dataPointIndex];
+          return `<div style="padding:8px 12px; background:#333; color:#fff; border-radius:6px;">
+            <div style="font-weight:600; margin-bottom:4px;">${fullLabel}</div>
+            <hr style="border-color:#555; margin:4px 0;">
+            <div style="display:flex; align-items:center; gap:6px;">
+              <span style="width:10px; height:10px; border-radius:50%; background:#F2CB05; display:inline-block;"></span>
+              <span>จำนวน: ${value}</span>
+            </div>
+          </div>`;
+        },
+      },
+      stroke: { width: 1, colors: ['#e0b800'] },
+      fill: {
+        colors: ['#F2CB05'],
+        opacity: 1,
+        type: 'gradient',
+        gradient: {
+          shade: 'light',
+          type: 'horizontal',
+          shadeIntensity: 0.25,
+          inverseColors: true,
+          opacityFrom: 0.9,
+          opacityTo: 0.9,
+          stops: [0, 100],
+        },
+      },
+      grid: {
+        show: true,
+        borderColor: '#e5e7eb',
+        position: 'back',
+        xaxis: { lines: { show: true } },
+        yaxis: { lines: { show: false } },
+      },
+    };
+  }
+
+  /** เรดาร์เทียบสัดส่วนคณะ (ฝั่งขวา, Top 8) */
+  private createFacultyRadarChart(
+    data: { label: string; count: number; label_full: string }[]
+  ): Partial<RadarChartOptions> {
+    const top = data.slice(0, 8);
+    this.facultyFullLabels = top.map((d) => d.label_full || d.label);
+
+    return {
+      series: [{ name: 'จำนวนผลงาน', data: top.map((d) => d.count) }],
+      chart: {
+        type: 'radar',
+        height: 360,
+        width: '100%',
+        toolbar: { show: false },
+        foreColor: '#394250',
+      },
+      labels: top.map((d) => this.shortLabel(d.label_full || d.label, 10)),
+      fill: { opacity: 0.3, colors: ['#F2CB05'] },
+      stroke: { width: 2, colors: ['#F2CB05'] },
+      markers: { size: 4, colors: ['#F2CB05'], strokeColors: '#394250' },
+      dataLabels: { enabled: true, style: { colors: ['#394250'] } },
+      plotOptions: {
+        radar: {
+          size: 130,
+          polygons: {
+            strokeColors: '#e5e7eb',
+            fill: { colors: ['transparent'] },
+          },
+        },
+      },
+      yaxis: { labels: { style: { colors: '#394250' } } },
+      xaxis: { labels: { style: { colors: '#394250' } } },
+      tooltip: {
+        theme: 'dark',
+        custom: ({ series, seriesIndex, dataPointIndex }: any) => {
+          const label = this.facultyFullLabels[dataPointIndex];
+          const value = series[seriesIndex][dataPointIndex];
+          return `<div style="padding:8px 12px; background:#333; color:#fff; border-radius:6px;">
+            <div style="font-weight:600; margin-bottom:4px;">${label}</div>
+            <hr style="border-color:#555; margin:4px 0;">
+            <div style="display:flex; align-items:center; gap:6px;">
+              <span style="width:10px; height:10px; border-radius:50%; background:#F2CB05; display:inline-block;"></span>
+              <span>จำนวน: ${value}</span>
+            </div>
+          </div>`;
+        },
+      },
+    };
+  }
+
+  /** คลิกแท่งคณะ (ฝั่งซ้าย) → โหลด OECD แล้วเปลี่ยน radar ฝั่งขวา */
+  selectFacultyOecd(item: FacultyOverviewItem): void {
+    // ครอบด้วย zone.run เพราะ event มาจาก ApexCharts (นอก Angular zone)
+    this.zone.run(() => {
+      this.loadingOecd = true;
+      this.selectedFacultyOecd = null;
+
+      this.service
+        .getMajorBreakdown(item.organization_id, this.toApiType(this.facultyTab))
+        .subscribe({
+          next: (res: FacultyOecdResponse) => {
+            if (res?.result === 1 && res?.data) {
+              this.hasFacultyOecd = (res.data.radar?.items?.length ?? 0) > 0;
+              this.buildFacultyOecdRadar(res.data);
+              this.loadingOecd = false;
+              // หน่วง 1 tick ให้ *ngIf ถอด spinner ก่อน แล้วค่อย mount radar ใหม่
+              setTimeout(() => {
+                this.selectedFacultyOecd = res.data;
+              }, 0);
+            } else {
+              this.loadingOecd = false;
+            }
+          },
+          error: (err) => {
+            console.error('Faculty OECD load error:', err);
+            this.loadingOecd = false;
+          },
+        });
+    });
+  }
+
+  clearFacultyOecd(): void {
+    this.selectedFacultyOecd = null;
+    this.hasFacultyOecd = false;
+    this.loadingOecd = false;
+  }
+
+  /** สร้าง radar OECD ของคณะ (ฝั่งขวา) */
+  private buildFacultyOecdRadar(data: FacultyOecdData): void {
+    const labels = data.radar?.labels ?? [];
+    const values = data.radar?.data ?? [];
+    this.facultyOecdFullLabels = [...labels];
+
+    this.facultyOecdRadar = {
+      series: [{ name: 'จำนวนผลงาน', data: [...values] }],
+      chart: {
+        type: 'radar',
+        height: 360,
+        width: '100%',
+        toolbar: { show: false },
+        foreColor: '#394250',
+      },
+      labels: labels.map((l) => this.shortLabel(l, 10)),
+      fill: { opacity: 0.3, colors: ['#16498C'] },
+      stroke: { width: 2, colors: ['#16498C'] },
+      markers: { size: 4, colors: ['#16498C'], strokeColors: '#394250' },
+      dataLabels: { enabled: true, style: { colors: ['#394250'] } },
+      plotOptions: {
+        radar: {
+          size: 130,
+          polygons: {
+            strokeColors: '#e5e7eb',
+            fill: { colors: ['transparent'] },
+          },
+        },
+      },
+      yaxis: { labels: { style: { colors: '#394250' } } },
+      xaxis: { labels: { style: { colors: '#394250' } } },
+      tooltip: {
+        theme: 'dark',
+        custom: ({ series, seriesIndex, dataPointIndex }: any) => {
+          const label = this.facultyOecdFullLabels[dataPointIndex];
+          const value = series[seriesIndex][dataPointIndex];
+          return `<div style="padding:8px 12px; background:#333; color:#fff; border-radius:6px;">
+            <div style="font-weight:600; margin-bottom:4px;">${label}</div>
+            <hr style="border-color:#555; margin:4px 0;">
+            <div style="display:flex; align-items:center; gap:6px;">
+              <span style="width:10px; height:10px; border-radius:50%; background:#16498C; display:inline-block;"></span>
+              <span>จำนวน: ${value}</span>
+            </div>
+          </div>`;
+        },
+      },
+    };
   }
 }

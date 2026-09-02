@@ -33,7 +33,7 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-5">
       <!-- Card 1: โครงการวิจัย -->
       <div
-      (click)="routerToProject()"
+        (click)="routerToProject()"
         class="group relative overflow-hidden bg-white rounded-2xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 hover:-translate-y-1"
       >
         <div
@@ -64,7 +64,7 @@
 
       <!-- Card 2: ผลงานตีพิมพ์ -->
       <div
-      (click)="routerToArticle()"
+        (click)="routerToArticle()"
         class="group relative overflow-hidden bg-white rounded-2xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 hover:-translate-y-1"
       >
         <div
@@ -95,7 +95,7 @@
 
       <!-- Card 3: นวัตกรรมสิ่งประดิษฐ์ -->
       <div
-      (click)="routerToInnovation()"
+        (click)="routerToInnovation()"
         class="group relative overflow-hidden bg-white rounded-2xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 hover:-translate-y-1"
       >
         <div
@@ -126,7 +126,7 @@
 
       <!-- Card 4: จำนวนนักวิจัย -->
       <div
-      (click)="routerToResearchers()"
+        (click)="routerToResearchers()"
         class="group relative overflow-hidden bg-white rounded-2xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 hover:-translate-y-1"
       >
         <div
@@ -587,6 +587,196 @@
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- ===== Faculty Dashboard (รวม: ภาพรวมคณะ) ===== -->
+    <div
+      class="bg-white p-5 md:p-8 rounded-2xl shadow-sm border border-gray-100 space-y-8"
+    >
+      <!-- Header + Tabs (ชุดเดียวคุมทั้งการ์ด) -->
+      <div
+        class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-4 border-b border-gray-100"
+      >
+        <div class="flex items-center gap-3">
+          <div
+            class="w-11 h-11 rounded-xl bg-linear-to-br from-[#F2CB05] to-[#e0b800] flex items-center justify-center shadow-sm"
+          >
+            <i class="bi bi-building text-white text-xl"></i>
+          </div>
+          <div>
+            <h1 class="text-xl md:text-2xl font-semibold text-black">
+              ภาพรวมแยกตามคณะและสาขา
+            </h1>
+            <p class="text-sm text-gray-500">
+              เปรียบเทียบผลงานของแต่ละคณะ และเจาะลึกรายสาขา
+            </p>
+          </div>
+        </div>
+
+        <div class="inline-flex p-1 bg-gray-100 rounded-xl self-start">
+          <button
+            (click)="changeFacultyTab('project')"
+            [ngClass]="
+              facultyTab === 'project'
+                ? 'bg-white text-black shadow-sm'
+                : 'text-gray-500 hover:text-gray-700'
+            "
+            class="px-3 md:px-4 py-2 rounded-lg cursor-pointer text-xs md:text-sm transition-all whitespace-nowrap"
+          >
+            โครงการวิจัย
+          </button>
+          <button
+            (click)="changeFacultyTab('article')"
+            [ngClass]="
+              facultyTab === 'article'
+                ? 'bg-white text-black shadow-sm'
+                : 'text-gray-500 hover:text-gray-700'
+            "
+            class="px-3 md:px-4 py-2 rounded-lg cursor-pointer text-xs md:text-sm transition-all"
+          >
+            ผลงานตีพิมพ์
+          </button>
+          <button
+            (click)="changeFacultyTab('innovation')"
+            [ngClass]="
+              facultyTab === 'innovation'
+                ? 'bg-white text-black shadow-sm'
+                : 'text-gray-500 hover:text-gray-700'
+            "
+            class="px-3 md:px-4 py-2 rounded-lg cursor-pointer text-xs md:text-sm transition-all whitespace-nowrap"
+          >
+            นวัตกรรม
+          </button>
+        </div>
+      </div>
+
+      <!-- ── ภาพรวมคณะ (Bar ซ้าย + Radar ขวาสลับโหมด) ── -->
+<ng-container *ngIf="hasFacultyData; else noFacultyData">
+  <div class="space-y-4">
+    <div class="flex items-center gap-2">
+      <span class="w-1 h-5 rounded-full bg-[#F2CB05]"></span>
+      <h2 class="text-lg font-semibold text-[#394250]">เปรียบเทียบภาพรวมคณะ</h2>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+      <!-- Bar ซ้าย -->
+      <div class="bg-linear-to-br from-white to-gray-50 rounded-xl p-5 border border-gray-200">
+        <div class="flex items-center gap-2 mb-3">
+          <div class="w-8 h-8 rounded-lg bg-yellow-100 flex items-center justify-center">
+            <i class="bi bi-bar-chart-fill text-[#e0b800]"></i>
+          </div>
+          <div>
+            <h3 class="text-base md:text-lg font-semibold">จำนวนผลงานต่อคณะ</h3>
+            <p class="text-xs text-gray-500">คลิกแท่งเพื่อดู OECD ของคณะ</p>
+          </div>
+        </div>
+        <div class="overflow-y-auto max-h-125">
+          <apx-chart
+            [series]="facultyBarChart.series"
+            [chart]="facultyBarChart.chart"
+            [dataLabels]="facultyBarChart.dataLabels"
+            [plotOptions]="facultyBarChart.plotOptions"
+            [yaxis]="facultyBarChart.yaxis"
+            [xaxis]="facultyBarChart.xaxis"
+            [stroke]="facultyBarChart.stroke"
+            [grid]="facultyBarChart.grid"
+            [fill]="facultyBarChart.fill"
+            [annotations]="facultyBarChart.annotations"
+            [tooltip]="facultyBarChart.tooltip!">
+          </apx-chart>
+        </div>
+      </div>
+
+      <!-- Radar ขวา — สลับ: เทียบคณะ / OECD ของคณะ -->
+      <div class="bg-linear-to-br from-white to-gray-50 rounded-xl p-5 border border-gray-200">
+        <div class="flex items-center justify-between gap-2 mb-3">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
+              <i class="bi bi-bullseye" [ngClass]="selectedFacultyOecd ? 'text-[#16498C]' : 'text-blue-600'"></i>
+            </div>
+            <div>
+              <h3 class="text-base md:text-lg font-semibold">
+                {{ selectedFacultyOecd ? 'สาขา OECD ของคณะ' : 'เทียบสัดส่วนคณะ' }}
+              </h3>
+              <p class="text-xs text-gray-500">
+                {{ selectedFacultyOecd ? selectedFacultyOecd.organization.name : 'แสดงสูงสุด 8 คณะ' }}
+              </p>
+            </div>
+          </div>
+          <button *ngIf="selectedFacultyOecd" (click)="clearFacultyOecd()"
+            class="flex items-center gap-1 text-xs text-gray-500 hover:text-[#16498C] px-2.5 py-1.5 rounded-lg hover:bg-gray-50 transition-all cursor-pointer shrink-0">
+            <i class="bi bi-x-circle"></i> ล้าง
+          </button>
+        </div>
+
+        <div *ngIf="loadingOecd" class="flex justify-center items-center h-72 text-gray-400">
+          <i class="bi bi-arrow-repeat text-3xl animate-spin"></i>
+        </div>
+
+        <apx-chart *ngIf="!selectedFacultyOecd && !loadingOecd"
+          class="w-full"
+          [series]="facultyRadarChart.series!"
+          [chart]="facultyRadarChart.chart!"
+          [labels]="facultyRadarChart.labels!"
+          [fill]="facultyRadarChart.fill!"
+          [stroke]="facultyRadarChart.stroke!"
+          [markers]="facultyRadarChart.markers!"
+          [xaxis]="facultyRadarChart.xaxis!"
+          [yaxis]="facultyRadarChart.yaxis!"
+          [plotOptions]="facultyRadarChart.plotOptions!"
+          [dataLabels]="facultyRadarChart.dataLabels!"
+          [tooltip]="facultyRadarChart.tooltip!">
+        </apx-chart>
+
+        <ng-container *ngIf="selectedFacultyOecd && !loadingOecd">
+          <apx-chart *ngIf="hasFacultyOecd; else noOecd"
+            class="w-full"
+            [series]="facultyOecdRadar.series!"
+            [chart]="facultyOecdRadar.chart!"
+            [labels]="facultyOecdRadar.labels!"
+            [fill]="facultyOecdRadar.fill!"
+            [stroke]="facultyOecdRadar.stroke!"
+            [markers]="facultyOecdRadar.markers!"
+            [xaxis]="facultyOecdRadar.xaxis!"
+            [yaxis]="facultyOecdRadar.yaxis!"
+            [plotOptions]="facultyOecdRadar.plotOptions!"
+            [dataLabels]="facultyOecdRadar.dataLabels!"
+            [tooltip]="facultyOecdRadar.tooltip!">
+          </apx-chart>
+
+          <div *ngIf="selectedFacultyOecd.top_oecd"
+            class="mt-3 flex items-center justify-center gap-2 text-sm text-gray-500 border-t border-gray-100 pt-3">
+            <span class="w-3 h-3 rounded-full bg-[#16498C] inline-block"></span>
+            <span>สูงสุด:</span>
+            <span class="font-semibold text-[#394250]">{{ selectedFacultyOecd.top_oecd.name_th }}</span>
+            <span>{{ selectedFacultyOecd.top_oecd.count }} ({{ selectedFacultyOecd.top_oecd.percent }}%)</span>
+          </div>
+
+          <ng-template #noOecd>
+            <div class="flex flex-col justify-center items-center h-72 text-gray-400">
+              <i class="bi bi-folder-x text-4xl mb-2"></i>
+              <span class="text-sm">ไม่พบข้อมูล OECD ของคณะนี้</span>
+            </div>
+          </ng-template>
+        </ng-container>
+      </div>
+    </div>
+
+    <div class="pt-3 border-t border-gray-100 flex items-center justify-center gap-2">
+      <span class="text-sm text-gray-500">รวมทั้งหมด</span>
+      <span class="text-2xl font-bold text-[#394250]">{{ getFacultyTotal() }}</span>
+      <span class="text-sm text-gray-500">ผลงาน</span>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #noFacultyData>
+  <div class="flex flex-col justify-center items-center h-48 text-gray-400">
+    <i class="bi bi-folder-x text-4xl mb-2"></i>
+    <span class="text-sm">ไม่พบข้อมูล</span>
+  </div>
+</ng-template>
+
     </div>
 
     <!-- ===== News Section ===== -->

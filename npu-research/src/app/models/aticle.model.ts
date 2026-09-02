@@ -60,6 +60,7 @@ export interface ArticleSubjectArea {
     pre_location: string;
     pages: string;
     year_published: number;
+    year_published_ad?: number;
     volume: string;
     volume_no: string;
     is_cooperation: string;
