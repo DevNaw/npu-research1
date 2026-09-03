@@ -533,61 +533,62 @@
           />
         </div>
 
-        <!-- ปีที่ตีพิมพ์ -->
-        <div class="relative">
-          <label class="block text-sm font-medium text-[#394250] mb-2">
-            ปีที่ตีพิมพ์ (พ.ศ.) <span class="text-red-500">*</span>
-          </label>
-          <button
-            (click)="toggleDropdown('yearPublished', $event)"
-            type="button"
-            [class.border-red-500]="
-              yearPublished.invalid && yearPublished.touched
-            "
-            class="w-full border border-gray-200 rounded-xl px-4 py-3 flex justify-between items-center bg-white hover:border-[#F2CB05] text-sm font-light transition cursor-pointer"
-          >
-            <span [class.text-gray-400]="!articleData.year_published">{{
-              articleData.year_published || "เลือกปี"
-            }}</span>
-            <i
-              class="bi bi-chevron-down text-sm text-gray-400 transition-transform duration-200"
-              [class.rotate-180]="activeDropdown === 'yearPublished'"
-            ></i>
-          </button>
-
-          <div
-            *ngIf="activeDropdown === 'yearPublished'"
-            class="absolute z-50 w-full bg-white border border-gray-200 rounded-xl mt-1 shadow-lg text-sm font-light overflow-hidden"
-            (click)="$event.stopPropagation()"
-          >
-            <ul class="max-h-60 overflow-y-auto py-1">
-              <li
-                *ngFor="let year of thaiYears"
-                (click)="selectYear(year)"
-                class="px-4 py-2 hover:bg-[#F2E7AC]/30 cursor-pointer transition-colors"
-                [class.text-\[\#F2CB05\]]="articleData.year_published === year"
-                [class.font-medium]="articleData.year_published === year"
-              >
-                {{ year }}
-              </li>
-            </ul>
-          </div>
-
-          <input
-            type="hidden"
-            name="year_published"
-            required
-            [(ngModel)]="articleData.year_published"
-            #yearPublished="ngModel"
-          />
-
-          <p
-            *ngIf="yearPublished.invalid && yearPublished.touched"
-            class="text-red-500 text-xs mt-1.5 flex items-center gap-1"
-          >
-            <i class="bi bi-exclamation-circle"></i> กรุณาเลือกปีที่ตีพิมพ์
-          </p>
-        </div>
+                <!-- ปีที่ตีพิมพ์ -->
+                <div class="relative">
+                  <label class="block text-sm font-medium text-[#394250] mb-2">
+                    ปีที่ตีพิมพ์ ({{ type === 'en' ? 'ค.ศ.' : 'พ.ศ.' }})
+                    <span class="text-red-500">*</span>
+                  </label>
+                  <button
+                    (click)="toggleDropdown('yearPublished', $event)"
+                    type="button"
+                    [class.border-red-500]="
+                      yearPublished.invalid && yearPublished.touched
+                    "
+                    class="w-full border border-gray-200 rounded-xl px-4 py-3 flex justify-between items-center bg-white hover:border-[#F2CB05] text-sm font-light transition cursor-pointer"
+                  >
+                    <span [class.text-gray-400]="!articleData.year_published">{{
+                      articleData.year_published || articleData.year_published_ad || "เลือกปี"
+                    }}</span>
+                    <i
+                      class="bi bi-chevron-down text-sm text-gray-400 transition-transform duration-200"
+                      [class.rotate-180]="activeDropdown === 'yearPublished'"
+                    ></i>
+                  </button>
+        
+                  <div
+                    *ngIf="activeDropdown === 'yearPublished'"
+                    class="absolute z-50 w-full bg-white border border-gray-200 rounded-xl mt-1 shadow-lg text-sm font-light overflow-hidden"
+                    (click)="$event.stopPropagation()"
+                  >
+                    <ul class="max-h-60 overflow-y-auto py-1">
+                      <li
+                        *ngFor="let year of (type === 'en' ? gregorianYears : thaiYears)"
+                        (click)="selectYear(year)"
+                        class="px-4 py-2 hover:bg-[#F2E7AC]/30 cursor-pointer transition-colors"
+                        [class.text-\[\#F2CB05\]]="articleData.year_published === year"
+                        [class.font-medium]="articleData.year_published === year"
+                      >
+                        {{ year }}
+                      </li>
+                    </ul>
+                  </div>
+        
+                  <input
+                    type="hidden"
+                    name="year_published"
+                    required
+                    [(ngModel)]="articleData.year_published"
+                    #yearPublished="ngModel"
+                  />
+        
+                  <p
+                    *ngIf="yearPublished.invalid && yearPublished.touched"
+                    class="text-red-500 text-xs mt-1.5 flex items-center gap-1"
+                  >
+                    <i class="bi bi-exclamation-circle"></i> กรุณาเลือกปีที่ตีพิมพ์
+                  </p>
+                </div>
       </div>
 
       <!-- ===== SECTION: สาขาของบทความ (OECD) ===== -->

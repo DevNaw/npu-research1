@@ -81,6 +81,7 @@ export class EditArticleComponent {
   searchMajor = '';
   searchSub = '';
   thaiYears: number[] = [];
+  gregorianYears: number[] = [];
   searchSubSub = '';
   selectedSubSub: Child | null = null;
   activeDropdown: string | null = null;
@@ -656,11 +657,14 @@ export class EditArticleComponent {
   }
 
   generateThaiYears() {
-    const currentYear = new Date().getFullYear() + 543;
+    const currentYearTH = new Date().getFullYear() + 543;
+    const currentYearAD = new Date().getFullYear();
 
     this.thaiYears = [];
+    this.gregorianYears = [];
     for (let i = 0; i < 70; i++) {
-      this.thaiYears.push(currentYear - i);
+      this.thaiYears.push(currentYearTH - i);
+      this.gregorianYears.push(currentYearAD - i);
     }
   }
 

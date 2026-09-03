@@ -24,6 +24,8 @@ import { MainComponent } from '../../shared/layouts/main/main.component';
 import { AuthService } from '../../services/auth.service';
 import { Color, LegendPosition, ScaleType } from '@swimlane/ngx-charts';
 import Swal from 'sweetalert2';
+import { ResearchProfile } from '../../models/profile-project.model';
+import { ResearchProfileType } from '../../user-pages/user-profile/user-profile.component';
 
 export type RadarChartOptions = {
   series: ApexAxisChartSeries;
@@ -73,6 +75,34 @@ export class DashboardComponent implements OnInit {
   isPersonalOpen = true;
   isWorkOpen = false;
   isEducation = false;
+
+  researchProfiles: ResearchProfile[] = [];
+
+  readonly profileTypeMeta: Record<
+    ResearchProfileType,
+    { label: string; icon: string; color: string }
+  > = {
+    google_scholar: {
+      label: 'Google Scholar',
+      icon: 'bi-mortarboard-fill',
+      color: '#4285F4',
+    },
+    researchgate: {
+      label: 'ResearchGate',
+      icon: 'bi-diagram-3-fill',
+      color: '#00CCBB',
+    },
+    scopus: { label: 'Scopus', icon: 'bi-journal-text', color: '#E9711C' },
+    orcid: { label: 'ORCID', icon: 'bi-person-vcard-fill', color: '#A6CE39' },
+  };
+
+  meta(type: ResearchProfileType) {
+    return this.profileTypeMeta[type];
+  }
+
+  openResearchProfile(url: string): void {
+    window.open(url, '_blank', 'noopener,noreferrer');
+  }
 
   selectedTab: ResearchTab = 'project';
   searchText = '';
@@ -245,6 +275,7 @@ export class DashboardComponent implements OnInit {
         this.donutSummary = res.data.donut;
         this.researchData = res.data.researchs;
         this.radarData = res.data.radar;
+        this.researchProfiles = res.data.user?.research_profiles ?? [];
         this.loading = false;
         this.changeTab('project');
         this.updateCharts();

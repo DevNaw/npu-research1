@@ -25,6 +25,7 @@ export interface ResearchArticle {
   pages: string;
   year: number;
   year_published: number;
+  year_published_ad: number;
   published_date: string;
   is_cooperation: string;
   article_file: ArticleFile;

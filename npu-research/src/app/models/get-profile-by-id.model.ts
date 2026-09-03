@@ -1,90 +1,102 @@
 export interface ResearchProfileResponse {
-    result: number;
-    message: string;
-    data: ResearchProfileData;
-  }
+  result: number;
+  message: string;
+  data: ResearchProfileData;
+}
 
-  export interface ResearchProfileData {
-    user: UserProfile;
-    donut: DonutSummary;
-    bar: BarSummary[];
-    radar: RadarData;
-    researchs: ResearchGroup;
-  }
+export interface ResearchProfileData {
+  user: UserProfile;
+  donut: DonutSummary;
+  bar: BarSummary[];
+  radar: RadarData;
+  researchs: ResearchGroup;
+}
 
-  export interface UserProfile {
-    user_id: number;
-    full_name: string;
-    full_name_en: string;
-    avatar_url: string | null;
-    generalInfo: any | null;
-    workInfo: any | null;
-    educationalInfo: EducationalInfo[];
-  }
+export interface UserProfile {
+  user_id: number;
+  full_name: string;
+  full_name_en: string;
+  avatar_url: string | null;
+  generalInfo: any | null;
+  workInfo: any | null;
+  educationalInfo: EducationalInfo[];
+  research_profiles?: ResearchProfile[];
+}
 
-  export interface DonutSummary {
-    projects_count: number;
-    articles_count: number;
-    innovations_count: number;
-  }
+export type ResearchProfileType =
+  | 'google_scholar'
+  | 'researchgate'
+  | 'scopus'
+  | 'orcid';
 
-  export interface BarSummary {
-    year: number;
-    project_count: number;
-    article_count: number;
-    innovation_count: number;
-  }
+export interface ResearchProfile {
+  type: ResearchProfileType;
+  url: string;
+}
 
-  export interface ResearchGroup {
-    projects: ResearchItem[];
-    articles: ResearchItem[];
-    innovations: ResearchItem[];
-  }
+export interface DonutSummary {
+  projects_count: number;
+  articles_count: number;
+  innovations_count: number;
+}
 
-  export interface ResearchItem {
-    research_id: number;
-    research_type: 'PROJECT' | 'ARTICLE' | 'INNOVATION';
-    title_th: string;
-    title_en: string | null;
-    abstract: string | null;
-    year: number;
-    published_date: string; // ISO Date (yyyy-MM-dd)
-    status: string | null;
-    call_other: string | null;
-    img_url: string | null;
-    own: ResearchOwner[];
-    research_code: string;
-  }
+export interface BarSummary {
+  year: number;
+  project_count: number;
+  article_count: number;
+  innovation_count: number;
+}
 
-  export interface ResearchOwner {
-    user_id: number;
-    full_name: string;
-    role: string;
-  }
+export interface ResearchGroup {
+  projects: ResearchItem[];
+  articles: ResearchItem[];
+  innovations: ResearchItem[];
+}
 
-  export interface RadarData {
-    major: RadarSection;
-    sub: RadarSection;
-    child: RadarSection;
-  }
+export interface ResearchItem {
+  research_id: number;
+  research_type: 'PROJECT' | 'ARTICLE' | 'INNOVATION';
+  title_th: string;
+  title_en: string | null;
+  abstract: string | null;
+  year: number;
+  published_date: string; // ISO Date (yyyy-MM-dd)
+  status: string | null;
+  call_other: string | null;
+  img_url: string | null;
+  own: ResearchOwner[];
+  research_code: string;
+}
 
-  export interface RadarSection {
-    labels: string[];
-    datasets: RadarDataset[];
-    raw: any[];
-  }
+export interface ResearchOwner {
+  user_id: number;
+  full_name: string;
+  role: string;
+}
 
-  export interface RadarDataset {
-    label: string;
-    data: number[];
-  }
+export interface RadarData {
+  major: RadarSection;
+  sub: RadarSection;
+  child: RadarSection;
+}
 
-  export interface EducationalInfo {
-    highest_education: string;
-    field_of_study: string;
-    qualification: string;
-    gpa: string;
-    institution: string;
-    date_enrollment: string;
-    date_graduation: string;
-  }
+export interface RadarSection {
+  labels: string[];
+  datasets: RadarDataset[];
+  raw: any[];
+}
+
+export interface RadarDataset {
+  label: string;
+  data: number[];
+}
+
+export interface EducationalInfo {
+  highest_education: string;
+  field_of_study: string;
+  qualification: string;
+  gpa: string;
+  institution: string;
+  date_enrollment: string;
+  date_graduation: string;
+}

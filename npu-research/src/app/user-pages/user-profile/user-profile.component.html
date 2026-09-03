@@ -1,60 +1,87 @@
 <div class="bg-linear-to-br from-slate-50 via-gray-50 to-slate-100 min-h-screen p-5 md:px-10 md:py-8 text-[#394250] font-medium">
 
-  <!-- ===== Profile Header Card ===== -->
-  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 md:p-6 mb-6">
-    <div class="flex items-center gap-4 md:gap-6">
-      <!-- Avatar -->
-      <div class="relative shrink-0">
-        <div class="w-20 h-20 md:w-28 md:h-28 rounded-2xl overflow-hidden border-4 border-[#F2E7AC] shadow-md bg-white p-1">
-          <img
-            [src]="previewUrl || profileData?.avatar_url || '/assets/default_profile.png'"
-            class="w-full h-full rounded-xl object-cover"
-            alt="avatar"
-          />
-        </div>
-        <!-- Camera button -->
-        <button
-          class="absolute -bottom-1 -right-1 bg-[#F2CB05] hover:bg-[#e0b800] text-white rounded-xl w-8 h-8 flex items-center justify-center shadow-md cursor-pointer transition-all hover:scale-110 border-2 border-white"
-          (click)="fileInput.click()"
-        >
-          <i class="bi bi-camera-fill text-sm"></i>
-        </button>
-        <input type="file" #fileInput hidden accept="image/*" (change)="onFileSelected($event)" />
-      </div>
-
-      <!-- Name + Save/Cancel -->
-      <div class="min-w-0 flex-1">
-        <div class="inline-flex items-center gap-2 px-2.5 py-0.5 bg-[#F2E7AC]/40 rounded-full text-xs text-[#394250] mb-2">
-          <i class="bi bi-person-badge-fill text-[#F2CB05]"></i>
-          โปรไฟล์นักวิจัย
-        </div>
-        <h1 class="text-lg md:text-2xl lg:text-3xl font-semibold text-black leading-snug wrap-break-word">
-          {{ profileData?.full_name }}
-        </h1>
-        <h2 class="text-sm md:text-base italic text-gray-500 leading-snug wrap-break-word mt-1">
-          {{ profileData?.full_name_en || "—" }}
-        </h2>
-
-        <!-- Save/Cancel for avatar -->
-        <div class="flex gap-2 mt-3" *ngIf="selectedFile">
+    <!-- ===== Profile Header Card ===== -->
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 md:p-6 mb-6">
+      <div class="flex items-start gap-4 md:gap-6">
+        <!-- Avatar -->
+        <div class="relative shrink-0">
+          <div class="w-20 h-20 md:w-28 md:h-28 rounded-2xl overflow-hidden border-4 border-[#F2E7AC] shadow-md bg-white p-1">
+            <img
+              [src]="previewUrl || profileData?.avatar_url || '/assets/default_profile.png'"
+              class="w-full h-full rounded-xl object-cover"
+              alt="avatar"
+            />
+          </div>
+          <!-- Camera button -->
           <button
-            class="flex items-center gap-1.5 bg-linear-to-r from-[#F2CB05] to-[#e0b800] hover:from-[#e0b800] hover:to-[#F2CB05] text-white px-4 py-2 rounded-lg shadow-md font-medium text-sm cursor-pointer transition-all"
-            (click)="saveAvatar()"
+            class="absolute -bottom-1 -right-1 bg-[#F2CB05] hover:bg-[#e0b800] text-white rounded-xl w-8 h-8 flex items-center justify-center shadow-md cursor-pointer transition-all hover:scale-110 border-2 border-white"
+            (click)="fileInput.click()"
           >
-            <i class="bi bi-check-lg"></i>
-            บันทึก
+            <i class="bi bi-camera-fill text-sm"></i>
           </button>
+          <input type="file" #fileInput hidden accept="image/*" (change)="onFileSelected($event)" />
+        </div>
+  
+        <!-- Name + Save/Cancel -->
+        <div class="min-w-0 flex-1">
+          <div class="inline-flex items-center gap-2 px-2.5 py-0.5 bg-[#F2E7AC]/40 rounded-full text-xs text-[#394250] mb-2">
+            <i class="bi bi-person-badge-fill text-[#F2CB05]"></i>
+            โปรไฟล์นักวิจัย
+          </div>
+          <h1 class="text-lg md:text-2xl lg:text-3xl font-semibold text-black leading-snug wrap-break-word">
+            {{ profileData?.full_name }}
+          </h1>
+          <h2 class="text-sm md:text-base italic text-gray-500 leading-snug wrap-break-word mt-1">
+            {{ profileData?.full_name_en || "—" }}
+          </h2>
+  
+          <!-- ปุ่มลิงก์โปรไฟล์นักวิจัย (สูงสุด 3) -->
+          <div class="flex flex-wrap gap-2 mt-3" *ngIf="researchProfiles.length">
+            <button
+              *ngFor="let p of researchProfiles"
+              (click)="openResearchProfile(p.url)"
+              class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-white text-xs font-medium shadow-sm cursor-pointer transition-all hover:scale-105 hover:shadow-md"
+              [style.background]="meta(p.type).color"
+              [title]="meta(p.type).label"
+            >
+              <i class="bi {{ meta(p.type).icon }}"></i>
+              {{ meta(p.type).label }}
+              <i class="bi bi-box-arrow-up-right text-[10px] opacity-80"></i>
+            </button>
+          </div>
+  
+          <!-- Save/Cancel for avatar -->
+          <div class="flex gap-2 mt-3" *ngIf="selectedFile">
+            <button
+              class="flex items-center gap-1.5 bg-linear-to-r from-[#F2CB05] to-[#e0b800] hover:from-[#e0b800] hover:to-[#F2CB05] text-white px-4 py-2 rounded-lg shadow-md font-medium text-sm cursor-pointer transition-all"
+              (click)="saveAvatar()"
+            >
+              <i class="bi bi-check-lg"></i>
+              บันทึก
+            </button>
+            <button
+              class="flex items-center gap-1.5 bg-gray-100 hover:bg-gray-200 text-gray-600 px-4 py-2 rounded-lg shadow-sm font-medium text-sm cursor-pointer transition-all border border-gray-200"
+              (click)="cancelAvatar()"
+            >
+              <i class="bi bi-x-lg"></i>
+              ยกเลิก
+            </button>
+          </div>
+        </div>
+  
+        <!-- ปุ่มเพิ่ม/จัดการโปรไฟล์นักวิจัย (มุมขวาบน) -->
+        <div class="shrink-0">
           <button
-            class="flex items-center gap-1.5 bg-gray-100 hover:bg-gray-200 text-gray-600 px-4 py-2 rounded-lg shadow-sm font-medium text-sm cursor-pointer transition-all border border-gray-200"
-            (click)="cancelAvatar()"
+            (click)="openProfileModal()"
+            class="inline-flex items-center gap-1.5 bg-[#F2E7AC]/60 hover:bg-[#F2CB05] text-[#394250] hover:text-white rounded-lg px-3 py-2 shadow-sm cursor-pointer transition-all text-sm font-medium"
+            title="เพิ่ม/จัดการโปรไฟล์นักวิจัย"
           >
-            <i class="bi bi-x-lg"></i>
-            ยกเลิก
+            <i class="bi bi-link-45deg text-base"></i>
+            <span class="hidden sm:inline">โปรไฟล์นักวิจัย</span>
           </button>
         </div>
       </div>
     </div>
-  </div>
 
   <!-- ===== Main Layout ===== -->
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 md:gap-6">
@@ -712,6 +739,97 @@
       <button
         (click)="save()"
         class="px-5 py-2.5 rounded-lg bg-linear-to-r from-[#F2CB05] to-[#e0b800] hover:from-[#e0b800] hover:to-[#F2CB05] text-white shadow-md hover:shadow-lg cursor-pointer transition-all text-sm font-semibold flex items-center gap-2"
+      >
+        <i class="bi bi-check-lg"></i>
+        บันทึก
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ====== Modal Research Profiles ====== -->
+<div
+  *ngIf="isProfileModalOpen"
+  class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center text-[#394250] p-4"
+>
+  <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden relative">
+    <!-- Header -->
+    <div class="bg-linear-to-r from-[#F2CB05] to-[#e0b800] px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30">
+          <i class="bi bi-link-45deg text-white text-lg"></i>
+        </div>
+        <h2 class="text-lg font-semibold text-white">โปรไฟล์นักวิจัย</h2>
+      </div>
+      <button
+        (click)="closeProfileModal()"
+        class="w-9 h-9 rounded-lg bg-white/20 hover:bg-white/30 text-white flex items-center justify-center transition cursor-pointer"
+      >
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <!-- Content -->
+    <div class="p-6 space-y-3">
+      <p class="text-xs text-gray-500 font-light">
+        เพิ่มลิงก์โปรไฟล์ได้สูงสุด {{ MAX_RESEARCH_PROFILES }} รายการ
+      </p>
+
+      <div
+        *ngFor="let row of editProfiles; let i = index"
+        class="flex items-center gap-2"
+      >
+        <!-- ชนิดโปรไฟล์ -->
+        <select
+          [(ngModel)]="row.type"
+          class="w-40 shrink-0 px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm font-light focus:outline-none focus:ring-2 focus:ring-[#F2CB05]/30 focus:border-[#F2CB05] focus:bg-white transition-all"
+        >
+          <option *ngFor="let opt of profileTypeOptions" [value]="opt">
+            {{ meta(opt).label }}
+          </option>
+        </select>
+
+        <!-- URL -->
+        <input
+          [(ngModel)]="row.url"
+          type="url"
+          placeholder="https://..."
+          class="flex-1 min-w-0 px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm font-light focus:outline-none focus:ring-2 focus:ring-[#F2CB05]/30 focus:border-[#F2CB05] focus:bg-white transition-all placeholder:text-gray-400"
+        />
+
+        <!-- ลบแถว -->
+        <button
+          (click)="removeProfileRow(i)"
+          class="shrink-0 w-9 h-9 rounded-lg bg-red-50 hover:bg-red-500 text-red-600 hover:text-white flex items-center justify-center transition-all cursor-pointer"
+          title="ลบ"
+        >
+          <i class="bi bi-trash3 text-sm"></i>
+        </button>
+      </div>
+
+      <!-- ปุ่มเพิ่มแถว -->
+      <button
+        *ngIf="canAddProfileRow"
+        (click)="addProfileRow()"
+        class="w-full flex items-center justify-center gap-1.5 py-2.5 rounded-xl border-2 border-dashed border-gray-200 text-gray-500 hover:border-[#F2CB05] hover:text-[#F2CB05] transition-all cursor-pointer text-sm font-medium"
+      >
+        <i class="bi bi-plus-lg"></i>
+        เพิ่มโปรไฟล์
+      </button>
+    </div>
+
+    <!-- Footer -->
+    <div class="flex justify-end gap-2 px-6 py-4 bg-gray-50 border-t border-gray-100">
+      <button
+        (click)="closeProfileModal()"
+        class="px-5 py-2.5 rounded-lg bg-white border border-gray-200 text-gray-600 hover:bg-gray-100 cursor-pointer transition-all text-sm font-medium"
+      >
+        ยกเลิก
+      </button>
+      <button
+        (click)="saveResearchProfiles()"
+        [disabled]="savingProfiles"
+        class="px-5 py-2.5 rounded-lg bg-linear-to-r from-[#F2CB05] to-[#e0b800] hover:from-[#e0b800] hover:to-[#F2CB05] text-white shadow-md hover:shadow-lg cursor-pointer transition-all text-sm font-semibold flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <i class="bi bi-check-lg"></i>
         บันทึก

@@ -16,19 +16,34 @@
         <span class="absolute bottom-1 right-1 w-4 h-4 md:w-5 md:h-5 rounded-full bg-emerald-500 border-2 border-white"></span>
       </div>
 
-      <!-- Name -->
-      <div class="min-w-0 flex-1">
-        <div class="inline-flex items-center gap-2 px-2.5 py-0.5 bg-[#F2E7AC]/40 rounded-full text-xs text-[#394250] mb-2">
-          <i class="bi bi-person-badge-fill text-[#F2CB05]"></i>
-          โปรไฟล์นักวิจัย
-        </div>
-        <h1 class="text-lg md:text-2xl lg:text-3xl font-semibold text-black leading-snug wrap-break-word">
-          {{ profileDataById?.user?.full_name }}
-        </h1>
-        <h2 class="text-sm md:text-base italic text-gray-500 leading-snug wrap-break-word mt-1">
-          {{ profileDataById?.user?.full_name_en || "—" }}
-        </h2>
-      </div>
+            <!-- Name -->
+            <div class="min-w-0 flex-1">
+              <div class="inline-flex items-center gap-2 px-2.5 py-0.5 bg-[#F2E7AC]/40 rounded-full text-xs text-[#394250] mb-2">
+                <i class="bi bi-person-badge-fill text-[#F2CB05]"></i>
+                โปรไฟล์นักวิจัย
+              </div>
+              <h1 class="text-lg md:text-2xl lg:text-3xl font-semibold text-black leading-snug wrap-break-word">
+                {{ profileDataById?.user?.full_name }}
+              </h1>
+              <h2 class="text-sm md:text-base italic text-gray-500 leading-snug wrap-break-word mt-1">
+                {{ profileDataById?.user?.full_name_en || "—" }}
+              </h2>
+      
+              <!-- ปุ่มลิงก์โปรไฟล์นักวิจัย (read-only) -->
+              <div class="flex flex-wrap gap-2 mt-3" *ngIf="researchProfiles.length">
+                <button
+                  *ngFor="let p of researchProfiles"
+                  (click)="openResearchProfile(p.url)"
+                  class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-white text-xs font-medium shadow-sm cursor-pointer transition-all hover:scale-105 hover:shadow-md"
+                  [style.background]="meta(p.type).color"
+                  [title]="meta(p.type).label"
+                >
+                  <i class="bi {{ meta(p.type).icon }}"></i>
+                  {{ meta(p.type).label }}
+                  <i class="bi bi-box-arrow-up-right text-[10px] opacity-80"></i>
+                </button>
+              </div>
+            </div>
     </div>
   </div>
 

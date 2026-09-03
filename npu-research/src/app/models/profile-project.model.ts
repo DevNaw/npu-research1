@@ -1,3 +1,5 @@
+import { ResearchProfileType } from "../user-pages/user-profile/user-profile.component";
+
 export interface ResearchListResponse {
     result: number;
     message: string;
@@ -31,4 +33,14 @@ export interface ResearchListResponse {
     user_id: number;
     full_name: string;
     role: string;
+  }
+
+  export interface ResearchProfile {
+    type: 'google_scholar' | 'researchgate' | 'scopus' | 'orcid';
+    url: string;
+  }
+
+  export interface ResearchProfile {
+    type: ResearchProfileType;
+    url: string;
   }

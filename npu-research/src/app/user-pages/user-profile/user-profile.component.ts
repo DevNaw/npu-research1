@@ -55,6 +55,18 @@ export type RadarChartOptions = {
 
 type ResearchTab = 'project' | 'article' | 'innovation';
 
+/** ชนิดโปรไฟล์นักวิจัยที่รองรับ */
+export type ResearchProfileType =
+  | 'google_scholar'
+  | 'researchgate'
+  | 'scopus'
+  | 'orcid';
+
+export interface ResearchProfile {
+  type: ResearchProfileType;
+  url: string;
+}
+
 @Component({
   selector: 'app-user-profile',
   standalone: false,
@@ -100,6 +112,39 @@ export class UserProfileComponent implements OnInit {
 
   previewUrl: string | ArrayBuffer | null = null;
   selectedFile: File | null = null;
+
+  /* ===== Research Profiles ===== */
+  readonly MAX_RESEARCH_PROFILES = 3;
+  researchProfiles: ResearchProfile[] = [];
+  isProfileModalOpen = false;
+  editProfiles: ResearchProfile[] = []; // buffer ที่แก้ใน modal
+  savingProfiles = false;
+
+  /** meta สำหรับแสดงชื่อ/ไอคอน/สีของแต่ละชนิด */
+  readonly profileTypeMeta: Record <
+    ResearchProfileType,
+    { label: string; icon: string; color: string }
+  > = {
+    google_scholar: {
+      label: 'Google Scholar',
+      icon: 'bi-mortarboard-fill',
+      color: '#4285F4',
+    },
+    researchgate: {
+      label: 'ResearchGate',
+      icon: 'bi-diagram-3-fill',
+      color: '#00CCBB',
+    },
+    scopus: { label: 'Scopus', icon: 'bi-journal-text', color: '#E9711C' },
+    orcid: { label: 'ORCID', icon: 'bi-person-vcard-fill', color: '#A6CE39' },
+  };
+
+  readonly profileTypeOptions: ResearchProfileType[] = [
+    'google_scholar',
+    'researchgate',
+    'scopus',
+    'orcid',
+  ];
 
   educationData: EducationInfo = {
     highest_education: '',
@@ -338,6 +383,7 @@ export class UserProfileComponent implements OnInit {
         this.donutSummary = res.data.donut;
         this.radarData = res.data.radar;
         this.researchData = res.data.researchs;
+        this.researchProfiles = res.data.user?.research_profiles ?? [];
         this.changeTab('project');
         this.updateCharts();
       },
@@ -484,6 +530,104 @@ export class UserProfileComponent implements OnInit {
     if (current < total - 2) pages.push('...');
     pages.push(total);
     return pages;
+  }
+
+  // ── Research Profiles ────────────────────────────────────────
+  /** เปิด modal จัดการโปรไฟล์ — clone ของเดิมมาเป็น buffer */
+  openProfileModal(): void {
+    this.editProfiles = this.researchProfiles.map((p) => ({ ...p }));
+    if (this.editProfiles.length === 0) this.addProfileRow();
+    this.isProfileModalOpen = true;
+  }
+
+  closeProfileModal(): void {
+    this.isProfileModalOpen = false;
+    this.editProfiles = [];
+  }
+
+  addProfileRow(): void {
+    if (this.editProfiles.length >= this.MAX_RESEARCH_PROFILES) return;
+    this.editProfiles.push({ type: 'google_scholar', url: '' });
+  }
+
+  removeProfileRow(index: number): void {
+    this.editProfiles.splice(index, 1);
+  }
+
+  get canAddProfileRow(): boolean {
+    return this.editProfiles.length < this.MAX_RESEARCH_PROFILES;
+  }
+
+  /** meta helper สำหรับ template */
+  meta(type: ResearchProfileType) {
+    return this.profileTypeMeta[type];
+  }
+
+  private isValidHttpUrl(value: string): boolean {
+    try {
+      const u = new URL(value);
+      return u.protocol === 'http:' || u.protocol === 'https:';
+    } catch {
+      return false;
+    }
+  }
+
+  saveResearchProfiles() {
+    // ตัดแถวที่ url ว่างทิ้ง
+    const cleaned = this.editProfiles
+      .map((p) => ({ type: p.type, url: p.url.trim() }))
+      .filter((p) => p.url.length > 0);
+
+    // validate url
+    const invalid = cleaned.find((p) => !this.isValidHttpUrl(p.url));
+    if (invalid) {
+      Swal.fire(
+        'ลิงก์ไม่ถูกต้อง',
+        'กรุณากรอก URL ที่ขึ้นต้นด้วย http:// หรือ https://',
+        'warning'
+      );
+      return;
+    }
+
+    if (cleaned.length > this.MAX_RESEARCH_PROFILES) {
+      Swal.fire(
+        'เกินจำนวนที่กำหนด',
+        `เพิ่มได้สูงสุด ${this.MAX_RESEARCH_PROFILES} รายการ`,
+        'warning'
+      );
+      return;
+    }
+
+    this.savingProfiles = true;
+    this.service
+      .createResearchProfile({ research_profiles: cleaned })
+      .subscribe({
+        next: () => {
+          this.researchProfiles = cleaned;
+          if (this.profileData)
+            this.profileData.research_profiles = cleaned;
+          this.savingProfiles = false;
+          this.isProfileModalOpen = false;
+          Swal.fire({
+            icon: 'success',
+            title: 'บันทึกโปรไฟล์นักวิจัยสำเร็จ',
+            timer: 1500,
+            showConfirmButton: false,
+          });
+        },
+        error: (err) => {
+          this.savingProfiles = false;
+          Swal.fire(
+            'ผิดพลาด',
+            err.error?.message || 'ไม่สามารถบันทึกข้อมูลได้',
+            'error'
+          );
+        },
+      });
+  }
+
+  openResearchProfile(url: string): void {
+    window.open(url, '_blank', 'noopener,noreferrer');
   }
 
   // ── Navigation ──────────────────────────────────────────────

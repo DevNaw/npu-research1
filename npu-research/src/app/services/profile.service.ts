@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { ResearchListResponse } from '../models/profile-project.model';
+import {
+  ResearchListResponse,
+  ResearchProfile,
+} from '../models/profile-project.model';
 import { Observable } from 'rxjs';
 import { GeneralInfoResponse } from '../models/edit-general.model';
 import { UserProfileResponse } from '../models/profiledetai.model';
@@ -83,15 +86,24 @@ export class ProfileService {
   }
 
   updateGeneral(data: any) {
-    return this.http.post(`${this.api}/user/infomation/general`, (this.spoof('PATCH', data)));
+    return this.http.post(
+      `${this.api}/user/infomation/general`,
+      this.spoof('PATCH', data)
+    );
   }
 
   updateEducation(data: any) {
-    return this.http.post(`${this.api}/user/infomation/education`, (this.spoof('PATCH', data)));
+    return this.http.post(
+      `${this.api}/user/infomation/education`,
+      this.spoof('PATCH', data)
+    );
   }
 
   updateWork(data: any) {
-    return this.http.post(`${this.api}/user/infomation/work`, (this.spoof('PATCH', data)));
+    return this.http.post(
+      `${this.api}/user/infomation/work`,
+      this.spoof('PATCH', data)
+    );
   }
 
   getProjectList(): Observable<ResearchListResponse> {
@@ -100,6 +112,14 @@ export class ProfileService {
 
   // Delete Project
   deleteProject(id: number) {
-    return this.http.post(`${this.api}/research/${id}/delete`, this.spoof('DELETE'));
+    return this.http.post(
+      `${this.api}/research/${id}/delete`,
+      this.spoof('DELETE')
+    );
+  }
+
+  // Research Profile
+  createResearchProfile(payload: { research_profiles: ResearchProfile[] }) {
+    return this.http.post(`${this.api}/profile/research-profiles`, payload);
   }
 }

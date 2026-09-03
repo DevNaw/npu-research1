@@ -21,6 +21,12 @@
     generalInfo: GeneralInfo;
     workInfo: WorkInfo;
     educationalInfo: EducationalInfo[];
+    research_profiles?: ResearchProfile[];
+  }
+
+  export interface ResearchProfile {
+    type: 'google_scholar' | 'researchgate' | 'scopus' | 'orcid';
+    url: string;
   }
 
   export interface GeneralInfo {

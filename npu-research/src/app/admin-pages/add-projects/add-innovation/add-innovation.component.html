@@ -23,10 +23,15 @@
       <h2 class="text-2xl md:text-3xl">เพิ่มข้อมูลนวัตกรรมสิ่งประดิษฐ์</h2>
     </div>
 
+    <!-- ── divider: ชื่อผลงาน ── -->
+    <div class="flex items-center gap-4 my-6">
+      <span class="h-px flex-1 bg-gray-200"></span>
+      <span class="text-sm font-normal text-gray-400 tracking-wide whitespace-nowrap">ชื่อผลงาน</span>
+      <span class="h-px flex-1 bg-gray-200"></span>
+    </div>
+
     <!-- ชื่อนวัตกรรมสิ่งประดิษฐ์ -->
-    <div
-      class="grid grid-cols-1 md:grid-cols-1 md:gap-2 mb-2 mt-4 md:mb-6 md:mt-10"
-    >
+    <div class="grid grid-cols-1 md:grid-cols-1 md:gap-2 mb-2 mt-4 md:mb-6">
       <label class="md:col-span-1 text-start">
         ชื่อนวัตกรรมสิ่งประดิษฐ์ <span class="text-red-500">*</span>
       </label>
@@ -65,6 +70,13 @@
       >
         กรุณากรอกชื่อนวัตกรรมสิ่งประดิษฐ์ภาษาอังกฤษ
       </div>
+    </div>
+
+    <!-- ── divider: บทคัดย่อ / ABSTRACT ── -->
+    <div class="flex items-center gap-4 my-6">
+      <span class="h-px flex-1 bg-gray-200"></span>
+      <span class="text-sm font-normal text-gray-400 tracking-wide whitespace-nowrap">บทคัดย่อ / ABSTRACT</span>
+      <span class="h-px flex-1 bg-gray-200"></span>
     </div>
 
     <div class="flex gap-6 mb-4">
@@ -175,6 +187,13 @@
           placeholder="Enter keyword"
         />
       </div>
+    </div>
+
+    <!-- ── divider: สาขาของผลงาน ── -->
+    <div class="flex items-center gap-4 my-6">
+      <span class="h-px flex-1 bg-gray-200"></span>
+      <span class="text-sm font-normal text-gray-400 tracking-wide whitespace-nowrap">สาขาของผลงาน</span>
+      <span class="h-px flex-1 bg-gray-200"></span>
     </div>
 
     <!-- สาขาของนวัตกรรมสิ่งประดิษฐ์ -->
@@ -305,6 +324,13 @@
         placeholder="ระบุหลักการและเหตุผล"
         class="md:col-span-3 w-full border text-lg font-light rounded-md px-4 py-2"
       ></textarea>
+    </div>
+
+    <!-- ── divider: ความรับผิดชอบและคุณภาพ ── -->
+    <div class="flex items-center gap-4 my-6">
+      <span class="h-px flex-1 bg-gray-200"></span>
+      <span class="text-sm font-normal text-gray-400 tracking-wide whitespace-nowrap">ความรับผิดชอบและคุณภาพ</span>
+      <span class="h-px flex-1 bg-gray-200"></span>
     </div>
 
     <!-- ประเภทความรับผิดชอบ -->
@@ -458,6 +484,13 @@
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- ── divider: ผู้ร่วมโครงการ ── -->
+    <div class="flex items-center gap-4 my-6">
+      <span class="h-px flex-1 bg-gray-200"></span>
+      <span class="text-sm font-normal text-gray-400 tracking-wide whitespace-nowrap">ผู้ร่วมโครงการ</span>
+      <span class="h-px flex-1 bg-gray-200"></span>
     </div>
 
     <!-- ผู้ร่วมโครงการ -->
@@ -720,439 +753,458 @@
           เพิ่มรายการ
         </button>
       </div>
+    </div>
 
+    <!-- ── divider: แหล่งทุนและงบประมาณ ── -->
+    <div class="flex items-center gap-4 my-6">
+      <span class="h-px flex-1 bg-gray-200"></span>
+      <span class="text-sm font-normal text-gray-400 tracking-wide whitespace-nowrap">แหล่งทุนและงบประมาณ</span>
+      <span class="h-px flex-1 bg-gray-200"></span>
+    </div>
+
+    <!-- แหล่งเงินทุน -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-6">
       <!-- แหล่งเงินทุน -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-6 mt-2 md:mt-10">
-        <!-- แหล่งเงินทุน -->
-        <div class="relative">
-          <label class="block mb-2">
-            แหล่งทุน <span class="text-red-500">*</span>
-          </label>
+      <div class="relative">
+        <label class="block mb-2">
+          แหล่งทุน <span class="text-red-500">*</span>
+        </label>
 
-          <button
-            type="button"
-            (click)="toggleDropdown('funding', $event)"
-            class="w-full h-12 border rounded-md px-3 flex justify-between items-center text-lg font-light bg-white"
-          >
-            <span class="flex-1 truncate text-left">
-              {{ projectData.source_funds || "เลือกแหล่งทุน" }}
-            </span>
-            <i class="bi bi-chevron-down shrink-0 ml-2"></i>
-          </button>
-
-          <div
-            *ngIf="activeDropdown === 'funding'"
-            class="absolute z-9999 mt-1 w-full bg-white border rounded-md shadow text-lg font-light"
-          >
-            <div
-              class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
-              (click)="
-                selectValue('source_funds', 'แหล่งทุนภายใน');
-                selectValue('funding_code', '01')
-              "
-            >
-              แหล่งทุนภายใน
-            </div>
-            <div
-              class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
-              (click)="selectValue('source_funds', 'แหล่งทุนภายนอก')"
-            >
-              แหล่งทุนภายนอก
-            </div>
-            <div
-              class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
-              (click)="
-                selectValue('source_funds', 'แหล่งทุนอื่น');
-                selectValue('funding_code', '99')
-              "
-            >
-              แหล่งทุนอื่น
-            </div>
-          </div>
-        </div>
-
-        <!-- ชื่อแหล่งทุน -->
-        <div *ngIf="projectData.source_funds === 'แหล่งทุนภายใน'">
-          <label class="block mb-2">
-            ชื่อแหล่งทุน <span class="text-red-500">*</span>
-          </label>
-
-          <input
-            type="text"
-            [(ngModel)]="projectData.name_funding"
-            placeholder="กรอกชื่อแหล่งทุน"
-            class="w-full h-12 border rounded-md px-3 text-lg font-light"
-          />
-        </div>
+        <button
+          type="button"
+          (click)="toggleDropdown('funding', $event)"
+          class="w-full h-12 border rounded-md px-3 flex justify-between items-center text-lg font-light bg-white"
+        >
+          <span class="flex-1 truncate text-left">
+            {{ projectData.source_funds || "เลือกแหล่งทุน" }}
+          </span>
+          <i class="bi bi-chevron-down shrink-0 ml-2"></i>
+        </button>
 
         <div
-          *ngIf="projectData.source_funds === 'แหล่งทุนภายนอก'"
-          class="relative"
+          *ngIf="activeDropdown === 'funding'"
+          class="absolute z-9999 mt-1 w-full bg-white border rounded-md shadow text-lg font-light"
         >
-          <label class="block mb-2">
-            ชื่อแหล่งทุน <span class="text-red-500">*</span>
-          </label>
-
-          <button
-            type="button"
-            (click)="toggleDropdown('fundName', $event)"
-            class="w-full h-12 border rounded-md px-3 flex justify-between items-center bg-white text-lg font-light"
+          <div
+            class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
+            (click)="
+              selectValue('source_funds', 'แหล่งทุนภายใน');
+              selectValue('funding_code', '01')
+            "
           >
-            <span class="truncate">
-              {{ projectData.name_funding || "เลือกชื่อแหล่งทุน" }}
+            แหล่งทุนภายใน
+          </div>
+          <div
+            class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
+            (click)="selectValue('source_funds', 'แหล่งทุนภายนอก')"
+          >
+            แหล่งทุนภายนอก
+          </div>
+          <div
+            class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
+            (click)="
+              selectValue('source_funds', 'แหล่งทุนอื่น');
+              selectValue('funding_code', '99')
+            "
+          >
+            แหล่งทุนอื่น
+          </div>
+        </div>
+      </div>
+
+      <!-- ชื่อแหล่งทุน -->
+      <div *ngIf="projectData.source_funds === 'แหล่งทุนภายใน'">
+        <label class="block mb-2">
+          ชื่อแหล่งทุน <span class="text-red-500">*</span>
+        </label>
+
+        <input
+          type="text"
+          [(ngModel)]="projectData.name_funding"
+          placeholder="กรอกชื่อแหล่งทุน"
+          class="w-full h-12 border rounded-md px-3 text-lg font-light"
+        />
+      </div>
+
+      <div
+        *ngIf="projectData.source_funds === 'แหล่งทุนภายนอก'"
+        class="relative"
+      >
+        <label class="block mb-2">
+          ชื่อแหล่งทุน <span class="text-red-500">*</span>
+        </label>
+
+        <button
+          type="button"
+          (click)="toggleDropdown('fundName', $event)"
+          class="w-full h-12 border rounded-md px-3 flex justify-between items-center bg-white text-lg font-light"
+        >
+          <span class="truncate">
+            {{ projectData.name_funding || "เลือกชื่อแหล่งทุน" }}
+          </span>
+          <i class="bi bi-chevron-down"></i>
+        </button>
+
+        <div
+          *ngIf="activeDropdown === 'fundName'"
+          class="absolute left-0 top-full mt-1 h-60 w-full bg-white border rounded-md shadow z-50 overflow-y-auto"
+        >
+          <div
+            *ngFor="let fund of fundings"
+            class="px-3 py-2 hover:bg-gray-100 cursor-pointer font-light text-lg"
+            (click)="
+              selectValue('name_funding', fund.funding_name);
+              selectValue('funding_code', fund.funding_code);
+              selectValue('funding_id', fund.id)
+            "
+          >
+            {{ fund.funding_name }}
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="projectData.source_funds === 'แหล่งทุนอื่น'">
+        <label class="block mb-2">
+          ชื่อแหล่งทุน <span class="text-red-500">*</span>
+        </label>
+
+        <input
+          type="text"
+          [(ngModel)]="projectData.name_funding"
+          placeholder="กรอกชื่อแหล่งทุน"
+          class="w-full h-12 border rounded-md px-3 text-lg font-light"
+        />
+      </div>
+
+      <!-- จำนวนงบประมาณ -->
+      <div>
+        <label class="block text-2xl mb-2">
+          จำนวนงบประมาณ <span class="text-red-500">*</span>
+        </label>
+        <input
+          name="budget_amount"
+          required
+          #budgetAmount="ngModel"
+          [class.border-red-500]="
+            budgetAmount.invalid && budgetAmount.touched
+          "
+          [(ngModel)]="projectData.budget_amount"
+          type="text"
+          class="w-full border text-lg font-light rounded-md h-12 px-4 py-2 focus:ring-2 focus:ring-blue-400"
+          placeholder="ระบุจำนวนงบประมาณ"
+        />
+
+        <div
+          *ngIf="budgetAmount.invalid && budgetAmount.touched"
+          class="text-red-500 text-sm"
+        >
+          กรุณากรอกจำนวนงบประมาณ
+        </div>
+      </div>
+
+      <!-- ปีที่ได้รับทุน -->
+      <div>
+        <label class="block mb-2">
+          ปีที่ได้รับทุน (พ.ศ.) <span class="text-red-500">*</span>
+        </label>
+
+        <div class="relative">
+          <!-- BUTTON -->
+          <button
+            (click)="toggleDropdown('year', $event)"
+            type="button"
+            class="w-full border rounded-md px-4 h-12 flex justify-between items-center bg-white text-lg font-light"
+            [class.border-red-500]="
+              yearReceivedBudget.invalid && yearReceivedBudget.touched
+            "
+          >
+            <span>
+              {{ projectData.year_received_budget || "เลือกปี" }}
             </span>
             <i class="bi bi-chevron-down"></i>
           </button>
 
+          <!-- DROPDOWN -->
           <div
-            *ngIf="activeDropdown === 'fundName'"
-            class="absolute left-0 top-full mt-1 h-60 w-full bg-white border rounded-md shadow z-50 overflow-y-auto"
+            *ngIf="activeDropdown === 'year'"
+            class="absolute z-50 w-full bg-white border rounded-md mt-1 shadow text-lg font-light"
+            (click)="$event.stopPropagation()"
           >
-            <div
-              *ngFor="let fund of fundings"
-              class="px-3 py-2 hover:bg-gray-100 cursor-pointer font-light text-lg"
-              (click)="
-                selectValue('name_funding', fund.funding_name);
-                selectValue('funding_code', fund.funding_code);
-                selectValue('funding_id', fund.id)
-              "
-            >
-              {{ fund.funding_name }}
-            </div>
+            <ul class="max-h-60 overflow-y-auto">
+              <li
+                *ngFor="let year of thaiYears"
+                (click)="selectYear(year)"
+                class="px-4 py-2 hover:bg-gray-200 cursor-pointer"
+              >
+                {{ year }}
+              </li>
+            </ul>
           </div>
         </div>
 
-        <div *ngIf="projectData.source_funds === 'แหล่งทุนอื่น'">
-          <label class="block mb-2">
-            ชื่อแหล่งทุน <span class="text-red-500">*</span>
-          </label>
-
-          <input
-            type="text"
-            [(ngModel)]="projectData.name_funding"
-            placeholder="กรอกชื่อแหล่งทุน"
-            class="w-full h-12 border rounded-md px-3 text-lg font-light"
-          />
-        </div>
-
-        <!-- จำนวนงบประมาณ -->
-        <div>
-          <label class="block text-2xl mb-2">
-            จำนวนงบประมาณ <span class="text-red-500">*</span>
-          </label>
-          <input
-            name="budget_amount"
-            required
-            #budgetAmount="ngModel"
-            [class.border-red-500]="
-              budgetAmount.invalid && budgetAmount.touched
-            "
-            [(ngModel)]="projectData.budget_amount"
-            type="text"
-            class="w-full border text-lg font-light rounded-md h-12 px-4 py-2 focus:ring-2 focus:ring-blue-400"
-            placeholder="ระบุจำนวนงบประมาณ"
-          />
-
-          <div
-            *ngIf="budgetAmount.invalid && budgetAmount.touched"
-            class="text-red-500 text-sm"
-          >
-            กรุณากรอกจำนวนงบประมาณ
-          </div>
-        </div>
-
-        <!-- ปีที่ได้รับทุน -->
-        <div>
-          <label class="block mb-2">
-            ปีที่ได้รับทุน (พ.ศ.) <span class="text-red-500">*</span>
-          </label>
-
-          <div class="relative">
-            <!-- BUTTON -->
-            <button
-              (click)="toggleDropdown('year', $event)"
-              type="button"
-              class="w-full border rounded-md px-4 h-12 flex justify-between items-center bg-white text-lg font-light"
-              [class.border-red-500]="
-                yearReceivedBudget.invalid && yearReceivedBudget.touched
-              "
-            >
-              <span>
-                {{ projectData.year_received_budget || "เลือกปี" }}
-              </span>
-              <i class="bi bi-chevron-down"></i>
-            </button>
-
-            <!-- DROPDOWN -->
-            <div
-              *ngIf="activeDropdown === 'year'"
-              class="absolute z-50 w-full bg-white border rounded-md mt-1 shadow text-lg font-light"
-              (click)="$event.stopPropagation()"
-            >
-              <ul class="max-h-60 overflow-y-auto">
-                <li
-                  *ngFor="let year of thaiYears"
-                  (click)="selectYear(year)"
-                  class="px-4 py-2 hover:bg-gray-200 cursor-pointer"
-                >
-                  {{ year }}
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <!-- VALIDATE -->
-          <input
-            type="hidden"
-            name="year_received_budget"
-            required
-            [(ngModel)]="projectData.year_received_budget"
-            #yearReceivedBudget="ngModel"
-          />
-
-          <div
-            *ngIf="yearReceivedBudget.invalid && yearReceivedBudget.touched"
-            class="text-red-500 text-sm"
-          >
-            กรุณาเลือกปีที่ได้รับทุน
-          </div>
-        </div>
-      </div>
-
-      <!-- ความร่วมมือกับหน่วยงานอื่นๆ : -->
-      <div class="grid grid-cols-1 md:grid-cols-1 gap-2 mb-6 mt-6">
-        <label class="md:col-span-1 text-start">
-          ความร่วมมือกับหน่วยงานอื่นๆ
-        </label>
-        <textarea
-          [(ngModel)]="projectData.call_other"
-          name="attention"
-          id="attention"
-          placeholder="ระบุความร่วมมือกับหน่วยงานอื่นๆ"
-          class="md:col-span-3 w-full border text-lg font-light rounded-md px-4 py-2"
-        ></textarea>
-      </div>
-
-      <!-- เลขที่สิทธิบัตร -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-        <div>
-          <label class="md:col-span-1 text-start">
-            เลขที่สิทธิบัตร : <span class="text-red-500">*</span>
-          </label>
-          <input
-            name="patent_number"
-            required
-            #patentNumber="ngModel"
-            [class.border-red-500]="
-              patentNumber.invalid && patentNumber.touched
-            "
-            [(ngModel)]="projectData.patent_number"
-            type="text"
-            class="md:col-span-2 h-12 w-full text-lg font-light border rounded-md px-4 py-2"
-            placeholder="ระบุเลขที่สิทธิบัตร"
-          />
-
-          <div
-            *ngIf="patentNumber.invalid && patentNumber.touched"
-            class="text-red-500 text-sm"
-          >
-            กรุณากรอกเลขที่สิทธิบัตร
-          </div>
-        </div>
-
-        <!-- เลขที่คำขอสิทธิบัตร -->
-        <div>
-          <label class="md:col-span-1 text-start">
-            เลขที่คำขอสิทธิบัตร : <span class="text-red-500">*</span>
-          </label>
-          <input
-            name="application_number"
-            required
-            #applicationNumber="ngModel"
-            [class.border-red-500]="
-              applicationNumber.invalid && applicationNumber.touched
-            "
-            [(ngModel)]="projectData.application_number"
-            type="text"
-            class="md:col-span-2 h-12 w-full text-lg font-light border rounded-md px-4 py-2"
-            placeholder="ระบุเลขที่คำขอสิทธิบัตร"
-          />
-
-          <div
-            *ngIf="applicationNumber.invalid && applicationNumber.touched"
-            class="text-red-500 text-sm"
-          >
-            กรุณากรอกเลขที่คำขอสิทธิบัตร
-          </div>
-        </div>
-      </div>
-
-      <!-- เว็บไซต์ตรวจสิทธิบัตร -->
-      <div class="grid grid-cols-1 md:grid-cols-1 gap-2 mb-6">
-        <label class="md:col-span-1 text-start">
-          เว็บไซต์ตรวจสิทธิบัตร : <span class="text-red-500">*</span>
-        </label>
+        <!-- VALIDATE -->
         <input
-          name="examination_url"
+          type="hidden"
+          name="year_received_budget"
           required
-          #examinationUrl="ngModel"
-          [class.border-red-500]="
-            examinationUrl.invalid && examinationUrl.touched
-          "
-          [(ngModel)]="projectData.examination_url"
-          type="text"
-          class="md:col-span-2 w-full border text-lg font-light rounded-md px-4 py-2"
-          placeholder="ระบุเว็บไซต์ตรวจสิทธิบัตร"
+          [(ngModel)]="projectData.year_received_budget"
+          #yearReceivedBudget="ngModel"
         />
 
         <div
-          *ngIf="examinationUrl.invalid && examinationUrl.touched"
+          *ngIf="yearReceivedBudget.invalid && yearReceivedBudget.touched"
           class="text-red-500 text-sm"
         >
-          กรุณากรอกเว็บไซต์ตรวจสิทธิบัตร
+          กรุณาเลือกปีที่ได้รับทุน
+        </div>
+      </div>
+    </div>
+
+    <!-- ความร่วมมือกับหน่วยงานอื่นๆ : -->
+    <div class="grid grid-cols-1 md:grid-cols-1 gap-2 mb-6 mt-6">
+      <label class="md:col-span-1 text-start">
+        ความร่วมมือกับหน่วยงานอื่นๆ
+      </label>
+      <textarea
+        [(ngModel)]="projectData.call_other"
+        name="attention"
+        id="attention"
+        placeholder="ระบุความร่วมมือกับหน่วยงานอื่นๆ"
+        class="md:col-span-3 w-full border text-lg font-light rounded-md px-4 py-2"
+      ></textarea>
+    </div>
+
+    <!-- ── divider: ข้อมูลสิทธิบัตร ── -->
+    <div class="flex items-center gap-4 my-6">
+      <span class="h-px flex-1 bg-gray-200"></span>
+      <span class="text-sm font-normal text-gray-400 tracking-wide whitespace-nowrap">ข้อมูลสิทธิบัตร</span>
+      <span class="h-px flex-1 bg-gray-200"></span>
+    </div>
+
+    <!-- เลขที่สิทธิบัตร -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+      <div>
+        <label class="md:col-span-1 text-start">
+          เลขที่สิทธิบัตร : <span class="text-red-500">*</span>
+        </label>
+        <input
+          name="patent_number"
+          required
+          #patentNumber="ngModel"
+          [class.border-red-500]="
+            patentNumber.invalid && patentNumber.touched
+          "
+          [(ngModel)]="projectData.patent_number"
+          type="text"
+          class="md:col-span-2 h-12 w-full text-lg font-light border rounded-md px-4 py-2"
+          placeholder="ระบุเลขที่สิทธิบัตร"
+        />
+
+        <div
+          *ngIf="patentNumber.invalid && patentNumber.touched"
+          class="text-red-500 text-sm"
+        >
+          กรุณากรอกเลขที่สิทธิบัตร
         </div>
       </div>
 
-      <!-- ไฟล์รายงานฉบับสมบูรณ์ -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 items-center">
-        <div>
-          <label class="md:col-span-1 text-start">
-            ไฟล์รายงานฉบับสมบูรณ์ (PDF) :
-          </label>
+      <!-- เลขที่คำขอสิทธิบัตร -->
+      <div>
+        <label class="md:col-span-1 text-start">
+          เลขที่คำขอสิทธิบัตร : <span class="text-red-500">*</span>
+        </label>
+        <input
+          name="application_number"
+          required
+          #applicationNumber="ngModel"
+          [class.border-red-500]="
+            applicationNumber.invalid && applicationNumber.touched
+          "
+          [(ngModel)]="projectData.application_number"
+          type="text"
+          class="md:col-span-2 h-12 w-full text-lg font-light border rounded-md px-4 py-2"
+          placeholder="ระบุเลขที่คำขอสิทธิบัตร"
+        />
 
-          <!-- input file ซ่อน -->
-          <input
-            #reportFileInput
-            type="file"
-            accept="application/pdf"
-            class="hidden"
-            (change)="onFileSelected($event)"
-          />
-
-          <!-- ปุ่ม + ชื่อไฟล์ -->
-          <div class="md:col-span-2 flex gap-3 items-center mt-3">
-            <span class="text-gray-400 text-lg font-light truncate">
-              {{
-                selectedFileName ||
-                  projectData.full_report?.file_name ||
-                  "ยังไม่ได้เลือกไฟล์"
-              }}
-            </span>
-
-            <button
-              *ngIf="selectedFile || projectData.full_report?.file_name"
-              type="button"
-              class="text-red-500 hover:text-red-700 text-lg"
-              (click)="removeFile()"
-            >
-              ✕
-            </button>
-
-            <button
-              type="button"
-              class="px-4 py-1 bg-[#f2e7ac] hover:bg-[#f2cb05] text-[#394250] hover:text-white text-lg font-light rounded-md cursor-pointer"
-              (click)="reportFileInput.click()"
-            >
-              เลือกไฟล์
-            </button>
-          </div>
+        <div
+          *ngIf="applicationNumber.invalid && applicationNumber.touched"
+          class="text-red-500 text-sm"
+        >
+          กรุณากรอกเลขที่คำขอสิทธิบัตร
         </div>
+      </div>
+    </div>
 
-        <!-- ไฟล์รูปนวัตกรรมสิ่งประดิษฐ์ -->
-        <div class="flex flex-col gap-2 mt-2">
-          <label class="text-start"> ไฟล์รูปนวัตกรรมสิ่งประดิษฐ์ : </label>
+    <!-- เว็บไซต์ตรวจสิทธิบัตร -->
+    <div class="grid grid-cols-1 md:grid-cols-1 gap-2 mb-6">
+      <label class="md:col-span-1 text-start">
+        เว็บไซต์ตรวจสิทธิบัตร : <span class="text-red-500">*</span>
+      </label>
+      <input
+        name="examination_url"
+        required
+        #examinationUrl="ngModel"
+        [class.border-red-500]="
+          examinationUrl.invalid && examinationUrl.touched
+        "
+        [(ngModel)]="projectData.examination_url"
+        type="text"
+        class="md:col-span-2 w-full border text-lg font-light rounded-md px-4 py-2"
+        placeholder="ระบุเว็บไซต์ตรวจสิทธิบัตร"
+      />
 
-          <!-- รูปจาก DB -->
-          <div
-            *ngFor="let img of projectData.innovation_images"
-            class="flex items-center gap-3"
+      <div
+        *ngIf="examinationUrl.invalid && examinationUrl.touched"
+        class="text-red-500 text-sm"
+      >
+        กรุณากรอกเว็บไซต์ตรวจสิทธิบัตร
+      </div>
+    </div>
+
+    <!-- ── divider: ไฟล์แนบ ── -->
+    <div class="flex items-center gap-4 my-6">
+      <span class="h-px flex-1 bg-gray-200"></span>
+      <span class="text-sm font-normal text-gray-400 tracking-wide whitespace-nowrap">ไฟล์แนบ</span>
+      <span class="h-px flex-1 bg-gray-200"></span>
+    </div>
+
+    <!-- ไฟล์รายงานฉบับสมบูรณ์ -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 items-start">
+      <div>
+        <label class="md:col-span-1 text-start">
+          ไฟล์รายงานฉบับสมบูรณ์ (PDF) :
+        </label>
+
+        <!-- input file ซ่อน -->
+        <input
+          #reportFileInput
+          type="file"
+          accept="application/pdf"
+          class="hidden"
+          (change)="onFileSelected($event)"
+        />
+
+        <!-- ปุ่ม + ชื่อไฟล์ -->
+        <div class="md:col-span-2 flex gap-3 items-center mt-3">
+          <span class="text-gray-400 text-lg font-light truncate">
+            {{
+              selectedFileName ||
+                projectData.full_report?.file_name ||
+                "ยังไม่ได้เลือกไฟล์"
+            }}
+          </span>
+
+          <button
+            *ngIf="selectedFile || projectData.full_report?.file_name"
+            type="button"
+            class="text-red-500 hover:text-red-700 text-lg"
+            (click)="removeFile()"
           >
-            <img
-              [src]="img.get_url"
-              class="w-16 h-16 object-cover rounded border"
-            />
+            ✕
+          </button>
 
-            <span class="text-gray-700 flex-1 truncate">
-              {{ img.file_name }}
-            </span>
-
-            <button
-              type="button"
-              class="text-red-500 hover:text-red-700 cursor-pointer"
-              (click)="deleteImage(img.file_id)"
-            >
-              <i class="bi bi-trash"></i>
-            </button>
-          </div>
-
-          <!-- รูปใหม่ -->
-          <div
-            *ngFor="let file of selectedImagesFile; let i = index"
-            class="flex items-center gap-3"
-          >
-            <img
-              [src]="imagePreviews[i]"
-              class="w-16 h-16 object-cover rounded border"
-            />
-
-            <span class="text-gray-600 flex-1 truncate">
-              {{ file.name }}
-            </span>
-
-            <button
-              type="button"
-              class="text-red-500 hover:text-red-700 cursor-pointer"
-              (click)="removeImageFile(i)"
-            >
-              <i class="bi bi-trash"></i>
-            </button>
-          </div>
-
-          <!-- ไม่มีรูป -->
-          <div
-            *ngIf="
-              !projectData.innovation_images.length &&
-              !selectedImagesFile.length
-            "
-            class="text-gray-400 text-lg font-light"
-          >
-            ยังไม่ได้เลือกรูป
-          </div>
-
-          <!-- input file -->
-          <input
-            #fileInput
-            type="file"
-            accept="image/*"
-            class="hidden"
-            multiple
-            (change)="onImageFileSelected($event)"
-          />
-
-          <!-- ปุ่มเลือกไฟล์ -->
           <button
             type="button"
-            class="w-fit px-4 py-1 bg-[#f2e7ac] hover:bg-[#f2cb05] text-[#394250] hover:text-white text-lg font-light rounded-md cursor-pointer"
-            (click)="fileInput.click()"
+            class="px-4 py-1 bg-[#f2e7ac] hover:bg-[#f2cb05] text-[#394250] hover:text-white text-lg font-light rounded-md cursor-pointer"
+            (click)="reportFileInput.click()"
           >
             เลือกไฟล์
           </button>
         </div>
       </div>
 
-      <!-- ปุ่ม -->
-      <div class="flex justify-center mt-10">
-        <button
-          (click)="submit()"
-          type="submit"
-          class="flex items-center justify-center text-xl gap-3 w-72 py-3 bg-[#f2e7ac] hover:bg-[#f2cb05] text-[#394250] hover:text-white rounded-lg shadow transition duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 cursor-pointer"
+      <!-- ไฟล์รูปนวัตกรรมสิ่งประดิษฐ์ -->
+      <div class="flex flex-col gap-2 mt-2">
+        <label class="text-start"> ไฟล์รูปนวัตกรรมสิ่งประดิษฐ์ : </label>
+
+        <!-- รูปจาก DB -->
+        <div
+          *ngFor="let img of projectData.innovation_images"
+          class="flex items-center gap-3"
         >
-          <i
-            class="bi bi-floppy2 text-2xl"
-          ></i>
-          <span>บันทึกข้อมูล"</span>
+          <img
+            [src]="img.get_url"
+            class="w-16 h-16 object-cover rounded border"
+          />
+
+          <span class="text-gray-700 flex-1 truncate">
+            {{ img.file_name }}
+          </span>
+
+          <button
+            type="button"
+            class="text-red-500 hover:text-red-700 cursor-pointer"
+            (click)="deleteImage(img.file_id)"
+          >
+            <i class="bi bi-trash"></i>
+          </button>
+        </div>
+
+        <!-- รูปใหม่ -->
+        <div
+          *ngFor="let file of selectedImagesFile; let i = index"
+          class="flex items-center gap-3"
+        >
+          <img
+            [src]="imagePreviews[i]"
+            class="w-16 h-16 object-cover rounded border"
+          />
+
+          <span class="text-gray-600 flex-1 truncate">
+            {{ file.name }}
+          </span>
+
+          <button
+            type="button"
+            class="text-red-500 hover:text-red-700 cursor-pointer"
+            (click)="removeImageFile(i)"
+          >
+            <i class="bi bi-trash"></i>
+          </button>
+        </div>
+
+        <!-- ไม่มีรูป -->
+        <div
+          *ngIf="
+            !projectData.innovation_images.length &&
+            !selectedImagesFile.length
+          "
+          class="text-gray-400 text-lg font-light"
+        >
+          ยังไม่ได้เลือกรูป
+        </div>
+
+        <!-- input file -->
+        <input
+          #fileInput
+          type="file"
+          accept="image/*"
+          class="hidden"
+          multiple
+          (change)="onImageFileSelected($event)"
+        />
+
+        <!-- ปุ่มเลือกไฟล์ -->
+        <button
+          type="button"
+          class="w-fit px-4 py-1 bg-[#f2e7ac] hover:bg-[#f2cb05] text-[#394250] hover:text-white text-lg font-light rounded-md cursor-pointer"
+          (click)="fileInput.click()"
+        >
+          เลือกไฟล์
         </button>
       </div>
+    </div>
+
+    <!-- ปุ่ม -->
+    <div class="flex justify-center mt-10">
+      <button
+        (click)="submit()"
+        type="submit"
+        class="flex items-center justify-center text-xl gap-3 w-72 py-3 bg-[#f2e7ac] hover:bg-[#f2cb05] text-[#394250] hover:text-white rounded-lg shadow transition duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 cursor-pointer"
+      >
+        <i class="bi bi-floppy2 text-2xl"></i>
+        <span>บันทึกข้อมูล</span>
+      </button>
     </div>
   </div>
 </div>
