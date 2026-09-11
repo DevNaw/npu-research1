@@ -14,12 +14,19 @@ import { Funding } from '../../models/funding.model';
 import { FundingService } from '../../services/funding.service';
 import { Color, LegendPosition, ScaleType } from '@swimlane/ngx-charts';
 import Swal from 'sweetalert2';
+import { BUDDHIST_DATE_FORMATS, BuddhistDateAdapter } from '../../services/buddhist-date-adapter';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 
 @Component({
   selector: 'app-user-research',
   standalone: false,
   templateUrl: './user-research.component.html',
   styleUrl: './user-research.component.css',
+  providers: [
+    { provide: DateAdapter, useClass: BuddhistDateAdapter },
+    { provide: MAT_DATE_FORMATS, useValue: BUDDHIST_DATE_FORMATS },
+    { provide: MAT_DATE_LOCALE, useValue: 'th-TH' },
+  ],
 })
 export class UserResearchComponent {
   activeDropdown: string | null = null;
@@ -321,7 +328,7 @@ export class UserResearchComponent {
       payload.q = this.researchItems.trim();
     }
 
-    if (this.selectedType) {
+    if (this.selectedType && this.selectedType !== 'ทั้งหมด') {
       payload.type = this.mapTypeToApi(this.selectedType);
       if (this.selectedType === 'บทความ') {
         payload.article_type = 'ประชุมวิชาการ';

@@ -16,12 +16,19 @@ import Swal from 'sweetalert2';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { Color, LegendPosition, ScaleType } from '@swimlane/ngx-charts';
+import { BUDDHIST_DATE_FORMATS, BuddhistDateAdapter } from '../../services/buddhist-date-adapter';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 
 @Component({
   selector: 'app-admin-search-paper',
   standalone: false,
   templateUrl: './admin-search-paper.component.html',
   styleUrl: './admin-search-paper.component.css',
+  providers: [
+    { provide: DateAdapter, useClass: BuddhistDateAdapter },
+    { provide: MAT_DATE_FORMATS, useValue: BUDDHIST_DATE_FORMATS },
+    { provide: MAT_DATE_LOCALE, useValue: 'th-TH' },
+  ],
 })
 export class AdminSearchPaperComponent {
   activeDropdown: string | null = null;
@@ -329,7 +336,7 @@ export class AdminSearchPaperComponent {
 
     if (this.researchItems?.trim()) payload.q = this.researchItems.trim();
 
-    if (this.selectedType) {
+    if (this.selectedType && this.selectedType !== 'ทั้งหมด') {
       payload.type = this.mapTypeToApi(this.selectedType);
       if (this.selectedType === 'บทความ') {
         payload.article_type = 'ประชุมวิชาการ';
