@@ -27,6 +27,8 @@ export class UserResearchComponent {
   // ── Search inputs ──────────────────────────────────────────
   researchItems = '';
   searchText = '';
+  customDateStart: Date | null = null;
+  customDateEnd: Date | null = null;
 
   // ── Type / SubType ─────────────────────────────────────────
   selectedType: string | null = null;
@@ -61,6 +63,7 @@ export class UserResearchComponent {
   searchMajor = '';
   searchSub = '';
   searchSubSub = '';
+  chartSingle: { name: string; value: number }[] = [];
 
   // ── Agency ─────────────────────────────────────────────────
   organizations: Organization[] = [];
@@ -340,8 +343,14 @@ export class UserResearchComponent {
     if (this.selectedAgency) payload.org_id = this.selectedAgency.id;
     if (this.selectedFundingSource)
       payload.funding_id = this.selectedFundingSource.id;
-    if (this.dateRange.start) payload.date_from = this.dateRange.start;
-    if (this.dateRange.end) payload.date_to = this.dateRange.end;
+    // if (this.dateRange.start) payload.date_from = this.dateRange.start;
+    // if (this.dateRange.end) payload.date_to = this.dateRange.end;
+
+        // ── ช่วงวันที่: ใช้ input date (customDate) เป็นหลัก, fallback ไป picker วารสาร ──
+        const from = this.customDateStart ?? this.dateRange.start;
+        const to = this.customDateEnd ?? this.dateRange.end;
+        if (from) payload.date_from = this.toDateString(from);
+        if (to) payload.date_to = this.toDateString(to);
 
     if (this.selectedSubSub?.child_id) {
       oecdId = this.selectedSubSub.child_id;
@@ -371,22 +380,69 @@ export class UserResearchComponent {
         this.totalResearchers = data.total;
         this.donutSeries = data.graph.map((g: any) => g.count);
         this.donutLabels = data.graph.map((g: any) => g.oecd_name);
-        this.single = data.graph.map((g: any) => ({
-          name: g.oecd_name,
-          value: g.count,
-        }));
+        // this.single = data.graph.map((g: any) => ({
+        //   name: g.oecd_name,
+        //   value: g.count,
+        // }));
+        this.single = data.graph
+  .map((g: any) => ({
+    name: g.oecd_name,
+    value: Number(g.count || 0),
+  }))
+  .sort((a, b) => b.value - a.value);
+        
+        // เรียงจากมาก → น้อย
+        const sorted = [...this.single];
+        
+        // แสดง Top 6
+        const top = sorted.slice(0, 6);
+        
+        // รวมรายการที่เหลือ
+        const others = sorted.slice(6);
+        
+        const otherTotal = others.reduce(
+          (sum, item) => sum + item.value,
+          0
+        );
+        
+        this.chartSingle = [
+          ...top,
+          ...(otherTotal > 0
+            ? [
+                {
+                  name: 'อื่นๆ',
+                  value: otherTotal,
+                },
+              ]
+            : []),
+        ];
+        
+        this.hasData = this.chartSingle.length > 0;
         this.hasData = data.graph.length > 0;
         this.currentPage = 1;
         this.updatePagination();
         this.loading = false;
       },
-      error: (err) => {                                          // ← เพิ่มทั้งบล็อก
+      error: (err) => {
+        // ← เพิ่มทั้งบล็อก
         console.error('Search failed:', err);
         this.loading = false;
         Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถค้นหาข้อมูลได้', 'error');
       },
     });
   }
+
+    /** แปลง Date หรือ string จาก input ให้เป็น 'YYYY-MM-DD' (กัน timezone shift) */
+    private toDateString(value: Date | string): string {
+      if (typeof value === 'string') {
+        // input type="date" ให้ 'YYYY-MM-DD' อยู่แล้ว — ตัดเวลาทิ้งถ้ามี
+        return value.slice(0, 10);
+      }
+      const y = value.getFullYear();
+      const m = String(value.getMonth() + 1).padStart(2, '0');
+      const d = String(value.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    }
 
   onSearch(): void {
     const keyword = this.searchText?.trim().toLowerCase();
@@ -527,6 +583,8 @@ export class UserResearchComponent {
     this.isSearched = false;
     this.filteredResearchers = [];
     this.allTableData = [];
+    this.customDateStart = null;
+    this.customDateEnd = null;
     this.currentPage = 1;
     this.updatePagination();
   }
@@ -563,16 +621,17 @@ export class UserResearchComponent {
   }
 
   @HostListener('window:resize')
-  setChartView(): void {
-    const w = window.innerWidth;
-    if (w < 640) {
-      this.chartView = [w - 40, 260];
-    } else if (w < 1024) {
-      this.chartView = [420, 320];
-    } else {
-      this.chartView = [0, 350];
-    }
+setChartView(): void {
+  const w = window.innerWidth;
+
+  if (w < 640) {
+    this.chartView = [280, 280];
+  } else if (w < 1024) {
+    this.chartView = [340, 340];
+  } else {
+    this.chartView = [390, 390];
   }
+}
 
   onChartSelect(event: any): void {
     const item = this.single.find((d) => d.name === event.name);

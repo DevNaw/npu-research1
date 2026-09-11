@@ -313,23 +313,91 @@
             </div>
           </div>
 
-          <div
-            class="relative w-full pie-chart-wrapper flex items-center justify-center"
-          >
+          <div class="relative grid grid-cols-1 xl:grid-cols-[320px_minmax(0,1fr)] gap-6 items-center mt-5">
+
+            <!-- Donut Chart -->
             <ng-container *ngIf="hasData; else noData">
-              <ngx-charts-pie-chart
-                [view]="chartView"
-                [results]="single"
-                [scheme]="colorScheme"
-                [legend]="false"
-                [labels]="true"
-                [doughnut]="true"
-                [tooltipDisabled]="false"
-                [labelFormatting]="labelFormat"
-                (select)="onChartSelect($event)"
+              <div class="flex justify-center items-center">
+                <div class="pie-chart-wrapper shrink-0">
+                  <ngx-charts-pie-chart
+                    [view]="[300, 300]"
+                    [results]="single"
+                    [scheme]="colorScheme"
+                    [legend]="false"
+                    [labels]="false"
+                    [doughnut]="true"
+                    [arcWidth]="0.38"
+                    [tooltipDisabled]="false"
+                    (select)="onChartSelect($event)"
+                  >
+                  </ngx-charts-pie-chart>
+                </div>
+              </div>
+          
+              <!-- Legend -->
+              <div
+                class="w-full max-h-[360px] overflow-y-auto pr-2 space-y-2 custom-scroll"
               >
-              </ngx-charts-pie-chart>
+                <div
+                  *ngFor="let item of single; let i = index"
+                  (click)="onChartSelect(item)"
+                  class="
+                    group
+                    grid grid-cols-[14px_minmax(0,1fr)_auto]
+                    items-start gap-3
+                    px-4 py-3
+                    rounded-xl
+                    hover:bg-white/10
+                    cursor-pointer
+                    transition-all duration-200
+                  "
+                >
+                  <!-- Color -->
+                  <span
+                    class="w-3.5 h-3.5 rounded-full mt-1.5 shrink-0"
+                    [style.background]="
+                      colorScheme.domain[i % colorScheme.domain.length]
+                    "
+                  ></span>
+          
+                  <!-- Full name -->
+                  <div class="min-w-0">
+                    <p
+                      class="
+                        text-sm
+                        leading-5
+                        text-gray-100
+                        font-medium
+                        whitespace-normal
+                        wrap-break-word
+                      "
+                    >
+                      {{ item.name }}
+                    </p>
+                  </div>
+          
+                  <!-- Value -->
+                  <div class="flex items-baseline gap-2 pl-3 whitespace-nowrap">
+                    <span class="text-base font-bold text-white">
+                      {{ item.value }}
+                    </span>
+          
+                    <span
+                      class="
+                        text-xs
+                        text-gray-300
+                        bg-white/10
+                        px-2 py-1
+                        rounded-full
+                      "
+                    >
+                      {{ item.extra.percent }}%
+                    </span>
+                  </div>
+                </div>
+              </div>
             </ng-container>
+          
           </div>
         </div>
 
@@ -815,16 +883,16 @@
       <!-- News Cards -->
       <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
         <div
-          *ngFor="let news of newsList"
-          class="group bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col overflow-hidden cursor-pointer"
-          (click)="goToNewsDetail(news.news_id)"
-        >
-          <!-- Image -->
-          <div class="relative aspect-video w-full overflow-hidden bg-gray-100">
-            <img
-              [src]="news.news_cover"
-              class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-            />
+        *ngFor="let news of newsList"
+        class="group bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col overflow-hidden cursor-pointer"
+        (click)="goToNewsDetail(news.url)"
+      >
+        <!-- Image -->
+        <div class="relative aspect-video w-full overflow-hidden bg-gray-100">
+          <img
+            [src]="news.image"
+            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+          />
             <div
               class="absolute inset-0 bg-linear-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"
             ></div>
@@ -840,7 +908,7 @@
 
             <p class="text-xs text-gray-500 flex items-center gap-1 flex-1">
               <i class="bi bi-calendar3"></i>
-              {{ news.published_date | date : "dd MMMM YYYY" : "" : "th-TH" }}
+              {{ news.date | date : "dd MMMM YYYY" : "" : "th-TH" }}
             </p>
 
             <!-- Read more -->

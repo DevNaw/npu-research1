@@ -20,3 +20,221 @@
 ::ng-deep .ngx-charts text {
   fill: white !important;
 }
+/* <!-- ===== DONUT CHART ===== -->
+     
+    <div
+      *ngIf="isSearched && !loading"
+      class="grid grid-cols-1 xl:grid-cols-1 gap-5"
+    >
+      <!-- Chart -->
+      <div
+        class="bg-linear-to-br from-[#394250] to-[#2f3742] rounded-2xl shadow-lg border border-gray-100 p-6 md:p-8"
+      >
+        <!-- Header -->
+        <div class="flex items-center gap-3 mb-6 pb-5 border-b border-white/15">
+          <div
+            class="w-11 h-11 rounded-xl bg-[#F2E7AC]/50 flex items-center justify-center"
+          >
+            <i class="bi bi-pie-chart-fill text-[#F2CB05] text-xl"></i>
+          </div>
+
+          <div>
+            <h2 class="text-xl md:text-2xl font-semibold text-white">
+              สัดส่วนงานวิจัย
+            </h2>
+
+            <p class="text-sm text-gray-300">จำแนกตามสาขาที่เกี่ยวข้อง</p>
+          </div>
+        </div>
+
+        <!-- Content -->
+        <div
+          class="grid grid-cols-1 xl:grid-cols-[44%_56%] gap-8 xl:gap-10 items-center"
+        >
+          <!-- ================= Donut ================= -->
+          <div
+            class="relative flex items-center justify-center min-h-[360px] md:min-h-[400px]"
+          >
+            <ngx-charts-pie-chart
+              [view]="chartView"
+              [results]="chartSingle"
+              [scheme]="colorScheme"
+              [legend]="false"
+              [labels]="false"
+              [doughnut]="true"
+              [arcWidth]="0.34"
+              [tooltipDisabled]="false"
+              (select)="onChartSelect($event)"
+            >
+            </ngx-charts-pie-chart>
+
+            <!-- Center -->
+            <div
+              class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none"
+            >
+              <span class="text-sm text-gray-400 font-medium">
+                รวมทั้งหมด
+              </span>
+
+              <span
+                class="text-4xl md:text-5xl font-bold text-white leading-tight mt-1"
+              >
+                {{ totalResearchers | number }}
+              </span>
+
+              <span class="text-sm text-gray-400 mt-1"> ผลงาน </span>
+            </div>
+          </div>
+
+          <!-- ================= Right Legend ================= -->
+          <div class="min-w-0">
+            <!-- Legend Header -->
+            <div class="flex items-start justify-between gap-4 mb-4">
+              <div>
+                <h3 class="text-lg md:text-xl font-semibold text-white">
+                  สาขาที่มีผลงานสูงสุด
+                </h3>
+
+                <p class="text-sm text-gray-400 mt-1">
+                  แสดง 6 อันดับแรกและอื่นๆ
+                </p>
+              </div>
+
+              <span
+                class="shrink-0 px-3 py-1.5 rounded-full border border-white/20 bg-white/5 text-sm text-gray-200"
+              >
+                {{ chartSingle.length }} กลุ่ม
+              </span>
+            </div>
+
+            <!-- Legend Items -->
+            <div
+              class="space-y-3 max-h-[430px] overflow-y-auto pr-2 custom-scroll"
+            >
+              <div
+                *ngFor="let item of chartSingle; let i = index"
+                (click)="onChartSelect(item)"
+                class="group bg-white/[0.05] hover:bg-white/[0.09] rounded-2xl px-4 py-4 cursor-pointer transition-all duration-200"
+              >
+                <!-- Row -->
+                <div
+                  class="grid grid-cols-[16px_minmax(0,1fr)_auto_auto] items-center gap-3"
+                >
+                  <!-- Color -->
+                  <span
+                    class="w-4 h-4 rounded-full shrink-0"
+                    [style.background]="
+                      colorScheme.domain[i % colorScheme.domain.length]
+                    "
+                  ></span>
+
+                  <!-- Name -->
+                  <div class="min-w-0">
+                    <p
+                      class="text-sm md:text-base text-white font-medium leading-5 whitespace-normal"
+                    >
+                      {{ item.name }}
+                    </p>
+                  </div>
+
+                  <!-- Count -->
+                  <span
+                    class="text-base font-bold text-white whitespace-nowrap"
+                  >
+                    {{ item.value | number }}
+                  </span>
+
+                  <!-- Percent -->
+                  <span
+                    class="min-w-[68px] text-center px-3 py-1.5 rounded-full bg-gray-100 text-sm font-semibold text-gray-600 whitespace-nowrap"
+                  >
+                    {{
+                      totalResearchers > 0
+                        ? ((item.value / totalResearchers) * 100
+                          | number : "1.1-1")
+                        : 0
+                    }}%
+                  </span>
+                </div>
+
+                <!-- Progress -->
+                <div
+                  class="ml-7 mt-3 h-2 rounded-full bg-white/10 overflow-hidden"
+                >
+                  <div
+                    class="h-full rounded-full transition-all duration-500"
+                    [style.background]="
+                      colorScheme.domain[i % colorScheme.domain.length]
+                    "
+                    [style.width.%]="
+                      totalResearchers > 0
+                        ? (item.value / totalResearchers) * 100
+                        : 0
+                    "
+                  ></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Legend -->
+      <div
+        class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col justify-between"
+      >
+        <div class="flex items-center gap-3 mb-5 pb-4 border-b border-gray-100">
+          <div
+            class="w-9 h-9 rounded-lg bg-[#F2E7AC]/50 flex items-center justify-center"
+          >
+            <i class="bi bi-list-ul text-[#F2CB05] text-lg"></i>
+          </div>
+          <div>
+            <h2 class="text-lg md:text-xl font-semibold text-[#394250]">
+              รายละเอียดสาขา
+            </h2>
+            <p class="text-xs text-gray-500">จำแนกตามสาขาที่เกี่ยวข้อง</p>
+          </div>
+        </div>
+
+        <div class="space-y-2 max-h-52 overflow-y-auto pr-1">
+          <div
+            *ngFor="let l of donutLabels; let i = index"
+            class="flex justify-between items-center px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors"
+          >
+            <div class="flex items-center gap-3 min-w-0">
+              <span
+                class="w-6 h-6 rounded-full bg-[#F2E7AC]/60 text-[#394250] text-xs font-semibold flex items-center justify-center shrink-0"
+              >
+                {{ i + 1 }}
+              </span>
+              <span class="text-sm font-light text-gray-700 wrap-break-word">{{
+                l
+              }}</span>
+            </div>
+            <span
+              class="text-sm font-medium text-[#394250] bg-white px-2 py-0.5 rounded-full border border-gray-200 shrink-0 ml-2"
+            >
+              {{ donutSeries[i] }} งาน
+            </span>
+          </div>
+          <p
+            *ngIf="donutLabels.length === 0"
+            class="text-center text-gray-400 py-4 text-sm"
+          >
+            <i class="bi bi-folder-x text-2xl block mb-2"></i>
+            ไม่พบข้อมูล
+          </p>
+        </div>
+
+        <div class="pt-4 border-t border-gray-100 mt-3">
+          <div class="flex items-center justify-center gap-2">
+            <span class="text-sm text-gray-500">รวมทั้งหมด</span>
+            <span class="text-2xl font-bold text-[#394250]">{{
+              totalResearchers
+            }}</span>
+            <span class="text-sm text-gray-500">งาน</span>
+          </div>
+        </div>
+      </div>
+    </div>  */

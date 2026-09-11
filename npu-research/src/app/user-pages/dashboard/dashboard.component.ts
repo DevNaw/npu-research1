@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { DataPerformanceItem } from '../../models/dashboard.model';
 import { registerLocaleData } from '@angular/common';
 import localeTh from '@angular/common/locales/th';
-import { NewsItem } from '../../models/news.model';
+import { NewsItem, RdiNewsItem } from '../../models/news.model';
 import { DashboardService } from '../../services/dashboard.service';
 import {
   DashboardData,
@@ -36,6 +36,7 @@ import {
 import { MainComponent } from '../../shared/layouts/main/main.component';
 import { AuthService } from '../../services/auth.service';
 import { Color, LegendPosition, ScaleType } from '@swimlane/ngx-charts';
+import { NewsService } from '../../services/news.service';
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -102,7 +103,7 @@ export class UserDashboardComponent implements OnInit {
   }[] = [];
 
   today: Date = new Date();
-  newsList: NewsItem[] = [];
+
 
   pageSize = 10;
   currentPage = 1;
@@ -129,6 +130,8 @@ export class UserDashboardComponent implements OnInit {
 
   otherMajor: { label: string; value: number } | null = null;
   otherSub: { label: string; value: number } | null = null;
+
+  newsList: RdiNewsItem[] = [];
 
   colorScheme: Color = {
     name: 'horizon',
@@ -167,21 +170,18 @@ export class UserDashboardComponent implements OnInit {
   labelFormat = (name: string): string => {
     const item = this.single.find((d) => d.name === name);
     if (!item) return name;
-
+  
     const total = this.single.reduce((sum, d) => sum + d.value, 0);
     const percent = total > 0 ? ((item.value / total) * 100).toFixed(1) : '0';
-
-    const isMobile = window.innerWidth < 640;
-    const maxLen = isMobile ? 4 : 6;
-    const shortName = name.length > maxLen ? name.slice(0, maxLen) + '…' : name;
-
-    return `${shortName} ${percent}%`;
+  
+    return `${name} ${percent}%`;
   };
 
   constructor(
     private router: Router,
     private service: DashboardService,
     private authService: AuthService,
+    private newsService: NewsService, 
     private zone: NgZone
   ) {
     this.initRadarCharts();
@@ -193,6 +193,7 @@ export class UserDashboardComponent implements OnInit {
     MainComponent.showLoading();
     Promise.all([
       this.loadDashboardData(),
+      this.loadNews(),
       new Promise((resolve) => setTimeout(resolve, 1000)),
     ]).then(() => MainComponent.hideLoading());
 
@@ -277,13 +278,25 @@ export class UserDashboardComponent implements OnInit {
     };
   }
 
+  // โหลดข่าวจาก RDI จำกัด 4 ข่าวสำหรับหน้าแรก
+  loadNews(): void {
+    this.newsService.getNewsFromRDI(4).subscribe({
+      next: (res) => {
+        this.newsList = res.data;
+      },
+      error: (err) => {
+        console.error('Failed to load RDI news:', err);
+      },
+    });
+  }
+
   loadDashboardData(): void {
     this.loading = true;
     this.service.getDashboardData().subscribe({
       next: (res: DashboardResponse) => {
         if (res?.result === 1 && res?.data) {
           this.dashboardData = res.data;
-          this.newsList = res.data.news;
+          
           this.publications = res.data.researchs;
 
           const key = this.mapResearchTypeToKey(this.selectedTab);
@@ -601,8 +614,8 @@ export class UserDashboardComponent implements OnInit {
   goToManual() {
     this.router.navigateByUrl('/manual');
   }
-  goToNewsDetail(id: number) {
-    this.router.navigate(['/news', id]);
+  goToNewsDetail(url: string) {
+    if (url) window.open(url, '_blank');
   }
   goToAllNews() {
     this.router.navigate(['/news']);

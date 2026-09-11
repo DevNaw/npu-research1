@@ -656,7 +656,7 @@
               [ngClass]="{ 'bg-[#F2E7AC]/60': openMenu === 'news' }"
             >
               <i class="bi bi-newspaper text-base"></i>
-              <span>จัดการข่าว/ประกาศ</span>
+              <span>จัดการประกาศ</span>
               <i
                 class="bi bi-chevron-down text-xs transition-transform"
                 [ngClass]="{ 'rotate-180': openMenu === 'news' }"
@@ -667,14 +667,14 @@
               *ngIf="openMenu === 'news'"
               class="absolute left-0 mt-2 bg-white text-[#394250] rounded-xl shadow-lg border border-gray-100 w-56 z-50 overflow-hidden"
             >
-              <a
+              <!-- <a
                 (click)="closeMenu()"
                 routerLink="/admin/news"
                 class="flex items-center gap-3 px-4 py-3 hover:bg-[#F2E7AC]/40 text-sm transition-colors"
               >
                 <i class="bi bi-megaphone text-[#F2CB05]"></i>
                 ข่าวประชาสัมพันธ์
-              </a>
+              </a> -->
               <a
                 (click)="closeMenu()"
                 routerLink="/admin/download"
@@ -823,7 +823,7 @@
           [ngClass]="{ 'bg-[#F2E7AC]/60': openMobileSubMenu === 'news' }"
         >
           <i class="bi bi-newspaper text-xl text-[#394250]"></i>
-          <span class="text-[10px] text-center">จัดการข่าว</span>
+          <span class="text-[10px] text-center">จัดการประกาศ</span>
         </button>
 
         <button
@@ -921,15 +921,15 @@
         class="mt-3 bg-gray-50 rounded-xl p-2 border border-gray-100"
       >
         <p class="text-xs text-gray-500 px-3 py-2 font-medium">
-          จัดการข่าว/ประกาศ
+          จัดการประกาศ
         </p>
-        <a
+        <!-- <a
           (click)="closeAllMobileMenus()"
           routerLink="/admin/news"
           class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white text-sm transition-colors"
         >
           <i class="bi bi-megaphone text-[#F2CB05]"></i> ข่าวประชาสัมพันธ์
-        </a>
+        </a> -->
         <a
           (click)="closeAllMobileMenus()"
           routerLink="/admin/download"

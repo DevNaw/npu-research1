@@ -26,7 +26,10 @@
     <!-- ── divider: ชื่อผลงาน ── -->
     <div class="flex items-center gap-4 my-6">
       <span class="h-px flex-1 bg-gray-200"></span>
-      <span class="text-sm font-normal text-gray-400 tracking-wide whitespace-nowrap">ชื่อผลงาน</span>
+      <span
+        class="text-sm font-normal text-gray-400 tracking-wide whitespace-nowrap"
+        >ชื่อผลงาน</span
+      >
       <span class="h-px flex-1 bg-gray-200"></span>
     </div>
 
@@ -75,7 +78,10 @@
     <!-- ── divider: บทคัดย่อ / ABSTRACT ── -->
     <div class="flex items-center gap-4 my-6">
       <span class="h-px flex-1 bg-gray-200"></span>
-      <span class="text-sm font-normal text-gray-400 tracking-wide whitespace-nowrap">บทคัดย่อ / ABSTRACT</span>
+      <span
+        class="text-sm font-normal text-gray-400 tracking-wide whitespace-nowrap"
+        >บทคัดย่อ / ABSTRACT</span
+      >
       <span class="h-px flex-1 bg-gray-200"></span>
     </div>
 
@@ -192,7 +198,10 @@
     <!-- ── divider: สาขาของผลงาน ── -->
     <div class="flex items-center gap-4 my-6">
       <span class="h-px flex-1 bg-gray-200"></span>
-      <span class="text-sm font-normal text-gray-400 tracking-wide whitespace-nowrap">สาขาของผลงาน</span>
+      <span
+        class="text-sm font-normal text-gray-400 tracking-wide whitespace-nowrap"
+        >สาขาของผลงาน</span
+      >
       <span class="h-px flex-1 bg-gray-200"></span>
     </div>
 
@@ -329,7 +338,10 @@
     <!-- ── divider: ความรับผิดชอบและคุณภาพ ── -->
     <div class="flex items-center gap-4 my-6">
       <span class="h-px flex-1 bg-gray-200"></span>
-      <span class="text-sm font-normal text-gray-400 tracking-wide whitespace-nowrap">ความรับผิดชอบและคุณภาพ</span>
+      <span
+        class="text-sm font-normal text-gray-400 tracking-wide whitespace-nowrap"
+        >ความรับผิดชอบและคุณภาพ</span
+      >
       <span class="h-px flex-1 bg-gray-200"></span>
     </div>
 
@@ -489,7 +501,10 @@
     <!-- ── divider: ผู้ร่วมโครงการ ── -->
     <div class="flex items-center gap-4 my-6">
       <span class="h-px flex-1 bg-gray-200"></span>
-      <span class="text-sm font-normal text-gray-400 tracking-wide whitespace-nowrap">ผู้ร่วมโครงการ</span>
+      <span
+        class="text-sm font-normal text-gray-400 tracking-wide whitespace-nowrap"
+        >ผู้ร่วมโครงการ</span
+      >
       <span class="h-px flex-1 bg-gray-200"></span>
     </div>
 
@@ -758,7 +773,10 @@
     <!-- ── divider: แหล่งทุนและงบประมาณ ── -->
     <div class="flex items-center gap-4 my-6">
       <span class="h-px flex-1 bg-gray-200"></span>
-      <span class="text-sm font-normal text-gray-400 tracking-wide whitespace-nowrap">แหล่งทุนและงบประมาณ</span>
+      <span
+        class="text-sm font-normal text-gray-400 tracking-wide whitespace-nowrap"
+        >แหล่งทุนและงบประมาณ</span
+      >
       <span class="h-px flex-1 bg-gray-200"></span>
     </div>
 
@@ -885,9 +903,7 @@
           name="budget_amount"
           required
           #budgetAmount="ngModel"
-          [class.border-red-500]="
-            budgetAmount.invalid && budgetAmount.touched
-          "
+          [class.border-red-500]="budgetAmount.invalid && budgetAmount.touched"
           [(ngModel)]="projectData.budget_amount"
           type="text"
           class="w-full border text-lg font-light rounded-md h-12 px-4 py-2 focus:ring-2 focus:ring-blue-400"
@@ -977,7 +993,10 @@
     <!-- ── divider: ข้อมูลสิทธิบัตร ── -->
     <div class="flex items-center gap-4 my-6">
       <span class="h-px flex-1 bg-gray-200"></span>
-      <span class="text-sm font-normal text-gray-400 tracking-wide whitespace-nowrap">ข้อมูลสิทธิบัตร</span>
+      <span
+        class="text-sm font-normal text-gray-400 tracking-wide whitespace-nowrap"
+        >ข้อมูลสิทธิบัตร</span
+      >
       <span class="h-px flex-1 bg-gray-200"></span>
     </div>
 
@@ -991,9 +1010,7 @@
           name="patent_number"
           required
           #patentNumber="ngModel"
-          [class.border-red-500]="
-            patentNumber.invalid && patentNumber.touched
-          "
+          [class.border-red-500]="patentNumber.invalid && patentNumber.touched"
           [(ngModel)]="projectData.patent_number"
           type="text"
           class="md:col-span-2 h-12 w-full text-lg font-light border rounded-md px-4 py-2"
@@ -1064,7 +1081,10 @@
     <!-- ── divider: ไฟล์แนบ ── -->
     <div class="flex items-center gap-4 my-6">
       <span class="h-px flex-1 bg-gray-200"></span>
-      <span class="text-sm font-normal text-gray-400 tracking-wide whitespace-nowrap">ไฟล์แนบ</span>
+      <span
+        class="text-sm font-normal text-gray-400 tracking-wide whitespace-nowrap"
+        >ไฟล์แนบ</span
+      >
       <span class="h-px flex-1 bg-gray-200"></span>
     </div>
 
@@ -1166,8 +1186,7 @@
         <!-- ไม่มีรูป -->
         <div
           *ngIf="
-            !projectData.innovation_images.length &&
-            !selectedImagesFile.length
+            !projectData.innovation_images.length && !selectedImagesFile.length
           "
           class="text-gray-400 text-lg font-light"
         >

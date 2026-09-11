@@ -66,7 +66,7 @@ const routes: Routes = [
   {
     path: '',
     redirectTo: 'dashboard',
-    pathMatch: 'full'
+    pathMatch: 'full',
   },
   {
     path: '',
@@ -86,8 +86,14 @@ const routes: Routes = [
       { path: 'report-researcher', component: ReportResearcherTypeComponent },
       { path: 'profile/:id', component: UserProfileComponent },
       { path: 'profile-public/:id', component: DashboardComponent },
-      { path: 'performance-by-departmaent/:type', component: PerformanceByDepartmentComponent },
-      { path: 'performance-detail-by-departmaent/:type/:id', component: PerformanceDetailByDepartmentComponent },
+      {
+        path: 'performance-by-departmaent/:type',
+        component: PerformanceByDepartmentComponent,
+      },
+      {
+        path: 'performance-detail-by-departmaent/:type/:id',
+        component: PerformanceDetailByDepartmentComponent,
+      },
       {
         path: 'report-institution',
         component: ReportResearcherInstitutionComponent,
@@ -103,7 +109,10 @@ const routes: Routes = [
       { path: 'report-research', component: ReportResearcherResearchComponent },
       { path: 'manual', component: ManualComponent },
       { path: 'performance/:type/:id', component: PerformanceComponent },
-      { path: 'performance-public/:type/:id', component: PerformancePublicComponent },
+      {
+        path: 'performance-public/:type/:id',
+        component: PerformancePublicComponent,
+      },
       { path: 'privacy-policy', component: PrivacyPolicyComponent },
       { path: 'all-researcher', component: AllResearcherComponent },
     ],
@@ -134,10 +143,19 @@ const routes: Routes = [
       { path: 'edit-study', component: UserEditStudyComponent },
       { path: 'edit-traning', component: UserEditTraningComponent },
       { path: 'performance/:type/:id', component: PerformanceComponent },
-      { path: 'performance-public/:type/:id', component: PerformancePublicComponent },
+      {
+        path: 'performance-public/:type/:id',
+        component: PerformancePublicComponent,
+      },
       { path: 'edit-work', component: EditWorkComponent },
-      { path: 'performance-by-departmaent/:type', component: PerformanceByDepartmentComponent },
-      { path: 'performance-by-departmaent/:type/:id', component: PerformanceDetailByDepartmentComponent },
+      {
+        path: 'performance-by-departmaent/:type',
+        component: PerformanceByDepartmentComponent,
+      },
+      {
+        path: 'performance-by-departmaent/:type/:id',
+        component: PerformanceDetailByDepartmentComponent,
+      },
     ],
   },
 
@@ -179,11 +197,20 @@ const routes: Routes = [
         component: UserAddInnovationComponent,
       },
       { path: 'performance/:type/:id', component: PerformanceComponent },
-      { path: 'performance-public/:type/:id', component: PerformancePublicComponent },
+      {
+        path: 'performance-public/:type/:id',
+        component: PerformancePublicComponent,
+      },
       { path: 'report', component: ReportComponent },
       { path: 'edit-work', component: EditWorkComponent },
-      { path: 'performance-by-departmaent/:type', component: PerformanceByDepartmentComponent },
-      { path: 'performance-by-departmaent/:type/:id', component: PerformanceDetailByDepartmentComponent },
+      {
+        path: 'performance-by-departmaent/:type',
+        component: PerformanceByDepartmentComponent,
+      },
+      {
+        path: 'performance-by-departmaent/:type/:id',
+        component: PerformanceDetailByDepartmentComponent,
+      },
       { path: 'management-user', component: ManagementUserComponent },
       { path: 'management-admin', component: ManagementAdminComponent },
       { path: 'admin-manual', component: AdminManualComponent },

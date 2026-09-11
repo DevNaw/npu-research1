@@ -29,19 +29,19 @@
       <div
         *ngFor="let news of newsList"
         class="group bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col overflow-hidden cursor-pointer"
-        (click)="goToNewsDetail(news.news_id)"
+        (click)="goToNewsDetail(news.url)"
       >
         <!-- Image -->
         <div class="relative aspect-video w-full overflow-hidden bg-gray-100">
           <img
-            [src]="news?.news_cover"
+            [src]="news?.image"
             alt=""
             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
           />
           <!-- Overlay on hover -->
           <div class="absolute inset-0 bg-linear-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
 
-          <!-- "ข่าวล่าสุด" badge (optional - แสดงตลอด) -->
+          <!-- badge -->
           <div class="absolute top-3 left-3 px-2.5 py-1 bg-white/90 backdrop-blur-sm rounded-full text-xs text-[#394250] font-medium shadow-sm">
             <i class="bi bi-newspaper text-[#F2CB05] mr-1"></i>
             ข่าวสาร
@@ -56,7 +56,7 @@
 
           <p class="text-xs text-gray-500 flex items-center gap-1.5 flex-1">
             <i class="bi bi-calendar3"></i>
-            {{ news?.published_date | date : "d MMMM yyyy" : "" : "th-TH" }}
+            {{ news?.date | date : "d MMMM yyyy" : "" : "th-TH" }}
           </p>
 
           <!-- Read more -->
@@ -77,43 +77,5 @@
         <span class="text-sm">ยังไม่มีข่าวประชาสัมพันธ์</span>
       </div>
     </ng-template>
-
-    <!-- ===== PAGINATION (เผื่อต้องใช้) ===== -->
-    <!--
-    <div class="flex flex-col md:flex-row md:justify-between md:items-center mt-6 gap-3 font-light pt-4 border-t border-gray-100">
-      <div class="text-sm text-gray-500">
-        แสดง <span class="text-[#394250] font-medium">{{ newsList.length }}</span> ข่าว
-      </div>
-
-      <div class="flex items-center justify-end space-x-1">
-        <button
-          (click)="changePage(currentPage - 1)"
-          [disabled]="currentPage === 1"
-          class="px-3 py-1.5 rounded-lg border border-gray-200 text-sm disabled:opacity-40 hover:bg-gray-50 cursor-pointer transition-colors"
-        >
-          <i class="bi bi-chevron-left"></i>
-        </button>
-
-        <button
-          *ngFor="let page of totalPages"
-          (click)="changePage(page)"
-          class="min-w-[36px] px-3 py-1.5 rounded-lg border text-sm transition-all cursor-pointer"
-          [ngClass]="{
-            'bg-[#F2CB05] text-white border-[#F2CB05] shadow-sm': currentPage === page,
-            'border-gray-200 hover:bg-gray-50 text-gray-700': currentPage !== page
-          }"
-        >
-          {{ page }}
-        </button>
-
-        <button
-          (click)="changePage(currentPage + 1)"
-          class="px-3 py-1.5 rounded-lg border border-gray-200 text-sm disabled:opacity-40 hover:bg-gray-50 cursor-pointer transition-colors"
-        >
-          <i class="bi bi-chevron-right"></i>
-        </button>
-      </div>
-    </div>
-    -->
   </div>
 </div>

@@ -7,7 +7,7 @@
       (click)="goToResearchDetail()"
       class="flex items-center gap-2 font-medium group transition-colors cursor-pointer"
     >
-    <i
+      <i
         class="bi bi-arrow-left-circle-fill text-xl transition-all group-hover:translate-x-1 group-hover:text-[#f2cb05]"
       ></i>
 
@@ -23,15 +23,16 @@
     >
       <i class="bi bi-cloud-arrow-up-fill text-3xl"></i>
 
-      <h2 class="text-2xl sm:text-3xl">
-        เพิ่มผลงานโครงการวิจัยใหม่
-      </h2>
+      <h2 class="text-2xl sm:text-3xl">เพิ่มผลงานโครงการวิจัยใหม่</h2>
     </div>
 
     <!-- ── divider: ชื่อผลงาน ── -->
     <div class="flex items-center gap-4 my-6">
       <span class="h-px flex-1 bg-gray-200"></span>
-      <span class="text-sm font-normal text-gray-400 tracking-wide whitespace-nowrap">ชื่อผลงาน</span>
+      <span
+        class="text-sm font-normal text-gray-400 tracking-wide whitespace-nowrap"
+        >ชื่อผลงาน</span
+      >
       <span class="h-px flex-1 bg-gray-200"></span>
     </div>
 
@@ -82,7 +83,10 @@
     <!-- ── divider: บทคัดย่อ / ABSTRACT ── -->
     <div class="flex items-center gap-4 my-6">
       <span class="h-px flex-1 bg-gray-200"></span>
-      <span class="text-sm font-normal text-gray-400 tracking-wide whitespace-nowrap">บทคัดย่อ / ABSTRACT</span>
+      <span
+        class="text-sm font-normal text-gray-400 tracking-wide whitespace-nowrap"
+        >บทคัดย่อ / ABSTRACT</span
+      >
       <span class="h-px flex-1 bg-gray-200"></span>
     </div>
 
@@ -203,7 +207,10 @@
     <!-- ── divider: สาขาของผลงาน ── -->
     <div class="flex items-center gap-4 my-6">
       <span class="h-px flex-1 bg-gray-200"></span>
-      <span class="text-sm font-normal text-gray-400 tracking-wide whitespace-nowrap">สาขาของผลงาน</span>
+      <span
+        class="text-sm font-normal text-gray-400 tracking-wide whitespace-nowrap"
+        >สาขาของผลงาน</span
+      >
       <span class="h-px flex-1 bg-gray-200"></span>
     </div>
 
@@ -329,7 +336,10 @@
     <!-- ── divider: ความรับผิดชอบ ── -->
     <div class="flex items-center gap-4 my-6">
       <span class="h-px flex-1 bg-gray-200"></span>
-      <span class="text-sm font-normal text-gray-400 tracking-wide whitespace-nowrap">ความรับผิดชอบ</span>
+      <span
+        class="text-sm font-normal text-gray-400 tracking-wide whitespace-nowrap"
+        >ความรับผิดชอบ</span
+      >
       <span class="h-px flex-1 bg-gray-200"></span>
     </div>
 
@@ -376,7 +386,10 @@
     <!-- ── divider: ผู้ร่วมโครงการ ── -->
     <div class="flex items-center gap-4 my-6">
       <span class="h-px flex-1 bg-gray-200"></span>
-      <span class="text-sm font-normal text-gray-400 tracking-wide whitespace-nowrap">ผู้ร่วมโครงการ</span>
+      <span
+        class="text-sm font-normal text-gray-400 tracking-wide whitespace-nowrap"
+        >ผู้ร่วมโครงการ</span
+      >
       <span class="h-px flex-1 bg-gray-200"></span>
     </div>
 
@@ -645,7 +658,10 @@
     <!-- ── divider: แหล่งทุนและสถานะ ── -->
     <div class="flex items-center gap-4 my-6">
       <span class="h-px flex-1 bg-gray-200"></span>
-      <span class="text-sm font-normal text-gray-400 tracking-wide whitespace-nowrap">แหล่งทุนและสถานะ</span>
+      <span
+        class="text-sm font-normal text-gray-400 tracking-wide whitespace-nowrap"
+        >แหล่งทุนและสถานะ</span
+      >
       <span class="h-px flex-1 bg-gray-200"></span>
     </div>
 
@@ -738,7 +754,11 @@
           <div
             *ngFor="let fund of fundings"
             class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
-            (click)="selectValue('name_funding', fund.funding_name); selectValue('funding_code', fund.funding_code); selectValue('funding_id', fund.id)"
+            (click)="
+              selectValue('name_funding', fund.funding_name);
+              selectValue('funding_code', fund.funding_code);
+              selectValue('funding_id', fund.id)
+            "
           >
             {{ fund.funding_name }}
           </div>
@@ -876,7 +896,10 @@
     <!-- ── divider: พื้นที่วิจัย ── -->
     <div class="flex items-center gap-4 my-6">
       <span class="h-px flex-1 bg-gray-200"></span>
-      <span class="text-sm font-normal text-gray-400 tracking-wide whitespace-nowrap">พื้นที่วิจัย</span>
+      <span
+        class="text-sm font-normal text-gray-400 tracking-wide whitespace-nowrap"
+        >พื้นที่วิจัย</span
+      >
       <span class="h-px flex-1 bg-gray-200"></span>
     </div>
 
@@ -909,7 +932,10 @@
     <!-- ── divider: ไฟล์แนบ ── -->
     <div class="flex items-center gap-4 my-6">
       <span class="h-px flex-1 bg-gray-200"></span>
-      <span class="text-sm font-normal text-gray-400 tracking-wide whitespace-nowrap">ไฟล์แนบ</span>
+      <span
+        class="text-sm font-normal text-gray-400 tracking-wide whitespace-nowrap"
+        >ไฟล์แนบ</span
+      >
       <span class="h-px flex-1 bg-gray-200"></span>
     </div>
 
@@ -956,9 +982,7 @@
 
       <!-- ไฟล์ สัญญารับทุน PDF -->
       <div>
-        <label class="md:col-span-1 text-start">
-          ไฟล์สัญญารับทุน (PDF)
-        </label>
+        <label class="md:col-span-1 text-start"> ไฟล์สัญญารับทุน (PDF) </label>
 
         <!-- input file (ซ่อน) -->
         <input
