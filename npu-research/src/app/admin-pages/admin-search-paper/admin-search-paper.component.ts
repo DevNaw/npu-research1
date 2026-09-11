@@ -106,8 +106,8 @@ export class AdminSearchPaperComponent {
   loading = false;
 
   // ── Chart ──────────────────────────────────────────────────
-  single: { name: string; value: number }[] = [];
-  chartSingle: { name: string; value: number }[] = [];
+  single: { name: string; value: number; main_oecd_name?: string }[] = [];
+  chartSingle: { name: string; value: number; main_oecd_name?: string }[] = [];
   donutLabels: string[] = [];
   donutSeries: number[] = [];
   totalResearchers = 0;
@@ -358,8 +358,6 @@ export class AdminSearchPaperComponent {
     if (this.selectedAgency) payload.org_id = this.selectedAgency.id;
     if (this.selectedFundingSource)
       payload.funding_id = this.selectedFundingSource.id;
-    // if (this.dateRange.start) payload.date_from = this.dateRange.start;
-    // if (this.dateRange.end) payload.date_to = this.dateRange.end;
 
     // ── ช่วงวันที่: ใช้ input date (customDate) เป็นหลัก, fallback ไป picker วารสาร ──
     const from = this.customDateStart ?? this.dateRange.start;
@@ -400,6 +398,7 @@ export class AdminSearchPaperComponent {
           .map((g: any) => ({
             name: g.oecd_name,
             value: Number(g.count || 0),
+            main_oecd_name: g.main_oecd_name,
           }))
           .sort((a, b) => b.value - a.value);
 
@@ -409,7 +408,9 @@ export class AdminSearchPaperComponent {
         const otherTotal = others.reduce((sum, item) => sum + item.value, 0);
         this.chartSingle = [
           ...top,
-          ...(otherTotal > 0 ? [{ name: 'อื่นๆ', value: otherTotal }] : []),
+          ...(otherTotal > 0
+            ? [{ name: 'อื่นๆ', value: otherTotal, main_oecd_name: 'อื่นๆ' }]
+            : []),
         ];
 
         this.hasData = data.graph.length > 0;

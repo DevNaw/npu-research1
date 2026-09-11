@@ -417,8 +417,8 @@
         <div
           class="flex flex-col md:flex-row gap-3 items-start md:items-center"
         >
-          <label class="text-base text-gray-600 md:w-24 shrink-0"
-            >สาขาวิชา</label
+          <label class="text-base text-gray-600 md:w-50 shrink-0"
+            >สาขาวิจัยจำแนกตาม OECD</label
           >
           <div
             class="grid grid-cols-1 sm:grid-cols-3 gap-3 flex-1 w-full font-light text-base"
@@ -666,9 +666,9 @@
           </div>
           <div>
             <h2 class="text-xl md:text-2xl font-semibold text-white">
-              สัดส่วนงานวิจัย
+              สาขาวิจัยจำแนกตาม OECD
             </h2>
-            <p class="text-sm text-gray-300">จำแนกตามสาขาที่เกี่ยวข้อง</p>
+            <p class="text-sm text-gray-300">Organization for Economic Co-Operation and Development (OECD)</p>
           </div>
         </div>
 
@@ -728,7 +728,7 @@
             <div class="flex items-start justify-between gap-4 mb-4 pr-5">
               <div>
                 <h3 class="text-lg md:text-xl font-semibold text-white">
-                  สาขาที่มีผลงานสูงสุด
+                  สาขา OECD ย่อยที่มีผลงานสูงสุด
                 </h3>
                 <p class="text-sm text-gray-400 mt-1">
                   แสดงทุกสาขา เรียงตามจำนวนผลงาน
@@ -762,7 +762,7 @@
                     <p
                       class="text-sm md:text-base text-white font-medium leading-5 whitespace-normal wrap-break-word"
                     >
-                      {{ item.name }}
+                      {{ item.name }} ({{ item.main_oecd_name }})
                     </p>
                   </div>
                   <div class="flex items-center gap-3 shrink-0">

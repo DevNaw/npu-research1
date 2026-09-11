@@ -14,8 +14,15 @@ import { Funding } from '../../models/funding.model';
 import { FundingService } from '../../services/funding.service';
 import { Color, LegendPosition, ScaleType } from '@swimlane/ngx-charts';
 import Swal from 'sweetalert2';
-import { BUDDHIST_DATE_FORMATS, BuddhistDateAdapter } from '../../services/buddhist-date-adapter';
-import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import {
+  BUDDHIST_DATE_FORMATS,
+  BuddhistDateAdapter,
+} from '../../services/buddhist-date-adapter';
+import {
+  DateAdapter,
+  MAT_DATE_FORMATS,
+  MAT_DATE_LOCALE,
+} from '@angular/material/core';
 
 @Component({
   selector: 'app-user-research',
@@ -70,7 +77,6 @@ export class UserResearchComponent {
   searchMajor = '';
   searchSub = '';
   searchSubSub = '';
-  chartSingle: { name: string; value: number }[] = [];
 
   // ── Agency ─────────────────────────────────────────────────
   organizations: Organization[] = [];
@@ -104,7 +110,8 @@ export class UserResearchComponent {
   loading = false;
 
   // ── Chart ──────────────────────────────────────────────────
-  single: { name: string; value: number }[] = [];
+  single: { name: string; value: number; main_oecd_name?: string }[] = [];
+  chartSingle: { name: string; value: number; main_oecd_name?: string }[] = [];
   donutLabels: string[] = [];
   donutSeries: number[] = [];
   totalResearchers = 0;
@@ -353,11 +360,11 @@ export class UserResearchComponent {
     // if (this.dateRange.start) payload.date_from = this.dateRange.start;
     // if (this.dateRange.end) payload.date_to = this.dateRange.end;
 
-        // ── ช่วงวันที่: ใช้ input date (customDate) เป็นหลัก, fallback ไป picker วารสาร ──
-        const from = this.customDateStart ?? this.dateRange.start;
-        const to = this.customDateEnd ?? this.dateRange.end;
-        if (from) payload.date_from = this.toDateString(from);
-        if (to) payload.date_to = this.toDateString(to);
+    // ── ช่วงวันที่: ใช้ input date (customDate) เป็นหลัก, fallback ไป picker วารสาร ──
+    const from = this.customDateStart ?? this.dateRange.start;
+    const to = this.customDateEnd ?? this.dateRange.end;
+    if (from) payload.date_from = this.toDateString(from);
+    if (to) payload.date_to = this.toDateString(to);
 
     if (this.selectedSubSub?.child_id) {
       oecdId = this.selectedSubSub.child_id;
@@ -392,38 +399,23 @@ export class UserResearchComponent {
         //   value: g.count,
         // }));
         this.single = data.graph
-  .map((g: any) => ({
-    name: g.oecd_name,
-    value: Number(g.count || 0),
-  }))
-  .sort((a, b) => b.value - a.value);
-        
-        // เรียงจากมาก → น้อย
-        const sorted = [...this.single];
-        
-        // แสดง Top 6
-        const top = sorted.slice(0, 6);
-        
-        // รวมรายการที่เหลือ
-        const others = sorted.slice(6);
-        
-        const otherTotal = others.reduce(
-          (sum, item) => sum + item.value,
-          0
-        );
-        
+          .map((g: any) => ({
+            name: g.oecd_name,
+            value: Number(g.count || 0),
+            main_oecd_name: g.main_oecd_name,
+          }))
+          .sort((a, b) => b.value - a.value);
+
+        const top = this.single.slice(0, 6);
+        const others = this.single.slice(6);
+        const otherTotal = others.reduce((sum, item) => sum + item.value, 0);
         this.chartSingle = [
           ...top,
           ...(otherTotal > 0
-            ? [
-                {
-                  name: 'อื่นๆ',
-                  value: otherTotal,
-                },
-              ]
+            ? [{ name: 'อื่นๆ', value: otherTotal, main_oecd_name: 'อื่นๆ' }]
             : []),
         ];
-        
+
         this.hasData = this.chartSingle.length > 0;
         this.hasData = data.graph.length > 0;
         this.currentPage = 1;
@@ -439,17 +431,17 @@ export class UserResearchComponent {
     });
   }
 
-    /** แปลง Date หรือ string จาก input ให้เป็น 'YYYY-MM-DD' (กัน timezone shift) */
-    private toDateString(value: Date | string): string {
-      if (typeof value === 'string') {
-        // input type="date" ให้ 'YYYY-MM-DD' อยู่แล้ว — ตัดเวลาทิ้งถ้ามี
-        return value.slice(0, 10);
-      }
-      const y = value.getFullYear();
-      const m = String(value.getMonth() + 1).padStart(2, '0');
-      const d = String(value.getDate()).padStart(2, '0');
-      return `${y}-${m}-${d}`;
+  /** แปลง Date หรือ string จาก input ให้เป็น 'YYYY-MM-DD' (กัน timezone shift) */
+  private toDateString(value: Date | string): string {
+    if (typeof value === 'string') {
+      // input type="date" ให้ 'YYYY-MM-DD' อยู่แล้ว — ตัดเวลาทิ้งถ้ามี
+      return value.slice(0, 10);
     }
+    const y = value.getFullYear();
+    const m = String(value.getMonth() + 1).padStart(2, '0');
+    const d = String(value.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+  }
 
   onSearch(): void {
     const keyword = this.searchText?.trim().toLowerCase();
@@ -628,17 +620,17 @@ export class UserResearchComponent {
   }
 
   @HostListener('window:resize')
-setChartView(): void {
-  const w = window.innerWidth;
+  setChartView(): void {
+    const w = window.innerWidth;
 
-  if (w < 640) {
-    this.chartView = [280, 280];
-  } else if (w < 1024) {
-    this.chartView = [340, 340];
-  } else {
-    this.chartView = [390, 390];
+    if (w < 640) {
+      this.chartView = [280, 280];
+    } else if (w < 1024) {
+      this.chartView = [340, 340];
+    } else {
+      this.chartView = [390, 390];
+    }
   }
-}
 
   onChartSelect(event: any): void {
     const item = this.single.find((d) => d.name === event.name);
