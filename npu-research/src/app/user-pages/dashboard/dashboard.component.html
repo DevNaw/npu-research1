@@ -487,8 +487,8 @@
             </div>
           </div>
 
-          <div class="overflow-x-auto max-h-125">
-            <div *ngIf="chartsOECD.length > 0" class="min-w-175">
+          <div class="max-h-125 overflow-y-auto">
+            <div *ngIf="chartsOECD.length > 0">
               <ng-container *ngIf="hasData; else noData">
                 <apx-chart
                   [series]="chartsOECD[0].options.series"

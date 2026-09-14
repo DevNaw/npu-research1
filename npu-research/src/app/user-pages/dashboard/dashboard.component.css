@@ -58,3 +58,20 @@
   background: rgba(255, 255, 255, 0.2);
   border-radius: 3px;
 }
+
+/* ═══ ApexCharts tooltip (Top 10 OECD) ═══ */
+/* ซ่อนหัวข้อ default ที่ Apex แปะเอง (ตัว "อื่นๆ" ที่ค้างทับ) */
+::ng-deep .apexcharts-tooltip-title {
+  display: none !important;
+}
+
+/* กัน tooltip โดน container ตัด */
+::ng-deep .apexcharts-tooltip {
+  overflow: visible !important;
+  z-index: 9999 !important;
+  white-space: normal !important;
+}
+
+::ng-deep .apexcharts-canvas {
+  overflow: visible !important;
+}

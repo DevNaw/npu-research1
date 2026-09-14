@@ -442,9 +442,12 @@ export class UserDashboardComponent implements OnInit {
   private createBarChartOECD(
     data: { label: string; count: number }[]
   ): ChartOptions {
-    const height = Math.max(320, data.length * 42);
+    const isMobile =
+      typeof window !== 'undefined' && window.innerWidth < 640;
+    const perBar = isMobile ? 56 : 46;
+    const height = Math.max(360, data.length * perBar);
     const maxValue = Math.max(...data.map((d) => d.count), 10);
-
+  
     return {
       colors: ['#F2CB05'],
       series: [{ name: 'จำนวนผลงาน', data: data.map((d) => d.count) }],
@@ -460,7 +463,7 @@ export class UserDashboardComponent implements OnInit {
       plotOptions: {
         bar: {
           horizontal: true,
-          barHeight: '55%',
+          barHeight: '65%',
           borderRadius: 4,
           borderRadiusApplication: 'end',
           distributed: false,
@@ -478,14 +481,23 @@ export class UserDashboardComponent implements OnInit {
         axisTicks: { show: true, color: '#000' },
       },
       yaxis: {
-        labels: { style: { fontSize: '12px', colors: '#394250' } as any },
+        labels: {
+          style: { fontSize: isMobile ? '10px' : '12px', colors: '#394250' } as any,
+          maxWidth: isMobile ? 110 : 200,
+        },
       },
       tooltip: {
         theme: 'dark',
+        fixed: {
+          enabled: true,
+          position: 'topLeft',
+          offsetX: 60,
+          offsetY: 0,
+        },
         custom: ({ series, seriesIndex, dataPointIndex }: any) => {
           const fullLabel = data[dataPointIndex]?.label ?? '';
           const value = series[seriesIndex][dataPointIndex];
-          return `<div style="padding:8px 12px; background:#333; color:#fff; border-radius:6px;">
+          return `<div style="padding:8px 12px; background:#333; color:#fff; border-radius:6px; max-width:260px; white-space:normal;">
             <div style="font-weight:600; margin-bottom:4px;">${fullLabel}</div>
             <hr style="border-color:#555; margin:4px 0;">
             <div style="display:flex; align-items:center; gap:6px;">
