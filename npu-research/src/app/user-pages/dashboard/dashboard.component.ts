@@ -442,16 +442,16 @@ export class UserDashboardComponent implements OnInit {
   private createBarChartOECD(
     data: { label: string; count: number }[]
   ): ChartOptions {
-    const shortLabels = data.map((d) => this.truncateText(d.label, 8));
+    const height = Math.max(320, data.length * 42);
     const maxValue = Math.max(...data.map((d) => d.count), 10);
 
     return {
-      colors: ['#06E396'],
+      colors: ['#F2CB05'],
       series: [{ name: 'จำนวนผลงาน', data: data.map((d) => d.count) }],
       annotations: { points: [] },
       chart: {
         type: 'bar',
-        height: 500,
+        height,
         stacked: false,
         animations: { enabled: false },
         zoom: { enabled: false },
@@ -459,67 +459,63 @@ export class UserDashboardComponent implements OnInit {
       },
       plotOptions: {
         bar: {
-          columnWidth: '40%',
-          borderRadius: 2,
-          borderRadiusApplication: 'around',
+          horizontal: true,
+          barHeight: '55%',
+          borderRadius: 4,
+          borderRadiusApplication: 'end',
+          distributed: false,
         } as any,
       },
-      dataLabels: { enabled: false },
+      dataLabels: {
+        enabled: true,
+        style: { fontSize: '12px', colors: ['#394250'] },
+        offsetX: 24,
+      },
       xaxis: {
-        categories: shortLabels,
-        tickPlacement: 'on',
-        labels: {
-          rotate: -45,
-          hideOverlappingLabels: true,
-          trim: true,
-          style: { fontSize: '11px' },
-        },
+        categories: data.map((d) => d.label),
+        labels: { style: { fontSize: '12px' } },
+        axisBorder: { show: true, color: '#000' },
+        axisTicks: { show: true, color: '#000' },
+      },
+      yaxis: {
+        labels: { style: { fontSize: '12px', colors: '#394250' } as any },
       },
       tooltip: {
+        theme: 'dark',
         custom: ({ series, seriesIndex, dataPointIndex }: any) => {
           const fullLabel = data[dataPointIndex]?.label ?? '';
           const value = series[seriesIndex][dataPointIndex];
-          return `<div style="padding:10px 14px; background:#fff; color:#333; border-radius:6px; border:1px solid #e0e0e0; box-shadow:0 2px 8px rgba(0,0,0,0.15);">
-            <div style="font-weight:600; margin-bottom:6px;">${fullLabel}</div>
-            <hr style="border-color:#eee; margin:4px 0;">
+          return `<div style="padding:8px 12px; background:#333; color:#fff; border-radius:6px;">
+            <div style="font-weight:600; margin-bottom:4px;">${fullLabel}</div>
+            <hr style="border-color:#555; margin:4px 0;">
             <div style="display:flex; align-items:center; gap:6px;">
-              <span style="width:10px; height:10px; border-radius:50%; background:#f2ae30; display:inline-block;"></span>
-              <span>จำนวนผลงาน: <strong>${value}</strong></span>
+              <span style="width:10px; height:10px; border-radius:50%; background:#F2CB05; display:inline-block;"></span>
+              <span>จำนวน: ${value}</span>
             </div>
           </div>`;
         },
       },
-      yaxis: {
-        title: { text: 'จำนวน' },
-        min: 0,
-        max: maxValue,
-        tickAmount: 4,
-        axisBorder: { show: true, color: '#000' },
-        axisTicks: { show: true, color: '#000' },
-      },
-      stroke: { width: 1 },
+      stroke: { width: 1, colors: ['#e0b800'] },
       fill: {
-        colors: ['#f2ae30'],
+        colors: ['#F2CB05'],
         opacity: 1,
         type: 'gradient',
         gradient: {
           shade: 'light',
           type: 'horizontal',
-          shadeIntensity: 0.4,
+          shadeIntensity: 0.25,
           inverseColors: true,
-          opacityFrom: 1,
-          opacityTo: 1,
-          stops: [50, 0, 100],
+          opacityFrom: 0.9,
+          opacityTo: 0.9,
+          stops: [0, 100],
         },
       },
       grid: {
         show: true,
-        borderColor: '#bdbdbd',
+        borderColor: '#e5e7eb',
         position: 'back',
         xaxis: { lines: { show: true } },
-        yaxis: { lines: { show: true } },
-        row: { colors: ['#f3f3f3', 'transparent'], opacity: 0.5 },
-        column: { colors: ['#f3f3f3', 'transparent'], opacity: 0.5 },
+        yaxis: { lines: { show: false } },
       },
     };
   }
