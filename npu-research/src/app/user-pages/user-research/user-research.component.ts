@@ -334,8 +334,7 @@ export class UserResearchComponent {
     const hasType = !!this.selectedType;
     const hasSubType = !!this.selectedSubType;
     const hasAgency = !!this.selectedAgency;
-    const hasFunding =
-      !!this.selectedFunding && this.selectedFunding !== 'แหล่งทุนทั้งหมด';
+    const hasFunding = !!this.selectedFunding; // รวม "แหล่งทุนทั้งหมด"
     const hasFundingSource = !!this.selectedFundingSource;
     const hasYear = !!this.selectedYear;
     const hasDate =
