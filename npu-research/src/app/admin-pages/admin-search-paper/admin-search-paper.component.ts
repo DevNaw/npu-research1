@@ -330,7 +330,50 @@ export class AdminSearchPaperComponent {
   // Search
   // ============================================================
 
+  /** true = ผู้ใช้ยังไม่ได้ระบุเงื่อนไขค้นหาใดๆ เลย (เลือก "ทั้งหมด" ถือว่ามีเจตนาแล้ว) */
+  private hasNoSearchCriteria(): boolean {
+    const hasKeyword = !!this.researchItems?.trim();
+    const hasType = !!this.selectedType; // รวม "ทั้งหมด"
+    const hasSubType = !!this.selectedSubType;
+    const hasAgency = !!this.selectedAgency;
+    const hasFunding =
+      !!this.selectedFunding && this.selectedFunding !== 'แหล่งทุนทั้งหมด';
+    const hasFundingSource = !!this.selectedFundingSource;
+    const hasYear = !!this.selectedYear;
+    const hasDate =
+      !!this.customDateStart ||
+      !!this.customDateEnd ||
+      !!this.dateRange.start ||
+      !!this.dateRange.end;
+    const hasOecd =
+      !!this.selectedMajor || !!this.selectedSub || !!this.selectedSubSub;
+
+    return !(
+      hasKeyword ||
+      hasType ||
+      hasSubType ||
+      hasAgency ||
+      hasFunding ||
+      hasFundingSource ||
+      hasYear ||
+      hasDate ||
+      hasOecd
+    );
+  }
+
   search() {
+    // ── กันค้นหาแบบไม่มีเงื่อนไข → เด้ง modal เตือน ──
+    if (this.hasNoSearchCriteria()) {
+      Swal.fire({
+        icon: 'info',
+        title: 'กรุณาระบุเงื่อนไขการค้นหา',
+        text: 'โปรดเลือกตัวกรองอย่างน้อย 1 อย่าง หรือพิมพ์คำค้นหา ก่อนกดค้นหา',
+        confirmButtonColor: '#f2cb05',
+        confirmButtonText: 'รับทราบ',
+      });
+      return;
+    }
+
     const payload: SearchResearchRequest = {};
     let oecdId: number | null = null;
 
