@@ -73,6 +73,16 @@
             <span>หน้าหลัก</span>
           </a>
 
+           <!-- Grant Finder -->
+           <a
+           routerLink="/grants"
+           routerLinkActive="bg-[#F2E7AC]/60 text-[#394250]"
+           class="group flex items-center gap-2 px-4 py-2 rounded-full text-sm hover:bg-[#F2E7AC]/60 hover:text-[#394250] transition-all duration-200"
+         >
+           <i class="bi bi-bullseye text-base"></i>
+           <span>แหล่งทุนวิจัย</span>
+         </a>
+
           <a
             routerLink="/research"
             routerLinkActive="bg-[#F2E7AC]/60 text-[#394250]"
@@ -161,6 +171,16 @@
           <span class="text-[10px] text-center">โครงการวิจัย</span>
         </a>
 
+        <!-- Grant Finder -->
+        <a
+          routerLink="/grants"
+          (click)="closeAllMobileMenus()"
+          class="flex flex-col items-center gap-1 p-3 rounded-xl hover:bg-[#F2E7AC]/60 transition-colors"
+        >
+          <i class="bi bi-bullseye text-xl text-[#394250]"></i>
+          <span class="text-[10px] text-center">แหล่งทุน</span>
+        </a>
+
         <a
           routerLink="/aticle"
           (click)="closeAllMobileMenus()"
@@ -208,7 +228,7 @@
         <a
           routerLink="/login"
           (click)="closeMobileMenu()"
-          class="flex flex-col items-center gap-1 p-3 rounded-xl bg-[#F2CB05] hover:bg-[#e0b800] text-white transition-colors"
+          class="flex flex-col items-center gap-1 p-3 rounded-xl bg-[#F2CB05] hover:bg-[#e0b800] text-white transition-colors col-span-4"
         >
           <i class="bi bi-box-arrow-in-right text-xl"></i>
           <span class="text-[10px] text-center">เข้าสู่ระบบ</span>
@@ -291,7 +311,7 @@
     <!-- ===== Navigation Bar (Desktop) ===== -->
     <div class="hidden md:block border-t border-gray-100 bg-white">
       <div class="max-w-full mx-auto px-3 sm:px-6 lg:px-8">
-        <div class="flex items-center gap-1 py-2 font-light">
+        <div class="flex items-center gap-1 py-2 font-light flex-wrap">
           <a
             routerLink="/user/dashboard"
             routerLinkActive="bg-[#F2E7AC]/60 text-[#394250]"
@@ -361,6 +381,16 @@
             </div>
           </div>
 
+          <!-- Grant Finder -->
+          <a
+            routerLink="/user/grants"
+            routerLinkActive="bg-[#F2E7AC]/60 text-[#394250]"
+            class="flex items-center gap-2 px-4 py-2 rounded-full text-sm hover:bg-[#F2E7AC]/60 hover:text-[#394250] transition-all duration-200"
+          >
+            <i class="bi bi-bullseye text-base"></i>
+            <span>ค้นหาทุนวิจัย</span>
+          </a>
+
           <a
             routerLink="/user/research"
             routerLinkActive="bg-[#F2E7AC]/60 text-[#394250]"
@@ -405,6 +435,16 @@
         >
           <i class="bi bi-person-fill text-xl text-[#394250]"></i>
           <span class="text-[10px] text-center">โปรไฟล์</span>
+        </a>
+
+        <!-- Grant Finder -->
+        <a
+          routerLink="/user/grants"
+          (click)="closeAllMobileMenus()"
+          class="flex flex-col items-center gap-1 p-3 rounded-xl hover:bg-[#F2E7AC]/60 transition-colors"
+        >
+          <i class="bi bi-bullseye text-xl text-[#394250]"></i>
+          <span class="text-[10px] text-center">ค้นหาทุน</span>
         </a>
 
         <button
@@ -610,6 +650,14 @@
               </a>
               <a
                 (click)="closeMenu()"
+                routerLink="/admin/manage-grants"
+                class="flex items-center gap-3 px-4 py-3 hover:bg-[#F2E7AC]/40 text-sm transition-colors border-t border-gray-50"
+              >
+                <i class="bi bi-megaphone text-[#F2CB05]"></i>
+                การจัดการประกาศทุน
+              </a>
+              <a
+                (click)="closeMenu()"
                 routerLink="/admin/manage-oecd"
                 class="flex items-center gap-3 px-4 py-3 hover:bg-[#F2E7AC]/40 text-sm transition-colors border-t border-gray-50"
               >
@@ -678,7 +726,7 @@
               <a
                 (click)="closeMenu()"
                 routerLink="/admin/download"
-                class="flex items-center gap-3 px-4 py-3 hover:bg-[#F2E7AC]/40 text-sm transition-colors border-t border-gray-50"
+                class="flex items-center gap-3 px-4 py-3 hover:bg-[#F2E7AC]/40 text-sm transition-colors"
               >
                 <i class="bi bi-cloud-arrow-down text-[#F2CB05]"></i>
                 เอกสารดาวน์โหลด
@@ -753,6 +801,16 @@
             </div>
           </div>
 
+          <!-- Grant Finder -->
+          <a
+            routerLink="/admin/grants"
+            routerLinkActive="bg-[#F2E7AC]/60 text-[#394250]"
+            class="flex items-center gap-2 px-4 py-2 rounded-full text-sm hover:bg-[#F2E7AC]/60 hover:text-[#394250] transition-all duration-200"
+          >
+            <i class="bi bi-bullseye text-base"></i>
+            <span>ค้นหาทุนวิจัย</span>
+          </a>
+
           <a
             routerLink="/admin/search-paper"
             routerLinkActive="bg-[#F2E7AC]/60 text-[#394250]"
@@ -806,6 +864,16 @@
         >
           <i class="bi bi-person-fill text-xl text-[#394250]"></i>
           <span class="text-[10px] text-center">โปรไฟล์</span>
+        </a>
+
+        <!-- Grant Finder -->
+        <a
+          routerLink="/admin/grants"
+          (click)="closeAllMobileMenus()"
+          class="flex flex-col items-center gap-1 p-3 rounded-xl hover:bg-[#F2E7AC]/60 transition-colors"
+        >
+          <i class="bi bi-bullseye text-xl text-[#394250]"></i>
+          <span class="text-[10px] text-center">ค้นหาทุน</span>
         </a>
 
         <button
@@ -863,8 +931,8 @@
         </a>
 
         <button
-          (click)="onLogout(); closeAllMobileMenus()"
-          class="flex flex-col items-center gap-1 p-3 rounded-xl bg-red-50 hover:bg-red-500 text-red-600 hover:text-white transition-colors col-span-4 cursor-pointer"
+          (click)="logout(); closeAllMobileMenus()"
+          class="flex flex-col items-center gap-1 p-3 rounded-xl bg-red-50 hover:bg-red-500 text-red-600 hover:text-white transition-colors col-span-3 cursor-pointer"
         >
           <i class="bi bi-box-arrow-right text-xl"></i>
           <span class="text-[10px] text-center">ออกจากระบบ</span>
@@ -883,6 +951,13 @@
           class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white text-sm transition-colors"
         >
           <i class="bi bi-cash-stack text-[#F2CB05]"></i> แหล่งทุนภายนอก
+        </a>
+        <a
+          (click)="closeAllMobileMenus()"
+          routerLink="/admin/manage-grants"
+          class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white text-sm transition-colors"
+        >
+          <i class="bi bi-megaphone text-[#F2CB05]"></i> การจัดการประกาศทุน
         </a>
         <a
           (click)="closeAllMobileMenus()"

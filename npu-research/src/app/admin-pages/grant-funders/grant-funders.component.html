@@ -1,0 +1,376 @@
+<div class="min-h-screen bg-gray-50 text-[#394250]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <!-- ===== Header ===== -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl font-semibold">จัดการแหล่งทุนภายนอก</h1>
+          <p class="text-sm text-gray-500 mt-1">
+            แหล่งทุนที่เปิดใช้งานจะแสดงเป็นตัวเลือกตอนเพิ่มประกาศทุน
+          </p>
+        </div>
+        <button
+          (click)="openCreate()"
+          class="flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-[#F2CB05] hover:bg-[#e0b800] text-[#394250] font-medium text-sm shadow-sm transition-colors cursor-pointer"
+        >
+          <i class="bi bi-building-add"></i>
+          เพิ่มแหล่งทุน
+        </button>
+      </div>
+  
+      <!-- ===== Toolbar ===== -->
+      <div class="mt-6 flex flex-col md:flex-row md:items-center gap-3">
+        <div class="relative flex-1">
+          <i class="bi bi-search absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+          <input
+            type="text"
+            [(ngModel)]="keyword"
+            (ngModelChange)="onKeywordChange($event)"
+            placeholder="ค้นหารหัส ชื่อแหล่งทุน หรือชื่อย่อ"
+            class="w-full rounded-full border border-gray-200 bg-white pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#F2CB05]/50"
+          />
+        </div>
+        <span *ngIf="pagination" class="text-xs text-gray-500 md:ml-2">
+          ทั้งหมด {{ pagination.total }} แหล่งทุน
+        </span>
+      </div>
+  
+      <!-- ===== Table ===== -->
+      <div class="mt-4 bg-white rounded-xl border border-gray-200 overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm min-w-[820px]">
+            <thead class="thead-dark text-white text-left">
+              <tr>
+                <th class="px-4 py-3 font-medium w-36">รหัส</th>
+                <th class="px-4 py-3 font-medium">ชื่อแหล่งทุน</th>
+                <th class="px-4 py-3 font-medium text-center">ประเภท</th>
+                <th class="px-4 py-3 font-medium text-center">จำนวนทุน</th>
+                <th class="px-4 py-3 font-medium text-center">สถานะ</th>
+                <th class="px-4 py-3 font-medium text-center w-36">จัดการ</th>
+              </tr>
+            </thead>
+  
+            <tbody>
+              <!-- Loading -->
+              <tr *ngIf="isLoading">
+                <td colspan="6" class="px-4 py-10 text-center text-gray-400">
+                  <i class="bi bi-arrow-repeat animate-spin inline-block"></i> กำลังโหลดข้อมูล
+                </td>
+              </tr>
+  
+              <!-- Empty -->
+              <tr *ngIf="!isLoading && funders.length === 0">
+                <td colspan="6" class="px-4 py-12 text-center">
+                  <i class="bi bi-building text-3xl text-gray-300"></i>
+                  <p class="mt-2 text-sm font-medium">ไม่พบแหล่งทุน</p>
+                  <p class="text-xs text-gray-500 mt-1">ลองเปลี่ยนคำค้นหา หรือเพิ่มแหล่งทุนใหม่</p>
+                </td>
+              </tr>
+  
+              <ng-container *ngIf="!isLoading">
+                <tr
+                  *ngFor="let f of funders; trackBy: trackById"
+                  class="border-t border-gray-100 hover:bg-[#F2E7AC]/20 transition-colors"
+                  [ngClass]="{ 'opacity-60': !f.is_active }"
+                >
+                  <td class="px-4 py-3 align-top font-mono text-xs">{{ f.code }}</td>
+                  <td class="px-4 py-3 align-top">
+                    <button
+                      (click)="openEdit(f)"
+                      class="text-left font-medium hover:text-[#8a6f00] cursor-pointer"
+                    >
+                      {{ f.name_th }}
+                      <span *ngIf="f.short_name" class="text-gray-500 font-normal">({{ f.short_name }})</span>
+                    </button>
+                    <p *ngIf="f.name_en" class="text-xs text-gray-500 mt-0.5">{{ f.name_en }}</p>
+                    <a
+                      *ngIf="f.website_url"
+                      [href]="f.website_url"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="inline-flex items-center gap-1 text-[11px] text-gray-400 hover:text-[#8a6f00] mt-1"
+                    >
+                      <i class="bi bi-globe2"></i>{{ f.website_url }}
+                    </a>
+                  </td>
+                  <td class="px-4 py-3 align-top text-center">
+                    <span class="px-2 py-0.5 rounded bg-gray-100 text-xs">{{ typeLabel(f) }}</span>
+                  </td>
+                  <td class="px-4 py-3 align-top text-center tabular-nums">{{ f.grants_count }}</td>
+                  <td class="px-4 py-3 align-top text-center">
+                    <button
+                      type="button"
+                      role="switch"
+                      [attr.aria-checked]="f.is_active"
+                      (click)="toggleActive(f)"
+                      [disabled]="togglingId !== null"
+                      class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors cursor-pointer disabled:cursor-wait"
+                      [ngClass]="f.is_active ? 'bg-emerald-500' : 'bg-gray-300'"
+                      [title]="f.is_active ? 'กดเพื่อปิดใช้งาน' : 'กดเพื่อเปิดใช้งาน'"
+                    >
+                      <span
+                        class="inline-block h-5 w-5 rounded-full bg-white shadow transition-transform"
+                        [ngClass]="f.is_active ? 'translate-x-5' : 'translate-x-0.5'"
+                      ></span>
+                    </button>
+                    <p class="text-[11px] mt-1" [ngClass]="f.is_active ? 'text-emerald-700' : 'text-gray-500'">
+                      <i *ngIf="togglingId === f.id" class="bi bi-arrow-repeat animate-spin inline-block"></i>
+                      {{ f.is_active ? 'ใช้งาน' : 'ปิดใช้งาน' }}
+                    </p>
+                  </td>
+                  <td class="px-4 py-3 align-top">
+                    <div class="flex items-center justify-center gap-1">
+                      <button (click)="openEdit(f)" class="icon-btn" title="แก้ไข">
+                        <i class="bi bi-pencil-square text-[#8a6f00]"></i>
+                      </button>
+                      <button (click)="confirmDelete(f)" class="icon-btn icon-btn-danger" title="ลบ">
+                        <i class="bi bi-trash3 text-red-500"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+        </div>
+  
+        <!-- Pagination -->
+        <div
+          *ngIf="pagination && pagination.last_page > 1"
+          class="flex flex-col sm:flex-row items-center justify-between gap-3 px-4 py-3 border-t border-gray-100 text-sm"
+        >
+          <span class="text-gray-500 text-xs">
+            แสดง {{ pagination.from }}–{{ pagination.to }} จาก {{ pagination.total }} รายการ
+          </span>
+          <div class="flex items-center gap-1">
+            <button (click)="goToPage(page - 1)" [disabled]="page === 1 || isLoading" class="page-btn">
+              <i class="bi bi-chevron-left"></i>
+            </button>
+            <button
+              *ngFor="let p of pageNumbers"
+              (click)="goToPage(p)"
+              [disabled]="isLoading"
+              class="page-btn"
+              [ngClass]="{ 'page-active': p === page }"
+            >
+              {{ p }}
+            </button>
+            <button
+              (click)="goToPage(page + 1)"
+              [disabled]="page === totalPages || isLoading"
+              class="page-btn"
+            >
+              <i class="bi bi-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- ===== Create / Edit Modal ===== -->
+  <div *ngIf="isModalOpen" class="fixed inset-0 z-[70] flex items-center justify-center p-4">
+    <div class="absolute inset-0 bg-black/40 drawer-backdrop" (click)="closeModal()"></div>
+    <div
+      class="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh]"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="funder-modal-title"
+    >
+      <div class="flex items-center justify-between px-5 py-4 thead-dark text-white">
+        <h2 id="funder-modal-title" class="font-semibold flex items-center gap-2">
+          <i class="bi" [ngClass]="editingId ? 'bi-pencil-square' : 'bi-building-add'"></i>
+          {{ editingId ? 'แก้ไขแหล่งทุน' : 'เพิ่มแหล่งทุนภายนอก' }}
+        </h2>
+        <button
+          (click)="closeModal()"
+          class="w-9 h-9 rounded-full hover:bg-white/10 cursor-pointer"
+          aria-label="ปิด"
+        >
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+  
+      <div class="flex-1 overflow-y-auto p-5 space-y-4">
+        <div class="grid sm:grid-cols-2 gap-4">
+          <label class="block">
+            <span class="field-label">รหัสแหล่งทุน <span class="text-red-500">*</span></span>
+            <input
+              type="text"
+              [(ngModel)]="form.code"
+              class="field-input uppercase"
+              [ngClass]="{ 'field-error': hasError('code') }"
+              placeholder="เช่น NRCT"
+            />
+            <span *ngIf="hasError('code')" class="error-text">{{ errors['code'] }}</span>
+          </label>
+  
+          <label class="block">
+            <span class="field-label">ประเภท <span class="text-red-500">*</span></span>
+            <select
+              [(ngModel)]="form.type"
+              class="field-input"
+              [ngClass]="{ 'field-error': hasError('type') }"
+            >
+              <option [ngValue]="''">เลือกประเภท</option>
+              <option *ngFor="let t of typeOptions" [ngValue]="t.value">{{ t.label }}</option>
+            </select>
+            <span *ngIf="hasError('type')" class="error-text">{{ errors['type'] }}</span>
+          </label>
+        </div>
+  
+        <label class="block">
+          <span class="field-label">ชื่อแหล่งทุน (ภาษาไทย) <span class="text-red-500">*</span></span>
+          <input
+            type="text"
+            [(ngModel)]="form.nameTh"
+            class="field-input"
+            [ngClass]="{ 'field-error': hasError('nameTh') }"
+            placeholder="เช่น สำนักงานการวิจัยแห่งชาติ"
+          />
+          <span *ngIf="hasError('nameTh')" class="error-text">{{ errors['nameTh'] }}</span>
+        </label>
+  
+        <div class="grid sm:grid-cols-[1fr_140px] gap-4">
+          <label class="block">
+            <span class="field-label">ชื่อแหล่งทุน (ภาษาอังกฤษ)</span>
+            <input
+              type="text"
+              [(ngModel)]="form.nameEn"
+              class="field-input"
+              placeholder="National Research Council of Thailand"
+            />
+          </label>
+          <label class="block">
+            <span class="field-label">ชื่อย่อ</span>
+            <input type="text" [(ngModel)]="form.shortName" class="field-input" placeholder="เช่น วช." />
+          </label>
+        </div>
+  
+        <label class="block">
+          <span class="field-label">เว็บไซต์</span>
+          <input
+            type="url"
+            [(ngModel)]="form.websiteUrl"
+            class="field-input"
+            [ngClass]="{ 'field-error': hasError('websiteUrl') }"
+            placeholder="https://"
+          />
+          <span *ngIf="hasError('websiteUrl')" class="error-text">{{ errors['websiteUrl'] }}</span>
+        </label>
+  
+        <label class="block">
+          <span class="field-label">รายละเอียด</span>
+          <textarea
+            [(ngModel)]="form.description"
+            rows="2"
+            class="field-input resize-y"
+            placeholder="ภารกิจหรือขอบเขตการให้ทุนของหน่วยงาน"
+          ></textarea>
+        </label>
+  
+        <label class="flex items-center justify-between gap-4 rounded-lg bg-gray-50 px-3 py-2.5 cursor-pointer">
+          <span>
+            <span class="block text-sm font-medium">เปิดใช้งาน</span>
+            <span class="block text-[11px] text-gray-500">
+              ปิดใช้งานแล้วจะไม่แสดงเป็นตัวเลือกตอนเพิ่มประกาศทุนใหม่ ทุนเดิมยังอ้างอิงได้
+            </span>
+          </span>
+          <input type="checkbox" [(ngModel)]="form.isActive" class="w-4 h-4 accent-[#394250]" />
+        </label>
+      </div>
+  
+      <div class="px-5 py-4 border-t border-gray-100 flex flex-col-reverse sm:flex-row sm:justify-end gap-2">
+        <button
+          (click)="closeModal()"
+          [disabled]="isSaving"
+          class="px-5 py-2.5 rounded-full text-sm text-gray-600 hover:bg-gray-100 disabled:opacity-50 cursor-pointer"
+        >
+          ยกเลิก
+        </button>
+        <button
+          (click)="save()"
+          [disabled]="isSaving"
+          class="flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-[#F2CB05] hover:bg-[#e0b800] text-[#394250] font-medium text-sm disabled:opacity-50 cursor-pointer"
+        >
+          <i class="bi" [ngClass]="isSaving ? 'bi-arrow-repeat animate-spin inline-block' : 'bi-check2'"></i>
+          {{ isSaving ? 'กำลังบันทึก' : editingId ? 'บันทึกการแก้ไข' : 'บันทึกแหล่งทุน' }}
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- ===== Delete Confirm ===== -->
+  <div *ngIf="deleteTarget" class="fixed inset-0 z-[75] flex items-center justify-center p-4">
+    <div class="absolute inset-0 bg-black/40 drawer-backdrop" (click)="cancelDelete()"></div>
+    <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md p-6" role="alertdialog">
+      <!-- มีทุนผูกอยู่: ลบไม่ได้ เสนอให้ปิดใช้งานแทน -->
+      <ng-container *ngIf="deleteTarget.grants_count > 0; else canDelete">
+        <div class="w-12 h-12 rounded-full bg-orange-50 flex items-center justify-center">
+          <i class="bi bi-exclamation-triangle text-xl text-orange-500"></i>
+        </div>
+        <h3 class="font-semibold mt-4">ลบแหล่งทุนนี้ไม่ได้</h3>
+        <p class="text-sm text-gray-600 mt-1">
+          “{{ deleteTarget.name_th }}” มีประกาศทุนผูกอยู่ {{ deleteTarget.grants_count }} รายการ
+          <ng-container *ngIf="deleteTarget.is_active">
+            แนะนำให้ปิดใช้งานแทน เพื่อไม่ให้แสดงเป็นตัวเลือกอีก แต่ทุนเดิมยังอ้างอิงได้
+          </ng-container>
+          <ng-container *ngIf="!deleteTarget.is_active">
+            และถูกปิดใช้งานอยู่แล้ว
+          </ng-container>
+        </p>
+        <div class="mt-6 flex justify-end gap-2">
+          <button
+            (click)="cancelDelete()"
+            class="px-5 py-2.5 rounded-full text-sm text-gray-600 hover:bg-gray-100 cursor-pointer"
+          >
+            ปิด
+          </button>
+          <button
+            *ngIf="deleteTarget.is_active"
+            (click)="deactivateInstead()"
+            class="px-5 py-2.5 rounded-full bg-[#394250] hover:bg-[#2b323d] text-white text-sm cursor-pointer"
+          >
+            ปิดใช้งานแทน
+          </button>
+        </div>
+      </ng-container>
+  
+      <ng-template #canDelete>
+        <div class="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center">
+          <i class="bi bi-trash3 text-xl text-red-500"></i>
+        </div>
+        <h3 class="font-semibold mt-4">ลบแหล่งทุนนี้?</h3>
+        <p class="text-sm text-gray-600 mt-1">
+          “{{ deleteTarget!.name_th }}” จะถูกลบถาวร และไม่สามารถกู้คืนได้
+        </p>
+        <div class="mt-6 flex justify-end gap-2">
+          <button
+            (click)="cancelDelete()"
+            [disabled]="isDeleting"
+            class="px-5 py-2.5 rounded-full text-sm text-gray-600 hover:bg-gray-100 disabled:opacity-50 cursor-pointer"
+          >
+            ยกเลิก
+          </button>
+          <button
+            (click)="deleteFunder()"
+            [disabled]="isDeleting"
+            class="flex items-center gap-2 px-5 py-2.5 rounded-full bg-red-500 hover:bg-red-600 text-white text-sm disabled:opacity-50 cursor-pointer"
+          >
+            <i *ngIf="isDeleting" class="bi bi-arrow-repeat animate-spin inline-block"></i>
+            {{ isDeleting ? 'กำลังลบ' : 'ลบแหล่งทุน' }}
+          </button>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+  
+  <!-- ===== Toast ===== -->
+  <div
+    *ngIf="toast"
+    class="fixed bottom-6 left-1/2 z-[80] flex items-center gap-2 px-4 py-3 rounded-full shadow-lg text-sm toast"
+    [ngClass]="toast.type === 'success' ? 'bg-[#394250] text-white' : 'bg-red-500 text-white'"
+    role="status"
+  >
+    <i class="bi" [ngClass]="toast.type === 'success' ? 'bi-check-circle-fill text-[#F2CB05]' : 'bi-exclamation-circle-fill'"></i>
+    {{ toast.message }}
+  </div>

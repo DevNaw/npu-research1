@@ -1,0 +1,1085 @@
+<div class="min-h-screen bg-gray-50 text-[#394250]">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <!-- ===== Header ===== -->
+    <div
+      class="flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+    >
+      <div>
+        <h1 class="text-2xl font-semibold">การจัดการประกาศทุน</h1>
+        <p class="text-sm text-gray-500 mt-1">
+          ทุนที่เผยแพร่จะแสดงในหน้าค้นหาทุนวิจัยของนักวิจัยและบุคคลทั่วไป
+        </p>
+      </div>
+      <div class="flex flex-col sm:flex-row gap-2">
+        <a
+          routerLink="/admin/grant-funders"
+          class="flex items-center justify-center gap-2 px-5 py-2.5 rounded-full border border-gray-300 bg-white hover:bg-gray-50 text-[#394250] font-medium text-sm shadow-sm transition-colors cursor-pointer"
+        >
+          <i class="bi bi-building-add"></i>
+          จัดการแหล่งทุน
+        </a>
+        <button
+          (click)="openCreate()"
+          class="flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-[#F2CB05] hover:bg-[#e0b800] text-[#394250] font-medium text-sm shadow-sm transition-colors cursor-pointer"
+        >
+          <i class="bi bi-plus-lg"></i>
+          เพิ่มประกาศทุน
+        </button>
+      </div>
+    </div>
+
+    <!-- ===== Status summary (acts as filter) ===== -->
+    <div class="mt-6 grid grid-cols-2 lg:grid-cols-4 gap-3">
+      <button
+        (click)="
+          setStatusFilter(statusFilter === 'published' ? '' : 'published')
+        "
+        class="stat-card"
+        [ngClass]="{ 'stat-active': statusFilter === 'published' }"
+      >
+        <span class="text-2xl font-semibold">{{ countPublished }}</span>
+        <span class="text-xs text-gray-500">เผยแพร่และเปิดรับ</span>
+        <span
+          *ngIf="countClosingSoon > 0"
+          class="text-[11px] text-orange-600 mt-1"
+        >
+          ใกล้ปิดรับ {{ countClosingSoon }} ทุน
+        </span>
+      </button>
+      <button
+        (click)="setStatusFilter(statusFilter === 'draft' ? '' : 'draft')"
+        class="stat-card"
+        [ngClass]="{ 'stat-active': statusFilter === 'draft' }"
+      >
+        <span class="text-2xl font-semibold">{{ countDraft }}</span>
+        <span class="text-xs text-gray-500">ฉบับร่าง รอตรวจทาน</span>
+      </button>
+      <button
+        (click)="setStatusFilter(statusFilter === 'closed' ? '' : 'closed')"
+        class="stat-card"
+        [ngClass]="{ 'stat-active': statusFilter === 'closed' }"
+      >
+        <span class="text-2xl font-semibold">{{ countClosed }}</span>
+        <span class="text-xs text-gray-500">ปิดรับแล้ว</span>
+      </button>
+      <button
+        (click)="setStatusFilter('')"
+        class="stat-card"
+        [ngClass]="{ 'stat-active': statusFilter === '' }"
+      >
+        <span class="text-2xl font-semibold">{{ grants.length }}</span>
+        <span class="text-xs text-gray-500">ทั้งหมด</span>
+      </button>
+    </div>
+
+    <!-- ===== Toolbar ===== -->
+    <div class="mt-6 flex flex-col md:flex-row gap-3">
+      <div class="relative flex-1">
+        <i
+          class="bi bi-search absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm"
+        ></i>
+        <input
+          type="text"
+          [(ngModel)]="keyword"
+          (ngModelChange)="onFilterChange()"
+          placeholder="ค้นหาชื่อทุน แหล่งทุน หรือคำสำคัญ"
+          class="w-full rounded-full border border-gray-200 bg-white pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#F2CB05]/50"
+        />
+      </div>
+
+      <!-- Funding filter (custom dropdown) -->
+      <div data-menu="filterFunding" class="relative md:w-72">
+        <button
+          type="button"
+          (click)="toggleMenu('filterFunding')"
+          aria-haspopup="listbox"
+          [attr.aria-expanded]="isMenuOpen('filterFunding')"
+          class="w-full flex items-center justify-between gap-2 rounded-full border bg-white px-4 py-2.5 text-sm transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#F2CB05]/50"
+          [ngClass]="
+            isMenuOpen('filterFunding')
+              ? 'border-[#F2CB05] ring-2 ring-[#F2CB05]/50'
+              : 'border-gray-200 hover:border-gray-300'
+          "
+        >
+          <span class="flex items-center gap-2 min-w-0">
+            <i class="bi bi-building text-gray-400"></i>
+            <span
+              class="truncate"
+              [ngClass]="{ 'text-gray-500': fundingFilter === '' }"
+            >
+              {{ selectedFundingLabel }}
+            </span>
+          </span>
+          <i
+            class="bi bi-chevron-down text-xs text-gray-400 transition-transform"
+            [ngClass]="{ 'rotate-180': isMenuOpen('filterFunding') }"
+          ></i>
+        </button>
+
+        <ul
+          *ngIf="isMenuOpen('filterFunding')"
+          role="listbox"
+          class="absolute right-0 z-30 mt-2 w-full max-h-72 overflow-y-auto rounded-xl border border-gray-200 bg-white p-1 shadow-lg"
+        >
+          <li>
+            <button
+              type="button"
+              role="option"
+              [attr.aria-selected]="fundingFilter === ''"
+              (click)="selectFunding('')"
+              class="w-full flex items-center justify-between gap-2 rounded-lg px-3 py-2 text-left text-sm cursor-pointer transition-colors"
+              [ngClass]="
+                fundingFilter === ''
+                  ? 'bg-[#F2E7AC]/60 font-medium'
+                  : 'hover:bg-gray-50'
+              "
+            >
+              <span>ทุกแหล่งทุน</span>
+              <i
+                *ngIf="fundingFilter === ''"
+                class="bi bi-check2 text-[#8a6f00]"
+              ></i>
+            </button>
+          </li>
+
+          <li
+            *ngIf="fundings.length"
+            class="my-1 border-t border-gray-100"
+          ></li>
+
+          <li *ngFor="let f of fundings; trackBy: trackById">
+            <button
+              type="button"
+              role="option"
+              [attr.aria-selected]="fundingFilter === f.id"
+              (click)="selectFunding(f.id)"
+              class="w-full flex items-center justify-between gap-2 rounded-lg px-3 py-2 text-left text-sm cursor-pointer transition-colors"
+              [ngClass]="
+                fundingFilter === f.id
+                  ? 'bg-[#F2E7AC]/60 font-medium'
+                  : 'hover:bg-gray-50'
+              "
+            >
+              <span class="flex items-center gap-2 min-w-0">
+                <span class="truncate">{{ f.name }}</span>
+                <span
+                  class="shrink-0 px-1.5 py-0.5 rounded bg-gray-100 text-[10px] font-normal text-gray-500"
+                >
+                  {{ f.type }}
+                </span>
+              </span>
+              <i
+                *ngIf="fundingFilter === f.id"
+                class="bi bi-check2 text-[#8a6f00]"
+              ></i>
+            </button>
+          </li>
+
+          <li
+            *ngIf="!fundings.length"
+            class="px-3 py-3 text-center text-xs text-gray-400"
+          >
+            ยังไม่มีแหล่งทุน
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ===== Table ===== -->
+    <div
+      class="mt-4 bg-white rounded-xl border border-gray-200 overflow-hidden"
+    >
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm min-w-[860px]">
+          <thead class="thead-dark text-white text-left">
+            <tr>
+              <th class="px-4 py-3 font-medium">ชื่อทุน / แหล่งทุน</th>
+              <th class="px-4 py-3 font-medium text-right">งบสูงสุด (บาท)</th>
+              <th class="px-4 py-3 font-medium">ช่วงเปิดรับ</th>
+              <th class="px-4 py-3 font-medium text-center">TRL</th>
+              <th class="px-4 py-3 font-medium text-center">สถานะ</th>
+              <th class="px-4 py-3 font-medium text-center w-44">จัดการ</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <!-- Loading -->
+            <tr *ngIf="isLoading">
+              <td colspan="6" class="px-4 py-10 text-center text-gray-400">
+                <i class="bi bi-arrow-repeat animate-spin inline-block"></i>
+                กำลังโหลดข้อมูล
+              </td>
+            </tr>
+
+            <!-- Empty -->
+            <tr *ngIf="!isLoading && filteredGrants.length === 0">
+              <td colspan="6" class="px-4 py-12 text-center">
+                <i class="bi bi-inbox text-3xl text-gray-300"></i>
+                <p class="mt-2 text-sm font-medium">ไม่พบประกาศทุน</p>
+                <p class="text-xs text-gray-500 mt-1">
+                  ลองเปลี่ยนคำค้นหาหรือตัวกรอง หรือเพิ่มประกาศทุนใหม่
+                </p>
+              </td>
+            </tr>
+
+            <ng-container *ngIf="!isLoading">
+              <tr
+                *ngFor="let g of pagedGrants; trackBy: trackById"
+                class="border-t border-gray-100 hover:bg-[#F2E7AC]/20 transition-colors"
+              >
+                <td class="px-4 py-3 align-top">
+                  <button
+                    (click)="openEdit(g)"
+                    class="text-left font-medium hover:text-[#8a6f00] cursor-pointer"
+                  >
+                    {{ g.title }}
+                  </button>
+                  <p class="text-xs text-gray-500 mt-0.5">
+                    {{ fundingName(g.externalFundingId) }}
+                    <span
+                      *ngIf="fundingType(g.externalFundingId)"
+                      class="ml-1 px-1.5 py-0.5 rounded bg-gray-100 text-[10px]"
+                      >{{ fundingType(g.externalFundingId) }}</span
+                    >
+                  </p>
+                  <p class="text-[11px] text-gray-400 mt-1">
+                    แก้ไขล่าสุด {{ formatDate(g.updatedAt) }}
+                  </p>
+                </td>
+                <td class="px-4 py-3 align-top text-right tabular-nums">
+                  {{ formatBudget(g.maxBudget) }}
+                </td>
+                <td class="px-4 py-3 align-top whitespace-nowrap">
+                  <span class="text-gray-500"
+                    >{{ formatDate(g.openedAt) }} –</span
+                  >
+                  {{ formatDate(g.deadline) }}
+                  <p
+                    *ngIf="!isClosed(g) && g.deadline"
+                    class="text-[11px] mt-0.5"
+                    [ngClass]="
+                      daysLeft(g) <= 14 ? 'text-orange-600' : 'text-gray-400'
+                    "
+                  >
+                    เหลือ {{ daysLeft(g) }} วัน
+                  </p>
+                </td>
+                <td class="px-4 py-3 align-top text-center whitespace-nowrap">
+                  {{ g.trlMin }}–{{ g.trlMax }}
+                </td>
+                <td class="px-4 py-3 align-top text-center">
+                  <span
+                    class="inline-block px-2.5 py-1 rounded-full text-xs font-medium"
+                    [ngClass]="statusTone(g)"
+                    >{{ statusLabel(g) }}</span
+                  >
+                </td>
+                <td class="px-4 py-3 align-top">
+                  <div class="flex items-center justify-center gap-1">
+                    <!-- สวิตช์เผยแพร่ / ฉบับร่าง -->
+                    <button
+                      type="button"
+                      role="switch"
+                      [attr.aria-checked]="g.status === 'published'"
+                      (click)="togglePublish(g)"
+                      [disabled]="
+                        statusChangingId !== null ||
+                        (g.status === 'draft' && isClosed(g))
+                      "
+                      class="relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors cursor-pointer disabled:cursor-not-allowed mr-1"
+                      [ngClass]="[
+                        g.status === 'published'
+                          ? 'bg-emerald-500'
+                          : 'bg-gray-300',
+                        g.status === 'draft' && isClosed(g) ? 'opacity-50' : ''
+                      ]"
+                      [title]="
+                        g.status === 'published'
+                          ? 'กดเพื่อยกเลิกเผยแพร่'
+                          : isClosed(g)
+                          ? 'ปิดรับแล้ว เผยแพร่ไม่ได้'
+                          : 'กดเพื่อเผยแพร่'
+                      "
+                    >
+                      <span
+                        class="flex h-5 w-5 items-center justify-center rounded-full bg-white shadow transition-transform"
+                        [ngClass]="
+                          g.status === 'published'
+                            ? 'translate-x-5'
+                            : 'translate-x-0.5'
+                        "
+                      >
+                        <i
+                          *ngIf="statusChangingId === g.id"
+                          class="bi bi-arrow-repeat animate-spin inline-block text-[11px] text-gray-400"
+                        ></i>
+                      </span>
+                    </button>
+
+                    <a
+                      *ngIf="g.sourceUrl"
+                      [href]="g.sourceUrl"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="icon-btn"
+                      title="เปิดประกาศต้นฉบับ"
+                    >
+                      <i class="bi bi-box-arrow-up-right"></i>
+                    </a>
+                    <button
+                      (click)="openEdit(g)"
+                      class="icon-btn"
+                      title="แก้ไข"
+                    >
+                      <i class="bi bi-pencil-square text-[#8a6f00]"></i>
+                    </button>
+                    <button
+                      (click)="confirmDelete(g)"
+                      class="icon-btn icon-btn-danger"
+                      title="ลบ"
+                    >
+                      <i class="bi bi-trash3 text-red-500"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <div
+        *ngIf="filteredGrants.length > pageSize"
+        class="flex flex-col sm:flex-row items-center justify-between gap-3 px-4 py-3 border-t border-gray-100 text-sm"
+      >
+        <span class="text-gray-500 text-xs">
+          แสดง {{ (page - 1) * pageSize + 1 }}–{{
+            page * pageSize > filteredGrants.length
+              ? filteredGrants.length
+              : page * pageSize
+          }}
+          จาก {{ filteredGrants.length }} รายการ
+        </span>
+        <div class="flex items-center gap-1">
+          <button
+            (click)="goToPage(page - 1)"
+            [disabled]="page === 1"
+            class="page-btn"
+          >
+            <i class="bi bi-chevron-left"></i>
+          </button>
+          <button
+            *ngFor="let p of pageNumbers"
+            (click)="goToPage(p)"
+            class="page-btn"
+            [ngClass]="{ 'page-active': p === page }"
+          >
+            {{ p }}
+          </button>
+          <button
+            (click)="goToPage(page + 1)"
+            [disabled]="page === totalPages"
+            class="page-btn"
+          >
+            <i class="bi bi-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Form Drawer ===== -->
+<div *ngIf="isDrawerOpen" class="fixed inset-0 z-[60]">
+  <div
+    class="absolute inset-0 bg-black/40 drawer-backdrop"
+    (click)="closeDrawer()"
+  ></div>
+
+  <aside
+    class="drawer-panel absolute right-0 top-0 h-full w-full sm:w-[640px] bg-white shadow-2xl flex flex-col"
+    role="dialog"
+    aria-modal="true"
+  >
+    <div
+      class="flex items-center justify-between px-5 py-4 thead-dark text-white"
+    >
+      <h2 class="font-semibold">
+        {{ isEditing ? "แก้ไขประกาศทุน" : "เพิ่มประกาศทุน" }}
+      </h2>
+      <button
+        (click)="closeDrawer()"
+        class="w-9 h-9 rounded-full hover:bg-white/10 cursor-pointer"
+        aria-label="ปิด"
+      >
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <div class="relative flex-1 overflow-y-auto p-5 space-y-5">
+      <!-- Detail loading overlay -->
+      <div
+        *ngIf="isLoadingDetail"
+        class="absolute inset-0 z-10 bg-white/70 flex items-center justify-center text-sm text-gray-500"
+      >
+        <i class="bi bi-arrow-repeat animate-spin inline-block mr-2"></i>
+        กำลังโหลดรายละเอียดทุน
+      </div>
+
+      <!-- Title -->
+      <label class="block">
+        <span class="field-label"
+          >ชื่อทุน <span class="text-red-500">*</span></span
+        >
+        <input
+          type="text"
+          [(ngModel)]="form.title"
+          class="field-input"
+          [ngClass]="{ 'field-error': hasError('title') }"
+          placeholder="เช่น ทุนวิจัยปัญญาประดิษฐ์เพื่อการเกษตร"
+        />
+        <span *ngIf="hasError('title')" class="error-text">{{
+          errors["title"]
+        }}</span>
+      </label>
+
+      <!-- Funding (custom dropdown) -->
+      <div>
+        <div class="flex items-center justify-between gap-2">
+          <span id="grant-funding-label" class="field-label"
+            >แหล่งทุน <span class="text-red-500">*</span></span
+          >
+          <button
+            type="button"
+            (click)="openCreateFunder()"
+            class="flex items-center gap-1 text-xs font-medium text-[#8a6f00] hover:underline cursor-pointer"
+          >
+            <i class="bi bi-plus-circle"></i>
+            เพิ่มแหล่งทุนใหม่
+          </button>
+        </div>
+
+        <div data-menu="formFunding" class="relative">
+          <button
+            type="button"
+            (click)="toggleMenu('formFunding')"
+            aria-haspopup="listbox"
+            aria-labelledby="grant-funding-label"
+            [attr.aria-expanded]="isMenuOpen('formFunding')"
+            class="field-input text-left cursor-pointer"
+            [ngClass]="{
+              'field-error': hasError('funding'),
+              'border-[#F2CB05] ring-2 ring-[#F2CB05]/50':
+                isMenuOpen('formFunding')
+            }"
+          >
+            <span class="flex w-full items-center justify-between gap-2">
+              <span class="flex items-center gap-2 min-w-0">
+                <span
+                  class="truncate"
+                  [ngClass]="{ 'text-gray-400': !form.externalFundingId }"
+                >
+                  {{ formFundingLabel }}
+                </span>
+                <span
+                  *ngIf="
+                    form.externalFundingId &&
+                    fundingType(form.externalFundingId)
+                  "
+                  class="shrink-0 px-1.5 py-0.5 rounded bg-gray-100 text-[10px] text-gray-500"
+                >
+                  {{ fundingType(form.externalFundingId) }}
+                </span>
+              </span>
+              <i
+                class="bi bi-chevron-down shrink-0 text-xs text-gray-400 transition-transform"
+                [ngClass]="{ 'rotate-180': isMenuOpen('formFunding') }"
+              ></i>
+            </span>
+          </button>
+
+          <ul
+            *ngIf="isMenuOpen('formFunding')"
+            role="listbox"
+            class="absolute left-0 right-0 z-20 mt-2 max-h-64 overflow-y-auto rounded-xl border border-gray-200 bg-white p-1 shadow-lg"
+          >
+            <li *ngFor="let f of fundings; trackBy: trackById">
+              <button
+                type="button"
+                role="option"
+                [attr.aria-selected]="form.externalFundingId === f.id"
+                (click)="selectFormFunding(f.id)"
+                class="w-full flex items-center justify-between gap-2 rounded-lg px-3 py-2 text-left text-sm cursor-pointer transition-colors"
+                [ngClass]="
+                  form.externalFundingId === f.id
+                    ? 'bg-[#F2E7AC]/60 font-medium'
+                    : 'hover:bg-gray-50'
+                "
+              >
+                <span class="flex items-center gap-2 min-w-0">
+                  <span class="truncate">{{ f.name }}</span>
+                  <span
+                    class="shrink-0 px-1.5 py-0.5 rounded bg-gray-100 text-[10px] font-normal text-gray-500"
+                  >
+                    {{ f.type }}
+                  </span>
+                </span>
+                <i
+                  *ngIf="form.externalFundingId === f.id"
+                  class="bi bi-check2 text-[#8a6f00]"
+                ></i>
+              </button>
+            </li>
+
+            <li
+              *ngIf="!fundings.length"
+              class="px-3 py-4 text-center text-xs text-gray-400"
+            >
+              ยังไม่มีแหล่งทุน
+              <button
+                type="button"
+                (click)="openCreateFunder()"
+                class="block mx-auto mt-1 font-medium text-[#8a6f00] hover:underline cursor-pointer"
+              >
+                เพิ่มแหล่งทุนใหม่
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        <span *ngIf="hasError('funding')" class="error-text">{{
+          errors["funding"]
+        }}</span>
+        <span class="block text-[11px] text-gray-400 mt-1">
+          ถ้าไม่มีในรายการ กด “เพิ่มแหล่งทุนใหม่”
+          ระบบจะเลือกแหล่งทุนที่สร้างให้อัตโนมัติ
+        </span>
+      </div>
+
+      <!-- Summary -->
+      <label class="block">
+        <span class="field-label">รายละเอียดโดยย่อ</span>
+        <textarea
+          [(ngModel)]="form.summary"
+          rows="3"
+          class="field-input resize-y"
+          placeholder="วัตถุประสงค์และขอบเขตของทุน"
+        ></textarea>
+      </label>
+
+      <!-- Budget + source -->
+      <div class="grid sm:grid-cols-2 gap-4">
+        <label class="block">
+          <span class="field-label"
+            >งบประมาณสูงสุด (บาท) <span class="text-red-500">*</span></span
+          >
+          <input
+            type="number"
+            min="0"
+            step="1000"
+            [(ngModel)]="form.maxBudget"
+            class="field-input"
+            [ngClass]="{ 'field-error': hasError('budget') }"
+            placeholder="3000000"
+          />
+          <span *ngIf="hasError('budget')" class="error-text">{{
+            errors["budget"]
+          }}</span>
+        </label>
+        <label class="block">
+          <span class="field-label"
+            >ลิงก์ประกาศต้นฉบับ <span class="text-red-500">*</span></span
+          >
+          <input
+            type="url"
+            [(ngModel)]="form.sourceUrl"
+            class="field-input"
+            [ngClass]="{ 'field-error': hasError('sourceUrl') }"
+            placeholder="https://"
+          />
+          <span *ngIf="hasError('sourceUrl')" class="error-text">{{
+            errors["sourceUrl"]
+          }}</span>
+        </label>
+      </div>
+
+      <!-- Dates -->
+      <div class="grid sm:grid-cols-2 gap-4">
+        <label class="block">
+          <span class="field-label">วันเปิดรับ</span>
+          <input type="date" [(ngModel)]="form.openedAt" class="field-input" />
+        </label>
+        <label class="block">
+          <span class="field-label"
+            >วันปิดรับ <span class="text-red-500">*</span></span
+          >
+          <input
+            type="date"
+            [(ngModel)]="form.deadline"
+            [min]="form.openedAt"
+            class="field-input"
+            [ngClass]="{ 'field-error': hasError('deadline') }"
+          />
+          <span *ngIf="hasError('deadline')" class="error-text">{{
+            errors["deadline"]
+          }}</span>
+        </label>
+      </div>
+
+      <!-- TRL -->
+      <div>
+        <span class="field-label">TRL ที่ต้องการ</span>
+        <div class="grid grid-cols-2 gap-4 mt-1">
+          <select
+            [(ngModel)]="form.trlMin"
+            (ngModelChange)="onTrlMinChange()"
+            class="field-input"
+          >
+            <option *ngFor="let t of trlOptions" [ngValue]="t">
+              ต่ำสุด TRL {{ t }}
+            </option>
+          </select>
+          <select
+            [(ngModel)]="form.trlMax"
+            class="field-input"
+            [ngClass]="{ 'field-error': hasError('trl') }"
+          >
+            <option
+              *ngFor="let t of trlOptions"
+              [ngValue]="t"
+              [disabled]="t < form.trlMin"
+            >
+              สูงสุด TRL {{ t }}
+            </option>
+          </select>
+        </div>
+        <span *ngIf="hasError('trl')" class="error-text">{{
+          errors["trl"]
+        }}</span>
+      </div>
+
+      <!-- OECD -->
+      <div>
+        <span class="field-label"
+          >สาขาวิจัย OECD <span class="text-red-500">*</span></span
+        >
+        <div class="flex flex-wrap gap-2 mt-2">
+          <button
+            *ngFor="let o of oecdOptions; trackBy: trackById"
+            type="button"
+            (click)="toggleOecd(o.id)"
+            class="px-3 py-1.5 rounded-full text-xs border transition-colors cursor-pointer"
+            [ngClass]="
+              isOecdSelected(o.id)
+                ? 'bg-[#394250] text-white border-[#394250]'
+                : 'border-gray-200 hover:bg-gray-50'
+            "
+          >
+            <i *ngIf="isOecdSelected(o.id)" class="bi bi-check2 mr-0.5"></i
+            >{{ o.name }}
+          </button>
+        </div>
+        <span *ngIf="hasError('oecd')" class="error-text">{{
+          errors["oecd"]
+        }}</span>
+      </div>
+
+      <!-- Keywords -->
+      <div>
+        <span class="field-label">คำสำคัญ</span>
+        <span class="block text-[11px] text-gray-400">
+          ใช้สำหรับการค้นหาและการจับคู่นักวิจัย กด Enter หรือคั่นด้วยจุลภาค
+        </span>
+        <div
+          class="mt-1 flex flex-wrap items-center gap-1.5 rounded-lg border border-gray-200 px-2 py-1.5 focus-within:ring-2 focus-within:ring-[#F2CB05]/50"
+        >
+          <span
+            *ngFor="let k of form.keywords; let i = index"
+            class="flex items-center gap-1 pl-2 pr-1 py-0.5 rounded-full bg-[#F2E7AC]/60 text-xs"
+          >
+            {{ k }}
+            <button
+              type="button"
+              (click)="removeKeyword(i)"
+              class="w-4 h-4 rounded-full hover:bg-black/10 cursor-pointer"
+              [attr.aria-label]="'ลบ ' + k"
+            >
+              <i class="bi bi-x text-xs"></i>
+            </button>
+          </span>
+          <input
+            type="text"
+            [(ngModel)]="keywordInput"
+            (keydown.enter)="addKeyword($event)"
+            (blur)="addKeyword()"
+            class="flex-1 min-w-[120px] py-1 text-sm focus:outline-none"
+            placeholder="เช่น AI, IoT"
+          />
+        </div>
+      </div>
+
+      <!-- PI qualifications -->
+      <div>
+        <span class="field-label">คุณสมบัติหัวหน้าโครงการ</span>
+        <ul class="mt-2 space-y-1.5">
+          <li
+            *ngFor="let q of form.piQualifications; let i = index"
+            class="flex items-start gap-2 rounded-lg bg-gray-50 px-3 py-2 text-sm"
+          >
+            <i class="bi bi-check2-circle text-[#F2CB05] mt-0.5"></i>
+            <span class="flex-1">{{ q.description }}</span>
+            <button
+              type="button"
+              (click)="removeQualification(i)"
+              class="text-gray-400 hover:text-red-500 cursor-pointer"
+              aria-label="ลบคุณสมบัติ"
+            >
+              <i class="bi bi-x-lg text-xs"></i>
+            </button>
+          </li>
+        </ul>
+        <div class="mt-2 flex gap-2">
+          <input
+            type="text"
+            [(ngModel)]="qualificationInput"
+            (keydown.enter)="addQualification()"
+            class="field-input flex-1"
+            placeholder="เช่น สำเร็จการศึกษาระดับปริญญาเอก"
+          />
+          <button
+            type="button"
+            (click)="addQualification()"
+            class="shrink-0 px-4 rounded-lg border border-gray-200 text-sm hover:bg-gray-50 cursor-pointer"
+          >
+            เพิ่ม
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div
+      class="px-5 py-4 border-t border-gray-100 flex flex-col-reverse sm:flex-row sm:justify-end gap-2"
+    >
+      <button
+        (click)="closeDrawer()"
+        [disabled]="isSaving"
+        class="px-5 py-2.5 rounded-full text-sm text-gray-600 hover:bg-gray-100 disabled:opacity-50 cursor-pointer"
+      >
+        ยกเลิก
+      </button>
+      <button
+        (click)="save('draft')"
+        [disabled]="isSaving || isLoadingDetail"
+        class="px-5 py-2.5 rounded-full border border-gray-200 text-sm hover:bg-gray-50 disabled:opacity-50 cursor-pointer"
+      >
+        {{
+          isEditing && form.status === "published"
+            ? "ยกเลิกเผยแพร่ (เป็นฉบับร่าง)"
+            : "บันทึกฉบับร่าง"
+        }}
+      </button>
+      <button
+        (click)="save('published')"
+        [disabled]="isSaving || isLoadingDetail"
+        class="flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-[#F2CB05] hover:bg-[#e0b800] text-[#394250] font-medium text-sm disabled:opacity-50 cursor-pointer"
+      >
+        <i
+          class="bi"
+          [ngClass]="
+            isSaving ? 'bi-arrow-repeat animate-spin inline-block' : 'bi-send'
+          "
+        ></i>
+        {{
+          isSaving
+            ? "กำลังบันทึก"
+            : isEditing && form.status === "published"
+            ? "บันทึกการแก้ไข"
+            : "บันทึกและเผยแพร่"
+        }}
+      </button>
+    </div>
+  </aside>
+</div>
+
+<!-- ===== Create Funder Modal (เปิดจากฟอร์มประกาศทุน) ===== -->
+<div
+  *ngIf="isFunderModalOpen"
+  class="fixed inset-0 z-[75] flex items-center justify-center p-4"
+>
+  <div
+    class="absolute inset-0 bg-black/40 drawer-backdrop"
+    (click)="closeFunderModal()"
+  ></div>
+  <div
+    class="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh]"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="funder-modal-title"
+  >
+    <div
+      class="flex items-center justify-between px-5 py-4 thead-dark text-white"
+    >
+      <h2 id="funder-modal-title" class="font-semibold flex items-center gap-2">
+        <i class="bi bi-building-add"></i>
+        เพิ่มแหล่งทุนภายนอก
+      </h2>
+      <button
+        (click)="closeFunderModal()"
+        class="w-9 h-9 rounded-full hover:bg-white/10 cursor-pointer"
+        aria-label="ปิด"
+      >
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <div class="flex-1 overflow-y-auto p-5 space-y-4">
+      <div class="grid sm:grid-cols-2 gap-4">
+        <!-- Code -->
+        <label class="block">
+          <span class="field-label"
+            >รหัสแหล่งทุน <span class="text-red-500">*</span></span
+          >
+          <input
+            type="text"
+            [(ngModel)]="funderForm.code"
+            class="field-input uppercase"
+            [ngClass]="{ 'field-error': hasFunderError('code') }"
+            placeholder="เช่น NRCT"
+          />
+          <span *ngIf="hasFunderError('code')" class="error-text">{{
+            funderErrors["code"]
+          }}</span>
+        </label>
+
+        <!-- Type (custom dropdown) -->
+        <div class="block">
+          <span id="funder-type-label" class="field-label"
+            >ประเภท <span class="text-red-500">*</span></span
+          >
+          <div data-menu="funderType" class="relative">
+            <button
+              type="button"
+              (click)="toggleMenu('funderType')"
+              aria-haspopup="listbox"
+              aria-labelledby="funder-type-label"
+              [attr.aria-expanded]="isMenuOpen('funderType')"
+              class="field-input text-left cursor-pointer"
+              [ngClass]="{
+                'field-error': hasFunderError('type'),
+                'border-[#F2CB05] ring-2 ring-[#F2CB05]/50':
+                  isMenuOpen('funderType')
+              }"
+            >
+              <span class="flex w-full items-center justify-between gap-2">
+                <span
+                  class="truncate"
+                  [ngClass]="{ 'text-gray-400': !funderForm.type }"
+                >
+                  {{ funderTypeLabel }}
+                </span>
+                <i
+                  class="bi bi-chevron-down shrink-0 text-xs text-gray-400 transition-transform"
+                  [ngClass]="{ 'rotate-180': isMenuOpen('funderType') }"
+                ></i>
+              </span>
+            </button>
+
+            <ul
+              *ngIf="isMenuOpen('funderType')"
+              role="listbox"
+              class="absolute left-0 right-0 z-20 mt-2 rounded-xl border border-gray-200 bg-white p-1 shadow-lg"
+            >
+              <li *ngFor="let t of funderTypeOptions">
+                <button
+                  type="button"
+                  role="option"
+                  [attr.aria-selected]="funderForm.type === t.value"
+                  (click)="selectFunderType(t.value)"
+                  class="w-full flex items-center justify-between gap-2 rounded-lg px-3 py-2 text-left text-sm cursor-pointer transition-colors"
+                  [ngClass]="
+                    funderForm.type === t.value
+                      ? 'bg-[#F2E7AC]/60 font-medium'
+                      : 'hover:bg-gray-50'
+                  "
+                >
+                  <span>{{ t.label }}</span>
+                  <i
+                    *ngIf="funderForm.type === t.value"
+                    class="bi bi-check2 text-[#8a6f00]"
+                  ></i>
+                </button>
+              </li>
+            </ul>
+          </div>
+          <span *ngIf="hasFunderError('type')" class="error-text">{{
+            funderErrors["type"]
+          }}</span>
+        </div>
+      </div>
+
+      <!-- Name TH -->
+      <label class="block">
+        <span class="field-label"
+          >ชื่อแหล่งทุน (ภาษาไทย) <span class="text-red-500">*</span></span
+        >
+        <input
+          type="text"
+          [(ngModel)]="funderForm.nameTh"
+          class="field-input"
+          [ngClass]="{ 'field-error': hasFunderError('nameTh') }"
+          placeholder="เช่น สำนักงานการวิจัยแห่งชาติ"
+        />
+        <span *ngIf="hasFunderError('nameTh')" class="error-text">{{
+          funderErrors["nameTh"]
+        }}</span>
+      </label>
+
+      <div class="grid sm:grid-cols-[1fr_140px] gap-4">
+        <!-- Name EN -->
+        <label class="block">
+          <span class="field-label">ชื่อแหล่งทุน (ภาษาอังกฤษ)</span>
+          <input
+            type="text"
+            [(ngModel)]="funderForm.nameEn"
+            class="field-input"
+            placeholder="National Research Council of Thailand"
+          />
+        </label>
+
+        <!-- Short name -->
+        <label class="block">
+          <span class="field-label">ชื่อย่อ</span>
+          <input
+            type="text"
+            [(ngModel)]="funderForm.shortName"
+            class="field-input"
+            placeholder="เช่น วช."
+          />
+        </label>
+      </div>
+
+      <!-- Website -->
+      <label class="block">
+        <span class="field-label">เว็บไซต์</span>
+        <input
+          type="url"
+          [(ngModel)]="funderForm.websiteUrl"
+          class="field-input"
+          [ngClass]="{ 'field-error': hasFunderError('websiteUrl') }"
+          placeholder="https://"
+        />
+        <span *ngIf="hasFunderError('websiteUrl')" class="error-text">{{
+          funderErrors["websiteUrl"]
+        }}</span>
+      </label>
+
+      <!-- Description -->
+      <label class="block">
+        <span class="field-label">รายละเอียด</span>
+        <textarea
+          [(ngModel)]="funderForm.description"
+          rows="2"
+          class="field-input resize-y"
+          placeholder="ภารกิจหรือขอบเขตการให้ทุนของหน่วยงาน"
+        ></textarea>
+      </label>
+    </div>
+
+    <div
+      class="px-5 py-4 border-t border-gray-100 flex flex-col-reverse sm:flex-row sm:justify-end gap-2"
+    >
+      <button
+        (click)="closeFunderModal()"
+        [disabled]="isSavingFunder"
+        class="px-5 py-2.5 rounded-full text-sm text-gray-600 hover:bg-gray-100 disabled:opacity-50 cursor-pointer"
+      >
+        ยกเลิก
+      </button>
+      <button
+        (click)="saveFunder()"
+        [disabled]="isSavingFunder"
+        class="flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-[#F2CB05] hover:bg-[#e0b800] text-[#394250] font-medium text-sm disabled:opacity-50 cursor-pointer"
+      >
+        <i
+          class="bi"
+          [ngClass]="
+            isSavingFunder
+              ? 'bi-arrow-repeat animate-spin inline-block'
+              : 'bi-check2'
+          "
+        ></i>
+        {{ isSavingFunder ? "กำลังบันทึก" : "บันทึกแหล่งทุน" }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Delete Confirm ===== -->
+<div
+  *ngIf="deleteTarget"
+  class="fixed inset-0 z-[70] flex items-center justify-center p-4"
+>
+  <div
+    class="absolute inset-0 bg-black/40 drawer-backdrop"
+    (click)="cancelDelete()"
+  ></div>
+  <div
+    class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md p-6"
+    role="alertdialog"
+  >
+    <div
+      class="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center"
+    >
+      <i class="bi bi-trash3 text-xl text-red-500"></i>
+    </div>
+    <h3 class="font-semibold mt-4">ลบประกาศทุนนี้?</h3>
+    <p class="text-sm text-gray-600 mt-1">
+      “{{ deleteTarget.title }}” จะถูกนำออกจากหน้าค้นหาทุน
+      และนักวิจัยที่บันทึกทุนนี้ไว้จะไม่เห็นอีก
+    </p>
+    <div class="mt-6 flex justify-end gap-2">
+      <button
+        (click)="cancelDelete()"
+        [disabled]="isDeleting"
+        class="px-5 py-2.5 rounded-full text-sm text-gray-600 hover:bg-gray-100 disabled:opacity-50 cursor-pointer"
+      >
+        ยกเลิก
+      </button>
+      <button
+        (click)="deleteGrant()"
+        [disabled]="isDeleting"
+        class="flex items-center gap-2 px-5 py-2.5 rounded-full bg-red-500 hover:bg-red-600 text-white text-sm disabled:opacity-50 cursor-pointer"
+      >
+        <i
+          *ngIf="isDeleting"
+          class="bi bi-arrow-repeat animate-spin inline-block"
+        ></i>
+        {{ isDeleting ? "กำลังลบ" : "ลบประกาศทุน" }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Toast ===== -->
+<div
+  *ngIf="toast"
+  class="fixed bottom-6 left-1/2 z-[80] flex items-center gap-2 px-4 py-3 rounded-full shadow-lg text-sm toast"
+  [ngClass]="
+    toast.type === 'success'
+      ? 'bg-[#394250] text-white'
+      : 'bg-red-500 text-white'
+  "
+  role="status"
+>
+  <i
+    class="bi"
+    [ngClass]="
+      toast.type === 'success'
+        ? 'bi-check-circle-fill text-[#F2CB05]'
+        : 'bi-exclamation-circle-fill'
+    "
+  ></i>
+  {{ toast.message }}
+</div>

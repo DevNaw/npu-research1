@@ -79,6 +79,9 @@ import { AddArticleComponent } from './admin-pages/add-projects/add-article/add-
 import { AddInnovationComponent } from './admin-pages/add-projects/add-innovation/add-innovation.component';
 import { MethodSpoofInterceptor } from './services/method-spoof.interceptor';
 import { AllResearcherComponent } from './general/all-researcher/all-researcher.component';
+import { GrantsComponent } from './user-pages/grants/grants.component';
+import { ManageGrantsComponent } from './admin-pages/manage-grants/manage-grants.component';
+import { GrantFundersComponent } from './admin-pages/grant-funders/grant-funders.component';
 
 @NgModule({
   declarations: [
@@ -141,6 +144,9 @@ import { AllResearcherComponent } from './general/all-researcher/all-researcher.
     AddArticleComponent,
     AddInnovationComponent,
     AllResearcherComponent,
+    GrantsComponent,
+    ManageGrantsComponent,
+    GrantFundersComponent,
   ],
   imports: [
     BrowserAnimationsModule,

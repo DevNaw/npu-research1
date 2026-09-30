@@ -1,0 +1,178 @@
+/* ===== Table header ===== */
+.thead-dark {
+  background: linear-gradient(135deg, #394250 0%, #2a323d 100%);
+}
+
+/* ===== Stat cards ===== */
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  padding: 1rem 1.125rem;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.stat-card:hover {
+  border-color: #f2cb05;
+}
+
+.stat-active {
+  border-color: #f2cb05;
+  box-shadow: inset 0 -3px 0 #f2cb05;
+}
+
+/* ===== Row actions ===== */
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 9999px;
+  color: #6b7280;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.icon-btn:hover {
+  background-color: #f3f4f6;
+}
+
+.icon-btn-danger:hover {
+  background-color: #fef2f2;
+}
+
+/* ===== Pagination ===== */
+.page-btn {
+  min-width: 2rem;
+  height: 2rem;
+  padding: 0 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.8125rem;
+  color: #394250;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.page-btn:hover:not(:disabled) {
+  background-color: rgba(242, 231, 172, 0.6);
+}
+
+.page-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.page-active,
+.page-active:hover:not(:disabled) {
+  background-color: #394250;
+  color: #fff;
+}
+
+/* ===== Form fields ===== */
+.field-label {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: #394250;
+}
+
+.field-input {
+  display: block;
+  width: 100%;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 0.55rem 0.75rem;
+  font-size: 0.875rem;
+  background: #fff;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.field-label + .field-input {
+  margin-top: 0.25rem;
+}
+
+.field-input:focus {
+  outline: none;
+  border-color: #f2cb05;
+  box-shadow: 0 0 0 3px rgba(242, 203, 5, 0.25);
+}
+
+.field-error {
+  border-color: #ef4444;
+}
+
+.error-text {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  color: #ef4444;
+}
+
+/* ===== Drawer / modal / toast ===== */
+.drawer-backdrop {
+  animation: fadeIn 0.2s ease-out;
+}
+
+.drawer-panel {
+  animation: slideIn 0.25s ease-out;
+}
+
+.toast {
+  transform: translateX(-50%);
+  animation: toastIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes toastIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 8px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drawer-backdrop,
+  .drawer-panel,
+  .toast {
+    animation: none;
+  }
+}
+
+/* ===== สีข้อความในช่องกรอก ===== */
+/* ค่าที่พิมพ์แล้ว: สีเข้ม */
+.field-input {
+  color: #394250;
+}
+
+/* ตัวอย่าง (placeholder): สีจาง */
+.field-input::placeholder {
+  color: #9ca3af; /* gray-400 */
+  opacity: 1; /* Firefox ลด opacity ของ placeholder เองอยู่แล้ว ต้องรีเซ็ตให้สีตรงกันทุกเบราว์เซอร์ */
+}

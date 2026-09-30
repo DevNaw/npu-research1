@@ -1,0 +1,56 @@
+/* ===== Tabs ===== */
+.tab-btn {
+    flex-shrink: 0;
+    padding: 0.45rem 1rem;
+    border-radius: 9999px;
+    font-size: 0.8125rem;
+    color: #6b7280;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+    white-space: nowrap;
+  }
+  
+  .tab-btn:hover {
+    color: #394250;
+    background-color: rgba(242, 231, 172, 0.4);
+  }
+  
+  .tab-active,
+  .tab-active:hover {
+    background-color: #394250;
+    color: #fff;
+  }
+  
+  /* ===== Drawer ===== */
+  .drawer-backdrop {
+    animation: fadeIn 0.2s ease-out;
+  }
+  
+  .drawer-panel {
+    animation: slideIn 0.25s ease-out;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  @keyframes slideIn {
+    from {
+      transform: translateX(100%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+  
+  @media (prefers-reduced-motion: reduce) {
+    .drawer-backdrop,
+    .drawer-panel {
+      animation: none;
+    }
+  }

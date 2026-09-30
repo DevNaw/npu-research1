@@ -57,6 +57,9 @@ import { AddProjectComponent } from './admin-pages/add-projects/add-project/add-
 import { AddArticleComponent } from './admin-pages/add-projects/add-article/add-article.component';
 import { AddInnovationComponent } from './admin-pages/add-projects/add-innovation/add-innovation.component';
 import { AllResearcherComponent } from './general/all-researcher/all-researcher.component';
+import { GrantsComponent } from './user-pages/grants/grants.component';
+import { ManageGrantsComponent } from './admin-pages/manage-grants/manage-grants.component';
+import { GrantFundersComponent } from './admin-pages/grant-funders/grant-funders.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -115,6 +118,8 @@ const routes: Routes = [
       },
       { path: 'privacy-policy', component: PrivacyPolicyComponent },
       { path: 'all-researcher', component: AllResearcherComponent },
+      { path: 'grants', component: GrantsComponent },
+      { path: 'grants/:id', component: GrantsComponent },
     ],
   },
   /* ================= USER ================= */
@@ -156,6 +161,8 @@ const routes: Routes = [
         path: 'performance-by-departmaent/:type/:id',
         component: PerformanceDetailByDepartmentComponent,
       },
+      { path: 'grants', component: GrantsComponent },
+      { path: 'grants/:id', component: GrantsComponent },
     ],
   },
 
@@ -223,6 +230,10 @@ const routes: Routes = [
       { path: 'project/create', component: AddProjectComponent },
       { path: 'article/create', component: AddArticleComponent },
       { path: 'innovation-create', component: AddInnovationComponent },
+      { path: 'grants', component: GrantsComponent },
+      { path: 'grants/:id', component: GrantsComponent },
+      { path: 'manage-grants', component: ManageGrantsComponent },
+      { path: 'grant-funders', component: GrantFundersComponent },
     ],
   },
 ];
