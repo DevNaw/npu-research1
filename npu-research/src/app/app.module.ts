@@ -82,6 +82,7 @@ import { AllResearcherComponent } from './general/all-researcher/all-researcher.
 import { GrantsComponent } from './user-pages/grants/grants.component';
 import { ManageGrantsComponent } from './admin-pages/manage-grants/manage-grants.component';
 import { GrantFundersComponent } from './admin-pages/grant-funders/grant-funders.component';
+import { CvComponent } from './user-pages/cv/cv.component';
 
 @NgModule({
   declarations: [
@@ -147,6 +148,7 @@ import { GrantFundersComponent } from './admin-pages/grant-funders/grant-funders
     GrantsComponent,
     ManageGrantsComponent,
     GrantFundersComponent,
+    CvComponent,
   ],
   imports: [
     BrowserAnimationsModule,

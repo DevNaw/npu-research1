@@ -1,0 +1,251 @@
+/* ใช้ ViewEncapsulation.None → ทุก class ขึ้นต้นด้วย cv- */
+
+/* ===== แผ่น CV บนหน้าจอ (ความกว้างคุมด้วย Tailwind max-w-7xl ใน HTML) ===== */
+.cv-sheet {
+  margin: 0 auto;
+  background: #fff;
+  padding: 18mm 18mm 14mm 22mm;
+  border-left: 6px solid #F2CB05;
+  box-shadow: 0 1px 3px rgba(57, 66, 80, 0.12), 0 8px 24px rgba(57, 66, 80, 0.08);
+  color: #394250;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+@media (max-width: 640px) {
+  .cv-sheet {
+    padding: 20px 16px 16px 20px;
+  }
+}
+
+/* ===== Header ===== */
+.cv-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding-bottom: 14px;
+  border-bottom: 2px solid #394250;
+}
+
+.cv-header-text {
+  min-width: 0;
+}
+
+.cv-name {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: #1f2630;
+  margin: 0;
+}
+
+.cv-name-en {
+  font-size: 15px;
+  color: #6b7280;
+  margin: 2px 0 0;
+}
+
+.cv-headline {
+  margin: 10px 0 0;
+  font-weight: 600;
+}
+
+.cv-org {
+  margin: 0;
+  color: #4b5563;
+}
+
+.cv-avatar {
+  width: 30mm;
+  height: 36mm;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid #e5e7eb;
+  flex-shrink: 0;
+}
+
+@media (max-width: 640px) {
+  .cv-name { font-size: 22px; }
+  .cv-avatar { width: 72px; height: 88px; }
+}
+
+.cv-summary {
+  margin: 10px 0 0;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* ===== Section ===== */
+.cv-section {
+  margin-top: 20px;
+}
+
+.cv-h2 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1f2630;
+  margin: 0 0 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #F2CB05;
+  break-after: avoid;
+}
+
+.cv-count {
+  font-weight: 400;
+  color: #9ca3af;
+  font-size: 13px;
+}
+
+/* label : value */
+.cv-dl {
+  display: grid;
+  grid-template-columns: 9.5em 1fr;
+  column-gap: 12px;
+  row-gap: 4px;
+  margin: 0;
+}
+
+.cv-dl dt {
+  color: #6b7280;
+  font-weight: 400;
+}
+
+.cv-dl dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+/* ปีด้านซ้าย + รายละเอียดด้านขวา */
+.cv-timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.cv-timeline > li {
+  display: grid;
+  grid-template-columns: 4em 1fr;
+  column-gap: 12px;
+  padding: 5px 0;
+}
+
+.cv-timeline > li + li {
+  border-top: 1px dashed #e5e7eb;
+}
+
+.cv-year {
+  font-weight: 600;
+  color: #394250;
+  font-variant-numeric: tabular-nums;
+}
+
+.cv-item-title {
+  margin: 0;
+  color: #1f2630;
+}
+
+.cv-item-sub {
+  margin: 0;
+  color: #4b5563;
+  font-size: 13px;
+}
+
+.cv-item-meta {
+  margin: 0;
+  color: #9ca3af;
+  font-size: 12px;
+}
+
+.cv-link {
+  color: #16498C;
+  text-decoration: none;
+  word-break: break-all;
+}
+
+.cv-link:hover {
+  text-decoration: underline;
+}
+
+.cv-footer {
+  margin-top: 28px;
+  padding-top: 8px;
+  border-top: 1px solid #e5e7eb;
+  font-size: 11px;
+  color: #9ca3af;
+  text-align: right;
+}
+
+/* ===== โหมดสร้าง PDF (ใช้กับ clone ที่วางนอกจอ กว้าง 794px = A4) ===== */
+.cv-sheet.cv-pdf {
+  width: 794px;
+  max-width: none !important;
+  min-height: 0;
+  margin: 0;
+  padding: 0 14mm 0 16mm;
+  border-left: 0;
+  box-shadow: none;
+  font-size: 13px;
+}
+
+.cv-sheet.cv-pdf .cv-link {
+  color: #16498C;
+}
+
+/* ===== Print =====
+   สำรองไว้กรณีผู้ใช้กด Ctrl+P บนหน้าเว็บโดยตรง → บังคับ A4 */
+@page {
+  size: A4 portrait;
+  margin: 12mm 14mm;
+}
+
+@media print {
+  body:not(.cv-print-body) * {
+    visibility: hidden !important;
+  }
+
+  body:not(.cv-print-body) .cv-sheet,
+  body:not(.cv-print-body) .cv-sheet * {
+    visibility: visible !important;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  .cv-page {
+    padding: 0 !important;
+    background: #fff !important;
+    min-height: 0 !important;
+  }
+
+  body:not(.cv-print-body) .cv-sheet {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    max-width: none !important;
+    margin: 0;
+    padding: 0 0 0 6mm;
+    border-left-width: 4px;
+    box-shadow: none;
+    font-size: 12.5px;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .cv-no-print {
+    display: none !important;
+  }
+
+  .cv-avoid-break {
+    break-inside: avoid;
+  }
+
+  .cv-link {
+    color: #394250;
+  }
+}

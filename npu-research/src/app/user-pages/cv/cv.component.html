@@ -1,0 +1,199 @@
+<div class="cv-page bg-slate-100 min-h-screen p-4 md:px-10 md:py-8 text-[#394250]">
+
+  <!-- ===== Toolbar ===== -->
+  <div class="cv-no-print max-w-7xl mx-auto mb-5">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+      <button
+        (click)="back()"
+        class="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-white border border-gray-200 text-sm text-gray-600 hover:bg-gray-50 cursor-pointer transition-colors"
+      >
+        <i class="bi bi-arrow-left"></i>
+        กลับไปหน้าโปรไฟล์
+      </button>
+
+      <button
+        (click)="downloadPdf()"
+        [disabled]="!loaded || exporting"
+        class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#F2CB05] hover:bg-[#e0b800] text-white text-sm font-semibold shadow-sm cursor-pointer transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        <i *ngIf="!exporting" class="bi bi-file-earmark-arrow-down-fill"></i>
+        <span *ngIf="exporting" class="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin"></span>
+        {{ exporting ? "กำลังสร้าง PDF..." : "ดาวน์โหลด PDF" }}
+      </button>
+    </div>
+
+    <!-- เลือกส่วนที่แสดง -->
+    <details class="mt-3 bg-white rounded-xl border border-gray-200 px-4 py-3 text-sm">
+      <summary class="cursor-pointer font-medium select-none">เลือกส่วนที่จะแสดงใน CV</summary>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mt-3 font-light">
+        <label *ngFor="let s of sections" class="inline-flex items-center gap-2 cursor-pointer">
+          <input type="checkbox" [(ngModel)]="s.show" class="accent-[#F2CB05] w-4 h-4" />
+          {{ s.label }}
+        </label>
+        <label class="inline-flex items-center gap-2 cursor-pointer col-span-2">
+          <input type="checkbox" [(ngModel)]="showTitleEn" class="accent-[#F2CB05] w-4 h-4" />
+          แสดงชื่อผลงานภาษาอังกฤษ
+        </label>
+      </div>
+    </details>
+  </div>
+
+  <!-- ===== Error ===== -->
+  <div *ngIf="loadError" class="cv-no-print max-w-7xl mx-auto bg-white rounded-xl border border-red-200 p-8 text-center">
+    <i class="bi bi-exclamation-triangle text-3xl text-red-400 block mb-2"></i>
+    <p class="text-sm">โหลดข้อมูลไม่สำเร็จ ลองรีเฟรชหน้านี้อีกครั้ง</p>
+  </div>
+
+  <!-- ===== CV Sheet (A4) ===== -->
+  <article *ngIf="loaded" #sheet class="cv-sheet max-w-7xl">
+
+    <!-- Header -->
+    <header class="cv-header">
+      <div class="cv-header-text">
+        <h1 class="cv-name">{{ profile?.full_name || "—" }}</h1>
+        <p *ngIf="profile?.full_name_en" class="cv-name-en">{{ profile?.full_name_en }}</p>
+        <p *ngIf="headline" class="cv-headline">{{ headline }}</p>
+        <p *ngIf="profile?.workInfo?.organization" class="cv-org">
+          {{ profile?.workInfo?.organization }}
+        </p>
+      </div>
+      <img
+        class="cv-avatar"
+        [src]="avatarSrc"
+        alt="รูปโปรไฟล์"
+      />
+    </header>
+
+    <!-- สรุปจำนวนผลงาน -->
+    <p *ngIf="totalWorks" class="cv-summary">
+      โครงการวิจัย {{ projects.length }} เรื่อง,
+      ผลงานตีพิมพ์ {{ articles.length }} เรื่อง,
+      นวัตกรรมสิ่งประดิษฐ์ {{ innovations.length }} ชิ้น
+    </p>
+
+    <!-- ข้อมูลส่วนตัว -->
+    <section *ngIf="isShown('personal') && hasPersonal" class="cv-section">
+      <h2 class="cv-h2">ข้อมูลส่วนตัว</h2>
+      <dl class="cv-dl">
+        <ng-container *ngIf="profile?.generalInfo?.date_of_birth">
+          <dt>วันเดือนปีเกิด</dt>
+          <dd>{{ profile?.generalInfo?.date_of_birth }}</dd>
+        </ng-container>
+        <ng-container *ngIf="profile?.generalInfo?.nationality">
+          <dt>สัญชาติ</dt>
+          <dd>{{ profile?.generalInfo?.nationality }}</dd>
+        </ng-container>
+      </dl>
+    </section>
+
+    <!-- ประวัติการศึกษา -->
+    <section *ngIf="isShown('education') && profile?.educationalInfo?.length" class="cv-section">
+      <h2 class="cv-h2">ประวัติการศึกษา</h2>
+      <ol class="cv-timeline">
+        <li *ngFor="let edu of profile?.educationalInfo" class="cv-avoid-break">
+          <span class="cv-year">{{ edu.date_graduation || "—" }}</span>
+          <div>
+            <p class="cv-item-title">
+              {{ edu.qualification || edu.highest_education || "—" }}
+              <span *ngIf="edu.field_of_study"> สาขา{{ edu.field_of_study }}</span>
+            </p>
+            <p class="cv-item-sub">
+              {{ edu.institution || "—" }}
+              <span *ngIf="edu.highest_education && edu.qualification"> ({{ edu.highest_education }})</span>
+            </p>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <!-- การทำงาน -->
+    <section *ngIf="isShown('work') && hasWork" class="cv-section">
+      <h2 class="cv-h2">การทำงาน</h2>
+      <dl class="cv-dl">
+        <ng-container *ngIf="profile?.workInfo?.academic_position">
+          <dt>ตำแหน่งวิชาการ</dt>
+          <dd>{{ profile?.workInfo?.academic_position }}</dd>
+        </ng-container>
+        <ng-container *ngIf="profile?.workInfo?.position">
+          <dt>ตำแหน่งบริหาร</dt>
+          <dd>{{ profile?.workInfo?.position }}</dd>
+        </ng-container>
+        <ng-container *ngIf="profile?.workInfo?.organization">
+          <dt>สังกัด</dt>
+          <dd>{{ profile?.workInfo?.organization }}</dd>
+        </ng-container>
+        <ng-container *ngIf="profile?.workInfo?.type">
+          <dt>ประเภทบุคลากร</dt>
+          <dd>{{ profile?.workInfo?.type }}</dd>
+        </ng-container>
+        <ng-container *ngIf="profile?.workInfo?.work_start_date">
+          <dt>เริ่มปฏิบัติงาน</dt>
+          <dd>
+            {{ profile?.workInfo?.work_start_date }}
+            <span *ngIf="profile?.workInfo?.year_of_service" class="text-gray-500">
+              (อายุงาน {{ profile?.workInfo?.year_of_service }} ปี)
+            </span>
+          </dd>
+        </ng-container>
+      </dl>
+    </section>
+
+    <!-- ความเชี่ยวชาญ -->
+    <section *ngIf="isShown('expertise') && hasExpertise" class="cv-section">
+      <h2 class="cv-h2">ความเชี่ยวชาญและความสนใจ</h2>
+      <dl class="cv-dl">
+        <ng-container *ngIf="profile?.workInfo?.expertises">
+          <dt>ความเชี่ยวชาญ</dt>
+          <dd>{{ profile?.workInfo?.expertises }}</dd>
+        </ng-container>
+        <ng-container *ngIf="profile?.workInfo?.interest">
+          <dt>ความสนใจ</dt>
+          <dd>{{ profile?.workInfo?.interest }}</dd>
+        </ng-container>
+      </dl>
+    </section>
+
+    <!-- ผลงาน (ใช้ template เดียวกัน 3 หมวด) -->
+    <ng-container
+      *ngTemplateOutlet="workList; context: { key: 'project', title: 'โครงการวิจัย', items: projects }"
+    ></ng-container>
+    <ng-container
+      *ngTemplateOutlet="workList; context: { key: 'article', title: 'ผลงานตีพิมพ์', items: articles }"
+    ></ng-container>
+    <ng-container
+      *ngTemplateOutlet="workList; context: { key: 'innovation', title: 'นวัตกรรมสิ่งประดิษฐ์', items: innovations }"
+    ></ng-container>
+
+    <!-- ลิงก์โปรไฟล์นักวิจัย -->
+    <section *ngIf="isShown('links') && researchProfiles.length" class="cv-section">
+      <h2 class="cv-h2">โปรไฟล์นักวิจัยออนไลน์</h2>
+      <dl class="cv-dl">
+        <ng-container *ngFor="let p of researchProfiles">
+          <dt>{{ profileTypeLabel[p.type] || p.type }}</dt>
+          <dd><a [href]="p.url" target="_blank" rel="noopener noreferrer" class="cv-link">{{ p.url }}</a></dd>
+        </ng-container>
+      </dl>
+    </section>
+
+    <footer class="cv-footer">
+      ข้อมูล ณ วันที่ {{ thaiDate(printedAt) }}
+    </footer>
+  </article>
+</div>
+
+<!-- ===== Template: รายการผลงาน ===== -->
+<ng-template #workList let-key="key" let-title="title" let-items="items">
+  <section *ngIf="isShown(key) && items.length" class="cv-section">
+    <h2 class="cv-h2">{{ title }} <span class="cv-count">({{ items.length }})</span></h2>
+    <ol class="cv-timeline">
+      <li *ngFor="let w of items" class="cv-avoid-break">
+        <span class="cv-year">{{ w.year }}</span>
+        <div>
+          <p class="cv-item-title">{{ w.title }}</p>
+          <p *ngIf="showTitleEn && w.titleEn" class="cv-item-sub italic">{{ w.titleEn }}</p>
+          <p *ngIf="w.code" class="cv-item-meta">รหัส {{ w.code }}</p>
+        </div>
+      </li>
+    </ol>
+  </section>
+</ng-template>

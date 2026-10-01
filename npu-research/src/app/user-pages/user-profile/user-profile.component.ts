@@ -121,7 +121,7 @@ export class UserProfileComponent implements OnInit {
   savingProfiles = false;
 
   /** meta สำหรับแสดงชื่อ/ไอคอน/สีของแต่ละชนิด */
-  readonly profileTypeMeta: Record <
+  readonly profileTypeMeta: Record<
     ResearchProfileType,
     { label: string; icon: string; color: string }
   > = {
@@ -604,8 +604,7 @@ export class UserProfileComponent implements OnInit {
       .subscribe({
         next: () => {
           this.researchProfiles = cleaned;
-          if (this.profileData)
-            this.profileData.research_profiles = cleaned;
+          if (this.profileData) this.profileData.research_profiles = cleaned;
           this.savingProfiles = false;
           this.isProfileModalOpen = false;
           Swal.fire({
@@ -662,6 +661,13 @@ export class UserProfileComponent implements OnInit {
   goToEditAddress() {
     this.router.navigate([
       this.authService.isAdmin() ? '/admin/edit-address' : '/user/edit-address',
+    ]);
+  }
+
+  /** ไปหน้า CV (ดู / พิมพ์ / บันทึกเป็น PDF) */
+  goToCv() {
+    this.router.navigate([
+      this.authService.isAdmin() ? '/admin/cv' : '/user/cv',
     ]);
   }
 

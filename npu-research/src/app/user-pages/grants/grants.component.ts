@@ -10,6 +10,7 @@ import {
   switchMap,
   takeUntil,
   tap,
+  timeout,
 } from 'rxjs/operators';
 import { MainComponent } from '../../shared/layouts/main/main.component';
 import { UserGratsService } from '../../services/user-grats.service';
@@ -60,22 +61,40 @@ const FALLBACK_SORTS: SelectOption[] = [
 const FALLBACK_VIEWS = ['all', 'closing_soon'];
 
 // quick keywords: ใช้ tag (keywords) จากทุนจริง -> ไม่มีข้อมูลค่อยใช้ชุดนี้
-const DEFAULT_QUICK_KEYWORDS = ['AI', 'เกษตร', 'ผู้สูงอายุ', 'Mekong', 'Climate Change'];
+const DEFAULT_QUICK_KEYWORDS = [
+  'AI',
+  'เกษตร',
+  'ผู้สูงอายุ',
+  'Mekong',
+  'Climate Change',
+];
 const QUICK_KEYWORD_LIMIT = 8;
 
 // ตัวเลือกงบ: ก่อนโหลด filter-options ใช้ชุด default
 // โหลดแล้ว -> min จาก API + ขั้นที่อยู่ในช่วง (min, max] จาก BUDGET_STEPS + max จาก API
 const DEFAULT_BUDGET_PRESETS = [500000, 1000000, 3000000, 5000000];
 const BUDGET_STEPS = [
-  100000, 300000, 500000, 1000000, 2000000, 3000000, 5000000, 10000000, 20000000, 50000000,
+  100000, 300000, 500000, 1000000, 2000000, 3000000, 5000000, 10000000,
+  20000000, 50000000,
 ];
+
+// รอ recalculate matching ได้นานสุดเท่านี้ เกินแล้วโหลดรายการไปก่อน
+const RECALC_WAIT_MS = 5000;
+
+// สร้าง formatter ครั้งเดียว (toLocaleDateString / toLocaleString สร้างใหม่ทุกครั้งที่เรียก)
+const DATE_FORMAT = new Intl.DateTimeFormat('th-TH', {
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric',
+});
+const NUMBER_FORMAT = new Intl.NumberFormat('th-TH');
 
 // map แท็บ UI -> ค่า view ที่ API รับ
 // null = backend ยังไม่รองรับ -> ซ่อนแท็บ และไม่ยิงค่านั้นไป API
 // TODO: เปิดใช้ recommended เมื่อ backend เพิ่มค่าใน validation rule ของ view แล้ว
 const TAB_TO_VIEW: Record<Tab, string | null> = {
   all: 'all',
-  recommended: null,
+  recommended: 'recommended',
   closing: 'closing_soon',
   saved: 'saved',
 };
@@ -155,6 +174,17 @@ export class GrantsComponent implements OnInit, OnDestroy {
   private lastSearchedKeyword = '';
   private firstLoad = true;
 
+  /** query ของหน้าแรกที่โหลดสำเร็จล่าสุด — loadMore ใช้ค่านี้ ไม่อ่าน filter สด (กันผลปนกัน) */
+  private currentQuery: GrantQuery = {};
+
+  /** cache ของ filteredGrants — คำนวณใหม่เฉพาะเมื่อ input เปลี่ยน */
+  private filteredCache: {
+    src: Grant[] | null;
+    openOnly: boolean;
+    saved: boolean;
+    out: Grant[];
+  } = { src: null, openOnly: true, saved: false, out: [] };
+
   constructor(private router: Router, private grantService: UserGratsService) {}
 
   ngOnInit(): void {
@@ -164,6 +194,42 @@ export class GrantsComponent implements OnInit, OnDestroy {
     this.buildDropdownOptions();
     this.bindStreams();
     this.loadFilterOptions();
+    this.initData();
+  }
+
+  /**
+   * login แล้ว -> คำนวณคะแนน matching ก่อน แล้วค่อยโหลดรายการ/สถิติ เพื่อให้ % และแท็บแนะนำเป็นค่าล่าสุด
+   * ถ้าคำนวณนานเกิน RECALC_WAIT_MS -> โหลดรายการไปก่อน แล้วโหลดซ้ำเมื่อคำนวณเสร็จ
+   */
+  private initData(): void {
+    if (!this.isLoggedIn) {
+      this.loadData();
+      return;
+    }
+
+    let loadedEarly = false;
+    this.grantService
+      .recalculateMatchingOnce()
+      .pipe(
+        timeout({
+          first: RECALC_WAIT_MS,
+          with: () => {
+            loadedEarly = true;
+            this.loadData();
+            // รอ request เดิมต่อ (shareReplay -> ไม่ยิงซ้ำ)
+            return this.grantService.recalculateMatchingOnce();
+          },
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((res) => {
+        // ปกติ: โหลดครั้งเดียวหลังคำนวณเสร็จ
+        // โหลดไปก่อนแล้ว: โหลดซ้ำเฉพาะเมื่อคำนวณสำเร็จ (ล้มเหลว = ค่าเดิมยังใช้ได้)
+        if (!loadedEarly || res) this.loadData();
+      });
+  }
+
+  private loadData(): void {
     this.loadStats();
     this.reload$.next();
   }
@@ -224,7 +290,10 @@ export class GrantsComponent implements OnInit, OnDestroy {
         if (d.trl?.length) this.trlOptions = d.trl;
         if (d.budget) {
           this.budgetRange = d.budget;
-          this.budgetOptions = this.buildBudgetOptions(d.budget.min, d.budget.max);
+          this.budgetOptions = this.buildBudgetOptions(
+            d.budget.min,
+            d.budget.max
+          );
         }
 
         if (d.oecd?.length) {
@@ -263,7 +332,10 @@ export class GrantsComponent implements OnInit, OnDestroy {
       changed = true;
     }
 
-    if (this.selectedTrl !== '' && !this.trlOptions.includes(this.selectedTrl)) {
+    if (
+      this.selectedTrl !== '' &&
+      !this.trlOptions.includes(this.selectedTrl)
+    ) {
       this.selectedTrl = '';
       changed = true;
     }
@@ -285,21 +357,26 @@ export class GrantsComponent implements OnInit, OnDestroy {
     const unique = [...new Set(values)].sort((a, b) => a - b);
     return [
       { label: 'ทุกช่วงงบ', value: '' },
-      ...unique.map((v) => ({ label: `${this.formatBudget(v)}ขึ้นไป`, value: v })),
+      ...unique.map((v) => ({
+        label: `${this.formatBudget(v)}ขึ้นไป`,
+        value: v,
+      })),
     ];
   }
 
   /** OECD สาขาหลักจาก filter-options — แสดงครบทุกตัว เรียงตาม code */
   private mapOecdMajors(majors: OecdMajor[]): OecdOption[] {
-    return [...majors]
-      .sort((a, b) => a.code.localeCompare(b.code))
-      // เอาแค่ 6 สาขาหลัก (ตัด 07 อื่นๆ) -> เปิดบรรทัดล่าง
-      // .filter((m) => m.code !== '07')
-      .map((m) => ({
-        id: m.major_id,
-        name: m.name_th || m.name_en || m.code,
-        level: 1,
-      }));
+    return (
+      [...majors]
+        .sort((a, b) => a.code.localeCompare(b.code))
+        // เอาแค่ 6 สาขาหลัก (ตัด 07 อื่นๆ) -> เปิดบรรทัดล่าง
+        // .filter((m) => m.code !== '07')
+        .map((m) => ({
+          id: m.major_id,
+          name: m.name_th || m.name_en || m.code,
+          level: 1,
+        }))
+    );
   }
 
   // ===== Streams =====
@@ -308,38 +385,50 @@ export class GrantsComponent implements OnInit, OnDestroy {
     this.keyword$
       .pipe(debounceTime(400), takeUntil(this.destroy$))
       .subscribe(() => {
-        if (this.keyword.trim() !== this.lastSearchedKeyword) this.reload$.next();
+        if (this.keyword.trim() !== this.lastSearchedKeyword)
+          this.reload$.next();
       });
 
     // โหลดหน้าแรกใหม่ทุกครั้งที่ filter เปลี่ยน (switchMap ยกเลิก request เก่า)
+    // ส่ง query ผ่าน stream ไปพร้อมผลลัพธ์ -> รู้แน่ว่าผลนี้มาจาก query ไหน
     this.reload$
       .pipe(
+        map(() => this.buildQuery()),
         tap(() => {
           this.queryVersion++;
           this.isLoading = true;
           this.loadError = '';
         }),
-        switchMap(() =>
-          this.grantService.getUserGrats(this.buildQuery(1)).pipe(
+        switchMap((query) =>
+          this.grantService.getUserGrats(query).pipe(
+            map((res) => ({ query, res })),
             catchError((err: HttpErrorResponse) => {
               this.loadError = this.extractErrorMessage(err);
-              return of(null);
+              return of({ query, res: null });
             })
           )
         ),
         takeUntil(this.destroy$)
       )
-      .subscribe((res) => {
+      .subscribe(({ query, res }) => {
         if (res && res.result === 1 && res.data) {
+          this.currentQuery = query;
           this.grants = (res.data.items ?? []).map(mapGrantListItem);
           this.setPagination(res.data.pagination);
           this.mergeOecdFromGrants();
           this.updateQuickKeywordsFromTags();
+
+          // query ว่าง = request เดียวกับตัวนับ "ทุนที่เปิดรับ" -> ใช้ total ได้เลย ไม่ต้องยิงแยก
+          if (this.isDefaultQuery(query)) {
+            this.stats = { ...this.stats, open: this.pagination.total };
+          }
         } else {
           this.grants = [];
           this.pagination = { currentPage: 1, lastPage: 1, total: 0 };
           this.loadError =
-            this.loadError || res?.message || 'โหลดข้อมูลทุนไม่สำเร็จ กรุณาลองใหม่';
+            this.loadError ||
+            res?.message ||
+            'โหลดข้อมูลทุนไม่สำเร็จ กรุณาลองใหม่';
         }
         this.isLoading = false;
         if (this.firstLoad) {
@@ -355,11 +444,13 @@ export class GrantsComponent implements OnInit, OnDestroy {
     const firstFieldError = body?.errors
       ? (Object.values(body.errors)[0] as string[] | undefined)?.[0]
       : undefined;
-    return body?.message || firstFieldError || 'โหลดข้อมูลทุนไม่สำเร็จ กรุณาลองใหม่';
+    return (
+      body?.message || firstFieldError || 'โหลดข้อมูลทุนไม่สำเร็จ กรุณาลองใหม่'
+    );
   }
 
-  /** ส่งเฉพาะเงื่อนไขที่ผู้ใช้เลือก — ไม่เลือกอะไรเลยจะได้ query ว่าง = ค้นหาทั้งหมด */
-  private buildQuery(page: number): GrantQuery {
+  /** ส่งเฉพาะเงื่อนไขที่ผู้ใช้เลือก — ไม่เลือกอะไรเลยจะได้ query ว่าง = ค้นหาทั้งหมด (หน้า 1) */
+  private buildQuery(): GrantQuery {
     const search = this.keyword.trim();
     this.lastSearchedKeyword = search;
 
@@ -372,10 +463,14 @@ export class GrantsComponent implements OnInit, OnDestroy {
       trl: this.selectedTrl === '' ? undefined : Number(this.selectedTrl),
       funder_type: this.selectedFunderType || undefined,
       view: view === DEFAULT_VIEW ? undefined : view,
-      max_budget: this.budgetFilter === '' ? undefined : Number(this.budgetFilter),
+      max_budget:
+        this.budgetFilter === '' ? undefined : Number(this.budgetFilter),
       sort: sort === DEFAULT_SORT ? undefined : sort,
-      page: page > 1 ? page : undefined,
     };
+  }
+
+  private isDefaultQuery(query: GrantQuery): boolean {
+    return Object.values(query).every((v) => v === undefined);
   }
 
   private setPagination(p: ApiPagination | undefined): void {
@@ -396,19 +491,28 @@ export class GrantsComponent implements OnInit, OnDestroy {
   }
 
   loadMore(): void {
-    if (this.isLoadingMore || !this.hasMore) return;
+    // หน้าแรกกำลังโหลด -> currentQuery ยังเป็นของชุดเก่า ห้ามโหลดต่อ
+    if (this.isLoading || this.isLoadingMore || !this.hasMore) return;
     const version = this.queryVersion;
+    const query: GrantQuery = {
+      ...this.currentQuery,
+      page: this.pagination.currentPage + 1,
+    };
     this.isLoadingMore = true;
 
     this.grantService
-      .getUserGrats(this.buildQuery(this.pagination.currentPage + 1))
+      .getUserGrats(query)
       .pipe(
         finalize(() => (this.isLoadingMore = false)),
         takeUntil(this.destroy$)
       )
       .subscribe({
         next: (res) => {
-          if (version !== this.queryVersion || !res?.data) return; // filter เปลี่ยนระหว่างโหลด
+          if (version !== this.queryVersion) return; // filter เปลี่ยนระหว่างโหลด
+          if (res?.result !== 1 || !res.data) {
+            this.loadError = res?.message || 'โหลดทุนเพิ่มไม่สำเร็จ กรุณาลองใหม่';
+            return;
+          }
           const existing = new Set(this.grants.map((g) => g.id));
           const items = (res.data.items ?? [])
             .map(mapGrantListItem)
@@ -421,28 +525,27 @@ export class GrantsComponent implements OnInit, OnDestroy {
   }
 
   // ===== Stats (ตัวเลขบน header) =====
+  /**
+   * stats.open ไม่ต้องยิงแยก — ได้จาก total ของ list ตอน query ว่าง (ดู bindStreams)
+   * TODO: ถ้า backend มี GET /grants/stats จะเหลือ request เดียวแทน 3
+   */
   private loadStats(): void {
-    const count = (view: string): Observable<number> =>
-      this.grantService
-        .getUserGrats(view === DEFAULT_VIEW ? {} : { view })
-        .pipe(
-          map((r) => r?.data?.pagination?.total ?? 0),
-          catchError(() => of(0))
-        );
-
     const countTab = (tab: Tab, needLogin = false): Observable<number> => {
       const view = TAB_TO_VIEW[tab];
-      return view && (!needLogin || this.isLoggedIn) ? count(view) : of(0);
+      if (!view || (needLogin && !this.isLoggedIn)) return of(0);
+      return this.grantService.getUserGrats({ view }).pipe(
+        map((r) => r?.data?.pagination?.total ?? 0),
+        catchError(() => of(0))
+      );
     };
 
     forkJoin({
-      open: countTab('all'),
       closingSoon: countTab('closing'),
       recommended: countTab('recommended', true),
       saved: countTab('saved', true),
     })
       .pipe(takeUntil(this.destroy$))
-      .subscribe((s) => (this.stats = s));
+      .subscribe((s) => (this.stats = { ...this.stats, ...s }));
   }
 
   get openCount(): number {
@@ -464,7 +567,12 @@ export class GrantsComponent implements OnInit, OnDestroy {
    */
   private updateQuickKeywordsFromTags(): void {
     if (this.quickKeywordsFromTags) return;
-    if (this.keyword.trim() || this.activeFilterCount > 0 || this.activeTab !== 'all') return;
+    if (
+      this.keyword.trim() ||
+      this.activeFilterCount > 0 ||
+      this.activeTab !== 'all'
+    )
+      return;
 
     const count = new Map<string, { label: string; n: number }>();
     this.grants.forEach((g) => {
@@ -530,13 +638,20 @@ export class GrantsComponent implements OnInit, OnDestroy {
       }
     };
     const root: any = tree;
-    walk(Array.isArray(root) ? root : root?.oecd ?? root?.items ?? root?.tree ?? [], 1);
-    return out
-      .filter((o) => o.level === 1)
-      // เอาแค่ 6 สาขาหลัก (ตัด 07 อื่นๆ) -> เปิดบรรทัดล่าง
-      // .filter((o) => o.code !== '07')
-      .sort((a, b) => a.code.localeCompare(b.code))
-      .map(({ id, name, level }) => ({ id, name, level }));
+    walk(
+      Array.isArray(root)
+        ? root
+        : root?.oecd ?? root?.items ?? root?.tree ?? [],
+      1
+    );
+    return (
+      out
+        .filter((o) => o.level === 1)
+        // เอาแค่ 6 สาขาหลัก (ตัด 07 อื่นๆ) -> เปิดบรรทัดล่าง
+        // .filter((o) => o.code !== '07')
+        .sort((a, b) => a.code.localeCompare(b.code))
+        .map(({ id, name, level }) => ({ id, name, level }))
+    );
   }
 
   /** fallback สุดท้าย: โหลด OECD จาก API ไม่ได้ ใช้สาขาจากทุนที่โหลดมาแทน */
@@ -547,7 +662,8 @@ export class GrantsComponent implements OnInit, OnDestroy {
       .flatMap((g) => g.oecds)
       .filter((o) => o.level === 1)
       .forEach((o) => {
-        if (!byId.has(o.id)) byId.set(o.id, { id: o.id, name: o.name, level: 1 });
+        if (!byId.has(o.id))
+          byId.set(o.id, { id: o.id, name: o.name, level: 1 });
       });
     this.oecdOptions = [...byId.values()].sort((a, b) =>
       a.name.localeCompare(b.name, 'th')
@@ -561,13 +677,20 @@ export class GrantsComponent implements OnInit, OnDestroy {
     this.dropdownOptions = {
       oecd: [
         { value: '', label: 'ทุกสาขา' },
-        ...this.oecdOptions.map((o) => ({ value: o.id, label: o.name, indent: o.level > 1 })),
+        ...this.oecdOptions.map((o) => ({
+          value: o.id,
+          label: o.name,
+          indent: o.level > 1,
+        })),
       ],
       trl: [
         { value: '', label: 'ทุกระดับ' },
         ...this.trlOptions.map((t) => ({ value: t, label: `TRL ${t}` })),
       ],
-      budget: this.budgetOptions.map((b) => ({ value: b.value, label: b.label })),
+      budget: this.budgetOptions.map((b) => ({
+        value: b.value,
+        label: b.label,
+      })),
       sort: this.sortOptions
         .filter((o) => this.isSortAvailable(o.value))
         .map((o) => ({ value: o.value, label: o.label })),
@@ -579,7 +702,9 @@ export class GrantsComponent implements OnInit, OnDestroy {
     const options = this.dropdownOptions[key];
     const q = this.dropdownSearch.trim().toLowerCase();
     if (key !== 'oecd' || !q) return options;
-    return options.filter((o) => o.value !== '' && o.label.toLowerCase().includes(q));
+    return options.filter(
+      (o) => o.value !== '' && o.label.toLowerCase().includes(q)
+    );
   }
 
   private currentValue(key: DropdownKey): number | string {
@@ -677,15 +802,17 @@ export class GrantsComponent implements OnInit, OnDestroy {
     if (k !== 'ArrowDown' && k !== 'ArrowUp') return;
     event.preventDefault();
     const panel = event.currentTarget as HTMLElement;
-    const options = Array.from(panel.querySelectorAll<HTMLElement>('[data-dd-option]'));
+    const options = Array.from(
+      panel.querySelectorAll<HTMLElement>('[data-dd-option]')
+    );
     if (!options.length) return;
     const idx = options.indexOf(document.activeElement as HTMLElement);
     const next =
       k === 'ArrowDown'
         ? options[Math.min(idx + 1, options.length - 1)]
         : idx <= 0
-          ? options[0]
-          : options[idx - 1];
+        ? options[0]
+        : options[idx - 1];
     next.focus();
   }
 
@@ -706,10 +833,27 @@ export class GrantsComponent implements OnInit, OnDestroy {
   /**
    * API ไม่มี param กรองทุนที่ปิดแล้ว จึงกรองฝั่ง client
    * แท็บ "บันทึกไว้" แสดงทุกทุนที่บันทึก รวมที่ปิดรับแล้ว (ไม่งั้นทุนที่บันทึกจะหายเงียบ ๆ)
+   * memoize: คืน array เดิมถ้า input ไม่เปลี่ยน (ไม่ filter ใหม่ทุกรอบ change detection)
    */
   get filteredGrants(): Grant[] {
-    if (this.activeTab === 'saved' || !this.openOnly) return this.grants;
-    return this.grants.filter((g) => g.daysRemaining >= 0);
+    const saved = this.activeTab === 'saved';
+    const c = this.filteredCache;
+    if (
+      c.src !== this.grants ||
+      c.openOnly !== this.openOnly ||
+      c.saved !== saved
+    ) {
+      this.filteredCache = {
+        src: this.grants,
+        openOnly: this.openOnly,
+        saved,
+        out:
+          saved || !this.openOnly
+            ? this.grants
+            : this.grants.filter((g) => g.daysRemaining >= 0),
+      };
+    }
+    return this.filteredCache.out;
   }
 
   get activeFilterCount(): number {
@@ -814,7 +958,8 @@ export class GrantsComponent implements OnInit, OnDestroy {
   // ===== Matching =====
   matchTone(score: number): string {
     if (score >= 80) return 'text-emerald-700 bg-emerald-50 border-emerald-200';
-    if (score >= 60) return 'text-[#8a6f00] bg-[#F2E7AC]/50 border-[#F2CB05]/40';
+    if (score >= 60)
+      return 'text-[#8a6f00] bg-[#F2E7AC]/50 border-[#F2CB05]/40';
     return 'text-gray-500 bg-gray-50 border-gray-200';
   }
 
@@ -831,11 +976,7 @@ export class GrantsComponent implements OnInit, OnDestroy {
     if (!iso) return '-';
     const [y, m, d] = iso.slice(0, 10).split('-').map(Number);
     if (!y || !m || !d) return '-';
-    return new Date(y, m - 1, d).toLocaleDateString('th-TH', {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric',
-    });
+    return DATE_FORMAT.format(new Date(y, m - 1, d));
   }
 
   formatBudget(value: number | null): string {
@@ -844,7 +985,7 @@ export class GrantsComponent implements OnInit, OnDestroy {
       const m = value / 1000000;
       return `${Number.isInteger(m) ? m : m.toFixed(1)} ล้านบาท`;
     }
-    return `${value.toLocaleString('th-TH')} บาท`;
+    return `${NUMBER_FORMAT.format(value)} บาท`;
   }
 
   trlLabel(g: Grant): string {
@@ -893,10 +1034,16 @@ export class GrantsComponent implements OnInit, OnDestroy {
             this.applySaved(g.id, !next);
             return;
           }
-          this.stats = { ...this.stats, saved: Math.max(0, this.stats.saved + (next ? 1 : -1)) };
+          this.stats = {
+            ...this.stats,
+            saved: Math.max(0, this.stats.saved + (next ? 1 : -1)),
+          };
           if (!next && this.activeTab === 'saved') {
             this.grants = this.grants.filter((x) => x.id !== g.id);
-            this.pagination = { ...this.pagination, total: Math.max(0, this.pagination.total - 1) };
+            this.pagination = {
+              ...this.pagination,
+              total: Math.max(0, this.pagination.total - 1),
+            };
           }
         },
         error: (err: HttpErrorResponse) => {
@@ -907,7 +1054,9 @@ export class GrantsComponent implements OnInit, OnDestroy {
   }
 
   private applySaved(id: number, value: boolean): void {
-    this.grants = this.grants.map((x) => (x.id === id ? { ...x, isSaved: value } : x));
+    this.grants = this.grants.map((x) =>
+      x.id === id ? { ...x, isSaved: value } : x
+    );
     if (this.selectedGrant?.id === id) {
       this.selectedGrant = { ...this.selectedGrant, isSaved: value };
     }
@@ -930,7 +1079,9 @@ export class GrantsComponent implements OnInit, OnDestroy {
           if (!res?.data) return;
           const detail = mapGrantDetail(res.data);
           // เก็บไว้ใน list ด้วย เปิดซ้ำจะได้ไม่ต้องยิงใหม่
-          this.grants = this.grants.map((x) => (x.id === detail.id ? detail : x));
+          this.grants = this.grants.map((x) =>
+            x.id === detail.id ? detail : x
+          );
           if (this.selectedGrant?.id === detail.id) this.selectedGrant = detail;
         },
         error: () => (this.detailError = 'โหลดรายละเอียดทุนไม่สำเร็จ'),

@@ -60,6 +60,7 @@ import { AllResearcherComponent } from './general/all-researcher/all-researcher.
 import { GrantsComponent } from './user-pages/grants/grants.component';
 import { ManageGrantsComponent } from './admin-pages/manage-grants/manage-grants.component';
 import { GrantFundersComponent } from './admin-pages/grant-funders/grant-funders.component';
+import { CvComponent } from './user-pages/cv/cv.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -163,6 +164,7 @@ const routes: Routes = [
       },
       { path: 'grants', component: GrantsComponent },
       { path: 'grants/:id', component: GrantsComponent },
+      { path: 'cv', component: CvComponent },
     ],
   },
 
@@ -234,6 +236,7 @@ const routes: Routes = [
       { path: 'grants/:id', component: GrantsComponent },
       { path: 'manage-grants', component: ManageGrantsComponent },
       { path: 'grant-funders', component: GrantFundersComponent },
+      { path: 'cv', component: CvComponent },
     ],
   },
 ];

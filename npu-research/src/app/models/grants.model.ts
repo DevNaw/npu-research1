@@ -191,7 +191,10 @@ export interface Grant {
 const CLOSING_SOON_DAYS = 14;
 
 /** ใช้ days_remaining จาก API ก่อน ไม่มี -> คำนวณจาก deadline (ไม่มี deadline = ถือว่าเปิดรับ) */
-function resolveDaysRemaining(apiDays: number | null | undefined, deadline: string | null): number {
+function resolveDaysRemaining(
+  apiDays: number | null | undefined,
+  deadline: string | null
+): number {
   if (typeof apiDays === 'number') return apiDays;
   if (!deadline) return 0;
   const [y, m, d] = deadline.slice(0, 10).split('-').map(Number);
@@ -226,9 +229,18 @@ function mapMatch(score: ApiMatchingScore | undefined): GrantMatch | null {
   };
 }
 
-function mapBase(api: ApiGrantListItem | ApiGrantDetail): Omit<
+function mapBase(
+  api: ApiGrantListItem | ApiGrantDetail
+): Omit<
   Grant,
-  'keywords' | 'description' | 'objective' | 'piRequirement' | 'requirements' | 'applicationUrl' | 'documentUrl' | 'hasDetail'
+  | 'keywords'
+  | 'description'
+  | 'objective'
+  | 'piRequirement'
+  | 'requirements'
+  | 'applicationUrl'
+  | 'documentUrl'
+  | 'hasDetail'
 > {
   const daysRemaining = resolveDaysRemaining(api.days_remaining, api.deadline);
   return {
@@ -239,7 +251,10 @@ function mapBase(api: ApiGrantListItem | ApiGrantDetail): Omit<
 
     funderId: api.funder?.id ?? null,
     funderName:
-      api.funder?.name_th || api.funder?.name || api.funder?.name_en || 'ไม่ระบุแหล่งทุน',
+      api.funder?.name_th ||
+      api.funder?.name ||
+      api.funder?.name_en ||
+      'ไม่ระบุแหล่งทุน',
     funderType: api.funder?.type ?? '',
 
     minBudget: api.min_budget,
@@ -248,7 +263,8 @@ function mapBase(api: ApiGrantListItem | ApiGrantDetail): Omit<
     deadline: api.deadline,
     daysRemaining,
     isClosingSoon:
-      api.is_closing_soon ?? (daysRemaining >= 0 && daysRemaining <= CLOSING_SOON_DAYS),
+      api.is_closing_soon ??
+      (daysRemaining >= 0 && daysRemaining <= CLOSING_SOON_DAYS),
 
     trlMin: api.trl?.min ?? null,
     trlMax: api.trl?.max ?? null,
