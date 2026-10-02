@@ -83,6 +83,7 @@ import { GrantsComponent } from './user-pages/grants/grants.component';
 import { ManageGrantsComponent } from './admin-pages/manage-grants/manage-grants.component';
 import { GrantFundersComponent } from './admin-pages/grant-funders/grant-funders.component';
 import { CvComponent } from './user-pages/cv/cv.component';
+import { CollaboratorRecommendationComponent } from './user-pages/collaborator-recommendation/collaborator-recommendation.component';
 
 @NgModule({
   declarations: [
@@ -149,6 +150,7 @@ import { CvComponent } from './user-pages/cv/cv.component';
     ManageGrantsComponent,
     GrantFundersComponent,
     CvComponent,
+    CollaboratorRecommendationComponent,
   ],
   imports: [
     BrowserAnimationsModule,

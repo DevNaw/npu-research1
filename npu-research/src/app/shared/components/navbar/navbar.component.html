@@ -408,6 +408,15 @@
             <i class="bi bi-people-fill text-base"></i>
             <span>ค้นหาข้อมูลนักวิจัย</span>
           </a>
+
+          <a
+            routerLink="/user/collaborator-recommendation"
+            routerLinkActive="bg-[#F2E7AC]/60 text-[#394250]"
+            class="flex items-center gap-2 px-4 py-2 rounded-full text-sm hover:bg-[#F2E7AC]/60 hover:text-[#394250] transition-all duration-200"
+          >
+            <i class="bi bi-people-fill text-base"></i>
+            <span>แนะนำผู้ราวมงานวิจัย</span>
+          </a>
         </div>
       </div>
     </div>
@@ -473,6 +482,15 @@
           <i class="bi bi-people-fill text-xl text-[#394250]"></i>
           <span class="text-[10px] text-center">นักวิจัย</span>
         </a>
+
+        <a
+        routerLink="/user/collaborator-recommendation"
+        (click)="closeAllMobileMenus()"
+        class="flex flex-col items-center gap-1 p-3 rounded-xl hover:bg-[#F2E7AC]/60 transition-colors"
+      >
+        <i class="bi bi-people-fill text-xl text-[#394250]"></i>
+        <span class="text-[10px] text-center">แนะนำผู้ราวมงานวิจัย</span>
+      </a>
 
         <button
           (click)="logout(); closeAllMobileMenus()"
@@ -830,6 +848,15 @@
           </a>
 
           <a
+            routerLink="/admin/collaborator-recommendation"
+            routerLinkActive="bg-[#F2E7AC]/60 text-[#394250]"
+            class="flex items-center gap-2 px-4 py-2 rounded-full text-sm hover:bg-[#F2E7AC]/60 hover:text-[#394250] transition-all duration-200"
+          >
+            <i class="bi bi-people-fill text-base"></i>
+            <span>แนะนำผู้ราวมงานวิจัย</span>
+          </a>
+
+          <a
             routerLink="/admin/report"
             routerLinkActive="bg-[#F2E7AC]/60 text-[#394250]"
             class="flex items-center gap-2 px-4 py-2 rounded-full text-sm hover:bg-[#F2E7AC]/60 hover:text-[#394250] transition-all duration-200"
@@ -920,6 +947,15 @@
           <i class="bi bi-people-fill text-xl text-[#394250]"></i>
           <span class="text-[10px] text-center">นักวิจัย</span>
         </a>
+
+        <a
+        routerLink="/admin/collaborator-recommendation"
+        (click)="closeAllMobileMenus()"
+        class="flex flex-col items-center gap-1 p-3 rounded-xl hover:bg-[#F2E7AC]/60 transition-colors"
+      >
+        <i class="bi bi-people-fill text-xl text-[#394250]"></i>
+        <span class="text-[10px] text-center">แนะนำผู้ราวมงานวิจัย</span>
+      </a>
 
         <a
           routerLink="/admin/report"

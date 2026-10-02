@@ -61,6 +61,7 @@ import { GrantsComponent } from './user-pages/grants/grants.component';
 import { ManageGrantsComponent } from './admin-pages/manage-grants/manage-grants.component';
 import { GrantFundersComponent } from './admin-pages/grant-funders/grant-funders.component';
 import { CvComponent } from './user-pages/cv/cv.component';
+import { CollaboratorRecommendationComponent } from './user-pages/collaborator-recommendation/collaborator-recommendation.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -165,6 +166,7 @@ const routes: Routes = [
       { path: 'grants', component: GrantsComponent },
       { path: 'grants/:id', component: GrantsComponent },
       { path: 'cv', component: CvComponent },
+      { path: 'collaborator-recommendation', component: CollaboratorRecommendationComponent },
     ],
   },
 
@@ -237,6 +239,7 @@ const routes: Routes = [
       { path: 'manage-grants', component: ManageGrantsComponent },
       { path: 'grant-funders', component: GrantFundersComponent },
       { path: 'cv', component: CvComponent },
+      { path: 'collaborator-recommendation', component: CollaboratorRecommendationComponent },
     ],
   },
 ];
