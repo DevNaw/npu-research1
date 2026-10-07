@@ -1,29 +1,30 @@
 <div class="min-h-screen bg-gray-50">
-    <div class="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-  
-      <!-- Top bar -->
-      <div class="mb-6">
-        <button
-          type="button"
-          (click)="goBack()"
-          class="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#F2CB05]"
-        >
-          <i class="bi bi-arrow-left"></i>
-          กลับไปหน้าโปรไฟล์
-        </button>
-      </div>
-  
-      <!-- Header -->
-      <header class="rounded-xl border-l-[6px] border-[#F2CB05] bg-white px-6 py-6 shadow-sm sm:px-8">
-        <div class="flex flex-wrap items-start justify-between gap-4">
-          <div class="max-w-2xl">
-            <h1 class="text-2xl font-bold text-gray-900">แนะนำผู้ร่วมวิจัย</h1>
-            <p class="mt-1 text-gray-500">
-              นักวิจัยในมหาวิทยาลัยที่มีความเชี่ยวชาญใกล้เคียงกับคุณและยังไม่เคยร่วมงานกัน
-              เรียงจากความเหมาะสมมากไปน้อย
-            </p>
-          </div>
-  
+  <div class="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+
+    <!-- Top bar -->
+    <div class="mb-6">
+      <button
+        type="button"
+        (click)="goBack()"
+        class="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#F2CB05]"
+      >
+        <i class="bi bi-arrow-left"></i>
+        กลับไปหน้าโปรไฟล์
+      </button>
+    </div>
+
+    <!-- Header -->
+    <header class="rounded-xl border-l-[6px] border-[#F2CB05] bg-white px-6 py-6 shadow-sm sm:px-8">
+      <div class="flex flex-wrap items-start justify-between gap-4">
+        <div class="max-w-2xl">
+          <h1 class="text-2xl font-bold text-gray-900">แนะนำผู้ร่วมวิจัย</h1>
+          <p class="mt-1 text-gray-500">
+            นักวิจัยในมหาวิทยาลัยที่มีความเชี่ยวชาญใกล้เคียงกับคุณและยังไม่เคยร่วมงานกัน
+            เรียงจากความเหมาะสมมากไปน้อย
+          </p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2">
           <button
             *ngIf="evaluation?.passed"
             type="button"
@@ -35,180 +36,313 @@
             ผ่านการประเมินผลแล้ว
             <i class="bi" [class.bi-chevron-down]="!showEvaluation" [class.bi-chevron-up]="showEvaluation"></i>
           </button>
+
+          <button
+            type="button"
+            (click)="recalculate()"
+            [disabled]="recalculating || recalcCooldown"
+            [attr.aria-busy]="recalculating"
+            [attr.title]="recalcCooldown ? 'ระบบกำลังอัปเดตอยู่เบื้องหลัง' : null"
+            class="inline-flex items-center gap-2 rounded-lg bg-[#F2CB05] px-4 py-2 text-sm font-semibold text-gray-900 shadow-sm hover:brightness-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-900 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            <span
+              *ngIf="recalculating"
+              class="h-4 w-4 animate-spin rounded-full border-2 border-gray-900 border-t-transparent"
+              aria-hidden="true"
+            ></span>
+            <i *ngIf="!recalculating" class="bi bi-arrow-clockwise"></i>
+            {{ recalculating ? 'กำลังอัปเดต…' : 'อัปเดตผู้ร่วมวิจัยใหม่' }}
+          </button>
         </div>
-  
-        <!-- Evaluation details -->
-        <div *ngIf="showEvaluation && evaluation" class="mt-6 border-t border-gray-100 pt-6">
-          <p class="mb-5 text-sm text-gray-600">
-            ทดสอบกับนักวิจัย {{ evaluation.test_users }} คน โดยซ่อนผลงานร่วม{{
-              evaluation.strategy === 'temporal' ? 'ในปีล่าสุด' : 'บางส่วนแบบสุ่ม'
-            }}
-            แล้วตรวจว่าระบบแนะนำผู้ที่ร่วมงานกันจริงได้ภายใน {{ evaluation.k }} อันดับแรกหรือไม่
-            <span class="whitespace-nowrap">(ประเมินเมื่อ {{ thaiDate(evaluation.evaluated_at) }})</span>
-          </p>
-  
-          <div class="grid gap-6 md:grid-cols-3">
-            <div *ngFor="let metric of evaluationMetrics">
-              <h3 class="mb-3 text-sm font-semibold text-gray-800">{{ metric.label }}</h3>
-              <div class="space-y-2">
-                <div *ngFor="let method of evaluationMethods">
-                  <div class="mb-1 flex justify-between text-xs">
-                    <span [class.font-semibold]="method.key === 'model'"
-                          [class.text-gray-900]="method.key === 'model'"
-                          [class.text-gray-500]="method.key !== 'model'">
-                      {{ method.label }}
-                    </span>
-                    <span [class.font-semibold]="method.key === 'model'" class="text-gray-700">
-                      {{ percent(metricValue(method.key, metric.key)) }}
-                    </span>
-                  </div>
-                  <div class="h-2 rounded-full bg-gray-100">
-                    <div
-                      class="h-2 rounded-full"
-                      [ngClass]="method.key === 'model' ? 'bg-[#F2CB05]' : 'bg-gray-300'"
-                      [style.width.%]="metricValue(method.key, metric.key) * 100"
-                    ></div>
-                  </div>
+      </div>
+
+      <!-- 202: รับคำสั่งแล้ว คำนวณอยู่เบื้องหลัง -->
+      <div
+        *ngIf="recalcNotice === 'accepted'"
+        role="status"
+        class="mt-4 flex items-start justify-between gap-3 rounded-lg border border-sky-200 bg-sky-50 px-4 py-3 text-sm text-sky-800"
+      >
+        <div class="flex gap-2">
+          <i class="bi bi-hourglass-split mt-0.5"></i>
+          <div>
+            <p class="font-medium">ระบบกำลังอัปเดตผู้ร่วมวิจัยที่แนะนำอยู่เบื้องหลัง</p>
+            <p class="mt-0.5">
+              อาจใช้เวลาประมาณ 1 นาที เมื่อเสร็จแล้วกด “โหลดรายชื่อใหม่” หรือรีเฟรชหน้านี้เพื่อดูผลล่าสุด
+            </p>
+            <button
+              type="button"
+              (click)="reloadAfterRecalc()"
+              class="mt-2 inline-flex items-center gap-1.5 rounded-md border border-sky-300 bg-white px-3 py-1 text-xs font-medium text-sky-800 hover:bg-sky-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
+            >
+              <i class="bi bi-arrow-repeat"></i>
+              โหลดรายชื่อใหม่
+            </button>
+          </div>
+        </div>
+        <button type="button" (click)="dismissRecalc()" aria-label="ปิด"
+                class="rounded p-1 hover:bg-black/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+
+      <!-- 200: คำนวณเสร็จทันที พร้อมตัวเลขสรุป -->
+      <div
+        *ngIf="recalcNotice === 'done'"
+        role="status"
+        class="mt-4 flex items-start justify-between gap-3 rounded-lg px-4 py-3 text-sm"
+        [ngClass]="(recalcResult?.failed_count ?? 0) > 0
+          ? 'border border-amber-200 bg-amber-50 text-amber-800'
+          : 'border border-emerald-200 bg-emerald-50 text-emerald-800'"
+      >
+        <div class="flex gap-2">
+          <i class="bi mt-0.5"
+             [class.bi-check-circle-fill]="(recalcResult?.failed_count ?? 0) === 0"
+             [class.bi-exclamation-triangle-fill]="(recalcResult?.failed_count ?? 0) > 0"></i>
+
+          <div *ngIf="recalcResult; else simpleDone">
+            <p class="font-medium">
+              อัปเดตเสร็จแล้ว {{ recalcResult.calculated_count | number }} จาก
+              {{ recalcResult.candidate_count | number }} คน
+            </p>
+            <p class="mt-0.5">
+              ยังไม่เคยร่วมงาน {{ recalcResult.new_collaborator_count | number }} คน ·
+              เคยร่วมงานแล้ว {{ recalcResult.existing_collaborator_count | number }} คน
+              <ng-container *ngIf="recalcResult.failed_count > 0">
+                · ไม่สำเร็จ {{ recalcResult.failed_count | number }} คน
+              </ng-container>
+            </p>
+          </div>
+
+          <ng-template #simpleDone>
+            <p class="font-medium">อัปเดตผู้ร่วมวิจัยที่แนะนำเรียบร้อยแล้ว</p>
+          </ng-template>
+        </div>
+        <button type="button" (click)="dismissRecalc()" aria-label="ปิด"
+                class="rounded p-1 hover:bg-black/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-900">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+
+      <div
+        *ngIf="recalcError"
+        role="alert"
+        class="mt-4 flex items-start justify-between gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+      >
+        <div class="flex gap-2">
+          <i class="bi bi-exclamation-circle-fill mt-0.5"></i>
+          <span>{{ recalcError }}</span>
+        </div>
+        <button type="button" (click)="dismissRecalc()" aria-label="ปิด"
+                class="rounded p-1 hover:bg-black/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+
+      <!-- Evaluation details -->
+      <div *ngIf="showEvaluation && evaluation" class="mt-6 border-t border-gray-100 pt-6">
+        <p class="mb-5 text-sm text-gray-600">
+          ทดสอบกับนักวิจัย {{ evaluation.test_users }} คน โดยซ่อนผลงานร่วม{{
+            evaluation.strategy === 'temporal' ? 'ในปีล่าสุด' : 'บางส่วนแบบสุ่ม'
+          }}
+          แล้วตรวจว่าระบบแนะนำผู้ที่ร่วมงานกันจริงได้ภายใน {{ evaluation.k }} อันดับแรกหรือไม่
+          <span class="whitespace-nowrap">(ประเมินเมื่อ {{ thaiDate(evaluation.evaluated_at) }})</span>
+        </p>
+
+        <div class="grid gap-6 md:grid-cols-3">
+          <div *ngFor="let metric of evaluationMetrics">
+            <h3 class="mb-3 text-sm font-semibold text-gray-800">{{ metric.label }}</h3>
+            <div class="space-y-2">
+              <div *ngFor="let method of evaluationMethods">
+                <div class="mb-1 flex justify-between text-xs">
+                  <span [class.font-semibold]="method.key === 'model'"
+                        [class.text-gray-900]="method.key === 'model'"
+                        [class.text-gray-500]="method.key !== 'model'">
+                    {{ method.label }}
+                  </span>
+                  <span [class.font-semibold]="method.key === 'model'" class="text-gray-700">
+                    {{ percent(metricValue(method.key, metric.key)) }}
+                  </span>
+                </div>
+                <div class="h-2 rounded-full bg-gray-100">
+                  <div
+                    class="h-2 rounded-full"
+                    [ngClass]="method.key === 'model' ? 'bg-[#F2CB05]' : 'bg-gray-300'"
+                    [style.width.%]="metricValue(method.key, metric.key) * 100"
+                  ></div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </header>
-  
-      <!-- Filters -->
-      <div *ngIf="state === 'ready'" class="mt-6 flex flex-wrap gap-2" role="group" aria-label="กรองตามระดับความเหมาะสม">
-        <button
-          *ngFor="let f of filters"
-          type="button"
-          (click)="activeLevel = f.key"
-          [attr.aria-pressed]="activeLevel === f.key"
-          class="inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#F2CB05]"
-          [ngClass]="activeLevel === f.key
-            ? 'border-gray-900 bg-gray-900 text-white'
-            : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300'"
-        >
-          {{ f.label }}
-          <span
-            class="rounded-full px-1.5 text-xs"
-            [ngClass]="activeLevel === f.key ? 'bg-white/20' : 'bg-gray-100 text-gray-500'"
-          >{{ countBy(f.key) }}</span>
-        </button>
       </div>
-  
-      <!-- Loading -->
-      <div *ngIf="state === 'loading'" class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3" aria-busy="true">
-        <div *ngFor="let _ of [1, 2, 3, 4, 5, 6]" class="animate-pulse rounded-xl bg-white p-5 shadow-sm">
-          <div class="flex items-center gap-3">
-            <div class="h-14 w-14 rounded-full bg-gray-200"></div>
-            <div class="flex-1 space-y-2">
-              <div class="h-3 w-3/4 rounded bg-gray-200"></div>
-              <div class="h-3 w-1/2 rounded bg-gray-100"></div>
-            </div>
-          </div>
-          <div class="mt-5 space-y-2">
-            <div class="h-2 rounded bg-gray-100"></div>
-            <div class="h-2 rounded bg-gray-100"></div>
-            <div class="h-2 w-2/3 rounded bg-gray-100"></div>
+    </header>
+
+    <!-- Filters -->
+    <div *ngIf="levelCounts" class="mt-6 flex flex-wrap gap-2" role="group" aria-label="กรองตามระดับความเหมาะสม">
+      <button
+        *ngFor="let f of filters"
+        type="button"
+        (click)="setLevel(f.key)"
+        [attr.aria-pressed]="activeLevel === f.key"
+        [attr.title]="thresholdHint(f.key)"
+        [disabled]="state === 'loading'"
+        class="inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#F2CB05] disabled:cursor-wait"
+        [ngClass]="activeLevel === f.key
+          ? 'border-gray-900 bg-gray-900 text-white'
+          : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300'"
+      >
+        {{ f.label }}
+        <span
+          class="rounded-full px-1.5 text-xs"
+          [ngClass]="activeLevel === f.key ? 'bg-white/20' : 'bg-gray-100 text-gray-500'"
+        >{{ countBy(f.key) | number }}</span>
+      </button>
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="state === 'loading'" class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3" aria-busy="true">
+      <div *ngFor="let _ of [1, 2, 3, 4, 5, 6]" class="animate-pulse rounded-xl bg-white p-5 shadow-sm">
+        <div class="flex items-center gap-3">
+          <div class="h-14 w-14 rounded-full bg-gray-200"></div>
+          <div class="flex-1 space-y-2">
+            <div class="h-3 w-3/4 rounded bg-gray-200"></div>
+            <div class="h-3 w-1/2 rounded bg-gray-100"></div>
           </div>
         </div>
+        <div class="mt-5 space-y-2">
+          <div class="h-2 rounded bg-gray-100"></div>
+          <div class="h-2 rounded bg-gray-100"></div>
+          <div class="h-2 w-2/3 rounded bg-gray-100"></div>
+        </div>
       </div>
-  
-      <!-- Error -->
-      <div *ngIf="state === 'error'" class="mt-6 rounded-xl bg-white px-6 py-10 text-center shadow-sm">
-        <i class="bi bi-exclamation-circle text-3xl text-red-500"></i>
-        <p class="mt-2 text-gray-700">โหลดรายชื่อผู้ร่วมวิจัยไม่สำเร็จ</p>
-        <button
-          type="button"
-          (click)="load()"
-          class="mt-4 rounded-lg bg-[#F2CB05] px-5 py-2 text-sm font-semibold text-gray-900 hover:brightness-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-900"
-        >
-          ลองอีกครั้ง
-        </button>
-      </div>
-  
-      <!-- Empty -->
-      <div *ngIf="state === 'empty' || state === 'not_ready'" class="mt-6 rounded-xl bg-white px-6 py-10 text-center shadow-sm">
-        <i class="bi bi-people text-3xl text-gray-300"></i>
-        <p class="mt-2 text-gray-700">
-          {{ state === 'not_ready' ? 'ระบบแนะนำอยู่ระหว่างการประเมินผล' : 'ยังไม่พบนักวิจัยที่เหมาะสม' }}
-        </p>
-        <p *ngIf="state === 'empty'" class="mt-1 text-sm text-gray-500">
-          เพิ่มความเชี่ยวชาญและความสนใจในโปรไฟล์ เพื่อให้ระบบแนะนำได้แม่นยำขึ้น
-        </p>
-      </div>
-  
-      <!-- Cards -->
-      <div *ngIf="state === 'ready'" class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <article
-          *ngFor="let r of filteredItems; let i = index; trackBy: trackById"
-          class="flex flex-col rounded-xl border border-gray-100 bg-white p-5 shadow-sm"
-        >
-          <!-- Person -->
-          <div class="flex items-start gap-3">
-            <div class="relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-amber-50 text-lg font-semibold text-amber-700 ring-2 ring-[#F2CB05]/40">
-              <span>{{ initials(r.name) }}</span>
-              <img
-                *ngIf="r.photo_url"
-                [src]="r.photo_url"
-                [alt]="r.name"
-                loading="lazy"
-                (error)="onImageError($event)"
-                class="absolute inset-0 h-full w-full object-cover"
-              />
-            </div>
-            <div class="min-w-0 flex-1">
-              <h2 class="font-semibold leading-snug text-gray-900">{{ r.name }}</h2>
-              <p class="text-sm text-gray-500">{{ r.position || 'นักวิจัย' }}</p>
-              <p *ngIf="r.department" class="truncate text-sm text-gray-500" [title]="r.department">
-                {{ r.department }}
-              </p>
-            </div>
-            <span class="shrink-0 rounded-full px-2.5 py-0.5 text-xs font-medium" [ngClass]="levelClass[r.level]">
-              {{ levelLabel[r.level] }}
-            </span>
-          </div>
-  
-          <!-- Reasons -->
-          <ul class="mt-4 space-y-1.5 text-sm text-gray-700">
-            <li *ngIf="r.reasons.shared_topics.length" class="flex gap-2">
-              <i class="bi bi-diagram-3 mt-0.5 text-amber-600"></i>
-              <span>สนใจเรื่องเดียวกัน: <span class="font-medium">{{ r.reasons.shared_topics.join(', ') }}</span></span>
-            </li>
-            <li *ngIf="r.reasons.mutual_collaborators > 0" class="flex gap-2">
-              <i class="bi bi-people mt-0.5 text-amber-600"></i>
-              <span>มีผู้ร่วมงานร่วมกัน {{ r.reasons.mutual_collaborators }} คน</span>
-            </li>
-            <li *ngIf="r.reasons.recent_works > 0" class="flex gap-2">
-              <i class="bi bi-journal-text mt-0.5 text-amber-600"></i>
-              <span>มีผลงานใน 5 ปีล่าสุด {{ r.reasons.recent_works }} เรื่อง</span>
-            </li>
-          </ul>
-  
-          <!-- Score breakdown -->
-          <div class="mt-4 space-y-2 border-t border-gray-100 pt-4">
-            <div *ngFor="let c of scoreParts" class="grid grid-cols-[7.5rem_1fr_2.5rem] items-center gap-2 text-xs">
-              <span class="text-gray-500">{{ c.label }}</span>
-              <div class="h-1.5 rounded-full bg-gray-100">
-                <div class="h-1.5 rounded-full bg-[#F2CB05]" [style.width.%]="r.components[c.key] * 100"></div>
-              </div>
-              <span class="text-right text-gray-600">{{ percent(r.components[c.key]) }}</span>
-            </div>
-          </div>
-  
-          <!-- Action -->
-          <a
-            [routerLink]="[profileRoute, r.id]"
-            class="mt-5 inline-flex items-center justify-center gap-2 rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-800 hover:border-[#F2CB05] hover:bg-amber-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#F2CB05]"
-          >
-            <i class="bi bi-person-lines-fill"></i>
-            ดูโปรไฟล์
-          </a>
-        </article>
-      </div>
-  
-      <p *ngIf="state === 'ready' && !filteredItems.length" class="mt-6 text-center text-sm text-gray-500">
-        ไม่มีนักวิจัยในระดับนี้
+    </div>
+
+    <!-- Error -->
+    <div *ngIf="state === 'error'" class="mt-6 rounded-xl bg-white px-6 py-10 text-center shadow-sm">
+      <i class="bi bi-exclamation-circle text-3xl text-red-500"></i>
+      <p class="mt-2 text-gray-700">โหลดรายชื่อผู้ร่วมวิจัยไม่สำเร็จ</p>
+      <button
+        type="button"
+        (click)="load()"
+        class="mt-4 rounded-lg bg-[#F2CB05] px-5 py-2 text-sm font-semibold text-gray-900 hover:brightness-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-900"
+      >
+        ลองอีกครั้ง
+      </button>
+    </div>
+
+    <!-- Empty -->
+    <div *ngIf="state === 'empty'" class="mt-6 rounded-xl bg-white px-6 py-10 text-center shadow-sm">
+      <i class="bi bi-people text-3xl text-gray-300"></i>
+      <p class="mt-2 text-gray-700">ยังไม่พบนักวิจัยที่เหมาะสม</p>
+      <p class="mt-1 text-sm text-gray-500">
+        เพิ่มความเชี่ยวชาญและความสนใจในโปรไฟล์ เพื่อให้ระบบแนะนำได้แม่นยำขึ้น
       </p>
     </div>
+
+    <!-- Cards -->
+    <div *ngIf="state === 'ready' && items.length" class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <article
+        *ngFor="let r of items; trackBy: trackById"
+        class="flex flex-col rounded-xl border border-gray-100 bg-white p-5 shadow-sm"
+      >
+        <!-- Person -->
+        <div class="flex items-start gap-3">
+          <div class="relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-amber-50 text-lg font-semibold text-amber-700 ring-2 ring-[#F2CB05]/40">
+            <span>{{ initials(r) }}</span>
+            <img
+              *ngIf="r.researcher.avatar"
+              [src]="r.researcher.avatar"
+              [alt]="r.researcher.full_name_th"
+              loading="lazy"
+              (error)="onImageError($event)"
+              class="absolute inset-0 h-full w-full object-cover"
+            />
+          </div>
+          <div class="min-w-0 flex-1">
+            <h2 class="font-semibold leading-snug text-gray-900">{{ r.researcher.full_name_th }}</h2>
+            <p class="text-sm text-gray-500">{{ displayPosition(r) }}</p>
+          </div>
+          <div class="flex shrink-0 flex-col items-end gap-1">
+            <span class="rounded-full px-2.5 py-0.5 text-xs font-medium" [ngClass]="levelClass[r.level.code]">
+              {{ r.level.label }}
+            </span>
+            <span class="text-xs text-gray-500">คะแนน {{ r.matching_score | number: '1.0-1' }}</span>
+          </div>
+        </div>
+
+        <!-- Reasons -->
+        <ul class="mt-4 space-y-1.5 text-sm text-gray-700">
+          <li *ngIf="sharedFields(r).length" class="flex gap-2">
+            <i class="bi bi-diagram-3 mt-0.5 text-amber-600"></i>
+            <span>สาขาที่ตรงกัน: <span class="font-medium">{{ sharedFields(r).join(', ') }}</span></span>
+          </li>
+          <li *ngIf="r.common_collaborator_count > 0" class="flex gap-2">
+            <i class="bi bi-people mt-0.5 text-amber-600"></i>
+            <span>มีผู้ร่วมงานร่วมกัน {{ r.common_collaborator_count }} คน</span>
+          </li>
+          <li *ngIf="r.recent_output_count > 0" class="flex gap-2">
+            <i class="bi bi-journal-text mt-0.5 text-amber-600"></i>
+            <span>
+              มีผลงานใน {{ r.explain.activity.period.recent_years || 5 }} ปีล่าสุด
+              {{ r.recent_output_count }} เรื่อง
+            </span>
+          </li>
+        </ul>
+
+        <!-- Score breakdown -->
+        <div class="mt-4 space-y-2 border-t border-gray-100 pt-4">
+          <div *ngFor="let c of scoreParts" class="grid grid-cols-[7.5rem_1fr_2.5rem] items-center gap-2 text-xs">
+            <span class="text-gray-500">{{ c.label }}</span>
+            <div class="h-1.5 rounded-full bg-gray-100">
+              <div class="h-1.5 rounded-full bg-[#F2CB05]" [style.width.%]="scoreWidth(r.scores[c.key])"></div>
+            </div>
+            <span class="text-right text-gray-600">{{ scoreText(r.scores[c.key]) }}</span>
+          </div>
+        </div>
+
+        <!-- Action -->
+        <a
+          [routerLink]="[profileRoute, r.researcher.id]"
+          class="mt-auto inline-flex items-center justify-center gap-2 rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-800 hover:border-[#F2CB05] hover:bg-amber-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#F2CB05]"
+          style="margin-top: 1.25rem"
+        >
+          <i class="bi bi-person-lines-fill"></i>
+          ดูโปรไฟล์
+        </a>
+      </article>
+    </div>
+
+    <p *ngIf="state === 'ready' && !items.length" class="mt-6 text-center text-sm text-gray-500">
+      ไม่มีนักวิจัยในระดับนี้
+    </p>
   </div>
+
+  <!-- Recalculate loading modal -->
+  <div
+    *ngIf="recalculating"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/50 px-4 backdrop-blur-sm"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="recalc-title"
+    aria-describedby="recalc-desc"
+  >
+    <div class="w-full max-w-sm rounded-2xl bg-white p-8 text-center shadow-xl">
+      <div class="relative mx-auto h-16 w-16">
+        <div class="absolute inset-0 rounded-full border-4 border-amber-100"></div>
+        <div class="absolute inset-0 animate-spin rounded-full border-4 border-[#F2CB05] border-t-transparent"></div>
+        <i class="bi bi-people-fill absolute inset-0 flex items-center justify-center text-xl text-amber-600"></i>
+      </div>
+
+      <h2 id="recalc-title" class="mt-5 text-lg font-semibold text-gray-900">
+        กำลังส่งคำสั่งอัปเดต
+      </h2>
+      <p id="recalc-desc" class="mt-2 text-sm text-gray-500">
+        กรุณารอสักครู่…
+      </p>
+
+      <div class="mt-5 h-1.5 overflow-hidden rounded-full bg-gray-100">
+        <div class="recalc-bar h-full w-1/3 rounded-full bg-[#F2CB05]"></div>
+      </div>
+    </div>
+  </div>
+</div>

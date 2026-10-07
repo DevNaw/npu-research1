@@ -1,0 +1,21 @@
+/* แถบ progress แบบไม่ทราบระยะเวลา (indeterminate) ใน modal คำนวณใหม่ */
+.recalc-bar {
+  animation: recalc-slide 1.4s ease-in-out infinite;
+}
+
+@keyframes recalc-slide {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(300%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .recalc-bar {
+    animation: none;
+    width: 100%;
+    opacity: 0.6;
+  }
+}

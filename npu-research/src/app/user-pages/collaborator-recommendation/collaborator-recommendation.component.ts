@@ -1,153 +1,27 @@
-// import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-// import { ActivatedRoute } from '@angular/router';
-// import { Subscription } from 'rxjs';
-// import {
-//   CollaboratorRecommendation,
-//   MatchLevel,
-//   RecommenderEvaluation,
-// } from '../../models/collaborator-recommendation.model';
-// import { CollaboratorRecommendationService } from '../../services/collaborator-recommendation.service';
-// import { MainComponent } from '../../shared/layouts/main/main.component';
-
-// type ViewState = 'loading' | 'ready' | 'empty' | 'not_ready' | 'error';
-
-// @Component({
-//   selector: 'app-collaborator-recommendation',
-//   standalone: false,
-//   templateUrl: './collaborator-recommendation.component.html',
-//   styleUrl: './collaborator-recommendation.component.css',
-// })
-// export class CollaboratorRecommendationComponent implements OnInit, OnDestroy {
-//   /** Optional: when not passed in, the :id route param is used. */
-//   @Input() researcherId?: number | null;
-//   @Input() limit = 6;
-//   /** Route of the researcher profile page; the researcher id is appended. */
-//   @Input() profileRoute = '/researcher';
-
-//   state: ViewState = 'loading';
-//   items: CollaboratorRecommendation[] = [];
-//   evaluation: RecommenderEvaluation | null = null;
-//   showEvaluation = false;
-
-//   readonly levelLabel: Record<MatchLevel, string> = {
-//     high: 'เหมาะสมมาก',
-//     medium: 'เหมาะสม',
-//     low: 'น่าพิจารณา',
-//   };
-
-//   readonly levelClass: Record<MatchLevel, string> = {
-//     high: 'bg-[#F2CB05] text-gray-900',
-//     medium: 'bg-amber-100 text-amber-800',
-//     low: 'bg-gray-100 text-gray-600',
-//   };
-
-//   private sub?: Subscription;
-//   private routeSub?: Subscription;
-
-//   constructor(
-//     private service: CollaboratorRecommendationService,
-//     private route: ActivatedRoute
-//   ) {}
-
-//   ngOnInit() {
-//     MainComponent.showLoading();
-
-//     this.routeSub = this.route.paramMap.subscribe((params) => {
-//       const id = params.get('id');
-
-//       if (id) {
-//         this.researcherId = +id;
-//       }
-
-//       if (this.researcherId) {
-//         this.loadRecommendations(this.researcherId);
-//       } else {
-//         this.items = [];
-//         this.state = 'empty';
-//         MainComponent.hideLoading();
-//       }
-//     });
-//   }
-
-//   ngOnDestroy(): void {
-//     this.sub?.unsubscribe();
-//     this.routeSub?.unsubscribe();
-//     MainComponent.hideLoading();
-//   }
-
-//   loadRecommendations(researcherId: number): void {
-//     this.sub?.unsubscribe();
-//     this.state = 'loading';
-
-//     this.sub = this.service.getRecommendations(researcherId, this.limit).subscribe({
-//       next: (res) => {
-//         this.items = res.data ?? [];
-//         this.evaluation = res.meta?.evaluation ?? null;
-//         if (res.meta?.status === 'not_ready') {
-//           this.state = 'not_ready';
-//         } else {
-//           this.state = this.items.length ? 'ready' : 'empty';
-//         }
-//         MainComponent.hideLoading();
-//       },
-//       error: (err) => {
-//         console.error('[CollaboratorRecommendation]', err);
-//         this.items = [];
-//         this.state = 'error';
-//         MainComponent.hideLoading();
-//       },
-//     });
-//   }
-
-//   /** Used by the "ลองอีกครั้ง" button. */
-//   load(): void {
-//     if (this.researcherId) {
-//       MainComponent.showLoading();
-//       this.loadRecommendations(this.researcherId);
-//     }
-//   }
-
-//   percent(value: number | undefined): string {
-//     return `${Math.round((value ?? 0) * 100)}%`;
-//   }
-
-//   thaiDate(value: string): string {
-//     const date = new Date((value || '').replace(' ', 'T'));
-//     return isNaN(date.getTime())
-//       ? ''
-//       : date.toLocaleDateString('th-TH', { day: 'numeric', month: 'long', year: 'numeric' });
-//   }
-
-//   initials(name: string): string {
-//     return (name || '?').trim().charAt(0);
-//   }
-
-//   onImageError(event: Event): void {
-//     (event.target as HTMLImageElement).style.display = 'none';
-//   }
-
-//   trackById(_: number, item: CollaboratorRecommendation): number {
-//     return item.id;
-//   }
-// }
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { finalize } from 'rxjs/operators';
 import {
   CollaboratorRecommendation,
+  LevelCounts,
+  LevelFilter,
+  LevelThresholds,
   MatchLevel,
+  RecalculateResult,
+  RecommendationScores,
   RecommenderEvaluation,
   RecommenderMetrics,
 } from '../../models/collaborator-recommendation.model';
 import { CollaboratorRecommendationService } from '../../services/collaborator-recommendation.service';
 import { MainComponent } from '../../shared/layouts/main/main.component';
 
-type ViewState = 'loading' | 'ready' | 'empty' | 'not_ready' | 'error';
-type LevelFilter = 'all' | MatchLevel;
+type ViewState = 'loading' | 'ready' | 'empty' | 'error';
 type MethodKey = 'model' | 'popularity' | 'random';
 type MetricKey = 'hit_rate' | 'ndcg' | 'recall';
-type ScoreKey = 'content' | 'network' | 'activity';
+type ScoreKey = keyof RecommendationScores;
+/** accepted = รับคำสั่งแล้ว กำลังคำนวณเบื้องหลัง / done = คำนวณเสร็จทันที (200) */
+type RecalcNotice = 'accepted' | 'done' | null;
 
 @Component({
   selector: 'app-collaborator-recommendation',
@@ -156,39 +30,49 @@ type ScoreKey = 'content' | 'network' | 'activity';
   styleUrl: './collaborator-recommendation.component.css',
 })
 export class CollaboratorRecommendationComponent implements OnInit, OnDestroy {
-  /** Optional: when not passed in, the :id route param is used (if any). */
-  @Input() researcherId?: number | null;
-  @Input() limit = 6;
   /** Route of the researcher profile page; the researcher id is appended. */
   @Input() profileRoute = '/researcher';
 
   state: ViewState = 'loading';
   items: CollaboratorRecommendation[] = [];
+  levelCounts: LevelCounts | null = null;
+  thresholds: LevelThresholds | null = null;
+  /** API ยังไม่ส่ง evaluation มา → บล็อกประเมินผลจะถูกซ่อนไว้ */
   evaluation: RecommenderEvaluation | null = null;
   showEvaluation = false;
   activeLevel: LevelFilter = 'all';
 
-  readonly levelLabel: Record<MatchLevel, string> = {
-    high: 'เหมาะสมมาก',
-    medium: 'เหมาะสม',
-    low: 'น่าพิจารณา',
-  };
+  /** ปุ่ม "อัปเดตผู้ร่วมวิจัยใหม่" */
+  recalculating = false;
+  recalcNotice: RecalcNotice = null;
+  /** ตัวเลขสรุป — มีเฉพาะกรณี API ตอบ 200 */
+  recalcResult: RecalculateResult | null = null;
+  recalcError: string | null = null;
+  /** กันกดซ้ำหลังสั่งอัปเดตแล้ว (หน่วงไว้ช่วงหนึ่ง) */
+  recalcCooldown = false;
+  private readonly cooldownMs = 60_000;
+  private cooldownTimer?: ReturnType<typeof setTimeout>;
+
+  /** สาขา OECD ที่ตรงกัน (คำนวณครั้งเดียวตอนโหลด) */
+  private fieldsById: Record<number, string[]> = {};
 
   readonly levelClass: Record<MatchLevel, string> = {
     high: 'bg-[#F2CB05] text-gray-900',
-    medium: 'bg-amber-100 text-amber-800',
-    low: 'bg-gray-100 text-gray-600',
+    good: 'bg-amber-100 text-amber-800',
+    consider: 'bg-gray-100 text-gray-700',
+    other: 'bg-gray-50 text-gray-500',
   };
 
   readonly filters: { key: LevelFilter; label: string }[] = [
     { key: 'all', label: 'ทั้งหมด' },
     { key: 'high', label: 'เหมาะสมมาก' },
-    { key: 'medium', label: 'เหมาะสม' },
-    { key: 'low', label: 'น่าพิจารณา' },
+    { key: 'good', label: 'เหมาะสม' },
+    { key: 'consider', label: 'น่าพิจารณา' },
+    { key: 'other', label: 'อื่นๆ' },
   ];
 
   readonly scoreParts: { key: ScoreKey; label: string }[] = [
-    { key: 'content', label: 'ความเชี่ยวชาญตรงกัน' },
+    { key: 'expertise', label: 'ความเชี่ยวชาญตรงกัน' },
     { key: 'network', label: 'เครือข่ายร่วม' },
     { key: 'activity', label: 'ผลงานต่อเนื่อง' },
   ];
@@ -206,74 +90,123 @@ export class CollaboratorRecommendationComponent implements OnInit, OnDestroy {
   ];
 
   private sub?: Subscription;
-  private routeSub?: Subscription;
+  private recalcSub?: Subscription;
 
   constructor(
     private service: CollaboratorRecommendationService,
-    private route: ActivatedRoute,
     private location: Location
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     MainComponent.showLoading();
-
-    this.routeSub = this.route.paramMap.subscribe((params) => {
-      const id = params.get('id');
-      if (id) {
-        this.researcherId = +id;
-      }
-      // Mock mode: load even without an id.
-      this.loadRecommendations();
-    });
+    this.loadRecommendations();
   }
 
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
-    this.routeSub?.unsubscribe();
+    this.recalcSub?.unsubscribe();
+    if (this.cooldownTimer) {
+      clearTimeout(this.cooldownTimer);
+    }
+    document.body.style.overflow = '';
     MainComponent.hideLoading();
   }
 
-  get filteredItems(): CollaboratorRecommendation[] {
-    return this.activeLevel === 'all'
-      ? this.items
-      : this.items.filter((r) => r.level === this.activeLevel);
-  }
-
-  countBy(level: LevelFilter): number {
-    return level === 'all' ? this.items.length : this.items.filter((r) => r.level === level).length;
-  }
-
-  metricValue(method: MethodKey, metric: MetricKey): number {
-    if (!this.evaluation) {
-      return 0;
+  /** สั่งอัปเดตครั้งเดียว แล้วแจ้งผลให้ผู้ใช้ทราบ (ไม่ poll) */
+  recalculate(): void {
+    if (this.recalculating || this.recalcCooldown) {
+      return;
     }
-    const source: RecommenderMetrics =
-      method === 'model' ? this.evaluation.metrics : this.evaluation.baselines[method];
-    return source?.[metric] ?? 0;
+    this.recalculating = true;
+    this.recalcNotice = null;
+    this.recalcResult = null;
+    this.recalcError = null;
+    document.body.style.overflow = 'hidden';
+
+    this.recalcSub?.unsubscribe();
+    this.recalcSub = this.service
+      .recalculate()
+      .pipe(
+        finalize(() => {
+          this.recalculating = false;
+          document.body.style.overflow = '';
+        })
+      )
+      .subscribe({
+        next: (outcome) => {
+          if (outcome.accepted) {
+            // 202 / 409 → คำนวณอยู่เบื้องหลัง แจ้งผู้ใช้แล้วจบ
+            this.recalcNotice = 'accepted';
+            this.startCooldown();
+          } else {
+            // 200 → เสร็จแล้ว โหลดรายชื่อใหม่
+            this.recalcNotice = 'done';
+            this.recalcResult = outcome.result;
+            this.loadRecommendations();
+          }
+        },
+        error: (err) => {
+          console.error('[CollaboratorRecommendation:recalculate]', err);
+          this.recalcError = err?.message || 'อัปเดตผู้ร่วมวิจัยไม่สำเร็จ กรุณาลองอีกครั้ง';
+        },
+      });
+  }
+
+  dismissRecalc(): void {
+    this.recalcNotice = null;
+    this.recalcResult = null;
+    this.recalcError = null;
+  }
+
+  /** ปุ่ม "โหลดรายชื่อใหม่" ในกล่องแจ้งเตือน — ผู้ใช้กดเองเมื่อพร้อม */
+  reloadAfterRecalc(): void {
+    this.dismissRecalc();
+    this.load();
+  }
+
+  private startCooldown(): void {
+    this.recalcCooldown = true;
+    if (this.cooldownTimer) {
+      clearTimeout(this.cooldownTimer);
+    }
+    this.cooldownTimer = setTimeout(() => (this.recalcCooldown = false), this.cooldownMs);
+  }
+
+  setLevel(level: LevelFilter): void {
+    if (this.activeLevel === level || this.state === 'loading') {
+      return;
+    }
+    this.activeLevel = level;
+    this.loadRecommendations();
   }
 
   loadRecommendations(): void {
     this.sub?.unsubscribe();
     this.state = 'loading';
-    this.activeLevel = 'all';
 
-    this.sub = this.service.getRecommendations(this.researcherId, this.limit).subscribe({
+    const level = this.activeLevel === 'all' ? null : this.activeLevel;
+
+    this.sub = this.service.getRecommendations(level).subscribe({
       next: (res) => {
-        this.items = res.data ?? [];
-        this.evaluation = res.meta?.evaluation ?? null;
-        if (res.meta?.status === 'not_ready') {
-          this.state = 'not_ready';
-        } else {
-          this.state = this.items.length ? 'ready' : 'empty';
+        if (res?.result !== 1 || !res.data) {
+          this.fail(res?.message);
+          return;
         }
+
+        const data = res.data;
+        this.items = data.recommendations ?? [];
+        this.levelCounts = data.level_counts ?? null;
+        this.thresholds = data.thresholds ?? null;
+        this.fieldsById = {};
+        for (const r of this.items) {
+          this.fieldsById[r.researcher.id] = this.extractFields(r);
+        }
+
+        // ถ้ากรองระดับแล้วว่าง ยังคงแสดงตัวกรองไว้ (state = ready + ข้อความ "ไม่มีนักวิจัยในระดับนี้")
+        this.state = this.items.length || this.activeLevel !== 'all' ? 'ready' : 'empty';
         MainComponent.hideLoading();
       },
-      error: (err) => {
-        console.error('[CollaboratorRecommendation]', err);
-        this.items = [];
-        this.state = 'error';
-        MainComponent.hideLoading();
-      },
+      error: (err) => this.fail(err),
     });
   }
 
@@ -287,8 +220,47 @@ export class CollaboratorRecommendationComponent implements OnInit, OnDestroy {
     this.location.back();
   }
 
+  countBy(level: LevelFilter): number {
+    return this.levelCounts?.[level] ?? 0;
+  }
+
+  thresholdHint(level: LevelFilter): string | null {
+    if (!this.thresholds || level === 'all' || level === 'other') {
+      return null;
+    }
+    return `คะแนนรวมตั้งแต่ ${this.thresholds[level]} ขึ้นไป`;
+  }
+
+  sharedFields(r: CollaboratorRecommendation): string[] {
+    return this.fieldsById[r.researcher.id] ?? [];
+  }
+
+  displayPosition(r: CollaboratorRecommendation): string {
+    const work = r.researcher.work;
+    return work?.academic_position || work?.position || 'นักวิจัย';
+  }
+
+  metricValue(method: MethodKey, metric: MetricKey): number {
+    if (!this.evaluation) {
+      return 0;
+    }
+    const source: RecommenderMetrics =
+      method === 'model' ? this.evaluation.metrics : this.evaluation.baselines[method];
+    return source?.[metric] ?? 0;
+  }
+
+  /** ค่า 0–1 (ใช้กับ evaluation) */
   percent(value: number | undefined): string {
     return `${Math.round((value ?? 0) * 100)}%`;
+  }
+
+  /** ค่า 0–100 (ใช้กับคะแนนจาก API) */
+  scoreText(value: number | undefined): string {
+    return `${Math.round(value ?? 0)}%`;
+  }
+
+  scoreWidth(value: number | undefined): number {
+    return Math.max(0, Math.min(100, value ?? 0));
   }
 
   thaiDate(value: string): string {
@@ -298,8 +270,8 @@ export class CollaboratorRecommendationComponent implements OnInit, OnDestroy {
       : date.toLocaleDateString('th-TH', { day: 'numeric', month: 'long', year: 'numeric' });
   }
 
-  initials(name: string): string {
-    return (name || '?').trim().charAt(0);
+  initials(r: CollaboratorRecommendation): string {
+    return (r.researcher.first_name || r.researcher.full_name_th || '?').trim().charAt(0);
   }
 
   onImageError(event: Event): void {
@@ -307,6 +279,20 @@ export class CollaboratorRecommendationComponent implements OnInit, OnDestroy {
   }
 
   trackById(_: number, item: CollaboratorRecommendation): number {
-    return item.id;
+    return item.researcher.id;
+  }
+
+  private extractFields(r: CollaboratorRecommendation): string[] {
+    const names = (r.explain?.expertise?.top_matches ?? [])
+      .map((m) => m.source_oecd?.name_th?.trim())
+      .filter((n): n is string => !!n && n !== 'อื่นๆ');
+    return Array.from(new Set(names));
+  }
+
+  private fail(err: unknown): void {
+    console.error('[CollaboratorRecommendation]', err);
+    this.items = [];
+    this.state = 'error';
+    MainComponent.hideLoading();
   }
 }
