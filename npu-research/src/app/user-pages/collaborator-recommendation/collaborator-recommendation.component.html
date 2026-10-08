@@ -199,6 +199,15 @@
       </button>
     </div>
 
+    <!-- Result summary -->
+    <p
+      *ngIf="state === 'ready' && pagination && pagination.total > 0"
+      class="mt-4 text-sm text-gray-500"
+    >
+      แสดง {{ pagination.from | number }}–{{ pagination.to | number }}
+      จาก {{ pagination.total | number }} คน
+    </p>
+
     <!-- Loading -->
     <div *ngIf="state === 'loading'" class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3" aria-busy="true">
       <div *ngFor="let _ of [1, 2, 3, 4, 5, 6]" class="animate-pulse rounded-xl bg-white p-5 shadow-sm">
@@ -270,11 +279,35 @@
           </div>
         </div>
 
+        <!-- Rank + confidence -->
+        <div class="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
+          <span
+            *ngIf="showRank(r)"
+            class="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5 font-medium text-amber-800"
+          >
+            <i class="bi bi-trophy"></i>
+            {{ r.rank.label }}
+          </span>
+          <span
+            *ngIf="r.confidence"
+            class="inline-flex items-center gap-1"
+            [ngClass]="confidenceClass[r.confidence.code] || 'text-gray-500'"
+            [attr.title]="'หลักฐาน ' + r.confidence.points + '/' + r.confidence.max_points + ' คะแนน'"
+          >
+            <i class="bi bi-shield-check"></i>
+            {{ r.confidence.label }}
+          </span>
+        </div>
+
         <!-- Reasons -->
         <ul class="mt-4 space-y-1.5 text-sm text-gray-700">
           <li *ngIf="sharedFields(r).length" class="flex gap-2">
             <i class="bi bi-diagram-3 mt-0.5 text-amber-600"></i>
             <span>สาขาที่ตรงกัน: <span class="font-medium">{{ sharedFields(r).join(', ') }}</span></span>
+          </li>
+          <li *ngIf="sharedTopics(r).length" class="flex gap-2">
+            <i class="bi bi-tags mt-0.5 text-amber-600"></i>
+            <span>หัวข้อที่ตรงกัน: <span class="font-medium">{{ sharedTopics(r).join(', ') }}</span></span>
           </li>
           <li *ngIf="r.common_collaborator_count > 0" class="flex gap-2">
             <i class="bi bi-people mt-0.5 text-amber-600"></i>
@@ -283,7 +316,7 @@
           <li *ngIf="r.recent_output_count > 0" class="flex gap-2">
             <i class="bi bi-journal-text mt-0.5 text-amber-600"></i>
             <span>
-              มีผลงานใน {{ r.explain.activity.period.recent_years || 5 }} ปีล่าสุด
+              มีผลงานใน {{ recentYears(r) }} ปีล่าสุด
               {{ r.recent_output_count }} เรื่อง
             </span>
           </li>
@@ -300,27 +333,347 @@
           </div>
         </div>
 
-        <!-- Action -->
-        <a
-          [routerLink]="[profileRoute, r.researcher.id]"
-          class="mt-auto inline-flex items-center justify-center gap-2 rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-800 hover:border-[#F2CB05] hover:bg-amber-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#F2CB05]"
-          style="margin-top: 1.25rem"
-        >
-          <i class="bi bi-person-lines-fill"></i>
-          ดูโปรไฟล์
-        </a>
+        <!-- Actions -->
+        <div class="mt-auto grid grid-cols-2 gap-2" style="margin-top: 1.25rem">
+          <button
+            type="button"
+            (click)="openExplain(r)"
+            [attr.aria-label]="'ดูเหตุผลที่แนะนำ ' + r.researcher.full_name_th"
+            class="inline-flex items-center justify-center gap-2 rounded-lg bg-[#F2CB05] px-3 py-2 text-sm font-semibold text-gray-900 hover:brightness-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-900"
+          >
+            <i class="bi bi-lightbulb"></i>
+            ทำไมถึงแนะนำ
+          </button>
+          <a
+            [routerLink]="[profileRoute, r.researcher.id]"
+            class="inline-flex items-center justify-center gap-2 rounded-lg border border-gray-200 px-3 py-2 text-sm font-medium text-gray-800 hover:border-[#F2CB05] hover:bg-amber-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#F2CB05]"
+          >
+            <i class="bi bi-person-lines-fill"></i>
+            ดูโปรไฟล์
+          </a>
+        </div>
       </article>
     </div>
 
     <p *ngIf="state === 'ready' && !items.length" class="mt-6 text-center text-sm text-gray-500">
       ไม่มีนักวิจัยในระดับนี้
     </p>
+
+    <!-- Pagination -->
+    <nav
+      *ngIf="state === 'ready' && pagination && pagination.last_page > 1"
+      class="mt-8 flex flex-wrap items-center justify-center gap-1"
+      aria-label="เปลี่ยนหน้า"
+    >
+      <button
+        type="button"
+        (click)="goToPage(1)"
+        [disabled]="page === 1"
+        aria-label="หน้าแรก"
+        class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 bg-white text-sm text-gray-700 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#F2CB05] disabled:cursor-not-allowed disabled:opacity-40"
+      >
+        <i class="bi bi-chevron-double-left"></i>
+      </button>
+      <button
+        type="button"
+        (click)="goToPage(page - 1)"
+        [disabled]="page === 1"
+        aria-label="หน้าก่อนหน้า"
+        class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 bg-white text-sm text-gray-700 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#F2CB05] disabled:cursor-not-allowed disabled:opacity-40"
+      >
+        <i class="bi bi-chevron-left"></i>
+      </button>
+
+      <button
+        *ngFor="let p of pageNumbers"
+        type="button"
+        (click)="goToPage(p)"
+        [attr.aria-current]="p === page ? 'page' : null"
+        class="inline-flex h-9 min-w-[2.25rem] items-center justify-center rounded-lg border px-2 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-[#F2CB05]"
+        [ngClass]="p === page
+          ? 'border-gray-900 bg-gray-900 font-semibold text-white'
+          : 'border-gray-200 bg-white text-gray-700 hover:bg-gray-50'"
+      >
+        {{ p }}
+      </button>
+
+      <button
+        type="button"
+        (click)="goToPage(page + 1)"
+        [disabled]="page === pagination.last_page"
+        aria-label="หน้าถัดไป"
+        class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 bg-white text-sm text-gray-700 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#F2CB05] disabled:cursor-not-allowed disabled:opacity-40"
+      >
+        <i class="bi bi-chevron-right"></i>
+      </button>
+      <button
+        type="button"
+        (click)="goToPage(pagination.last_page)"
+        [disabled]="page === pagination.last_page"
+        aria-label="หน้าสุดท้าย"
+        class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 bg-white text-sm text-gray-700 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#F2CB05] disabled:cursor-not-allowed disabled:opacity-40"
+      >
+        <i class="bi bi-chevron-double-right"></i>
+      </button>
+    </nav>
+  </div>
+
+  <!--
+    Overlay host — ย้ายไปไว้ใต้ <body> ตอน ngAfterViewInit
+    กัน header ของ layout (fixed / stacking context) บัง drawer และ modal
+  -->
+  <div #overlayHost>
+  <!-- Explain drawer -->
+  <div *ngIf="explainOpen" class="fixed inset-0 z-[1100] flex justify-end">
+    <div class="absolute inset-0 bg-gray-900/40" (click)="closeExplain()" aria-hidden="true"></div>
+
+    <aside
+      class="explain-drawer relative flex h-full w-full max-w-xl flex-col bg-white shadow-2xl"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="explain-title"
+    >
+      <!-- Drawer header -->
+      <div class="flex items-start gap-3 border-b border-gray-100 px-5 py-4">
+        <div *ngIf="explainTarget"
+             class="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-amber-50 font-semibold text-amber-700 ring-2 ring-[#F2CB05]/40">
+          <span>{{ initials(explainTarget) }}</span>
+          <img
+            *ngIf="explainTarget.researcher.avatar"
+            [src]="explainTarget.researcher.avatar"
+            [alt]="explainTarget.researcher.full_name_th"
+            (error)="onImageError($event)"
+            class="absolute inset-0 h-full w-full object-cover"
+          />
+        </div>
+        <div class="min-w-0 flex-1">
+          <p class="text-xs font-medium uppercase tracking-wide text-amber-700">ทำไมถึงแนะนำ</p>
+          <h2 id="explain-title" class="font-semibold leading-snug text-gray-900">
+            {{ explainTarget?.researcher?.full_name_th }}
+          </h2>
+          <p *ngIf="explainTarget" class="text-sm text-gray-500">{{ displayPosition(explainTarget) }}</p>
+        </div>
+        <button
+          type="button"
+          (click)="closeExplain()"
+          aria-label="ปิด"
+          class="rounded-lg p-2 text-gray-500 hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#F2CB05]"
+        >
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+
+      <div class="flex-1 overflow-y-auto px-5 py-5">
+        <!-- Loading -->
+        <div *ngIf="explainLoading" class="animate-pulse space-y-4" aria-busy="true">
+          <div class="h-24 rounded-xl bg-gray-100"></div>
+          <div class="h-3 w-1/2 rounded bg-gray-200"></div>
+          <div class="h-2 rounded bg-gray-100"></div>
+          <div class="h-2 rounded bg-gray-100"></div>
+          <div class="h-2 w-2/3 rounded bg-gray-100"></div>
+          <div class="h-32 rounded-xl bg-gray-100"></div>
+        </div>
+
+        <!-- Error -->
+        <div *ngIf="explainError && !explainLoading" class="py-10 text-center">
+          <i class="bi bi-exclamation-circle text-3xl text-red-500"></i>
+          <p class="mt-2 text-gray-700">{{ explainError }}</p>
+          <button
+            type="button"
+            (click)="retryExplain()"
+            class="mt-4 rounded-lg bg-[#F2CB05] px-5 py-2 text-sm font-semibold text-gray-900 hover:brightness-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-900"
+          >
+            ลองอีกครั้ง
+          </button>
+        </div>
+
+        <ng-container *ngIf="explainData as d">
+          <!-- Summary -->
+          <section class="rounded-xl bg-amber-50 p-4">
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <p class="text-xs text-amber-800">คะแนนรวม</p>
+                <p class="text-3xl font-bold text-gray-900">{{ d.matching_score | number: '1.0-2' }}</p>
+              </div>
+              <div class="flex flex-col items-end gap-1">
+                <span class="rounded-full px-2.5 py-0.5 text-xs font-medium" [ngClass]="levelClass[d.level.code]">
+                  {{ d.level.label }}
+                </span>
+                <span class="text-xs text-gray-600">{{ d.rank.label }}</span>
+              </div>
+            </div>
+            <p *ngIf="d.level.reason" class="mt-2 text-sm text-gray-700">{{ d.level.reason }}</p>
+            <p class="mt-3 rounded-lg bg-white/70 px-3 py-2 text-xs text-gray-600">
+              ความเกี่ยวข้อง {{ num(d.explain.total.relevance_score) }}
+              × ตัวคูณผลงาน {{ num(d.explain.total.activity_factor, 3) }}
+              = <span class="font-semibold text-gray-900">{{ num(d.explain.total.score) }}</span>
+            </p>
+          </section>
+
+          <!-- Score breakdown -->
+          <section class="mt-6">
+            <h3 class="mb-3 text-sm font-semibold text-gray-800">ที่มาของคะแนน</h3>
+            <div class="space-y-3">
+              <div *ngFor="let c of explainScoreParts">
+                <div class="mb-1 flex justify-between text-xs">
+                  <span class="text-gray-700" [attr.title]="c.hint">{{ c.label }}</span>
+                  <span class="text-gray-600">{{ num(d.scores[c.key], 1) }}</span>
+                </div>
+                <div class="h-1.5 rounded-full bg-gray-100">
+                  <div class="h-1.5 rounded-full bg-[#F2CB05]" [style.width.%]="scoreWidth(d.scores[c.key])"></div>
+                </div>
+              </div>
+            </div>
+            <p class="mt-3 text-xs text-gray-500">
+              น้ำหนัก: ความเชี่ยวชาญ {{ d.explain.total.components.expertise.weight }}% ·
+              เครือข่าย {{ d.explain.total.components.network.weight }}%
+            </p>
+          </section>
+
+          <!-- Evidence -->
+          <section class="mt-6">
+            <div class="mb-3 flex items-center justify-between">
+              <h3 class="text-sm font-semibold text-gray-800">หลักฐานความเกี่ยวข้อง</h3>
+              <span class="text-xs" [ngClass]="confidenceClass[d.confidence.code] || 'text-gray-500'">
+                {{ d.confidence.label }} ({{ d.confidence.points }}/{{ d.confidence.max_points }})
+              </span>
+            </div>
+            <ul class="divide-y divide-gray-100 rounded-xl border border-gray-100">
+              <li *ngFor="let e of evidenceRows(d)" class="flex items-start gap-3 px-4 py-2.5 text-sm">
+                <i class="bi mt-0.5"
+                   [ngClass]="e.ok ? 'bi-check-circle-fill text-emerald-600' : 'bi-dash-circle text-gray-300'"></i>
+                <div class="min-w-0 flex-1">
+                  <p class="text-gray-800">{{ e.label }}</p>
+                  <p class="text-xs text-gray-500">{{ e.detail }}</p>
+                </div>
+              </li>
+            </ul>
+          </section>
+
+          <!-- Topics -->
+          <section class="mt-6">
+            <h3 class="mb-2 text-sm font-semibold text-gray-800">หัวข้อวิจัยที่ตรงกัน</h3>
+            <div *ngIf="explainSharedTopics(d).length; else noShared" class="flex flex-wrap gap-1.5">
+              <span *ngFor="let t of explainSharedTopics(d)"
+                    class="rounded-full bg-[#F2CB05] px-2.5 py-0.5 text-xs font-medium text-gray-900">
+                {{ t }}
+              </span>
+            </div>
+            <ng-template #noShared>
+              <p class="text-sm text-gray-500">ยังไม่พบหัวข้อที่ตรงกัน</p>
+            </ng-template>
+
+            <div class="mt-4 grid gap-4 sm:grid-cols-2">
+              <div>
+                <p class="mb-1.5 text-xs font-medium text-gray-600">หัวข้อเด่นของคุณ</p>
+                <div class="flex flex-wrap gap-1.5">
+                  <span *ngFor="let t of myTopics(d)"
+                        class="rounded-full px-2 py-0.5 text-xs"
+                        [ngClass]="isSharedTopic(d, t.topic) ? 'bg-amber-100 text-amber-800' : 'bg-gray-100 text-gray-600'">
+                    {{ t.topic }}
+                  </span>
+                </div>
+              </div>
+              <div>
+                <p class="mb-1.5 text-xs font-medium text-gray-600">หัวข้อเด่นของ{{ d.researcher.first_name }}</p>
+                <div class="flex flex-wrap gap-1.5">
+                  <span *ngFor="let t of candidateTopics(d)"
+                        class="rounded-full px-2 py-0.5 text-xs"
+                        [ngClass]="isSharedTopic(d, t.topic) ? 'bg-amber-100 text-amber-800' : 'bg-gray-100 text-gray-600'">
+                    {{ t.topic }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- OECD -->
+          <section *ngIf="d.explain.expertise.top_matches.length" class="mt-6">
+            <h3 class="mb-2 text-sm font-semibold text-gray-800">สาขาวิจัย (OECD)</h3>
+            <ul class="space-y-1.5 text-sm">
+              <li *ngFor="let m of d.explain.expertise.top_matches" class="flex items-center gap-2 text-gray-700">
+                <span class="font-mono text-xs text-gray-400">{{ m.source_oecd.code }}</span>
+                <span class="flex-1">{{ m.source_oecd.name_th }}</span>
+                <span class="text-xs text-gray-500">ใกล้เคียง {{ m.similarity }}%</span>
+              </li>
+            </ul>
+            <p *ngIf="hasGenericOecd(d)" class="mt-2 text-xs text-gray-500">
+              <i class="bi bi-info-circle"></i>
+              สาขาเป็นกลุ่ม “อื่นๆ” จึงให้น้ำหนักน้อย ควรระบุสาขาให้เจาะจงในโปรไฟล์
+            </p>
+          </section>
+
+          <!-- Network -->
+          <section class="mt-6">
+            <h3 class="mb-2 text-sm font-semibold text-gray-800">เครือข่าย</h3>
+            <div class="grid grid-cols-3 gap-2 text-center">
+              <div class="rounded-lg bg-gray-50 px-2 py-3">
+                <p class="text-lg font-semibold text-gray-900">{{ d.explain.network.common_collaborator_count }}</p>
+                <p class="text-xs text-gray-500">ผู้ร่วมงานร่วมกัน</p>
+              </div>
+              <div class="rounded-lg bg-gray-50 px-2 py-3">
+                <p class="text-lg font-semibold text-gray-900">{{ d.explain.network.researcher_collaborator_count }}</p>
+                <p class="text-xs text-gray-500">ผู้ร่วมงานของคุณ</p>
+              </div>
+              <div class="rounded-lg bg-gray-50 px-2 py-3">
+                <p class="text-lg font-semibold text-gray-900">{{ d.explain.network.candidate_collaborator_count }}</p>
+                <p class="text-xs text-gray-500">ผู้ร่วมงานของ{{ d.researcher.first_name }}</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- Activity -->
+          <section class="mt-6">
+            <h3 class="mb-1 text-sm font-semibold text-gray-800">ผลงานล่าสุด</h3>
+            <p class="mb-3 text-xs text-gray-500">
+              ปี {{ d.explain.activity.period.start_year_be }}–{{ d.explain.activity.period.end_year_be }}
+              · {{ d.explain.activity.recent_output_count }} เรื่อง
+              · มีผลงาน {{ d.explain.activity.active_year_count }} จาก {{ d.explain.activity.period.recent_years }} ปี
+            </p>
+
+            <div class="mb-3 flex flex-wrap gap-1.5">
+              <ng-container *ngFor="let t of researchTypes">
+                <span *ngIf="d.explain.activity.output_type_counts[t]"
+                      class="rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-600">
+                  {{ researchTypeLabel[t] }} {{ d.explain.activity.output_type_counts[t] }}
+                </span>
+              </ng-container>
+            </div>
+
+            <ul class="space-y-2">
+              <li *ngFor="let o of latestOutputs(d)" class="rounded-lg border border-gray-100 px-3 py-2">
+                <p class="text-sm leading-snug text-gray-800">{{ outputTitle(o) || '(ไม่มีชื่อเรื่อง)' }}</p>
+                <p class="mt-0.5 text-xs text-gray-500">
+                  {{ researchTypeLabel[o.research_type] || o.research_type }} · พ.ศ. {{ o.original_year }}
+                </p>
+              </li>
+            </ul>
+          </section>
+
+          <p class="mt-6 border-t border-gray-100 pt-3 text-xs text-gray-400">
+            คำนวณเมื่อ {{ thaiDate(d.calculated_at) }} · {{ d.algorithm_version }} · {{ d.policy_version }}
+          </p>
+        </ng-container>
+      </div>
+
+      <!-- Drawer footer -->
+      <div *ngIf="explainTarget" class="border-t border-gray-100 px-5 py-3">
+        <a
+          [routerLink]="[profileRoute, explainTarget.researcher.id]"
+          (click)="closeExplain()"
+          class="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#F2CB05]"
+        >
+          <i class="bi bi-person-lines-fill"></i>
+          ดูโปรไฟล์
+        </a>
+      </div>
+    </aside>
   </div>
 
   <!-- Recalculate loading modal -->
   <div
     *ngIf="recalculating"
-    class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/50 px-4 backdrop-blur-sm"
+    class="fixed inset-0 z-[1110] flex items-center justify-center bg-gray-900/50 px-4 backdrop-blur-sm"
     role="dialog"
     aria-modal="true"
     aria-labelledby="recalc-title"
@@ -345,4 +698,6 @@
       </div>
     </div>
   </div>
+  </div>
+  <!-- /overlayHost -->
 </div>

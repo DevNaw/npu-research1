@@ -19,3 +19,38 @@
     opacity: 0.6;
   }
 }
+
+/* แถบ loading ใน modal อัปเดต */
+.recalc-bar {
+  animation: recalc-slide 1.2s ease-in-out infinite;
+}
+
+@keyframes recalc-slide {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(300%);
+  }
+}
+
+/* drawer "ทำไมถึงแนะนำ" เลื่อนเข้าจากขวา */
+.explain-drawer {
+  animation: explain-slide-in 0.2s ease-out;
+}
+
+@keyframes explain-slide-in {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .recalc-bar,
+  .explain-drawer {
+    animation: none;
+  }
+}

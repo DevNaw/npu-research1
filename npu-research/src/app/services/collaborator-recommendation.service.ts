@@ -5,6 +5,7 @@ import { catchError, map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import {
   ApiResponse,
+  CollaboratorExplainResponse,
   CollaboratorRecommendationResponse,
   MatchLevel,
   RecalculateOutcome,
@@ -17,11 +18,21 @@ export class CollaboratorRecommendationService {
 
   constructor(private http: HttpClient) {}
 
-  /** level = null → ทุกระดับ (ตรวจชื่อ query param ให้ตรงกับฝั่ง Laravel) */
-  getRecommendations(level?: MatchLevel | null): Observable<CollaboratorRecommendationResponse> {
-    let params = new HttpParams();
+  /**
+   * level = null → ทุกระดับ
+   * ตรวจชื่อ query param (level, page, per_page) ให้ตรงกับฝั่ง Laravel
+   */
+  getRecommendations(
+    level?: MatchLevel | null,
+    page = 1,
+    perPage?: number
+  ): Observable<CollaboratorRecommendationResponse> {
+    let params = new HttpParams().set('page', page);
     if (level) {
       params = params.set('level', level);
+    }
+    if (perPage) {
+      params = params.set('per_page', perPage);
     }
     return this.http.get<CollaboratorRecommendationResponse>(this.baseUrl, { params });
   }
@@ -59,5 +70,10 @@ export class CollaboratorRecommendationService {
           return throwError(() => err);
         })
       );
+  }
+
+  /** รายละเอียดการจับคู่กับนักวิจัย 1 คน */
+  explain(researcherId: number): Observable<CollaboratorExplainResponse> {
+    return this.http.get<CollaboratorExplainResponse>(`${this.baseUrl}/${researcherId}/explain`);
   }
 }
