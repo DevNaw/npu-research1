@@ -156,83 +156,268 @@
       </div>
     </div>
 
-    <!-- ===== Skills Overview / FORD ===== -->
-    <div
-      class="bg-white p-5 md:p-8 rounded-2xl shadow-sm border border-gray-100 space-y-6"
-    >
-      <!-- 🔷 HEADER -->
+    <!-- ===================================================== -->
+    <!-- ส่วนที่แสดงเฉพาะผู้ที่ล็อกอินแล้ว                         -->
+    <!-- Skills Overview / ภาพรวมฐานข้อมูลงานวิจัย / ภาพรวมคณะ -->
+    <!-- ===================================================== -->
+    <ng-container *ngIf="isLoggedIn">
+      <!-- ===== Skills Overview / FORD ===== -->
       <div
-        class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-4 border-b border-gray-100"
+        class="bg-white p-5 md:p-8 rounded-2xl shadow-sm border border-gray-100 space-y-6"
       >
-        <div class="flex items-center gap-3">
-          <div
-            class="w-11 h-11 rounded-xl bg-linear-to-br from-[#F2CB05] to-[#e0b800] flex items-center justify-center shadow-sm"
-          >
-            <i class="bi bi-pie-chart-fill text-white text-xl"></i>
-          </div>
-          <div>
-            <h1 class="text-xl md:text-2xl font-semibold text-black">
-              Skills Overview
-            </h1>
-            <p class="text-sm text-gray-500">ภาพรวมตาม OECD และ FORD</p>
-          </div>
-        </div>
-
-        <!-- Segmented Tabs -->
-        <div class="inline-flex p-1 bg-gray-100 rounded-xl">
-          <button
-            (click)="changeTabForChart('PROJECT')"
-            [ngClass]="
-              selectedTab === 'PROJECT'
-                ? 'bg-white text-black shadow-sm'
-                : 'text-gray-500 hover:text-gray-700'
-            "
-            class="px-3 md:px-4 py-2 rounded-lg cursor-pointer text-xs md:text-sm transition-all whitespace-nowrap"
-          >
-            โครงการวิจัย
-          </button>
-          <button
-            (click)="changeTabForChart('ARTICLE')"
-            [ngClass]="
-              selectedTab === 'ARTICLE'
-                ? 'bg-white text-black shadow-sm'
-                : 'text-gray-500 hover:text-gray-700'
-            "
-            class="px-3 md:px-4 py-2 rounded-lg cursor-pointer text-xs md:text-sm transition-all"
-          >
-            ผลงานตีพิมพ์
-          </button>
-          <button
-            (click)="changeTabForChart('INNOVATION')"
-            [ngClass]="
-              selectedTab === 'INNOVATION'
-                ? 'bg-white text-black shadow-sm'
-                : 'text-gray-500 hover:text-gray-700'
-            "
-            class="px-3 md:px-4 py-2 rounded-lg cursor-pointer text-xs md:text-sm transition-all whitespace-nowrap"
-          >
-            นวัตกรรม
-          </button>
-        </div>
-      </div>
-
-      <!-- 🔷 CONTENT (2 COLUMN) -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
-        <!-- ===== LEFT: RADAR MAJOR ===== -->
+        <!-- 🔷 HEADER -->
         <div
-          class="bg-linear-to-br from-white to-gray-50 rounded-xl p-5 border border-gray-200 hover:shadow-md transition-all"
+          class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-4 border-b border-gray-100"
         >
-          <div class="flex items-center justify-between mb-3">
-            <div class="flex items-center gap-2">
+          <div class="flex items-center gap-3">
+            <div
+              class="w-11 h-11 rounded-xl bg-linear-to-br from-[#F2CB05] to-[#e0b800] flex items-center justify-center shadow-sm"
+            >
+              <i class="bi bi-pie-chart-fill text-white text-xl"></i>
+            </div>
+            <div>
+              <h1 class="text-xl md:text-2xl font-semibold text-black">
+                Skills Overview
+              </h1>
+              <p class="text-sm text-gray-500">ภาพรวมตาม OECD และ FORD</p>
+            </div>
+          </div>
+
+          <!-- Segmented Tabs -->
+          <div class="inline-flex p-1 bg-gray-100 rounded-xl">
+            <button
+              (click)="changeTabForChart('PROJECT')"
+              [ngClass]="
+                selectedTab === 'PROJECT'
+                  ? 'bg-white text-black shadow-sm'
+                  : 'text-gray-500 hover:text-gray-700'
+              "
+              class="px-3 md:px-4 py-2 rounded-lg cursor-pointer text-xs md:text-sm transition-all whitespace-nowrap"
+            >
+              โครงการวิจัย
+            </button>
+            <button
+              (click)="changeTabForChart('ARTICLE')"
+              [ngClass]="
+                selectedTab === 'ARTICLE'
+                  ? 'bg-white text-black shadow-sm'
+                  : 'text-gray-500 hover:text-gray-700'
+              "
+              class="px-3 md:px-4 py-2 rounded-lg cursor-pointer text-xs md:text-sm transition-all"
+            >
+              ผลงานตีพิมพ์
+            </button>
+            <button
+              (click)="changeTabForChart('INNOVATION')"
+              [ngClass]="
+                selectedTab === 'INNOVATION'
+                  ? 'bg-white text-black shadow-sm'
+                  : 'text-gray-500 hover:text-gray-700'
+              "
+              class="px-3 md:px-4 py-2 rounded-lg cursor-pointer text-xs md:text-sm transition-all whitespace-nowrap"
+            >
+              นวัตกรรม
+            </button>
+          </div>
+        </div>
+
+        <!-- 🔷 CONTENT (2 COLUMN) -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+          <!-- ===== LEFT: RADAR MAJOR ===== -->
+          <div
+            class="bg-linear-to-br from-white to-gray-50 rounded-xl p-5 border border-gray-200 hover:shadow-md transition-all"
+          >
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center gap-2">
+                <div
+                  class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center"
+                >
+                  <i class="bi bi-bullseye text-blue-600"></i>
+                </div>
+                <div>
+                  <h3 class="text-base md:text-lg font-semibold">
+                    สาขา OECD หลัก
+                  </h3>
+                  <p class="text-xs text-gray-500">
+                    {{
+                      selectedTab === "PROJECT"
+                        ? "โครงการวิจัย"
+                        : selectedTab === "ARTICLE"
+                        ? "ผลงานตีพิมพ์"
+                        : "นวัตกรรม"
+                    }}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="w-full">
+              <ng-container *ngIf="hasData; else noData">
+                <apx-chart
+                  class="w-full h-full"
+                  [series]="radarChartOptions.series!"
+                  [chart]="radarChartOptions.chart!"
+                  [labels]="radarChartOptions.labels!"
+                  [fill]="radarChartOptions.fill!"
+                  [stroke]="radarChartOptions.stroke!"
+                  [markers]="radarChartOptions.markers!"
+                  [xaxis]="radarChartOptions.xaxis!"
+                  [yaxis]="radarChartOptions.yaxis!"
+                  [plotOptions]="radarChartOptions.plotOptions!"
+                  [dataLabels]="radarChartOptions.dataLabels!"
+                  [tooltip]="radarChartOptions.tooltip!"
+                >
+                </apx-chart>
+              </ng-container>
+
+              <!-- แสดง อื่นๆ ด้านล่างกราฟ -->
               <div
-                class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center"
+                *ngIf="otherMajor"
+                class="mt-3 flex items-center justify-center gap-2 text-sm text-gray-500 border-t border-gray-100 pt-3"
               >
-                <i class="bi bi-bullseye text-blue-600"></i>
+                <span
+                  class="w-3 h-3 rounded-full bg-[#038FFB] inline-block"
+                ></span>
+                <span>{{ otherMajor.label }}</span>
+                <span class="font-semibold text-[#394250]">{{
+                  otherMajor.value
+                }}</span>
+                <span>รายการ</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- ===== RIGHT: PIE (FORD) ===== -->
+          <div
+            class="relative overflow-hidden bg-linear-to-br from-[#394250] to-[#2a323d] text-white rounded-xl shadow-lg p-5 md:p-6"
+          >
+            <!-- Decorative blob -->
+            <div
+              class="absolute -right-10 -bottom-10 w-40 h-40 rounded-full bg-[#F2CB05]/10 blur-2xl"
+            ></div>
+
+            <div class="relative flex items-center gap-2 flex-wrap mb-2">
+              <div
+                class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center"
+              >
+                <i class="bi bi-pie-chart-fill text-[#F2CB05]"></i>
               </div>
               <div>
-                <h3 class="text-base md:text-lg font-semibold">
-                  สาขา OECD หลัก
-                </h3>
+                <h2 class="text-base md:text-lg font-semibold">
+                  การจัดกลุ่มของ FORD
+                </h2>
+                <p class="text-xs text-gray-300">
+                  {{
+                    selectedTab === "PROJECT"
+                      ? "โครงการวิจัย"
+                      : selectedTab === "ARTICLE"
+                      ? "ผลงานตีพิมพ์"
+                      : "นวัตกรรม"
+                  }}
+                </p>
+              </div>
+            </div>
+
+            <div class="relative grid grid-cols-1 xl:grid-cols-[320px_minmax(0,1fr)] gap-6 items-center mt-5">
+
+              <!-- Donut Chart -->
+              <ng-container *ngIf="hasData; else noData">
+                <div class="flex justify-center items-center">
+                  <div class="pie-chart-wrapper shrink-0">
+                    <ngx-charts-pie-chart
+                      [view]="[300, 300]"
+                      [results]="single"
+                      [scheme]="colorScheme"
+                      [legend]="false"
+                      [labels]="false"
+                      [doughnut]="true"
+                      [arcWidth]="0.38"
+                      [tooltipDisabled]="false"
+                      (select)="onChartSelect($event)"
+                    >
+                    </ngx-charts-pie-chart>
+                  </div>
+                </div>
+
+                <!-- Legend -->
+                <div
+                  class="w-full max-h-[360px] overflow-y-auto pr-2 space-y-2 custom-scroll"
+                >
+                  <div
+                    *ngFor="let item of single; let i = index"
+                    (click)="onChartSelect(item)"
+                    class="
+                      group
+                      grid grid-cols-[14px_minmax(0,1fr)_auto]
+                      items-start gap-3
+                      px-4 py-3
+                      rounded-xl
+                      hover:bg-white/10
+                      cursor-pointer
+                      transition-all duration-200
+                    "
+                  >
+                    <!-- Color -->
+                    <span
+                      class="w-3.5 h-3.5 rounded-full mt-1.5 shrink-0"
+                      [style.background]="
+                        colorScheme.domain[i % colorScheme.domain.length]
+                      "
+                    ></span>
+
+                    <!-- Full name -->
+                    <div class="min-w-0">
+                      <p
+                        class="
+                          text-sm
+                          leading-5
+                          text-gray-100
+                          font-medium
+                          whitespace-normal
+                          wrap-break-word
+                        "
+                      >
+                        {{ item.name }}
+                      </p>
+                    </div>
+
+                    <!-- Value -->
+                    <div class="flex items-baseline gap-2 pl-3 whitespace-nowrap">
+                      <span class="text-base font-bold text-white">
+                        {{ item.value }}
+                      </span>
+
+                      <span
+                        class="
+                          text-xs
+                          text-gray-300
+                          bg-white/10
+                          px-2 py-1
+                          rounded-full
+                        "
+                      >
+                        {{ item.extra.percent }}%
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+
+            </div>
+          </div>
+
+          <!-- ===== RADAR SUB ===== -->
+          <div
+            class="bg-linear-to-br from-white to-gray-50 rounded-xl p-5 border border-gray-200 hover:shadow-md transition-all"
+          >
+            <div class="flex items-center gap-2 mb-3">
+              <div
+                class="w-8 h-8 rounded-lg bg-rose-100 flex items-center justify-center"
+              >
+                <i class="bi bi-diagram-3 text-rose-600"></i>
+              </div>
+              <div>
+                <h3 class="text-base md:text-lg font-semibold">สาขา OECD ย่อย</h3>
                 <p class="text-xs text-gray-500">
                   {{
                     selectedTab === "PROJECT"
@@ -244,608 +429,429 @@
                 </p>
               </div>
             </div>
-          </div>
 
-          <div class="w-full">
-            <ng-container *ngIf="hasData; else noData">
-              <apx-chart
-                class="w-full h-full"
-                [series]="radarChartOptions.series!"
-                [chart]="radarChartOptions.chart!"
-                [labels]="radarChartOptions.labels!"
-                [fill]="radarChartOptions.fill!"
-                [stroke]="radarChartOptions.stroke!"
-                [markers]="radarChartOptions.markers!"
-                [xaxis]="radarChartOptions.xaxis!"
-                [yaxis]="radarChartOptions.yaxis!"
-                [plotOptions]="radarChartOptions.plotOptions!"
-                [dataLabels]="radarChartOptions.dataLabels!"
-                [tooltip]="radarChartOptions.tooltip!"
-              >
-              </apx-chart>
-            </ng-container>
-
-            <!-- แสดง อื่นๆ ด้านล่างกราฟ -->
-            <div
-              *ngIf="otherMajor"
-              class="mt-3 flex items-center justify-center gap-2 text-sm text-gray-500 border-t border-gray-100 pt-3"
-            >
-              <span
-                class="w-3 h-3 rounded-full bg-[#038FFB] inline-block"
-              ></span>
-              <span>{{ otherMajor.label }}</span>
-              <span class="font-semibold text-[#394250]">{{
-                otherMajor.value
-              }}</span>
-              <span>รายการ</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- ===== RIGHT: PIE (FORD) ===== -->
-        <div
-          class="relative overflow-hidden bg-linear-to-br from-[#394250] to-[#2a323d] text-white rounded-xl shadow-lg p-5 md:p-6"
-        >
-          <!-- Decorative blob -->
-          <div
-            class="absolute -right-10 -bottom-10 w-40 h-40 rounded-full bg-[#F2CB05]/10 blur-2xl"
-          ></div>
-
-          <div class="relative flex items-center gap-2 flex-wrap mb-2">
-            <div
-              class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center"
-            >
-              <i class="bi bi-pie-chart-fill text-[#F2CB05]"></i>
-            </div>
-            <div>
-              <h2 class="text-base md:text-lg font-semibold">
-                การจัดกลุ่มของ FORD
-              </h2>
-              <p class="text-xs text-gray-300">
-                {{
-                  selectedTab === "PROJECT"
-                    ? "โครงการวิจัย"
-                    : selectedTab === "ARTICLE"
-                    ? "ผลงานตีพิมพ์"
-                    : "นวัตกรรม"
-                }}
-              </p>
-            </div>
-          </div>
-
-          <div class="relative grid grid-cols-1 xl:grid-cols-[320px_minmax(0,1fr)] gap-6 items-center mt-5">
-
-            <!-- Donut Chart -->
-            <ng-container *ngIf="hasData; else noData">
-              <div class="flex justify-center items-center">
-                <div class="pie-chart-wrapper shrink-0">
-                  <ngx-charts-pie-chart
-                    [view]="[300, 300]"
-                    [results]="single"
-                    [scheme]="colorScheme"
-                    [legend]="false"
-                    [labels]="false"
-                    [doughnut]="true"
-                    [arcWidth]="0.38"
-                    [tooltipDisabled]="false"
-                    (select)="onChartSelect($event)"
-                  >
-                  </ngx-charts-pie-chart>
-                </div>
-              </div>
-          
-              <!-- Legend -->
-              <div
-                class="w-full max-h-[360px] overflow-y-auto pr-2 space-y-2 custom-scroll"
-              >
-                <div
-                  *ngFor="let item of single; let i = index"
-                  (click)="onChartSelect(item)"
-                  class="
-                    group
-                    grid grid-cols-[14px_minmax(0,1fr)_auto]
-                    items-start gap-3
-                    px-4 py-3
-                    rounded-xl
-                    hover:bg-white/10
-                    cursor-pointer
-                    transition-all duration-200
-                  "
-                >
-                  <!-- Color -->
-                  <span
-                    class="w-3.5 h-3.5 rounded-full mt-1.5 shrink-0"
-                    [style.background]="
-                      colorScheme.domain[i % colorScheme.domain.length]
-                    "
-                  ></span>
-          
-                  <!-- Full name -->
-                  <div class="min-w-0">
-                    <p
-                      class="
-                        text-sm
-                        leading-5
-                        text-gray-100
-                        font-medium
-                        whitespace-normal
-                        wrap-break-word
-                      "
-                    >
-                      {{ item.name }}
-                    </p>
-                  </div>
-          
-                  <!-- Value -->
-                  <div class="flex items-baseline gap-2 pl-3 whitespace-nowrap">
-                    <span class="text-base font-bold text-white">
-                      {{ item.value }}
-                    </span>
-          
-                    <span
-                      class="
-                        text-xs
-                        text-gray-300
-                        bg-white/10
-                        px-2 py-1
-                        rounded-full
-                      "
-                    >
-                      {{ item.extra.percent }}%
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </ng-container>
-          
-          </div>
-        </div>
-
-        <!-- ===== RADAR SUB ===== -->
-        <div
-          class="bg-linear-to-br from-white to-gray-50 rounded-xl p-5 border border-gray-200 hover:shadow-md transition-all"
-        >
-          <div class="flex items-center gap-2 mb-3">
-            <div
-              class="w-8 h-8 rounded-lg bg-rose-100 flex items-center justify-center"
-            >
-              <i class="bi bi-diagram-3 text-rose-600"></i>
-            </div>
-            <div>
-              <h3 class="text-base md:text-lg font-semibold">สาขา OECD ย่อย</h3>
-              <p class="text-xs text-gray-500">
-                {{
-                  selectedTab === "PROJECT"
-                    ? "โครงการวิจัย"
-                    : selectedTab === "ARTICLE"
-                    ? "ผลงานตีพิมพ์"
-                    : "นวัตกรรม"
-                }}
-              </p>
-            </div>
-          </div>
-
-          <div class="w-full">
-            <ng-container *ngIf="hasData; else noData">
-              <apx-chart
-                class="w-full h-full"
-                [series]="radarChartOptionsSub.series!"
-                [chart]="radarChartOptionsSub.chart!"
-                [labels]="radarChartOptionsSub.labels!"
-                [fill]="radarChartOptionsSub.fill!"
-                [stroke]="radarChartOptionsSub.stroke!"
-                [markers]="radarChartOptionsSub.markers!"
-                [xaxis]="radarChartOptionsSub.xaxis!"
-                [yaxis]="radarChartOptionsSub.yaxis!"
-                [plotOptions]="radarChartOptionsSub.plotOptions!"
-                [dataLabels]="radarChartOptionsSub.dataLabels!"
-                [tooltip]="radarChartOptionsSub.tooltip!"
-              >
-              </apx-chart>
-            </ng-container>
-
-            <!-- แสดง อื่นๆ ด้านล่างกราฟ -->
-            <div
-              *ngIf="otherSub"
-              class="mt-3 flex items-center justify-center gap-2 text-sm text-gray-500 border-t border-gray-100 pt-3"
-            >
-              <span
-                class="w-3 h-3 rounded-full bg-[#FF4560] inline-block"
-              ></span>
-              <span>{{ otherSub.label }}</span>
-              <span class="font-semibold text-[#394250]">{{
-                otherSub.value
-              }}</span>
-              <span>รายการ</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- ===== TOP 10 OECD ===== -->
-        <div
-          class="bg-linear-to-br from-white to-gray-50 rounded-xl p-5 border border-gray-200 hover:shadow-md transition-all"
-        >
-          <div class="flex items-center gap-2 mb-3">
-            <div
-              class="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center"
-            >
-              <i class="bi bi-bar-chart-fill text-emerald-600"></i>
-            </div>
-            <div>
-              <h2 class="text-base md:text-lg font-semibold">
-                Top 10 สาขาที่เกี่ยวข้อง
-              </h2>
-              <p class="text-xs text-gray-500">
-                {{
-                  selectedTab === "PROJECT"
-                    ? "โครงการวิจัย"
-                    : selectedTab === "ARTICLE"
-                    ? "ผลงานตีพิมพ์"
-                    : "นวัตกรรม"
-                }}
-              </p>
-            </div>
-          </div>
-
-          <div class="max-h-125 overflow-y-auto">
-            <div *ngIf="chartsOECD.length > 0">
+            <div class="w-full">
               <ng-container *ngIf="hasData; else noData">
                 <apx-chart
-                  [series]="chartsOECD[0].options.series"
-                  [chart]="chartsOECD[0].options.chart"
-                  [dataLabels]="chartsOECD[0].options.dataLabels"
-                  [plotOptions]="chartsOECD[0].options.plotOptions"
-                  [yaxis]="chartsOECD[0].options.yaxis"
-                  [xaxis]="chartsOECD[0].options.xaxis"
-                  [stroke]="chartsOECD[0].options.stroke"
-                  [grid]="chartsOECD[0].options.grid"
-                  [fill]="chartsOECD[0].options.fill"
-                  [annotations]="chartsOECD[0].options.annotations"
-                  [tooltip]="chartsOECD[0].options.tooltip!"
-                ></apx-chart>
-              </ng-container>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <ng-template #noData>
-        <div
-          class="flex flex-col justify-center items-center h-64 text-gray-400"
-        >
-          <i class="bi bi-folder-x text-4xl mb-2"></i>
-          <span class="text-sm">ไม่พบข้อมูล</span>
-        </div>
-      </ng-template>
-    </div>
-
-    <!-- ===== Charts Overview ===== -->
-    <div
-      class="bg-white p-5 md:p-8 rounded-2xl shadow-sm border border-gray-100 space-y-6"
-    >
-      <div class="flex items-center gap-3 pb-4 border-b border-gray-100">
-        <div
-          class="w-11 h-11 rounded-xl bg-linear-to-br from-[#F2CB05] to-[#e0b800] flex items-center justify-center shadow-sm"
-        >
-          <i class="bi bi-bar-chart-line-fill text-white text-xl"></i>
-        </div>
-        <div>
-          <h1 class="text-xl md:text-2xl font-semibold text-black">
-            ภาพรวมฐานข้อมูลงานวิจัย
-          </h1>
-          <p class="text-sm text-gray-500">สถิติแยกตามหน่วยงาน</p>
-        </div>
-      </div>
-
-      <!-- Charts -->
-      <div
-        *ngFor="let c of charts"
-        class="bg-white rounded-xl overflow-hidden border border-gray-200"
-      >
-        <!-- Chart Header -->
-        <div
-          class="bg-linear-to-r from-[#EBEFF2] to-[#f5f7fa] p-4 md:px-6 md:py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-gray-200"
-        >
-          <div class="flex items-center gap-3">
-            <div
-              class="w-10 h-10 rounded-lg bg-white flex items-center justify-center shadow-sm border border-gray-200"
-            >
-              <i class="bi bi-graph-up text-[#F2CB05] text-lg"></i>
-            </div>
-            <div>
-              <h2 class="text-lg md:text-xl font-semibold text-[#394250]">
-                {{ c.title }}
-              </h2>
-              <p class="text-sm text-gray-500">{{ c.subtitle }}</p>
-            </div>
-          </div>
-
-          <button
-            (click)="SeeMoreDetails(c.type)"
-            type="button"
-            class="flex items-center justify-center gap-2 bg-white hover:bg-[#F2CB05] text-[#394250] hover:text-white px-4 py-2 rounded-lg shadow-sm border border-gray-200 cursor-pointer transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-yellow-300 group"
-          >
-            <i
-              class="bi bi-file-earmark-bar-graph-fill text-base group-hover:scale-110 transition-transform"
-            ></i>
-            <span class="text-sm">ดูรายละเอียดเพิ่มเติม</span>
-          </button>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-[60%_40%]">
-          <!-- Chart Body -->
-          <div
-            class="p-4 md:p-5 w-full h-full overflow-x-auto border-r border-gray-100"
-          >
-            <div class="min-w-200">
-              <apx-chart
-                [series]="c.options.series"
-                [chart]="c.options.chart"
-                [dataLabels]="c.options.dataLabels"
-                [plotOptions]="c.options.plotOptions"
-                [yaxis]="c.options.yaxis"
-                [xaxis]="c.options.xaxis"
-                [stroke]="c.options.stroke"
-                [grid]="c.options.grid"
-                [fill]="c.options.fill"
-                [annotations]="c.options.annotations"
-                [tooltip]="c.options.tooltip!"
-              >
-              </apx-chart>
-            </div>
-          </div>
-
-          <!-- Side List -->
-          <div
-            class="bg-gray-50/50 p-5 md:p-6 flex flex-col justify-between h-140 w-full"
-          >
-            <div
-              class="flex items-center gap-2 mb-4 pb-3 border-b border-gray-200"
-            >
-              <div
-                class="w-8 h-8 rounded-lg bg-[#F2E7AC]/50 flex items-center justify-center"
-              >
-                <i class="bi bi-list-ul text-[#F2CB05]"></i>
-              </div>
-              <h2 class="text-base md:text-lg font-semibold">
-                สัดส่วนผลงานตามหน่วยงาน
-              </h2>
-            </div>
-
-            <div class="space-y-2 overflow-y-auto h-90 pr-2 custom-scroll">
-              <div
-                *ngFor="
-                  let item of c.type == 'project'
-                    ? dashboardData?.statistic_graph?.graph_project
-                    : c.type == 'article'
-                    ? dashboardData?.statistic_graph?.graph_article
-                    : dashboardData?.statistic_graph?.graph_innovation;
-                  let idx = index
-                "
-                class="flex justify-between items-center px-3 py-2 gap-3 rounded-lg hover:bg-white hover:shadow-sm transition-all"
-              >
-                <div class="flex items-center gap-3 min-w-0">
-                  <span
-                    class="shrink-0 w-6 h-6 rounded-full bg-[#F2E7AC]/60 text-[#394250] text-xs font-semibold flex items-center justify-center"
-                    >{{ idx + 1 }}</span
-                  >
-                  <span
-                    class="font-light text-sm md:text-base min-w-0 wrap-break-word"
-                  >
-                    {{ item.label_full }}
-                  </span>
-                </div>
-                <span
-                  class="font-medium text-sm shrink-0 whitespace-nowrap text-[#394250] bg-white px-2 py-0.5 rounded-full border border-gray-200"
+                  class="w-full h-full"
+                  [series]="radarChartOptionsSub.series!"
+                  [chart]="radarChartOptionsSub.chart!"
+                  [labels]="radarChartOptionsSub.labels!"
+                  [fill]="radarChartOptionsSub.fill!"
+                  [stroke]="radarChartOptionsSub.stroke!"
+                  [markers]="radarChartOptionsSub.markers!"
+                  [xaxis]="radarChartOptionsSub.xaxis!"
+                  [yaxis]="radarChartOptionsSub.yaxis!"
+                  [plotOptions]="radarChartOptionsSub.plotOptions!"
+                  [dataLabels]="radarChartOptionsSub.dataLabels!"
+                  [tooltip]="radarChartOptionsSub.tooltip!"
                 >
-                  {{ item.count }}
-                </span>
+                </apx-chart>
+              </ng-container>
+
+              <!-- แสดง อื่นๆ ด้านล่างกราฟ -->
+              <div
+                *ngIf="otherSub"
+                class="mt-3 flex items-center justify-center gap-2 text-sm text-gray-500 border-t border-gray-100 pt-3"
+              >
+                <span
+                  class="w-3 h-3 rounded-full bg-[#FF4560] inline-block"
+                ></span>
+                <span>{{ otherSub.label }}</span>
+                <span class="font-semibold text-[#394250]">{{
+                  otherSub.value
+                }}</span>
+                <span>รายการ</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- ===== TOP 10 OECD ===== -->
+          <div
+            class="bg-linear-to-br from-white to-gray-50 rounded-xl p-5 border border-gray-200 hover:shadow-md transition-all"
+          >
+            <div class="flex items-center gap-2 mb-3">
+              <div
+                class="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center"
+              >
+                <i class="bi bi-bar-chart-fill text-emerald-600"></i>
+              </div>
+              <div>
+                <h2 class="text-base md:text-lg font-semibold">
+                  Top 10 สาขาที่เกี่ยวข้อง
+                </h2>
+                <p class="text-xs text-gray-500">
+                  {{
+                    selectedTab === "PROJECT"
+                      ? "โครงการวิจัย"
+                      : selectedTab === "ARTICLE"
+                      ? "ผลงานตีพิมพ์"
+                      : "นวัตกรรม"
+                  }}
+                </p>
               </div>
             </div>
 
-            <div class="pt-4 mt-3 border-t border-gray-200">
-              <div class="flex items-center justify-center gap-2">
-                <span class="text-sm text-gray-500">รวมทั้งหมด</span>
-                <span class="text-2xl font-bold text-[#394250]">{{
-                  getTotalCount(c.type)
-                }}</span>
-                <span class="text-sm text-gray-500">ผลงาน</span>
+            <div class="max-h-125 overflow-y-auto">
+              <div *ngIf="chartsOECD.length > 0">
+                <ng-container *ngIf="hasData; else noData">
+                  <apx-chart
+                    [series]="chartsOECD[0].options.series"
+                    [chart]="chartsOECD[0].options.chart"
+                    [dataLabels]="chartsOECD[0].options.dataLabels"
+                    [plotOptions]="chartsOECD[0].options.plotOptions"
+                    [yaxis]="chartsOECD[0].options.yaxis"
+                    [xaxis]="chartsOECD[0].options.xaxis"
+                    [stroke]="chartsOECD[0].options.stroke"
+                    [grid]="chartsOECD[0].options.grid"
+                    [fill]="chartsOECD[0].options.fill"
+                    [annotations]="chartsOECD[0].options.annotations"
+                    [tooltip]="chartsOECD[0].options.tooltip!"
+                  ></apx-chart>
+                </ng-container>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
 
-    <!-- ===== Faculty Dashboard (รวม: ภาพรวมคณะ) ===== -->
-    <div
-      class="bg-white p-5 md:p-8 rounded-2xl shadow-sm border border-gray-100 space-y-8"
-    >
-      <!-- Header + Tabs (ชุดเดียวคุมทั้งการ์ด) -->
+        <ng-template #noData>
+          <div
+            class="flex flex-col justify-center items-center h-64 text-gray-400"
+          >
+            <i class="bi bi-folder-x text-4xl mb-2"></i>
+            <span class="text-sm">ไม่พบข้อมูล</span>
+          </div>
+        </ng-template>
+      </div>
+
+      <!-- ===== Charts Overview ===== -->
       <div
-        class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-4 border-b border-gray-100"
+        class="bg-white p-5 md:p-8 rounded-2xl shadow-sm border border-gray-100 space-y-6"
       >
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-3 pb-4 border-b border-gray-100">
           <div
             class="w-11 h-11 rounded-xl bg-linear-to-br from-[#F2CB05] to-[#e0b800] flex items-center justify-center shadow-sm"
           >
-            <i class="bi bi-building text-white text-xl"></i>
+            <i class="bi bi-bar-chart-line-fill text-white text-xl"></i>
           </div>
           <div>
             <h1 class="text-xl md:text-2xl font-semibold text-black">
-              ภาพรวมแยกตามคณะและสาขา
+              ภาพรวมฐานข้อมูลงานวิจัย
             </h1>
-            <p class="text-sm text-gray-500">
-              เปรียบเทียบผลงานของแต่ละคณะ และเจาะลึกรายสาขา
-            </p>
+            <p class="text-sm text-gray-500">สถิติแยกตามหน่วยงาน</p>
           </div>
         </div>
 
-        <div class="inline-flex p-1 bg-gray-100 rounded-xl self-start">
-          <button
-            (click)="changeFacultyTab('project')"
-            [ngClass]="
-              facultyTab === 'project'
-                ? 'bg-white text-black shadow-sm'
-                : 'text-gray-500 hover:text-gray-700'
-            "
-            class="px-3 md:px-4 py-2 rounded-lg cursor-pointer text-xs md:text-sm transition-all whitespace-nowrap"
+        <!-- Charts -->
+        <div
+          *ngFor="let c of charts"
+          class="bg-white rounded-xl overflow-hidden border border-gray-200"
+        >
+          <!-- Chart Header -->
+          <div
+            class="bg-linear-to-r from-[#EBEFF2] to-[#f5f7fa] p-4 md:px-6 md:py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-gray-200"
           >
-            โครงการวิจัย
-          </button>
-          <button
-            (click)="changeFacultyTab('article')"
-            [ngClass]="
-              facultyTab === 'article'
-                ? 'bg-white text-black shadow-sm'
-                : 'text-gray-500 hover:text-gray-700'
-            "
-            class="px-3 md:px-4 py-2 rounded-lg cursor-pointer text-xs md:text-sm transition-all"
-          >
-            ผลงานตีพิมพ์
-          </button>
-          <button
-            (click)="changeFacultyTab('innovation')"
-            [ngClass]="
-              facultyTab === 'innovation'
-                ? 'bg-white text-black shadow-sm'
-                : 'text-gray-500 hover:text-gray-700'
-            "
-            class="px-3 md:px-4 py-2 rounded-lg cursor-pointer text-xs md:text-sm transition-all whitespace-nowrap"
-          >
-            นวัตกรรม
-          </button>
+            <div class="flex items-center gap-3">
+              <div
+                class="w-10 h-10 rounded-lg bg-white flex items-center justify-center shadow-sm border border-gray-200"
+              >
+                <i class="bi bi-graph-up text-[#F2CB05] text-lg"></i>
+              </div>
+              <div>
+                <h2 class="text-lg md:text-xl font-semibold text-[#394250]">
+                  {{ c.title }}
+                </h2>
+                <p class="text-sm text-gray-500">{{ c.subtitle }}</p>
+              </div>
+            </div>
+
+            <button
+              (click)="SeeMoreDetails(c.type)"
+              type="button"
+              class="flex items-center justify-center gap-2 bg-white hover:bg-[#F2CB05] text-[#394250] hover:text-white px-4 py-2 rounded-lg shadow-sm border border-gray-200 cursor-pointer transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-yellow-300 group"
+            >
+              <i
+                class="bi bi-file-earmark-bar-graph-fill text-base group-hover:scale-110 transition-transform"
+              ></i>
+              <span class="text-sm">ดูรายละเอียดเพิ่มเติม</span>
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-[60%_40%]">
+            <!-- Chart Body -->
+            <div
+              class="p-4 md:p-5 w-full h-full overflow-x-auto border-r border-gray-100"
+            >
+              <div class="min-w-200">
+                <apx-chart
+                  [series]="c.options.series"
+                  [chart]="c.options.chart"
+                  [dataLabels]="c.options.dataLabels"
+                  [plotOptions]="c.options.plotOptions"
+                  [yaxis]="c.options.yaxis"
+                  [xaxis]="c.options.xaxis"
+                  [stroke]="c.options.stroke"
+                  [grid]="c.options.grid"
+                  [fill]="c.options.fill"
+                  [annotations]="c.options.annotations"
+                  [tooltip]="c.options.tooltip!"
+                >
+                </apx-chart>
+              </div>
+            </div>
+
+            <!-- Side List -->
+            <div
+              class="bg-gray-50/50 p-5 md:p-6 flex flex-col justify-between h-140 w-full"
+            >
+              <div
+                class="flex items-center gap-2 mb-4 pb-3 border-b border-gray-200"
+              >
+                <div
+                  class="w-8 h-8 rounded-lg bg-[#F2E7AC]/50 flex items-center justify-center"
+                >
+                  <i class="bi bi-list-ul text-[#F2CB05]"></i>
+                </div>
+                <h2 class="text-base md:text-lg font-semibold">
+                  สัดส่วนผลงานตามหน่วยงาน
+                </h2>
+              </div>
+
+              <div class="space-y-2 overflow-y-auto h-90 pr-2 custom-scroll">
+                <div
+                  *ngFor="
+                    let item of c.type == 'project'
+                      ? dashboardData?.statistic_graph?.graph_project
+                      : c.type == 'article'
+                      ? dashboardData?.statistic_graph?.graph_article
+                      : dashboardData?.statistic_graph?.graph_innovation;
+                    let idx = index
+                  "
+                  class="flex justify-between items-center px-3 py-2 gap-3 rounded-lg hover:bg-white hover:shadow-sm transition-all"
+                >
+                  <div class="flex items-center gap-3 min-w-0">
+                    <span
+                      class="shrink-0 w-6 h-6 rounded-full bg-[#F2E7AC]/60 text-[#394250] text-xs font-semibold flex items-center justify-center"
+                      >{{ idx + 1 }}</span
+                    >
+                    <span
+                      class="font-light text-sm md:text-base min-w-0 wrap-break-word"
+                    >
+                      {{ item.label_full }}
+                    </span>
+                  </div>
+                  <span
+                    class="font-medium text-sm shrink-0 whitespace-nowrap text-[#394250] bg-white px-2 py-0.5 rounded-full border border-gray-200"
+                  >
+                    {{ item.count }}
+                  </span>
+                </div>
+              </div>
+
+              <div class="pt-4 mt-3 border-t border-gray-200">
+                <div class="flex items-center justify-center gap-2">
+                  <span class="text-sm text-gray-500">รวมทั้งหมด</span>
+                  <span class="text-2xl font-bold text-[#394250]">{{
+                    getTotalCount(c.type)
+                  }}</span>
+                  <span class="text-sm text-gray-500">ผลงาน</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- ── ภาพรวมคณะ (Bar ซ้าย + Radar ขวาสลับโหมด) ── -->
-<ng-container *ngIf="hasFacultyData; else noFacultyData">
-  <div class="space-y-4">
-    <div class="flex items-center gap-2">
-      <span class="w-1 h-5 rounded-full bg-[#F2CB05]"></span>
-      <h2 class="text-lg font-semibold text-[#394250]">เปรียบเทียบภาพรวมคณะ</h2>
-    </div>
-
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
-      <!-- Bar ซ้าย -->
-      <div class="bg-linear-to-br from-white to-gray-50 rounded-xl p-5 border border-gray-200">
-        <div class="flex items-center gap-2 mb-3">
-          <div class="w-8 h-8 rounded-lg bg-yellow-100 flex items-center justify-center">
-            <i class="bi bi-bar-chart-fill text-[#e0b800]"></i>
-          </div>
-          <div>
-            <h3 class="text-base md:text-lg font-semibold">จำนวนผลงานต่อคณะ</h3>
-            <p class="text-xs text-gray-500">คลิกแท่งเพื่อดู OECD ของคณะ</p>
-          </div>
-        </div>
-        <div class="overflow-y-auto max-h-125">
-          <apx-chart
-            [series]="facultyBarChart.series"
-            [chart]="facultyBarChart.chart"
-            [dataLabels]="facultyBarChart.dataLabels"
-            [plotOptions]="facultyBarChart.plotOptions"
-            [yaxis]="facultyBarChart.yaxis"
-            [xaxis]="facultyBarChart.xaxis"
-            [stroke]="facultyBarChart.stroke"
-            [grid]="facultyBarChart.grid"
-            [fill]="facultyBarChart.fill"
-            [annotations]="facultyBarChart.annotations"
-            [tooltip]="facultyBarChart.tooltip!">
-          </apx-chart>
-        </div>
-      </div>
-
-      <!-- Radar ขวา — สลับ: เทียบคณะ / OECD ของคณะ -->
-      <div class="bg-linear-to-br from-white to-gray-50 rounded-xl p-5 border border-gray-200">
-        <div class="flex items-center justify-between gap-2 mb-3">
-          <div class="flex items-center gap-2">
-            <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
-              <i class="bi bi-bullseye" [ngClass]="selectedFacultyOecd ? 'text-[#16498C]' : 'text-blue-600'"></i>
+      <!-- ===== Faculty Dashboard (รวม: ภาพรวมคณะ) ===== -->
+      <div
+        class="bg-white p-5 md:p-8 rounded-2xl shadow-sm border border-gray-100 space-y-8"
+      >
+        <!-- Header + Tabs (ชุดเดียวคุมทั้งการ์ด) -->
+        <div
+          class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-4 border-b border-gray-100"
+        >
+          <div class="flex items-center gap-3">
+            <div
+              class="w-11 h-11 rounded-xl bg-linear-to-br from-[#F2CB05] to-[#e0b800] flex items-center justify-center shadow-sm"
+            >
+              <i class="bi bi-building text-white text-xl"></i>
             </div>
             <div>
-              <h3 class="text-base md:text-lg font-semibold">
-                {{ selectedFacultyOecd ? 'สาขา OECD ของคณะ' : 'เทียบสัดส่วนคณะ' }}
-              </h3>
-              <p class="text-xs text-gray-500">
-                {{ selectedFacultyOecd ? selectedFacultyOecd.organization.name : 'แสดงสูงสุด 8 คณะ' }}
+              <h1 class="text-xl md:text-2xl font-semibold text-black">
+                ภาพรวมแยกตามคณะและสาขา
+              </h1>
+              <p class="text-sm text-gray-500">
+                เปรียบเทียบผลงานของแต่ละคณะ และเจาะลึกรายสาขา
               </p>
             </div>
           </div>
-          <button *ngIf="selectedFacultyOecd" (click)="clearFacultyOecd()"
-            class="flex items-center gap-1 text-xs text-gray-500 hover:text-[#16498C] px-2.5 py-1.5 rounded-lg hover:bg-gray-50 transition-all cursor-pointer shrink-0">
-            <i class="bi bi-x-circle"></i> ล้าง
-          </button>
-        </div>
 
-        <div *ngIf="loadingOecd" class="flex justify-center items-center h-72 text-gray-400">
-          <i class="bi bi-arrow-repeat text-3xl animate-spin"></i>
-        </div>
-
-        <apx-chart *ngIf="!selectedFacultyOecd && !loadingOecd"
-          class="w-full"
-          [series]="facultyRadarChart.series!"
-          [chart]="facultyRadarChart.chart!"
-          [labels]="facultyRadarChart.labels!"
-          [fill]="facultyRadarChart.fill!"
-          [stroke]="facultyRadarChart.stroke!"
-          [markers]="facultyRadarChart.markers!"
-          [xaxis]="facultyRadarChart.xaxis!"
-          [yaxis]="facultyRadarChart.yaxis!"
-          [plotOptions]="facultyRadarChart.plotOptions!"
-          [dataLabels]="facultyRadarChart.dataLabels!"
-          [tooltip]="facultyRadarChart.tooltip!">
-        </apx-chart>
-
-        <ng-container *ngIf="selectedFacultyOecd && !loadingOecd">
-          <apx-chart *ngIf="hasFacultyOecd; else noOecd"
-            class="w-full"
-            [series]="facultyOecdRadar.series!"
-            [chart]="facultyOecdRadar.chart!"
-            [labels]="facultyOecdRadar.labels!"
-            [fill]="facultyOecdRadar.fill!"
-            [stroke]="facultyOecdRadar.stroke!"
-            [markers]="facultyOecdRadar.markers!"
-            [xaxis]="facultyOecdRadar.xaxis!"
-            [yaxis]="facultyOecdRadar.yaxis!"
-            [plotOptions]="facultyOecdRadar.plotOptions!"
-            [dataLabels]="facultyOecdRadar.dataLabels!"
-            [tooltip]="facultyOecdRadar.tooltip!">
-          </apx-chart>
-
-          <div *ngIf="selectedFacultyOecd.top_oecd"
-            class="mt-3 flex items-center justify-center gap-2 text-sm text-gray-500 border-t border-gray-100 pt-3">
-            <span class="w-3 h-3 rounded-full bg-[#16498C] inline-block"></span>
-            <span>สูงสุด:</span>
-            <span class="font-semibold text-[#394250]">{{ selectedFacultyOecd.top_oecd.name_th }}</span>
-            <span>{{ selectedFacultyOecd.top_oecd.count }} ({{ selectedFacultyOecd.top_oecd.percent }}%)</span>
+          <div class="inline-flex p-1 bg-gray-100 rounded-xl self-start">
+            <button
+              (click)="changeFacultyTab('project')"
+              [ngClass]="
+                facultyTab === 'project'
+                  ? 'bg-white text-black shadow-sm'
+                  : 'text-gray-500 hover:text-gray-700'
+              "
+              class="px-3 md:px-4 py-2 rounded-lg cursor-pointer text-xs md:text-sm transition-all whitespace-nowrap"
+            >
+              โครงการวิจัย
+            </button>
+            <button
+              (click)="changeFacultyTab('article')"
+              [ngClass]="
+                facultyTab === 'article'
+                  ? 'bg-white text-black shadow-sm'
+                  : 'text-gray-500 hover:text-gray-700'
+              "
+              class="px-3 md:px-4 py-2 rounded-lg cursor-pointer text-xs md:text-sm transition-all"
+            >
+              ผลงานตีพิมพ์
+            </button>
+            <button
+              (click)="changeFacultyTab('innovation')"
+              [ngClass]="
+                facultyTab === 'innovation'
+                  ? 'bg-white text-black shadow-sm'
+                  : 'text-gray-500 hover:text-gray-700'
+              "
+              class="px-3 md:px-4 py-2 rounded-lg cursor-pointer text-xs md:text-sm transition-all whitespace-nowrap"
+            >
+              นวัตกรรม
+            </button>
           </div>
+        </div>
 
-          <ng-template #noOecd>
-            <div class="flex flex-col justify-center items-center h-72 text-gray-400">
-              <i class="bi bi-folder-x text-4xl mb-2"></i>
-              <span class="text-sm">ไม่พบข้อมูล OECD ของคณะนี้</span>
+        <!-- ── ภาพรวมคณะ (Bar ซ้าย + Radar ขวาสลับโหมด) ── -->
+        <ng-container *ngIf="hasFacultyData; else noFacultyData">
+          <div class="space-y-4">
+            <div class="flex items-center gap-2">
+              <span class="w-1 h-5 rounded-full bg-[#F2CB05]"></span>
+              <h2 class="text-lg font-semibold text-[#394250]">เปรียบเทียบภาพรวมคณะ</h2>
             </div>
-          </ng-template>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+              <!-- Bar ซ้าย -->
+              <div class="bg-linear-to-br from-white to-gray-50 rounded-xl p-5 border border-gray-200">
+                <div class="flex items-center gap-2 mb-3">
+                  <div class="w-8 h-8 rounded-lg bg-yellow-100 flex items-center justify-center">
+                    <i class="bi bi-bar-chart-fill text-[#e0b800]"></i>
+                  </div>
+                  <div>
+                    <h3 class="text-base md:text-lg font-semibold">จำนวนผลงานต่อคณะ</h3>
+                    <p class="text-xs text-gray-500">คลิกแท่งเพื่อดู OECD ของคณะ</p>
+                  </div>
+                </div>
+                <div class="overflow-y-auto max-h-125">
+                  <apx-chart
+                    [series]="facultyBarChart.series"
+                    [chart]="facultyBarChart.chart"
+                    [dataLabels]="facultyBarChart.dataLabels"
+                    [plotOptions]="facultyBarChart.plotOptions"
+                    [yaxis]="facultyBarChart.yaxis"
+                    [xaxis]="facultyBarChart.xaxis"
+                    [stroke]="facultyBarChart.stroke"
+                    [grid]="facultyBarChart.grid"
+                    [fill]="facultyBarChart.fill"
+                    [annotations]="facultyBarChart.annotations"
+                    [tooltip]="facultyBarChart.tooltip!">
+                  </apx-chart>
+                </div>
+              </div>
+
+              <!-- Radar ขวา — สลับ: เทียบคณะ / OECD ของคณะ -->
+              <div class="bg-linear-to-br from-white to-gray-50 rounded-xl p-5 border border-gray-200">
+                <div class="flex items-center justify-between gap-2 mb-3">
+                  <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
+                      <i class="bi bi-bullseye" [ngClass]="selectedFacultyOecd ? 'text-[#16498C]' : 'text-blue-600'"></i>
+                    </div>
+                    <div>
+                      <h3 class="text-base md:text-lg font-semibold">
+                        {{ selectedFacultyOecd ? 'สาขา OECD ของคณะ' : 'เทียบสัดส่วนคณะ' }}
+                      </h3>
+                      <p class="text-xs text-gray-500">
+                        {{ selectedFacultyOecd ? selectedFacultyOecd.organization.name : 'แสดงสูงสุด 8 คณะ' }}
+                      </p>
+                    </div>
+                  </div>
+                  <button *ngIf="selectedFacultyOecd" (click)="clearFacultyOecd()"
+                    class="flex items-center gap-1 text-xs text-gray-500 hover:text-[#16498C] px-2.5 py-1.5 rounded-lg hover:bg-gray-50 transition-all cursor-pointer shrink-0">
+                    <i class="bi bi-x-circle"></i> ล้าง
+                  </button>
+                </div>
+
+                <div *ngIf="loadingOecd" class="flex justify-center items-center h-72 text-gray-400">
+                  <i class="bi bi-arrow-repeat text-3xl animate-spin"></i>
+                </div>
+
+                <apx-chart *ngIf="!selectedFacultyOecd && !loadingOecd"
+                  class="w-full"
+                  [series]="facultyRadarChart.series!"
+                  [chart]="facultyRadarChart.chart!"
+                  [labels]="facultyRadarChart.labels!"
+                  [fill]="facultyRadarChart.fill!"
+                  [stroke]="facultyRadarChart.stroke!"
+                  [markers]="facultyRadarChart.markers!"
+                  [xaxis]="facultyRadarChart.xaxis!"
+                  [yaxis]="facultyRadarChart.yaxis!"
+                  [plotOptions]="facultyRadarChart.plotOptions!"
+                  [dataLabels]="facultyRadarChart.dataLabels!"
+                  [tooltip]="facultyRadarChart.tooltip!">
+                </apx-chart>
+
+                <ng-container *ngIf="selectedFacultyOecd && !loadingOecd">
+                  <apx-chart *ngIf="hasFacultyOecd; else noOecd"
+                    class="w-full"
+                    [series]="facultyOecdRadar.series!"
+                    [chart]="facultyOecdRadar.chart!"
+                    [labels]="facultyOecdRadar.labels!"
+                    [fill]="facultyOecdRadar.fill!"
+                    [stroke]="facultyOecdRadar.stroke!"
+                    [markers]="facultyOecdRadar.markers!"
+                    [xaxis]="facultyOecdRadar.xaxis!"
+                    [yaxis]="facultyOecdRadar.yaxis!"
+                    [plotOptions]="facultyOecdRadar.plotOptions!"
+                    [dataLabels]="facultyOecdRadar.dataLabels!"
+                    [tooltip]="facultyOecdRadar.tooltip!">
+                  </apx-chart>
+
+                  <div *ngIf="selectedFacultyOecd.top_oecd"
+                    class="mt-3 flex items-center justify-center gap-2 text-sm text-gray-500 border-t border-gray-100 pt-3">
+                    <span class="w-3 h-3 rounded-full bg-[#16498C] inline-block"></span>
+                    <span>สูงสุด:</span>
+                    <span class="font-semibold text-[#394250]">{{ selectedFacultyOecd.top_oecd.name_th }}</span>
+                    <span>{{ selectedFacultyOecd.top_oecd.count }} ({{ selectedFacultyOecd.top_oecd.percent }}%)</span>
+                  </div>
+
+                  <ng-template #noOecd>
+                    <div class="flex flex-col justify-center items-center h-72 text-gray-400">
+                      <i class="bi bi-folder-x text-4xl mb-2"></i>
+                      <span class="text-sm">ไม่พบข้อมูล OECD ของคณะนี้</span>
+                    </div>
+                  </ng-template>
+                </ng-container>
+              </div>
+            </div>
+
+            <div class="pt-3 border-t border-gray-100 flex items-center justify-center gap-2">
+              <span class="text-sm text-gray-500">รวมทั้งหมด</span>
+              <span class="text-2xl font-bold text-[#394250]">{{ getFacultyTotal() }}</span>
+              <span class="text-sm text-gray-500">ผลงาน</span>
+            </div>
+          </div>
         </ng-container>
+
+        <ng-template #noFacultyData>
+          <div class="flex flex-col justify-center items-center h-48 text-gray-400">
+            <i class="bi bi-folder-x text-4xl mb-2"></i>
+            <span class="text-sm">ไม่พบข้อมูล</span>
+          </div>
+        </ng-template>
       </div>
-    </div>
-
-    <div class="pt-3 border-t border-gray-100 flex items-center justify-center gap-2">
-      <span class="text-sm text-gray-500">รวมทั้งหมด</span>
-      <span class="text-2xl font-bold text-[#394250]">{{ getFacultyTotal() }}</span>
-      <span class="text-sm text-gray-500">ผลงาน</span>
-    </div>
-  </div>
-</ng-container>
-
-<ng-template #noFacultyData>
-  <div class="flex flex-col justify-center items-center h-48 text-gray-400">
-    <i class="bi bi-folder-x text-4xl mb-2"></i>
-    <span class="text-sm">ไม่พบข้อมูล</span>
-  </div>
-</ng-template>
-
-    </div>
+    </ng-container>
+    <!-- ===== จบส่วนที่แสดงเฉพาะผู้ที่ล็อกอินแล้ว ===== -->
 
     <!-- ===== News Section ===== -->
     <div

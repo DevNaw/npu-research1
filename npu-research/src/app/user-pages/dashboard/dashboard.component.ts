@@ -81,6 +81,9 @@ registerLocaleData(localeTh);
 export class UserDashboardComponent implements OnInit {
   @ViewChild('chart') chart: ChartComponent | undefined;
 
+  // ── สถานะการล็อกอิน (ใช้ซ่อน Skills Overview / ภาพรวมฐานข้อมูล / ภาพรวมคณะ) ──
+  isLoggedIn = false;
+
   // ── Skills Overview (OECD/FORD) radars ──────────────────────
   radarChartOptions!: Partial<RadarChartOptions>;
   radarChartOptionsSub!: Partial<RadarChartOptions>;
@@ -189,6 +192,8 @@ export class UserDashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.isLoggedIn = this.authService.isLoggedIn();
+
     this.setChartView();
     MainComponent.showLoading();
     Promise.all([
@@ -305,7 +310,10 @@ export class UserDashboardComponent implements OnInit {
           this.updatePagination();
           this.initCharts();
           this.initChartsOECD();
-          this.initFacultyCharts();
+          // ภาพรวมคณะต้องยิง API เพิ่ม — โหลดเฉพาะเมื่อล็อกอินแล้ว
+          if (this.isLoggedIn) {
+            this.initFacultyCharts();
+          }
           this.changeTabForChart(this.selectedTab);
           this.loading = false;
         }
@@ -823,13 +831,15 @@ export class UserDashboardComponent implements OnInit {
     this.facultyRadarChart = this.createFacultyRadarChart(empty);
   }
 
-  /** เรียกครั้งเดียวหลังโหลด dashboardData */
+  /** เรียกครั้งเดียวหลังโหลด dashboardData (เฉพาะผู้ที่ล็อกอินแล้ว) */
   initFacultyCharts(): void {
     this.changeFacultyTab(this.facultyTab);
   }
 
   /** สลับ tab: ยิง API ภาพรวมคณะ + เคลียร์ OECD ที่เลือก */
   changeFacultyTab(type: ReportType): void {
+    if (!this.isLoggedIn) return;
+
     this.facultyTab = type;
     this.clearFacultyOecd();
 
